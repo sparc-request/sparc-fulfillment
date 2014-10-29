@@ -1,0 +1,2 @@
+rvm use ruby-2.1.2@cwf --create
+export rvm_trust_rvmrcs_flag=1
