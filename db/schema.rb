@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141029164656) do
+ActiveRecord::Schema.define(version: 20141029171058) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -21,15 +21,16 @@ ActiveRecord::Schema.define(version: 20141029164656) do
     t.integer  "subject_count"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   create_table "line_items", force: true do |t|
     t.integer  "sparc_id"
     t.integer  "arm_id"
     t.integer  "service_id"
-    t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
@@ -48,6 +49,7 @@ ActiveRecord::Schema.define(version: 20141029164656) do
     t.datetime "recruitment_end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   create_table "services", force: true do |t|
@@ -58,6 +60,7 @@ ActiveRecord::Schema.define(version: 20141029164656) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   create_table "visit_groups", force: true do |t|
@@ -70,6 +73,7 @@ ActiveRecord::Schema.define(version: 20141029164656) do
     t.integer  "window_after"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "visit_groups", ["arm_id"], name: "index_visit_groups_on_arm_id", using: :btree
@@ -83,6 +87,7 @@ ActiveRecord::Schema.define(version: 20141029164656) do
     t.integer  "effort_billing_qty"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "visits", ["line_item_id"], name: "index_visits_on_line_item_id", using: :btree
