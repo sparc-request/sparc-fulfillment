@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sparc_id: 1
+  arm_id: 
+  service_id: 
+  quantity: 1
+
+two:
+  sparc_id: 1
+  arm_id: 
+  service_id: 
+  quantity: 1

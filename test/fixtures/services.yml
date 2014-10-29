@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sparc_id: 1
+  cost: 9.99
+  name: MyString
+  appreviation: MyString
+  description: MyText
+
+two:
+  sparc_id: 1
+  cost: 9.99
+  name: MyString
+  appreviation: MyString
+  description: MyText
