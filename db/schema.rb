@@ -31,12 +31,12 @@ ActiveRecord::Schema.define(version: 20141029180810) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.string   "name"
+    t.decimal  "cost",               precision: 10, scale: 0
     t.integer  "sparc_core_id"
     t.string   "sparc_core_name"
     t.integer  "sparc_program_id"
     t.string   "sparc_program_name"
-    t.string   "name"
-    t.decimal  "cost",               precision: 10, scale: 0
   end
 
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
