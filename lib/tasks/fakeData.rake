@@ -29,7 +29,7 @@ namespace :data do
 
     #create protocols 
     for i in 0...10
-      protocol = Protocol.create(sparc_id: sparc_id, title: randString, short_title: randString, sponsor_name: randString, udac_project_number: rand, requester_id: sparc_id, start_date: today, end_date: notToday, recruitment_start_date: today, recruitment_end_date: notToday)
+      protocol = Protocol.create(sparc_id: sparc_id, title: randString, short_title: randString, sponsor_name: randString, udac_project_number: rand, requester_id: sparc_id, start_date: today, end_date: notToday, recruitment_start_date: today, recruitment_end_date: notToday, irb_status: randString, irb_approval_date: today, irb_expiration_date: notToday, subsidy_amount: rand, study_cost: rand)
       for a in 0...3
         arm = Arm.create(sparc_id: sparc_id, protocol_id: protocol.id, name: randString, visit_count: rand, subject_count: rand)
         for vg in 0...arm.visit_count
