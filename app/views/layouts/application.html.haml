@@ -1,0 +1,21 @@
+!!!
+%html
+  %head
+    %title ClinicalWorkFulfillment
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    #header_top
+      .container
+        = link_to image_tag("sctr_logo.png"), "http://sctr.musc.edu", :id => "logo_left", :class => "pull-left"
+        = link_to image_tag("musc_logo.gif"), "http://www.musc.edu", :id => "logo_right", :class => "pull-right"
+    #header_bottom
+      .container
+        .pull-left
+          %div Julia Glenn | glennj@musc.edu
+        .pull-right
+          = link_to "Task List", "#", :class => "btn btn-primary"
+          = link_to "Billing/Auditing Report", "#", :class => "btn btn-primary"
+    .container
+      = yield
