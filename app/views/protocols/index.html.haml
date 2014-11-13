@@ -1,0 +1,37 @@
+#protocols_index
+  .row
+    #search_box.col-md-6= text_field_tag 'protocol_search', "", :class => "typeahead form-control"
+    .col-md-6
+      %nav.navbar.navbar-default
+        %ul.nav.navbar-nav
+          %li= link_to "Financial View", "#"
+          %li.active= link_to "Study Management View", "#"
+
+  .row
+    %table.table
+      %colgroup
+        %col
+        %col.bordered
+        %col.bordered
+        %col.bordered
+        %col.bordered
+        %col.bordered
+        %col
+      %thead.custom_striped
+        %th Changes
+        %th Sparc ID
+        %th Short Title
+        %th Principal Investigator
+        %th Coordinators
+        %th IRB Approval Date
+        %th Current IRB Expiration Date
+      %tbody.custom_striped
+        - @protocols.each do |protocol|
+          %tr
+            %td TODO: Updates
+            %td= protocol.sparc_id
+            %td= protocol.short_title
+            %td TODO: NEEDS IDENTITIES
+            %td TODO: NEEDS IDENTITIES
+            %td= protocol.irb_approval_date
+            %td= protocol.irb_expiration_date

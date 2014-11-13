@@ -7,8 +7,11 @@ gem 'rails', '4.1.6'
 gem "paranoia", "~> 2.0"
 # Use mysql as the database for Active Record
 gem 'mysql2'
-# Use SCSS for stylesheets
+# Use SCSS and Bootstrap for stylesheets
+gem 'bootstrap-sass'
 gem 'sass-rails', '~> 4.0.3'
+gem 'autoprefixer-rails'
+gem 'sprockets-rails'
 # Use HAML for views
 gem 'haml-rails'
 # Use Uglifier as compressor for JavaScript assets

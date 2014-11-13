@@ -1,0 +1,51 @@
+@import "bootstrap-sprockets"
+@import "bootstrap"
+
+
+/************Main Layout Styling************/
+#header_top
+  background-color: #113967
+  height: 100px
+  padding: 13px 0 7px
+  #logo_left
+    margin-top: 17px
+#header_bottom
+  background-color: #416185
+  padding: 10px 0
+  margin-bottom: 20px
+  .pull-left div
+    padding: 6px
+    color: white
+
+
+/************Index Page Styling************/
+
+#protocols_index
+  //Search Box Styling
+  #search_box
+    padding-top: 10px
+    input.typeahead
+      width: auto
+      height: auto
+
+  //Navbar Styling
+  nav.navbar.navbar-default
+    float: right
+
+
+  //Index Table Styling
+  table.table 
+    thead.custom_striped th
+      background-color: #90B9CD
+      border-bottom: 0px
+      color: white
+      font-size: 1.1em
+      padding: 15px 8px
+
+    tbody.custom_striped tr:nth-child(2n)
+      background-color: #90B9CD
+      color: white
+    colgroup
+      col.bordered
+        border-left: 2px solid black
+        border-right: 2px solid black
