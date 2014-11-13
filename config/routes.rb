@@ -61,5 +61,6 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
+  mount CWFSPARC::API => '/'
   root 'protocols#index'
 end
