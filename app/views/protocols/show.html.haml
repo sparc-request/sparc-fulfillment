@@ -1,0 +1,25 @@
+= javascript_include_tag 'protocol_tabs'
+= render :partial => 'protocol_details'
+.clear
+%div
+  %ul.nav.nav-tabs
+    %li.active#study_schedule_tab= link_to "Study Schedule", "#study_schedule"
+    %li#participant_list_tab= link_to "Participant List", "#participant_list"
+    %li#participant_tracker_tab= link_to "Particiant Tracker", "#participant_tracker"
+    %li#study_level_charges_tab= link_to "Study Level Charges", "#study_level_charges"
+    %li#audit_reporting_tab= link_to "Audit Reporting", "#audit_reporting"
+
+  #study_schedule
+    = render 'study_schedule'
+
+  #participant_list
+    = render 'participant_list'
+
+  #participant_tracker
+    = render 'participant_tracker'
+
+  #study_level_charges
+    = render 'study_level_charges'
+
+  #audit_reporting
+    = render 'audit_reporting'

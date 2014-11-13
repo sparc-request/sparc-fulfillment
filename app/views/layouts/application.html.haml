@@ -15,7 +15,6 @@
         .pull-left
           %div Julia Glenn | glennj@musc.edu
         .pull-right
-          = link_to "Task List", "#", :class => "btn btn-primary"
-          = link_to "Billing/Auditing Report", "#", :class => "btn btn-primary"
+          = render :partial => 'shared/nav_buttons'
     .container
       = yield
