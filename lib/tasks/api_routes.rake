@@ -1,9 +1,9 @@
 desc "Print API routes"
 task api_routes: :environment do
 
-  puts 'v1/CWFSPARC'
+  puts 'CWFSPARC::V1::APIv1'
 
-  CWFSPARC::API.routes.each do |route|
+  CWFSPARC::V1::APIv1.routes.each do |route|
     puts route
   end
 end
