@@ -1,0 +1,23 @@
+%table.table.details
+  %colgroup
+    %col
+    %col.bordered
+    %col.bordered
+    %col.bordered
+    %col.bordered
+    %col
+  %thead.custom_striped
+    %th Sparc ID
+    %th Principal Investigator
+    %th Coordinators
+    %th Short Title
+    %th IRB #
+    %th IRB Expiration Date
+  %tbody.custom_striped
+    %tr
+      %td= @protocol.sparc_id
+      %td TODO: NEEDS IDENTITIES
+      %td TODO: NEEDS IDENTITIES
+      %td= @protocol.short_title
+      %td= @protocol.udac_project_number
+      %td= @protocol.irb_expiration_date
