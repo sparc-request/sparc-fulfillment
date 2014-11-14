@@ -3,23 +3,23 @@
 .clear
 %div
   %ul.nav.nav-tabs
-    %li.active#study_schedule_tab= link_to "Study Schedule", "#study_schedule"
-    %li#participant_list_tab= link_to "Participant List", "#participant_list"
-    %li#participant_tracker_tab= link_to "Particiant Tracker", "#participant_tracker"
-    %li#study_level_charges_tab= link_to "Study Level Charges", "#study_level_charges"
-    %li#audit_reporting_tab= link_to "Audit Reporting", "#audit_reporting"
+    %li.active.protocol_tab#study_schedule= link_to "Study Schedule", "#study_schedule"
+    %li.protocol_tab#participant_list= link_to "Participant List", "#participant_list"
+    %li.protocol_tab#participant_tracker= link_to "Particiant Tracker", "#participant_tracker"
+    %li.protocol_tab#study_level_charges= link_to "Study Level Charges", "#study_level_charges"
+    %li.protocol_tab#audit_reporting= link_to "Audit Reporting", "#audit_reporting"
 
-  #study_schedule
+  .protocol_tab_panel#study_schedule
     = render 'study_schedule'
 
-  #participant_list
+  .protocol_tab_panel#participant_list
     = render 'participant_list'
 
-  #participant_tracker
+  .protocol_tab_panel#participant_tracker
     = render 'participant_tracker'
 
-  #study_level_charges
+  .protocol_tab_panel#study_level_charges
     = render 'study_level_charges'
 
-  #audit_reporting
+  .protocol_tab_panel#audit_reporting
     = render 'audit_reporting'
