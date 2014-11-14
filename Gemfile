@@ -48,3 +48,6 @@ gem 'rest-client'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+group :test do
+  gem 'rspec-rails', '~> 3.1.0'
+end
