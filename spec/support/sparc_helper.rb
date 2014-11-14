@@ -1,12 +1,12 @@
 module SparcHelper
 
-	def sparc_sends_protocol_post
+	def sparc_sends_protocol_post(params=valid_params)
 		post '/v1/protocols.json', params
 	end
 
 	private
 
-	def params
+	def valid_params
 		{
 			id: 1,
 			ssr_id: 1
