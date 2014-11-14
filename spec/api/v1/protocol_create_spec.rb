@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'CWFSPARC::API', type: :request,
+RSpec.describe 'CWFSPARC::APIv1', type: :request,
 																debug_response: true do
 
 	describe 'POST /v1/protocols.json' do

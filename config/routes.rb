@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-  mount CWFSPARC::API => '/'
+  mount API::Base => '/'
   root 'protocols#index'
 end
