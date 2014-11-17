@@ -1,1 +1,41 @@
-participant list
+%br
+#search_box.col-md-3= text_field_tag 'participant_search', "", :class => "typeahead form-control", :placeholder => "Search Participants"
+%br
+%br
+%h3 Participant List
+%table.table#participant_list.table-condensed
+  %colgroup
+    %col
+    %col.bordered
+    %col.bordered
+    %col.bordered
+    %col.bordered
+    %col.bordered
+    %col
+  %thead
+    %th Last Name
+    %th First Name
+    %th MRN
+    %th Patient Status
+    %th Date of Birth
+    %th Gender
+    %th Ethnicity
+  %tbody
+    %tr
+      %td= text_field_tag 'last_name', "", :width => 10
+      %td= text_field_tag 'first_name', "", :width => 10
+      %td= text_field_tag 'mrn', "", :width => 6
+      %td= text_field_tag 'patient_status', "", :width => 10
+      %td= text_field_tag 'date_of_birth', "", :width => 10
+      %td.form-group
+        %select.form_control#gender
+          %option Select Gender...
+          %option{:value => 'male'} Male
+          %option{:value => 'female'} Female
+      %td.form-group
+        %select.form_control#ethnicity
+          %option Select Ethnicity...
+          %option{:value => 'african_american'} African American/Black
+          %option{:value => 'hispanic'} Hispanic/Latino
+          %option{:value => 'caucasian'} Caucasian/White
+          %option{:value => 'asian'} Asian/Pacific Islander
