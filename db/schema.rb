@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141112194351) do
+ActiveRecord::Schema.define(version: 20141117155906) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -23,6 +23,22 @@ ActiveRecord::Schema.define(version: 20141112194351) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
   end
+
+  create_table "delayed_jobs", force: true do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "line_items", force: true do |t|
     t.integer  "sparc_id"
@@ -61,6 +77,7 @@ ActiveRecord::Schema.define(version: 20141112194351) do
     t.datetime "irb_expiration_date"
     t.integer  "subsidy_amount"
     t.integer  "study_cost"
+    t.integer  "sparc_sub_service_request_id"
   end
 
   create_table "services", force: true do |t|

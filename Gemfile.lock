@@ -46,6 +46,11 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
+    delayed_job (4.0.4)
+      activesupport (>= 3.0, < 4.2)
+    delayed_job_active_record (4.0.2)
+      activerecord (>= 3.0, < 4.2)
+      delayed_job (>= 3.0, < 4.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
@@ -176,6 +181,7 @@ DEPENDENCIES
   autoprefixer-rails
   bootstrap-sass
   coffee-rails (~> 4.0.0)
+  delayed_job_active_record
   grape
   haml-rails
   jbuilder (~> 2.0)

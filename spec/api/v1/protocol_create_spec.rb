@@ -72,6 +72,18 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request,
             expect(response.status).to eq(400)
           end
         end
+
+        describe 'empty :ssr_id' do
+
+          it 'must not be empty' do
+
+            bad_params = { id: 1, ssr_id: '' }
+
+            sparc_sends_protocol_post(bad_params)
+
+            expect(response.status).to eq(400)
+          end
+        end
       end
     end
 	end
