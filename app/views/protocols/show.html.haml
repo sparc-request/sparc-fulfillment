@@ -2,11 +2,11 @@
 .clear
 %div{:role => 'tabpanel'}
   %ul.nav.nav-tabs{:role => 'tablist'}
-    %li.active{:role => 'presentation'}= link_to "Study Schedule", "#study_schedule",{:data => {:toggle => 'tab'}, :role => 'tab', :aria => {:controls => 'study_schedule'}}
-    %li{:role => 'presentation'}= link_to "Participant List", "#participant_list",{:data => {:toggle => 'tab'}, :role => 'tab', :aria => {:controls => 'participant_list'}}
-    %li{:role => 'presentation'}= link_to "Particiant Tracker", "#participant_tracker",{:data => {:toggle => 'tab'}, :role => 'tab', :aria => {:controls => 'participant_tracker'}}
-    %li{:role => 'presentation'}= link_to "Study Level Charges", "#study_level_charges",{:data => {:toggle => 'tab'}, :role => 'tab', :aria => {:controls => 'study_level_charges'}}
-    %li{:role => 'presentation'}= link_to "Audit Reporting", "#audit_reporting",{:data => {:toggle => 'tab'}, :role => 'tab', :aria => {:controls => 'audit_reporting'}}
+    %li.active{:role => 'presentation'}= link_to "Study Schedule", "#study_schedule",{"data-toggle" => 'tab', :role => 'tab', "aria-controls" => 'study_schedule'}
+    %li{:role => 'presentation'}= link_to "Participant List", "#participant_list",{"data-toggle" => 'tab', :role => 'tab', "aria-controls" => 'participant_list'}
+    %li{:role => 'presentation'}= link_to "Particiant Tracker", "#participant_tracker",{"data-toggle" => 'tab', :role => 'tab', "aria-controls" => 'participant_tracker'}
+    %li{:role => 'presentation'}= link_to "Study Level Charges", "#study_level_charges",{"data-toggle" => 'tab', :role => 'tab', "aria-controls" => 'study_level_charges'}
+    %li{:role => 'presentation'}= link_to "Audit Reporting", "#audit_reporting",{"data-toggle" => 'tab', :role => 'tab', "aria-controls" => 'audit_reporting'}
 
   .tab-content
     .tab-pane.active#study_schedule{:role => 'tabpanel'}
