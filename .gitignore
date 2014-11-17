@@ -34,3 +34,5 @@ scratch
 *.csv
 config/database.yml
 .ruby-gemset
+
+.env
