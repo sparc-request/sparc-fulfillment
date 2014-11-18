@@ -26,8 +26,10 @@
         %th IRB Approval Date
         %th Current IRB Expiration Date
       %tbody.custom_striped
+        - search_items = []
         - @protocols.each do |protocol|
-          %tr
+          - search_items << {:value => protocol.short_title, :short_title => protocol.short_title, :sparc_id => protocol.sparc_id}
+          %tr{:class => "id_#{protocol.sparc_id} #{pretty_tag(protocol.short_title)}"}
             %td TODO: Updates
             %td= protocol.sparc_id
             %td= protocol.short_title
@@ -35,3 +37,4 @@
             %td TODO: NEEDS IDENTITIES
             %td= protocol.irb_approval_date
             %td= protocol.irb_expiration_date
+    %input.protocols_search_values{:value => search_items.to_json, :type => 'hidden'}
