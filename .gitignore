@@ -33,3 +33,6 @@ scratch
 *.war
 *.csv
 config/database.yml
+.ruby-gemset
+
+.env

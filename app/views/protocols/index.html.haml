@@ -32,7 +32,7 @@
           %tr{:class => "id_#{protocol.sparc_id} #{pretty_tag(protocol.short_title)}"}
             %td TODO: Updates
             %td= protocol.sparc_id
-            %td= protocol.short_title
+            %td= link_to protocol.short_title, "/protocols/#{protocol.id}/show"
             %td TODO: NEEDS IDENTITIES
             %td TODO: NEEDS IDENTITIES
             %td= protocol.irb_approval_date
