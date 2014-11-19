@@ -8,8 +8,8 @@ module SparcHelper
 
 	def valid_params
 		{
-			id: 1,
-			ssr_id: 1
+			protocol_id: 1,
+			sub_service_request_id: 1
 		}
 	end
 end

@@ -3,7 +3,7 @@ module CWFSPARC
   module V1
 
     class APIv1 < Grape::API
-      
+
       version 'v1', using: :path
       format :json
 
@@ -20,8 +20,8 @@ module CWFSPARC
       resource :protocols do
         desc "Receive notification for protocols"
         params do
-          requires :id, type: Integer, desc: "Protocol ID"
-          requires :ssr_id, type: Integer, desc: "Sub Service Request ID"
+          requires :protocol_id, type: Integer, desc: "Protocol ID"
+          requires :sub_service_request_id, type: Integer, desc: "Sub Service Request ID"
         end
         post do
           # authenticate!
