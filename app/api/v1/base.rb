@@ -7,24 +7,25 @@ module CWFSPARC
       version 'v1', using: :path
       format :json
 
-      helpers do
-        def current_user
-          @current_user ||= User.authorize!(env)
-        end
+      http_basic do |username, password|
 
-        def authenticate!
-          error!('401 Unauthorized', 401) unless current_user
+        begin
+          username == ENV['SPARC_USERNAME'] &&
+            password == ENV['SPARC_PASSWORD']
+        rescue
+          false
         end
       end
 
       resource :protocols do
-        desc "Receive notification for protocols"
+
         params do
           requires :protocol_id, type: Integer, desc: "Protocol ID"
           requires :sub_service_request_id, type: Integer, desc: "Sub Service Request ID"
         end
+
         post do
-          # authenticate!
+
           protocol = Protocol.find_or_initialize_by(sparc_id: params[:id])
           if protocol.new_record?
             protocol.sparc_sub_service_request_id = params[:ssr_id]

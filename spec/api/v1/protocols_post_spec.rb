@@ -7,7 +7,9 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request,
 
     context 'success' do
 
-      before { sparc_sends_protocol_post }
+      before do
+        sparc_sends_protocol_post
+      end
 
       it 'should respond with an HTTP status of: 201' do
         expect(response.status).to eq(201)
