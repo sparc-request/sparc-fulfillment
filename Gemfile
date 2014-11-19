@@ -58,4 +58,5 @@ end
 group :test do
   gem 'rspec-rails', '~> 3.1.0'
   gem 'webmock', '~> 1.20.4'
+  gem 'shoulda-matchers', require: false
 end
