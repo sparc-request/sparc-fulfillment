@@ -9,4 +9,7 @@ class Protocol < ActiveRecord::Base
     ProtocolWorkerJob.enqueue(self.sparc_id, self.sparc_sub_service_request_id, true)
   end
 
+  def self.statuses
+    ['Nexus Approved', 'Complete']
+  end
 end
