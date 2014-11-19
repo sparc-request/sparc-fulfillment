@@ -1,6 +1,7 @@
 #protocols_index
   .row
     #search_box.col-md-6= text_field_tag 'protocol_search', "", :class => "typeahead form-control"
+    %select.selectpicker= options_for_select(Protocol.statuses, "Complete")
     .col-md-6
       %nav.navbar.navbar-default
         %ul.nav.navbar-nav

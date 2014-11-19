@@ -34,6 +34,7 @@ gem 'grape'
 gem 'rest-client'
 gem 'delayed_job_active_record'
 gem 'dotenv-deployment', '~> 0.2.0'
+gem 'bootstrap-select-rails', '~> 1.6.2'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
