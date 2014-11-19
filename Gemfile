@@ -52,6 +52,7 @@ gem 'dotenv-deployment', '~> 0.2.0'
 
 group :developemnt do
   gem 'spring-commands-rspec', '~> 1.0.2'
+  gem 'faker', '~> 1.4.3'
 end
 
 group :test do
