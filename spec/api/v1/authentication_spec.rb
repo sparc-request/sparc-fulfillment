@@ -8,7 +8,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request,
     context 'success' do
 
       before do
-        http_login(ENV['SPARC_USERNAME'], ENV['SPARC_PASSWORD'])
+        http_login(ENV['SPARC_API_USERNAME'], ENV['SPARC_API_PASSWORD'])
 
         post '/v1/protocols.json', { protocol_id: 1, sub_service_request_id: 1 }, @env
       end
