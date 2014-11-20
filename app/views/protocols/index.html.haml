@@ -5,8 +5,8 @@
         %ul.nav.navbar-nav
           %li= link_to "Financial View", "#"
           %li.active= link_to "Study Management View", "#"
-.statuses.col-md-4
-  %select.selectpicker= options_for_select(Protocol.statuses, "Complete")
+  .statuses.col-md-4
+    %select.selectpicker= options_for_select(Protocol.statuses, "Complete")
 %table{"data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true"}
   %thead
     %tr
