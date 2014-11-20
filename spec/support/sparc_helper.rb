@@ -1,7 +1,7 @@
 module SparcHelper
 
   def sparc_sends_protocol_post(params=valid_params)
-    http_login(ENV['SPARC_USERNAME'], ENV['SPARC_PASSWORD'])
+    http_login(ENV['SPARC_API_USERNAME'], ENV['SPARC_API_PASSWORD'])
 
     post '/v1/protocols.json', params, @env
   end

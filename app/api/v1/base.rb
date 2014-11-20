@@ -10,8 +10,8 @@ module CWFSPARC
       http_basic do |username, password|
 
         begin
-          username == ENV['SPARC_USERNAME'] &&
-            password == ENV['SPARC_PASSWORD']
+          username == ENV['SPARC_API_USERNAME'] &&
+            password == ENV['SPARC_API_PASSWORD']
         rescue
           false
         end
