@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 20141120185757) do
   add_index "line_items", ["service_id"], name: "index_line_items_on_service_id", using: :btree
 
   create_table "participants", force: true do |t|
+    t.integer  "protocol_id"
     t.string   "first_name"
     t.string   "last_name"
     t.integer  "mrn"

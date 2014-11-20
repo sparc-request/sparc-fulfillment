@@ -1,6 +1,7 @@
 class CreateParticipants < ActiveRecord::Migration
   def change
     create_table :participants do |t|
+      t.references :protocol
       t.string :first_name
       t.string :last_name
       t.integer :mrn
