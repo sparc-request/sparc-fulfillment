@@ -39,3 +39,11 @@ $(document).ready ->
     displayKey: "value"
     source: substringMatcher(protocols)
 
+  # $(document).on 'change', '.selectpicker', ->
+  #   console.log "I've been changed!"
+  #   console.log $(this).val()
+  #   status = $(this).val()
+  #   $.ajax
+  #     type: 'POST'
+  #     url: "protocols/"
+
