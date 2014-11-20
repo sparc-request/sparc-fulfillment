@@ -1,6 +1,6 @@
 class Arm < ActiveRecord::Base
   acts_as_paranoid
-  
+
   belongs_to :protocol
 
   has_many :line_items, :dependent => :destroy
