@@ -10,7 +10,7 @@
 
   .tab-content
     .tab-pane.active#study_schedule{:role => 'tabpanel'}
-      = render 'study_schedule'
+      = render partial: 'study_schedule', locals: {protocol: @protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_arm.visit_groups.first}
 
     .tab-pane#participant_list{:role => 'tabpanel'}
       = render 'participant_list'

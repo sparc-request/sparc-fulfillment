@@ -39,3 +39,10 @@ $(document).ready ->
     displayKey: "value"
     source: substringMatcher(protocols)
 
+# $(".typeahead").typeahead
+#   minLength: 3
+#   highlight: true
+# ,
+#   name: "protocols"
+#   remote: '/protocols_search'
+

@@ -5,5 +5,7 @@ class ProtocolsController < ApplicationController
 
   def show
     @protocol = Protocol.find(params[:id])
+    @selected_arm = @protocol.arms.first
+    @services = Service.all
   end
 end
