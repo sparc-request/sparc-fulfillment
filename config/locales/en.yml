@@ -20,4 +20,13 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  index_page:
+    sparc_id: "SPARC ID"
+    status: "Status"
+    short_title: "Short Title"
+    prinicipal_investgator: "Principal Investigator"
+    coordinators: "Coordinators"
+    irb_approval_date: "IRB Approval Date"
+    irb_expire_date: "Current IRB Expiration Date"
+    irb_status: "IRB State"
+

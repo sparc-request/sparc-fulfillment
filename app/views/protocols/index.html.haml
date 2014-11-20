@@ -1,41 +1,9 @@
-#protocols_index
-  .row
-    #search_box.col-md-6= text_field_tag 'protocol_search', "", :class => "typeahead form-control"
+.row
+  .statuses.col-md-4
     %select.selectpicker= options_for_select(Protocol.statuses, "Complete")
-    .col-md-6
-      %nav.navbar.navbar-default
-        %ul.nav.navbar-nav
-          %li= link_to "Financial View", "#"
-          %li.active= link_to "Study Management View", "#"
-
-  .row
-    %table.table
-      %colgroup
-        %col
-        %col.bordered
-        %col.bordered
-        %col.bordered
-        %col.bordered
-        %col.bordered
-        %col
-      %thead.custom_striped
-        %th Changes
-        %th Sparc ID
-        %th Short Title
-        %th Principal Investigator
-        %th Coordinators
-        %th IRB Approval Date
-        %th Current IRB Expiration Date
-      %tbody.custom_striped
-        - search_items = []
-        - @protocols.each do |protocol|
-          - search_items << {:value => protocol.short_title, :short_title => protocol.short_title, :sparc_id => protocol.sparc_id}
-          %tr{:class => "id_#{protocol.sparc_id} #{pretty_tag(protocol.short_title)}"}
-            %td TODO: Updates
-            %td= protocol.sparc_id
-            %td= link_to protocol.short_title, "/protocols/#{protocol.id}/show"
-            %td TODO: NEEDS IDENTITIES
-            %td TODO: NEEDS IDENTITIES
-            %td= protocol.irb_approval_date
-            %td= protocol.irb_expiration_date
-    %input.protocols_search_values{:value => search_items.to_json, :type => 'hidden'}
+  %table.protocol-list{"data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true"}
+    %thead
+      %tr
+        %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "sparc_id"} SPARC ID
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "short_title"} Short Title
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"} status

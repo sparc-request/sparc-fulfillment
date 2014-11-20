@@ -39,6 +39,15 @@ GEM
       sass (~> 3.2)
     bootstrap-select-rails (1.6.2)
     builder (3.2.2)
+    capybara (2.4.4)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (~> 2.0)
+    capybara-webkit (1.3.1)
+      capybara (>= 2.0.2, < 2.5.0)
+      json
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     coffee-rails (4.0.1)
@@ -64,6 +73,11 @@ GEM
     equalizer (0.0.9)
     erubis (2.7.0)
     execjs (2.2.2)
+    factory_girl (4.5.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.5.0)
+      factory_girl (~> 4.5.0)
+      railties (>= 3.0.0)
     faker (1.4.3)
       i18n (~> 0.5)
     grape (0.9.0)
@@ -97,11 +111,14 @@ GEM
     mail (2.6.1)
       mime-types (>= 1.16, < 3)
     mime-types (2.4.3)
+    mini_portile (0.6.1)
     minitest (5.4.2)
     multi_json (1.10.1)
     multi_xml (0.5.5)
     mysql2 (0.3.16)
     netrc (0.8.0)
+    nokogiri (1.6.4.1)
+      mini_portile (~> 0.6.0)
     paranoia (2.0.2)
       activerecord (~> 4.0)
     rack (1.5.2)
@@ -158,6 +175,8 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    shoulda-matchers (2.7.0)
+      activesupport (>= 3.0.0)
     spring (1.1.3)
     spring-commands-rspec (1.0.2)
       spring (>= 0.9.1)
@@ -188,6 +207,8 @@ GEM
     webmock (1.20.4)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
+    xpath (2.0.0)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
@@ -196,9 +217,11 @@ DEPENDENCIES
   autoprefixer-rails
   bootstrap-sass
   bootstrap-select-rails (~> 1.6.2)
+  capybara-webkit (~> 1.3.1)
   coffee-rails (~> 4.0.0)
   delayed_job_active_record
   dotenv-deployment (~> 0.2.0)
+  factory_girl_rails (~> 4.5.0)
   faker (~> 1.4.3)
   grape
   haml-rails
@@ -211,6 +234,7 @@ DEPENDENCIES
   rspec-rails (~> 3.1.0)
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
+  shoulda-matchers
   spring
   spring-commands-rspec (~> 1.0.2)
   sprockets-rails

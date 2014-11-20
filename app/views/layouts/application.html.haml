@@ -2,9 +2,8 @@
   %head
     %title ClinicalWorkFulfillment
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
-    = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
-  %body
+  %body{class:body_class}
     #header_top
       .container
         = link_to image_tag("sctr_logo.png"), "http://sctr.musc.edu", :id => "logo_left", :class => "pull-left"
@@ -17,3 +16,4 @@
           = render :partial => 'shared/nav_buttons'
     .container
       = yield
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
