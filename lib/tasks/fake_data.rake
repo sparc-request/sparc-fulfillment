@@ -11,6 +11,10 @@ namespace :data do
       1 + Random.rand(100000)
     end
 
+    def rand_date
+      Time.now - Random.rand(100).days
+    end
+
     def today
       Time.now
     end
@@ -23,6 +27,17 @@ namespace :data do
       Faker::Lorem.word
     end
 
+    def rand_status
+      ['Active','Completed','Early Term'].sample
+    end
+
+    def rand_gender
+      ['Male','Female'].sample
+    end
+
+    def rand_ethnicity
+      ['Caucasian','African American', 'Asian', 'Hispanic'].sample
+    end
 
     services = []
     for i in 0...10
@@ -47,6 +62,11 @@ namespace :data do
           end
         end
       end
+    end
+
+    #create participants
+    (0..10).each do |i|
+      Participant.create(first_name: rand_string, last_name: rand_string, mrn: rand, status: rand_status, date_of_birth: rand_date, gender: rand_gender, ethnicity: rand_ethnicity)
     end
   end
 end

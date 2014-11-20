@@ -3,7 +3,7 @@
 %br
 %br
 %h3 Participant List
-%table.table#participant_list.table-condensed
+%table.table#participant_list.table-condens
   %colgroup
     %col
     %col.bordered
@@ -27,13 +27,13 @@
       %td= text_field_tag 'mrn', "", :width => 6
       %td= text_field_tag 'patient_status', "", :width => 10
       %td= text_field_tag 'date_of_birth', "", :width => 10
-      %td.form-group
-        %select.form_control#gender
+      %td
+        %select.selectpicker
           %option Select Gender...
           %option{:value => 'male'} Male
           %option{:value => 'female'} Female
-      %td.form-group
-        %select.form_control#ethnicity
+      %td
+        %select.selectpicker
           %option Select Ethnicity...
           %option{:value => 'african_american'} African American/Black
           %option{:value => 'hispanic'} Hispanic/Latino
