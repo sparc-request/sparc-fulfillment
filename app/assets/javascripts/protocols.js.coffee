@@ -10,3 +10,8 @@ $ ->
     $('#events-table').on "click-row.bs.table", (e, row, $element) ->
       protocol_id = row.sparc_id
       window.location = "/protocols/#{protocol_id}"
+
+    $(document).on 'change', '.selectpicker', ->
+      status = $(this).val()
+      $('#events-table').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
+

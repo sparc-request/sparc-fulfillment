@@ -9,4 +9,12 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by_sparc_id(params[:id])
   end
 
+  def protocols_by_status
+    puts "<>"*100
+    puts params
+    status = params[:status] || 'Complete'
+    @protocols = Protocol.where(status: status)
+    respond_with @protocols
+  end
+
 end
