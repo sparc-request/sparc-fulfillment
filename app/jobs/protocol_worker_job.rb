@@ -1,35 +1,32 @@
-class ProtocolWorkerJob < Struct.new(:protocol_id, :ssr_id, :new_record)
+class ProtocolWorkerJob < Struct.new(:protocol_id, :sub_service_request_id)
 
   class SparcApiError < StandardError
   end
 
-  def perform
-    if new_record
-      RestClient.get(url, params) { |response, request, result, &block|
-        raise SparcApiError unless response.code == 200
-        puts response.inspect
-      }
-    else
-      # response = RestClient.patch url, {id: protocol_id}, content_type: 'application.json'
-    end
+  def self.enqueue(protocol_id, sub_service_request_id)
+    job = new(protocol_id, sub_service_request_id)
+
+    Delayed::Job.enqueue job, queue: 'sparc_protocol_updater'
   end
 
-  def self.enqueue protocol_id, ssr_id, new_record
-    job = new protocol_id, ssr_id, new_record
-    Delayed::Job.enqueue job, queue: 'sparc_protocol_updater'
+  def perform
+    RestClient.get(url, params) { |response, request, result, &block| raise SparcApiError unless response.code == 200 }
   end
 
   private
 
   def params
     {
-      params: { ssr_id: ssr_id },
+      params: { sub_service_request_id: sub_service_request_id },
       accept: :json
     }
-
   end
 
   def url
-    "https://sparc.musc.edu/v1/protocols/#{protocol_id}.json"
+    "https://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/#{sparc_api_version}/protocols/#{protocol_id}.json"
+  end
+
+  def sparc_api_version
+    'v1'
   end
 end

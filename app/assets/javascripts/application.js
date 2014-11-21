@@ -16,3 +16,4 @@
 //= require bootstrap-sprockets
 //= require bootstrap-select
 //= require bootstrap-table.min
+//= require protocols

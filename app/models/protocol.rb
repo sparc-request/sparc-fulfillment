@@ -7,7 +7,7 @@ class Protocol < ActiveRecord::Base
   after_create :fetch_protocol
 
   def fetch_protocol
-    ProtocolWorkerJob.enqueue(self.sparc_id, self.sparc_sub_service_request_id, true)
+    ProtocolWorkerJob.enqueue(self.sparc_id, self.sparc_sub_service_request_id)
   end
 
   def self.statuses
