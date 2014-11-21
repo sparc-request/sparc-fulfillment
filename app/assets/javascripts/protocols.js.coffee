@@ -7,3 +7,6 @@ $ ->
     $(".financial-management-view label").on "click", ->
       e = $(this)
 
+    $('#events-table').on "click-row.bs.table", (e, row, $element) ->
+      protocol_id = row.sparc_id
+      window.location = "/protocols/#{protocol_id}"

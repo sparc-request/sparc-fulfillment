@@ -1,9 +1,10 @@
 .row
   .statuses.col-md-4
     %select.selectpicker= options_for_select(Protocol.statuses, "Complete")
-  %table.protocol-list{"data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true"}
-    %thead
-      %tr
-        %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "sparc_id"} SPARC ID
-        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "short_title"} Short Title
-        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"} status
+  #protocols-table
+    %table.protocol-list{id: 'events-table', "data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true"}
+      %thead
+        %tr
+          %th.sparc-id{"data-events" => 'push-me', "data-align" => "right", "data-sortable" => "true", "data-field" => "sparc_id"} SPARC ID
+          %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "short_title"} Short Title
+          %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"} Status
