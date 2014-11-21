@@ -12,7 +12,7 @@ namespace :data do
     end
 
     def rand_date
-      Time.now - Random.rand(100).days
+      Date.today - Random.rand(100).days
     end
 
     def today

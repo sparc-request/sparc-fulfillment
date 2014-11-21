@@ -64,9 +64,10 @@ ActiveRecord::Schema.define(version: 20141120185757) do
     t.string   "last_name"
     t.integer  "mrn"
     t.string   "status"
-    t.datetime "date_of_birth"
+    t.date     "date_of_birth"
     t.string   "gender"
     t.string   "ethnicity"
+    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

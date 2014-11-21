@@ -9,6 +9,6 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find(params[:id])
     @selected_arm = @protocol.arms.first
     @services = Service.all
+    respond_with @protocol.participants
   end
-
 end
