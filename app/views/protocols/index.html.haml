@@ -1,9 +1,11 @@
 .row
   .statuses.col-md-4
     %select.selectpicker= options_for_select(Protocol.statuses, "Complete")
-  %table.protocol-list{"data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true"}
+  %table.protocol-list{id: "events-table", "data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true"}
     %thead
       %tr
-        %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "sparc_id"} SPARC ID
-        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "short_title"} Short Title
-        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"} status
+        %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "sparc_id"}= t(:index_page)[:sparc_id]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"}= t(:index_page)[:status]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "irb_approval_date"}= t(:index_page)[:irb_approval_date]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "irb_expiration_date"}= t(:index_page)[:irb_expire_date]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "irb_status"}= t(:index_page)[:irb_status]

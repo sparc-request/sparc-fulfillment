@@ -7,10 +7,7 @@ $ ->
     $(".financial-management-view label").on "click", ->
       e = $(this)
 
-# $(".typeahead").typeahead
-#   minLength: 3
-#   highlight: true
-# ,
-#   name: "protocols"
-#   remote: '/protocols_search'
+    $('#events-table').on "click-row.bs.table", (e, row, $element) ->
+      protocol_id = row.sparc_id
+      window.location = "/protocols/#{protocol_id}"
 

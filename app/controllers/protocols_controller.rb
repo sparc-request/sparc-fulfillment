@@ -9,6 +9,7 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find(params[:id])
     @selected_arm = @protocol.arms.first
     @services = Service.all
+    @protocol = Protocol.find_by_sparc_id(params[:id])
   end
 
 end
