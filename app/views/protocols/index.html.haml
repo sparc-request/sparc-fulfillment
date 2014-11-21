@@ -2,7 +2,7 @@
   .row
     #custom-toolbar
       %select.selectpicker= options_for_select(Protocol.statuses, "Complete")
-    %table.protocol-list{id: "events-table", "data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true",  "data-url" => "/protocols/protocols_by_status.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true", "data-toolbar" => "#custom-toolbar"}
+    %table.protocol-list{id: "events-table", "data-toggle" => 'table', "data-search" => "true", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true",  "data-url" => "/protocols/protocols_by_status.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true", "data-toolbar" => "#custom-toolbar"}
       %thead
         %tr
           %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "sparc_id"}= t(:index_page)[:sparc_id]
