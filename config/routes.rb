@@ -6,10 +6,6 @@ Rails.application.routes.draw do
     member do
       get 'show'
     end
-
-    collection do
-      get :protocols_by_status
-    end
   end
 
 end

@@ -10,6 +10,6 @@ class Protocol < ActiveRecord::Base
   end
 
   def self.statuses
-    ['Nexus Approved', 'Complete']
+    ['All', 'Nexus Approved', 'Complete']
   end
 end
