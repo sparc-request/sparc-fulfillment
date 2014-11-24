@@ -1,4 +1,5 @@
 $ ->
+  $(".selectpicker").selectpicker()
   if $("body.protocols-index").length > 0
 
     $(".bootstrap-table .fixed-table-toolbar").
@@ -21,14 +22,15 @@ $ ->
       status = $(this).val()
       $('#events-table').bootstrapTable('refresh', {url: "/protocols.json?status=" + status})
 
+  if $("body.protocols-index").length <= 0
+    $(document).on 'change', '#arms', ->
+      sparc_id = $('#arms').data('id')
+      # console.log($('#arms').val())
+      data =
+        'id': sparc_id
+        'arm_id': $('#arms').val()
+      $.ajax
+        type: 'GET'
+        url:  "/protocols/#{sparc_id}/change_arm"
+        data:  data
 
-  $(document).on 'change', '#arms', ->
-    sparc_id = $('#arms').data('id')
-    # console.log($('#arms').val())
-    data =
-      'id': sparc_id
-      'arm_id': $('#arms').val()
-    $.ajax
-      type: 'GET'
-      url:  "/protocols/#{sparc_id}/change_arm"
-      data:  data
