@@ -24,4 +24,4 @@ $ ->
 
     faye = new Faye.Client('http://localhost:9292/faye')
     faye.subscribe '/protocols/list', (data) ->
-      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json"})
+      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json", silent: "true"})
