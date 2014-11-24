@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   resources :protocols do
     member do
       get 'show'
-      post 'create_participant'
     end
+    resources :participants
   end
-
 end

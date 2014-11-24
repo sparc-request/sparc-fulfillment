@@ -9,6 +9,9 @@ class CreateParticipants < ActiveRecord::Migration
       t.date :date_of_birth
       t.string :gender
       t.string :ethnicity
+      t.string :race
+      t.string :address
+      t.string :phone
       t.datetime :deleted_at
 
       t.timestamps

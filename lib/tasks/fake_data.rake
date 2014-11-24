@@ -27,6 +27,14 @@ namespace :data do
       Faker::Lorem.word
     end
 
+    def rand_address
+      Random.rand(10).to_s + " " + Faker::Lorem.word + " " + ["way", "st", "lane"].sample
+    end
+
+    def rand_phone
+      Random.rand(100..999).to_s + "-" + Random.rand(100..999).to_s + "-" + Random.rand(1000..9999).to_s
+    end
+
     def rand_status
       ['Active','Completed','Early Term'].sample
     end
@@ -48,7 +56,7 @@ namespace :data do
     for i in 0...10
       protocol = Protocol.create(sparc_id: sparc_id, title: rand_string, short_title: rand_string, sponsor_name: rand_string, udac_project_number: rand, requester_id: sparc_id, start_date: today, end_date: not_today, recruitment_start_date: today, recruitment_end_date: not_today, irb_status: rand_string, irb_approval_date: today, irb_expiration_date: not_today, subsidy_amount: rand, study_cost: rand)
       for p in 0...3
-        Participant.create(protocol_id: protocol.id, first_name: rand_string, last_name: rand_string, mrn: rand, status: rand_status, date_of_birth: rand_date, gender: rand_gender, ethnicity: rand_ethnicity)
+        Participant.create(protocol_id: protocol.id, first_name: rand_string, last_name: rand_string, mrn: rand, status: rand_status, date_of_birth: rand_date, gender: rand_gender, ethnicity: rand_ethnicity, race: rand_ethnicity, address: rand_address, phone: rand_phone)
       end
       for a in 0...3
         arm = Arm.create(sparc_id: sparc_id, protocol_id: protocol.id, name: rand_string, visit_count: rand, subject_count: rand)

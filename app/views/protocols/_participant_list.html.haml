@@ -1,7 +1,7 @@
 %h3 Participant List
 #custom-toolbar
   %button.btn.btn-default{type: 'button', "data-toggle" => 'modal', "data-target" => '#newParticipantForm'} Create New Participant
-%table{"data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-toolbar" => '#custom-toolbar', "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols/#{@protocol.sparc_id}/show.json", "data-sort-name" => 'last_name', "data-sort-order" => 'asc', "data-striped" => "true", "data-height" => "400"}
+%table{"data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-toolbar" => '#custom-toolbar', "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols/#{protocol.sparc_id}/show.json", "data-sort-name" => 'last_name', "data-sort-order" => 'asc', "data-striped" => "true", "data-height" => "400"}
   %thead
     %tr
       %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "last_name"} Last Name
@@ -10,38 +10,7 @@
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"} Patient Status
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "date_of_birth"} Date of Birth
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "gender"} Gender
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "race"} Race
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "ethnicity"} Ethnicity
 
-.modal.fade#newParticipantForm{tabindex: '-1', role: 'dialog', "aria-labelledby" => "CreateNewParticipant", "aria-hidden" => 'true'}
-  .modal-dialog
-    .modal-content
-      .modal-header
-        %button.close{type: 'button', "data-dismiss" => 'modal'}
-          %span{"aria-hidden" => 'true'} &times;
-          %span.sr-only Close
-        %h4.modal-title#CreateNewParticipant Create New Participant
-      .modal-body
-        %form{action: create_participant_protocol_path, method: 'post', "accept-charset" => 'UTF-8'}
-          = label_tag "last_name", "Last Name:"
-          = text_field_tag "last_name"
-          %br
-          = label_tag "first_name", "First Name:"
-          = text_field_tag "first_name"
-          %br
-          = label_tag "mrn", "MRN:"
-          = text_field_tag "mrn"
-          %br
-          = label_tag "status", "Patient Status:"
-          = text_field_tag "status"
-          %br
-          = label_tag "date_of_birth", "Date of Birth:"
-          = text_field_tag "date_of_birth"
-          %br
-          = label_tag "gender", "Gender:"
-          = text_field_tag "gender"
-          %br
-          = label_tag "ethnicity", "Ethnicity:"
-          = text_field_tag "ethnicity"
-          .modal-footer
-            %button.btn.btn-default{type: 'button', "data-dismiss" => 'modal'} Close
-            %input.btn.btn-primary{type: 'submit', value: "Save Participant"}
+      = render partial: 'new_participant', locals: {protocol: protocol}
