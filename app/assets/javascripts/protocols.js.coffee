@@ -11,6 +11,7 @@ $ ->
     $('#events-table').on "click-row.bs.table", (e, row, $element) ->
       protocol_id = row.sparc_id
       window.location = "/protocols/#{protocol_id}"
+
     # $('#events-table').on 'search.bs.table', (e, text) ->
     #   if text == ''
     #     status = $('.selectpicker').val()

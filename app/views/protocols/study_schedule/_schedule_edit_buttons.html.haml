@@ -23,12 +23,8 @@
     %select.selectpicker#arms= visit_groups_for_select(@selected_arm, @selected_visit_group)
   .col-md-4
     %select.selectpicker#arms= services_for_select
-    /   -selected_arm =
-    / -puts selected_arm.name
-  / .col-md-4
-  /   %select.selectpicker#visits= select_visit_groups(selected_arm)
-  / .col-md-4
-  /   %select.selectpicker#services= options_for_select(services, services.first.name)
+
+
 
 
 

@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       get 'show'
       get 'change_arm'
     end
-
+    resources :participants
   end
 end
 
