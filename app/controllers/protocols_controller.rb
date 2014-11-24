@@ -10,8 +10,6 @@ class ProtocolsController < ApplicationController
   end
 
   def protocols_by_status
-    puts "<>"*100
-    puts params
     status = params[:status] || 'Complete'
     @protocols = Protocol.where(status: status)
     respond_with @protocols
