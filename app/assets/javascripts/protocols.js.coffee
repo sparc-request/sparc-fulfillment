@@ -21,3 +21,7 @@ $ ->
     $(document).on 'change', '.selectpicker', ->
       status = $(this).val()
       $('#events-table').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
+
+    faye = new Faye.Client('http://localhost:9292/faye')
+    faye.subscribe '/protocols/list', (data) ->
+      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json"})

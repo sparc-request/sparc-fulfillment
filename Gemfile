@@ -19,6 +19,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sprockets-rails'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
+gem 'faye'
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
@@ -28,6 +29,7 @@ group :development do
   gem 'spring-commands-rspec', '~> 1.0.2'
   gem 'faker', '~> 1.4.3'
   gem 'spring'
+  gem 'thin'
 end
 
 group :test do
