@@ -6,7 +6,7 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    @protocol = Protocol.find_by(sparc_id: params[:id])
+    @protocol = Protocol.find(params[:id])
   end
 
   def protocols_by_status

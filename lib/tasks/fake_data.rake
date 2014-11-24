@@ -23,7 +23,7 @@ namespace :data do
       Faker::Lorem.word
     end
 
-    statuses = ['Completed', 'Nexus Approved']
+    statuses = ['Complete', 'Nexus Approved']
 
     services = []
     for i in 0...10
