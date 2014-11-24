@@ -24,7 +24,7 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
 end
 
-group :developemnt do
+group :development do
   gem 'spring-commands-rspec', '~> 1.0.2'
   gem 'faker', '~> 1.4.3'
   gem 'spring'
