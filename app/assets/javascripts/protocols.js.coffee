@@ -10,4 +10,25 @@ $ ->
     $('#events-table').on "click-row.bs.table", (e, row, $element) ->
       protocol_id = row.sparc_id
       window.location = "/protocols/#{protocol_id}"
+    # $('#events-table').on 'search.bs.table', (e, text) ->
+    #   if text == ''
+    #     status = $('.selectpicker').val()
+    #     $('#events-table').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
+    #   else
+    #     $('#events-table').bootstrapTable('refresh', {url: "/protocols.json"})
 
+    $(document).on 'change', '.selectpicker', ->
+      status = $(this).val()
+      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json?status=" + status})
+
+
+  $(document).on 'change', '#arms', ->
+    sparc_id = $('#arms').data('id')
+    # console.log($('#arms').val())
+    data =
+      'id': sparc_id
+      'arm_id': $('#arms').val()
+    $.ajax
+      type: 'GET'
+      url:  "/protocols/#{sparc_id}/change_arm"
+      data:  data

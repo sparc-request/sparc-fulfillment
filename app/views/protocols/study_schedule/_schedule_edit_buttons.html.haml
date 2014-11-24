@@ -14,15 +14,21 @@
     Services
     %a.btn.btn-primary
       %span.glyphicon.glyphicon-plus
-    %a.btn.btn-primary.glyphicon-remove
+    %a.btn.btn-primary
+      %span.glyphicon.glyphicon-remove
 .row
   .col-md-4
-    -#%button.btn.btn-default.dropdown-toggle{data: {toggle: "dropdown"}, type: "button", id: "arms_for_select"}
-    %select.selectpicker= arms_for_select(protocol, selected_arm)
+    %select.selectpicker#arms{"data-id" => @protocol.sparc_id, "data-arm_id" => @selected_arm.id}= arms_for_select(@protocol, @selected_arm)
   .col-md-4
-    %select.selectpicker= select_visit_groups(selected_arm)
-  / / .col-md-4
-  / /   %select.selectpicker= options_for_select(services, services.first.name)
+    %select.selectpicker#arms= visit_groups_for_select(@selected_arm, @selected_visit_group)
+  .col-md-4
+    %select.selectpicker#arms= services_for_select
+    /   -selected_arm =
+    / -puts selected_arm.name
+  / .col-md-4
+  /   %select.selectpicker#visits= select_visit_groups(selected_arm)
+  / .col-md-4
+  /   %select.selectpicker#services= options_for_select(services, services.first.name)
 
 
 
