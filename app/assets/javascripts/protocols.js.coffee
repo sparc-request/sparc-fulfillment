@@ -11,16 +11,16 @@ $ ->
       protocol_id = row.id
       window.location = "/protocols/#{protocol_id}"
 
-    $('#events-table').on 'search.bs.table', (e, text) ->
-      if text == ''
-        status = $('.selectpicker').val()
-        $('#events-table').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
-      else
-        $('#events-table').bootstrapTable('refresh', {url: "/protocols.json"})
+    # $('#events-table').on 'search.bs.table', (e, text) ->
+    #   if text == ''
+    #     status = $('.selectpicker').val()
+    #     $('#events-table').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
+    #   else
+    #     $('#events-table').bootstrapTable('refresh', {url: "/protocols.json"})
 
     $(document).on 'change', '.selectpicker', ->
       status = $(this).val()
-      $('#events-table').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
+      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json?status=" + status})
 
     faye = new Faye.Client('http://localhost:9292/faye')
     faye.subscribe '/protocols/list', (data) ->
