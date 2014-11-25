@@ -1,9 +1,7 @@
 %h3 Participant List
 #custom-toolbar
-  %button.btn.btn-default{type: 'button', "data-toggle" => 'modal', "data-target" => '#newParticipantForm'} Create New Participant
-%table{id: "participants-table", "data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-toolbar" => '#custom-toolbar',
-  "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols/#{protocol.id}/participants.json",
-  "data-sort-name" => 'last_name', "data-sort-order" => 'asc', "data-striped" => "true", "data-height" => "400"}
+  %button.btn.btn-default{id: 'new_participant_button', type: 'button', "data-toggle" => 'modal', "data-target" => '#participantModal'} Create New Participant
+%table{id: "participants-table", "data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-toolbar" => '#custom-toolbar', "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols/#{protocol.id}/participants.json", "data-sort-name" => 'last_name', "data-sort-order" => 'asc', "data-striped" => "true", "data-height" => "400"}
   %thead
     %tr
       %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "last_name"} Last Name

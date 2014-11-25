@@ -1,4 +1,4 @@
-.modal.fade#newParticipantForm{tabindex: '-1', role: 'dialog', "aria-labelledby" => "CreateNewParticipant", "aria-hidden" => 'true'}
+.modal.fade#participantModal{tabindex: '-1', role: 'dialog', "aria-labelledby" => "CreateNewParticipant", "aria-hidden" => 'true'}
   .modal-dialog
     .modal-content
       .modal-header
@@ -7,7 +7,6 @@
           %span.sr-only Close
         %h4.modal-title#CreateNewParticipant Create New Participant
       .modal-body
-        / = form_for :participant, {remote: true, url: new_protocol_participant_path(protocol_id: protocol.id)} do |p|
         = form_for :participant, {remote: true, url: "/protocols/#{protocol.id}/participants"} do |p|
           = p.label "last_name", "Last Name:"
           = p.text_field "last_name"
