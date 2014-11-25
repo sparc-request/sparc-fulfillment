@@ -24,7 +24,7 @@
   /       %td= @protocol.udac_project_number
   /       %td= @protocol.irb_expiration_date
 
-  %table.protocol-list.custom_striped{id: "events-table", "data-toggle" => 'table', "data-search" => "false", "data-show-columns" => "false", "data-show-refresh" => "false", "data-show-false" => "true",  "data-url" => "/protocols/#{@protocol.id}.json", "data-striped" => "true"}
+  %table.protocol-list.custom_striped{id: "events-table", "data-toggle" => 'table', "data-search" => "false", "data-show-columns" => "false", "data-show-refresh" => "false", "data-show-false" => "true",  "data-url" => "/protocols/#{@protocol.sparc_id}.json", "data-striped" => "true"}
     %thead
       %tr
         %th{"data-align" => "right", "data-sortable" => "false", "data-field" => "sparc_id"}= t(:index_page)[:sparc_id]
