@@ -7,26 +7,26 @@ $ ->
     $(".financial-management-view label").on "click", ->
       e = $(this)
 
-    $('#events-table').on "click-row.bs.table", (e, row, $element) ->
+    $('#protocol-list').on "click-row.bs.table", (e, row, $element) ->
       protocol_id = row.sparc_id
       window.location = "/protocols/#{protocol_id}"
 
-    # $('#events-table').on 'search.bs.table', (e, text) ->
+    # $('#protocol-list').on 'search.bs.table', (e, text) ->
     #   if text == ''
     #     status = $('.selectpicker').val()
-    #     $('#events-table').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
+    #     $('#protocol-list').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
     #   else
-    #     $('#events-table').bootstrapTable('refresh', {url: "/protocols.json"})
+    #     $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json"})
 
     $(document).on 'change', '.selectpicker', ->
       status = $(this).val()
-      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json?status=" + status})
+      $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
     faye = new Faye.Client('http://localhost:9292/faye')
     faye.disable('websocket')
     faye.subscribe '/protocols/list', (data) ->
       status = $('.selectpicker').val()
-      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
+      $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
   if $("body.protocols-index").length <= 0
     $(document).on 'change', '#arms', ->
@@ -39,3 +39,7 @@ $ ->
         type: 'GET'
         url:  "/protocols/#{sparc_id}/change_arm"
         data:  data
+
+(exports ? this).display_date = (value) ->
+  d = new Date(value)
+  d.toLocaleFormat('%m/%d/%Y')
