@@ -1,4 +1,10 @@
 class ParticipantsController < ApplicationController
+  respond_to :json, :html
+
+  def index
+    @protocol = Protocol.find(params[:protocol_id])
+    respond_with @protocol.participants
+  end
 
   def create
     @participant = Participant.new(participant_params)

@@ -1,5 +1,4 @@
 $ ->
-  $(".selectpicker").selectpicker()
   if $("body.protocols-index").length > 0
 
     $(".bootstrap-table .fixed-table-toolbar").
