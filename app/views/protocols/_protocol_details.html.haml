@@ -1,4 +1,4 @@
-= hidden_field_tag :protocol_id, @protocol.id
+= hidden_field_tag :protocol_id, protocol.id
 .fixed-table-container
   / %table.table.details.custom_striped
   /   / %colgroup
@@ -24,10 +24,12 @@
   /       %td= @protocol.udac_project_number
   /       %td= @protocol.irb_expiration_date
 
-  %table.protocol-list.custom_striped{id: "events-table", "data-toggle" => 'table', "data-search" => "false", "data-show-columns" => "false", "data-show-refresh" => "false", "data-show-false" => "true",  "data-url" => "/protocols/#{@protocol.sparc_id}.json", "data-striped" => "true"}
+  %table.custom_striped{id: "protocol-info", "data-toggle" => 'table', "data-url" => "/protocols/#{protocol.sparc_id}.json"}
     %thead
       %tr
-        %th{"data-align" => "right", "data-sortable" => "false", "data-field" => "sparc_id"}= t(:index_page)[:sparc_id]
+        %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "sparc_id"}= t(:index_page)[:sparc_id]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => ""}= t(:index_page)[:principal_investigator]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => ""}= t(:index_page)[:coordinators]
         %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "short_title"}= t(:index_page)[:short_title]
         %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "udac_project_number"}= t(:index_page)[:udac_project_number]
-        %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "irb_expiration_date"}= t(:index_page)[:irb_expire_date]
+        %th{"data-align" => "center", "data-sortable" => "false", "data-field" => "irb_expiration_date", "data-formatter" => 'display_date'}= t(:index_page)[:irb_expire_date]

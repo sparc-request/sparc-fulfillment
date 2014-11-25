@@ -21,10 +21,11 @@
 
 en:
   index_page:
+    updates: "Updates"
     sparc_id: "SPARC ID"
     status: "Status"
     short_title: "Short Title"
-    prinicipal_investgator: "Principal Investigator"
+    principal_investigator: "Principal Investigator"
     coordinators: "Coordinators"
     irb_approval_date: "IRB Approval Date"
     irb_expire_date: "Current IRB Expiration Date"
