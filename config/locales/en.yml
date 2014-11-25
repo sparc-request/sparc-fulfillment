@@ -29,4 +29,5 @@ en:
     irb_approval_date: "IRB Approval Date"
     irb_expire_date: "Current IRB Expiration Date"
     irb_status: "IRB Status"
+    udac_project_number: "IRB #"
 

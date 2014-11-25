@@ -1,24 +1,32 @@
 .fixed-table-container
-  %table.table.details.custom_striped
-    / %colgroup
-    /   %col
-    /   %col.bordered
-    /   %col.bordered
-    /   %col.bordered
-    /   %col.bordered
-    /   %col
+  / %table.table.details.custom_striped
+  /   / %colgroup
+  /   /   %col
+  /   /   %col.bordered
+  /   /   %col.bordered
+  /   /   %col.bordered
+  /   /   %col.bordered
+  /   /   %col
+  /   %thead
+  /     %th.text-right Sparc ID
+  /     %th Principal Investigator
+  /     %th Coordinators
+  /     %th Short Title
+  /     %th IRB #
+  /     %th IRB Expiration Date
+  /   %tbody
+  /     %tr
+  /       %td.text-right= @protocol.sparc_id
+  /       %td TODO: NEEDS IDENTITIES
+  /       %td TODO: NEEDS IDENTITIES
+  /       %td= @protocol.short_title
+  /       %td= @protocol.udac_project_number
+  /       %td= @protocol.irb_expiration_date
+
+  %table.protocol-list.custom_striped{id: "events-table", "data-toggle" => 'table', "data-search" => "false", "data-show-columns" => "false", "data-show-refresh" => "false", "data-show-false" => "true",  "data-url" => "/protocols/#{@protocol.id}.json", "data-striped" => "true"}
     %thead
-      %th.text-right Sparc ID
-      %th Principal Investigator
-      %th Coordinators
-      %th Short Title
-      %th IRB #
-      %th IRB Expiration Date
-    %tbody
       %tr
-        %td.text-right= @protocol.sparc_id
-        %td TODO: NEEDS IDENTITIES
-        %td TODO: NEEDS IDENTITIES
-        %td= @protocol.short_title
-        %td= @protocol.udac_project_number
-        %td= @protocol.irb_expiration_date
+        %th{"data-align" => "right", "data-sortable" => "false", "data-field" => "sparc_id"}= t(:index_page)[:sparc_id]
+        %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "short_title"}= t(:index_page)[:short_title]
+        %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "udac_project_number"}= t(:index_page)[:udac_project_number]
+        %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "irb_expiration_date"}= t(:index_page)[:irb_expire_date]

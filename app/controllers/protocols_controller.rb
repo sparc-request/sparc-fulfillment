@@ -8,5 +8,6 @@ class ProtocolsController < ApplicationController
 
   def show
     @protocol = Protocol.find(params[:id])
+    respond_with [@protocol]
   end
 end
