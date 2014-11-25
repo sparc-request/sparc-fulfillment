@@ -4,13 +4,16 @@ module ProtocolHelper
     options_for_select(arr, selected_arm.id)
   end
 
-  def select_visit_groups(selected_arm)
-    visit_groups = VisitGroup.all
-    visit_groups.keep_if{ |vg| vg.arm_id == selected_arm.id}
-    puts options_for_select(protocol.visits.map(&:name), selected_visit_group.id)
+  def visit_groups_for_select selected_arm, selected_visit_group
+    visit_groups = VisitGroup.where arm_id: selected_arm.id
+    puts visit_groups.inspect
+    arr = visit_groups.map { |vg| [ vg.name, vg.id ] }
+    options_for_select arr, selected_visit_group
   end
 
-  def select_services(protocol,selected)
-    options_for_select(protocol.visits.map(&:name), selected)
+  def services_for_select
+    services = Service.all
+    arr = services.map {|s| [s.name, s.id] }
+    options_for_select arr, arr.first
   end
 end

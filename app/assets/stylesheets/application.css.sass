@@ -23,36 +23,35 @@
 
 
 /************Index Page Styling************/
+//Index Table Styling
+table.table.custom_striped
+  thead th
+    background-color: #90B9CD
+    // border-bottom: 0px
+    color: white
+    font-size: 1.1em
+    padding: 5px 0px
+    border-radius: 0px
 
-#protocols_index
-  //Search Box Styling
-  #search_box
-    padding-top: 10px
-    input.typeahead
-      // width: auto
-      // height: auto
-
-  .statuses
-    padding-top: 10px
-    
-  //Navbar Styling
-  nav.navbar.navbar-default
-    float: right
+  tbody tr:nth-child(2n),
+  tbody tr:nth-child(2n):hover
+    background-color: #90B9CD
+    color: white
+  // colgroup
+  //   col.bordered
+  //     border-left: 2px solid black
+  //     border-right: 2px solid black
+  tbody
+    tr:hover
+      background-color: #f9f9f9
+      cursor: pointer
 
 
-  //Index Table Styling
-  table.table
-    thead.custom_striped th
-      background-color: #90B9CD
-      border-bottom: 0px
-      color: white
-      font-size: 1.1em
-      padding: 15px 8px
-
-    tbody.custom_striped tr:nth-child(2n)
-      background-color: #90B9CD
-      color: white
-    colgroup
-      col.bordered
-        border-left: 2px solid black
-        border-right: 2px solid black
+table.table.details
+  thead
+    th
+      padding: 8px
+  tbody
+    tr:hover
+      cursor: auto
+      background: none
