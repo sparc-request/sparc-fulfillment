@@ -2,7 +2,7 @@
 %html
   %head
     %title ClinicalWorkFulfillment
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = stylesheet_link_tag    'application', media: 'all'
     = csrf_meta_tags
   %body{class:body_class}
     #header_top
@@ -17,5 +17,5 @@
           = render :partial => 'shared/nav_buttons'
     .container
       = yield
-    = javascript_include_tag 'application', 'data-turbolinks-track' => true
-    = javascript_include_tag 'http://localhost:9292/faye.js'
+    = javascript_include_tag 'application'
+    = javascript_include_tag 'http://localhost:9292/faye/faye.js'

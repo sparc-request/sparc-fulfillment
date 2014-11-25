@@ -23,5 +23,7 @@ $ ->
       $('#events-table').bootstrapTable('refresh', {url: "/protocols.json?status=" + status})
 
     faye = new Faye.Client('http://localhost:9292/faye')
+    faye.disable('websocket')
     faye.subscribe '/protocols/list', (data) ->
-      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json", silent: "true"})
+      status = $('.selectpicker').val()
+      $('#events-table').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
