@@ -5,7 +5,11 @@ Rails.application.routes.draw do
   resources :protocols do
     member do
       get 'show'
+      get 'change_arm'
     end
+    resources :participants
   end
-
 end
+
+
+

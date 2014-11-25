@@ -2,6 +2,7 @@ class Protocol < ActiveRecord::Base
   acts_as_paranoid
 
   has_many :arms, :dependent => :destroy
+  has_many :participants, :dependent => :destroy
 
   after_create :fetch_protocol
   after_save :update_via_faye
