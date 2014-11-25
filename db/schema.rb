@@ -80,8 +80,7 @@ ActiveRecord::Schema.define(version: 20141120185757) do
     t.text     "title"
     t.string   "short_title"
     t.string   "sponsor_name"
-    t.string   "udac_project_number"
-    t.integer  "requester_id"
+    t.string   "udak_project_number"
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "recruitment_start_date"
@@ -95,7 +94,6 @@ ActiveRecord::Schema.define(version: 20141120185757) do
     t.integer  "subsidy_amount"
     t.integer  "study_cost"
     t.integer  "sparc_sub_service_request_id"
-    t.string   "status"
   end
 
   create_table "services", force: true do |t|
