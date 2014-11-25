@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
-gem 'bootstrap-select-rails', '~> 1.6.2'
+gem 'bootstrap-select-rails', :git => "git@github.com:Slashek/bootstrap-select-rails.git"
 gem 'coffee-rails', '~> 4.0.0'
 gem 'delayed_job_active_record'
 gem 'dotenv-deployment', '~> 0.2.0'
@@ -19,6 +19,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sprockets-rails'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
+gem 'faye'
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
@@ -28,6 +29,7 @@ group :development do
   gem 'spring-commands-rspec', '~> 1.0.2'
   gem 'faker', '~> 1.4.3'
   gem 'spring'
+  gem 'thin'
 end
 
 group :test do

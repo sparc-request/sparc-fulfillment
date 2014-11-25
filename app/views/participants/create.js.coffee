@@ -1,0 +1,2 @@
+$ ->
+  $("#newParticipantForm").modal 'hide'

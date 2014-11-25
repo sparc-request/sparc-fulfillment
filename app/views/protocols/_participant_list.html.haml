@@ -1,41 +1,18 @@
-%br
-#search_box.col-md-3= text_field_tag 'participant_search', "", :class => "typeahead form-control", :placeholder => "Search Participants"
-%br
-%br
 %h3 Participant List
-%table.table#participant_list.table-condensed
-  %colgroup
-    %col
-    %col.bordered
-    %col.bordered
-    %col.bordered
-    %col.bordered
-    %col.bordered
-    %col
+#custom-toolbar
+  %button.btn.btn-default{type: 'button', "data-toggle" => 'modal', "data-target" => '#newParticipantForm'} Create New Participant
+%table{id: "participants-table", "data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-toolbar" => '#custom-toolbar',
+  "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols/#{protocol.id}/participants.json",
+  "data-sort-name" => 'last_name', "data-sort-order" => 'asc', "data-striped" => "true", "data-height" => "400"}
   %thead
-    %th Last Name
-    %th First Name
-    %th MRN
-    %th Patient Status
-    %th Date of Birth
-    %th Gender
-    %th Ethnicity
-  %tbody
     %tr
-      %td= text_field_tag 'last_name', "", :width => 10
-      %td= text_field_tag 'first_name', "", :width => 10
-      %td= text_field_tag 'mrn', "", :width => 6
-      %td= text_field_tag 'patient_status', "", :width => 10
-      %td= text_field_tag 'date_of_birth', "", :width => 10
-      %td.form-group
-        %select.form_control#gender
-          %option Select Gender...
-          %option{:value => 'male'} Male
-          %option{:value => 'female'} Female
-      %td.form-group
-        %select.form_control#ethnicity
-          %option Select Ethnicity...
-          %option{:value => 'african_american'} African American/Black
-          %option{:value => 'hispanic'} Hispanic/Latino
-          %option{:value => 'caucasian'} Caucasian/White
-          %option{:value => 'asian'} Asian/Pacific Islander
+      %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "last_name"} Last Name
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "first_name"} First Name
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "mrn"} MRN
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"} Patient Status
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "date_of_birth"} Date of Birth
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "gender"} Gender
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "race"} Race
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "ethnicity"} Ethnicity
+
+      = render partial: 'new_participant', locals: {protocol: protocol}
