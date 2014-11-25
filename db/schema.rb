@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 20141120185757) do
     t.integer  "subsidy_amount"
     t.integer  "study_cost"
     t.integer  "sparc_sub_service_request_id"
+    t.string   "status"
   end
 
   create_table "services", force: true do |t|
