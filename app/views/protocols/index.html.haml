@@ -1,7 +1,7 @@
 #protocols_index
   .row
     #custom-toolbar
-      %select.selectpicker= options_for_select(Protocol.statuses, "Complete")
+      %select.selectpicker.index_selectpicker= options_for_select(Protocol.statuses, "All")
     %table.custom_striped{id: "protocol-list", "data-toggle" => 'table', "data-search" => "true", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true",  "data-url" => "/protocols.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true", "data-toolbar" => "#custom-toolbar"}
       %thead
         %tr
