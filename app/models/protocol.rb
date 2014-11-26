@@ -10,7 +10,7 @@ class Protocol < ActiveRecord::Base
   def update_via_faye
     channel = "/protocols/list"
     message = {:channel => channel, :data => "woohoo", :ext => {:auth_token => FAYE_TOKEN}}
-    uri = URI.parse("http://localhost:9292/faye")
+    uri = URI.parse('http://' + ENV['CWF_FAYE_HOST'] + '/faye')
     Net::HTTP.post_form(uri, :message => message.to_json) 
   end
 
