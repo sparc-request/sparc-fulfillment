@@ -1,5 +1,5 @@
 require 'rails_helper'
-RSpec.describe 'Index spec', type: :feature, js: true do
+RSpec.describe 'Index spec', type: :feature, js: true, faye: true do
   before { visit protocols_path }
 
   let!(:protocol1) { create(:protocol, status: "Complete") }
