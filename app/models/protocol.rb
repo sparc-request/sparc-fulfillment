@@ -3,10 +3,13 @@ class Protocol < ActiveRecord::Base
 
   has_many :arms, :dependent => :destroy
 
-  after_create :fetch_protocol
+  after_create :fetch_protocol_from_sparc
 
-  def fetch_protocol
-    ProtocolWorkerJob.enqueue(self.sparc_id, self.sparc_sub_service_request_id)
+  accepts_nested_attributes_for :arms
+
+  def fetch_protocol_from_sparc
+    ProtocolUpdaterJob.enqueue(id)
+    # SubServiceRequestUpdaterJob.enqueue(id)
   end
 
   def self.statuses

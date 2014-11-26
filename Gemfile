@@ -35,4 +35,5 @@ group :test do
   gem 'webmock', '~> 1.20.4'
   gem 'shoulda-matchers', require: false
   gem 'capybara-webkit', '~> 1.3.1' # brew update && brew instal qt
+  gem 'vcr', '~> 2.9.3'
 end
