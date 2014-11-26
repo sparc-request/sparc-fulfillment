@@ -1,30 +1,6 @@
 = hidden_field_tag :protocol_id, protocol.id
 .fixed-table-container
-  / %table.table.details.custom_striped
-  /   / %colgroup
-  /   /   %col
-  /   /   %col.bordered
-  /   /   %col.bordered
-  /   /   %col.bordered
-  /   /   %col.bordered
-  /   /   %col
-  /   %thead
-  /     %th.text-right Sparc ID
-  /     %th Principal Investigator
-  /     %th Coordinators
-  /     %th Short Title
-  /     %th IRB #
-  /     %th IRB Expiration Date
-  /   %tbody
-  /     %tr
-  /       %td.text-right= @protocol.sparc_id
-  /       %td TODO: NEEDS IDENTITIES
-  /       %td TODO: NEEDS IDENTITIES
-  /       %td= @protocol.short_title
-  /       %td= @protocol.udac_project_number
-  /       %td= @protocol.irb_expiration_date
-
-  %table.custom_striped{id: "protocol-info", "data-toggle" => 'table', "data-url" => "/protocols/#{protocol.sparc_id}.json"}
+  %table.details.custom_striped{id: "protocol-info", "data-toggle" => 'table', "data-url" => "/protocols/#{protocol.sparc_id}.json"}
     %thead
       %tr
         %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "sparc_id"}= t(:index_page)[:sparc_id]
