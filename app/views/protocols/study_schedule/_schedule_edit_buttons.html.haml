@@ -1,28 +1,30 @@
-.row
-  .col-md-4
-    %a.btn.btn-primary
-      %span.glyphicon.glyphicon-plus
-    %a.btn.btn-primary
-      %span.glyphicon.glyphicon-remove
-  .col-md-4
-    Visit
-    %a.btn.btn-primary
-      %span.glyphicon.glyphicon-plus
-    %a.btn.btn-primary
-      %span.glyphicon.glyphicon-remove
-  .col-md-4
-    Services
-    %a.btn.btn-primary
-      %span.glyphicon.glyphicon-plus
-    %a.btn.btn-primary
-      %span.glyphicon.glyphicon-remove
-.row
-  .col-md-4
-    %select.selectpicker#arms{"data-id" => @protocol.sparc_id, "data-arm_id" => @selected_arm.id}= arms_for_select(@protocol, @selected_arm)
-  .col-md-4
-    %select.selectpicker#arms= visit_groups_for_select(@selected_arm, @selected_visit_group)
-  .col-md-4
-    %select.selectpicker#arms= services_for_select
+#study_schedule_buttons
+  .row
+    .col-md-4.text-center
+      =t(:study_schedule_tab)[:buttons][:arm]
+      %a.btn.btn-success
+        %span.glyphicon.glyphicon-plus
+      %a.btn.btn-danger
+        %span.glyphicon.glyphicon-remove
+    .col-md-4.text-center
+      =t(:study_schedule_tab)[:buttons][:visit]
+      %a.btn.btn-success
+        %span.glyphicon.glyphicon-plus
+      %a.btn.btn-danger
+        %span.glyphicon.glyphicon-remove
+    .col-md-4.text-center
+      =t(:study_schedule_tab)[:buttons][:services]
+      %a.btn.btn-success
+        %span.glyphicon.glyphicon-plus
+      %a.btn.btn-danger
+        %span.glyphicon.glyphicon-remove
+  .row
+    .col-md-4.text-center
+      %select.selectpicker#arms{"data-id" => @protocol.sparc_id, "data-arm_id" => @selected_arm.id}= arms_for_select(@protocol, @selected_arm)
+    .col-md-4.text-center
+      %select.selectpicker#arms= visit_groups_for_select(@selected_arm, @selected_visit_group)
+    .col-md-4.text-center
+      %select.selectpicker#arms= options_for_select(services_for_select, services_for_select.first)
 
 
 

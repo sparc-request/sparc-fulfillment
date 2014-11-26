@@ -14,6 +14,7 @@ module ProtocolHelper
   def services_for_select
     services = Service.all
     arr = services.map {|s| [s.name, s.id] }
-    options_for_select arr, arr.first
+    
+    arr
   end
 end
