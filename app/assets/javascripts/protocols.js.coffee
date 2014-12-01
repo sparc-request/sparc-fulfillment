@@ -31,17 +31,17 @@ $ ->
       status = $('.selectpicker').val()
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
-  # if $("body.protocols-index").length <= 0
-  #   $(document).on 'change', '#arms', ->
-  #     sparc_id = $('#arms').data('id')
-  #     # console.log($('#arms').val())
-  #     data =
-  #       'id': sparc_id
-  #       'arm_id': $('#arms').val()
-  #     $.ajax
-  #       type: 'GET'
-  #       url:  "/protocols/#{sparc_id}/change_arm"
-  #       data:  data
+  if $("body.protocols-index").length <= 0
+    $(document).on 'change', '#arms', ->
+      sparc_id = $('#arms').data('id')
+      console.log($('#arms').val())
+      data =
+        'id': sparc_id
+        'arm_id': $('#arms').val()
+      $.ajax
+        type: 'GET'
+        url:  "/protocols/#{sparc_id}/change_arm"
+        data:  data
 
 (exports ? this).display_date = (value) ->
   d = new Date(value)
