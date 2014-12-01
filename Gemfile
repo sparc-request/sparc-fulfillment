@@ -20,6 +20,8 @@ gem 'sprockets-rails'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
 gem 'faye'
+gem 'devise'
+gem 'omniauth'
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'

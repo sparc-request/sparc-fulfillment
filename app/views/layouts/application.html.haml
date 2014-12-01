@@ -12,10 +12,28 @@
     #header_bottom
       .container
         .pull-left
-          %div Julia Glenn | glennj@musc.edu
+          - if user_signed_in?
+            %div
+              = current_user.email
+              = link_to "Sign out", destroy_user_session_path, :method => :delete, :class => "btn btn-danger"
+          - else
+            %div= link_to "Sign in", new_user_session_path, :class => "btn btn-success"
         .pull-right
           = render :partial => 'shared/nav_buttons'
     .container
+      .alerts
+        - if notice
+          .alert.alert-success.alert-dismissible{:role => "alert"}
+            %button.close{:'data-dismiss' => "alert", :type => "button"}
+              %span{:'aria-hidden' => "true"} &times;
+              %span.sr-only Close
+            = notice
+        - if alert
+          .alert.alert-danger.alert-dismissible{:role => "alert"}
+            %button.close{:'data-dismiss' => "alert", :type => "button"}
+              %span{:'aria-hidden' => "true"} &times;
+              %span.sr-only Close
+            = alert
       = yield
     = javascript_include_tag 'application'
     = javascript_include_tag 'http://localhost:9292/faye/faye.js'
