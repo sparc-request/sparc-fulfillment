@@ -1,14 +1,15 @@
-class ProtocolUpdater
+class RemoteObjectUpdater
 
-  def initialize(json, protocol_id)
-    @json         = json
-    @protocol_id  = protocol_id
+  def initialize(json, object_id)
+    @json       = json
+    @object_id  = object_id
   end
 
   def import!
-    protocol_as_json = filter(parsed_json, 'protocol')
+    root_object_class = parsed_json.keys.first.to_s
+    object_as_json    = filter(parsed_json[root_object_class], root_object_class)
 
-    protocol.update_attributes protocol_as_json
+    object.update_attributes object_as_json
   end
 
   private
@@ -50,10 +51,10 @@ class ProtocolUpdater
   end
 
   def parsed_json
-    Yajl::Parser.parse @json
+    @parsed_json ||= Yajl::Parser.parse @json
   end
 
-  def protocol
-    @protocol ||= Protocol.find @protocol_id
+  def object
+    @object ||= Protocol.find @object_id
   end
 end
