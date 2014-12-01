@@ -4,14 +4,19 @@ RSpec.describe ProtocolUpdater, type: :model do
 
   describe '#import!', delay: true do
 
-    it 'should update the existing protocol' do
-      protocol          = create(:protocol_created_by_sparc)
+    before do
+      @protocol         = create(:protocol_created_by_sparc)
       json              = load_json
-      protocol_updater  = ProtocolUpdater.new(json, protocol.id)
+      protocol_updater  = ProtocolUpdater.new(json, @protocol.id)
 
       protocol_updater.import!
+      @protocol.reload
+    end
 
-      expect(protocol.reload.short_title).to eq('GS-US-321-0106')
+    it 'should update the existing protocol' do
+      expect(@protocol.short_title).to eq('GS-US-321-0106')
+      expect(@protocol.arms.count).to eq(1)
+      expect(@protocol.arms.first.visit_groups.count).to eq(125)
     end
   end
 

@@ -6,4 +6,5 @@ class Arm < ActiveRecord::Base
   has_many :line_items, :dependent => :destroy
   has_many :visit_groups, :dependent => :destroy
 
+  accepts_nested_attributes_for :line_items, :visit_groups
 end
