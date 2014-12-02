@@ -13,7 +13,7 @@ class ProtocolUpdaterJob < Struct.new(:protocol_id)
     RestClient.get(url, params) { |response, request, result, &block|
       raise SparcApiError unless response.code == 200
 
-      ProtocolUpdater.new(response, protocol_id).import!
+      RemoteObjectUpdater.new(response, protocol_id).import!
     }
   end
 

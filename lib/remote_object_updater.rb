@@ -16,8 +16,6 @@ class RemoteObjectUpdater
 
   def filter(json_in, klass)
     json_out                    = Hash.new
-    json_object_attributes_keys = class_attribute_filter(klass)
-    json_object_reflection_keys = class_reflections_filter(klass)
     json_object_all_keys        = [class_reflections_filter(klass), class_attribute_filter(klass)].flatten
 
     json_in.reject { |key, value| !json_object_all_keys.include?(key) }.

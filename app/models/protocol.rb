@@ -9,7 +9,6 @@ class Protocol < ActiveRecord::Base
 
   def fetch_protocol_from_sparc
     ProtocolUpdaterJob.enqueue(id)
-    # SubServiceRequestUpdaterJob.enqueue(id)
   end
 
   def self.statuses
