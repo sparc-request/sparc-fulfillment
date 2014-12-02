@@ -7,10 +7,7 @@ $ ->
       $('#participants-table').bootstrapTable('refresh', {silent: "true"})
 
   $('#participants-table').on "click-row.bs.table", (e, row, $element) ->
-    for key of row
-      id = "#participant_"+key
-      $(id).val row[key]
     $("#participantModal").modal 'show'
-
-  $("#new_participant_button").bind 'click', (event) ->
-    $("input[id^='participant_']").val '' #clear form
+    $.ajax
+      type: 'GET'
+      url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
