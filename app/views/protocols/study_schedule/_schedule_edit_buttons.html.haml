@@ -3,24 +3,27 @@
     .col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:arm]
       %a.btn.btn-success
-        %span.glyphicon.glyphicon-plus
+        %span.glyphicon.glyphicon-plus#add_arm
       %a.btn.btn-danger
-        %span.glyphicon.glyphicon-remove
+        %span.glyphicon.glyphicon-remove#remove
       %div
         = select_tag 'arms', options_from_collection_for_select(@protocol.arms, 'id' , 'name'), :class => 'selectpicker'
     .col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:visit]
       %a.btn.btn-success
-        %span.glyphicon.glyphicon-plus
+        %span.glyphicon.glyphicon-plus#add_visit
       %a.btn.btn-danger
-        %span.glyphicon.glyphicon-remove
+        %span.glyphicon.glyphicon-remove#remove_visit
       %div
         %select.selectpicker#visits
     .col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:services]
       %a.btn.btn-success
-        %span.glyphicon.glyphicon-plus
+        %span.glyphicon.glyphicon-plus#add_service
       %a.btn.btn-danger
-        %span.glyphicon.glyphicon-remove
+        %span.glyphicon.glyphicon-remove#remove_service
       %div
         = select_tag 'services', options_from_collection_for_select(@services, 'id', 'name'), :class => 'selectpicker'
+  = render partial: 'new_participant', locals: {protocol: protocol}
+
+

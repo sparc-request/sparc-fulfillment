@@ -17,4 +17,6 @@ class ParticipantsController < ApplicationController
   def participant_params
     params.require(:participant).permit(:last_name, :first_name, :mrn, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :phone)
   end
+
+
 end

@@ -1,1 +1,8 @@
-participant tracker
+%h3 Participant Tracker
+#participant_tracker
+  %table{id: "participants-table", "data-toggle" => 'table', "data-search" => "true", "data-show-columns" => "true", "data-url" => "/protocols/#{@protocol.id}/participants.json", "data-sort-name" => 'last_name', "data-sort-order" => 'asc',"data-height" => "400"}
+    %thead
+      %tr
+        %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "id", "data-formatter" => "view_buttons"}
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "last_name"} Last Name
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "first_name"} First Name
