@@ -32,17 +32,26 @@ $ ->
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
   if $("body.protocols-index").length <= 0
+    # initialize visit group select list
+    change_arm() 
+
     $(document).on 'change', '#arms', ->
-      sparc_id = $('#arms').data('id')
-      console.log($('#arms').val())
-      data =
-        'id': sparc_id
-        'arm_id': $('#arms').val()
-      $.ajax
-        type: 'GET'
-        url:  "/protocols/#{sparc_id}/change_arm"
-        data:  data
+      change_arm()
+
 
 (exports ? this).display_date = (value) ->
   d = new Date(value)
   d.toLocaleFormat('%m/%d/%Y')
+
+(exports ? this).change_arm = ->
+  $select = $('#visits')
+  arm_id = $('#arms').val()
+  
+  $.get "/protocols/arms/#{arm_id}/change", (data) ->
+    visit_groups = data
+    $select.find('option').remove()
+
+    $.each visit_groups, (key, visit_group) ->
+      $select.append('<option value=' + visit_group.id + '>' + visit_group.name + '</option>')
+    
+    $select.selectpicker('refresh')
