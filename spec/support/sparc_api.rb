@@ -1,9 +1,5 @@
 RSpec.configure do |config|
 
-  config.before(:each, sparc_api: :available) do
-    VCR.insert_cassette('reusable/sparc_api', match_requests_on: [:host])
-  end
-
   config.before(:each, sparc_api: :get_protocol_1) do
     VCR.insert_cassette('reusable/sparc_api/get_protocol_1', match_requests_on: [:host])
   end
