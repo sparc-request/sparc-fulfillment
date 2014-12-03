@@ -4,13 +4,12 @@ RSpec.describe RemoteObjectUpdater, type: :model do
 
   describe '#import!', delay: true do
 
-    before { @protocol = create(:protocol_created_by_sparc) }
-
-    context 'protocol update' do
+    context 'Protocol update' do
 
       before do
         json            = load_protocol_json
-        object_updater  = RemoteObjectUpdater.new(json, @protocol.id)
+        @protocol       = create(:protocol_created_by_sparc)
+        object_updater  = RemoteObjectUpdater.new(json, @protocol)
 
         object_updater.import!
         @protocol.reload
@@ -22,12 +21,35 @@ RSpec.describe RemoteObjectUpdater, type: :model do
         expect(@protocol.arms.first.visit_groups.count).to eq(125)
       end
     end
+
+    context 'Service update' do
+
+      before do
+        json            = load_service_json
+        @service        = create(:service_created_by_sparc)
+        object_updater  = RemoteObjectUpdater.new(json, @service)
+
+        object_updater.import!
+        @service.reload
+      end
+
+      it 'should update the existing service' do
+        expect(@service.name).to eq('Biostatistical Education')
+      end
+    end
   end
 
   private
 
   def load_protocol_json
-    file  = ::Rails.root.join('vcr_cassettes', 'reusable', 'sparc_response_to_get_protocol_1.yml')
+    file  = ::Rails.root.join('vcr_cassettes', 'reusable', 'sparc_api', 'get_protocol_1.yml')
+    yaml  = YAML.load_file file
+
+    yaml["http_interactions"][0]["response"]["body"]["string"]
+  end
+
+  def load_service_json
+    file  = ::Rails.root.join('vcr_cassettes', 'reusable', 'sparc_api', 'get_service_1.yml')
     yaml  = YAML.load_file file
 
     yaml["http_interactions"][0]["response"]["body"]["string"]

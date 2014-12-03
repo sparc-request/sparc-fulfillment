@@ -3,12 +3,12 @@ class Protocol < ActiveRecord::Base
 
   has_many :arms, :dependent => :destroy
 
-  after_create :fetch_protocol_from_sparc
+  after_create :update_from_sparc
 
   accepts_nested_attributes_for :arms
 
-  def fetch_protocol_from_sparc
-    ProtocolUpdaterJob.enqueue(id)
+  def update_from_sparc
+    RemoteObjectUpdaterJob.enqueue(self.id, self.class.to_s)
   end
 
   def self.statuses

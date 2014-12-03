@@ -8,8 +8,8 @@ RSpec.describe Protocol, type: :model do
 
     before { create(:protocol) }
 
-    it 'should create a ProtocolUpdater delayed_job' do
-      expect(Delayed::Job.where("handler LIKE '%ProtocolUpdaterJob%'").one?).to be
+    it 'should create a RemoteObjectUpdaterJob delayed_job' do
+      expect(Delayed::Job.where("handler LIKE '%RemoteObjectUpdaterJob%'").one?).to be
     end
   end
 end

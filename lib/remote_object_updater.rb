@@ -1,22 +1,22 @@
 class RemoteObjectUpdater
 
-  def initialize(json, object_id)
-    @json       = json
-    @object_id  = object_id
+  def initialize(json, object)
+    @json   = json
+    @object = object
   end
 
   def import!
-    root_object_class = parsed_json.keys.first.to_s
-    object_as_json    = filter(parsed_json[root_object_class], root_object_class)
+    object_class    = @object.class.to_s.underscore
+    object_as_json  = filter(parsed_json[object_class], object_class)
 
-    object.update_attributes object_as_json
+    @object.update_attributes object_as_json
   end
 
   private
 
   def filter(json_in, klass)
-    json_out                    = Hash.new
-    json_object_all_keys        = [class_reflections_filter(klass), class_attribute_filter(klass)].flatten
+    json_out              = Hash.new
+    json_object_all_keys  = [class_reflections_filter(klass), class_attribute_filter(klass)].flatten
 
     json_in.reject { |key, value| !json_object_all_keys.include?(key) }.
       each { |key, value|
@@ -50,9 +50,5 @@ class RemoteObjectUpdater
 
   def parsed_json
     @parsed_json ||= Yajl::Parser.parse @json
-  end
-
-  def object
-    @object ||= Protocol.find @object_id
   end
 end
