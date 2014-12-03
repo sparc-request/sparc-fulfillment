@@ -12,32 +12,51 @@
             = p.label "last_name", "Last Name:"
           .col-md-6
             = p.text_field "last_name"
-        = p.label "first_name", "First Name:"
-        = p.text_field "first_name"
-        %br
-        = p.label "mrn", "MRN:"
-        = p.text_field "mrn"
-        %br
-        = p.label "status", "Patient Status:"
-        = p.text_field "status"
-        %br
-        = p.label "date_of_birth", "Date of Birth:"
-        = p.text_field "date_of_birth"
-        %br
-        = p.label "gender", "Gender:"
-        = p.text_field "gender"
-        %br
-        = p.label "ethnicity", "Ethnicity:"
-        = p.text_field "ethnicity"
-        %br
-        = p.label "race", "Race:"
-        = p.text_field "race"
-        %br
-        = p.label "address", "Address:"
-        = p.text_field "address"
-        %br
-        = p.label "phone", "Phone:"
-        = p.text_field "phone"
+        .row
+          .col-md-3
+            = p.label "first_name", "First Name:"
+          .col-md-6
+            = p.text_field "first_name"
+        .row
+          .col-md-3
+            = p.label "mrn", "MRN:"
+          .col-md-6
+            = p.text_field "mrn"
+        .row
+          .col-md-3
+            = p.label "status", "Patient Status:"
+          .col-md-6
+            = p.text_field "status"
+        .row
+          .col-md-3
+            = p.label "date_of_birth", "Date of Birth:"
+          .col-md-6
+            = p.text_field "date_of_birth"
+        .row
+          .col-md-3
+            = p.label "gender", "Gender:"
+          .col-md-6
+            = p.text_field "gender"
+        .row
+          .col-md-3
+            = p.label "ethnicity", "Ethnicity:"
+          .col-md-6
+            = p.text_field "ethnicity"
+        .row
+          .col-md-3
+            = p.label "race", "Race:"
+          .col-md-6
+            = p.text_field "race"
+        .row
+          .col-md-3
+            = p.label "address", "Address:"
+          .col-md-6
+            = p.text_field "address"
+        .row
+          .col-md-3
+            = p.label "phone", "Phone:"
+          .col-md-6
+            = p.text_field "phone"
         .modal-footer
           %button.btn.btn-default{type: 'button', "data-dismiss" => 'modal'} Close
           %input.btn.btn-primary{type: 'submit', value: "Save Participant"}

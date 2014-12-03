@@ -27,6 +27,10 @@ class ParticipantsController < ApplicationController
     @participant.update(participant_params)
   end
 
+  def destroy
+    Participant.destroy(params[:id])
+  end
+
   private
 
   def participant_params

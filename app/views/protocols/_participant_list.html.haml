@@ -12,6 +12,8 @@
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "gender"} Gender
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "race"} Race
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "ethnicity"} Ethnicity
+      %th{"data-align" => "center", "data-formatter" => "editFormatter", "data-field" => "edit", "data-events" => "operateEvents", "data-width" => "5"} Edit
+      %th{"data-align" => "center", "data-formatter" => "deleteFormatter", "data-field" => "delete", "data-events" => "operateEvents", "data-width" => "5"} Delete
 
 .modal.fade#participantModal{tabindex: '-1', role: 'dialog', "aria-labelledby" => "CreateNewParticipant", "aria-hidden" => 'true'}
   #modalPlace
