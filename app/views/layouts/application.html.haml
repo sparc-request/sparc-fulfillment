@@ -21,7 +21,8 @@
         .pull-right
           = render :partial => 'shared/nav_buttons'
     .container
-      = render :partial => 'shared/flash_messages', :locals => {:flash => flash}
+      #flashes_container
+        = render :partial => 'shared/flash_messages', :locals => {:flash => flash}
       = yield
     = javascript_include_tag 'application'
     = javascript_include_tag 'http://localhost:9292/faye/faye.js'
