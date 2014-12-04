@@ -28,7 +28,7 @@ namespace :data do
     end
 
 
-    statuses = ['Complete', 'Nexus Approved']
+    statuses = ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold']
 
     def rand_address
       Random.rand(10).to_s + " " + Faker::Lorem.word + " " + ["way", "st", "lane"].sample
@@ -58,7 +58,7 @@ namespace :data do
 
     #create protocols
     for i in 0...10
-      protocol = Protocol.create(sparc_id: sparc_id, title: rand_string, short_title: rand_string, sponsor_name: rand_string, udac_project_number: rand, requester_id: sparc_id, start_date: today, end_date: not_today, recruitment_start_date: today, recruitment_end_date: not_today, irb_status: rand_string, irb_approval_date: today, irb_expiration_date: not_today, subsidy_amount: rand, study_cost: rand, status: statuses[i%2])
+      protocol = Protocol.create(sparc_id: sparc_id, title: rand_string, short_title: rand_string, sponsor_name: rand_string, udac_project_number: rand, requester_id: sparc_id, start_date: today, end_date: not_today, recruitment_start_date: today, recruitment_end_date: not_today, irb_status: rand_string, irb_approval_date: today, irb_expiration_date: not_today, subsidy_amount: rand, study_cost: Random.rand(10000...50000), status: statuses[i%2])
       for p in 0...3
         Participant.create(protocol_id: protocol.id, first_name: rand_string, last_name: rand_string, mrn: rand, status: rand_status, date_of_birth: rand_date, gender: rand_gender, ethnicity: rand_ethnicity, race: rand_ethnicity, address: rand_address, phone: rand_phone)
       end

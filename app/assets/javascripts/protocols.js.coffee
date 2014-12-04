@@ -1,8 +1,14 @@
 $ ->
   if $("body.protocols-index").length > 0
 
-    status = $('.index_selectpicker').val()
-    $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
+    #Setting the default state of the index page on initial load
+    $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
+    $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
+    $('#protocol-list').bootstrapTable('hideColumn', 'study_cost')
+    $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_amount')
+    $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
+    $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
+
 
     $(".bootstrap-table .fixed-table-toolbar").
       prepend('<div class="columns btn-group pull-right financial-management-view" data-toggle="buttons"><label class="btn btn-default financial" title="Financial View"><input type="radio" autocomplete="off" value="financial"><i class="glyphicon glyphicon-usd"></i></label><label class="btn btn-default management" title="Management View"><input type="radio" autocomplete="off" value="management"><i class="glyphicon glyphicon-book"></i></label></div>')
@@ -21,28 +27,72 @@ $ ->
     #   else
     #     $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json"})
 
+    #Index table events
     $(document).on 'change', '.index_selectpicker', ->
       status = $(this).val()
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
+    $(document).on 'click', '.financial', ->
+      $('#protocol-list').removeClass('custom_striped')
+      $('#protocol-list').addClass('custom_striped_financial')
+      $('#protocol-list').bootstrapTable('hideColumn', 'updates')
+      $('#protocol-list').bootstrapTable('hideColumn', 'status')
+      $('#protocol-list').bootstrapTable('hideColumn', 'short_title')
+      $('#protocol-list').bootstrapTable('hideColumn', 'coordinators')
+      $('#protocol-list').bootstrapTable('hideColumn', 'irb_status')
+      $('#protocol-list').bootstrapTable('showColumn', 'start_date')
+      $('#protocol-list').bootstrapTable('showColumn', 'end_date')
+      $('#protocol-list').bootstrapTable('showColumn', 'study_cost')
+      $('#protocol-list').bootstrapTable('showColumn', 'subsidy_amount')
+      $('#protocol-list').bootstrapTable('showColumn', 'subsidy_committed')
+      $('#protocol-list').bootstrapTable('showColumn', 'subsidy_expended')
+
+    $(document).on 'click', '.management', ->
+      $('#protocol-list').addClass('custom_striped')
+      $('#protocol-list').removeClass('custom_striped_financial')
+      $('#protocol-list').bootstrapTable('showColumn', 'updates')
+      $('#protocol-list').bootstrapTable('showColumn', 'status')
+      $('#protocol-list').bootstrapTable('showColumn', 'short_title')
+      $('#protocol-list').bootstrapTable('showColumn', 'coordinators')
+      $('#protocol-list').bootstrapTable('showColumn', 'irb_status')
+      $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
+      $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
+      $('#protocol-list').bootstrapTable('hideColumn', 'study_cost')
+      $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_amount')
+      $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
+      $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
+
+    #Faye logic
     faye = new Faye.Client('http://localhost:9292/faye')
     faye.disable('websocket')
     faye.subscribe '/protocols/list', (data) ->
       status = $('.selectpicker').val()
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
-  # if $("body.protocols-index").length <= 0
-  #   $(document).on 'change', '#arms', ->
-  #     sparc_id = $('#arms').data('id')
-  #     # console.log($('#arms').val())
-  #     data =
-  #       'id': sparc_id
-  #       'arm_id': $('#arms').val()
-  #     $.ajax
-  #       type: 'GET'
-  #       url:  "/protocols/#{sparc_id}/change_arm"
-  #       data:  data
+  if $("body.protocols-index").length <= 0
+    $(document).on 'change', '#arms', ->
+      sparc_id = $('#arms').data('id')
+      # console.log($('#arms').val())
+      data =
+        'id': sparc_id
+        'arm_id': $('#arms').val()
+      $.ajax
+        type: 'GET'
+        url:  "/protocols/#{sparc_id}/change_arm"
+        data:  data
 
+#Table formatting code
 (exports ? this).display_date = (value) ->
   d = new Date(value)
   d.toLocaleFormat('%m/%d/%Y')
+
+(exports ? this).cents_to_dollars = (value) ->
+  cents = value / 100
+  dollars = '$ ' + cents.toFixed(2)
+  
+  dollars
+
+(exports ? this).number_to_percent = (value) ->
+  value + '%'
+
+

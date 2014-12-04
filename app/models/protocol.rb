@@ -19,6 +19,6 @@ class Protocol < ActiveRecord::Base
   end
 
   def self.statuses
-    ['All', 'Nexus Approved', 'Complete']
+    ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold']
   end
 end
