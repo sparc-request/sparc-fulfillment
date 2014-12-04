@@ -3,6 +3,14 @@ Rails.application.routes.draw do
   root 'protocols#index'
 
   resources :protocols do
+    collection do
+      resources :arms do
+        member do
+          get 'change'
+        end
+      end
+    end
+
     member do
       get 'change_arm'
     end

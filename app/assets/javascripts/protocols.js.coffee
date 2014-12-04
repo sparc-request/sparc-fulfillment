@@ -20,6 +20,11 @@ $ ->
       protocol_id = row.sparc_id
       window.location = "/protocols/#{protocol_id}"
 
+
+    # if $("body.particpanttracker-particpant_tracker").length >= 0
+      #insert edit excel spreadsheet and delete buttons here
+
+
     # $('#protocol-list').on 'search.bs.table', (e, text) ->
     #   if text == ''
     #     status = $('.selectpicker').val()
@@ -70,29 +75,50 @@ $ ->
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
   if $("body.protocols-index").length <= 0
+
+    # initialize visit group select list
+    change_arm()
+
     $(document).on 'change', '#arms', ->
-      sparc_id = $('#arms').data('id')
-      # console.log($('#arms').val())
-      data =
-        'id': sparc_id
-        'arm_id': $('#arms').val()
-      $.ajax
-        type: 'GET'
-        url:  "/protocols/#{sparc_id}/change_arm"
-        data:  data
+      change_arm()
+
+
+  $(".glyphicon glyphicon-calendar").on "click", ->
+     #TODO: insert link to particpant calendar
+
+  $("glyphicon glyphicon-stats").on "click", ->
+    #TODO: insert link to
+
 
 #Table formatting code
 (exports ? this).display_date = (value) ->
   d = new Date(value)
   d.toLocaleFormat('%m/%d/%Y')
 
+
+
+(exports ? this).change_arm = ->
+  $select = $('#visits')
+  arm_id = $('#arms').val()
+
+  $.get "/protocols/arms/#{arm_id}/change", (data) ->
+    visit_groups = data
+    $select.find('option').remove()
+
+    $.each visit_groups, (key, visit_group) ->
+      $select.append('<option value=' + visit_group.id + '>' + visit_group.name + '</option>')
+
+    $select.selectpicker('refresh')
+
+(exports ? this).view_buttons = (value) ->
+  '<i class="glyphicon glyphicon-calendar" participant_id=' + value + '></i>' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-stats" participant_id=' + value + '></i>'
+
 (exports ? this).cents_to_dollars = (value) ->
   cents = value / 100
   dollars = '$ ' + cents.toFixed(2)
-  
+
   dollars
 
 (exports ? this).number_to_percent = (value) ->
   value + '%'
-
 
