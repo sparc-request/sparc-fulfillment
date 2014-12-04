@@ -13,6 +13,7 @@ $ ->
         $.ajax
           type: 'DELETE'
           url: "/protocols/#{row.protocol_id}/participants/#{row.id}"
+        $("#participants-table").bootstrapTable 'refresh', {url: "/protocols/#{row.protocol_id}/participants.json"}
 
     "click .edit": (e, value, row, index) ->
       $("#participantModal").modal 'show'
