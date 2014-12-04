@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141120185757) do
+ActiveRecord::Schema.define(version: 20141125124315) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
