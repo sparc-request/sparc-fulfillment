@@ -15,11 +15,13 @@ class ParticipantsController < ApplicationController
     @participant = Participant.new(participant_params)
     @participant.protocol_id = params[:protocol_id]
     @participant.save
+    flash[:success] = "Participant Created"
   end
 
   def edit
     @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:id])
+    flash[:success] = "Participant Saved"
   end
 
   def update
@@ -29,6 +31,7 @@ class ParticipantsController < ApplicationController
 
   def destroy
     Participant.destroy(params[:id])
+    flash[:success] = "Participant Destroyed"
   end
 
   private
