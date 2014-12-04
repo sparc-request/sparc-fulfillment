@@ -15,4 +15,20 @@ module ApplicationHelper
     uri = URI.parse("http://localhost:9292/faye")
     Net::HTTP.post_form(uri, :message => message.to_json)
   end
+
+  ##Sets css bootstrap classes for rails flash message types##
+  def twitterized_type(type)
+    case type.to_sym
+      when :alert
+        "alert-danger"
+      when :error
+        "alert-danger"
+      when :notice
+        "alert-info"
+      when :success
+        "alert-success"
+      else
+        type.to_s
+    end
+  end
 end
