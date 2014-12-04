@@ -34,7 +34,3 @@ scratch
 *.csv
 config/database.yml
 .ruby-gemset
-
-.env
-
-config/initializers/faye_token.rb

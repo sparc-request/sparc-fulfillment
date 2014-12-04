@@ -6,11 +6,33 @@ $ ->
     faye.subscribe "/participants/#{protocol_id}/list", (data) ->
       $('#participants-table').bootstrapTable('refresh', {silent: "true"})
 
-  $('#participants-table').on "click-row.bs.table", (e, row, $element) ->
-    for key of row
-      id = "#participant_"+key
-      $(id).val row[key]
-    $("#participantModal").modal 'show'
+  window.operateEvents =
+    "click .remove": (e, value, row, index) ->
+      del = confirm "Are you sure you want to delete "+capitalize(row.first_name)+" "+capitalize(row.last_name)+" from the Participant List?"
+      if del
+        $.ajax
+          type: 'DELETE'
+          url: "/protocols/#{row.protocol_id}/participants/#{row.id}"
 
-  $("#new_participant_button").bind 'click', (event) ->
-    $("input[id^='participant_']").val '' #clear form
+    "click .edit": (e, value, row, index) ->
+      $("#participantModal").modal 'show'
+      $.ajax
+        type: 'GET'
+        url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
+
+  capitalize = (string) ->
+    string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+
+(exports ? this).deleteFormatter = (value, row, index) ->
+  [
+    "<a class='remove' href='javascript:void(0)' title='Remove'>",
+    "<i class='glyphicon glyphicon-remove' style='z-index: 100'></i>",
+    "</a>"
+  ].join ""
+
+(exports ? this).editFormatter = (value, row, index) ->
+  [
+    "<a class='edit ml10' href='javascript:void(0)' title='Edit'>",
+    "<i class='glyphicon glyphicon-edit'></i>",
+    "</a>"
+  ].join ""

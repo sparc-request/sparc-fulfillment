@@ -22,6 +22,7 @@ module ClinicalWorkFulfillment
     # config.i18n.default_locale = :de
     config.paths.add File.join('app', 'jobs'), glob: File.join('**', '*.rb')
     config.autoload_paths += Dir[Rails.root.join('app', 'jobs', '*')]
-    config.autoload_paths += Dir[Rails.root.join('config', 'initializers', 'faye_token.rb')]
+    config.paths.add File.join('lib'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('lib')]
   end
 end

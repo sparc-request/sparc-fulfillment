@@ -4,21 +4,23 @@ class Protocol < ActiveRecord::Base
   has_many :arms, :dependent => :destroy
   has_many :participants, :dependent => :destroy
 
-  after_create :fetch_protocol
+  after_create :update_from_sparc
   after_save :update_via_faye
+
+  accepts_nested_attributes_for :arms
 
   def update_via_faye
     channel = "/protocols/list"
-    message = {:channel => channel, :data => "woohoo", :ext => {:auth_token => FAYE_TOKEN}}
+    message = {:channel => channel, :data => "woohoo", :ext => {:auth_token => ENV['FAYE_TOKEN']}}
     uri = URI.parse('http://' + ENV['CWF_FAYE_HOST'] + '/faye')
-    Net::HTTP.post_form(uri, :message => message.to_json) 
+    Net::HTTP.post_form(uri, :message => message.to_json)
   end
 
-  def fetch_protocol
-    ProtocolWorkerJob.enqueue(self.sparc_id, self.sparc_sub_service_request_id)
+  def update_from_sparc
+    RemoteObjectUpdaterJob.enqueue(self.id, self.class.to_s)
   end
 
   def self.statuses
-    ['All', 'Nexus Approved', 'Complete']
+    ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold']
   end
 end

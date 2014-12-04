@@ -1,10 +1,10 @@
 %h3 Participant List
 #custom-toolbar
-  %button.btn.btn-default{id: 'new_participant_button', type: 'button', "data-toggle" => 'modal', "data-target" => '#participantModal'} Create New Participant
+  = link_to 'Create New Participant', new_protocol_participant_path(protocol_id: protocol.id), {class: 'btn btn-default btn-primary', id: 'new_participant_button', type: 'button', "data-toggle" => 'modal', "data-target" => '#participantModal', remote: true}
 %table{id: "participants-table", "data-toggle" => 'table', "data-search" => "true", "data-select-item-name" => "toolbar1", "data-toolbar" => '#custom-toolbar', "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true", "data-url" => "/protocols/#{protocol.id}/participants.json", "data-sort-name" => 'last_name', "data-sort-order" => 'asc', "data-striped" => "true", "data-height" => "400"}
   %thead
     %tr
-      %th{"data-align" => "right", "data-sortable" => "true", "data-field" => "last_name"} Last Name
+      %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "last_name"} Last Name
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "first_name"} First Name
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "mrn"} MRN
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"} Patient Status
@@ -12,5 +12,8 @@
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "gender"} Gender
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "race"} Race
       %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "ethnicity"} Ethnicity
+      %th{"data-align" => "center", "data-formatter" => "editFormatter", "data-field" => "edit", "data-events" => "operateEvents", "data-width" => "5"} Edit
+      %th{"data-align" => "center", "data-formatter" => "deleteFormatter", "data-field" => "delete", "data-events" => "operateEvents", "data-width" => "5"} Delete
 
-      = render partial: 'new_participant', locals: {protocol: protocol}
+.modal.fade#participantModal{tabindex: '-1', role: 'dialog', "aria-labelledby" => "CreateNewParticipant", "aria-hidden" => 'true'}
+  #modalPlace

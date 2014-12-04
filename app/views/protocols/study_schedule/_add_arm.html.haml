@@ -1,0 +1,19 @@
+.modal.fade#participantModal{tabindex: '-1', role: 'dialog', "aria-labelledby" => "CreateNewParticipant", "aria-hidden" => 'true'}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{type: 'button', "data-dismiss" => 'modal'}
+          %span{"aria-hidden" => 'true'} &times;
+          %span.sr-only Close
+        %h4.modal-title#add_arm Add an Arm
+      .modal-body
+        = form_for :participant, {remote: true, url: "/protocols/#{protocol.id}/participants"} do |p|
+          = p.label "last_name", "Last Name:"
+          = p.text_field "last_name"
+          %br
+          = p.label "first_name", "First Name:"
+          = p.text_field "first_name"
+          %br
+          .modal-footer
+            %button.btn.btn-default{type: 'button', "data-dismiss" => 'modal'} Close
+            %input.btn.btn-primary{type: 'submit', value: "Add Arm"}

@@ -24,6 +24,5 @@
         %span.glyphicon.glyphicon-remove#remove_service
       %div
         = select_tag 'services', options_from_collection_for_select(@services, 'id', 'name'), :class => 'selectpicker'
-  = render partial: 'new_participant', locals: {protocol: protocol}
 
 

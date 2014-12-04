@@ -31,6 +31,12 @@ en:
     irb_expire_date: "Current IRB Expiration Date"
     irb_status: "IRB Status"
     udac_project_number: "IRB #"
+    start_date: "Study Start Date"
+    end_date: "Study End Date"
+    study_cost: "Study Costs"
+    subsidy_amount: "Subsidy Amount"
+    subsidy_committed: "Subsidy Committed"
+    subsidy_expended: "Subsidy Expended"
   study_schedule_tab:
     buttons:
       arm: "Arm | "
