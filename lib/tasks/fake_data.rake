@@ -63,7 +63,7 @@ namespace :data do
 
     #create protocols
     for i in 0...10
-      protocol = Protocol.create(sparc_id: sparc_id, title: rand_string, short_title: rand_string, sponsor_name: rand_string, udac_project_number: rand, requester_id: sparc_id, start_date: today, end_date: not_today, recruitment_start_date: today, recruitment_end_date: not_today, irb_status: rand_string, irb_approval_date: today, irb_expiration_date: not_today, stored_percent_subsidy: rand.to_f, study_cost: Random.rand(10000...50000), status: protocol_status)
+      protocol = Protocol.create(sparc_id: sparc_id, title: rand_string, short_title: rand_string, sponsor_name: rand_string, udak_project_number: rand, start_date: today, end_date: not_today, recruitment_start_date: today, recruitment_end_date: not_today, irb_status: rand_string, irb_approval_date: today, irb_expiration_date: not_today, stored_percent_subsidy: rand.to_f, study_cost: Random.rand(10000...50000), status: protocol_status)
       for p in 0...3
         Participant.create(protocol_id: protocol.id, first_name: rand_string, last_name: rand_string, mrn: rand, status: participant_status, date_of_birth: rand_date, gender: rand_gender, ethnicity: rand_ethnicity, race: rand_ethnicity, address: rand_address, phone: rand_phone)
       end
@@ -71,7 +71,7 @@ namespace :data do
       for a in 0...3
         arm = Arm.create(sparc_id: sparc_id, protocol_id: protocol.id, name: rand_string, visit_count: rand, subject_count: rand)
         for vg in 0...arm.visit_count
-          visit_group = VisitGroup.create(sparc_id: sparc_id, arm_id: arm.id, position: vg, name: rand_string, day: today, window_before: rand, window_after: rand)
+          visit_group = VisitGroup.create(sparc_id: sparc_id, arm_id: arm.id, position: vg+1, name: rand_string, day: today, window_before: rand, window_after: rand)
         end
         for li in 0...rand
           #for the service_id, it simply uses the counting index so each lineitem created there won't be duplicate services
