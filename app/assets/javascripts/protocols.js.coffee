@@ -5,7 +5,7 @@ $ ->
     $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
     $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
     $('#protocol-list').bootstrapTable('hideColumn', 'study_cost')
-    $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_amount')
+    $('#protocol-list').bootstrapTable('hideColumn', 'stored_percent_subsidy')
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
 
@@ -43,7 +43,7 @@ $ ->
       $('#protocol-list').bootstrapTable('showColumn', 'start_date')
       $('#protocol-list').bootstrapTable('showColumn', 'end_date')
       $('#protocol-list').bootstrapTable('showColumn', 'study_cost')
-      $('#protocol-list').bootstrapTable('showColumn', 'subsidy_amount')
+      $('#protocol-list').bootstrapTable('showColumn', 'stored_percent_subsidy')
       $('#protocol-list').bootstrapTable('showColumn', 'subsidy_committed')
       $('#protocol-list').bootstrapTable('showColumn', 'subsidy_expended')
 
@@ -58,7 +58,7 @@ $ ->
       $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
       $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
       $('#protocol-list').bootstrapTable('hideColumn', 'study_cost')
-      $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_amount')
+      $('#protocol-list').bootstrapTable('hideColumn', 'stored_percent_subsidy')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
 
@@ -88,7 +88,7 @@ $ ->
 
 (exports ? this).cents_to_dollars = (value) ->
   cents = value / 100
-  dollars = '$ ' + cents.toFixed(2)
+  dollars = '$' + cents.toFixed(2)
   
   dollars
 

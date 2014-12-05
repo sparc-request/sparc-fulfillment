@@ -1,4 +1,4 @@
-class Protocol < ActiveRecord::Base
+ class Protocol < ActiveRecord::Base
   acts_as_paranoid
 
   has_many :arms, :dependent => :destroy
@@ -20,5 +20,19 @@ class Protocol < ActiveRecord::Base
 
   def self.statuses
     ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold']
+  end
+
+  #For displaying the subsidy committed on the index page
+  def subsidy_committed
+    study_cost = self.study_cost / 100.00
+    subsidy = self.stored_percent_subsidy / 100.00
+    field = sprintf('%.2f', (study_cost * subsidy))
+
+    "$" + field
+  end
+
+  #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.
+  def subsidy_expended
+    "$0"
   end
 end
