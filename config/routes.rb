@@ -16,7 +16,10 @@ Rails.application.routes.draw do
       get 'change_arm'
     end
     resources :participants
+    
+    resources :service_calendar
   end
+
 end
 
 

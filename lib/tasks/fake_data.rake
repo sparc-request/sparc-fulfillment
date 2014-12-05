@@ -44,11 +44,15 @@ namespace :data do
     end
 
     def rand_gender
-      ['Male','Female'].sample
+      ['Male', 'Female'].sample
     end
 
     def rand_ethnicity
       ['Caucasian','African American', 'Asian', 'Hispanic'].sample
+    end
+
+    def rand_core
+      ['Nursing', 'Lab', 'RCM', 'Apples'].sample
     end
 
 
@@ -67,11 +71,11 @@ namespace :data do
       for a in 0...3
         arm = Arm.create(sparc_id: sparc_id, protocol_id: protocol.id, name: rand_string, visit_count: rand, subject_count: rand)
         for vg in 0...arm.visit_count
-          visit_group = VisitGroup.create(sparc_id: sparc_id, arm_id: arm.id, position: rand, name: rand_string, day: today, window_before: rand, window_after: rand)
+          visit_group = VisitGroup.create(sparc_id: sparc_id, arm_id: arm.id, position: vg, name: rand_string, day: today, window_before: rand, window_after: rand)
         end
         for li in 0...rand
           #for the service_id, it simply uses the counting index so each lineitem created there won't be duplicate services
-          line_items = LineItem.create(sparc_id: sparc_id, arm_id: arm.id, service_id: services[li].id, name: rand_string, cost: rand)
+          line_items = LineItem.create(sparc_id: sparc_id, arm_id: arm.id, service_id: services[li].id, name: rand_string, cost: rand, sparc_core_name: rand_core)
         end
         arm.visit_groups.each do |vg|
           arm.line_items.each do |li|

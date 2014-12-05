@@ -1,22 +1,22 @@
 #protocols_index
   .row
     #custom-toolbar
-      %select.selectpicker.index_selectpicker= options_for_select(Protocol.statuses, "All")
-    %table.custom_striped{id: "protocol-list", "data-toggle" => 'table', "data-search" => "true", "data-show-columns" => "true", "data-show-refresh" => "true", "data-show-toggle" => "true",  "data-url" => "/protocols.json", "data-sort-name" => 'sparc_id', "data-sort-order" => 'asc', "data-striped" => "true", "data-toolbar" => "#custom-toolbar"}
+      = select_tag 'index_selectpicker', options_for_select(Protocol.statuses, 'All'), class: 'selectpicker'
+    %table.custom_striped{id: "protocol-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: "/protocols.json", "sort-name" => "sparc_id", "sort-order" => 'asc', striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel', 'csv']}}
       %thead
         %tr
-          %th{"data-align" => "left", "data-field" => "updates"}= t(:index_page)[:updates]
-          %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "sparc_id"}= t(:index_page)[:sparc_id]
-          %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"}= t(:index_page)[:status]
-          %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "short_title"}= t(:index_page)[:short_title]
-          %th{"data-align" => "left", "data-sortable" => "true", "data-field" => ""}= t(:index_page)[:principal_investigator]
-          %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "coordinators"}= t(:index_page)[:coordinators]
-          %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "irb_approval_date", "data-formatter" => "display_date"}= t(:index_page)[:irb_approval_date]
-          %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "irb_expiration_date", "data-formatter" => "display_date"}= t(:index_page)[:irb_expire_date]
-          %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "irb_status"}= t(:index_page)[:irb_status]
-          %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "start_date", "data-formatter" => "display_date"}= t(:index_page)[:start_date]
-          %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "end_date", "data-formatter" => "display_date"}= t(:index_page)[:end_date]
-          %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "study_cost", "data-formatter" => "cents_to_dollars"}= t(:index_page)[:study_cost]
-          %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "stored_percent_subsidy", "data-formatter" => "number_to_percent"}= t(:index_page)[:subsidy_amount]
-          %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "subsidy_committed"}= t(:index_page)[:subsidy_committed]
-          %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "subsidy_expended"}= t(:index_page)[:subsidy_expended]
+          %th{data: {align: 'left', field: 'updates'}}= t(:index_page)[:updates]
+          %th{data: {align: 'left', sortable: "true", field: 'sparc_id'}}= t(:index_page)[:sparc_id]
+          %th{data: {align: 'left', sortable: "true", field: "status"}}= t(:index_page)[:status]
+          %th{data: {align: 'left', sortable: "true", field: "short_title"}}= t(:index_page)[:short_title]
+          %th{data: {align: 'left', sortable: "true", field: ""}}= t(:index_page)[:principal_investigator]
+          %th{data: {align: 'left', sortable: "true", field: "coordinators"}}= t(:index_page)[:coordinators]
+          %th{data: {align: 'center', sortable: "true", field: "irb_approval_date", formatter: "display_date"}}= t(:index_page)[:irb_approval_date]
+          %th{data: {align: 'center', sortable: "true", field: "irb_expiration_date", formatter: "display_date"}}= t(:index_page)[:irb_expire_date]
+          %th{data: {align: 'center', sortable: "true", field: "irb_status"}}= t(:index_page)[:irb_status]
+          %th{data: {align: 'center', sortable: "true", field: "start_date", formatter: "display_date"}}= t(:index_page)[:start_date]
+          %th{data: {align: 'center', sortable: "true", field: "end_date", formatter: "display_date"}}= t(:index_page)[:end_date]
+          %th{data: {align: 'center', sortable: "true", field: "study_cost", formatter: "cents_to_dollars"}}= t(:index_page)[:study_cost]
+          %th{data: {align: 'center', sortable: "true", field: "stored_percent_subsidy", formatter: "number_to_percent"}}= t(:index_page)[:subsidy_amount]
+          %th{data: {align: 'center', sortable: "true", field: "subsidy_committed"}}= t(:index_page)[:subsidy_committed]
+          %th{data: {align: 'left', sortable: "true", field: "subsidy_expended"}}= t(:index_page)[:subsidy_expended]

@@ -18,3 +18,6 @@
 //= require protocols
 //= require participants
 //= require global
+//= require tableExport
+//= require jquery.base64
+//= require bootstrap-table-export
