@@ -1,17 +1,22 @@
 module SparcHelper
 
-  def sparc_sends_protocol_post(params=valid_params)
+  def sparc_sends_notification_post(params=valid_params)
     http_login(ENV['SPARC_API_USERNAME'], ENV['SPARC_API_PASSWORD'])
 
-    post '/v1/protocols.json', params, @env
+    post '/v1/notifications.json', params, @env
   end
 
   private
 
   def valid_params
+    notification = build(:notification)
+
     {
-      protocol_id: 1,
-      sub_service_request_id: 1
+      notification: {
+        sparc_id: notification.sparc_id,
+        action: notification.action,
+        callback_url: notification.callback_url
+      }
     }
   end
 end
