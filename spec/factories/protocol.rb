@@ -1,9 +1,7 @@
 FactoryGirl.define do
 
-  factory :protocol do
+  factory :protocol, aliases: [:protocol_created_by_sparc] do
     sparc_id 1
-    sequence :title do |n|
-      "Protocol #{n}"
-    end
+    sparc_sub_service_request_id 1
   end
 end

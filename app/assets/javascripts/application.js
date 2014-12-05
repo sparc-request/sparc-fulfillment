@@ -17,3 +17,4 @@
 //= require bootstrap-table.min
 //= require protocols
 //= require participants
+//= require global

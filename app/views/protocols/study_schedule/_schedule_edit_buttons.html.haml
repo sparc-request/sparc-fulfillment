@@ -3,30 +3,26 @@
     .col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:arm]
       %a.btn.btn-success
-        %span.glyphicon.glyphicon-plus
+        %span.glyphicon.glyphicon-plus#add_arm
       %a.btn.btn-danger
-        %span.glyphicon.glyphicon-remove
+        %span.glyphicon.glyphicon-remove#remove
+      %div
+        = select_tag 'arms', options_from_collection_for_select(@protocol.arms, 'id' , 'name'), :class => 'selectpicker'
     .col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:visit]
       %a.btn.btn-success
-        %span.glyphicon.glyphicon-plus
+        %span.glyphicon.glyphicon-plus#add_visit
       %a.btn.btn-danger
-        %span.glyphicon.glyphicon-remove
+        %span.glyphicon.glyphicon-remove#remove_visit
+      %div
+        %select.selectpicker#visits
     .col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:services]
       %a.btn.btn-success
-        %span.glyphicon.glyphicon-plus
+        %span.glyphicon.glyphicon-plus#add_service
       %a.btn.btn-danger
-        %span.glyphicon.glyphicon-remove
-  .row
-    .col-md-4.text-center
-      %select.selectpicker#arms{"data-id" => @protocol.sparc_id, "data-arm_id" => @selected_arm.id}= arms_for_select(@protocol, @selected_arm)
-    .col-md-4.text-center
-      %select.selectpicker#arms= visit_groups_for_select(@selected_arm, @selected_visit_group)
-    .col-md-4.text-center
-      %select.selectpicker#arms= options_for_select(services_for_select, services_for_select.first)
-
-
-
+        %span.glyphicon.glyphicon-remove#remove_service
+      %div
+        = select_tag 'services', options_from_collection_for_select(@services, 'id', 'name'), :class => 'selectpicker'
 
 

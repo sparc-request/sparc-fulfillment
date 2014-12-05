@@ -6,6 +6,7 @@ gem 'bootstrap-select-rails', :git => "git@github.com:Slashek/bootstrap-select-r
 gem 'coffee-rails', '~> 4.0.0'
 gem 'delayed_job_active_record'
 gem 'dotenv-deployment', '~> 0.2.0'
+gem 'faye'
 gem 'grape'
 gem 'haml-rails'
 gem 'jquery-rails'
@@ -19,7 +20,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sprockets-rails'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
-gem 'faye'
+gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
+gem 'devise'
+gem 'omniauth'
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
@@ -37,4 +40,5 @@ group :test do
   gem 'webmock', '~> 1.20.4'
   gem 'shoulda-matchers', require: false
   gem 'capybara-webkit', '~> 1.3.1' # brew update && brew instal qt
+  gem 'vcr', '~> 2.9.3'
 end

@@ -12,10 +12,17 @@
     #header_bottom
       .container
         .pull-left
-          %div Julia Glenn | glennj@musc.edu
+          - if user_signed_in?
+            %div
+              = current_user.email
+              = link_to "Sign out", destroy_user_session_path, :method => :delete, :class => "btn btn-danger"
+          - else
+            %div= link_to "Sign in", new_user_session_path, :class => "btn btn-success"
         .pull-right
           = render :partial => 'shared/nav_buttons'
     .container
+      #flashes_container
+        = render :partial => 'shared/flash_messages', :locals => {:flash => flash}
       = yield
     = javascript_include_tag 'application'
     = javascript_include_tag 'http://localhost:9292/faye/faye.js'

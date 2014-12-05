@@ -11,52 +11,52 @@
           .col-md-3
             = p.label "last_name", "Last Name:"
           .col-md-6
-            = p.text_field "last_name"
+            = p.text_field "last_name", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "first_name", "First Name:"
           .col-md-6
-            = p.text_field "first_name"
+            = p.text_field "first_name", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "mrn", "MRN:"
           .col-md-6
-            = p.text_field "mrn"
+            = p.text_field "mrn", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "status", "Patient Status:"
           .col-md-6
-            = p.text_field "status"
+            = p.text_field "status", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "date_of_birth", "Date of Birth:"
           .col-md-6
-            = p.text_field "date_of_birth"
+            = p.text_field "date_of_birth", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "gender", "Gender:"
           .col-md-6
-            = p.text_field "gender"
+            = p.text_field "gender", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "ethnicity", "Ethnicity:"
           .col-md-6
-            = p.text_field "ethnicity"
+            = p.text_field "ethnicity", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "race", "Race:"
           .col-md-6
-            = p.text_field "race"
+            = p.text_field "race", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "address", "Address:"
           .col-md-6
-            = p.text_field "address"
+            = p.text_field "address", {class: 'form-control'}
         .row
           .col-md-3
             = p.label "phone", "Phone:"
           .col-md-6
-            = p.text_field "phone"
+            = p.text_field "phone", {class: 'form-control'}
         .modal-footer
           %button.btn.btn-default{type: 'button', "data-dismiss" => 'modal'} Close
           %input.btn.btn-primary{type: 'submit', value: "Save Participant"}
