@@ -58,6 +58,16 @@ ActiveRecord::Schema.define(version: 20141201164925) do
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
   add_index "line_items", ["service_id"], name: "index_line_items_on_service_id", using: :btree
 
+  create_table "notifications", force: true do |t|
+    t.integer  "sparc_id"
+    t.string   "action"
+    t.string   "callback_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notifications", ["sparc_id"], name: "index_notifications_on_sparc_id", using: :btree
+
   create_table "participants", force: true do |t|
     t.integer  "protocol_id"
     t.string   "first_name"

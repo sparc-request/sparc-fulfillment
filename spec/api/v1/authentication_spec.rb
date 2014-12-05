@@ -1,7 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'CWFSPARC::APIv1', type: :request,
-                                  debug_response: true do
+RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
 
   describe 'authentication' do
 
@@ -10,7 +9,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request,
       before do
         http_login(ENV['SPARC_API_USERNAME'], ENV['SPARC_API_PASSWORD'])
 
-        post '/v1/protocols.json', { protocol_id: 1, sub_service_request_id: 1 }, @env
+        post '/v1/notifications.json', params, @env
       end
 
       it 'should allow the request' do
@@ -27,7 +26,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request,
 
           http_login(bad_username, ENV['SPARC_PASSWORD'])
 
-          post '/v1/protocols.json', { protocol_id: 1, sub_service_request_id: 1 }, @env
+          post '/v1/notifications.json', params, @env
         end
 
         it 'should not allow the request' do
@@ -46,7 +45,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request,
 
           http_login(bad_password, ENV['SPARC_PASSWORD'])
 
-          post '/v1/protocols.json', { protocol_id: 1, sub_service_request_id: 1 }, @env
+          post '/v1/notifications.json', params, @env
         end
 
         it 'should not allow the request' do
@@ -58,5 +57,15 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request,
         end
       end
     end
+  end
+
+  def params
+    {
+      notification: {
+        sparc_id: 1,
+        action: 'create',
+        callback_url: 'http://localhost:5000/services/1.json'
+      }
+    }
   end
 end
