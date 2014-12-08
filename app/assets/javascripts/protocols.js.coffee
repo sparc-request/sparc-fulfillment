@@ -74,7 +74,7 @@ $ ->
       status = $('.selectpicker').val()
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
-  if $("body.protocols-index").length <= 0
+  if $("body.protocols-show").length > 0
 
     # initialize visit group select list
     change_arm()
@@ -83,11 +83,11 @@ $ ->
       change_arm()
 
 
-  $(".glyphicon glyphicon-calendar").on "click", ->
-     #TODO: insert link to particpant calendar
+    $(".glyphicon glyphicon-calendar").on "click", ->
+       #TODO: insert link to particpant calendar
 
-  $("glyphicon glyphicon-stats").on "click", ->
-    #TODO: insert link to
+    $("glyphicon glyphicon-stats").on "click", ->
+      #TODO: insert link to
 
 
 #Table formatting code
@@ -97,11 +97,13 @@ $ ->
 
 
 
+
 (exports ? this).change_arm = ->
   $select = $('#visits')
+  protocol_id = $('#arms').data('protocol_id')
   arm_id = $('#arms').val()
 
-  $.get "/protocols/arms/#{arm_id}/change", (data) ->
+  $.get "/protocols/#{protocol_id}/arms/#{arm_id}/change", (data) ->
     visit_groups = data
     $select.find('option').remove()
 
@@ -116,9 +118,15 @@ $ ->
 (exports ? this).cents_to_dollars = (value) ->
   cents = value / 100
   dollars = '$' + cents.toFixed(2)
-  
+
   dollars
 
 (exports ? this).number_to_percent = (value) ->
   value + '%'
+
+  #update the arm data upon new arm addition
+(exports ? this).create_arm = (name, id) ->
+  $select = $('#arms')
+  $select.append('<option value=' + id + '>' + name + '</option>')
+  $select.selectpicker('refresh')
 

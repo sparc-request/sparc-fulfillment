@@ -91,7 +91,7 @@ ActiveRecord::Schema.define(version: 20141201164925) do
     t.string   "irb_status"
     t.datetime "irb_approval_date"
     t.datetime "irb_expiration_date"
-    t.float    "stored_percent_subsidy",       limit: 24
+    t.integer  "subsidy_amount"
     t.integer  "study_cost"
     t.integer  "sparc_sub_service_request_id"
     t.string   "status"

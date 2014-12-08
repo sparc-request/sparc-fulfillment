@@ -2,12 +2,11 @@
   .row
     .col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:arm]
-      %a.btn.btn-success
-        %span.glyphicon.glyphicon-plus#add_arm
+      = link_to '', new_arm_path(protocol), {class: 'btn btn-success glyphicon glyphicon-plus ', id: '#add_arm_button', type: 'button',"data-toggle" => 'modal', "data-target" => '#arm_modal', remote: true}
       %a.btn.btn-danger
         %span.glyphicon.glyphicon-remove#remove
       %div
-        = select_tag 'arms', options_from_collection_for_select(@protocol.arms, 'id' , 'name'), :class => 'selectpicker'
+        = select_tag 'arms', options_from_collection_for_select(protocol.arms, 'id' , 'name'), :class => 'selectpicker', :'data-protocol_id' => protocol.id
     .col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:visit]
       %a.btn.btn-success
@@ -23,6 +22,6 @@
       %a.btn.btn-danger
         %span.glyphicon.glyphicon-remove#remove_service
       %div
-        = select_tag 'services', options_from_collection_for_select(@services, 'id', 'name'), :class => 'selectpicker'
-
-
+        = select_tag 'services', options_from_collection_for_select(services, 'id', 'name'), :class => 'selectpicker'
+.modal.fade#arm_modal{"aria-hidden" => true}
+  #arm_form

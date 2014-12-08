@@ -1,0 +1,28 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{type: 'button', "data-dismiss" => 'modal'}
+        %span{"aria-hidden" => 'true'} &times;
+        %span.sr-only Close
+      %h4.modal-title#add_arm_modal Add Arm
+    .modal-body
+      = form_for arm, {remote: true} do |a|
+        = a.hidden_field :protocol_id
+        .row
+          .col-md-3
+            = a.label "name", "Arm Name:"
+          .col-md-6
+            = a.text_field "name", {class: 'form-control'}
+        .row
+          .col-md-3
+            = a.label "subject_count", "Subject Count:"
+          .col-md-6
+            = a.text_field "subject_count", {class: 'form-control'}
+        .row
+          .col-md-3
+            = a.label "visit_count", "Visit Count:"
+          .col-md-6
+            = a.text_field "visit_count", {class: 'form-control'}
+        .modal-footer
+          %button.btn.btn-default{type: 'button', "data-dismiss" => 'modal'} Close
+          %input.btn.btn-primary{type: 'submit', value: "Add Arm"}
