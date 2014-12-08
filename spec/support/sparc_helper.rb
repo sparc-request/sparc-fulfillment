@@ -23,7 +23,7 @@ module SparcHelper
   private
 
   def valid_params
-    notification = build(:notification)
+    notification = build(:notification_protocol_create)
 
     {
       notification: {
