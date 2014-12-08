@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
 
-  describe 'authentication' do
+  describe 'authentication', delay: true do
 
     context 'success' do
 
@@ -63,6 +63,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
     {
       notification: {
         sparc_id: 1,
+        kind: 'Service',
         action: 'create',
         callback_url: 'http://localhost:5000/services/1.json'
       }

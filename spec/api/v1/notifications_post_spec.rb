@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
+RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true, delay: true do
 
   describe 'POST /v1/notifications.json' do
 
@@ -19,10 +19,13 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
       end
 
       it 'should create a Notification' do
+        expected_notification = Notification.first
+
         expect(Notification.count).to eq(1)
-        expect(Notification.first.sparc_id).to eq(1)
-        expect(Notification.first.action).to eq('create')
-        expect(Notification.first.callback_url).to eq('http://localhost:5000/protocols/1.json')
+        expect(expected_notification.sparc_id).to eq(1)
+        expect(expected_notification.kind).to eq('Protocol')
+        expect(expected_notification.action).to eq('create')
+        expect(expected_notification.callback_url).to eq('http://localhost:5000/protocols/1.json')
       end
     end
 

@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe RemoteObjectUpdater, type: :model do
+RSpec.describe RemoteObjectUpdater do
 
   describe '#import!', delay: true do
 
     context 'Protocol update' do
 
       before do
-        json            = load_protocol_json
+        json            = load_protocol_1_json
         @protocol       = create(:protocol_created_by_sparc)
         object_updater  = RemoteObjectUpdater.new(json, @protocol)
 
@@ -25,7 +25,7 @@ RSpec.describe RemoteObjectUpdater, type: :model do
     context 'Service update' do
 
       before do
-        json            = load_service_json
+        json            = load_service_1_json
         @service        = create(:service_created_by_sparc)
         object_updater  = RemoteObjectUpdater.new(json, @service)
 
@@ -37,21 +37,5 @@ RSpec.describe RemoteObjectUpdater, type: :model do
         expect(@service.name).to eq('Biostatistical Education')
       end
     end
-  end
-
-  private
-
-  def load_protocol_json
-    file  = ::Rails.root.join('vcr_cassettes', 'reusable', 'sparc_api', 'get_protocol_1.yml')
-    yaml  = YAML.load_file file
-
-    yaml["http_interactions"][0]["response"]["body"]["string"]
-  end
-
-  def load_service_json
-    file  = ::Rails.root.join('vcr_cassettes', 'reusable', 'sparc_api', 'get_service_1.yml')
-    yaml  = YAML.load_file file
-
-    yaml["http_interactions"][0]["response"]["body"]["string"]
   end
 end

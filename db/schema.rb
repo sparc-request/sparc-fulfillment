@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141201164925) do
+ActiveRecord::Schema.define(version: 20141208131117) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20141201164925) do
     t.string   "callback_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "kind"
   end
 
   add_index "notifications", ["sparc_id"], name: "index_notifications_on_sparc_id", using: :btree
@@ -101,7 +102,7 @@ ActiveRecord::Schema.define(version: 20141201164925) do
     t.string   "irb_status"
     t.datetime "irb_approval_date"
     t.datetime "irb_expiration_date"
-    t.float    "stored_percent_subsidy",       limit: 24
+    t.integer  "subsidy_amount"
     t.integer  "study_cost"
     t.integer  "sparc_sub_service_request_id"
     t.string   "status"

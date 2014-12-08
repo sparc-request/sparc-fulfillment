@@ -24,6 +24,7 @@ module CWFSPARC
           requires :notification, type: Hash do
 
             requires :sparc_id, type: Integer
+            requires :kind, type: String
             requires :action, type: String,
                               values: ['create', 'update']
             requires :callback_url, type: String

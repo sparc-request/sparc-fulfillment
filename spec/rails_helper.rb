@@ -54,6 +54,6 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   # Helpers
-  config.include SparcHelper, type: :request
-  config.include ApiAuthenticationHelper, type: :request
+  config.include SparcHelper
+  config.include ApiAuthenticationHelper
 end

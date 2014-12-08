@@ -1,10 +1,9 @@
  class Protocol < ActiveRecord::Base
   acts_as_paranoid
 
-  has_many :arms, :dependent => :destroy
-  has_many :participants, :dependent => :destroy
+  has_many :arms, dependent: :destroy
+  has_many :participants, dependent: :destroy
 
-  after_create :update_from_sparc
   after_save :update_via_faye
 
   accepts_nested_attributes_for :arms
@@ -14,10 +13,6 @@
     message = {:channel => channel, :data => "woohoo", :ext => {:auth_token => ENV['FAYE_TOKEN']}}
     uri = URI.parse('http://' + ENV['CWF_FAYE_HOST'] + '/faye')
     Net::HTTP.post_form(uri, :message => message.to_json)
-  end
-
-  def update_from_sparc
-    RemoteObjectUpdaterJob.enqueue(self.id, self.class.to_s)
   end
 
   def self.statuses
