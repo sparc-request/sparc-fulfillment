@@ -1,17 +1,19 @@
-%h2 Log in
-= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-  .field
-    = f.label :email
-    %br/
-    = f.email_field :email, autofocus: true
-  .field
-    = f.label :password
-    %br/
-    = f.password_field :password, autocomplete: "off"
-  - if devise_mapping.rememberable?
-    .field
-      = f.check_box :remember_me
-      = f.label :remember_me
-  .actions
-    = f.submit "Log in"
-= render "devise/shared/links"
+.row
+  .col-md-4
+  .col-md-4.text-center
+    %h1.page-header Log in
+    = form_for(resource, as: resource_name, url: session_path(resource_name), :role => "form") do |f|
+      .form-group
+        = f.label :email
+        = f.email_field :email, autofocus: true, :class => "form-control"
+      .form-group
+        = f.label :password
+        = f.password_field :password, autocomplete: "off", :class => "form-control"
+      - if devise_mapping.rememberable?
+        .form-group
+          = f.check_box :remember_me
+          = f.label :remember_me
+      .form-group
+        = f.submit "Log in", :class => "btn btn-primary"
+    = render "devise/shared/links"
+  .col-md-4
