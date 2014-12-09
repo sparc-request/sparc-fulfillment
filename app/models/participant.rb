@@ -5,6 +5,8 @@ class Participant < ActiveRecord::Base
 
   belongs_to :protocol
 
+  validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :address, :phone, :status, :ethnicity, :race, :gender, presence: true
+
   def update_via_faye
     channel = "/participants/#{self.protocol.id}/list"
     message = {:channel => channel, :data => "woohoo", :ext => {:auth_token => ENV['FAYE_TOKEN']}}
@@ -27,4 +29,9 @@ class Participant < ActiveRecord::Base
   def self.gender_options
     ['Male', 'Female']
   end
+
+  validates :status, inclusion: {in: status_options}
+  validates :ethnicity, inclusion: {in: ethnicity_options}
+  validates :race, inclusion: {in: race_options}
+  validates :gender, inclusion: {in: gender_options}
 end
