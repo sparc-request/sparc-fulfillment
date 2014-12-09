@@ -3,60 +3,60 @@
     .modal-header
       %button.close{type: 'button', data: {dismiss: 'modal'}}
         %span{aria: {hidden:'true'}} &times;
-        %span.sr-only Close
+        %span.sr-only= t(:actions)[:close]
       %h4.modal-title#CreateNewParticipant= header_text
     .modal-body
       = form_for [protocol, participant], {remote: true} do |p|
         .row
           .col-md-3
-            = p.label "last_name", "Last Name:"
+            = p.label "last_name", t(:participant)[:last_name]
           .col-md-6
             = p.text_field "last_name", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "first_name", "First Name:"
+            = p.label "first_name", t(:participant)[:first_name]
           .col-md-6
             = p.text_field "first_name", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "mrn", "MRN:"
+            = p.label "mrn", t(:participant)[:mrn]
           .col-md-6
             = p.text_field "mrn", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "status", "Patient Status:"
+            = p.label "status", t(:participant)[:status]
           .col-md-6
             = p.text_field "status", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "date_of_birth", "Date of Birth:"
+            = p.label "date_of_birth", t(:participant)[:dob]
           .col-md-6
             = p.text_field "date_of_birth", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "gender", "Gender:"
+            = p.label "gender", t(:participant)[:gender]
           .col-md-6
             = p.text_field "gender", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "ethnicity", "Ethnicity:"
+            = p.label "ethnicity", t(:participant)[:ethnicity]
           .col-md-6
             = p.text_field "ethnicity", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "race", "Race:"
+            = p.label "race", t(:participant)[:race]
           .col-md-6
             = p.text_field "race", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "address", "Address:"
+            = p.label "address", t(:participant)[:address]
           .col-md-6
             = p.text_field "address", {class: 'form-control'}
         .row
           .col-md-3
-            = p.label "phone", "Phone:"
+            = p.label "phone", t(:participant)[:phone]
           .col-md-6
             = p.text_field "phone", {class: 'form-control'}
         .modal-footer
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}} Close
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
           %input.btn.btn-primary{type: 'submit', value: "Save Participant"}

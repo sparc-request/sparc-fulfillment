@@ -20,6 +20,11 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  actions:
+    close: "Close"
+    edit: "Edit"
+    delete: "Delete"
+
   index_page:
     updates: "Updates"
     sparc_id: "SPARC ID"
@@ -37,9 +42,23 @@ en:
     subsidy_amount: "Subsidy Amount"
     subsidy_committed: "Subsidy Committed"
     subsidy_expended: "Subsidy Expended"
+
   study_schedule_tab:
     buttons:
       arm: "Arm | "
       visit: "Visit | "
       services: "Services | "
 
+  participant:
+    list: "Participant List"
+    new: "Create New Participant"
+    last_name: "Last Name"
+    first_name: "First Name"
+    mrn: "MRN"
+    status: "Patient Status"
+    dob: "Date of Birth"
+    gender: "Gender"
+    ethnicity: "Ethnicity"
+    race: "Race"
+    address: "Address"
+    phone: "Phone"
