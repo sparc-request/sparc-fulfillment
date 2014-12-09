@@ -37,3 +37,6 @@ $ ->
     "<i class='glyphicon glyphicon-edit'></i>",
     "</a>"
   ].join ""
+
+(exports ? this).nameFormatter = (value, row, index) ->
+  value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()

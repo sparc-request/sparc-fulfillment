@@ -1,8 +1,8 @@
 .modal-dialog
   .modal-content
     .modal-header
-      %button.close{type: 'button', "data-dismiss" => 'modal'}
-        %span{"aria-hidden" => 'true'} &times;
+      %button.close{type: 'button', data: {dismiss: 'modal'}}
+        %span{aria: {hidden:'true'}} &times;
         %span.sr-only Close
       %h4.modal-title#CreateNewParticipant= header_text
     .modal-body
@@ -58,5 +58,5 @@
           .col-md-6
             = p.text_field "phone", {class: 'form-control'}
         .modal-footer
-          %button.btn.btn-default{type: 'button', "data-dismiss" => 'modal'} Close
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}} Close
           %input.btn.btn-primary{type: 'submit', value: "Save Participant"}
