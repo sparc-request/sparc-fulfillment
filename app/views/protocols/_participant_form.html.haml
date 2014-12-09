@@ -26,7 +26,7 @@
           .col-md-3
             = p.label "status", t(:participant)[:status]
           .col-md-6
-            = p.text_field "status", {class: 'form-control'}
+            = p.select "status", Participant.status_options, {include_blank: true}
         .row
           .col-md-3
             = p.label "date_of_birth", t(:participant)[:dob]
@@ -36,17 +36,17 @@
           .col-md-3
             = p.label "gender", t(:participant)[:gender]
           .col-md-6
-            = p.text_field "gender", {class: 'form-control'}
+            = p.select "gender", Participant.gender_options, {include_blank: true}
         .row
           .col-md-3
             = p.label "ethnicity", t(:participant)[:ethnicity]
           .col-md-6
-            = p.text_field "ethnicity", {class: 'form-control'}
+            = p.select "ethnicity", Participant.ethnicity_options, {include_blank: true}
         .row
           .col-md-3
             = p.label "race", t(:participant)[:race]
           .col-md-6
-            = p.text_field "race", {class: 'form-control'}
+            = p.select "race", Participant.race_options, {include_blank: true}
         .row
           .col-md-3
             = p.label "address", t(:participant)[:address]
