@@ -29,9 +29,4 @@ class Participant < ActiveRecord::Base
   def self.gender_options
     ['Male', 'Female']
   end
-
-  validates :status, inclusion: {in: status_options}
-  validates :ethnicity, inclusion: {in: ethnicity_options}
-  validates :race, inclusion: {in: race_options}
-  validates :gender, inclusion: {in: gender_options}
 end
