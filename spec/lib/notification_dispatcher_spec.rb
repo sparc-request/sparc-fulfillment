@@ -15,8 +15,10 @@ RSpec.describe NotificationDispatcher, type: :request do
 
         before { sparc_sends_notification_post(@params) }
 
-        it 'should create an object' do
-          expect(Service.count).to eq(1)
+        it 'should create an object with a :sparc_id' do
+          expected_service = Service.where(sparc_id: @object.sparc_id).first
+
+          expect(expected_service).to be
         end
 
         it 'should create a RemoteObjectUpdaterJob delayed job' do

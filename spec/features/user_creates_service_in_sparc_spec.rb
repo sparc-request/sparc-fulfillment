@@ -5,7 +5,7 @@ RSpec.describe 'User creates Service in SPARC', type: :request, delay: false do
   describe 'full lifecycle' do
 
     it 'should create and update a Service', sparc_api: :get_service_1 do
-      user_adds_service_in_sparc
+      user_creates_service_in_sparc
 
       expect(Service.count).to eq(1)
     end
