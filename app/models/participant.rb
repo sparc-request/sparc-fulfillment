@@ -6,6 +6,19 @@ class Participant < ActiveRecord::Base
   belongs_to :protocol
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :address, :phone, :status, :ethnicity, :race, :gender, presence: true
+  validate :phone_number_format, :date_of_birth_format
+
+  def phone_number_format
+    unless /^\d{3}-\d{3}-\d{4}$/.match self.phone
+      errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX")
+    end
+  end
+
+  def date_of_birth_format
+    unless /^\d{4}-\d{2}-\d{2}$/.match self.date_of_birth.to_s
+      errors.add(:date_of_birth, "is not a date in the format YYYY-MM-DD")
+    end
+  end
 
   def update_via_faye
     channel = "/participants/#{self.protocol.id}/list"
