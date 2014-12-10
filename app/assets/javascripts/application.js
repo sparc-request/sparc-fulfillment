@@ -16,3 +16,4 @@
 //= require tableExport
 //= require jquery.base64
 //= require bootstrap-table-export
+//= require bootstrap-datepicker

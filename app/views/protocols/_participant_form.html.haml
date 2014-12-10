@@ -24,7 +24,7 @@
               .col-sm-7= p.select "status", Participant.status_options, {include_blank: true}, :class => "form-control"
             .form-group
               = p.label "date_of_birth", t(:participant)[:dob], class: "col-sm-4 control-label"
-              .col-sm-7= p.text_field "date_of_birth", {class: 'form-control'}
+              .col-sm-7= p.text_field "date_of_birth", {class: 'form-control', "data-provide" => "datepicker"}
             .form-group
               = p.label "gender", t(:participant)[:gender], class: "col-sm-4 control-label"
               .col-sm-7= p.select "gender", Participant.gender_options, {include_blank: true}, :class => "form-control"
