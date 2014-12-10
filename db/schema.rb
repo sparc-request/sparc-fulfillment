@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208131117) do
+ActiveRecord::Schema.define(version: 20141210185032) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 20141208131117) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
   end
+
+  add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", unique: true, using: :btree
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -57,6 +59,7 @@ ActiveRecord::Schema.define(version: 20141208131117) do
 
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
   add_index "line_items", ["service_id"], name: "index_line_items_on_service_id", using: :btree
+  add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree
 
   create_table "notifications", force: true do |t|
     t.integer  "sparc_id"
@@ -102,11 +105,13 @@ ActiveRecord::Schema.define(version: 20141208131117) do
     t.string   "irb_status"
     t.datetime "irb_approval_date"
     t.datetime "irb_expiration_date"
-    t.integer  "subsidy_amount"
+    t.float    "stored_percent_subsidy",       limit: 24
     t.integer  "study_cost"
     t.integer  "sparc_sub_service_request_id"
     t.string   "status"
   end
+
+  add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
 
   create_table "services", force: true do |t|
     t.integer  "sparc_id"
@@ -118,6 +123,8 @@ ActiveRecord::Schema.define(version: 20141208131117) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
   end
+
+  add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -151,6 +158,7 @@ ActiveRecord::Schema.define(version: 20141208131117) do
   end
 
   add_index "visit_groups", ["arm_id"], name: "index_visit_groups_on_arm_id", using: :btree
+  add_index "visit_groups", ["sparc_id"], name: "index_visit_groups_on_sparc_id", unique: true, using: :btree
 
   create_table "visits", force: true do |t|
     t.integer  "sparc_id"
@@ -165,6 +173,7 @@ ActiveRecord::Schema.define(version: 20141208131117) do
   end
 
   add_index "visits", ["line_item_id"], name: "index_visits_on_line_item_id", using: :btree
+  add_index "visits", ["sparc_id"], name: "index_visits_on_sparc_id", unique: true, using: :btree
   add_index "visits", ["visit_group_id"], name: "index_visits_on_visit_group_id", using: :btree
 
 end
