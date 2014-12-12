@@ -27,6 +27,7 @@ gem 'bootstrap-datepicker-rails'
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'database_cleaner'
 end
 
 group :development do

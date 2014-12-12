@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :protocol, aliases: [:protocol_created_by_sparc] do
-    sparc_id Random.rand(1..9999)
+    sparc_id Random.rand(9999)
     sparc_sub_service_request_id 1
     title 'Fake'
     short_title 'Moaner'
