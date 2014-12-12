@@ -30,7 +30,7 @@
     subsidy = self.stored_percent_subsidy / 100.00
     field = sprintf('%.2f', (study_cost * subsidy))
 
-    "$" + field
+    field
   end
 
   #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.
