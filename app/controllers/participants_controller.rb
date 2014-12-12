@@ -14,24 +14,34 @@ class ParticipantsController < ApplicationController
   def create
     @participant = Participant.new(participant_params)
     @participant.protocol_id = params[:protocol_id]
-    @participant.save
-    flash[:success] = "Participant Created"
+    if @participant.valid?
+      @participant.save
+      flash[:success] = "Participant Created"
+    else
+      @errors = @participant.errors
+    end
   end
 
   def edit
     @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:id])
-    flash[:success] = "Participant Saved"
   end
 
   def update
-    @participant = Participant.find(params[:id])
-    @participant.update(participant_params)
+    @participant = Participant.new(participant_params)
+    @participant.protocol_id = params[:protocol_id]
+    if @participant.valid?
+      @participant = Participant.find(params[:id])
+      @participant.update(participant_params)
+      flash[:success] = "Participant Saved"
+    else
+      @errors = @participant.errors
+    end
   end
 
   def destroy
     Participant.destroy(params[:id])
-    flash[:success] = "Participant Destroyed"
+    flash[:alert] = "Participant Destroyed"
   end
 
   private

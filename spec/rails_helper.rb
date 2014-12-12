@@ -56,4 +56,5 @@ RSpec.configure do |config|
   # Helpers
   config.include SparcHelper, type: :request
   config.include ApiAuthenticationHelper, type: :request
+  config.include DeviseHelpers, type: :feature
 end
