@@ -6,8 +6,6 @@
 
   after_save :update_via_faye
 
-  accepts_nested_attributes_for :arms
-
   def update_via_faye
     channel = "/protocols/list"
     message = {:channel => channel, :data => "woohoo", :ext => {:auth_token => ENV['FAYE_TOKEN']}}

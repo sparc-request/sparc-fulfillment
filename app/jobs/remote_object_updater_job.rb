@@ -13,7 +13,9 @@ class RemoteObjectUpdaterJob < Struct.new(:object_id, :object_class, :callback_u
     RestClient.get(callback_url, params) { |response, request, result, &block|
       raise SparcApiError unless response.code == 200
 
-      RemoteObjectUpdater.new(response, object).import!
+      parsed_json = parse_json(response)
+
+      RemoteObjectUpdater.new(parsed_json, object).import!
     }
   end
 
@@ -25,5 +27,9 @@ class RemoteObjectUpdaterJob < Struct.new(:object_id, :object_class, :callback_u
 
   def object
     @object ||= object_class.classify.constantize.find object_id
+  end
+
+  def parse_json(response)
+    Yajl::Parser.parse response
   end
 end
