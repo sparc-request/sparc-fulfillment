@@ -1,28 +1,26 @@
 .modal-dialog
   .modal-content
-    .modal-header
-      %button.close{type: 'button', "data-dismiss" => 'modal'}
-        %span{"aria-hidden" => 'true'} &times;
-        %span.sr-only Close
-      %h4.modal-title#add_arm_modal Add Arm
-    .modal-body
-      = form_for arm, {remote: true} do |a|
-        = a.hidden_field :protocol_id
+    = form_for [protocol, arm], {remote: true, html: {class: "form-horizontal new_visit", role: "form"}} do |a|
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4#CreateNewParticipant.modal-title.text-center Add Arm
+      .modal-body
+        #arm_modal_errors
         .row
-          .col-md-3
-            = a.label "name", "Arm Name:"
-          .col-md-6
-            = a.text_field "name", {class: 'form-control'}
-        .row
-          .col-md-3
-            = a.label "subject_count", "Subject Count:"
-          .col-md-6
-            = a.text_field "subject_count", {class: 'form-control'}
-        .row
-          .col-md-3
-            = a.label "visit_count", "Visit Count:"
-          .col-md-6
-            = a.text_field "visit_count", {class: 'form-control'}
-        .modal-footer
-          %button.btn.btn-default{type: 'button', "data-dismiss" => 'modal'} Close
+          .col-md-12
+            = a.hidden_field :protocol_id
+            .form-group
+              = a.label "name", t(:arm)[:name], class: "col-sm-4 control-label"
+              .col-sm-7= a.text_field "name", {class: 'form-control'}
+            .form-group
+              = a.label "subject_count", t(:arm)[:subject_count], class: "col-sm-4 control-label"
+              .col-sm-7= a.text_field "subject_count", {class: 'form-control'}
+            .form-group
+              = a.label "visit_count", t(:arm)[:visit_count], class: "col-sm-4 control-label"
+              .col-sm-7= a.text_field "visit_count", {class: 'form-control'}
+      .modal-footer
+        .center-block{style: "width: 205px;"}
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
           %input.btn.btn-primary{type: 'submit', value: "Add Arm"}

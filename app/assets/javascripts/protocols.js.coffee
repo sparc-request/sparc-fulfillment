@@ -74,46 +74,10 @@ $ ->
       status = $('.selectpicker').val()
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
-  if $("body.protocols-show").length > 0
-
-    # initialize visit group select list
-    change_arm()
-
-    $(document).on 'change', '#arms', ->
-      change_arm()
-
-
-    $(".glyphicon glyphicon-calendar").on "click", ->
-       #TODO: insert link to particpant calendar
-
-    $("glyphicon glyphicon-stats").on "click", ->
-      #TODO: insert link to
-
-
 #Table formatting code
 (exports ? this).display_date = (value) ->
   d = new Date(value)
   d.toLocaleFormat('%m/%d/%Y')
-
-
-
-
-(exports ? this).change_arm = ->
-  $select = $('#visits')
-  protocol_id = $('#arms').data('protocol_id')
-  arm_id = $('#arms').val()
-
-  $.get "/protocols/#{protocol_id}/arms/#{arm_id}/change", (data) ->
-    visit_groups = data
-    $select.find('option').remove()
-
-    $.each visit_groups, (key, visit_group) ->
-      $select.append('<option value=' + visit_group.id + '>' + visit_group.name + '</option>')
-
-    $select.selectpicker('refresh')
-
-(exports ? this).view_buttons = (value) ->
-  '<i class="glyphicon glyphicon-calendar" participant_id=' + value + '></i>' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-stats" participant_id=' + value + '></i>'
 
 (exports ? this).cents_to_dollars = (value) ->
   cents = value / 100
@@ -123,10 +87,4 @@ $ ->
 
 (exports ? this).number_to_percent = (value) ->
   value + '%'
-
-  #update the arm data upon new arm addition
-(exports ? this).create_arm = (name, id) ->
-  $select = $('#arms')
-  $select.append('<option value=' + id + '>' + name + '</option>')
-  $select.selectpicker('refresh')
 

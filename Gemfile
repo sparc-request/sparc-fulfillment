@@ -23,9 +23,11 @@ gem 'uglifier', '>= 1.3.0'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
 gem 'devise'
 gem 'omniauth'
+gem 'bootstrap-datepicker-rails'
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'database_cleaner'
 end
 
 group :development do

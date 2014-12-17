@@ -21,6 +21,15 @@ $ ->
         type: 'GET'
         url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
 
+  #particpant tracker logic
+  if $('#particpant_tracker').length > 0
+    $(".glyphicon glyphicon-calendar").on "click", ->
+       #TODO: insert link to particpant calendar
+
+    $("glyphicon glyphicon-stats").on "click", ->
+      #TODO: insert link to
+
+#methods
   capitalize = (string) ->
     string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
 
@@ -37,3 +46,10 @@ $ ->
     "<i class='glyphicon glyphicon-edit'></i>",
     "</a>"
   ].join ""
+
+(exports ? this).nameFormatter = (value, row, index) ->
+  value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+
+(exports ? this).view_buttons = (value) ->
+  '<i class="glyphicon glyphicon-calendar" participant_id=' + value + '></i>' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-stats" participant_id=' + value + '></i>'
+

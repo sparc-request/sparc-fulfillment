@@ -4,12 +4,11 @@ Rails.application.routes.draw do
   root 'protocols#index'
 
   resources :protocols do
-    member do
-      resources :arms do
-        member do
-          get 'change'
-        end
+    resources :arms do
+      member do
+        get 'change'
       end
+      resources :visit_groups
     end
 
     # member do

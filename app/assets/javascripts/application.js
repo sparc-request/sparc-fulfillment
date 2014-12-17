@@ -12,4 +12,10 @@
 //
 //= require protocols
 //= require participants
+//= require study_schedule_edit_buttons
 //= require global
+//= require tableExport
+//= require jquery.base64
+//= require bootstrap-table-export
+//= require bootstrap-datepicker
+

@@ -7,4 +7,19 @@ class Arm < ActiveRecord::Base
   has_many :visit_groups, :dependent => :destroy
 
   accepts_nested_attributes_for :line_items, :visit_groups
+
+  validates :name, presence: true
+  validates_numericality_of :subject_count, greater_than_or_equal_to: 1
+  validates_numericality_of :visit_count, greater_than_or_equal_to: 1
+
+  after_create :create_visit_groups
+
+
+
+  private
+  def create_visit_groups
+    for count in 1..self.visit_count
+      VisitGroup.create(name: "Visit "+ count.to_s, day: count, position: count, arm_id: self.id)
+    end
+  end
 end
