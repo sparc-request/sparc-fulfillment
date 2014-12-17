@@ -4,6 +4,7 @@ class Participant < ActiveRecord::Base
   after_save :update_via_faye
 
   belongs_to :protocol
+  belongs_to :arm
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :address, :phone, :status, :ethnicity, :race, :gender, presence: true
   validate :phone_number_format, :date_of_birth_format

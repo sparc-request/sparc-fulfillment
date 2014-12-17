@@ -1,6 +1,6 @@
 %h3= t(:participant)[:tracker]
 #participant_tracker
-  %table{id: "participants-table", data: {toggle: 'table', search: "true", height: "400", url: "/protocols/#{@protocol.id}/participants.json", show: {columns: "true", refresh: "true"}, sort: {name: 'last_name', order: 'asc'}}}
+  %table{id: "participants-table", data: {toggle: 'table', search: "true", height: "400", url: "/protocols/#{@protocol.id}/participants.json", striped: "true", show: {columns: "true", refresh: "true"}, sort: {name: 'last_name', order: 'asc'}}}
     %thead
       %tr
         %th{data: {align: "left", sortable: "true", field: "last_name"}}= t(:participant)[:last_name]
