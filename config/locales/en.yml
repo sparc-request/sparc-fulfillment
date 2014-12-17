@@ -24,7 +24,11 @@ en:
     close: "Close"
     edit: "Edit"
     delete: "Delete"
+    save: "Save"
     change_arm: "Change Arm"
+    new_participant: "Create New Participant"
+    save_participant: "Save Participant"
+
 
   index_page:
     updates: "Updates"
@@ -53,7 +57,6 @@ en:
   participant:
     list: "Participant List"
     tracker: "Participant Tracker"
-    new: "Create New Participant"
     last_name: "Last Name"
     first_name: "First Name"
     mrn: "MRN"

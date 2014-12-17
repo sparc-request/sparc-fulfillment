@@ -13,23 +13,26 @@ $ ->
         $.ajax
           type: 'DELETE'
           url: "/protocols/#{row.protocol_id}/participants/#{row.id}"
-        $("#participants-table").bootstrapTable 'refresh', {url: "/protocols/#{row.protocol_id}/participants.json"}
 
     "click #editParticipant": (e, value, row, index) ->
-      $("#participantModal").modal 'show'
       $.ajax
         type: 'GET'
         url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
 
+    "click #changeParticipantArm": (e, value, row, index) ->
+      if row.arm_id == null
+        urlVar = "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm"
+      else
+        urlVar = "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm/#{row.arm_id}/edit"
+      $.ajax
+        type: 'GET'
+        url: urlVar
+
     "click .calendar": (e, value, row, index) ->
-      alert "calendar"
+      alert JSON.stringify row
 
     "click .stats": (e, value, row, index) ->
-      alert "stats"
-
-    "click #changeParticipantArm": (e, value, row, index) ->
-      alert "change arm"
-
+      alert JSON.stringify row
 
   capitalize = (string) ->
     string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
@@ -71,3 +74,7 @@ $ ->
     "<i class='glyphicon glyphicon-stats' style='z-index: 100'></i>",
     "</a>"
   ].join ""
+
+(exports ? this).refreshParticipantTables = (protocol_id) ->
+  $("#participants-list-table").bootstrapTable 'refresh', {url: "/protocols/#{protocol_id}/participants.json"}
+  $("#participants-tracker-table").bootstrapTable 'refresh', {url: "/protocols/#{protocol_id}/participants.json"}
