@@ -41,7 +41,7 @@ class ParticipantsController < ApplicationController
 
   def destroy
     Participant.destroy(params[:id])
-    flash[:alert] = "Participant Destroyed"
+    flash[:alert] = "Participant Removed"
   end
 
   private

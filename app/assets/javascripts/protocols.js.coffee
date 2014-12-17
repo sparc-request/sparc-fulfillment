@@ -89,15 +89,6 @@ $ ->
   $("glyphicon glyphicon-stats").on "click", ->
     #TODO: insert link to
 
-
-#Table formatting code
-(exports ? this).display_date = (value) ->
-  d = new Date(value)
-  month = if ((d.getMonth() + 1) < 10) then ("0" + (d.getMonth() + 1)) else d.getMonth() + 1
-  day = if (d.getDate() < 10) then ("0" + d.getDate()) else d.getDate()
-  year = d.getFullYear()
-  year + '-' + month + '-' + day
-
 (exports ? this).change_arm = ->
   $select = $('#visits')
   arm_id = $('#arms').val()
