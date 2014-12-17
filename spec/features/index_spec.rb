@@ -22,4 +22,17 @@ RSpec.describe 'Index spec', type: :feature, js: true do
       expect(page.body).to_not have_css("table#protocol-list", text: "Swanson")
     end
   end
+
+  describe 'financial view' do
+
+    it "should display and hide the proper columns when hte button is " do
+      visit protocols_path
+
+      find('.financial').click
+
+      sleep 2
+      expect(page).to have_content('Subsidy Amount')
+      expect(page).to_not have_content('Status')
+    end
+  end
 end
