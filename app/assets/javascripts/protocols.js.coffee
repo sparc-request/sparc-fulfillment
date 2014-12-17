@@ -89,14 +89,6 @@ $ ->
   $("glyphicon glyphicon-stats").on "click", ->
     #TODO: insert link to
 
-
-#Table formatting code
-(exports ? this).display_date = (value) ->
-  d = new Date(value)
-  d.toLocaleFormat('%m/%d/%Y')
-
-
-
 (exports ? this).change_arm = ->
   $select = $('#visits')
   arm_id = $('#arms').val()
