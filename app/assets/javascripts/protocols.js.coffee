@@ -82,13 +82,6 @@ $ ->
     $(document).on 'change', '#arms', ->
       change_arm()
 
-
-  $(".glyphicon glyphicon-calendar").on "click", ->
-     #TODO: insert link to particpant calendar
-
-  $("glyphicon glyphicon-stats").on "click", ->
-    #TODO: insert link to
-
 (exports ? this).change_arm = ->
   $select = $('#visits')
   arm_id = $('#arms').val()
@@ -101,9 +94,6 @@ $ ->
       $select.append('<option value=' + visit_group.id + '>' + visit_group.name + '</option>')
 
     $select.selectpicker('refresh')
-
-(exports ? this).view_buttons = (value) ->
-  '<i class="glyphicon glyphicon-calendar" participant_id=' + value + '></i>' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-stats" participant_id=' + value + '></i>'
 
 (exports ? this).cents_to_dollars = (value) ->
   cents = value / 100

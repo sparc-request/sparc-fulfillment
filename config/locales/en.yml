@@ -24,6 +24,7 @@ en:
     close: "Close"
     edit: "Edit"
     delete: "Delete"
+    change_arm: "Change Arm"
 
   index_page:
     updates: "Updates"
@@ -51,6 +52,7 @@ en:
 
   participant:
     list: "Participant List"
+    tracker: "Participant Tracker"
     new: "Create New Participant"
     last_name: "Last Name"
     first_name: "First Name"
@@ -62,3 +64,6 @@ en:
     race: "Race"
     address: "Address"
     phone: "Phone"
+    calendar: "Calendar"
+    stats: "Stats"
+    arm: "Arm"

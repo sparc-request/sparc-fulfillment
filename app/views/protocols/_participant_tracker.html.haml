@@ -1,8 +1,12 @@
-%h3 Participant Tracker
+%h3= t(:participant)[:tracker]
 #participant_tracker
-  %table{id: "participants-table", "data-toggle" => 'table', "data-search" => "true", "data-show-columns" => "true", "data-url" => "/protocols/#{@protocol.id}/participants.json", "data-sort-name" => 'last_name', "data-sort-order" => 'asc',"data-height" => "400"}
+  %table{id: "participants-table", data: {toggle: 'table', search: "true", height: "400", url: "/protocols/#{@protocol.id}/participants.json", show: {columns: "true", refresh: "true"}, sort: {name: 'last_name', order: 'asc'}}}
     %thead
       %tr
-        %th{"data-align" => "center", "data-sortable" => "true", "data-field" => "id", "data-formatter" => "view_buttons"}
-        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "last_name"} Last Name
-        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "first_name"} First Name
+        %th{data: {align: "left", sortable: "true", field: "last_name"}}= t(:participant)[:last_name]
+        %th{data: {align: "left", sortable: "true", field: "first_name"}}= t(:participant)[:first_name]
+        %th{data: {align: "left", sortable: "true", field: "mrn"}}= t(:participant)[:mrn]
+        %th{data: {align: "left", sortable: "true", field: "arm_id"}}= t(:participant)[:arm]
+        %th{data: {align: "center", events: "operateEvents", formatter: "calendarFormatter", width: "5"}}= t(:participant)[:calendar]
+        %th{data: {align: "center", events: "operateEvents", formatter: "statsFormatter", width: "5"}}= t(:participant)[:stats]
+        %th{data: {align: "center", events: "operateEvents", formatter: "changeArmFormatter", width: "5"}}= t(:actions)[:change_arm]
