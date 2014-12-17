@@ -16,9 +16,11 @@ Rails.application.routes.draw do
       get 'change_arm'
     end
     resources :participants
-    
+
     resources :service_calendar
   end
+
+  get '/service_calendar/change_page' => 'service_calendar#change_page'
 
 end
 

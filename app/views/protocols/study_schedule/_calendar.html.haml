@@ -1,8 +1,5 @@
 %br
 %br
-%br
-%br
-.clear
 %div{role: 'tabpanel'}
   %ul.nav.nav-tabs{role: 'tablist'}
   %div{role: 'tablist'}
@@ -12,7 +9,9 @@
       %li{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated_request", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
   .tab-content
     .tab-pane.active#template{role: 'tabpanel'}
-      = render 'protocols/study_schedule/template'
+      - protocol.arms.each do |arm|
+        = render partial: 'service_calendar/template', locals: {arm: arm, page: page}
+        %br
 
     .tab-pane#quantity_billing{role: 'tabpanel'}
       = render 'protocols/study_schedule/quantity_billing'
