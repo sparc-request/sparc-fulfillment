@@ -39,6 +39,10 @@ namespace :data do
       ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold'].sample
     end
 
+    def rand_core
+      ['RCM', 'Nexus', 'Something', 'Or Other'].sample
+    end
+
     services = []
     for i in 0...10
       services << Service.create(sparc_id: sparc_id, cost: rand, name: rand_string, abbreviation: rand_string, description: rand_string)
