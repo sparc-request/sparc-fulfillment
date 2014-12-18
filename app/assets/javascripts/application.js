@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require protocols
+//= require service_calendar
 //= require participants
 //= require global
 //= require tableExport
