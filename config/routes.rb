@@ -20,8 +20,11 @@ Rails.application.routes.draw do
     resources :service_calendar
   end
 
-  get '/service_calendar/change_page' => 'service_calendar#change_page'
-
+  resources :service_calendar, only: [:change_page] do
+    collection do
+      get 'change_page'
+    end
+  end
 end
 
 

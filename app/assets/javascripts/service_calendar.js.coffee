@@ -6,7 +6,6 @@ $ ->
     data =
         'arm_id': obj.data('arm_id'),
         'page'  : obj.attr('page')
-    console.log data
     $.ajax
       type: 'GET'
       url:  '/service_calendar/change_page'
