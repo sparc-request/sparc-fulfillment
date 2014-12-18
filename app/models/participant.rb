@@ -33,7 +33,7 @@ class Participant < ActiveRecord::Base
   end
 
   def self.race_options
-    ['Caucasian', 'African American', 'Hispanic', 'Asian / Pacific Islander', 'Other']
+    ['Caucasian', 'African American/Black', 'Asian', 'Middle Eastern', 'Pacific Islander', 'Native American/Alaskan', 'Other']
   end
 
   def self.status_options
