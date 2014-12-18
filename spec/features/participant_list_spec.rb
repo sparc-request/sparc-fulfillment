@@ -37,8 +37,6 @@ RSpec.describe 'Participant List', type: :feature, js: true do
 
     wait_until{ page.has_no_css?("input[value='Save Participant']") } #wait for modal to disappear
     expect(page).to have_content('Participant Created') #expect flash message
-    click_button "Refresh" #refresh table
-    wait_for_javascript_to_finish
     expect(page).to have_content(participant2.first_name) #table should have new entry
   end
 
@@ -53,16 +51,12 @@ RSpec.describe 'Participant List', type: :feature, js: true do
 
     wait_until{ page.has_no_css?("input[value='Save Participant']") } #wait for modal to disappear
     expect(page).to have_content('Participant Saved') #expect flash message
-    click_button "Refresh" #refresh table
-    wait_for_javascript_to_finish
     expect(page).to have_content((participant1.first_name + 'y')) #table should have changed entry
   end
 
   it "should delete an existing participant" do
     expect(page).to have_content(participant1.first_name) #participant should exist
     click_link "Remove"
-    wait_for_javascript_to_finish
-    click_button "Refresh" #refresh table
     wait_for_javascript_to_finish
     expect(page).to have_content('Participant Removed') #expect flash message
     expect(page).not_to have_content(participant1.first_name) #expect participant to be removed

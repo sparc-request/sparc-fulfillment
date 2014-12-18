@@ -22,7 +22,6 @@ class VisitGroupsController < ApplicationController
   end
 
   def destroy
-
     if Arm.find(params[:arm_id]).visit_groups.count == 1
       flash.now[:alert] = "Arms must have at least one visit. Add another visit before deleting this one"
     else

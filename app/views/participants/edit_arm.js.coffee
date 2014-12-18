@@ -1,0 +1,2 @@
+$("#changeArmModalPlace").html("<%= escape_javascript(render(:partial =>'participants/change_arm_form', locals: {protocol: @protocol, participant: @participant, arm: @arm, path: @path})) %>");
+$("#changeArmModal").modal 'show'
