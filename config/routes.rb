@@ -4,18 +4,25 @@ Rails.application.routes.draw do
   root 'protocols#index'
 
   resources :protocols do
-    collection do
-      resources :arms do
-        member do
-          get 'change'
-        end
+    resources :arms do
+      member do
+        get 'change'
       end
+      resources :visit_groups
     end
 
-    member do
-      get 'change_arm'
+    resources :participants do
+      get 'change_arm/(:id/edit)', to: 'participants#edit_arm', as: :edit_arm
+      patch 'change_arm(/:id)', to: 'participants#update_arm'
+      put 'change_arm(/:id)', to: 'participants#update_arm'
+      post 'change_arm(/:id)', to: 'participants#update_arm'
     end
-    resources :participants
+  end
+
+  resources :service_calendar, only: [:change_page] do
+    collection do
+      get 'change_page'
+    end
   end
 end
 

@@ -1,4 +1,6 @@
 class VisitGroup < ActiveRecord::Base
+  self.per_page = 5
+
   acts_as_paranoid
 
   belongs_to :arm

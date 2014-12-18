@@ -4,6 +4,7 @@ class Participant < ActiveRecord::Base
   after_save :update_via_faye
 
   belongs_to :protocol
+  belongs_to :arm
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :address, :phone, :status, :ethnicity, :race, :gender, presence: true
   validate :phone_number_format, :date_of_birth_format
@@ -32,7 +33,7 @@ class Participant < ActiveRecord::Base
   end
 
   def self.race_options
-    ['Caucasian', 'African American', 'Hispanic', 'Asian / Pacific Islander', 'Other']
+    ['Caucasian', 'African American/Black', 'Asian', 'Middle Eastern', 'Pacific Islander', 'Native American/Alaskan', 'Other']
   end
 
   def self.status_options

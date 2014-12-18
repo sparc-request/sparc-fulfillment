@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Participant, type: :model do
 
   it { should belong_to(:protocol) }
+  it { should belong_to(:arm) }
 
   describe 'validations' do
     let!(:protocol1)     { create(:protocol) }

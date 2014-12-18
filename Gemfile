@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
-gem 'bootstrap-select-rails', :git => "git@github.com:Slashek/bootstrap-select-rails.git"
+gem 'bootstrap-select-rails', :git => "git@zgithub.com:Slashek/bootstrap-select-rails.git"
 gem 'coffee-rails', '~> 4.0.0'
 gem 'delayed_job_active_record'
 gem 'dotenv-deployment', '~> 0.2.0'
@@ -23,6 +23,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
 gem 'devise'
 gem 'omniauth'
+gem 'will_paginate'
 gem 'bootstrap-datepicker-rails'
 
 group :development, :test do
