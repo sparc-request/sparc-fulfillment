@@ -84,9 +84,10 @@ $ ->
 
 (exports ? this).change_arm = ->
   $select = $('#visits')
+  protocol_id = $('#arms').data('protocol_id')
   arm_id = $('#arms').val()
 
-  $.get "/protocols/arms/#{arm_id}/change", (data) ->
+  $.get "/protocols/#{protocol_id}/arms/#{arm_id}/change", (data) ->
     visit_groups = data
     $select.find('option').remove()
 
