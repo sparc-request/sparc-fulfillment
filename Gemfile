@@ -2,7 +2,8 @@ source 'https://rubygems.org'
 
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
-gem 'bootstrap-select-rails', :git => "git@github.com:Slashek/bootstrap-select-rails.git"
+gem 'bootstrap-select-rails'
+# gem 'bootstrap-select-rails', :git => "git@github.com:Slashek/bootstrap-select-rails.git"
 gem 'coffee-rails', '~> 4.0.0'
 gem 'delayed_job_active_record'
 gem 'dotenv-deployment', '~> 0.2.0'

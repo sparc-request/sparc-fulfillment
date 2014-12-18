@@ -6,9 +6,9 @@
         %th{data: {align: "left", sortable: "true", field: "last_name", formatter: "nameFormatter"}}= t(:participant)[:last_name]
         %th{data: {align: "left", sortable: "true", field: "first_name", formatter: "nameFormatter"}}= t(:participant)[:first_name]
         %th{data: {align: "left", sortable: "true", field: "mrn"}}= t(:participant)[:mrn]
-        %th{data: {align: "left", sortable: "true", field: "arm_id"}}= t(:participant)[:arm]
+        %th{data: {align: "left", sortable: "true", field: "arm_name"}}= t(:participant)[:arm]
         %th{data: {align: "center", events: "operateEvents", formatter: "calendarFormatter", width: "5"}}= t(:participant)[:calendar]
-        %th{data: {align: "center", events: "operateEvents", formatter: "statsFormatter", width: "5"}}= t(:participant)[:stats]
+        %th{data: {align: "center", events: "operateEvents", formatter: "statsFormatter", width: "5"}}= t(:participant)[:report]
         %th{data: {align: "center", events: "operateEvents", formatter: "changeArmFormatter", width: "5"}}= t(:actions)[:change_arm]
 
 .modal.fade#changeArmModal{tabindex: '-1', role: 'dialog', aria: {labelledby: "changeParticipantArm", hidden: 'true'}}

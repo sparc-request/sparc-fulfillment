@@ -3,7 +3,8 @@ class ParticipantsController < ApplicationController
 
   def index
     @protocol = Protocol.find(params[:protocol_id])
-    respond_with @protocol.participants
+    @participants = @protocol.participants
+    respond_with @participants
   end
 
   def new
@@ -48,9 +49,12 @@ class ParticipantsController < ApplicationController
   end
 
   def edit_arm
+    def is_number?(string)
+      Float(string) != nil rescue false
+    end
     @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:participant_id])
-    if params[:id]
+    if is_number? params[:id]
       @arm = Arm.find(params[:id])
       @path = "/protocols/#{@protocol.id}/participants/#{@participant.id}/change_arm/#{@arm.id}"
     else
