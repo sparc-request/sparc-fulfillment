@@ -39,7 +39,6 @@ namespace :data do
       ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold'].sample
     end
 
-
     services = []
     for i in 0...10
       services << Service.create(sparc_id: sparc_id, cost: rand, name: rand_string, abbreviation: rand_string, description: rand_string)
@@ -57,7 +56,7 @@ namespace :data do
         end
         for li in 0...rand
           #for the service_id, it simply uses the counting index so each lineitem created there won't be duplicate services
-          line_items = LineItem.create(sparc_id: sparc_id, arm_id: arm.id, service_id: services[li].id, name: rand_string, cost: rand)
+          line_items = LineItem.create(sparc_id: sparc_id, arm_id: arm.id, service_id: services[li].id, name: rand_string, cost: rand, sparc_core_name: rand_core)
         end
         arm.visit_groups.each do |vg|
           arm.line_items.each do |li|

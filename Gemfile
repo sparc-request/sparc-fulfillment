@@ -24,6 +24,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
 gem 'devise'
 gem 'omniauth'
+gem 'will_paginate'
 gem 'bootstrap-datepicker-rails'
 
 group :development, :test do
