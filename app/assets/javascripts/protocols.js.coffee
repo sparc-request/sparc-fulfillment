@@ -74,11 +74,6 @@ $ ->
       status = $('.selectpicker').val()
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
-#Table formatting code
-(exports ? this).display_date = (value) ->
-  d = new Date(value)
-  d.toLocaleFormat('%m/%d/%Y')
-
 (exports ? this).cents_to_dollars = (value) ->
   cents = value / 100
   dollars = '$' + cents.toFixed(2)

@@ -27,7 +27,6 @@ $ ->
     $("glyphicon glyphicon-stats").on "click", ->
       #TODO: insert link to
 
-
     "click .change-arm": (e, value, row, index) ->
       if row.arm_id == null
         urlVar = "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm"

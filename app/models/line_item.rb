@@ -6,10 +6,8 @@ class LineItem < ActiveRecord::Base
   belongs_to :arm
   belongs_to :service
 
-  has_many :visit_groups, through: :arm
-  has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, :dependent => :destroy
-
   after_create :create_visits
+  has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, :dependent => :destroy
 
   accepts_nested_attributes_for :visits
 

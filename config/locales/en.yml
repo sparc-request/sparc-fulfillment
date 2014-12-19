@@ -94,3 +94,5 @@ en:
   services:
     name: "Selected Service"
     arm: "Select Arm(s)"
+    report: "Report"
+    arm: "Arm"
