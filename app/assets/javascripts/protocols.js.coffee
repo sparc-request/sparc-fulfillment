@@ -11,7 +11,7 @@ $ ->
 
 
     $(".bootstrap-table .fixed-table-toolbar").
-      prepend('<div class="columns btn-group pull-right financial-management-view" data-toggle="buttons"><label class="btn btn-default financial" title="Financial View"><input type="radio" autocomplete="off" value="financial"><i class="glyphicon glyphicon-usd"></i></label><label class="btn btn-default management" title="Management View"><input type="radio" autocomplete="off" value="management"><i class="glyphicon glyphicon-book"></i></label></div>')
+      prepend('<div class="columns btn-group pull-right financial--view" data-toggle="buttons"><label class="btn btn-default financial" title="Financial View"><input type="radio" autocomplete="off" value="financial"><i class="glyphicon glyphicon-usd"></i></label><label class="btn btn-default management" title="Management View"><input type="radio" autocomplete="off" value="management"><i class="glyphicon glyphicon-book"></i></label></div>')
 
     $(".financial-management-view label").on "click", ->
       e = $(this)
@@ -33,7 +33,7 @@ $ ->
     #     $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json"})
 
     #Index table events
-    $(document).on 'change', '.index_selectpicker', ->
+    $(document).on 'change', '#index_selectpicker', ->
       status = $(this).val()
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
@@ -87,4 +87,3 @@ $ ->
 
 (exports ? this).number_to_percent = (value) ->
   value + '%'
-

@@ -3,7 +3,6 @@ class VisitGroupsController < ApplicationController
 
   def new
     @arm = Arm.find(params[:arm_id])
-    #sets the newly created visit group to the last position but it will be moved if the user chooses a different option
     @visit_group = VisitGroup.new(arm_id: params[:arm_id])
   end
 

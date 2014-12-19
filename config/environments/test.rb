@@ -36,4 +36,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Include models
+  config.included_models = ActiveRecord::Base.descendants.map!(&:name)
+  # Solves Rails 4: 'Circular dependency detected while autoloading constant' RSPEC error
+  config.dependency_loading = false
 end

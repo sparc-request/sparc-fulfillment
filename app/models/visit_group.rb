@@ -1,9 +1,14 @@
 class VisitGroup < ActiveRecord::Base
+  self.per_page = 5
+
   acts_as_paranoid
-  after_create :reorder_visit_groups_up
+  after_create :reorder_visit_groups_up, :create_visits
   after_destroy :reorder_visit_groups_down
+
   belongs_to :arm
+
   has_many :visits, :dependent => :destroy
+  has_many :line_items, through: :arm
 
   default_scope {order(:position)}
 
@@ -27,6 +32,11 @@ class VisitGroup < ActiveRecord::Base
     end
   end
 
-
-
+  def create_visits
+    new_visits = []
+    self.line_items.pluck(:id).each do |li|
+      new_visits << Visit.new(visit_group_id: self.id, line_item_id: li, research_billing_qty: 0, insurance_billing_qty: 0, effort_billing_qty: 0)
+    end
+    Visit.import new_visits
+  end
 end

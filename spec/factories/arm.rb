@@ -8,5 +8,7 @@ FactoryGirl.define do
     sequence :name do |n|
       "Protocol #{n}"
     end
+    visit_count 5
+    subject_count 5
   end
 end

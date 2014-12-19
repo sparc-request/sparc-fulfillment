@@ -40,6 +40,13 @@ $ ->
       arm_id = $('#arms').val()
       $.get "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/new"
 
+    $(document).on 'click', '#add_service_button', ->
+      protocol_id = $('#arms').data('protocol_id')
+      service_id = $('#services').val()
+      arm_id = $('#arms').val()
+      $.ajax
+        type: 'GET'
+        url: "/protocols/#{protocol_id}/arms/#{arm_id}/services/#{service_id}/line_items/new"
 
 (exports ? this).create_arm = (name, id) ->
   $select = $('#arms')

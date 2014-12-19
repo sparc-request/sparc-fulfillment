@@ -19,8 +19,10 @@ class Arm < ActiveRecord::Base
 
   private
   def create_visit_groups
+    new_visit_groups = []
     for count in 1..self.visit_count
-      VisitGroup.create(name: "Visit "+ count.to_s, day: count, position: count, arm_id: self.id)
+      new_visit_groups << VisitGroup.new(name: "Visit "+ count.to_s, day: count, position: count, arm_id: self.id)
     end
+    VisitGroup.import new_visit_groups
   end
 end

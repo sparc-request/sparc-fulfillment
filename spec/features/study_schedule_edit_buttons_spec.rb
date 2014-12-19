@@ -6,6 +6,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   let!(:arm2)         { create(:arm, protocol_id: protocol1.id) }
   let!(:visit_group1) { create(:visit_group, arm_id: arm1.id) }
   let!(:visit_group2) { create(:visit_group, arm_id: arm2.id) }
+  let!(:service1)     { create(:service) }
 
   before :each do
     visit protocol_path(protocol1.sparc_id)
@@ -57,11 +58,29 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     fill_in 'Visit Day', with: 3
     select 'add as last', from: 'visit_group_position'
     click_button 'Add Visit'
-    save_and_open_screenshot
     wait_until(3) {expect(page).to have_content "Visit Created"}
   end
-  it "should add a service" do
-    #TODO this functionality does not exsist yet
+  it "should add a service to one or multiple arms" do
+    click_link 'add_service_button'
+    sleep 3
+    modal = page.find('#line_item_modal')
+    within modal do
+      expect(page).to have_content "#{arm1.name} #{arm2.name}"
+      select service1.name, from: "line_item_id"
+      find(:css,"#arm_ids_[value='#{arm1.id}']").set(true)
+      click_button 'Add Service'
+    end
+    expect(page).to have_content "Service has been added"
+    click_link 'add_service_button'
+    sleep 3
+    modal = page.find('#line_item_modal')
+    within modal do
+      select service1.name, from: "line_item_id"
+      find(:css,"#arm_ids_[value='#{arm1.id}']").set(true)
+      find(:css,"#arm_ids_[value='#{arm2.id}']").set(true)
+      click_button 'Add Service'
+    end
+    expect(page).to have_content "Services have been added to the chosen arms"
   end
 
 end

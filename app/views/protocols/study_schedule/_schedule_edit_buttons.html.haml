@@ -1,6 +1,6 @@
 #study_schedule_buttons
   .row
-    .col-md-4.text-center
+    .col-sm-4.col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:arm]
       = link_to '', new_protocol_arm_path(protocol), {class: 'btn btn-success glyphicon glyphicon-plus ', id: 'add_arm_button', type: 'button',"data-toggle" => 'modal', "data-target" => '#arm_modal', remote: true}
       = link_to '', 'javascript:void(0)', {class: 'btn btn-danger glyphicon glyphicon-remove ', id: 'remove_arm_button', type: 'button', remote: true}
@@ -13,9 +13,9 @@
       = link_to '', 'javascript:void(0)', {class: 'btn btn-danger glyphicon glyphicon-remove ', id: 'remove_visit_button', type: 'button', remote: true}
       %div
         %select.selectpicker#visits
-    .col-md-4.text-center
+    .col-sm-4.col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:services]
-      = link_to '', 'javascript:void(0)', {class: 'btn btn-success glyphicon glyphicon-plus ', id: 'add_service_button', type: 'button', remote: true}
+      = link_to '', 'javascript:void(0)', {class: 'btn btn-success glyphicon glyphicon-plus ', id: 'add_service_button', type: 'button', "data-toggle" => 'modal', "data-target" => '#line_item_modal', remote: true}
       = link_to '', 'javascript:void(0)', {class: 'btn btn-danger glyphicon glyphicon-remove ', id: 'remove_service_button', type: 'button', remote: true}
       %div
         = select_tag 'services', options_from_collection_for_select(services, 'id', 'name'), :class => 'selectpicker'
@@ -23,3 +23,5 @@
   #arm_form
 .modal.fade#visit_modal
   #visit_form
+.modal.fade#line_item_modal
+  #line_item_form
