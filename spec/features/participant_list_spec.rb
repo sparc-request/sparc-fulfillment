@@ -41,7 +41,7 @@ RSpec.describe 'Participant List', type: :feature, js: true do
   it "should edit an existing participant" do
     click_link "Edit"
     wait_for_javascript_to_finish
-    expect(page).to have_css("#participant_first_name[value='#{participant.first_name}']") #form should appear with correct info filled in
+    expect(page).to have_css("#participant_first_name[value='#{@participant.first_name}']") #form should appear with correct info filled in
 
     #Edit participant first name then save
     fill_in 'First Name', with: (@participant.first_name + 'y')

@@ -48,6 +48,13 @@ en:
     subsidy_committed: "Subsidy Committed"
     subsidy_expended: "Subsidy Expended"
 
+  protocol_tabs:
+    study_schedule: "Study Schedule"
+    participant_list: "Participant List"
+    participant_tracker: "Participant Tracker"
+    study_level_charges: "Study Level Charges"
+    audit_reporting: "Audit Reporting"
+
   study_schedule_tab:
     buttons:
       arm: "Arm | "
