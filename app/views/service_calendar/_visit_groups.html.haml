@@ -1,6 +1,6 @@
 - visit_groups = arm.visit_groups.paginate(page: page)
 - visit_groups.each_with_index do |visit_group, index|
   .col-sm-2
-    = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "shorter_text visit_group_#{index}"
+    = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "shorter_text visit_group_#{index} visit_name", :'data-visit_group_id' => visit_group.id
 - (visit_groups.size...5).each do |index|
   .col-sm-2{class: "visit_group_#{index}"} &nbsp

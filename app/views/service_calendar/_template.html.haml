@@ -13,7 +13,7 @@
           .btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
         -# The visit jump to drop down
         .col-sm-6.col-md-6
-          = select_tag "visits_select_#{arm.id}", options_from_collection_for_select(arm.visit_groups, 'id', 'name')
+          = select_tag "visits_select_#{arm.id}", options_from_collection_for_select(arm.visit_groups, 'id', 'name'), class: 'visit_dropdown'
         -# The next page arrow
         .col-sm-2.col-md-2
           .btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count < 5}
