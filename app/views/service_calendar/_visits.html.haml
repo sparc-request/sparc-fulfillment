@@ -1,6 +1,6 @@
 - visits = line_item.visits.paginate(page: page)
 - visits.each_with_index do |visit, index|
   .col-sm-1.col-md-1{class: "line_item_#{line_item.id}_visit_#{index}"}
-    = check_box_tag "visit_check_#{visit.id}"
+    = check_box_tag "visit_check_#{visit.id}", visit.id, visit.has_billing?, class: 'visit'
 - (visits.size...5).each do |index|
   .col-sm-1.col-md-1{class: "line_item_#{line_item.id}_visit_#{index}"} &nbsp

@@ -2,8 +2,8 @@
   .col-sm-3.col-md-3= select_tag "line_item_select_#{line_item.id}", options_for_select(['testing', 'wooo', line_item.name], line_item.name)
   .col-sm-1.col-md-1.text-center= line_item.subject_count
   .col-sm-1.col-md-1.text-center
-    .glyphicon.glyphicon-ok
+    .glyphicon.check_row{:'data-line_item_id' => "#{line_item.id}", check: "#{set_check(line_item)}", class: "#{glyph_class(line_item)}"}
   %div{class: "visits_for_#{line_item.id}"}
     = render partial: '/service_calendar/visits', locals: {line_item: line_item, page: page}
   .col-sm-2.col-md-2.text-center
-    .glyphicon.glyphicon-remove-sign
+    .glyphicon.glyphicon-remove-sign.remove_line_item{:'data-line_item_id' => "#{line_item.id}"}
