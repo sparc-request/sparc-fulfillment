@@ -16,7 +16,7 @@
           = select_tag "visits_select_for_#{arm.id}", visits_select_options(arm), class: 'visit_dropdown', :'data-arm_id' => "#{arm.id}", page: page
         -# The next page arrow
         .col-sm-2.col-md-2
-          .btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count < Visit.per_page}
+          .btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page}
       .row.header{class: "visit_groups_for_#{arm.id}"}
         = render partial: '/service_calendar/visit_groups', locals: {arm: arm, page: page}
     .col-sm-2.col-md-2.header

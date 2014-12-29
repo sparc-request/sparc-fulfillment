@@ -10,7 +10,7 @@ class Visit < ActiveRecord::Base
     visit_group.position
   end
 
-  def is_checked?
+  def has_billing?
     research_billing_qty > 0 || insurance_billing_qty > 0 || effort_billing_qty > 0
   end
 end

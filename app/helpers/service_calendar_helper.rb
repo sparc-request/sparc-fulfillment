@@ -30,7 +30,7 @@ module ServiceCalendarHelper
       arr << option
 
       (beginning_visit..ending_visit).each do |y|
-        arr << ["&nbsp&nbsp&nbsp#{arm.visit_groups[y - 1].name}".html_safe, :parent_page => page + 1]
+        arr << ["- #{arm.visit_groups[y - 1].name}".html_safe, "#{arm.visit_groups[y - 1].id}", :parent_page => page + 1]
       end
     end
 

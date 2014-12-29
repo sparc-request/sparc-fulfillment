@@ -59,7 +59,7 @@ $ ->
       success: ->
         # Need to find out if this is actually necessary
         # or if we can use faye
-        $(".visit_dropdown option[value=#{visit_group_id}]").text(name)
+        $(".visit_dropdown option[value=#{visit_group_id}]").text("- #{name}")
 
   $(document).on 'click', '.check_row', ->
     check = $(this).attr('check')

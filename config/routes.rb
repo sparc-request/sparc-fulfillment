@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :service_calendar, only: [:change_page, :check_visit] do
+  resources :service_calendar, only: [] do
     collection do
       get 'change_page'
       put 'check_visit'
