@@ -6,4 +6,4 @@
   %div{class: "visits_for_#{line_item.id}"}
     = render partial: '/service_calendar/visits', locals: {line_item: line_item, page: page}
   .col-sm-2.col-md-2.text-center
-    .glyphicon.glyphicon-remove-sign
+    .glyphicon.glyphicon-remove-sign.remove_line_item{:'data-line_item_id' => "#{line_item.id}"}

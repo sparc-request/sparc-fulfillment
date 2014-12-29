@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       put 'change_visit_name'
       put 'check_row'
       put 'check_column'
+      put 'remove_line_item'
     end
   end
 end

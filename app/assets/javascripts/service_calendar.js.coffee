@@ -82,3 +82,11 @@ $ ->
           $(this).removeClass('glyphicon-remove').addClass('glyphicon-ok')
           $(this).attr('check', 'true')
           $(".visits_for_#{line_item_id} input[type=checkbox]").prop('checked', false)
+
+  $(document).on 'click', '.remove_line_item', ->
+    if confirm("Are you sure you want to remove this line item?")
+      data = 'line_item_id': $(this).data('line_item_id')
+      $.ajax
+        type: 'PUT'
+        url:  '/service_calendar/remove_line_item'
+        data: data

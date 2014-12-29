@@ -30,6 +30,6 @@
       - arm.line_items.each do |line_item|
         - if line_item.sparc_core_name != current_core
           - current_core = line_item.sparc_core_name
-          .row.core
+          .row.core{id: "arm_#{arm.id}_core_#{line_item.sparc_core_id}"}
             .col-sm-12.col-md-12= current_core
         = render partial: 'service_calendar/line_item', locals: {line_item: line_item, page: page}
