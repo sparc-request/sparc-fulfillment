@@ -5,4 +5,8 @@ class LineItem < ActiveRecord::Base
   belongs_to :service
 
   has_many :visits, :dependent => :destroy
+
+  delegate  :name,
+            :cost,
+            to: :service
 end

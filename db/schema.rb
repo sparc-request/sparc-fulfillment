@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141210185032) do
+ActiveRecord::Schema.define(version: 20141229162955) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -49,12 +49,8 @@ ActiveRecord::Schema.define(version: 20141210185032) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.string   "name"
-    t.integer  "cost"
     t.integer  "sparc_core_id"
     t.string   "sparc_core_name"
-    t.integer  "sparc_program_id"
-    t.string   "sparc_program_name"
   end
 
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
