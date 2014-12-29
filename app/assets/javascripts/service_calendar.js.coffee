@@ -11,13 +11,33 @@ $ ->
       url:  '/service_calendar/change_page'
       data: data
 
-  $('.glyphicon-arrow-right').on 'click', ->
+  $(document).on 'click', '.glyphicon-arrow-right', ->
     change_page $(this)
 
-  $('.glyphicon-arrow-left').on 'click', ->
+  $(document).on 'click', '.glyphicon-arrow-left', ->
     change_page $(this)
 
-  $('.visit').on 'change', ->
+  $(document).on 'change', '.visit_dropdown', ->
+    page = $(this).find('option:selected').attr('parent_page')
+    cur_page = $(this).attr('page')
+
+    if page == undefined || page == false
+      page = $(this).val()
+
+    # Early out when selecting a visit that is already shown
+    if page == cur_page
+      $(this).val(page)
+      return
+
+    data =
+      'arm_id': $(this).data('arm_id')
+      'page'  : page
+    $.ajax
+      type: 'GET'
+      url:  '/service_calendar/change_page'
+      data: data
+
+  $(document).on 'change', '.visit', ->
     data =
       'visit_id': $(this).val()
       'checked':  $(this).prop('checked')
@@ -26,7 +46,7 @@ $ ->
       url:  '/service_calendar/check_visit'
       data: data
 
-  $('.visit_name').on 'change', ->
+  $(document).on 'change', '.visit_name', ->
     visit_group_id = $(this).data('visit_group_id')
     name = $(this).val()
     data =
@@ -41,10 +61,11 @@ $ ->
         # or if we can use faye
         $(".visit_dropdown option[value=#{visit_group_id}]").text(name)
 
-  $('.check_row').on 'click', ->
+  $(document).on 'click', '.check_row', ->
     check = $(this).attr('check')
+    line_item_id = $(this).data('line_item_id')
     data =
-      'line_item_id': $(this).data('line_item_id'),
+      'line_item_id': line_item_id,
       'check':        check
     $.ajax
       type: 'PUT'
@@ -56,6 +77,8 @@ $ ->
         if check == 'true'
           $(this).removeClass('glyphicon-ok').addClass('glyphicon-remove')
           $(this).attr('check', 'false')
+          $(".visits_for_#{line_item_id} input[type=checkbox]").prop('checked', true)
         else
           $(this).removeClass('glyphicon-remove').addClass('glyphicon-ok')
           $(this).attr('check', 'true')
+          $(".visits_for_#{line_item_id} input[type=checkbox]").prop('checked', false)
