@@ -1,9 +1,9 @@
 .row{id: "line_item_#{line_item.id}"}
-  .col-sm-3.col-md-3= select_tag "line_item_select_#{line_item.id}", options_for_select(['testing', 'wooo', line_item.name], line_item.name)
-  .col-sm-1.col-md-1.text-center= line_item.subject_count
-  .col-sm-1.col-md-1.text-center
+  .col-md-3= select_tag "line_item_select_#{line_item.id}", options_for_select(['testing', 'wooo', line_item.name], line_item.name)
+  .col-md-1.text-center= line_item.subject_count
+  .col-md-1.text-center
     .glyphicon.glyphicon-ok
   %div{class: "visits_for_#{line_item.id}"}
     = render partial: '/service_calendar/visits', locals: {line_item: line_item, page: page}
-  .col-sm-2.col-md-2.text-center
+  .col-md-1.text-center
     .glyphicon.glyphicon-remove-sign

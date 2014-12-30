@@ -1,5 +1,5 @@
 class VisitGroup < ActiveRecord::Base
-  self.per_page = 5
+  self.per_page = 6
 
   acts_as_paranoid
 

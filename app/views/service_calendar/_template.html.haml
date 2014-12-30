@@ -1,31 +1,29 @@
 - # Container for calendar
 .service-calendar{class: "arm_#{arm.id}"}
   - # Headers (Services, Number of Participants, Visit Navigation, Empty for deleting line items)
-  .row
-    .col-sm-3.col-md-3.text-center.header Services
-    .col-sm-1.col-md-1.text-center.header N
-    .col-sm-1.col-md-1.header
-      &nbsp
-    .col-sm-5.col-md-5.text-center.header
-      .row.header
+  .row.header
+    .col-md-3.text-center Services
+    .col-md-1.text-center N
+    .col-md-1 &nbsp;
+    .col-md-6.text-center
+      .row
         -# The previous page arrow
-        .col-sm-2.col-md-2
+        .col-md-2
           .btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
         -# The visit jump to drop down
-        .col-sm-6.col-md-6
+        .col-md-8
           = select_tag "visits_select_#{arm.id}", options_from_collection_for_select(arm.visit_groups, 'id', 'name')
         -# The next page arrow
-        .col-sm-2.col-md-2
+        .col-md-2
           .btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count < 5}
-      .row.header{class: "visit_groups_for_#{arm.id}"}
+      .row{class: "visit_groups visit_groups_for_#{arm.id}"}
         = render partial: '/service_calendar/visit_groups', locals: {arm: arm, page: page}
-    .col-sm-2.col-md-2.header
-      &nbsp
+    .col-md-1 &nbsp;
   - # Display Arm Name
   .row.arm-name
-    .col-sm-12.col-md-12= arm.name
+    .col-md-12= arm.name
   .row
-    .scrolling-div.col-md-12.col-sm-12
+    .scrolling-div.col-md-12
       - current_core = ''
       - arm.line_items.each do |line_item|
         - if line_item.sparc_core_name != current_core

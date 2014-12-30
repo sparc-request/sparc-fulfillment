@@ -2,5 +2,5 @@
 - visits.each_with_index do |visit, index|
   .col-sm-1.col-md-1{class: "line_item_#{line_item.id}_visit_#{index}"}
     = check_box_tag "visit_check_#{visit.id}"
-- (visits.size...5).each do |index|
+- (visits.size...6).each do |index|
   .col-sm-1.col-md-1{class: "line_item_#{line_item.id}_visit_#{index}"} &nbsp
