@@ -1,6 +1,6 @@
 module ServiceCalendarHelper
   def glyph_class line_item
-    count = Visit.where("line_item_id = #{line_item.id} and (research_billing_qty = 0 or insurance_billing_qty = 0)").count
+    count = Visit.where("line_item_id = #{line_item.id} and research_billing_qty = 0 and insurance_billing_qty = 0").count
     if count == 0
       'glyphicon-remove'
     else
@@ -9,7 +9,7 @@ module ServiceCalendarHelper
   end
 
   def set_check line_item
-    count = Visit.where("line_item_id = #{line_item.id} and (research_billing_qty = 0 or insurance_billing_qty = 0)").count
+    count = Visit.where("line_item_id = #{line_item.id} and research_billing_qty = 0 and insurance_billing_qty = 0").count
     if count == 0
       return false
     else
