@@ -19,6 +19,5 @@ FactoryGirl.define do
     stored_percent_subsidy 0.0
     study_cost 500
     status 'Complete'
-    sparc_id 1
   end
 end

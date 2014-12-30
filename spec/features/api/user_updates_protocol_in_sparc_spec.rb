@@ -5,7 +5,7 @@ RSpec.describe 'User updates Protocol in SPARC', type: :request, delay: false do
   describe 'full lifecycle' do
 
     it 'should update the Protocol', sparc_api: :get_protocol_1 do
-      protocol = create(:protocol)
+      protocol = create(:protocol, sparc_id: 1)
 
       user_updates_protocol_in_sparc
 
@@ -16,7 +16,7 @@ RSpec.describe 'User updates Protocol in SPARC', type: :request, delay: false do
   private
 
   def user_updates_protocol_in_sparc
-    notification  = build(:notification_protocol_update)
+    notification  = build(:notification_protocol_update, sparc_id: 1)
     params        = {
       notification: {
         sparc_id: notification.sparc_id,
