@@ -12,10 +12,10 @@
           .btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
         -# The visit jump to drop down
         .col-md-8
-          = select_tag "visits_select_#{arm.id}", options_from_collection_for_select(arm.visit_groups, 'id', 'name')
+          = select_tag "visits_select_for_#{arm.id}", visits_select_options(arm), class: 'visit_dropdown', :'data-arm_id' => "#{arm.id}", page: page
         -# The next page arrow
         .col-md-2
-          .btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count < 5}
+          .btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page}
       .row{class: "visit_groups visit_groups_for_#{arm.id}"}
         = render partial: '/service_calendar/visit_groups', locals: {arm: arm, page: page}
     .col-md-1 &nbsp;
@@ -28,6 +28,6 @@
       - arm.line_items.each do |line_item|
         - if line_item.sparc_core_name != current_core
           - current_core = line_item.sparc_core_name
-          .row.core
+          .row.core{id: "arm_#{arm.id}_core_#{line_item.sparc_core_id}"}
             .col-sm-12.col-md-12= current_core
         = render partial: 'service_calendar/line_item', locals: {line_item: line_item, page: page}

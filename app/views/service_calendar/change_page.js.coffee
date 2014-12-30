@@ -20,3 +20,8 @@ $(".visit_groups_for_#{arm_id}").html("<%= escape_javascript(render partial: '/s
 <% @arm.line_items.each do |line_item| %>
 $(".visits_for_<%= line_item.id %>").html("<%= escape_javascript(render partial: '/service_calendar/visits', locals: {line_item: line_item, page: @page}) %>")
 <% end %>
+
+# Set the dropdown to the selected page
+$("#visits_select_for_#{arm_id}").val(page)
+# Set the current page for early out in javascript
+$("#visits_select_for_#{arm_id}").attr('page', page)
