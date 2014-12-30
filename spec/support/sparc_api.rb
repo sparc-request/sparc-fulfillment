@@ -54,7 +54,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, sparc_api: :get_sub_service_request_1) do
-    VCR.insert_cassette('reusable/sparc_api/get_sub_service_request_1', match_requests_on: [:host])
+    VCR.insert_cassette('reusable/sparc_api/get_sub_service_request_1')
   end
 
   config.before(:each, sparc_api: :unavailable) do

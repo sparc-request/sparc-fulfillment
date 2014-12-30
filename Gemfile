@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'addressable'
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-rails.git'
@@ -31,9 +32,9 @@ end
 
 group :development do
   gem 'faker', '~> 1.4.3'
+  gem 'puma'
   gem 'spring'
   gem 'spring-commands-rspec', '~> 1.0.2'
-  gem 'thin'
 end
 
 group :test do

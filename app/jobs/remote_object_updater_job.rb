@@ -10,16 +10,28 @@ class RemoteObjectUpdaterJob < Struct.new(:object_id, :object_class, :callback_u
   end
 
   def perform
-    RestClient.get(callback_url, params) { |response, request, result, &block|
-      raise SparcApiError unless response.code == 200
+    qualified_url = qualify_url(callback_url)
 
-      parsed_json = parse_json(response)
+    RestClient.get(qualified_url, params) { |response, request, result, &block|
+      if response.code == 200
+        parsed_json = parse_json(response)
 
-      RemoteObjectUpdater.new(parsed_json, object).import!
+        RemoteObjectUpdater.new(parsed_json, object).import!
+      else
+        raise SparcApiError
+      end
     }
   end
 
   private
+
+  def qualify_url(url)
+    uri           = URI(url)
+    uri.user      = ENV['SPARC_API_USERNAME']
+    uri.password  = ENV['SPARC_API_PASSWORD']
+
+    uri.to_s
+  end
 
   def params
     { accept: :json }

@@ -32,6 +32,7 @@ FactoryGirl.define do
     factory :notification_service_create, traits: [:service, :create]
     factory :notification_service_update, traits: [:service, :update]
     factory :notification_protocol_update, traits: [:protocol, :update]
+    factory :notification_sub_service_request_create, traits: [:sub_service_request, :create]
     factory :notification_sub_service_request_update, traits: [:sub_service_request, :update]
   end
 end

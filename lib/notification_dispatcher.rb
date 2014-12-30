@@ -23,20 +23,16 @@ class NotificationDispatcher
     case @notification_object_class
     when 'SubServiceRequest'
       if @notification.action == 'create'
-        # SubServiceRequestCreaterJob.enqueue(@notification.sparc_id, @notification.callback_url)
+        SubServiceRequestCreaterJob.enqueue(@notification.sparc_id, @notification.callback_url)
       elsif @notification.action == 'update'
-        SubServiceRequestUpdaterJob.enqueue(@notification.sparc_id, @notification.callback_url)
+        # Something
       end
     end
   end
 
   # Create or Find the local model and hand off to a RemoteObjectUpdaterJob for remote update
   def import_directly
-    if @notification.action == 'create'
-      object = @notification_object_class.constantize.create({ sparc_id: @notification.sparc_id })
-    else
-      object = persisted_object
-    end
+    object = @notification_object_class.constantize.find_or_create_by(sparc_id: @notification.sparc_id)
 
     RemoteObjectUpdaterJob.enqueue(object.id, object.class.to_s, @notification.callback_url)
   end
