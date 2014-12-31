@@ -10,38 +10,24 @@ class RemoteObjectUpdaterJob < Struct.new(:object_id, :object_class, :callback_u
   end
 
   def perform
-    qualified_url = qualify_url(callback_url)
-
-    RestClient.get(qualified_url, params) { |response, request, result, &block|
-      if response.code == 200
-        parsed_json = parse_json(response)
-
-        RemoteObjectUpdater.new(parsed_json, object).import!
-      else
-        raise SparcApiError
-      end
-    }
+    update_local_object_from_remote_object
   end
 
   private
 
-  def qualify_url(url)
-    uri           = URI(url)
-    uri.user      = ENV['SPARC_API_USERNAME']
-    uri.password  = ENV['SPARC_API_PASSWORD']
-
-    uri.to_s
+  def update_local_object_from_remote_object
+    local_object.update_attributes normalized_attributes
   end
 
-  def params
-    { accept: :json }
+  def local_object
+    object_class.classify.constantize.find object_id
   end
 
-  def object
-    @object ||= object_class.classify.constantize.find object_id
+  def remote_object
+    RemoteObjectFetcher.fetch(callback_url)
   end
 
-  def parse_json(response)
-    Yajl::Parser.parse response
+  def normalized_attributes
+    RemoteObjectNormalizer.new(object_class, remote_object[object_class]).normalize!
   end
 end
