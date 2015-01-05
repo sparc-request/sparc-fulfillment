@@ -4,8 +4,5 @@ FactoryGirl.define do
     arm nil
     service nil
     sparc_id 1
-    sequence :name do |n|
-      "LineItem #{n}"
-    end
   end
 end

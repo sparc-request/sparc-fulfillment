@@ -1,59 +1,51 @@
 require 'rails_helper'
 
-RSpec.describe RemoteObjectUpdaterJob, type: :model do
+RSpec.describe RemoteObjectUpdaterJob do
 
   describe '#enqueue', delay: true do
 
-    before { Protocol.skip_callback(:create, :after, :update_from_sparc) }
-
-    after { Protocol.set_callback(:create, :after, :update_from_sparc) }
-
     it 'should create a Delayed::Job' do
+      callback_url = "http://#{ENV.fetch('SPARC_API_USERNAME')}:#{ENV.fetch('SPARC_API_PASSWORD')}@#{ENV.fetch('SPARC_API_HOST')}/v1/sub_service_requests/6213.json"
 
-      protocol = create(:protocol_created_by_sparc)
-
-      RemoteObjectUpdaterJob.enqueue(protocol.id, 'Protocol')
+      RemoteObjectUpdaterJob.enqueue(6213, 'protocol', callback_url)
 
       expect(Delayed::Job.where(queue: 'sparc_api_requests').count).to eq(1)
     end
   end
 
-  describe '#perform', delay: false do
+  describe '#perform', vcr: true do
 
-    context 'SPARC API available' do
+    context 'Protocol update', vcr: :localhost do
 
-      context 'Protocol', sparc_api: :get_protocol_1 do
+      before do
+        @protocol                 = create( :protocol_created_by_sparc,
+                                            sparc_id: 6213,
+                                            short_title: 'Short Title')
+        callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/protocols/6213.json"
+        remote_object_updater_job = RemoteObjectUpdaterJob.new(@protocol.id, 'protocol', callback_url)
 
-        it 'should make a GET request to SPARC for a Protocol' do
-          protocol = create(:protocol_created_by_sparc)
-
-          expect(a_request(:get, /#{ENV['SPARC_API_HOST']}\/v1\/protocols\/#{protocol.sparc_id}.json/).
-            with( headers: {'Accept' => 'application/json'})).to have_been_made.once
-        end
+        remote_object_updater_job.perform
       end
 
-      context 'Service', sparc_api: :get_service_1 do
-
-        it 'should make a GET request to SPARC for a Service' do
-          service = create(:service_created_by_sparc)
-
-          expect(a_request(:get, /#{ENV['SPARC_API_HOST']}\/v1\/services\/#{service.sparc_id}.json/).
-            with( headers: {'Accept' => 'application/json'})).to have_been_made.once
-        end
+      it 'should update the existing protocol' do
+        expect(@protocol.reload.short_title).to eq('GS-US-321-0106')
       end
     end
 
-    context 'SPARC API unavailable', sparc_api: :unavailable do
+    context 'Service update', vcr: :localhost do
 
-      before { Protocol.skip_callback(:create, :after, :update_from_sparc) }
+      before do
+        @service                  = create( :service_created_by_sparc,
+                                            sparc_id: 3545,
+                                            name: 'Service Name')
+        callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/services/3545.json"
+        remote_object_updater_job = RemoteObjectUpdaterJob.new(@service.id, 'service', callback_url)
 
-      after { Protocol.set_callback(:create, :after, :update_from_sparc) }
+        remote_object_updater_job.perform
+      end
 
-      it 'should raise an exception' do
-        protocol  = create(:protocol_created_by_sparc)
-        job       = RemoteObjectUpdaterJob.new(protocol.id, 'Protocol')
-
-        expect{ job.perform }.to raise_exception
+      it 'should update the existing service' do
+        expect(@service.reload.name).to eq("DOPPLER ECHO CONT WAVE; F U-LTD - TECH")
       end
     end
   end
