@@ -77,3 +77,10 @@ en:
     calendar: "Calendar"
     report: "Report"
     arm: "Arm"
+
+  flash_messages:
+    participant:
+      created: "Participant Created"
+      saved: "Participant Saved"
+      removed: "Participant Removed"
+      arm_change: "Participant Successfully Changed Arms"
