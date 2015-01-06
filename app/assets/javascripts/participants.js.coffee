@@ -19,15 +19,7 @@ $ ->
         type: 'GET'
         url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
 
-  #particpant tracker logic
-  if $('#particpant_tracker').length > 0
-    $(".glyphicon glyphicon-calendar").on "click", ->
-       #TODO: insert link to particpant calendar
-
-    $("glyphicon glyphicon-stats").on "click", ->
-      #TODO: insert link to
-
-    "click .change-arm": (e, value, row, index) ->
+    "click #changeParticipantArm": (e, value, row, index) ->
       if row.arm_id == null
         urlVar = "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm"
       else
@@ -40,10 +32,6 @@ $ ->
       alert JSON.stringify row
 
     "click .stats": (e, value, row, index) ->
-      alert "stats"
-
-    "click #changeParticipantArm": (e, value, row, index) ->
-      alert "change arm"
       alert JSON.stringify row
 
   capitalize = (string) ->
@@ -65,7 +53,7 @@ $ ->
 
 (exports ? this).changeArmFormatter = (value, row, index) ->
   [
-    "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm'>",
+    "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' id='changeParticipantArm'>",
     "<i class='glyphicon glyphicon-random'></i>",
     "</a>"
   ].join ""
