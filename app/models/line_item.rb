@@ -8,5 +8,7 @@ class LineItem < ActiveRecord::Base
 
   has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, :dependent => :destroy
 
-  accepts_nested_attributes_for :visits
+  delegate  :name,
+            :cost,
+            to: :service
 end

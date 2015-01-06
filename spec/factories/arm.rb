@@ -2,7 +2,9 @@ FactoryGirl.define do
 
   factory :arm do
     protocol nil
-    sparc_id 1
+    sequence :sparc_id do |n|
+      Random.rand(9999) + n
+    end
     sequence :name do |n|
       "Protocol #{n}"
     end
