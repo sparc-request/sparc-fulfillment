@@ -44,6 +44,7 @@ group :test do
   gem 'capybara-webkit', '~> 1.3.1' # brew update && brew instal qt
   gem 'database_cleaner'
   gem 'rspec-rails', '~> 3.1.0'
+  gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', require: false
   gem 'webmock', '~> 1.20.4'
   gem 'vcr', '~> 2.9.3'

@@ -236,6 +236,8 @@ GEM
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
     sexp_processor (4.4.4)
+    shoulda-callback-matchers (1.1.1)
+      activesupport (>= 3)
     shoulda-matchers (2.7.0)
       activesupport (>= 3.0.0)
     spring (1.2.0)
@@ -310,6 +312,7 @@ DEPENDENCIES
   rspec-rails (~> 3.1.0)
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
+  shoulda-callback-matchers
   shoulda-matchers
   spring
   spring-commands-rspec (~> 1.0.2)
