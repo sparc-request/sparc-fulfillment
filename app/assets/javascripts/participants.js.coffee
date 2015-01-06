@@ -19,6 +19,14 @@ $ ->
         type: 'GET'
         url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
 
+  #particpant tracker logic
+  if $('#particpant_tracker').length > 0
+    $(".glyphicon glyphicon-calendar").on "click", ->
+       #TODO: insert link to particpant calendar
+
+    $("glyphicon glyphicon-stats").on "click", ->
+      #TODO: insert link to
+
     "click .change-arm": (e, value, row, index) ->
       if row.arm_id == null
         urlVar = "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm"
@@ -32,6 +40,10 @@ $ ->
       alert JSON.stringify row
 
     "click .stats": (e, value, row, index) ->
+      alert "stats"
+
+    "click #changeParticipantArm": (e, value, row, index) ->
+      alert "change arm"
       alert JSON.stringify row
 
   capitalize = (string) ->
@@ -60,6 +72,9 @@ $ ->
 
 (exports ? this).nameFormatter = (value, row, index) ->
   value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+
+(exports ? this).view_buttons = (value) ->
+  '<i class="glyphicon glyphicon-calendar" participant_id=' + value + '></i>' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-stats" participant_id=' + value + '></i>'
 
 (exports ? this).calendarFormatter = (value, row, index) ->
   [
