@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20141229162955) do
 
   create_table "participants", force: true do |t|
     t.integer  "protocol_id"
+    t.integer  "arm_id"
     t.string   "first_name"
     t.string   "last_name"
     t.integer  "mrn"

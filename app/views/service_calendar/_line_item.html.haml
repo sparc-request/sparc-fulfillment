@@ -4,6 +4,6 @@
   .col-xs-1.text-center
     .glyphicon.check_row.btn.btn-primary{:'data-line_item_id' => "#{line_item.id}", check: "#{set_check(line_item)}", class: "#{glyph_class(line_item)}"}
   %div{class: "visits_for_#{line_item.id}"}
-    = render partial: '/service_calendar/visits', locals: {line_item: line_item, page: page}
+    = render partial: '/service_calendar/visits', locals: {line_item: line_item, page: page, tab: 'template'}
   .col-xs-1.text-center
     .btn.btn-danger.glyphicon.glyphicon-remove.remove_line_item{:'data-line_item_id' => "#{line_item.id}"}

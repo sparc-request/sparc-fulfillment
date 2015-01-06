@@ -5,7 +5,8 @@ $ ->
   change_page = (obj) ->
     data =
       'arm_id': obj.data('arm_id'),
-      'page'  : obj.attr('page')
+      'page'  : obj.attr('page'),
+      'tab'   : $('#current_tab').val()
     $.ajax
       type: 'GET'
       url:  '/service_calendar/change_page'
@@ -37,6 +38,29 @@ $ ->
       url:  '/service_calendar/change_page'
       data: data
 
+  $(document).on 'click', '#service_calendar_tabs a', ->
+    tab = $(this).data('tab')
+    $('#current_tab').val(tab)
+    arms_and_pages = {}
+    arm_id = ''
+    $('.visit_dropdown').each ->
+      page = $(this).find('option:selected').attr('parent_page')
+
+      if page == undefined || page == false
+        page = $(this).val()
+
+      arm_id = $(this).data('arm_id')
+      arms_and_pages[arm_id] = page
+
+    data =
+      'arms_and_pages': arms_and_pages,
+      'arm_id': arm_id,
+      'tab'   : tab
+    $.ajax
+      type: 'GET'
+      url:  '/service_calendar/change_tab'
+      data: data
+
   $(document).on 'change', '.visit', ->
     data =
       'visit_id': $(this).val()
@@ -50,7 +74,7 @@ $ ->
     visit_group_id = $(this).data('visit_group_id')
     name = $(this).val()
     data =
-      'visit_group_id': visit_group_id
+      'visit_group_id': visit_group_id,
       'name':           name
     $.ajax
       type: 'PUT'

@@ -37,6 +37,7 @@ group :development do
   gem 'puma'
   gem 'spring'
   gem 'spring-commands-rspec', '~> 1.0.2'
+  gem 'foreman'
 end
 
 group :test do

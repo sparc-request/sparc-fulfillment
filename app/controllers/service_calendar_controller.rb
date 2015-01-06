@@ -3,6 +3,17 @@ class ServiceCalendarController < ApplicationController
     @page = params[:page]
     @arm = Arm.find params[:arm_id]
     @protocol = @arm.protocol
+    @tab = params[:tab]
+  end
+
+  def change_tab
+    @arms_and_pages = {}
+    hash = params[:arms_and_pages]
+    hash.each do |arm_id, page|
+      arm = Arm.find(arm_id)
+      @arms_and_pages[arm_id] = {arm: arm, page: page}
+    end
+    @tab = params[:tab]
   end
 
   def check_visit

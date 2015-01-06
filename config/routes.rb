@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :service_calendar, only: [] do
     collection do
       get 'change_page'
+      get 'change_tab'
       put 'check_visit'
       put 'change_quantity'
       put 'change_visit_name'
