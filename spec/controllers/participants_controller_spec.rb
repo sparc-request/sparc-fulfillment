@@ -8,6 +8,14 @@ RSpec.describe ParticipantsController do
     @participant = create(:participant, protocol_id: @protocol.id)
   end
 
+  it "should get participants" do
+    get :index, {
+      protocol_id: @protocol.id,
+      format: :json
+    }
+    expect(assigns(:participants)).to eq([@participant])
+  end
+
   it "should delete a participant" do
     expect{
       delete :destroy, {
