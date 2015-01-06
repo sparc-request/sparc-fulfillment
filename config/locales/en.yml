@@ -61,6 +61,18 @@ en:
       visit: "Visit | "
       services: "Services | "
 
+  visit_groups:
+    name: "Visit Name"
+    position: "Insert into Position"
+    window_before: "Window Before"
+    window_after: "Window After"
+    day: "Visit Day"
+
+  arm:
+    name: "Arm Name"
+    subject_count: "Subject Count"
+    visit_count: "Visit Count"
+
   participant:
     list: "Participant List"
     tracker: "Participant Tracker"
@@ -75,6 +87,13 @@ en:
     address: "Address"
     phone: "Phone"
     calendar: "Calendar"
+    stats: "Stats"
+    arm: "Arm"
+    report: "Report"
+
+  services:
+    name: "Selected Service"
+    arm: "Select Arm(s)"
     report: "Report"
     arm: "Arm"
 

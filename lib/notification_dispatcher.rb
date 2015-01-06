@@ -22,10 +22,8 @@ class NotificationDispatcher
   def import_indirectly
     case @notification_object_class
     when 'SubServiceRequest'
-      if @notification.action == 'create'
+      if @notification.action == 'update'
         SubServiceRequestCreaterJob.enqueue(@notification.sparc_id, @notification.callback_url)
-      elsif @notification.action == 'update'
-        # Something
       end
     end
   end

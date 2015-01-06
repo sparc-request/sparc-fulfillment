@@ -26,6 +26,7 @@ gem 'sprockets-rails'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
 gem 'will_paginate'
+gem 'activerecord-import'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
 
 group :development, :test do
@@ -43,6 +44,7 @@ group :test do
   gem 'capybara-webkit', '~> 1.3.1' # brew update && brew instal qt
   gem 'database_cleaner'
   gem 'rspec-rails', '~> 3.1.0'
+  gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', require: false
   gem 'webmock', '~> 1.20.4'
   gem 'vcr', '~> 2.9.3'
