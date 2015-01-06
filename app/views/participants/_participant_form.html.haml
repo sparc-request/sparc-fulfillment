@@ -21,19 +21,19 @@
               .col-sm-7= p.text_field "mrn", {class: 'form-control'}
             .form-group
               = p.label "status", t(:participant)[:status], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "status", Participant.status_options, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "status", Participant::STATUS_OPTIONS, {include_blank: true}, :class => "form-control"
             .form-group
               = p.label "date_of_birth", t(:participant)[:dob], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "date_of_birth", {class: 'form-control', data: {provide: "datepicker", 'date-format' => 'yyyy-mm-dd', 'date-start-view' => 'decade'}}
             .form-group
               = p.label "gender", t(:participant)[:gender], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "gender", Participant.gender_options, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "gender", Participant::GENDER_OPTIONS, {include_blank: true}, :class => "form-control"
             .form-group
               = p.label "ethnicity", t(:participant)[:ethnicity], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "ethnicity", Participant.ethnicity_options, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "ethnicity", Participant::ETHNICITY_OPTIONS, {include_blank: true}, :class => "form-control"
             .form-group
               = p.label "race", t(:participant)[:race], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "race", Participant.race_options, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "race", Participant::RACE_OPTIONS, {include_blank: true}, :class => "form-control"
             .form-group
               = p.label "address", t(:participant)[:address], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "address", {class: 'form-control'}

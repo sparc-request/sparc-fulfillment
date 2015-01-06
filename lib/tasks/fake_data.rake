@@ -53,7 +53,7 @@ namespace :data do
       protocol = Protocol.create(sparc_id: sparc_id, title: rand_string, short_title: rand_string, sponsor_name: rand_string, udak_project_number: rand, start_date: today, end_date: not_today, recruitment_start_date: today, recruitment_end_date: not_today, irb_status: rand_string, irb_approval_date: today, irb_expiration_date: not_today, stored_percent_subsidy: rand.to_f, study_cost: Random.rand(10000...50000), status: protocol_status)
       for a in 0...3
         arm = Arm.create(sparc_id: sparc_id, protocol_id: protocol.id, name: rand_string, visit_count: rand, subject_count: rand)
-        Participant.create(protocol_id: protocol.id, arm_id: arm.id, first_name: rand_string, last_name: rand_string, mrn: rand, status: Participant.status_options.sample, date_of_birth: rand_date, gender: Participant.gender_options.sample, ethnicity: Participant.ethnicity_options.sample, race: Participant.race_options.sample, address: rand_address, phone: rand_phone)
+        Participant.create(protocol_id: protocol.id, arm_id: arm.id, first_name: rand_string, last_name: rand_string, mrn: rand, status: Participant::STATUS_OPTIONS.sample, date_of_birth: rand_date, gender: Participant::GENDER_OPTIONS.sample, ethnicity: Participant::ETHNICITY_OPTIONS.sample, race: Participant::RACE_OPTIONS.sample, address: rand_address, phone: rand_phone)
         for vg in 0...arm.visit_count
           visit_group = VisitGroup.create(sparc_id: sparc_id, arm_id: arm.id, position: vg+1, name: rand_string, day: today, window_before: rand, window_after: rand)
         end
