@@ -22,7 +22,7 @@ class LineItemsController < ApplicationController
     end
   end
 
-  def destroy
+  def destroy#this destoy is only used on the service calendar
     if params[:arm_ids].count > 1
       params[:arm_id].each do |a|
         @line_item = LineItem.create(arm_id: a, service_id: params[:service_id])

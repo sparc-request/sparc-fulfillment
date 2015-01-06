@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   root 'protocols#index'
 
   resources :protocols do
+    member do
+    end
     resources :arms do
       member do
         get 'change'
@@ -22,11 +24,21 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :service_calendar, only: [:change_page] do
+  resources :service_calendar, only: [] do
     collection do
       get 'change_page'
+      put 'check_visit'
+      put 'change_quantity'
+      put 'change_visit_name'
+      put 'check_row'
+      put 'check_column'
+      put 'remove_line_item'
     end
   end
+
+  get 'multiple_line_items/(:protocol_id)/(:service_id)/new', to: 'multiple_line_items#new'
+  get 'multiple_line_items/(:protocol_id)/(:service_id)/edit', to: 'multiple_line_items#edit'
+  put 'multiple_line_items/update', to: 'multiple_line_items#update'
 end
 
 

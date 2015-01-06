@@ -7,7 +7,6 @@ $ ->
     $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
   if $("body.protocols-show").length > 0
-
     # initialize visit group select list
     change_arm()
 
@@ -43,10 +42,16 @@ $ ->
     $(document).on 'click', '#add_service_button', ->
       protocol_id = $('#arms').data('protocol_id')
       service_id = $('#services').val()
-      arm_id = $('#arms').val()
       $.ajax
         type: 'GET'
-        url: "/protocols/#{protocol_id}/arms/#{arm_id}/services/#{service_id}/line_items/new"
+        url: "/multiple_line_items/#{protocol_id}/#{service_id}/new"
+
+    $(document).on 'click', '#remove_service_button', ->
+      protocol_id = $('#arms').data('protocol_id')
+      service_id = $('#services').val()
+      $.ajax
+        type: 'GET'
+        url: "/multiple_line_items/#{protocol_id}/#{service_id}/edit"
 
 (exports ? this).create_arm = (name, id) ->
   $select = $('#arms')

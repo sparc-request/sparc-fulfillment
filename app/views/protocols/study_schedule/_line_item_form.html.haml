@@ -1,20 +1,21 @@
 .modal-dialog
   .modal-content
-    = form_for [protocol, line_item.arm, line_item.service, line_item], {remote: true, html: {class: "form-horizontal new_visit", role: "form"}} do |a|
+    = form_tag({controller: "multiple_line_items", action: "update"}, method: "put", class: "form-horizontal new_visit", remote: true) do
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only= t(:actions)[:close]
-        %h4#line_item.modal-title.text-center Add a Service to Arms
+        %h4#line_item.modal-title.text-center= header_text
       .modal-body
         #line_item_modal_errors
         .row
           .col-md-12
+            = hidden_field_tag :header_text, header_text
             .form-group
-              = a.label "service_id", t(:services)[:name], class: "col-sm-4 control-label"
-              .col-sm-7= a.select "id", options_from_collection_for_select(services, 'id' , 'name', "#{line_item.service.id}"), {include_blank: true}, :class => "form-control"
+              = label_tag "service_id", t(:services)[:name], class: "col-sm-4 control-label"
+              .col-sm-7= select_tag "service_id", options_from_collection_for_select(services, 'id' , 'name', "#{selected_service}"), class: "form-control"
             .form-group
-              = a.label "arm_ids", t(:services)[:arm], class: "col-sm-4 control-label"
+              = label_tag "arm_ids", t(:services)[:arm], class: "col-sm-4 control-label"
               .col-sm-7
                 - protocol.arms.each do |arm|
                   .checkbox
@@ -24,4 +25,4 @@
       .modal-footer
         .center-block{style: "width: 205px;"}
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: "Add Service"}
+          %input.btn.btn-primary{type: 'submit', value: button_text}

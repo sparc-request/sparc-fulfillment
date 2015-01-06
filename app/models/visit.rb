@@ -1,5 +1,5 @@
 class Visit < ActiveRecord::Base
-  self.per_page = 5
+  self.per_page = 6
 
   acts_as_paranoid
 
@@ -8,5 +8,9 @@ class Visit < ActiveRecord::Base
 
   def position
     visit_group.position
+  end
+
+  def has_billing?
+    research_billing_qty > 0 || insurance_billing_qty > 0 || effort_billing_qty > 0
   end
 end

@@ -8,7 +8,7 @@ namespace :data do
     end
 
     def sparc_id
-      1 + Random.rand(100000)
+      1 + Random.rand(1000000)
     end
 
     def rand_date
@@ -59,7 +59,7 @@ namespace :data do
         end
         for li in 0...rand
           #for the service_id, it simply uses the counting index so each lineitem created there won't be duplicate services
-          line_items = LineItem.create(sparc_id: sparc_id, arm_id: arm.id, service_id: services[li].id, name: rand_string, cost: rand, sparc_core_name: rand_core)
+          line_items = LineItem.create(sparc_id: sparc_id, arm_id: arm.id, service_id: services[li].id, sparc_core_name: rand_core)
         end
         arm.visit_groups.each do |vg|
           arm.line_items.each do |li|

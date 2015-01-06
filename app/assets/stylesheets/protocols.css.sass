@@ -7,7 +7,6 @@ body.protocols
       clear: right
 
   &.protocols-show
-
     #study_schedule_buttons
       .row
         margin-top: 20px
@@ -15,28 +14,58 @@ body.protocols
         font-size: 20px
         div
           margin-top: 5px
+
     .service-calendar
-      .row
-        background: #6f6fb3
-        .col-md-3,
-        .col-md-1,
-        .col-md-5,
-        .col-md-2,
-        .col-md-12,
-        .col-sm-3,
-        .col-sm-1,
-        .col-sm-5,
-        .col-sm-2,
-        .col-sm-12,
-          border: 1px solid white
+      .row.header > div
+        border-right: 1px solid white
+        padding-top: 32px
+        padding-bottom: 31px
+        &:last-child
+          border: 0px
+
+      .row.header > div.col-xs-6
+        padding-top: 0px
+        padding-bottom: 0px
+        .row > div
+          padding-top: 7px
+          padding-bottom: 8px
+
+      .row.visit_groups
+        border-top: 1px solid white
+      .visit_groups > div
+        border-right: 1px solid white
+        &:last-child
+          border: 0px
+
       .header
-        background: #337ab7
+        background: #113967
+        color: white
+        input,
+        select
+          color: black
+
+      // .row.line_item:nth-child(even)
+      //   background-color: #ababab
+      .row.line_item
+        border-top: 1px solid #ababab
+        padding: 4px 0px
       .arm-name
-        background: #8c8c8c
+        background-color: #416185
+        color: white
+        padding: 5px 0px
       .core
-        background: #ababab
+        // background-color: #90b9cd
+        background-color: #ababab
       .scrolling-div
         overflow: auto
         max-height: 250px !important
       .shorter_text
-        width: 50px
+        width: 65px
+      .btn
+        padding: 2px 6px
+        font-size: 13px
+      .form-control
+        height: 26px
+        padding: 0px 6px
+      .visit
+        margin-top: 6px

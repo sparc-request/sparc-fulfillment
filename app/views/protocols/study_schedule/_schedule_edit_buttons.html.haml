@@ -6,8 +6,8 @@
       = link_to '', 'javascript:void(0)', {class: 'btn btn-danger glyphicon glyphicon-remove ', id: 'remove_arm_button', type: 'button', remote: true}
 
       %div
-        = select_tag 'arms', options_from_collection_for_select(protocol.arms, 'id' , 'name'), :class => 'selectpicker', :'data-protocol_id' => protocol.id
-    .col-md-4.text-center
+        = select_tag 'arms', options_from_collection_for_select(protocol.arms, 'id' , 'name'), class: 'selectpicker', :'data-protocol_id' => protocol.id
+    .col-sm-4.col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:visit]
       = link_to '', 'javascript:void(0)', {class: 'btn btn-success glyphicon glyphicon-plus ', id: 'add_visit_button', type: 'button',"data-toggle" => 'modal', "data-target" => '#visit_modal', remote: true}
       = link_to '', 'javascript:void(0)', {class: 'btn btn-danger glyphicon glyphicon-remove ', id: 'remove_visit_button', type: 'button', remote: true}
@@ -16,9 +16,9 @@
     .col-sm-4.col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:services]
       = link_to '', 'javascript:void(0)', {class: 'btn btn-success glyphicon glyphicon-plus ', id: 'add_service_button', type: 'button', "data-toggle" => 'modal', "data-target" => '#line_item_modal', remote: true}
-      = link_to '', 'javascript:void(0)', {class: 'btn btn-danger glyphicon glyphicon-remove ', id: 'remove_service_button', type: 'button', remote: true}
+      = link_to '', 'javascript:void(0)', {class: 'btn btn-danger glyphicon glyphicon-remove ', id: 'remove_service_button', type: 'button', remote: true, "data-toggle" => 'modal', "data-target" => '#line_item_modal', remote: true}
       %div
-        = select_tag 'services', options_from_collection_for_select(services, 'id', 'name'), :class => 'selectpicker'
+        = select_tag 'services', options_from_collection_for_select(services, 'id', 'name'), class: 'selectpicker'
 .modal.fade#arm_modal{"aria-hidden" => true}
   #arm_form
 .modal.fade#visit_modal

@@ -4,6 +4,7 @@ FactoryGirl.define do
     first_name "Honest"
     last_name "Abe"
     mrn 5
+    arm nil
     status "Active"
     date_of_birth "2014-04-12"
     gender "Male"

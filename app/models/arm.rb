@@ -15,14 +15,13 @@ class Arm < ActiveRecord::Base
 
   after_create :create_visit_groups
 
-
-
   private
   def create_visit_groups
-    new_visit_groups = []
+    new_visit_group_columns = [:name, :day, :position, :arm_id]
+    new_visit_group_values = []
     for count in 1..self.visit_count
-      new_visit_groups << VisitGroup.new(name: "Visit "+ count.to_s, day: count, position: count, arm_id: self.id)
+      new_visit_group_values << ["Visit "+ count.to_s, count, count, self.id]
     end
-    VisitGroup.import new_visit_groups
+    VisitGroup.import new_visit_group_columns, new_visit_group_values, {validate: true}
   end
 end

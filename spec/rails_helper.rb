@@ -39,16 +39,6 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = false
 
-  config.before(:suite) do
-    # We can't use the transaction strategy with multiple threads, so we
-    # use truncation instead.
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.before(:each) { DatabaseCleaner.start }
-  config.after(:each) { DatabaseCleaner.clean }
-
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
@@ -65,7 +55,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   # Helpers
-  config.include SparcHelper, type: :request
-  config.include ApiAuthenticationHelper, type: :request
   config.include DeviseHelpers, type: :feature
+  config.include ApiAuthenticationHelper
+  config.include SparcHelper
 end
