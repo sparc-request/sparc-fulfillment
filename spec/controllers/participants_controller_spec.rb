@@ -88,7 +88,7 @@ RSpec.describe ParticipantsController, type: :controller do
     expect(assigns(:path)).to eq("/protocols/#{@protocol.id}/participants/#{@participant.id}/change_arm")
   end
 
-  it "should change a participant's arm" do 
+  it "should change a participant's arm" do
     @arm = create(:arm, protocol_id: @protocol.id)
     put :update_arm, {
       protocol_id: @protocol.id,
