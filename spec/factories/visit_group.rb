@@ -8,5 +8,6 @@ FactoryGirl.define do
     sequence :name do |n|
       "Visit Group #{n}"
     end
+    day 1
   end
 end
