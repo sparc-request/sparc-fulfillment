@@ -1,7 +1,7 @@
 class ArmsController < ApplicationController
 
   respond_to :json, :html
-  
+
   def change
     arm = Arm.find(params[:id])
     respond_with arm.visit_groups
@@ -13,12 +13,13 @@ class ArmsController < ApplicationController
   end
 
   def create
-    @arm = Arm.new(arm_params)
-    if @arm.valid?
-      @arm.save
+    @arm                      = Arm.new(arm_params)
+    @arm_visit_group_creator  = ArmVisitGroupsCreator.new(arm)
+
+    if @arm_visit_group_creator.create
       flash.now[:success] = "Arm Created"
     else
-      @errors = @arm.errors
+      @errors = @arm_visit_group_creator.arm.errors
     end
   end
 
@@ -36,5 +37,4 @@ class ArmsController < ApplicationController
       flash.now[:alert] = "Arm Destroyed"
     end
   end
-
 end
