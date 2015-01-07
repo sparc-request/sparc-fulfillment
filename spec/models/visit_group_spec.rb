@@ -3,8 +3,16 @@ require 'rails_helper'
 RSpec.describe VisitGroup, type: :model do
 
   it { should belong_to(:arm) }
-
   it { should have_many(:visits).dependent(:destroy) }
+  it { should have_many(:line_items).through(:arm) }
+
+  context 'validations' do
+    it { should validate_presence_of(:arm_id) }
+    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:day) }
+    it { should validate_numericality_of(:day) }
+    it { should accept_nested_attributes_for(:visits) }
+  end
 
   context 'class methods' do
 
@@ -18,11 +26,98 @@ RSpec.describe VisitGroup, type: :model do
     describe '#delete' do
 
       it 'should not permanently delete the record' do
-        visit_group = create(:visit_group)
+        visit_group = create(:visit_group_with_arm)
 
         visit_group.delete
 
         expect(visit_group.persisted?).to be
+      end
+    end
+
+    describe 'default_scope' do
+
+      it 'should be scoped to position' do
+        groups = []
+        # create them with positions 3,2,1
+        (3..1).each do |p|
+          vg = create(:visit_group_with_arm, position: p)
+          groups << vg
+        end
+        # expect them to return from query in position-order 1,2,3
+        sorted_groups = VisitGroup.all
+        expect(groups.first).to eq(sorted_groups.last)
+        expect(groups.second).to eq(sorted_groups.second)
+        expect(groups.third).to eq(sorted_groups.first)
+      end
+    end
+
+    describe 'callbacks' do
+
+      it 'should callback :reorder_visit_groups_up after create' do
+        visit_group = create(:visit_group_with_arm)
+        expect(visit_group).to callback(:reorder_visit_groups_up).after(:create)
+      end
+
+      it 'should callback :create_visits after create' do
+        visit_group = create(:visit_group_with_arm)
+        expect(visit_group).to callback(:create_visits).after(:create)
+      end
+
+      it 'should callback :reorder_visit_groups_down after destroy' do
+        visit_group = create(:visit_group_with_arm)
+        expect(visit_group).to callback(:reorder_visit_groups_down).after(:destroy)
+      end
+    end
+
+    describe 'public' do
+
+      it 'should return correct insertion_name' do
+        vg = create(:visit_group_with_arm, name: 'some_name')
+        expect(vg.insertion_name).to eq("insert before " + vg.name)
+      end
+    end
+
+    describe 'private' do
+
+      describe 'reorder' do
+
+        before :each do
+          @arm = create(:arm)
+          @arm.visit_groups.each{|vg| vg.destroy}
+          @arm.reload
+          @vg_a = create(:visit_group, name: 'A', position: 1, arm_id: @arm.id)
+          @vg_b = create(:visit_group, name: 'B', position: 2, arm_id: @arm.id)
+          @vg_c = create(:visit_group, name: 'C', position: 3, arm_id: @arm.id)
+        end
+
+        it 'should reorder_visit_groups_up when position is not nil' do
+          @vg_d = create(:visit_group, name: 'D', position: 3, arm_id: @arm.id)
+          @vg_c.reload
+          expect(@vg_c.position).to eq(4)
+        end
+
+        it 'should not reorder_visit_groups_up when position is nil' do
+          @vg_d = create(:visit_group, name: 'D', arm_id: @arm.id)
+          expect(@vg_d.position).to eq(4)
+        end
+
+        it 'should reorder_visit_groups_down' do
+          @vg_d = create(:visit_group, name: 'D', position: 3, arm_id: @arm.id)
+          @vg_c.reload
+          expect(@vg_c.position).to eq(4)
+
+          @vg_d.destroy
+          @vg_c.reload
+          expect(@vg_c.position).to eq(3)
+        end
+      end
+
+      it 'should create_visits' do
+        arm = create(:arm)
+        vg = create(:visit_group, arm_id: arm.id)
+        li_a = create(:line_item, arm_id: arm.id)
+        li_b = create(:line_item, arm_id: arm.id)
+        expect(vg.visits.count).to eq(2)
       end
     end
   end

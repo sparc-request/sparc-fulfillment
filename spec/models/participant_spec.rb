@@ -18,7 +18,6 @@ RSpec.describe Participant, type: :model do
     it { should validate_presence_of(:ethnicity) }
     it { should validate_presence_of(:race) }
     it { should validate_presence_of(:gender) }
-    it { should validate_presence_of(:gender) }
 
     context 'custom validations' do
 

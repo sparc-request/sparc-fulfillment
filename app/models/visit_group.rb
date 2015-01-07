@@ -29,7 +29,7 @@ class VisitGroup < ActiveRecord::Base
         group.update_attributes(position: group.position + 1) unless group == self
       end
     else
-      self.update_attributes(position: (VisitGroup.where("arm_id = ?", self.arm_id)).count + 1)
+      self.update_attributes(position: (VisitGroup.where("arm_id = ?", self.arm_id)).count)
     end
   end
 
