@@ -61,7 +61,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
   it "should add a service to one or multiple arms" do
     click_link 'add_service_button'
-    sleep 3
+    wait_for_javascript_to_finish
+    # sleep 3
     expect(page).to have_content "Add a Service"
     select service1.name, from: "service_id"
     find(:css,"#arm_ids_[value='#{arm1.id}']").set(true)
@@ -77,8 +78,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     find(:css,"#arm_ids_[value='#{arm1.id}']").set(true)
     find(:css,"#arm_ids_[value='#{arm2.id}']").set(true)
     click_button 'Remove'
-    sleep 3
-    save_and_open_screenshot
+    wait_for_javascript_to_finish
+    # sleep 3
     expect(page).to have_content "Service(s) have been removed from the chosen arms"
   end
 
