@@ -3,8 +3,9 @@ class ArmsController < ApplicationController
   respond_to :json, :html
   
   def change
-    arm = Arm.find(params[:id])
-    respond_with arm.visit_groups
+    @arm = Arm.find(params[:id])
+    @visit_groups = @arm.visit_groups
+    respond_with @visit_groups
   end
 
   def new
