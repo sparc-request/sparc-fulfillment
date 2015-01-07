@@ -8,8 +8,6 @@ RSpec.describe LineItem, type: :model do
   it { should have_many(:visits).dependent(:destroy) }
   it { should have_many(:visit_groups) }
 
-  it { should accept_nested_attributes_for(:visits) }
-
   context 'class methods' do
 
     describe 'default_scope' do
@@ -42,16 +40,6 @@ RSpec.describe LineItem, type: :model do
         line_item = create(:line_item, service: service)
 
         expect(line_item.cost).to eq(1)
-      end
-    end
-
-    describe '#create_visits' do
-
-      it 'should create Visits' do
-        arm       = create(:arm, visit_count: 3)
-        line_item = create(:line_item, arm: arm)
-
-        expect(line_item.visits.count).to eq(3)
       end
     end
   end

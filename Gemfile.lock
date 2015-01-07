@@ -202,6 +202,8 @@ GEM
     rest-client (1.7.2)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    rspec-collection_matchers (1.1.2)
+      rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.1.7)
       rspec-support (~> 3.1.0)
     rspec-expectations (3.1.2)
@@ -304,6 +306,7 @@ DEPENDENCIES
   puma
   rails (= 4.1.6)
   rest-client
+  rspec-collection_matchers
   rspec-rails (~> 3.1.0)
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)

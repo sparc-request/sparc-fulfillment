@@ -45,6 +45,7 @@ group :test do
   gem 'database_cleaner'
   gem 'rspec-rails', '~> 3.1.0'
   gem 'shoulda-callback-matchers'
+  gem 'rspec-collection_matchers'
   gem 'shoulda-matchers', require: false
   gem 'webmock', '~> 1.20.4'
   gem 'vcr', '~> 2.9.3'
