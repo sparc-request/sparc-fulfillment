@@ -1,10 +1,10 @@
 - visits = line_item.visits.paginate(page: page)
 - visits.each_with_index do |visit, index|
-  .col-xs-1.text-center{class: "line_item_#{line_item.id}_visit_#{index}"}
+  .col-xs-1.text-center{class: "line_item_#{line_item.id}_visit_#{index} visit_for_visit_group_#{visit.visit_group_id}", visit_group_id: visit.visit_group_id}
     - if tab == 'template'
       = check_box_tag "visit_check_#{visit.id}", visit.id, visit.has_billing?, class: 'visit'
     - else
-      = text_field_tag "visits_#{visit.id}_research_billing_qty", visit.research_billing_qty, class: 'even_shorter_text', current_quantity: visit.research_billing_qty, previous_quantity: visit.research_billing_qty
-      = text_field_tag "visits_#{visit.id}_insurance_billing_qty", visit.insurance_billing_qty, class: 'even_shorter_text', current_quantity: visit.insurance_billing_qty, previous_quantity: visit.insurance_billing_qty
+      = text_field_tag "visits_#{visit.id}_research_billing_qty", visit.research_billing_qty, class: 'even_shorter_text research', current_quantity: visit.research_billing_qty, previous_quantity: visit.research_billing_qty
+      = text_field_tag "visits_#{visit.id}_insurance_billing_qty", visit.insurance_billing_qty, class: 'even_shorter_text insurance', current_quantity: visit.insurance_billing_qty, previous_quantity: visit.insurance_billing_qty
 - (visits.size...Visit.per_page).each do |index|
   .col-xs-1{class: "line_item_#{line_item.id}_visit_#{index}"} &nbsp

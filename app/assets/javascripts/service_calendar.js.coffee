@@ -42,19 +42,15 @@ $ ->
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
     arms_and_pages = {}
-    arm_id = ''
-    $('.visit_dropdown').each ->
-      page = $(this).find('option:selected').attr('parent_page')
 
-      if page == undefined || page == false
-        page = $(this).val()
+    $('.visit_dropdown').each ->
+      page = $(this).val()
 
       arm_id = $(this).data('arm_id')
       arms_and_pages[arm_id] = page
 
     data =
       'arms_and_pages': arms_and_pages,
-      'arm_id': arm_id,
       'tab'   : tab
     $.ajax
       type: 'GET'
@@ -101,11 +97,41 @@ $ ->
         if check == 'true'
           $(this).removeClass('glyphicon-ok').addClass('glyphicon-remove')
           $(this).attr('check', 'false')
-          $(".visits_for_#{line_item_id} input[type=checkbox]").prop('checked', true)
+          $(".visits_for_line_item_#{line_item_id} input[type=checkbox]").prop('checked', true)
+          $(".visits_for_line_item_#{line_item_id} input[type=text].research").val(1)
+          $(".visits_for_line_item_#{line_item_id} input[type=text].insurance").val(0)
         else
           $(this).removeClass('glyphicon-remove').addClass('glyphicon-ok')
           $(this).attr('check', 'true')
-          $(".visits_for_#{line_item_id} input[type=checkbox]").prop('checked', false)
+          $(".visits_for_line_item_#{line_item_id} input[type=checkbox]").prop('checked', false)
+          $(".visits_for_line_item_#{line_item_id} input[type=text].research").val(0)
+          $(".visits_for_line_item_#{line_item_id} input[type=text].insurance").val(0)
+
+  $(document).on 'click', '.check_column', ->
+    check = $(this).attr('check')
+    visit_group_id = $(this).attr('visit_group_id')
+    data =
+      'visit_group_id': visit_group_id,
+      'check':        check
+    $.ajax
+      type: 'PUT'
+      url:  '/service_calendar/check_column'
+      data: data
+      success: =>
+        # Check off visits
+        # Update text fields
+        if check == 'true'
+          $(this).removeClass('glyphicon-ok').addClass('glyphicon-remove')
+          $(this).attr('check', 'false')
+          $(".visit_for_visit_group_#{visit_group_id} input[type=checkbox]").prop('checked', true)
+          $(".visit_for_visit_group_#{visit_group_id} input[type=text].research").val(1)
+          $(".visit_for_visit_group_#{visit_group_id} input[type=text].insurance").val(0)
+        else
+          $(this).removeClass('glyphicon-remove').addClass('glyphicon-ok')
+          $(this).attr('check', 'true')
+          $(".visit_for_visit_group_#{visit_group_id} input[type=checkbox]").prop('checked', false)
+          $(".visit_for_visit_group_#{visit_group_id} input[type=text].research").val(0)
+          $(".visit_for_visit_group_#{visit_group_id} input[type=text].insurance").val(0)
 
   $(document).on 'click', '.remove_line_item', ->
     if confirm("Are you sure you want to remove this line item?")
