@@ -5,7 +5,7 @@ RSpec.describe 'User updates Service in SPARC', type: :request, delay: false do
   describe 'full lifecycle' do
 
     it 'should update the Service', sparc_api: :get_service_1 do
-      service = create(:service)
+      service = create(:service, sparc_id: 1)
 
       user_updates_service_in_sparc
 

@@ -45,7 +45,7 @@ RSpec.describe Visit, type: :model do
     describe '.position' do
 
       it 'should delegate to VisitGroup' do
-        visit_group = create(:visit_group, position: 1)
+        visit_group = create(:visit_group_with_arm, position: 1)
         visit       = create(:visit, visit_group: visit_group)
 
         expect(visit.position).to eq(1)
