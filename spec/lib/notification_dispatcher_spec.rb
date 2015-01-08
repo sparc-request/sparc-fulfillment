@@ -16,8 +16,8 @@ RSpec.describe NotificationDispatcher, type: :request do
             sparc_sends_notification_post(params)
           end
 
-          it 'should create a struct:SubServiceRequestCreaterJob delayed job', skip: true do
-            expect(Delayed::Job.where("handler LIKE '%struct:SubServiceRequestUpdaterJob%'").one?).to be
+          it 'should create a struct:SubServiceRequestCreaterJob delayed job' do
+            expect(Delayed::Job.where("handler LIKE '%struct:SubServiceRequestCreaterJob%'").one?).to be
           end
         end
       end
@@ -28,7 +28,7 @@ RSpec.describe NotificationDispatcher, type: :request do
       context 'notification of create' do
 
         before do
-          @object = build(:service)
+          @object = build(:service, sparc_id: 1)
           @params = { notification: attributes_for(:notification_service_create) }
         end
 
@@ -37,7 +37,7 @@ RSpec.describe NotificationDispatcher, type: :request do
           before { sparc_sends_notification_post(@params) }
 
           it 'should create an object with a :sparc_id' do
-            expected_service = Service.where(sparc_id: @object.sparc_id).first
+            expected_service = Service.where(sparc_id: 1).first
 
             expect(expected_service).to be
           end
@@ -69,7 +69,7 @@ RSpec.describe NotificationDispatcher, type: :request do
       context 'notification of update' do
 
         before do
-          @object = create(:service)
+          @object = create(:service, sparc_id: 1)
           @params = { notification: attributes_for(:notification_service_update) }
         end
 
