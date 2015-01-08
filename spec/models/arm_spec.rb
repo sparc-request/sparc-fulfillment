@@ -24,24 +24,6 @@ RSpec.describe Arm, type: :model do
         expect(arm.persisted?).to be
       end
     end
-
-    describe 'callbacks' do
-
-      describe '#create_visit_groups' do
-
-        it 'should callback #create_visit_groups after #create' do
-          arm = create(:arm)
-
-          expect(arm).to callback(:create_visit_groups).after(:create)
-        end
-
-        it 'should import VisitGroups' do
-          arm = create(:arm, visit_count: 2)
-
-          expect(arm.visit_groups.count).to eq(2)
-        end
-      end
-    end
   end
 
   context 'instance methods' do

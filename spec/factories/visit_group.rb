@@ -9,5 +9,11 @@ FactoryGirl.define do
       "Visit Group #{n}"
     end
     day 1
+
+    trait :with_arm do
+      arm
+    end
+
+    factory :visit_group_with_arm, traits: [:with_arm]
   end
 end

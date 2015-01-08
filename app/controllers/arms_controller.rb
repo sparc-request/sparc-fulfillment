@@ -14,9 +14,9 @@ class ArmsController < ApplicationController
 
   def create
     @arm                      = Arm.new(arm_params)
-    @arm_visit_group_creator  = ArmVisitGroupsCreator.new(arm)
+    @arm_visit_group_creator  = ArmVisitGroupsImporter.new(@arm)
 
-    if @arm_visit_group_creator.create
+    if @arm_visit_group_creator.save_and_create_dependents
       flash.now[:success] = "Arm Created"
     else
       @errors = @arm_visit_group_creator.arm.errors

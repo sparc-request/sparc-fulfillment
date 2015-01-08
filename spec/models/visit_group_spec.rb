@@ -18,7 +18,7 @@ RSpec.describe VisitGroup, type: :model do
     describe '#delete' do
 
       it 'should not permanently delete the record' do
-        visit_group = create(:visit_group)
+        visit_group = create(:visit_group_with_arm)
 
         visit_group.delete
 
