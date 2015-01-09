@@ -8,6 +8,7 @@ class MultipleLineItemsController < ApplicationController
     @selected_service = params[:service_id]
     @services = Service.all
     @protocol = Protocol.find(params[:protocol_id])
+    @page_hash = params[:page_hash]
   end
 
   def edit
@@ -15,35 +16,43 @@ class MultipleLineItemsController < ApplicationController
     @selected_service = params[:service_id]
     @protocol = Protocol.find(params[:protocol_id])
     @services = Service.all
+    @page_hash = params[:page_hash]
   end
 
   def update
-    #handles subission of the line item form
-    if params[:header_text].include? ("Add")
-      create(params)
-    else
-      destroy(params)
+    #handles submission of the line item form
+    if params[:arm_ids]
+      @service_id = params[:service_id]
+      @core_id = Service.find(@service_id).sparc_core_id
+      @arm_ids = params[:arm_ids].map{ |set| set.split()[0]}
+
+      if params[:header_text].include? ("Add")
+        @action = 'create'
+        create(params)
+      else
+        @action = 'destroy'
+        destroy(params)
+      end
     end
   end
 
   def create (params)
-    if params[:arm_ids] == nil
-      return
-    end
-    params[:arm_ids].each do |a|
-      @line_item = LineItem.create(arm_id: a, service_id: params[:service_id])
+    @arm_hash = {}
+    params[:arm_ids].each do |set|
+      arm_id, page = set.split
+      @arm_hash[arm_id] = {page: page, line_item: LineItem.create(arm_id: arm_id, service_id: @service_id)}
     end
     flash.now[:success] = "Service(s) have been added to the chosen arms"
   end
 
   def destroy (params)
-    service_id = params[:service_id]
-    if params[:arm_ids] == nil
-      return
-    end
-    params[:arm_ids].each do |a|
-      if Arm.find(a).line_items.pluck(:service_id).include?(service_id.to_i)
-        LineItem.where("arm_id = ? AND service_id = ?", a, service_id).delete_all
+    @line_item_ids = []
+    @arm_ids.each do |arm_id|
+      line_items = LineItem.where("arm_id = #{arm_id} AND service_id = #{@service_id}")
+      if line_items.count > 0
+        @line_item_ids << line_items.pluck(:id)
+        @line_item_ids.flatten!.uniq!
+        line_items.delete_all
       end
     end
     flash.now[:success] = "Service(s) have been removed from the chosen arms"

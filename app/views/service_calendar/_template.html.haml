@@ -28,10 +28,9 @@
     .col-xs-1
   .row
     .scrolling-div.col-xs-12
-      - current_core = ''
-      - arm.line_items.each do |line_item|
-        - if line_item.sparc_core_name != current_core
-          - current_core = line_item.sparc_core_name
-          .row.core{id: "arm_#{arm.id}_core_#{line_item.sparc_core_id}"}
-            .col-xs-12= "Core: #{current_core}"
-        = render partial: 'service_calendar/line_item', locals: {line_item: line_item, page: page}
+      -arm.line_items_grouped_by_core.each do |core_id, line_items|
+        .row.core{id: "arm_#{arm.id}_core_#{core_id}"}
+          .col-xs-12= "Core: #{line_items[0].sparc_core_name}"
+        -line_items.each do |li|
+          = render partial: 'service_calendar/line_item', locals: {line_item: li, page: page}
+        %div{class: "arm_#{arm.id}_end_of_core_#{core_id}"}

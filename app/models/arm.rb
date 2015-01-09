@@ -16,6 +16,10 @@ class Arm < ActiveRecord::Base
 
   after_create :create_visit_groups
 
+  def line_items_grouped_by_core
+    line_items.includes(:service).group_by(&:sparc_core_id)
+  end
+
   private
 
   def create_visit_groups
@@ -27,4 +31,5 @@ class Arm < ActiveRecord::Base
     end
     VisitGroup.import new_visit_group_columns, new_visit_group_values, { validate: true }
   end
+
 end

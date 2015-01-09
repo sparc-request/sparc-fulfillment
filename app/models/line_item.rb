@@ -2,8 +2,6 @@ class LineItem < ActiveRecord::Base
 
   acts_as_paranoid
 
-  default_scope { order(:sparc_core_name) }
-
   belongs_to :arm
   belongs_to :service
 
@@ -16,6 +14,8 @@ class LineItem < ActiveRecord::Base
 
   delegate  :name,
             :cost,
+            :sparc_core_id,
+            :sparc_core_name,
             to: :service
 
   private

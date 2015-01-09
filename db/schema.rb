@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141229162955) do
+ActiveRecord::Schema.define(version: 20150108175805) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -49,8 +49,6 @@ ActiveRecord::Schema.define(version: 20141229162955) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.integer  "sparc_core_id"
-    t.string   "sparc_core_name"
     t.integer  "subject_count"
   end
 
@@ -113,13 +111,15 @@ ActiveRecord::Schema.define(version: 20141229162955) do
 
   create_table "services", force: true do |t|
     t.integer  "sparc_id"
-    t.decimal  "cost",         precision: 10, scale: 0
+    t.decimal  "cost",            precision: 10, scale: 0
     t.string   "name"
     t.string   "abbreviation"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "sparc_core_id"
+    t.string   "sparc_core_name"
   end
 
   add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
