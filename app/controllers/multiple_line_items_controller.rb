@@ -48,12 +48,11 @@ class MultipleLineItemsController < ApplicationController
   end
 
   def destroy (params)
-    @line_item_ids = []
+    @line_item_ids = {}
     @arm_ids.each do |arm_id|
       line_items = LineItem.where("arm_id = #{arm_id} AND service_id = #{@service_id}")
       if line_items.count > 0
-        @line_item_ids << line_items.pluck(:id)
-        @line_item_ids.flatten!.uniq!
+        @line_item_ids[arm_id] = line_items.pluck(:id)
         line_items.delete_all
       end
     end
