@@ -14,6 +14,8 @@ class VisitGroupsController < ApplicationController
       flash.now[:success] = "Visit Created"
     else
       @errors = @visit_group.errors
+      puts "*" * 80
+      puts @errors
     end
   end
 
