@@ -31,6 +31,13 @@ class ServiceCalendarController < ApplicationController
     visit_group.update_attributes(name: name)
   end
 
+  def change_quantity
+    quantity = params[:quantity]
+    qty_type = params[:qty_type]
+    visit = Visit.find params[:visit_id]
+    visit.update_attributes(qty_type => quantity)
+  end
+
   def check_row
     qty = params[:check] == 'true' ? 1 : 0
     Visit.where(line_item_id: params[:line_item_id]).update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
