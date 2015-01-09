@@ -27,5 +27,8 @@ module ClinicalWorkFulfillment
 
     # DependentObjectImporter
     config.autoload_paths += Dir[Rails.root.join('lib/dependent_object_importers')]
+
+    # Response compression
+    config.middleware.use Rack::Deflater
   end
 end
