@@ -36,6 +36,7 @@ end
 group :development do
   gem 'faker', '~> 1.4.3'
   gem 'puma'
+  gem 'rack-mini-profiler', require: false
   gem 'spring'
   gem 'spring-commands-rspec', '~> 1.0.2'
 end
