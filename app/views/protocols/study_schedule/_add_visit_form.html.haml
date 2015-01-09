@@ -9,6 +9,7 @@
       .modal-body
         #visit_group_modal_errors
         .row
+          = hidden_field_tag :current_page, current_page
           .col-md-12
             = a.hidden_field :arm_id
             .form-group

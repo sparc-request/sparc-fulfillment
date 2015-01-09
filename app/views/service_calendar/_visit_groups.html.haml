@@ -1,6 +1,6 @@
 - visit_groups = arm.visit_groups.paginate(page: page)
 - visit_groups.each_with_index do |visit_group, index|
-  .col-xs-2
+  .col-xs-2{id: "#{visit_group.id}"}
     = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "form-control visit_group_#{index} visit_name", :'data-visit_group_id' => visit_group.id
 - (visit_groups.size...Visit.per_page).each do |index|
   .col-xs-2{class: "visit_group_#{index}"} &nbsp
