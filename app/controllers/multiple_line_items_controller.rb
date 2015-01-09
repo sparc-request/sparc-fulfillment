@@ -23,7 +23,9 @@ class MultipleLineItemsController < ApplicationController
     #handles submission of the line item form
     if params[:arm_ids]
       @service_id = params[:service_id]
-      @core_id = Service.find(@service_id).sparc_core_id
+      service = Service.find(@service_id)
+      @core_id = service.sparc_core_id
+      @core_name = service.sparc_core_name
       @arm_ids = params[:arm_ids].map{ |set| set.split()[0]}
 
       if params[:header_text].include? ("Add")
