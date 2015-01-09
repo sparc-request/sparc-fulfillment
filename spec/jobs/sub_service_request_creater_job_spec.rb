@@ -13,7 +13,7 @@ RSpec.describe SubServiceRequestCreaterJob do
     end
   end
 
-  describe '#perform', sparc_api: :get_sub_service_request_1 do
+  describe '#perform' do
 
     before do
       callback_url            = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
@@ -22,7 +22,7 @@ RSpec.describe SubServiceRequestCreaterJob do
       sub_service_updater_job.perform
     end
 
-    it 'should make requests to the objects callback_url' do
+    it 'should make requests to the objects callback_url', vcr: :localhost do
       # SPARC sub_service_request
       expect(a_request(:get, /\/v1\/sub_service_requests\/6213.json/).
         with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once

@@ -4,13 +4,18 @@ Rails.application.routes.draw do
   root 'protocols#index'
 
   resources :protocols do
+    member do
+    end
     resources :arms do
       member do
         get 'change'
       end
+      resources :services do
+        resources :line_items do
+        end
+      end
       resources :visit_groups
     end
-
     resources :participants do
       get 'change_arm/(:id/edit)', to: 'participants#edit_arm', as: :edit_arm
       patch 'change_arm(/:id)', to: 'participants#update_arm'
@@ -31,6 +36,10 @@ Rails.application.routes.draw do
       put 'remove_line_item'
     end
   end
+
+  get 'multiple_line_items/(:protocol_id)/(:service_id)/new', to: 'multiple_line_items#new'
+  get 'multiple_line_items/(:protocol_id)/(:service_id)/edit', to: 'multiple_line_items#edit'
+  put 'multiple_line_items/update', to: 'multiple_line_items#update'
 end
 
 

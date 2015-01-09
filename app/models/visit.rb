@@ -6,11 +6,11 @@ class Visit < ActiveRecord::Base
   belongs_to :line_item
   belongs_to :visit_group
 
-  def position
-    visit_group.position
-  end
+  delegate :position, to: :visit_group
 
   def has_billing?
-    research_billing_qty > 0 || insurance_billing_qty > 0 || effort_billing_qty > 0
+    research_billing_qty > 0 ||
+      insurance_billing_qty > 0 ||
+        effort_billing_qty > 0
   end
 end

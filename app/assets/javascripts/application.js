@@ -13,8 +13,10 @@
 //= require protocols
 //= require service_calendar
 //= require participants
+//= require study_schedule_edit_buttons
 //= require global
 //= require tableExport
 //= require jquery.base64
 //= require bootstrap-table-export
-//= require bootstrap-datepicker
+//= require bootstrap-datepicker/core
+//= require bootstrap-datepicker/locales/bootstrap-datepicker.en-GB.js

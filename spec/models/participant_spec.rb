@@ -5,88 +5,74 @@ RSpec.describe Participant, type: :model do
   it { should belong_to(:protocol) }
   it { should belong_to(:arm) }
 
-  describe 'validations' do
-    let!(:protocol1)     { create(:protocol) }
+  context 'validations' do
 
-    it 'should create with no errors' do
-      expect(
-        create(:participant, protocol_id: protocol1.id)
-        ).to be_valid
+    it { should validate_presence_of(:protocol_id) }
+    it { should validate_presence_of(:first_name) }
+    it { should validate_presence_of(:last_name) }
+    it { should validate_presence_of(:mrn) }
+    it { should validate_presence_of(:date_of_birth) }
+    it { should validate_presence_of(:address) }
+    it { should validate_presence_of(:phone) }
+    it { should validate_presence_of(:status) }
+    it { should validate_presence_of(:ethnicity) }
+    it { should validate_presence_of(:race) }
+    it { should validate_presence_of(:gender) }
+
+    context 'custom validations' do
+
+      before { @participant = create(:participant_with_protocol) }
+
+      it 'should create with no errors' do
+        expect(@participant).to be_valid
+      end
+
+      it 'should validate date_of_birth format to be valid' do
+        expect(
+          build(:participant_with_protocol, date_of_birth: "2014-12-16")
+          ).to be_valid
+      end
+
+      it 'should validate date_of_birth format to be invalid' do
+        expect(
+          build(:participant_with_protocol, date_of_birth: "2014-12")
+          ).not_to be_valid
+      end
+
+      it 'should validate phone format to be valid' do
+        expect(
+          build(:participant_with_protocol, phone: "123-123-1234")
+          ).to be_valid
+      end
+
+      it 'should validate phone format to be invalid' do
+        expect(
+          build(:participant_with_protocol, phone: "123-123-123")
+          ).not_to be_valid
+      end
     end
-    it 'should validate protocol_id' do
-      expect(
-        build(:participant, protocol_id: "")
-        ).not_to be_valid
+  end
+
+  context 'class methods' do
+
+    describe '#delete' do
+
+      it 'should not permanently delete the record' do
+        participant = create(:participant_with_protocol)
+
+        participant.delete
+
+        expect(participant.persisted?).to be
+      end
     end
-    it 'should validate first_name' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, first_name: "")
-        ).not_to be_valid
-    end
-    it 'should validate last_name' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, last_name: "")
-        ).not_to be_valid
-    end
-    it 'should validate mrn' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, mrn: "")
-        ).not_to be_valid
-    end
-    it 'should validate status' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, status: "")
-        ).not_to be_valid
-    end
-    it 'should validate date_of_birth' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, date_of_birth: "")
-        ).not_to be_valid
-    end
-    it 'should validate date_of_birth format to be valid' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, date_of_birth: "2014-12-16")
-        ).to be_valid
-    end
-    it 'should validate date_of_birth format to be invalid' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, date_of_birth: "2014-12")
-        ).not_to be_valid
-    end
-    it 'should validate gender' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, gender: "")
-        ).not_to be_valid
-    end
-    it 'should validate ethnicity' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, ethnicity: "")
-        ).not_to be_valid
-    end
-    it 'should validate race' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, race: "")
-        ).not_to be_valid
-    end
-    it 'should validate address' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, address: "")
-        ).not_to be_valid
-    end
-    it 'should validate phone' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, phone: "")
-        ).not_to be_valid
-    end
-    it 'should validate phone format to be valid' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, phone: "123-123-1234")
-        ).to be_valid
-    end
-    it 'should validate phone format to be invalid' do
-      expect(
-        build(:participant, protocol_id: protocol1.id, phone: "123-123-123")
-        ).not_to be_valid
+
+    describe 'callbacks' do
+
+      it 'should callback :update_via_faye after save' do
+        participant = create(:participant_with_protocol)
+
+        expect(participant).to callback(:update_via_faye).after(:save)
+      end
     end
   end
 end

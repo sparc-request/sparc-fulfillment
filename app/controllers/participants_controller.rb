@@ -18,7 +18,7 @@ class ParticipantsController < ApplicationController
     @participant.protocol_id = @protocol.id
     if @participant.valid?
       @participant.save
-      flash[:success] = "Participant Created"
+      flash[:success] = t(:flash_messages)[:participant][:created]
     else
       @errors = @participant.errors
     end
@@ -36,7 +36,7 @@ class ParticipantsController < ApplicationController
     if @participant.valid?
       @participant = Participant.find(params[:id])
       @participant.update(participant_params)
-      flash[:success] = "Participant Saved"
+      flash[:success] = t(:flash_messages)[:participant][:saved]
     else
       @errors = @participant.errors
     end
@@ -45,7 +45,7 @@ class ParticipantsController < ApplicationController
   def destroy
     @protocol = Protocol.find(params[:protocol_id])
     Participant.destroy(params[:id])
-    flash[:alert] = "Participant Removed"
+    flash[:alert] = t(:flash_messages)[:participant][:removed]
   end
 
   def edit_arm
@@ -72,7 +72,7 @@ class ParticipantsController < ApplicationController
       @participant.arm = Arm.find( @protocol.arms.select{ |a| a.name == params[:arm][:name]}[0].id )
     end
     @participant.save
-    flash[:success] = "Participant Successfully Changed Arms"
+    flash[:success] = t(:flash_messages)[:participant][:arm_change]
   end
 
   private

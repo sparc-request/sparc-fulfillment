@@ -2,13 +2,41 @@ require 'rails_helper'
 
 RSpec.describe Protocol, type: :model do
 
-  it { should have_many(:arms) }
+  it { should have_many(:arms).dependent(:destroy) }
+  it { should have_many(:participants).dependent(:destroy) }
 
-  describe 'set subsidy committed' do
-    let!(:protocol)  { create(:protocol, study_cost: 5000, stored_percent_subsidy: 10.00)}
+  context 'class methods' do
 
-    it "should corrrectly calculate and set the subsidy committed field in the database" do
-      expect(protocol.subsidy_committed).to eq("$5.00")
+    describe '#delete' do
+
+      it 'should not permanently delete the record' do
+        service = create(:service)
+
+        service.delete
+
+        expect(service.persisted?).to be
+      end
+    end
+
+    describe 'callbacks' do
+
+      it 'should callback :update_via_faye after save' do
+        protocol = create(:protocol)
+
+        expect(protocol).to callback(:update_via_faye).after(:save)
+      end
+    end
+  end
+
+  context 'instance methods' do
+
+    describe 'subsidy_committed' do
+
+      it 'should return the correct amount formatted for currency' do
+        protocol = create(:protocol, study_cost: 5000, stored_percent_subsidy: 10.00)
+
+        expect(protocol.subsidy_committed).to eq('5.00')
+      end
     end
   end
 end

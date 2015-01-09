@@ -19,7 +19,7 @@ $ ->
         type: 'GET'
         url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
 
-    "click .change-arm": (e, value, row, index) ->
+    "click #changeParticipantArm": (e, value, row, index) ->
       if row.arm_id == null
         urlVar = "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm"
       else
@@ -53,13 +53,16 @@ $ ->
 
 (exports ? this).changeArmFormatter = (value, row, index) ->
   [
-    "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm'>",
+    "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' id='changeParticipantArm'>",
     "<i class='glyphicon glyphicon-random'></i>",
     "</a>"
   ].join ""
 
 (exports ? this).nameFormatter = (value, row, index) ->
   value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+
+(exports ? this).view_buttons = (value) ->
+  '<i class="glyphicon glyphicon-calendar" participant_id=' + value + '></i>' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-stats" participant_id=' + value + '></i>'
 
 (exports ? this).calendarFormatter = (value, row, index) ->
   [
