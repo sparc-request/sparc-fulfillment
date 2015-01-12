@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141229162955) do
+ActiveRecord::Schema.define(version: 20150112131530) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20141229162955) do
     t.datetime "deleted_at"
   end
 
+  add_index "arms", ["protocol_id"], name: "index_arms_on_protocol_id", using: :btree
   add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", unique: true, using: :btree
 
   create_table "delayed_jobs", force: true do |t|
@@ -86,6 +87,9 @@ ActiveRecord::Schema.define(version: 20141229162955) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "participants", ["arm_id"], name: "index_participants_on_arm_id", using: :btree
+  add_index "participants", ["protocol_id"], name: "index_participants_on_protocol_id", using: :btree
 
   create_table "protocols", force: true do |t|
     t.integer  "sparc_id"
