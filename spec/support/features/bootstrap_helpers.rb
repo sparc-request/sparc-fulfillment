@@ -8,14 +8,11 @@ module Features
       within bootstrap_select do
         page.find('a', text: choice).click
       end
-      sleep 2
     end
 
     def bootstrap_selected?(element, choice)
       page.find("button.selectpicker[data-id='#{element}'][title='#{choice}']")
     end
-
   end
-
 end
 

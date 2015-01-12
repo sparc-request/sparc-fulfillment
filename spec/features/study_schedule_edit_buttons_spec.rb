@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   let!(:protocol1)    { create(:protocol) }
-  let!(:arm1)         { create(:arm, protocol_id: protocol1.id) }
-  let!(:arm2)         { create(:arm, protocol_id: protocol1.id) }
+  let!(:arm1)         { create(:arm_with_visit_groups, protocol_id: protocol1.id) }
+  let!(:arm2)         { create(:arm_with_visit_groups, protocol_id: protocol1.id) }
   let!(:service1)     { create(:service) }
 
   before :each do
@@ -45,18 +45,29 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     click_button 'Add Arm'
     expect(page).to have_content 'Arm Created'
     bootstrap_select '#arms', 'arm name'
-    expect(bootstrap_selected? 'visits', 'Visit 1').to be
-  end
+    expect(bootstrap_selected? 'visits', 'Visit 0').to be
+    save_and_open_screenshot
+    # expect(page).to have_content "Arm: arm name"
+    # expect(page).to have_content ""
+    end
 
   it "should add a visit" do
+    create(:line_item, arm_id: arm1.id, service_id: service1.id)
+    visit current_path
     click_link 'add_visit_button'
     click_button 'Add'
+    wait_for_javascript_to_finish
+    save_and_open_screenshot
     expect(page).to have_content "Name can't be blank Day can't be blank Day is not a number"
     fill_in 'Visit Name', with: "visit name"
     fill_in 'Visit Day', with: 3
-    select 'add as last', from: 'visit_group_position'
+    save_and_open_screenshot
     click_button 'Add'
     wait_until(3) {expect(page).to have_content "Visit Created"}
+    #since only 5 visit groups are created on the factory default arm the addition of one should show up on the selected page
+    wait_for_javascript_to_finish
+    expect(page).to have_css ".visit_name[value='visit name']"
+
   end
 
   it "should add a service to one or multiple arms" do
@@ -80,5 +91,4 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     wait_for_javascript_to_finish
     expect(page).to have_content "Service(s) have been removed from the chosen arms"
   end
-
 end

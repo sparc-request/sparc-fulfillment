@@ -14,10 +14,14 @@ class VisitGroupsController < ApplicationController
     @current_page = params[:current_page]
     if @visit_group_visits_importer.save_and_create_dependents
       @arm.update_attributes(visit_count: @arm.visit_count + 1)
+      puts "DEBUG: #{@visit_group.position}"
+      puts @visit_group.inspect
       flash.now[:success] = "Visit Created"
     else
       @errors = @visit_group.errors
+      puts "else" * 80
     end
+    puts @errors.inspect
   end
 
   def visit_group_params
