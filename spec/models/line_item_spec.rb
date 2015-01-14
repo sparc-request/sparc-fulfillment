@@ -49,15 +49,5 @@ RSpec.describe LineItem, type: :model do
         expect(line_item.sparc_core_id).to eq(4)
       end
     end
-
-    describe '#create_visits' do
-
-      it 'should create Visits' do
-        arm       = create(:arm, visit_count: 3)
-        line_item = create(:line_item, arm: arm)
-
-        expect(line_item.visits.count).to eq(3)
-      end
-    end
   end
 end
