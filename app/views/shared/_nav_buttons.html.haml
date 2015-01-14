@@ -1,6 +1,7 @@
--if params[:action] == "index"
-  = link_to "Task List", "#", :class => "btn btn-primary"
-  = link_to "Billing/Auditing Report", "#", :class => "btn btn-primary"
--elsif params[:action]
-  = link_to "Export to Excel", "#", :class => "btn btn-primary"
-  = link_to "All Protocols", root_path, :class => "btn btn-primary"
+- if user_signed_in?
+  - if params[:action] == "index"
+    = link_to "Task List", "#", :class => "btn btn-primary"
+    = link_to "Billing/Auditing Report", "#", :class => "btn btn-primary"
+  - elsif params[:action]
+    = link_to "Export to Excel", "#", :class => "btn btn-primary"
+    = link_to "All Protocols", root_path, :class => "btn btn-primary"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141229162955) do
+ActiveRecord::Schema.define(version: 20150112132352) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 20141229162955) do
     t.datetime "deleted_at"
   end
 
+  add_index "arms", ["deleted_at"], name: "index_arms_on_deleted_at", using: :btree
+  add_index "arms", ["protocol_id"], name: "index_arms_on_protocol_id", using: :btree
   add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", unique: true, using: :btree
 
   create_table "delayed_jobs", force: true do |t|
@@ -49,12 +51,11 @@ ActiveRecord::Schema.define(version: 20141229162955) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.integer  "sparc_core_id"
-    t.string   "sparc_core_name"
     t.integer  "subject_count"
   end
 
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
+  add_index "line_items", ["deleted_at"], name: "index_line_items_on_deleted_at", using: :btree
   add_index "line_items", ["service_id"], name: "index_line_items_on_service_id", using: :btree
   add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree
 
@@ -87,6 +88,10 @@ ActiveRecord::Schema.define(version: 20141229162955) do
     t.datetime "updated_at"
   end
 
+  add_index "participants", ["arm_id"], name: "index_participants_on_arm_id", using: :btree
+  add_index "participants", ["deleted_at"], name: "index_participants_on_deleted_at", using: :btree
+  add_index "participants", ["protocol_id"], name: "index_participants_on_protocol_id", using: :btree
+
   create_table "protocols", force: true do |t|
     t.integer  "sparc_id"
     t.text     "title"
@@ -109,19 +114,23 @@ ActiveRecord::Schema.define(version: 20141229162955) do
     t.string   "status"
   end
 
+  add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
 
   create_table "services", force: true do |t|
     t.integer  "sparc_id"
-    t.decimal  "cost",         precision: 10, scale: 0
+    t.decimal  "cost",            precision: 10, scale: 0
     t.string   "name"
     t.string   "abbreviation"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "sparc_core_id"
+    t.string   "sparc_core_name"
   end
 
+  add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
   add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
@@ -156,6 +165,7 @@ ActiveRecord::Schema.define(version: 20141229162955) do
   end
 
   add_index "visit_groups", ["arm_id"], name: "index_visit_groups_on_arm_id", using: :btree
+  add_index "visit_groups", ["deleted_at"], name: "index_visit_groups_on_deleted_at", using: :btree
   add_index "visit_groups", ["sparc_id"], name: "index_visit_groups_on_sparc_id", unique: true, using: :btree
 
   create_table "visits", force: true do |t|
@@ -170,6 +180,7 @@ ActiveRecord::Schema.define(version: 20141229162955) do
     t.datetime "deleted_at"
   end
 
+  add_index "visits", ["deleted_at"], name: "index_visits_on_deleted_at", using: :btree
   add_index "visits", ["line_item_id"], name: "index_visits_on_line_item_id", using: :btree
   add_index "visits", ["sparc_id"], name: "index_visits_on_sparc_id", unique: true, using: :btree
   add_index "visits", ["visit_group_id"], name: "index_visits_on_visit_group_id", using: :btree

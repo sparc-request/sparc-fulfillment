@@ -40,18 +40,32 @@ $ ->
       $.get "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/new"
 
     $(document).on 'click', '#add_service_button', ->
+      page_hash = {}
+      $(".visit_dropdown.form-control").each (index) ->
+        key = $(this).data('arm_id')
+        value = $(this).attr('page')
+        page_hash[key] = value
+      data = 'page_hash': page_hash
       protocol_id = $('#arms').data('protocol_id')
       service_id = $('#services').val()
       $.ajax
         type: 'GET'
         url: "/multiple_line_items/#{protocol_id}/#{service_id}/new"
+        data: data
 
     $(document).on 'click', '#remove_service_button', ->
+      page_hash = {}
+      $(".visit_dropdown.form-control").each (index) ->
+        key = $(this).data('arm_id')
+        value = $(this).attr('page')
+        page_hash[key] = value
+      data = 'page_hash': page_hash
       protocol_id = $('#arms').data('protocol_id')
       service_id = $('#services').val()
       $.ajax
         type: 'GET'
         url: "/multiple_line_items/#{protocol_id}/#{service_id}/edit"
+        data: data
 
 (exports ? this).create_arm = (name, id) ->
   $select = $('#arms')
