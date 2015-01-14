@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   let!(:protocol1)    { create(:protocol) }
-  let!(:arm1)         { create(:arm, protocol_id: protocol1.id) }
-  let!(:arm2)         { create(:arm, protocol_id: protocol1.id) }
+  let!(:arm1)         { create(:arm_with_visit_groups, protocol_id: protocol1.id) }
+  let!(:arm2)         { create(:arm_with_visit_groups, protocol_id: protocol1.id) }
   let!(:service1)     { create(:service, sparc_core_id: 5, sparc_core_name: 'Core1') }
 
   before :each do
@@ -12,12 +12,14 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
   it "should render add arm modal" do
     click_link 'add_arm_button'
+    wait_for_javascript_to_finish
     expect(page).to have_content "Add Arm"
 
   end
 
   it "should render add a visit modal" do
     click_link 'add_visit_button'
+    wait_for_javascript_to_finish
     expect(page).to have_content 'Add Visit'
   end
 
