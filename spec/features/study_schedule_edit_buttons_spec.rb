@@ -9,6 +9,14 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   before :each do
     visit protocol_path(protocol1.sparc_id)
   end
+  describe "visit groups" do
+  end
+
+  describe "arms" do
+  end
+
+  describe "services" do
+  end
 
   it "should render add arm modal" do
     click_link 'add_arm_button'
