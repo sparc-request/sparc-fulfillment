@@ -12,8 +12,8 @@
         .col-xs-2
           .btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
         -# The visit jump to drop down
-        .col-xs-8
-          = select_tag "visits_select_for_#{arm.id}", visits_select_options(arm), class: 'visit_dropdown form-control', :'data-arm_id' => "#{arm.id}", page: page
+        .col-xs-8{id: "select_for_arm_#{arm.id}"}
+          = build_visits_select(arm, page)
         -# The next page arrow
         .col-xs-2
           .btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page}

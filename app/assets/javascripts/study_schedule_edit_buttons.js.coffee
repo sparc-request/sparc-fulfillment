@@ -18,11 +18,13 @@ $ ->
       visit_group_id = $("#visits").val()
       protocol_id = $('#arms').data('protocol_id')
       arm_id = $("#arms").val()
+      page = $("#visits_select_for_#{arm_id}").val()
+
       del = confirm "Are you sure you want to delete the selected visit from all particpants?"
       if del
         $.ajax
           type: 'DELETE'
-          url: "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/#{visit_group_id}"
+          url: "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/#{visit_group_id}.js?page=#{page}"
 
     $(document).on 'click', '#remove_arm_button', ->
       protocol_id = $('#arms').data('protocol_id')
@@ -37,7 +39,8 @@ $ ->
     $(document).on 'click', '#add_visit_button', ->
       protocol_id = $('#arms').data('protocol_id')
       arm_id = $('#arms').val()
-      $.get "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/new"
+      page = $("#visits_select_for_#{arm_id}").val()
+      $.get "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/new?page=#{page}"
 
     $(document).on 'click', '#add_service_button', ->
       page_hash = {}

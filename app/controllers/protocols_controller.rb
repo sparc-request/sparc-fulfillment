@@ -18,9 +18,8 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    @protocol = Protocol.find_by(sparc_id: params[:id])
+    @protocol = Protocol.find_by_sparc_id(params[:id])
     @services = Service.all
     @page = 1
-    respond_with [@protocol]
   end
 end

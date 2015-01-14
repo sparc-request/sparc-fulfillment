@@ -52,14 +52,19 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   end
 
   it "should add a visit" do
+    create(:line_item, arm_id: arm1.id, service_id: service1.id)
+    visit current_path
     click_link 'add_visit_button'
     click_button 'Add'
+    wait_for_javascript_to_finish
     expect(page).to have_content "Name can't be blank Day can't be blank Day is not a number"
     fill_in 'Visit Name', with: "visit name"
     fill_in 'Visit Day', with: 3
-    select 'add as last', from: 'visit_group_position'
     click_button 'Add'
     wait_until(3) {expect(page).to have_content "Visit Created"}
+    #since only 5 visit groups are created on the factory default arm the addition of one should show up on the selected page
+    wait_for_javascript_to_finish
+    expect(page).to have_css ".visit_name[value='visit name']"
   end
 
   it "should add a service to one or multiple arms" do
