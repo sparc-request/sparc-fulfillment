@@ -7,8 +7,9 @@ class DependentObjectImporter
   end
 
   def save_and_create_dependents
-    if object.save!
+    if object.save
       create_dependents
     end
+    object.persisted?
   end
 end
