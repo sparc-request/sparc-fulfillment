@@ -46,6 +46,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     expect(page).to have_content 'Arm Created'
     bootstrap_select '#arms', 'arm name'
     expect(bootstrap_selected? 'visits', 'Visit 1').to be
+    expect(page).to have_content "Arm: arm name"
   end
 
   it "should add a visit" do
