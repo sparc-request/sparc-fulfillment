@@ -8,8 +8,6 @@ class Arm < ActiveRecord::Base
   has_many :visit_groups, dependent: :destroy
   has_many :participants
 
-  accepts_nested_attributes_for :line_items, :visit_groups
-
   validates :name, presence: true
   validates_numericality_of :subject_count, greater_than_or_equal_to: 1
   validates_numericality_of :visit_count, greater_than_or_equal_to: 1
@@ -31,5 +29,4 @@ class Arm < ActiveRecord::Base
     end
     VisitGroup.import new_visit_group_columns, new_visit_group_values, { validate: true }
   end
-
 end

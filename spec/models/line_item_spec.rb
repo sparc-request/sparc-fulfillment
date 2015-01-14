@@ -8,10 +8,6 @@ RSpec.describe LineItem, type: :model do
   it { should have_many(:visits).dependent(:destroy) }
   it { should have_many(:visit_groups) }
 
-  it { should accept_nested_attributes_for(:visits) }
-
-  context 'class methods'
-
   context 'instance methods' do
 
     describe '.name' do

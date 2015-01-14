@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ProtocolsController do
+RSpec.describe ProtocolsController, type: :controller do
 
   before :each do
     sign_in
@@ -8,11 +8,36 @@ RSpec.describe ProtocolsController do
 
   describe "GET #index" do
 
-    it "populates an array of protocols" do
-      protocol = create(:protocol)
-      get :index
-      expect(assigns(:protocols)).to eq([protocol])
-    end 
+    context 'content-type: text/html' do
+
+      it 'renders the :index action' do
+        get :index, format: :html
+
+        expect(response).to be_success
+        expect(response).to render_template :index
+      end
+
+      it 'does not assign @protocols' do
+        get :index, format: :html
+
+        expect(assigns(:protocols)).to_not be
+      end
+    end
+
+    context 'content-type: application/json' do
+
+      it 'renders the :index action' do
+        get :index, format: :json
+
+        expect(response).to be_success
+      end
+
+      it 'assigns @protocols' do
+        get :index, format: :json
+
+        expect(assigns(:protocols)).to be
+      end
+    end
   end
 
   describe "GET #show" do

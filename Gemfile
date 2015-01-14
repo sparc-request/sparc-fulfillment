@@ -36,14 +36,17 @@ end
 group :development do
   gem 'faker', '~> 1.4.3'
   gem 'puma'
+  gem 'rack-mini-profiler', require: false
   gem 'spring'
   gem 'spring-commands-rspec', '~> 1.0.2'
+  gem 'foreman'
 end
 
 group :test do
   gem 'capybara-webkit', '~> 1.3.1' # brew update && brew instal qt
   gem 'database_cleaner'
   gem 'rspec-rails', '~> 3.1.0'
+  gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', require: false
   gem 'webmock', '~> 1.20.4'

@@ -1,4 +1,3 @@
-- visit_groups = arm.visit_groups.paginate(page: page)
 - visit_groups.each_with_index do |visit_group, index|
   .col-xs-2
     = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "form-control visit_group_#{index} visit_name", :'data-visit_group_id' => visit_group.id
