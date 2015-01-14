@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'addressable'
 gem 'autoprefixer-rails'
-gem 'bootstrap-datepicker-rails'
+gem 'bootstrap-datepicker-rails', '~> 1.3.1.1'
 gem 'bootstrap-sass'
 gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-rails.git'
 gem 'coffee-rails', '~> 4.0.0'

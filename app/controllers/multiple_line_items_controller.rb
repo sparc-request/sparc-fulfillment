@@ -9,6 +9,7 @@ class MultipleLineItemsController < ApplicationController
     @services = Service.all
     @protocol = Protocol.find(params[:protocol_id])
     @page_hash = params[:page_hash]
+    @calendar_tab = params[:calendar_tab]
   end
 
   def edit
@@ -17,6 +18,7 @@ class MultipleLineItemsController < ApplicationController
     @protocol = Protocol.find(params[:protocol_id])
     @services = Service.all
     @page_hash = params[:page_hash]
+    @calendar_tab = params[:calendar_tab]
   end
 
   def update
@@ -25,6 +27,7 @@ class MultipleLineItemsController < ApplicationController
       @service_id = params[:service_id]
       service = Service.find(@service_id)
       @core_id = service.sparc_core_id
+      @calendar_tab = params[:calendar_tab]
       @core_name = service.sparc_core_name
 
       if params[:header_text].include? ("Add")
@@ -41,7 +44,10 @@ class MultipleLineItemsController < ApplicationController
     @arm_hash = {}
     params[:arm_ids].each do |set|
       arm_id, page = set.split
-      @arm_hash[arm_id] = {page: page, line_item: LineItem.create(arm_id: arm_id, service_id: @service_id)}
+      line_item = LineItem.new(arm_id: arm_id, service_id: @service_id)
+      importer = LineItemVisitsImporter.new(line_item)
+      importer.save_and_create_dependents
+      @arm_hash[arm_id] = {page: page, line_item: line_item}
     end
     flash.now[:success] = "Service(s) have been added to the chosen arms"
   end
