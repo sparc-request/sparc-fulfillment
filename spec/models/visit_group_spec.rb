@@ -11,7 +11,6 @@ RSpec.describe VisitGroup, type: :model do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:day) }
     it { should validate_numericality_of(:day) }
-    it { should accept_nested_attributes_for(:visits) }
   end
 
   context 'class methods' do
@@ -56,11 +55,6 @@ RSpec.describe VisitGroup, type: :model do
       it 'should callback :reorder_visit_groups_up after create' do
         visit_group = create(:visit_group_with_arm)
         expect(visit_group).to callback(:reorder_visit_groups_up).after(:create)
-      end
-
-      it 'should callback :create_visits after create' do
-        visit_group = create(:visit_group_with_arm)
-        expect(visit_group).to callback(:create_visits).after(:create)
       end
 
       it 'should callback :reorder_visit_groups_down after destroy' do
@@ -110,14 +104,6 @@ RSpec.describe VisitGroup, type: :model do
           @vg_c.reload
           expect(@vg_c.position).to eq(3)
         end
-      end
-
-      it 'should create_visits' do
-        arm = create(:arm)
-        vg = create(:visit_group, arm_id: arm.id)
-        li_a = create(:line_item, arm_id: arm.id)
-        li_b = create(:line_item, arm_id: arm.id)
-        expect(vg.visits.count).to eq(2)
       end
     end
   end

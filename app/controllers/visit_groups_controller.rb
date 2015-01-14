@@ -7,9 +7,10 @@ class VisitGroupsController < ApplicationController
   end
 
   def create
-    @visit_group = VisitGroup.new(visit_group_params)
-    if @visit_group.valid?
-      @visit_group.save
+    @visit_group                  = VisitGroup.new(visit_group_params)
+    @visit_group_visits_importer  = VisitGroupVisitsImporter.new(@visit_group)
+
+    if @visit_group_visits_importer.save_and_create_dependents
       flash.now[:success] = "Visit Created"
     else
       @errors = @visit_group.errors
