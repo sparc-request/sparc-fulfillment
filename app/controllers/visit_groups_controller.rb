@@ -5,6 +5,7 @@ class VisitGroupsController < ApplicationController
     @current_page = params[:page] # the current page of the service calendar
     @arm = Arm.find(params[:arm_id])
     @visit_group = VisitGroup.new(arm_id: params[:arm_id])
+    @calendar_tab = params[:calendar_tab]
   end
 
   def create
@@ -12,6 +13,8 @@ class VisitGroupsController < ApplicationController
     @visit_group_visits_importer  = VisitGroupVisitsImporter.new(@visit_group)
     @arm =  Arm.find(visit_group_params[:arm_id])
     @current_page = params[:current_page]
+    @calendar_tab = params[:calendar_tab]
+    @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     if @visit_group_visits_importer.save_and_create_dependents
       @arm.update_attributes(visit_count: @arm.visit_count + 1)
       flash.now[:success] = "Visit Created"
