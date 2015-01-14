@@ -18,7 +18,7 @@ RSpec.describe RemoteObjectUpdaterJob do
     context 'Protocol update', vcr: :localhost do
 
       before do
-        @protocol                 = create( :protocol_created_by_sparc,
+        @protocol                 = create( :protocol,
                                             sparc_id: 6213,
                                             short_title: 'Short Title')
         callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/protocols/6213.json"

@@ -1,6 +1,6 @@
 module ServiceCalendarHelper
-  def glyph_class line_item
-    count = Visit.where("line_item_id = #{line_item.id} and research_billing_qty = 0 and insurance_billing_qty = 0").count
+  def glyph_class obj
+    count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
     if count == 0
       'glyphicon-remove'
     else
@@ -8,8 +8,8 @@ module ServiceCalendarHelper
     end
   end
 
-  def set_check line_item
-    count = Visit.where("line_item_id = #{line_item.id} and research_billing_qty = 0 and insurance_billing_qty = 0").count
+  def set_check obj
+    count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
     if count == 0
       return false
     else
@@ -42,15 +42,10 @@ module ServiceCalendarHelper
   end
 
   def on_current_page? current_page, visit_group
+    destination_page = visit_group.position / Visit.per_page
     if visit_group.position % Visit.per_page != 0
-      destination_page = (visit_group.position / Visit.per_page) + 1
-    else
-      destination_page = visit_group.position / Visit.per_page
+      destination_page += 1
     end
-    if destination_page == current_page.to_i
-      return true
-    else
-      return false
-    end
+    destination_page == current_page.to_i
   end
 end

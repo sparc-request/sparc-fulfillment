@@ -1,11 +1,20 @@
 class ProtocolsController < ApplicationController
+
   respond_to :json, :html
 
   def index
-    status = params[:status] || 'All'
-    @protocols = (status == 'All') ? Protocol.all : Protocol.where(status: status)
+    respond_to do |format|
+      format.html { render }
+      format.json do
+        if params[:status].present? && params[:status] != 'All'
+          @protocols = Protocol.where(status: params[:status])
+        else
+          @protocols = Protocol.all
+        end
 
-    respond_with @protocols
+        render
+      end
+    end
   end
 
   def show

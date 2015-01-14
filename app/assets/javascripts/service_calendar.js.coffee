@@ -5,7 +5,8 @@ $ ->
   change_page = (obj) ->
     data =
       'arm_id': obj.data('arm_id'),
-      'page'  : obj.attr('page')
+      'page'  : obj.attr('page'),
+      'tab'   : $('#current_tab').val()
     $.ajax
       type: 'GET'
       url:  '/service_calendar/change_page'
@@ -37,6 +38,25 @@ $ ->
       url:  '/service_calendar/change_page'
       data: data
 
+  $(document).on 'click', '#service_calendar_tabs a', ->
+    tab = $(this).data('tab')
+    $('#current_tab').val(tab)
+    arms_and_pages = {}
+
+    $('.visit_dropdown').each ->
+      page = $(this).val()
+
+      arm_id = $(this).data('arm_id')
+      arms_and_pages[arm_id] = page
+
+    data =
+      'arms_and_pages': arms_and_pages,
+      'tab'   : tab
+    $.ajax
+      type: 'GET'
+      url:  '/service_calendar/change_tab'
+      data: data
+
   $(document).on 'change', '.visit', ->
     data =
       'visit_id': $(this).val()
@@ -46,11 +66,31 @@ $ ->
       url:  '/service_calendar/check_visit'
       data: data
 
+  $(document).on 'change', '.quantity', ->
+    visit_id = $(this).attr('visit_id')
+    quantity = $(this).val()
+    qty_type = $(this).attr('qty_type')
+
+    if quantity == ''
+      $(this).val($(this).attr('previous_qty'))
+      return
+
+    data =
+      'visit_id': visit_id,
+      'quantity': quantity,
+      'qty_type': qty_type
+    $.ajax
+      type: 'PUT'
+      url:  '/service_calendar/change_quantity'
+      data: data
+      success: =>
+        $(this).attr('previous_qty', quantity)
+
   $(document).on 'change', '.visit_name', ->
     visit_group_id = $(this).data('visit_group_id')
     name = $(this).val()
     data =
-      'visit_group_id': visit_group_id
+      'visit_group_id': visit_group_id,
       'name':           name
     $.ajax
       type: 'PUT'
@@ -60,6 +100,13 @@ $ ->
         # Need to find out if this is actually necessary
         # or if we can use faye
         $(".visit_dropdown option[value=#{visit_group_id}]").text("- #{name}")
+
+  check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
+    obj.removeClass(remove_class).addClass(add_class)
+    obj.attr('check', attr_check)
+    $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
+    $("#{identifier} input[type=text].research").val(research_val)
+    $("#{identifier} input[type=text].insurance").val(insurance_val)
 
   $(document).on 'click', '.check_row', ->
     check = $(this).attr('check')
@@ -74,14 +121,30 @@ $ ->
       success: =>
         # Check off visits
         # Update text fields
+        identifier = ".visits_for_line_item_#{line_item_id}"
         if check == 'true'
-          $(this).removeClass('glyphicon-ok').addClass('glyphicon-remove')
-          $(this).attr('check', 'false')
-          $(".visits_for_#{line_item_id} input[type=checkbox]").prop('checked', true)
+          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
         else
-          $(this).removeClass('glyphicon-remove').addClass('glyphicon-ok')
-          $(this).attr('check', 'true')
-          $(".visits_for_#{line_item_id} input[type=checkbox]").prop('checked', false)
+          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
+
+  $(document).on 'click', '.check_column', ->
+    check = $(this).attr('check')
+    visit_group_id = $(this).attr('visit_group_id')
+    data =
+      'visit_group_id': visit_group_id,
+      'check':        check
+    $.ajax
+      type: 'PUT'
+      url:  '/service_calendar/check_column'
+      data: data
+      success: =>
+        # Check off visits
+        # Update text fields
+        identifier = ".visit_for_visit_group_#{visit_group_id}"
+        if check == 'true'
+          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
+        else
+          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
 
   $(document).on 'click', '.remove_line_item', ->
     if confirm("Are you sure you want to remove this line item?")

@@ -20,7 +20,7 @@
                 - protocol.arms.each do |arm|
                   .checkbox
                     %label
-                      = check_box_tag "arm_ids[]", arm.id
+                      = check_box_tag "arm_ids[]", [arm.id, page_hash[arm.id.to_s].to_i]
                       = arm.name
       .modal-footer
         .center-block{style: "width: 205px;"}
