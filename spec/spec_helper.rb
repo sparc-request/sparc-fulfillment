@@ -16,6 +16,15 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'shoulda-matchers'
+require 'simplecov'
+SimpleCov.start do
+  add_group "Models", "app/models"
+  add_group "Controllers", "app/controllers"
+  add_group "Features", "app/views"
+  add_group "API", "app/api"
+  add_group "Library", "lib"
+  add_group "Jobs", "app/jobs"
+end
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

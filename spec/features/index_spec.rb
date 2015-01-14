@@ -25,7 +25,7 @@ RSpec.describe 'Index spec', type: :feature, js: true do
 
   describe 'financial view' do
 
-    it "should display and hide the proper columns when hte button is " do
+    it "should display and hide the proper columns when financial button is clicked" do
       visit protocols_path
 
       find('.financial').click
