@@ -1,9 +1,3 @@
-GIT
-  remote: git@github.com:Slashek/bootstrap-select-rails.git
-  revision: 8ddca52aadd10eb4a512b00ca6ef8710586ba805
-  specs:
-    bootstrap-select-rails (1.6.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -48,6 +42,7 @@ GEM
       railties (>= 3.0)
     bootstrap-sass (3.3.1.0)
       sass (~> 3.2)
+    bootstrap-select-rails (1.6.3)
     builder (3.2.2)
     capybara (2.4.4)
       mime-types (>= 1.16)
@@ -295,7 +290,7 @@ DEPENDENCIES
   autoprefixer-rails
   bootstrap-datepicker-rails
   bootstrap-sass
-  bootstrap-select-rails!
+  bootstrap-select-rails
   capybara-webkit (~> 1.3.1)
   coffee-rails (~> 4.0.0)
   database_cleaner
