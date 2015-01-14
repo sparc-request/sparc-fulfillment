@@ -31,6 +31,8 @@ class VisitGroupsController < ApplicationController
     @arm = Arm.find(params[:arm_id])
     @current_page = params[:page]
     @visit_group = VisitGroup.find(params[:id])
+    @visit_groups = @arm.visit_groups.paginate(page: @current_page)
+    @calendar_tab = params[:calendar_tab]
     if @arm.visit_count == 1
       flash.now[:alert] = "Arms must have at least one visit. Add another visit before deleting this one"
     else

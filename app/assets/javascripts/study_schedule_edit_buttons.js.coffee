@@ -15,6 +15,7 @@ $ ->
 
 
     $(document).on 'click', '#remove_visit_button', ->
+      calendar_tab = $('#current_tab').attr('value')
       visit_group_id = $("#visits").val()
       protocol_id = $('#arms').data('protocol_id')
       arm_id = $("#arms").val()
