@@ -28,10 +28,10 @@
     .col-xs-1
   .row
     .scrolling-div.col-xs-12
-      -arm.line_items_grouped_by_core.each do |core_id, line_items|
+      - arm.line_items_grouped_by_core.each do |core_id, line_items|
         .row.core{id: "arm_#{arm.id}_core_#{core_id}"}
           .col-xs-12= "Core: #{line_items[0].sparc_core_name}"
-        -line_items.each do |li|
+        - line_items.each do |li|
           = render partial: 'service_calendar/line_item', locals: {line_item: li, page: page}
         %div{id: "arm_#{arm.id}_end_of_core_#{core_id}"}
       %div{id: "end_of_arm_#{arm.id}"}

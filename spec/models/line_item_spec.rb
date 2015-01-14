@@ -10,18 +10,7 @@ RSpec.describe LineItem, type: :model do
 
   it { should accept_nested_attributes_for(:visits) }
 
-  context 'class methods' do
-
-    describe 'default_scope' do
-
-      it 'should order by :sparc_core_name' do
-        line_item_2 = create(:line_item, sparc_core_name: 'Z')
-        line_item_1 = create(:line_item, sparc_core_name: 'A')
-
-        expect(LineItem.all).to eq([line_item_1, line_item_2])
-      end
-    end
-  end
+  context 'class methods'
 
   context 'instance methods' do
 
@@ -42,6 +31,26 @@ RSpec.describe LineItem, type: :model do
         line_item = create(:line_item, service: service)
 
         expect(line_item.cost).to eq(1)
+      end
+    end
+
+    describe '.sparc_core_name' do
+
+      it 'should be delegated to Service' do
+        service   = create(:service, sparc_core_name: 'Core A')
+        line_item = create(:line_item, service: service)
+
+        expect(line_item.sparc_core_name).to eq('Core A')
+      end
+    end
+
+    describe '.sparc_core_id' do
+
+      it 'should be delegated to Service' do
+        service   = create(:service, sparc_core_id: 4)
+        line_item = create(:line_item, service: service)
+
+        expect(line_item.sparc_core_id).to eq(4)
       end
     end
 

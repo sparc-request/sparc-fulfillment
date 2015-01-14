@@ -26,7 +26,6 @@ class MultipleLineItemsController < ApplicationController
       service = Service.find(@service_id)
       @core_id = service.sparc_core_id
       @core_name = service.sparc_core_name
-      @arm_ids = params[:arm_ids].map{ |set| set.split()[0]}
 
       if params[:header_text].include? ("Add")
         @action = 'create'
@@ -49,7 +48,8 @@ class MultipleLineItemsController < ApplicationController
 
   def destroy (params)
     @line_item_ids = {}
-    @arm_ids.each do |arm_id|
+    params[:arm_ids].each do |set|
+      arm_id = set.split()[0]
       line_items = LineItem.where("arm_id = #{arm_id} AND service_id = #{@service_id}")
       if line_items.count > 0
         @line_item_ids[arm_id] = line_items.pluck(:id)
