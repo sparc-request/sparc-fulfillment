@@ -43,12 +43,15 @@ $ ->
       $.get "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/new?page=#{page}"
 
     $(document).on 'click', '#add_service_button', ->
+      calendar_tab = $('#current_tab').attr('value')
       page_hash = {}
       $(".visit_dropdown.form-control").each (index) ->
         key = $(this).data('arm_id')
         value = $(this).attr('page')
         page_hash[key] = value
-      data = 'page_hash': page_hash
+      data =
+        'page_hash': page_hash
+        'calendar_tab': calendar_tab
       protocol_id = $('#arms').data('protocol_id')
       service_id = $('#services').val()
       $.ajax
@@ -57,12 +60,15 @@ $ ->
         data: data
 
     $(document).on 'click', '#remove_service_button', ->
+      calendar_tab = $('#current_tab').attr('value')
       page_hash = {}
       $(".visit_dropdown.form-control").each (index) ->
         key = $(this).data('arm_id')
         value = $(this).attr('page')
         page_hash[key] = value
-      data = 'page_hash': page_hash
+      data =
+        'page_hash': page_hash
+        'calendar_tab': calendar_tab
       protocol_id = $('#arms').data('protocol_id')
       service_id = $('#services').val()
       $.ajax
