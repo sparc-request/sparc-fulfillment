@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150112132352) do
+ActiveRecord::Schema.define(version: 20150115171414) do
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -166,6 +166,7 @@ ActiveRecord::Schema.define(version: 20150112132352) do
 
   add_index "visit_groups", ["arm_id"], name: "index_visit_groups_on_arm_id", using: :btree
   add_index "visit_groups", ["deleted_at"], name: "index_visit_groups_on_deleted_at", using: :btree
+  add_index "visit_groups", ["position"], name: "index_visit_groups_on_position", using: :btree
   add_index "visit_groups", ["sparc_id"], name: "index_visit_groups_on_sparc_id", unique: true, using: :btree
 
   create_table "visits", force: true do |t|
