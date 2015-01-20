@@ -20,7 +20,7 @@ gem 'omniauth'
 gem 'paranoia', '~> 2.0'
 gem 'rails', '4.1.6'
 gem 'rest-client'
-gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sprockets-rails'
 gem 'turbolinks'
