@@ -37,7 +37,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.6)
     arel (5.0.1.20140414130214)
-    autoprefixer-rails (5.0.0)
+    autoprefixer-rails (5.0.0.1)
       execjs
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)

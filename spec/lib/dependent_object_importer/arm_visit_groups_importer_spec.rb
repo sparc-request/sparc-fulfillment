@@ -32,11 +32,12 @@ RSpec.describe ArmVisitGroupsImporter do
 
     context 'invalid Arm attributes' do
 
-      it 'should raise ActiveRecord::RecordInvalid' do
+      it 'should not persist the Arm record' do
         invalid_arm             = build(:arm, name: nil)
         arm_visit_group_creator = ArmVisitGroupsImporter.new(invalid_arm)
+        arm_visit_group_creator.save_and_create_dependents
 
-        expect{ arm_visit_group_creator.save_and_create_dependents }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(arm_visit_group_creator.arm).not_to be_persisted
       end
     end
   end
