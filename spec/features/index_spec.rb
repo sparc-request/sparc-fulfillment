@@ -18,6 +18,7 @@ RSpec.describe 'Index spec', type: :feature, js: true do
       
       bootstrap_select '.selectpicker', 'Complete'
       
+      sleep 2
       expect(page.body).to have_css("table#protocol-list", text: "Slappy")
       expect(page.body).to_not have_css("table#protocol-list", text: "Swanson")
     end
