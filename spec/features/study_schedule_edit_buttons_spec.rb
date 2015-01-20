@@ -37,7 +37,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       page.driver.browser.accept_js_confirms
       expect(page).to have_content "Arm Destroyed"
       sleep 5
-      save_and_open_screenshot
       expect(page).not_to have_content "Arm: #{arm1.name}"
       click_link "remove_arm_button"
       page.driver.browser.accept_js_confirms
