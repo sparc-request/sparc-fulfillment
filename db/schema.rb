@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 20150116154817) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "total_cost",    precision: 10, scale: 0
+    t.integer  "total_cost"
   end
 
   add_index "participants", ["arm_id"], name: "index_participants_on_arm_id", using: :btree
@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 20150116154817) do
   create_table "procedures", force: true do |t|
     t.integer  "appointment_id"
     t.string   "service_name"
-    t.decimal  "service_cost",    precision: 10, scale: 0
+    t.integer  "service_cost"
     t.integer  "service_id"
     t.string   "status"
     t.datetime "start_date"

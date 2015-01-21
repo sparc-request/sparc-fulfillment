@@ -3,7 +3,7 @@ class CreateProcedures < ActiveRecord::Migration
     create_table :procedures do |t|
       t.integer :appointment_id
       t.string :service_name
-      t.decimal :service_cost
+      t.integer :service_cost
       t.integer :service_id
       t.string :status
       t.datetime :start_date
