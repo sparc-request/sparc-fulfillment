@@ -18,7 +18,7 @@ RSpec.describe 'Index spec', type: :feature, js: true do
       
       bootstrap_select '.selectpicker', 'Complete'
       
-      sleep 2
+      wait_for_javascript_to_finish
       expect(page.body).to have_css("table#protocol-list", text: "Slappy")
       expect(page.body).to_not have_css("table#protocol-list", text: "Swanson")
     end
@@ -31,7 +31,7 @@ RSpec.describe 'Index spec', type: :feature, js: true do
 
       find('.financial').click
 
-      sleep 2
+      wait_for_javascript_to_finish
       expect(page).to have_content('Subsidy Amount')
       expect(page).to_not have_content('Status')
     end
