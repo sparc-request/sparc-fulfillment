@@ -9,6 +9,7 @@ class ArmsController < ApplicationController
   end
 
   def new
+    @services = Service.all
     @protocol = Protocol.find(params[:protocol_id])
     @arm = Arm.new(protocol: @protocol)
   end
@@ -16,10 +17,14 @@ class ArmsController < ApplicationController
   def create
     @arm                      = Arm.new(arm_params)
     @arm_visit_group_creator  = ArmVisitGroupsImporter.new(@arm)
-    if @arm_visit_group_creator.save_and_create_dependents
+    if @arm_visit_group_creator.save_and_create_dependents and not params[:services].nil?
+      params[:services].each do |service|
+        LineItem.create(arm_id: @arm.id, service_id: service.to_i, subject_count: @arm.subject_count)
+      end
       flash.now[:success] = "Arm Created"
     else
       @errors = @arm_visit_group_creator.arm.errors
+      @errors.messages[:services] = ["must be included on an arm"] unless not params[:services].nil?
     end
   end
 
