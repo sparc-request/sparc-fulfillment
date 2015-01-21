@@ -4,7 +4,7 @@ FactoryGirl.define do
     protocol nil
     sparc_id
     sequence(:name) { |n| "Arm #{n}" }
-    visit_count 5
+    visit_count { rand(3..15) }
     subject_count 5
 
     trait :with_line_items do

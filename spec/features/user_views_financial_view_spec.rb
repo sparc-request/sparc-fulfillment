@@ -2,7 +2,12 @@ require 'rails_helper'
 
 RSpec.describe 'User clicks Financial/Management View buttons', type: :feature, js: true do
 
-  before { visit protocols_path }
+  let!(:protocol1) { create(:protocol, status: "Complete", short_title: "Slappy") }
+  let!(:protocol2) { create(:protocol, status: "Draft", short_title: "Swanson") }
+
+  before :each do
+    visit protocols_path
+  end
 
   describe 'initial button group state' do
 
@@ -14,21 +19,22 @@ RSpec.describe 'User clicks Financial/Management View buttons', type: :feature, 
   describe 'User clicks Management view' do
 
     it 'should add the .active class to the label' do
-      page.find(".financial-management-view label.management").click
+      
+      find(".management").click
 
-      expect(page.body).to have_css(".financial-management-view label.management.active")
-      expect(page.body).to have_css(".financial-management-view label.active", count: 1)
+      expect(page.body).to have_css(".management.active")
+      expect(page.body).to have_css(".active", count: 1)
     end
   end
 
   describe 'User switches between Financial and Management views' do
 
     it 'should move the .active class to the correct label' do
-      page.find(".financial-management-view label.management").click
-      page.find(".financial-management-view label.financial").click
+      find(".management").click
+      find(".financial").click
 
-      expect(page.body).to have_css(".financial-management-view label.financial.active")
-      expect(page.body).to have_css(".financial-management-view label.active", count: 1)
+      expect(page.body).to have_css(".financial.active")
+      expect(page.body).to have_css(".active", count: 1)
     end
   end
 end
