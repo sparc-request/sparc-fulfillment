@@ -33,14 +33,16 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     end
 
     it "should remove an arm" do
-      click_link "remove_arm_button"
-      page.driver.browser.accept_js_confirms
-      expect(page).to have_content "Arm Destroyed"
-      sleep 5
-      expect(page).not_to have_content "Arm: #{arm1.name}"
-      click_link "remove_arm_button"
-      page.driver.browser.accept_js_confirms
-      expect(page).to have_content "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
+      protocol1.arms.each do |arm|
+        click_link "remove_arm_button"
+        page.driver.browser.accept_js_confirms
+        if protocol1.arms.count == 1
+          expect(page).to have_content "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
+        else
+          expect(page).to have_content "Arm Destroyed"
+          expect(page).not_to have_content "Arm: #{arm.name}"
+        end
+      end
     end
   end
 
@@ -70,10 +72,17 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       end
 
       it "should remove a visit group" do
-        page.all(:css, '.visit_name')
-        click_link "remove_visit_button"
-        page.driver.browser.accept_js_confirms
-        expect(page).not_to have_css ".visit_name#{arm1.id}"
+        arm1.visit_groups.each do |visit|
+          sleep 3
+          page.driver.browser.accept_js_confirms
+          if arm1.visit_groups.count == 1
+            click_link "remove_visit_button"
+            expect(page).to have_content "Arms must have at least one visit. Add another visit before deleting this one"
+          else
+            click_link "remove_visit_button"
+            expect(page).not_to have_css "input#visit_group_#{visit.id}"
+          end
+        end
       end
     end
 
