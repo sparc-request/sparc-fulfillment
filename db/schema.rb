@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150115171414) do
+ActiveRecord::Schema.define(version: 20150116154817) do
+
+  create_table "appointments", force: true do |t|
+    t.integer  "participant_id"
+    t.integer  "visit_group_id"
+    t.integer  "visit_group_position"
+    t.integer  "position"
+    t.string   "name"
+    t.datetime "start_date"
+    t.datetime "completed_date"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "arms", force: true do |t|
     t.integer  "sparc_id"
@@ -59,6 +72,16 @@ ActiveRecord::Schema.define(version: 20150115171414) do
   add_index "line_items", ["service_id"], name: "index_line_items_on_service_id", using: :btree
   add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree
 
+  create_table "notes", force: true do |t|
+    t.integer  "procedure_id"
+    t.integer  "user_id"
+    t.string   "user_name"
+    t.string   "comment"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "notifications", force: true do |t|
     t.integer  "sparc_id"
     t.string   "action"
@@ -86,11 +109,30 @@ ActiveRecord::Schema.define(version: 20150115171414) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "total_cost"
   end
 
   add_index "participants", ["arm_id"], name: "index_participants_on_arm_id", using: :btree
   add_index "participants", ["deleted_at"], name: "index_participants_on_deleted_at", using: :btree
   add_index "participants", ["protocol_id"], name: "index_participants_on_protocol_id", using: :btree
+
+  create_table "procedures", force: true do |t|
+    t.integer  "appointment_id"
+    t.string   "service_name"
+    t.integer  "service_cost"
+    t.integer  "service_id"
+    t.string   "status"
+    t.datetime "start_date"
+    t.datetime "completed_date"
+    t.string   "billing_type"
+    t.string   "reason"
+    t.datetime "follow_up_date"
+    t.integer  "sparc_core_id"
+    t.string   "sparc_core_name"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "protocols", force: true do |t|
     t.integer  "sparc_id"
