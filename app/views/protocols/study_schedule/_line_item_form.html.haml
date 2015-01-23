@@ -19,7 +19,7 @@
               = label_tag "arm_ids", t(:services)[:arm], class: "col-sm-4 control-label"
               .col-sm-7
                 - protocol.arms.each do |arm|
-                  .checkbox
+                  .checkbox.arm-checkbox{id: "arm_#{arm.id}_checkbox"}
                     %label
                       = check_box_tag "arm_ids[]", [arm.id, page_hash[arm.id.to_s].to_i]
                       = arm.name

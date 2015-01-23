@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'multiple_line_items/(:protocol_id)/(:service_id)/necessary_arms', to: 'multiple_line_items#necessary_arms'
   get 'multiple_line_items/(:protocol_id)/(:service_id)/new', to: 'multiple_line_items#new'
   get 'multiple_line_items/(:protocol_id)/(:service_id)/edit', to: 'multiple_line_items#edit'
   put 'multiple_line_items/update', to: 'multiple_line_items#update'
