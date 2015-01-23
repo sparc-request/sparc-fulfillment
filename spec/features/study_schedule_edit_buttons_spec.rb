@@ -4,7 +4,10 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   let!(:protocol1)    { create(:protocol) }
   let!(:arm1)         { create(:arm_with_visit_groups, protocol_id: protocol1.id) }
   let!(:arm2)         { create(:arm_with_visit_groups, protocol_id: protocol1.id) }
+  let!(:arm3)         { create(:arm_with_visit_groups, protocol_id: protocol1.id) }
   let!(:service1)     { create(:service, sparc_core_id: 5, sparc_core_name: 'Core1') }
+  let!(:service2)     { create(:service, sparc_core_id: 6, sparc_core_name: 'Core2') }
+  let!(:service3)     { create(:service, sparc_core_id: 7, sparc_core_name: 'Core3') }
 
   before :each do
     visit protocol_path(protocol1.sparc_id)
@@ -56,70 +59,88 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     end
 
     it "should add a visit group" do
-        create(:line_item, arm_id: arm1.id, service_id: service1.id)
-        visit current_path
-        click_link 'add_visit_button'
-        click_button 'Add'
-        wait_for_javascript_to_finish
-        expect(page).to have_content "Name can't be blank Day can't be blank Day is not a number"
-        fill_in 'Visit Name', with: "visit name"
-        fill_in 'Visit Day', with: 3
-        click_button 'Add'
-        wait_until(3) {expect(page).to have_content "Visit Created"}
-        #since only 5 visit groups are created on the factory default arm the addition of one should show up on the selected page
-        wait_for_javascript_to_finish
-        expect(page).to have_css ".visit_name[value='visit name']"
-      end
+      create(:line_item, arm_id: arm1.id, service_id: service1.id)
+      visit current_path
+      click_link 'add_visit_button'
+      click_button 'Add'
+      wait_for_javascript_to_finish
+      expect(page).to have_content "Name can't be blank Day can't be blank Day is not a number"
+      fill_in 'Visit Name', with: "visit name"
+      fill_in 'Visit Day', with: 3
+      click_button 'Add'
+      wait_until(3) {expect(page).to have_content "Visit Created"}
+      #since only 5 visit groups are created on the factory default arm the addition of one should show up on the selected page
+      wait_for_javascript_to_finish
+      expect(page).to have_css ".visit_name[value='visit name']"
+    end
 
-      it "should remove a visit group" do
-        arm1.visit_groups.each do |visit|
-          sleep 3
-          page.driver.browser.accept_js_confirms
-          if arm1.visit_groups.count == 1
-            click_link "remove_visit_button"
-            expect(page).to have_content "Arms must have at least one visit. Add another visit before deleting this one"
-          else
-            click_link "remove_visit_button"
-            expect(page).not_to have_css "input#visit_group_#{visit.id}"
-          end
+    it "should remove a visit group" do
+      arm1.visit_groups.each do |visit|
+        sleep 3
+        page.driver.browser.accept_js_confirms
+        if arm1.visit_groups.count == 1
+          click_link "remove_visit_button"
+          expect(page).to have_content "Arms must have at least one visit. Add another visit before deleting this one"
+        else
+          click_link "remove_visit_button"
+          expect(page).not_to have_css "input#visit_group_#{visit.id}"
         end
       end
     end
+  end
 
   describe "services" do
 
-    it "should add a service to one or multiple arms" do
-      expect(page).not_to have_css("div#arm_#{arm1.id}_core_5")
-      expect(page).not_to have_css("div#arm_#{arm2.id}_core_5")
-      click_link 'add_service_button'
-      wait_for_javascript_to_finish
-      expect(page).to have_content "Add a Service"
-      select service1.name, from: "service_id"
-      find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
-      find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
-      click_button 'Add Service'
-      wait_for_javascript_to_finish
-      expect(page).to have_content "Service(s) have been added to the chosen arms"
-      expect(page).to have_css("div#arm_#{arm1.id}_core_5")
-      expect(page).to have_css("div#arm_#{arm2.id}_core_5")
+    describe 'add modal' do
+      it "should add a service to one or multiple arms" do
+        expect(page).not_to have_css("div#arm_#{arm1.id}_core_5")
+        expect(page).not_to have_css("div#arm_#{arm2.id}_core_5")
+        click_link 'add_service_button'
+        wait_for_javascript_to_finish
+        expect(page).to have_content "Add a Service"
+        select service1.name, from: "service_id"
+        find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
+        find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
+        click_button 'Add Service'
+        wait_for_javascript_to_finish
+        expect(page).to have_content "Service(s) have been added to the chosen arms"
+        expect(page).to have_css("div#arm_#{arm1.id}_core_5")
+        expect(page).to have_css("div#arm_#{arm2.id}_core_5")
+      end
     end
 
-    it "should remove service from one or more arms" do
-      li_1 = create(:line_item, arm: arm1, service: service1)
-      li_2 = create(:line_item, arm: arm2, service: service1)
-      visit current_path
-      expect(page).to have_css("div#arm_#{arm1.id}_core_5")
-      expect(page).to have_css("div#arm_#{arm2.id}_core_5")
-      click_link 'remove_service_button'
-      expect(page).to have_content "Remove Services"
-      select service1.name, from: "service_id"
-      find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
-      find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
-      click_button 'Remove'
-      wait_for_javascript_to_finish
-      expect(page).to have_content "Service(s) have been removed from the chosen arms"
-      expect(page).not_to have_css("div#arm_#{arm1.id}_core_5")
-      expect(page).not_to have_css("div#arm_#{arm2.id}_core_5")
+    describe 'remove modal' do
+
+      before :each do 
+        li_1 = create(:line_item, arm: arm1, service: service1)
+        li_2 = create(:line_item, arm: arm2, service: service1)
+        visit current_path
+      end
+
+      it "should remove service from one or more arms" do
+        expect(page).to have_css("div#arm_#{arm1.id}_core_5")
+        expect(page).to have_css("div#arm_#{arm2.id}_core_5")
+        click_link 'remove_service_button'
+        expect(page).to have_content "Remove Services"
+        select service1.name, from: "service_id"
+        find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
+        find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
+        click_button 'Remove'
+        wait_for_javascript_to_finish
+        expect(page).to have_content "Service(s) have been removed from the chosen arms"
+        expect(page).not_to have_css("div#arm_#{arm1.id}_core_5")
+        expect(page).not_to have_css("div#arm_#{arm2.id}_core_5")
+      end
+
+      it 'dropdown should populate only with currently added services' do
+        click_link 'remove_service_button'
+        assert_selector("#service_id > option", count: 1)
+      end
+
+      it 'arm checkbox should only display if service selected is on arm' do
+        click_link 'remove_service_button'
+        assert_selector(".arm-checkbox > label", count: 2)
+      end
     end
   end
 end
