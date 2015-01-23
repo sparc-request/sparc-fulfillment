@@ -13,10 +13,7 @@ class ArmsController < ApplicationController
     services_on_protocol = []
     @protocol.arms.each {|arm| services_on_protocol << arm.line_items.pluck(:service_id) }
     #the only services avaliable for select in the modal are the ones which are already on other arms of this protocol
-    puts "*" * 80
-    puts services_on_protocol
     services = services_on_protocol.flatten.uniq
-    puts services.inspect
     @services = Service.find(services)
     @arm = Arm.new(protocol: @protocol)
   end

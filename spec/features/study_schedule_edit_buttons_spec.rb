@@ -62,7 +62,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       it "should create visits with an arm" do
         click_link 'add_arm_button'
         fill_in 'Arm Name', with: 'arm name'
-        find(:css, "#services_[value='#{service1.id}']").set(true)
         fill_in 'Subject Count', with: 1
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
@@ -73,7 +72,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       it "should add the arm to the service calendar" do
         click_link 'add_arm_button'
         fill_in 'Arm Name', with: 'arm name'
-        find(:css, "#services_[value='#{service1.id}']").set(true)
         fill_in 'Subject Count', with: 1
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
