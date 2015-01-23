@@ -10,7 +10,7 @@ class VisitGroup < ActiveRecord::Base
 
   has_many :visits, :dependent => :destroy
   has_many :line_items, through: :arm
-  has_many :appointments
+  has_many :appointments 
 
   default_scope {order(:position)}
 

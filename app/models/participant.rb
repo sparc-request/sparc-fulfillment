@@ -28,6 +28,16 @@ class Participant < ActiveRecord::Base
     end
   end
 
+  def build_appointments
+    ActiveRecord::Base.transaction do
+      if self.appointments.empty?
+        appointments_for_visit_groups(self.arm.visit_groups)
+      elsif has_new_visit_groups?
+        appointments_for_visit_groups(new_visit_groups)
+      end
+    end
+  end
+
   private
 
   def update_via_faye
@@ -35,5 +45,23 @@ class Participant < ActiveRecord::Base
     message = { channel: channel, data: "woohoo", ext: { auth_token: ENV.fetch('FAYE_TOKEN') } }
     uri = URI.parse('http://' + ENV.fetch('CWF_FAYE_HOST') + '/faye')
     Net::HTTP.post_form(uri, message: message.to_json)
+  end
+
+  def has_new_visit_groups?
+    self.arm.visit_groups.count > self.appointments.count
+  end
+
+  def new_visit_groups
+    participant_vgs = self.appointments.map{|app| app.visit_group}
+    arm_vgs = self.arm.visit_groups
+    
+    arm_vgs - participant_vgs
+    end
+  end
+
+  def appointments_for_visit_groups visit_groups
+    visit_groups.each do |vg|
+      self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, name: vg.name)
+    end
   end
 end
