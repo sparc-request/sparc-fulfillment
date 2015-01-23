@@ -8,7 +8,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
   before :each do
     visit protocol_path(protocol1.sparc_id)
-    wait_for_javascript_to_finish
+    # wait_for_javascript_to_finish
   end
 
   describe "arm buttons" do
@@ -25,7 +25,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).to have_content "Name can't be blank"
         expect(page).to have_content "Subject count is not a number"
         expect(page).to have_content "Visit count is not a number"
-        expect(page).to have_content "Services must be included on an arm"
         fill_in 'Subject Count', with: 0
         fill_in 'Visit Count', with: 0
         click_button 'Add Arm'
@@ -33,7 +32,21 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).to have_content "Visit count must be greater than or equal to 1"
       end
 
-      it "should add an arm with valid information" do
+      it "should add an arm without services" do
+        click_link 'add_arm_button'
+        fill_in 'Arm Name', with: 'arm name'
+        fill_in 'Subject Count', with: 1
+        fill_in 'Visit Count', with: 3
+        click_button 'Add Arm'
+        expect(page).to have_content 'Arm Created'
+        new_arm = all(".service-calendar").last()
+        wait_for_javascript_to_finish
+        expect(new_arm).not_to have_css ".row.line_item"
+      end
+
+      it "should add an arm with services" do
+        create(:line_item, arm_id: arm1.id, service_id: service1.id)
+        visit current_path
         click_link 'add_arm_button'
         fill_in 'Arm Name', with: 'arm name'
         find(:css, "#services_[value='#{service1.id}']").set(true)
@@ -41,6 +54,9 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
+        new_arm = all(".service-calendar").last()
+        wait_for_javascript_to_finish
+        expect(new_arm).to have_css ".row.line_item"
       end
 
       it "should create visits with an arm" do
@@ -146,10 +162,10 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       end
 
       it "should remove the visit group from the service calendar" do
+        page.driver.browser.accept_js_confirms
         vg_id = arm1.visit_groups.first.id
         bootstrap_select "#visits", "#{arm1.visit_groups.first.name}"
         click_link "remove_visit_button"
-        page.driver.browser.accept_js_confirms
         expect(page).not_to have_css "#visit_group_#{vg_id}"
       end
     end
