@@ -14,6 +14,7 @@ class ParticipantsController < ApplicationController
 
   def show
     @participant = Participant.find(params[:id])
+    @participant.build_appointments
   end
 
   def create

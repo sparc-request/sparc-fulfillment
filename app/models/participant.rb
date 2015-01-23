@@ -56,7 +56,6 @@ class Participant < ActiveRecord::Base
     arm_vgs = self.arm.visit_groups
     
     arm_vgs - participant_vgs
-    end
   end
 
   def appointments_for_visit_groups visit_groups
