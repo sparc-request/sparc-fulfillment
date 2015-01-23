@@ -74,12 +74,14 @@ en:
     visit_count: "Visit Count"
 
   participant:
+    full_name: "Participant Name"
+    id: "ID"
     list: "Participant List"
     tracker: "Participant Tracker"
     last_name: "Last Name"
     first_name: "First Name"
     mrn: "MRN"
-    status: "Patient Status"
+    status: "Participant Status"
     dob: "Date of Birth"
     gender: "Gender"
     ethnicity: "Ethnicity"
@@ -88,8 +90,11 @@ en:
     phone: "Phone"
     calendar: "Calendar"
     stats: "Stats"
-    arm: "Arm"
+    arm: "Current Arm"
     report: "Report"
+
+  appointment:
+    protocol_id: "Protocol SPARC ID"
 
   services:
     name: "Selected Service"
