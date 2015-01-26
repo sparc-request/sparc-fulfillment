@@ -28,7 +28,7 @@ class ArmsController < ApplicationController
         importer = LineItemVisitsImporter.new(line_item)
         importer.save_and_create_dependents
       end
-      flash.now[:success] = "Arm Created"
+      flash.now[:success] = t(:arm)[:created]
     else
       @errors = @arm_visit_group_creator.arm.errors
     end
@@ -41,11 +41,11 @@ class ArmsController < ApplicationController
   def destroy
     @arm = Arm.find(params[:id])
     if Arm.where("protocol_id = ?",params[:protocol_id]).count == 1
-      flash.now[:alert] = "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
+      flash.now[:alert] = t(:arm)[:not_deleted]
     else
       @delete = true #this varaible is used in the coffescript logic to prevent the arm name from being removed from the dropdown
       @arm.delay.destroy
-      flash.now[:alert] = "Arm Destroyed"
+      flash.now[:alert] = t(:arm)[:deleted]
     end
   end
 end

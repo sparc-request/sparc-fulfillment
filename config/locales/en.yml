@@ -67,11 +67,17 @@ en:
     window_before: "Window Before"
     window_after: "Window After"
     day: "Visit Day"
+    created: "Visit Created"
+    deleted: "Visit Destroyed"
+    not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
 
   arm:
     name: "Arm Name"
     subject_count: "Subject Count"
     visit_count: "Visit Count"
+    created: "Arm Created"
+    deleted: "Arm Destroyed"
+    not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
 
   participant:
     full_name: "Participant Name"
@@ -101,6 +107,8 @@ en:
     arm: "Select Arm(s)"
     report: "Report"
     arm: "Arm"
+    created: "Service(s) have been added to the chosen arms"
+    deleted: "Service(s) have been removed from the chosen arms"
 
   flash_messages:
     participant:

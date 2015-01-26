@@ -17,7 +17,7 @@ class VisitGroupsController < ApplicationController
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     if @visit_group_visits_importer.save_and_create_dependents
       @arm.update_attributes(visit_count: @arm.visit_count + 1)
-      flash.now[:success] = "Visit Created"
+      flash.now[:success] = t(:visit_groups)[:created]
     else
       @errors = @visit_group.errors
     end
@@ -34,11 +34,11 @@ class VisitGroupsController < ApplicationController
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     @calendar_tab = params[:calendar_tab]
     if @arm.visit_count == 1
-      flash.now[:alert] = "Arms must have at least one visit. Add another visit before deleting this one"
+      flash.now[:alert] = t(:visit_groups)[:not_deleted]
     else
       @arm.update_attributes(visit_count: @arm.visit_count - 1)
       @delete = true #used in the coffeescript to determine whether or not to remove the display of the visit
-      flash.now[:alert] = "Visit Destroyed"
+      flash.now[:alert] = t(:visit_groups)[:deleted]
       @visit_group.destroy
     end
   end
