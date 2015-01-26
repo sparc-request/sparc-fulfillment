@@ -49,7 +49,7 @@ class MultipleLineItemsController < ApplicationController
       importer.save_and_create_dependents
       @arm_hash[arm_id] = {page: page, line_item: line_item}
     end
-    flash.now[:success] = "Service(s) have been added to the chosen arms"
+    flash.now[:success] = t(:services)[:created]
   end
 
   def destroy (params)
@@ -62,7 +62,7 @@ class MultipleLineItemsController < ApplicationController
         line_items.delete_all
       end
     end
-    flash.now[:success] = "Service(s) have been removed from the chosen arms"
+    flash.now[:success] = t(:services)[:deleted]
   end
 
   def necessary_arms
