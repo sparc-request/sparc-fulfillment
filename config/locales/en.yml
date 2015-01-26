@@ -95,6 +95,8 @@ en:
 
   appointment:
     protocol_id: "Protocol SPARC ID"
+    completed: "Completed Appointments"
+    date_of_visit: "Date of Participant Visit"
 
   services:
     name: "Selected Service"
