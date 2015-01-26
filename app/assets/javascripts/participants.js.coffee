@@ -29,7 +29,8 @@ $ ->
         url: urlVar
 
     "click .calendar": (e, value, row, index) ->
-      alert JSON.stringify row
+      participant_id = row.id
+      window.location = "/protocols/#{row.protocol_id}/participants/#{participant_id}"
 
     "click .stats": (e, value, row, index) ->
       alert JSON.stringify row

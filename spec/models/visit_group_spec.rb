@@ -5,6 +5,7 @@ RSpec.describe VisitGroup, type: :model do
   it { should belong_to(:arm) }
   it { should have_many(:visits).dependent(:destroy) }
   it { should have_many(:line_items).through(:arm) }
+  it { should have_many(:appointments) }
 
   context 'validations' do
     it { should validate_presence_of(:arm_id) }

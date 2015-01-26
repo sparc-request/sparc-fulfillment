@@ -5,6 +5,7 @@ class VisitGroup < ActiveRecord::Base
 
   after_create :reorder_visit_groups_up
   after_destroy :reorder_visit_groups_down
+  before_destroy :check_for_completed_data
 
   belongs_to :arm
 
@@ -38,6 +39,14 @@ class VisitGroup < ActiveRecord::Base
   def reorder_visit_groups_down
     VisitGroup.where("arm_id = ? AND position >= ?", self.arm_id, self.position).each do |group|
       group.update_attributes(position: group.position - 1) unless group == self
+    end
+  end
+
+  def check_for_completed_data
+    self.appointments.each do |appt|
+      unless appt.completed_date
+        appt.destroy
+      end
     end
   end
 end

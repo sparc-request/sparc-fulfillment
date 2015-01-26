@@ -12,6 +12,11 @@ class ParticipantsController < ApplicationController
     @participant = Participant.new(protocol_id: params[:protocol_id])
   end
 
+  def show
+    @participant = Participant.find(params[:id])
+    @participant.build_appointments
+  end
+
   def create
     @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.new(participant_params)
