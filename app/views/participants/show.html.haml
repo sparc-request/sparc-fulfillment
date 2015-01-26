@@ -1,2 +1,8 @@
 = render partial: 'participant', locals: { participant: @participant }
-%h3 Appointments
+#appointment_select
+  %span{style: 'font-size: 16px;'}
+    = "Please Select a Visit:"
+  %select.selectpicker
+    - arms_for_appointments(@participant.appointments).each do |arm|
+      %optgroup{label: "#{arm.name}"}
+        - options_from_collection_for_select(appointments_for_select(arm, @participant), 'id', 'name')
