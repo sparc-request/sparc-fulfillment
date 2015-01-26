@@ -77,6 +77,17 @@ $ ->
         url: "/multiple_line_items/#{protocol_id}/#{service_id}/edit"
         data: data
 
+    $(document).on 'change', "#service_id", ->
+      if $('#header_text').val() == 'Remove Services'
+        service_id = $(this).find('option:selected').val()
+        change_service service_id
+
+(exports ? this).change_service = (service_id) ->
+  protocol_id = $('#arms').data('protocol_id')
+  $.ajax
+    type: 'GET'
+    url: "/multiple_line_items/#{protocol_id}/#{service_id}/necessary_arms"
+
 (exports ? this).create_arm = (name, id) ->
   $select = $('#arms')
   $select.append('<option value=' + id + '>' + name + '</option>')

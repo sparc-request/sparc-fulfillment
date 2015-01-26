@@ -16,7 +16,7 @@ class MultipleLineItemsController < ApplicationController
     #called to render modal to mass remove line items
     @selected_service = params[:service_id]
     @protocol = Protocol.find(params[:protocol_id])
-    @services = Service.all
+    @services = @protocol.arms.map{ |arm| arm.line_items.map{ |li| li.service } }.flatten.uniq
     @page_hash = params[:page_hash]
     @calendar_tab = params[:calendar_tab]
   end
@@ -63,5 +63,11 @@ class MultipleLineItemsController < ApplicationController
       end
     end
     flash.now[:success] = "Service(s) have been removed from the chosen arms"
+  end
+
+  def necessary_arms
+    protocol = Protocol.find(params[:protocol_id])
+    service_id = params[:service_id]
+    @arm_ids = protocol.arms.map{ |arm| arm.id if arm.line_items.detect{|li| li.service_id.to_s == service_id} }
   end
 end
