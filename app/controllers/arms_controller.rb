@@ -10,13 +10,24 @@ class ArmsController < ApplicationController
 
   def new
     @protocol = Protocol.find(params[:protocol_id])
+    services_on_protocol = []
+    @protocol.arms.each {|arm| services_on_protocol << arm.line_items.pluck(:service_id) }
+    #the only services avaliable for select in the modal are the ones which are already on other arms of this protocol
+    services = services_on_protocol.flatten.uniq
+    @services = Service.find(services)
     @arm = Arm.new(protocol: @protocol)
   end
 
   def create
     @arm                      = Arm.new(arm_params)
     @arm_visit_group_creator  = ArmVisitGroupsImporter.new(@arm)
+    services = params[:services] || []
     if @arm_visit_group_creator.save_and_create_dependents
+      services.each do |service|
+        line_item = LineItem.new(arm_id: @arm.id, service_id: service)
+        importer = LineItemVisitsImporter.new(line_item)
+        importer.save_and_create_dependents
+      end
       flash.now[:success] = "Arm Created"
     else
       @errors = @arm_visit_group_creator.arm.errors

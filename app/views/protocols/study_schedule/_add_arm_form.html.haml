@@ -5,7 +5,7 @@
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only= t(:actions)[:close]
-        %h4#CreateNewParticipant.modal-title.text-center Add Arm
+        %h4#add_arm.modal-title.text-center Add Arm
       .modal-body
         #arm_modal_errors
         .row
@@ -20,6 +20,14 @@
             .form-group
               = a.label "visit_count", t(:arm)[:visit_count], class: "col-sm-4 control-label"
               .col-sm-7= a.text_field "visit_count", {class: 'form-control'}
+            .form-group
+              = label_tag "service_ids", t(:arm)[:line_items], class: "col-sm-4 control-label"
+              .col-sm-7.scrolling_div
+                -services.each do |s|
+                  .checkbox
+                    %label
+                      = check_box_tag "services[]", [s.id]
+                      = s.name
       .modal-footer
         .center-block{style: "width: 205px;"}
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
