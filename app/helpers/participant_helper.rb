@@ -12,8 +12,6 @@ module ParticipantHelper
   end
 
   def arms_for_appointments appts
-    arms = appts.map{|x| x.visit_group.arm}
-
-    arms.uniq
+    appts.map{|x| x.visit_group.arm}.uniq
   end
 end
