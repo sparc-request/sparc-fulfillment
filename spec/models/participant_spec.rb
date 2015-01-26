@@ -4,6 +4,7 @@ RSpec.describe Participant, type: :model do
 
   it { should belong_to(:protocol) }
   it { should belong_to(:arm) }
+  it { should have_many(:appointments) }
 
   context 'validations' do
 
@@ -55,6 +56,12 @@ RSpec.describe Participant, type: :model do
 
   context 'class methods' do
 
+    let!(:protocol)     { create(:protocol) }
+    let!(:arm)          { create(:arm, protocol_id: protocol.id) }
+    let!(:visit_group1) { create(:visit_group, arm: arm, name: 'Turd', position: 1) }
+    let!(:visit_group2) { create(:visit_group, arm: arm, name: 'Ferguson', position: 2) }
+    let!(:participant)  { create(:participant, arm: arm, protocol_id: protocol.id) }
+
     describe '#delete' do
 
       it 'should not permanently delete the record' do
@@ -72,6 +79,31 @@ RSpec.describe Participant, type: :model do
         participant = create(:participant_with_protocol)
 
         expect(participant).to callback(:update_via_faye).after(:save)
+      end
+    end
+
+    describe 'build appointments' do
+
+      it 'should build out appointments based on existing visit groups on initial patient calendar load' do
+        participant.build_appointments
+        expect(participant.appointments.count).to eq(2)
+        expect(participant.appointments[0].name).to eq('Turd')
+        expect(participant.appointments[1].position).to eq(2)
+      end
+
+      it 'should create additional appointments if a visit group is added to the arm' do
+        participant.build_appointments 
+        create(:visit_group, arm: participant.arm, name: "Dirk", position: 3)
+        arm.reload
+        participant.build_appointments
+        expect(participant.appointments.count).to eq(3)
+        expect(participant.appointments[2].position).to eq(3)
+      end
+
+      it 'should not do anything if there are no new visit groups' do
+        participant.build_appointments 
+        participant.build_appointments 
+        expect(participant.appointments.count).to eq(2)
       end
     end
   end

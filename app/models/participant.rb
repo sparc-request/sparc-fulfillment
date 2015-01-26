@@ -54,13 +54,12 @@ class Participant < ActiveRecord::Base
   def new_visit_groups
     participant_vgs = self.appointments.map{|app| app.visit_group}
     arm_vgs = self.arm.visit_groups
-    
     arm_vgs - participant_vgs
   end
 
   def appointments_for_visit_groups visit_groups
     visit_groups.each do |vg|
-      self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, name: vg.name)
+      self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: self.appointments.count + 1, name: vg.name)
     end
   end
 end
