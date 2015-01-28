@@ -95,6 +95,7 @@ en:
 
   appointment:
     protocol_id: "Protocol SPARC ID"
+    appointment_dropdown: "Please select a visit:"
 
   services:
     name: "Selected Service"
