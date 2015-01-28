@@ -1,7 +1,8 @@
 #appointment_select
   %span
     = t(:appointment)[:appointment_dropdown]
-  %select.selectpicker{multiple: "", title: 'Please Select'}
+  %select.selectpicker
+    %option{selected: "selected"} Please Select
     - arms_for_appointments(participant.appointments).each do |arm|
       %optgroup{:label => "#{arm.name}"}
         = options_from_collection_for_select(appointments_for_select(arm, participant), 'id', 'name')

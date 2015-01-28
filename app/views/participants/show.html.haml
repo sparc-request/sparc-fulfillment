@@ -1,3 +1,5 @@
 .participants
-  = render partial: 'participant', locals: { participant: @participant }
+  = render partial: 'participant', locals: { protocol: @protocol, participant: @participant }
+  = render partial: 'dashboard', locals: { protocol: @protocol, participant: @participant }
   = render partial: 'appointments_dropdown', locals: { participant: @participant }
+

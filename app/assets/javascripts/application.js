@@ -14,6 +14,7 @@
 //= require service_calendar
 //= require participants
 //= require study_schedule_edit_buttons
+//= require appointments
 //= require global
 //= require tableExport
 //= require jquery.base64

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       patch 'change_arm(/:id)', to: 'participants#update_arm'
       put 'change_arm(/:id)', to: 'participants#update_arm'
       post 'change_arm(/:id)', to: 'participants#update_arm'
+      get 'completed_appointments', to: 'participants#completed_appointments'
     end
   end
 
