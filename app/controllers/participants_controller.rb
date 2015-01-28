@@ -13,6 +13,7 @@ class ParticipantsController < ApplicationController
   end
 
   def show
+    @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:id])
     @participant.build_appointments
   end
@@ -78,6 +79,12 @@ class ParticipantsController < ApplicationController
     end
     @participant.save
     flash[:success] = t(:flash_messages)[:participant][:arm_change]
+  end
+
+  def completed_appointments
+    protocol = Protocol.find(params[:protocol_id])
+    participant = Participant.find(params[:participant_id])
+    @appointments = participant.appointments.where("completed_date IS NOT NULL")
   end
 
   private

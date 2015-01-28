@@ -1,2 +1,3 @@
-= render partial: 'participant', locals: { participant: @participant }
+= render partial: 'participant', locals: { protocol: @protocol, participant: @participant }
+= render partial: 'dashboard', locals: { protocol: @protocol, participant: @participant }
 %h3 Appointments
