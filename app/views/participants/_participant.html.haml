@@ -1,6 +1,6 @@
 = hidden_field_tag :participant_id, participant.id
 .fixed-table-container
-  %table.participant.details.custom_striped{id: "participant-info", "data-toggle" => 'table', "data-url" => "/protocols/#{participant.protocol.sparc_id}/participants/#{participant.id}.json"}
+  %table.participant.details.custom_striped{id: "participant-info", "data-toggle" => 'table', "data-url" => "/protocols/#{protocol.id}/participants/#{participant.id}.json"}
     %thead
       %tr
         %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "id"}= t(:participant)[:id]
