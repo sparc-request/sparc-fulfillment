@@ -75,7 +75,7 @@ table.custom_striped.details
     cursor: auto
     background: none
 
-/************Participant Calendar Styling************/
+/************Participant and Service Calendar Styling************/
 //Dashboard Styling
 .dashboard_link
   background-color: #2E6DA4
@@ -86,3 +86,63 @@ table.custom_striped.details
   padding: 2px
   text-align: center
   width: auto
+
+.calendar
+  .row.header > div
+    border-right: 1px solid white
+    padding-top: 32px
+    padding-bottom: 31px
+    &:last-child
+      border: 0px
+
+  .row.header > div.col-xs-6
+    padding-top: 0px
+    padding-bottom: 0px
+    .row > div
+      padding-top: 7px
+      padding-bottom: 8px
+
+  .row.visit_groups
+    border-top: 1px solid white
+  .visit_groups > div
+    border-right: 1px solid white
+    &:last-child
+      border: 0px
+
+  .header
+    background: #113967
+    color: white
+    input,
+    select
+      color: black
+
+  // .row.line_item:nth-child(even)
+  //   background-color: #ababab
+  .row.line_item
+    border-top: 1px solid #ababab
+    padding: 4px 0px
+  .arm-name
+    background-color: #416185
+    color: white
+    padding: 5px 0px
+  .core
+    // background-color: #90b9cd
+    background-color: #ababab
+  .scrolling-div
+    overflow: auto
+    max-height: 250px !important
+  .shorter_text
+    width: 65px
+  .even_shorter_text
+    width: 25px
+    padding: 0px 2px
+  .btn
+    padding: 2px 6px
+    font-size: 13px
+  .form-control
+    height: 26px
+    padding: 0px 6px
+  .visit
+    margin-top: 6px
+
+

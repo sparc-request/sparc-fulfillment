@@ -42,7 +42,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
-        new_arm = all(".service-calendar").last()
+        new_arm = all(".calendar.service").last()
         wait_for_javascript_to_finish
         expect(new_arm).not_to have_css ".row.line_item"
       end
@@ -57,7 +57,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
-        new_arm = all(".service-calendar").last()
+        new_arm = all(".calendar.service").last()
         wait_for_javascript_to_finish
         expect(new_arm).to have_css ".row.line_item"
       end
@@ -195,7 +195,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
     describe 'remove modal' do
 
-      before :each do 
+      before :each do
         li_1 = create(:line_item, arm: arm1, service: service1)
         li_2 = create(:line_item, arm: arm2, service: service1)
         visit current_path

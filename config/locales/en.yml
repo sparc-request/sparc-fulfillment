@@ -103,6 +103,14 @@ en:
     protocol_id: "Protocol SPARC ID"
     completed: "Completed Appointments"
     date_of_visit: "Date of Participant Visit"
+    procedure: "Procedure"
+    r_t: "R/T"
+    status: "Status"
+    incompletion: "Incompletion Reason"
+    follow_up: "Follow Up"
+    date_completed: "Date Completed"
+    notes: "Notes"
+    remove: "Remove"
 
   services:
     name: "Selected Service"
