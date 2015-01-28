@@ -87,6 +87,10 @@ class ParticipantsController < ApplicationController
     @appointments = participant.appointments.where("completed_date IS NOT NULL")
   end
 
+  def select_appointment
+    
+  end
+
   private
 
   def participant_params

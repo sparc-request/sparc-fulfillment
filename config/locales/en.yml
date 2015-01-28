@@ -101,12 +101,9 @@ en:
 
   appointment:
     protocol_id: "Protocol SPARC ID"
-<<<<<<< HEAD
     appointment_dropdown: "Please select a visit:"
-=======
     completed: "Completed Appointments"
     date_of_visit: "Date of Participant Visit"
->>>>>>> d3c0a11122c5fb831932ac96c9a7e63c47fd097a
 
   services:
     name: "Selected Service"
