@@ -9,7 +9,7 @@ class Appointment < ActiveRecord::Base
   def build_procedures
     ActiveRecord::Base.transaction do
       if self.procedures.empty?
-        
+      end
     end
   end
 
