@@ -74,16 +74,20 @@ RSpec.describe VisitGroup, type: :model do
 
     describe 'private' do
 
-      describe 'reorder' do
-
-        before :each do
-          @arm = create(:arm)
+      before :each do
+          @protocol = create(:protocol)
+          @arm = create(:arm, protocol: @protocol)
           @arm.visit_groups.each{|vg| vg.destroy}
           @arm.reload
-          @vg_a = create(:visit_group, name: 'A', position: 1, arm_id: @arm.id)
-          @vg_b = create(:visit_group, name: 'B', position: 2, arm_id: @arm.id)
-          @vg_c = create(:visit_group, name: 'C', position: 3, arm_id: @arm.id)
+          @vg_a        = create(:visit_group, name: 'A', position: 1, arm_id: @arm.id)
+          @vg_b        = create(:visit_group, name: 'B', position: 2, arm_id: @arm.id)
+          @vg_c        = create(:visit_group, name: 'C', position: 3, arm_id: @arm.id)
+          @participant = create(:participant, arm: @arm, protocol: @protocol)
+          @appointment = create(:appointment, visit_group: @vg_a, participant: @participant)
+          @procedure   = create(:procedure, appointment: @appointment)
         end
+
+      describe 'reorder' do
 
         it 'should reorder_visit_groups_up when position is not nil' do
           @vg_d = create(:visit_group, name: 'D', position: 3, arm_id: @arm.id)
@@ -104,6 +108,26 @@ RSpec.describe VisitGroup, type: :model do
           @vg_d.destroy
           @vg_c.reload
           expect(@vg_c.position).to eq(3)
+        end
+      end
+
+      describe 'check for completed data' do
+
+        it "should allow the appointment to be deleted if it is not completed" do
+          @vg_a.destroy
+          expect(@participant.appointments.empty?).to eq(true)
+        end
+
+        it "should not allow the appointment to be deleted if it is completed" do
+          @appointment.update_attributes(completed_date: Date.today)
+          @vg_a.destroy
+          expect(@participant.appointments.empty?).to eq(false)
+        end
+
+        it "should not allow the appointment to be deleted if any of it's procedures are completed" do
+          @procedure.update_attributes(completed_date: Date.today)
+          @vg_a.destroy
+          expect(@participant.appointments.empty?).to eq(false)
         end
       end
     end
