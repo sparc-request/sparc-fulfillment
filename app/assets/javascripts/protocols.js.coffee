@@ -15,9 +15,10 @@ $ ->
     $(".financial-management-view label").on "click", ->
       e = $(this)
 
-    $('#protocol-list').on "click-row.bs.table", (e, row, $element) ->
-      protocol_id = row.sparc_id
-      window.location = "/protocols/#{protocol_id}"
+    $('table.protocols').on 'click', 'td:not(td.coordinators)', ->
+      id = $(this).parent().find("td.sparc_id").text()
+
+      window.location = "/protocols/#{id}"
 
 
     # if $("body.particpanttracker-particpant_tracker").length >= 0
