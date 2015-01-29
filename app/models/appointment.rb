@@ -6,13 +6,6 @@ class Appointment < ActiveRecord::Base
   belongs_to :visit_group
   has_many :procedures
 
-  def build_procedures
-    ActiveRecord::Base.transaction do
-      if self.procedures.empty?
-      end
-    end
-  end
-
   def has_completed_procedures
     has_completed = false
     unless self.procedures.empty?
