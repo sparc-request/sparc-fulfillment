@@ -15,9 +15,10 @@ $ ->
     id = $(this).val()
     protocol_id = $("#protocol_id").val()
     participant_id = $("#participant_id").val()
-    $.ajax
-      type: 'GET'
-      url: "/protocols/#{protocol_id}/participants/#{participant_id}/select_appointment/#{id}"
+    if id
+      $.ajax
+        type: 'GET'
+        url: "/protocols/#{protocol_id}/participants/#{participant_id}/select_appointment/#{id}"
+      event.stopPropagation()
     $('.btn-group').removeClass('open')
-    event.stopPropagation()
   )
