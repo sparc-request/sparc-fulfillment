@@ -4,7 +4,6 @@ FactoryGirl.define do
     visit_group nil
     participant nil
     start_date Time.current
-    completed_date Time.current + 1.day
 
     trait :with_procedures do
       after(:create) do |appointment, evaluator|
