@@ -20,7 +20,9 @@ FactoryGirl.define do
 
     trait :with_appointments do
       after(:create) do | participant, evaluator|
-        create_list(:appointment_with_procedures, 4, participant: participant)
+        participant.arm.visit_groups.each do |vg|
+          create(:appointment_with_procedures, participant: participant, visit_group: vg, name: vg.name, visit_group_position: vg.position)
+        end
       end
     end
 
