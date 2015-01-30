@@ -18,6 +18,13 @@ FactoryGirl.define do
       protocol
     end
 
+    trait :with_appointments do
+      after(:create) do | participant, evaluator|
+        create_list(:appointment_with_procedures, 4, participant: participant)
+      end
+    end
+
     factory :participant_with_protocol, traits: [:with_protocol]
+    factory :participant_with_appointments, traits: [:with_appointments]
   end
 end

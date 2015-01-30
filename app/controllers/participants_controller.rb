@@ -87,6 +87,12 @@ class ParticipantsController < ApplicationController
     @appointments = participant.appointments.where("completed_date IS NOT NULL")
   end
 
+  def select_appointment
+    @protocol = Protocol.find(params[:protocol_id])
+    @participant = Participant.find(params[:participant_id])
+    @appointment = Appointment.find(params[:id])
+  end
+
   private
 
   def participant_params
