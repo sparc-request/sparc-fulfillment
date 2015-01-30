@@ -26,6 +26,7 @@ class Appointment < ActiveRecord::Base
         if visit and visit.has_billing?
           attributes = {
             appointment_id: self.id,
+            visit_id: visit.id,
             service_name: li.service.name,
             service_cost: li.service.cost,
             service_id: li.service.id,
