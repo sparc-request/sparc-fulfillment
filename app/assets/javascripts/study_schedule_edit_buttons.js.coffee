@@ -111,5 +111,5 @@ $ ->
   $select = $('#arms')
   $select.find("[value=#{arm_id}]").remove()
   $select.selectpicker('refresh')
-  $(".service-calendar.arm_#{arm_id}").remove()
+  $(".calendar.service.arm_#{arm_id}").remove()
 

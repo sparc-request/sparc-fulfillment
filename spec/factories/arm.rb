@@ -37,7 +37,7 @@ FactoryGirl.define do
 
     trait :with_participant do
       after(:create) do |arm, evaluator|
-        create(:participant, arm: arm, protocol: arm.protocol)
+        create(:participant_with_appointments, arm: arm, protocol: arm.protocol)
       end
     end
 

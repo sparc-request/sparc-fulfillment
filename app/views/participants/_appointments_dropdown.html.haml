@@ -1,0 +1,9 @@
+#appointment_select
+  %span
+    = hidden_field_tag :protocol_id, protocol.id
+    = hidden_field_tag :participant_id, participant.id
+    = t(:appointment)[:appointment_dropdown]
+  %select.selectpicker#appointment_select{:title => "Please Select", :multiple => true, :'data-max-options' => "1"}
+    - arms_for_appointments(participant.appointments).each do |arm|
+      %optgroup{:label => "#{arm.name}"}
+        = options_from_collection_for_select(appointments_for_select(arm, participant), 'id', 'name')

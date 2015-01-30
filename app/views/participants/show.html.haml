@@ -1,3 +1,6 @@
-= render partial: 'participant', locals: { protocol: @protocol, participant: @participant }
-= render partial: 'dashboard', locals: { protocol: @protocol, participant: @participant }
-%h3 Appointments
+.participants
+  = render partial: 'participant', locals: { protocol: @protocol, participant: @participant }
+  = render partial: 'dashboard', locals: { protocol: @protocol, participant: @participant }
+  = render partial: 'appointments_dropdown', locals: { protocol: @protocol, participant: @participant }
+
+  #participant_calendar
