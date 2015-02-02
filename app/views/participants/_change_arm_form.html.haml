@@ -1,6 +1,7 @@
+
 .modal-dialog
   .modal-content
-    = form_for [participant, arm], {url: path, remote: true, html: {class: "form-horizontal", role: "form"}} do |p|
+    = form_for [participant, arm], {url: "/protocols/#{protocol.id}/participants/#{participant.id}/change_arm", remote: true, html: {class: "form-horizontal", role: "form", method: "post"}} do |p|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
@@ -12,7 +13,7 @@
           .col-md-12
             .form-group
               = p.label "name", t(:participant)[:arm], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "name", protocol.arms.map{|a| a.name}, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "id", options_from_collection_for_select(protocol.arms, "id", "name", participant.arm_id), {include_blank: true}, :class => "form-control"
       .modal-footer
         .center-block{style: "width: 205px;"}
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

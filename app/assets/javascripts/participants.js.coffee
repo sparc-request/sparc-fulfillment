@@ -20,13 +20,9 @@ $ ->
         url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
 
     "click #changeParticipantArm": (e, value, row, index) ->
-      if row.arm_id == null
-        urlVar = "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm"
-      else
-        urlVar = "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm/#{row.arm_id}/edit"
       $.ajax
         type: 'GET'
-        url: urlVar
+        url: "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm?arm_id=#{row.arm_id}"
 
     "click .calendar": (e, value, row, index) ->
       participant_id = row.id
