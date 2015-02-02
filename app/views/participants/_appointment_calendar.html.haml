@@ -11,3 +11,6 @@
     .col-xs-2.text-center=t(:appointment)[:notes]
     .col-xs-1.text-center=t(:appointment)[:remove]
   .row.core
+  -appointment.procedures.each do |proc|
+    = proc.service_name + ': ' + proc.billing_type
+    %br

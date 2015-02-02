@@ -30,10 +30,12 @@ class Participant < ActiveRecord::Base
 
   def build_appointments
     ActiveRecord::Base.transaction do
-      if self.appointments.empty?
-        appointments_for_visit_groups(self.arm.visit_groups)
-      elsif has_new_visit_groups?
-        appointments_for_visit_groups(new_visit_groups)
+      if self.arm
+        if self.appointments.empty?
+          appointments_for_visit_groups(self.arm.visit_groups)
+        elsif has_new_visit_groups?
+          appointments_for_visit_groups(new_visit_groups)
+        end
       end
     end
   end
