@@ -82,6 +82,20 @@ RSpec.describe Participant, type: :model do
       end
     end
 
+    describe 'update appointments on arm change' do
+
+      it "should set appointments with completed procedures to completed" do
+        appts_with_completes = participant.appointments.map{|a| a.has_completed_procedures}
+        participant.update_appointments_on_arm_change
+        expect(participant.appointments.include?(appts_with_completes))
+      end
+      it "should delete incomplete appointments" do
+        appts_with_completes = participant.appointments.map{|a| a.has_completed_procedures}
+        participant.update_appointments_on_arm_change
+        expect(participant.appointments.exclude?(appts_with_completes))
+      end
+    end
+
     describe 'build appointments' do
 
       it 'should build out appointments based on existing visit groups on initial patient calendar load' do
@@ -92,7 +106,7 @@ RSpec.describe Participant, type: :model do
       end
 
       it 'should create additional appointments if a visit group is added to the arm' do
-        participant.build_appointments 
+        participant.build_appointments
         create(:visit_group, arm: participant.arm, name: "Dirk", position: 3)
         arm.reload
         participant.build_appointments
@@ -101,8 +115,8 @@ RSpec.describe Participant, type: :model do
       end
 
       it 'should not do anything if there are no new visit groups' do
-        participant.build_appointments 
-        participant.build_appointments 
+        participant.build_appointments
+        participant.build_appointments
         expect(participant.appointments.count).to eq(2)
       end
     end
