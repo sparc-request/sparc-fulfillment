@@ -78,6 +78,7 @@ class ParticipantsController < ApplicationController
       @participant.arm = Arm.find( @protocol.arms.select{ |a| a.name == params[:arm][:name]}[0].id )
     end
     @participant.save
+    update_appointments_on_arm_change
     flash[:success] = t(:flash_messages)[:participant][:arm_change]
   end
 
@@ -94,6 +95,16 @@ class ParticipantsController < ApplicationController
     if @appointment.procedures.empty?
       @appointment.initialize_procedures
     end
+  end
+
+  def update_appointments_on_arm_change
+    @participant.appointments.each do |appt|
+      if not(appt.completed_date) and appt.has_completed_procedures?
+        appt.set_completed_date
+      end
+      appt.destroy if not(appt.completed_date)
+    end
+    @participant.build_appointments
   end
 
   private

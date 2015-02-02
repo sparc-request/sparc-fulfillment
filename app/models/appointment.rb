@@ -19,6 +19,10 @@ class Appointment < ActiveRecord::Base
     has_completed
   end
 
+  def set_completed_date
+    self.completed_date = Time.now
+  end
+
   def initialize_procedures
     ActiveRecord::Base.transaction do
       self.visit_group.arm.line_items.each do |li|
