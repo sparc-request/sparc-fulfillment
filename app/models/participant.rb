@@ -40,6 +40,17 @@ class Participant < ActiveRecord::Base
     end
   end
 
+  def update_appointments_on_arm_change
+    self.appointments.each do |appt|
+      if not(appt.completed_date) and appt.has_completed_procedures?
+        appt.set_completed_date
+      end
+      appt.destroy if not(appt.completed_date)
+    end
+    self.build_appointments
+  end
+
+
   private
 
   def update_via_faye
