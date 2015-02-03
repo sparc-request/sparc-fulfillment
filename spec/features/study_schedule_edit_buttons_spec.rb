@@ -96,16 +96,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).to have_content "Arm Destroyed"
         expect(page).not_to have_content "Arm: #{arm1.name}"
       end
-
-      it "should remove all but the final arm" do
-        protocol1.arms.each do |arm|
-          click_link "remove_arm_button"
-          page.driver.browser.accept_js_confirms
-          if protocol1.arms.count == 1
-            expect(page).to have_content "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
-          end
-        end
-      end
     end
   end
 

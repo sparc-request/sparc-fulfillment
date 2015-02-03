@@ -24,7 +24,7 @@ RSpec.describe 'Participant List', type: :feature, js: true do
     fill_in 'First Name', with: participant2.first_name
     fill_in 'Last Name', with: participant2.last_name
     fill_in 'MRN', with: participant2.mrn
-    select participant2.status, from: 'Patient Status'
+    select participant2.status, from: 'Participant Status'
     fill_in 'Date of Birth', with: participant2.date_of_birth
     select participant2.gender, from: 'Gender'
     select participant2.ethnicity, from: 'Ethnicity'

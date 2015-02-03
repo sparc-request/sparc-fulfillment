@@ -13,12 +13,14 @@ class Participant < ActiveRecord::Base
 
   after_save :update_via_faye
 
-  validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, presence: true
+  validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :phone, :ethnicity, :race, :gender, presence: true
   validate :phone_number_format, :date_of_birth_format
 
   def phone_number_format
-    unless (phone.strip.empty? or /^\d{3}-\d{3}-\d{4}$/.match phone.strip)
-      errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX")
+    if phone != ""
+      unless /^\d{3}-\d{3}-\d{4}$/.match phone.to_s
+        errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX")
+      end
     end
   end
 
