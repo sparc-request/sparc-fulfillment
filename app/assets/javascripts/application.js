@@ -21,3 +21,4 @@
 //= require bootstrap-table-export
 //= require bootstrap-datepicker/core
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.en-GB.js
+//= require jquery.cookie

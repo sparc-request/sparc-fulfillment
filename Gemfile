@@ -44,8 +44,10 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-webkit', '~> 1.3.1' # brew update && brew instal qt
+  gem 'capybara-webkit', '~> 1.4.1'
+
   gem 'database_cleaner'
+  gem 'launchy'
   gem 'rspec-rails', '~> 3.1.0'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'

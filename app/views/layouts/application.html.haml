@@ -10,20 +10,11 @@
       .container
         = link_to image_tag("sctr_logo.png"), "http://sctr.musc.edu", :id => "logo_left", :class => "pull-left"
         = link_to image_tag("musc_logo.gif"), "http://www.musc.edu", :id => "logo_right", :class => "pull-right"
-    #header_bottom
-      .container
-        .pull-left
-          - if user_signed_in?
-            %div
-              = current_user.email
-              = link_to "Sign out", destroy_user_session_path, :method => :delete, :class => "btn btn-danger"
-          - else
-            %div= link_to "Sign in", new_user_session_path, :class => "btn btn-success"
-        .pull-right
-          = render :partial => 'shared/nav_buttons'
+    = render "nav"
     .container
       #flashes_container
         = render :partial => 'shared/flash_messages', :locals => {:flash => flash}
       = yield
     = javascript_include_tag 'application'
-    = javascript_include_tag 'http://localhost:9292/faye/faye.js'
+    - unless Rails.env.test?
+      = javascript_include_tag 'http://localhost:9292/faye/faye.js'

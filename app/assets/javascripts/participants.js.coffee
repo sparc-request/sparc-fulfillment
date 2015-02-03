@@ -67,14 +67,14 @@ $ ->
 
 (exports ? this).calendarFormatter = (value, row, index) ->
   [
-    "<a class='calendar' href='javascript:void(0)' title='Calendar'>",
+    "<a class='calendar' href='#' title='Calendar'>",
     "<i class='glyphicon glyphicon-calendar'></i>",
     "</a>"
   ].join ""
 
 (exports ? this).statsFormatter = (value, row, index) ->
   [
-    "<a class='stats' href='javascript:void(0)' title='Stats'>",
+    "<a class='stats' href='#' title='Stats'>",
     "<i class='glyphicon glyphicon-stats'></i>",
     "</a>"
   ].join ""
