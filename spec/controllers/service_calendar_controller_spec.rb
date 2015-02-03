@@ -99,6 +99,19 @@ RSpec.describe ServiceCalendarController do
     end
   end
 
+  describe "PUT #change_service" do
+    it "should change the service id of the line item" do
+      line_item = LineItem.first
+      service = create(:service)
+      put :change_service, {
+        line_item_id: line_item.id,
+        service_id: service.id,
+        format: :js
+      }
+      expect(assigns(:line_item).service_id).to eq(service.id)
+    end
+  end
+
   describe "PUT #check_row" do
     it "should set all visits for the line_item to have a research_billing_qty of 1 when checked" do
       line_item = LineItem.first
