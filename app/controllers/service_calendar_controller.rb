@@ -42,8 +42,8 @@ class ServiceCalendarController < ApplicationController
   end
 
   def change_service
-    line_item = LineItem.find(params[:line_item_id])
-    line_item.update_attributes(service_id: params[:service_id])
+    @line_item = LineItem.find(params[:line_item_id])
+    @line_item.update_attributes(service_id: params[:service_id])
     # TODO: Need to change any procedures that haven't been completed to the new service
   end
 
