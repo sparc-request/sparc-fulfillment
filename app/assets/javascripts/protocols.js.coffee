@@ -1,6 +1,5 @@
 $ ->
   if $("body.protocols-index").length > 0
-
     #Setting the default state of the index page on initial load
     $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
     $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
@@ -73,6 +72,16 @@ $ ->
     faye.subscribe '/protocols/list', (data) ->
       status = $('.selectpicker').val()
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
+
+  if $("body.protocols-show").length > 0
+    current_tab = $.cookie("active-protocol-tab")
+
+    if current_tab && current_tab.length > 0
+      $(".nav-tabs a[href='##{current_tab}']").tab('show')
+
+    $('a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
+      tab = String(e.target).split("#")[1]
+      $.cookie("active-protocol-tab", tab, expires: 1)
 
 (exports ? this).cents_to_dollars = (value) ->
   cents = value / 100

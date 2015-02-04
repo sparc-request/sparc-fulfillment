@@ -4,3 +4,9 @@
   = render partial: 'appointments_dropdown', locals: { protocol: @protocol, participant: @participant }
 
   #participant_calendar
+
+- content_for :nav_buttons do
+  %li
+    = button_to :back, method: :get, class: "btn btn-primary navbar-btn" do
+      %span.glyphicon.glyphicon-arrow-left{"aria-hidden" => "true"}
+      Back

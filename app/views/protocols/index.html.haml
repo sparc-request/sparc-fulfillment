@@ -20,3 +20,7 @@
           %th{data: {align: 'center', sortable: "true", field: "stored_percent_subsidy", formatter: "number_to_percent"}}= t(:index_page)[:subsidy_amount]
           %th{data: {align: 'center', sortable: "true", field: "subsidy_committed"}}= t(:index_page)[:subsidy_committed]
           %th{data: {align: 'left', sortable: "true", field: "subsidy_expended"}}= t(:index_page)[:subsidy_expended]
+
+- content_for :nav_buttons do
+  %li= button_to "Task List", "#", class: "btn btn-primary navbar-btn"
+  %li= button_to "Billing/Auditing Report", "#", class: "btn btn-primary navbar-btn"
