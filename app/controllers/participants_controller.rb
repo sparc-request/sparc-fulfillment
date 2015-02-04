@@ -57,13 +57,12 @@ class ParticipantsController < ApplicationController
   def edit_arm
     @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:participant_id])
-    @arm = params[:arm_id] != "null" ? Arm.find(params[:arm_id]) : Arm.new
   end
 
   def update_arm
     @protocol = Protocol.find(params[:protocol_id])
     participant = Participant.find(params[:participant_id])
-    participant.update_attributes(arm_id: params[:arm][:id])
+    participant.update_attributes(arm_id: params[:participant][:arm_id])
     flash[:success] = t(:flash_messages)[:participant][:arm_change]
   end
 
