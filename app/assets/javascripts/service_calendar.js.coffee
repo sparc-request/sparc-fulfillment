@@ -101,6 +101,15 @@ $ ->
         # or if we can use faye
         $(".visit_dropdown option[value=#{visit_group_id}]").text("- #{name}")
 
+  $(document).on 'change', '.line_item_service', ->
+    data =
+      'line_item_id': $(this).attr('line_item_id'),
+      'service_id'  : $(this).val()
+    $.ajax
+      type: 'PUT'
+      url: '/service_calendar/change_service'
+      data: data
+
   check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
     obj.removeClass(remove_class).addClass(add_class)
     obj.attr('check', attr_check)

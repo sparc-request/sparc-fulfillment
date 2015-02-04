@@ -2,8 +2,6 @@ require 'rails_helper'
 
 RSpec.describe 'Index spec', type: :feature, js: true do
 
-  
-
   let!(:protocol1) { create(:protocol, status: "Complete", short_title: "Slappy") }
   let!(:protocol2) { create(:protocol, status: "Draft", short_title: "Swanson") }
 
@@ -15,9 +13,9 @@ RSpec.describe 'Index spec', type: :feature, js: true do
 
     it "should filter the table by statuses" do
       visit protocols_path
-      
+
       bootstrap_select '.selectpicker', 'Complete'
-      
+
       wait_for_javascript_to_finish
       expect(page.body).to have_css("table#protocol-list", text: "Slappy")
       expect(page.body).to_not have_css("table#protocol-list", text: "Swanson")

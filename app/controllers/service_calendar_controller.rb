@@ -29,6 +29,7 @@ class ServiceCalendarController < ApplicationController
     name = params[:name]
 
     @visit_group.update_attributes(name: name)
+    # TODO: Need to change appointments name to new visit group name
   end
 
   def change_quantity
@@ -36,6 +37,14 @@ class ServiceCalendarController < ApplicationController
     qty_type = params[:qty_type]
     @visit = Visit.find params[:visit_id]
     @visit.update_attributes(qty_type => quantity)
+    # TODO: Need to update procedures with correct number based on quantity
+    # Need to make sure not to touch completed procedures
+  end
+
+  def change_service
+    @line_item = LineItem.find(params[:line_item_id])
+    @line_item.update_attributes(service_id: params[:service_id])
+    # TODO: Need to change any procedures that haven't been completed to the new service
   end
 
   def check_row
@@ -54,7 +63,7 @@ class ServiceCalendarController < ApplicationController
     @line_item_id = params[:line_item_id]
     @core_id = line_item.sparc_core_id
     line_item.destroy
-    @remove_core = LineItem.where("arm_id = #{@arm_id} and sparc_core_id = #{@core_id}").count > 0 ? false : true
+    @remove_core = LineItem.joins(:service).where("arm_id = #{@arm_id} and services.sparc_core_id = #{@core_id}").count > 0 ? false : true
   end
 
 end
