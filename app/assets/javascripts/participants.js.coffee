@@ -40,21 +40,21 @@ $ ->
 
 (exports ? this).deleteFormatter = (value, row, index) ->
   [
-    "<a class='remove remove-participant' href='javascript:void(0)' title='Remove'>",
+    "<a class='remove remove-participant' href='#' title='Remove'>",
     "<i class='glyphicon glyphicon-remove'></i>",
     "</a>"
   ].join ""
 
 (exports ? this).editFormatter = (value, row, index) ->
   [
-    "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit'>",
+    "<a class='edit edit-participant ml10' href='#' title='Edit'>",
     "<i class='glyphicon glyphicon-edit'></i>",
     "</a>"
   ].join ""
 
 (exports ? this).changeArmFormatter = (value, row, index) ->
   [
-    "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' id='changeParticipantArm'>",
+    "<a class='edit change-arm ml10' href='#' title='Change Arm' id='changeParticipantArm'>",
     "<i class='glyphicon glyphicon-random'></i>",
     "</a>"
   ].join ""
