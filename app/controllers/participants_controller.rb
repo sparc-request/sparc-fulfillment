@@ -63,6 +63,7 @@ class ParticipantsController < ApplicationController
     @protocol = Protocol.find(params[:protocol_id])
     participant = Participant.find(params[:participant_id])
     participant.update_attributes(arm_id: params[:participant][:arm_id])
+    participant.update_appointments_on_arm_change
     flash[:success] = t(:flash_messages)[:participant][:arm_change]
   end
 

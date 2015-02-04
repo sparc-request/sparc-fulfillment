@@ -40,6 +40,12 @@ class Participant < ActiveRecord::Base
     end
   end
 
+  def update_appointments_on_arm_change
+    self.appointments.each{ |appt| appt.destroy_if_incomplete }
+    self.build_appointments
+  end
+
+
   private
 
   def update_via_faye
