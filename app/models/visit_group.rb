@@ -44,8 +44,12 @@ class VisitGroup < ActiveRecord::Base
 
   def check_for_completed_data
     self.appointments.each do |appt|
-      unless (appt.completed_date || appt.has_completed_procedures?)
-        appt.destroy
+      unless appt.completed_date
+        if appt.has_completed_procedures?
+          appt.set_completed_date
+        else
+          appt.destroy
+        end
       end
     end
   end
