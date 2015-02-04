@@ -23,6 +23,16 @@ class Appointment < ActiveRecord::Base
     self.completed_date = Time.now
   end
 
+  def destroy_if_incomplete
+    unless completed_date
+      if has_completed_procedures?
+        set_completed_date
+      else
+        self.destroy
+      end
+    end
+  end
+
   def initialize_procedures
     ActiveRecord::Base.transaction do
       self.visit_group.arm.line_items.each do |li|

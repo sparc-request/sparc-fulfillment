@@ -41,15 +41,7 @@ class Participant < ActiveRecord::Base
   end
 
   def update_appointments_on_arm_change
-    self.appointments.each do |appt|
-      unless appt.completed_date
-        if appt.has_completed_procedures?
-          appt.set_completed_date
-        else
-          appt.destroy
-        end
-      end
-    end
+    self.appointments.each{ |appt| appt.destroy_if_incomplete }
     self.build_appointments
   end
 
