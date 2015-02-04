@@ -17,12 +17,10 @@ Rails.application.routes.draw do
       resources :visit_groups
     end
     resources :participants do
-      get 'change_arm/(:id/edit)', to: 'participants#edit_arm', as: :edit_arm
-      patch 'change_arm(/:id)', to: 'participants#update_arm'
-      put 'change_arm(/:id)', to: 'participants#update_arm'
+      get 'change_arm(/:id)', to: 'participants#edit_arm'
       post 'change_arm(/:id)', to: 'participants#update_arm'
       get 'completed_appointments', to: 'participants#completed_appointments'
-      get 'select_appointment/(:id)', to: 'participants#select_appointment' 
+      get 'select_appointment/(:id)', to: 'participants#select_appointment'
     end
   end
 
@@ -33,6 +31,7 @@ Rails.application.routes.draw do
       put 'check_visit'
       put 'change_quantity'
       put 'change_visit_name'
+      put 'change_service'
       put 'check_row'
       put 'check_column'
       put 'remove_line_item'
