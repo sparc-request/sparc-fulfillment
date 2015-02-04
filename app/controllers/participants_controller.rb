@@ -55,29 +55,14 @@ class ParticipantsController < ApplicationController
   end
 
   def edit_arm
-    def is_number?(string)
-      Float(string) != nil rescue false
-    end
     @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:participant_id])
-    if is_number? params[:id]
-      @arm = Arm.find(params[:id])
-      @path = "/protocols/#{@protocol.id}/participants/#{@participant.id}/change_arm/#{@arm.id}"
-    else
-      @arm = Arm.new
-      @path = "/protocols/#{@protocol.id}/participants/#{@participant.id}/change_arm"
-    end
   end
 
   def update_arm
     @protocol = Protocol.find(params[:protocol_id])
-    @participant = Participant.find(params[:participant_id])
-    if params[:arm][:name] == ""
-      @participant.arm = nil
-    else
-      @participant.arm = Arm.find( @protocol.arms.select{ |a| a.name == params[:arm][:name]}[0].id )
-    end
-    @participant.save
+    participant = Participant.find(params[:participant_id])
+    participant.update_attributes(arm_id: params[:participant][:arm_id])
     flash[:success] = t(:flash_messages)[:participant][:arm_change]
   end
 
