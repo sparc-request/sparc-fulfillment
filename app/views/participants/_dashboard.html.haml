@@ -1,9 +1,10 @@
-.dashboard_link.active -- Hide Dashboard --
-%br
-#dashboard_container
-  #dashboard
-    %table{id: "completed-appointments-table", data: {toggle: 'table', url: "/protocols/#{protocol.id}/participants/#{participant.id}/completed_appointments.json", striped: "true"}}
-      %thead
-        %tr
-          %th{data: {align: "left", field: "name"}}= t(:appointment)[:completed]
-          %th{data: {align: "left", field: "date"}}= t(:appointment)[:date_of_visit]
+.row
+  .dashboard_link.active -- Hide Dashboard --
+  %br
+  #dashboard_container
+    #dashboard
+      %table{id: "completed-appointments-table", data: {toggle: 'table', url: "/protocols/#{protocol.id}/participants/#{participant.id}/completed_appointments.json", striped: "true"}}
+        %thead
+          %tr
+            %th{data: {align: "left", field: "name"}}= t(:appointment)[:completed]
+            %th{data: {align: "left", field: "date"}}= t(:appointment)[:date_of_visit]

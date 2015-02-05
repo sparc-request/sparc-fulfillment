@@ -1,1 +1,0 @@
-$("#participant_calendar").html("<%= escape_javascript(render(:partial =>'participants/appointment_calendar', locals: {protocol: @protocol, participant: @participant, appointment: @appointment})) %>");
