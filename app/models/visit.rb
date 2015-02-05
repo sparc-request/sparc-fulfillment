@@ -6,7 +6,15 @@ class Visit < ActiveRecord::Base
   belongs_to :line_item
   belongs_to :visit_group
 
+  has_many :procedures
+
   delegate :position, to: :visit_group
+
+  def destroy
+    procedures.incomplete.map(&:destroy)
+
+    super
+  end
 
   def has_billing?
     research_billing_qty > 0 ||

@@ -2,10 +2,25 @@ require 'rails_helper'
 
 RSpec.describe Visit, type: :model do
 
-  it { should belong_to(:line_item) }
-  it { should belong_to(:visit_group) }
+  it { is_expected.to belong_to(:line_item) }
+  it { is_expected.to belong_to(:visit_group) }
+
+  it { is_expected.to have_many(:procedures) }
 
   context 'class methods' do
+
+    describe '#destroy' do
+
+      it 'should destroy associated incomplete Procedures' do
+        visit = create(:visit_with_complete_and_incomplete_procedures)
+
+        visit.destroy
+
+        expect(visit.procedures.count).to eq(3)
+        expect(visit.procedures.complete.count).to eq(3)
+        expect(visit.procedures.incomplete.count).to eq(0)
+      end
+    end
 
     describe '#delete' do
 
