@@ -77,28 +77,13 @@ RSpec.describe ParticipantsController do
   end
 
   describe "GET #edit_arm" do
-    it "should find the participant's arm" do
-      @arm = create(:arm, protocol_id: @protocol.id)
-      @participant.arm = @arm
-      @participant.save
-      xhr :get, :edit_arm, {
-        protocol_id: @protocol.id,
-        participant_id: @participant.id,
-        id: @arm.id,
-        format: :js
-      }
-      expect(assigns(:arm)).to eq(@arm)
-      expect(assigns(:path)).to eq("/protocols/#{@protocol.id}/participants/#{@participant.id}/change_arm/#{@arm.id}")
-    end
-
-    it "should not find the participant's arm" do
+    it "should find the participant" do
       xhr :get, :edit_arm, {
         protocol_id: @protocol.id,
         participant_id: @participant.id,
         format: :js
       }
-      expect(assigns(:arm)).to be_a_new(Arm)
-      expect(assigns(:path)).to eq("/protocols/#{@protocol.id}/participants/#{@participant.id}/change_arm")
+      expect(assigns(:participant)).to eq(@participant)
     end
   end
 
@@ -108,11 +93,11 @@ RSpec.describe ParticipantsController do
       put :update_arm, {
         protocol_id: @protocol.id,
         participant_id: @participant.id,
-        arm: @arm,
+        participant: {arm_id: @arm.id},
         format: :js
       }
       @participant.reload
-      expect(@participant.arm.id).to eq @arm.id
+      expect(@participant.arm_id).to eq @arm.id
     end
   end
 end
