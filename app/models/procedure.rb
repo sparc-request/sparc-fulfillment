@@ -1,7 +1,6 @@
 class Procedure < ActiveRecord::Base
 
   acts_as_paranoid
-  belongs_to :visit
   belongs_to :appointment
   belongs_to :visit
 
