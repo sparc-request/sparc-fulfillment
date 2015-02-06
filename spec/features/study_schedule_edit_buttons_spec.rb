@@ -8,7 +8,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   let!(:service1)     { create(:service, sparc_core_id: 5, sparc_core_name: 'Core1') }
   let!(:service2)     { create(:service, sparc_core_id: 6, sparc_core_name: 'Core2') }
   let!(:service3)     { create(:service, sparc_core_id: 7, sparc_core_name: 'Core3') }
-  let!(:appointment1) { create(:appointment, visit_group_id: arm1.id)}
 
   before :each do
     visit protocol_path(protocol1.sparc_id)

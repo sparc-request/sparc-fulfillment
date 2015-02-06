@@ -18,7 +18,7 @@ RSpec.describe Visit, type: :model do
 
         expect(visit.procedures.count).to eq(3)
         expect(visit.procedures.complete.count).to eq(3)
-        expect(visit.procedures.incomplete.count).to eq(0)
+        expect(visit.procedures.untouched.count).to eq(0)
       end
     end
 
