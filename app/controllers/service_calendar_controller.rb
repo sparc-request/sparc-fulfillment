@@ -20,14 +20,13 @@ class ServiceCalendarController < ApplicationController
   def check_visit
     @visit = Visit.find(params[:visit_id])
     qty = params[:checked] == 'true' ? 1 : 0
-
     @visit.update_attributes(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    @visit.update_procedures qty.to_i
   end
 
   def change_visit_name
     @visit_group = VisitGroup.find(params[:visit_group_id])
     name = params[:name]
-
     @visit_group.update_attributes(name: name)
     # TODO: Need to change appointments name to new visit group name
   end
@@ -37,6 +36,7 @@ class ServiceCalendarController < ApplicationController
     qty_type = params[:qty_type]
     @visit = Visit.find params[:visit_id]
     @visit.update_attributes(qty_type => quantity)
+    @visit.update_procedures quantity.to_i, qty_type
     # TODO: Need to update procedures with correct number based on quantity
     # Need to make sure not to touch completed procedures
   end
@@ -49,12 +49,21 @@ class ServiceCalendarController < ApplicationController
 
   def check_row
     qty = params[:check] == 'true' ? 1 : 0
-    Visit.where(line_item_id: params[:line_item_id]).update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    visits = Visit.where(line_item_id: params[:line_item_id])
+    visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    visits.each do |visit|
+      visit.update_procedures qty.to_i
+    end
   end
 
   def check_column
     qty = params[:check] == 'true' ? 1 : 0
-    Visit.where(visit_group_id: params[:visit_group_id]).update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    visits = Visit.where(visit_group_id: params[:visit_group_id])
+    visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    visits.each do |visit|
+      puts visit.inspect
+      visit.update_procedures qty.to_i
+    end
   end
 
   def remove_line_item
