@@ -26,7 +26,7 @@ class Visit < ActiveRecord::Base
       procedures_available = self.procedures.where("billing_type = ? AND service_id = ? AND appointment_id = ?", selected_qty_type, service.id, appointment.id)
       current_qty = procedures_available.count
       if current_qty > updated_qty
-        procedures_to_delete = procedures_available.where("completed_date is null").limit(current_qty - updated_qty)
+        procedures_to_delete = procedures_available.untouched.limit(current_qty - updated_qty)
         if not procedures_to_delete.empty?
           procedures_to_delete.destroy_all
         end

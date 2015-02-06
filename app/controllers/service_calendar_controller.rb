@@ -22,6 +22,7 @@ class ServiceCalendarController < ApplicationController
     qty = params[:checked] == 'true' ? 1 : 0
     @visit.update_attributes(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
     @visit.update_procedures qty.to_i
+    @visit.update_procedures 0, "insurance_billing_qty"
   end
 
   def change_visit_name
