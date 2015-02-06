@@ -51,7 +51,7 @@ class ServiceCalendarController < ApplicationController
     visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
     visits.each do |visit|
       visit.update_procedures qty.to_i
-      visit.update_procedures qty.to_i, "insurance_billing_qty"
+      visit.update_procedures 0, "insurance_billing_qty"
     end
   end
 
@@ -61,7 +61,7 @@ class ServiceCalendarController < ApplicationController
     visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
     visits.each do |visit|
       visit.update_procedures qty.to_i
-      visit.update_procedures qty.to_i, "insurance_billing_qty"
+      visit.update_procedures 0, "insurance_billing_qty"
     end
   end
 
