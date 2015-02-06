@@ -19,6 +19,10 @@ class Appointment < ActiveRecord::Base
     has_completed
   end
 
+  def services_grouped_by_core
+    self.procedures.includes(:service).group_by(&:sparc_core_id)
+  end
+
   def set_completed_date
     self.completed_date = Time.now
   end

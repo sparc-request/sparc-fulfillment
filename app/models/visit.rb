@@ -19,7 +19,7 @@ class Visit < ActiveRecord::Base
   def update_procedures updated_qty, selected_qty_type = "research_billing_qty"
     service = self.line_item.service
     new_procedure_values  = []
-    new_procedure_columns = [:visit_id, :service_id, :service_name, :service_cost, :status, :billing_type, :sparc_core_id, :sparc_core_name, :appointment_id]
+    new_procedure_columns = [:visit_id, :service_id, :service_name, :service_cost, :billing_type, :sparc_core_id, :sparc_core_name, :appointment_id]
     self.visit_group.arm.participants.each do |participant|
       appointment = participant.appointments.where("visit_group_id = ?", self.visit_group.id).first
       next if appointment.nil?
@@ -32,11 +32,10 @@ class Visit < ActiveRecord::Base
         end
       elsif current_qty < updated_qty
         (updated_qty - current_qty).times do
-          new_procedure_values << [self.id, service.id, service.name, service.cost, "incomplete", selected_qty_type, service.sparc_core_id, service.sparc_core_name, appointment.id]
+          new_procedure_values << [self.id, service.id, service.name, service.cost, selected_qty_type, service.sparc_core_id, service.sparc_core_name, appointment.id]
         end
       end
     end
     Procedure.import new_procedure_columns, new_procedure_values, {validate: true}
-    puts "*" * 80
   end
 end

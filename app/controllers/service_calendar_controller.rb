@@ -37,8 +37,6 @@ class ServiceCalendarController < ApplicationController
     @visit = Visit.find params[:visit_id]
     @visit.update_attributes(qty_type => quantity)
     @visit.update_procedures quantity.to_i, qty_type
-    # TODO: Need to update procedures with correct number based on quantity
-    # Need to make sure not to touch completed procedures
   end
 
   def change_service
@@ -53,6 +51,7 @@ class ServiceCalendarController < ApplicationController
     visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
     visits.each do |visit|
       visit.update_procedures qty.to_i
+      visit.update_procedures qty.to_i, "insurance_billing_qty"
     end
   end
 
@@ -61,8 +60,8 @@ class ServiceCalendarController < ApplicationController
     visits = Visit.where(visit_group_id: params[:visit_group_id])
     visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
     visits.each do |visit|
-      puts visit.inspect
       visit.update_procedures qty.to_i
+      visit.update_procedures qty.to_i, "insurance_billing_qty"
     end
   end
 
