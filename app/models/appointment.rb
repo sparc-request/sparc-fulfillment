@@ -19,7 +19,7 @@ class Appointment < ActiveRecord::Base
     has_completed
   end
 
-  def services_grouped_by_core
+  def procedures_grouped_by_core
     self.procedures.group_by(&:sparc_core_id)
   end
 
