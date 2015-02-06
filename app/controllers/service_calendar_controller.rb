@@ -20,14 +20,14 @@ class ServiceCalendarController < ApplicationController
   def check_visit
     @visit = Visit.find(params[:visit_id])
     qty = params[:checked] == 'true' ? 1 : 0
-
     @visit.update_attributes(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    @visit.update_procedures qty.to_i
+    @visit.update_procedures 0, "insurance_billing_qty"
   end
 
   def change_visit_name
     @visit_group = VisitGroup.find(params[:visit_group_id])
     name = params[:name]
-
     @visit_group.update_attributes(name: name)
     @visit_group.appointments.update_all(name: name)
   end
@@ -37,8 +37,7 @@ class ServiceCalendarController < ApplicationController
     qty_type = params[:qty_type]
     @visit = Visit.find params[:visit_id]
     @visit.update_attributes(qty_type => quantity)
-    # TODO: Need to update procedures with correct number based on quantity
-    # Need to make sure not to touch completed procedures
+    @visit.update_procedures quantity.to_i, qty_type
   end
 
   def change_service
@@ -49,12 +48,22 @@ class ServiceCalendarController < ApplicationController
 
   def check_row
     qty = params[:check] == 'true' ? 1 : 0
-    Visit.where(line_item_id: params[:line_item_id]).update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    visits = Visit.where(line_item_id: params[:line_item_id])
+    visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    visits.each do |visit|
+      visit.update_procedures qty.to_i
+      visit.update_procedures 0, "insurance_billing_qty"
+    end
   end
 
   def check_column
     qty = params[:check] == 'true' ? 1 : 0
-    Visit.where(visit_group_id: params[:visit_group_id]).update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    visits = Visit.where(visit_group_id: params[:visit_group_id])
+    visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
+    visits.each do |visit|
+      visit.update_procedures qty.to_i
+      visit.update_procedures 0, "insurance_billing_qty"
+    end
   end
 
   def remove_line_item

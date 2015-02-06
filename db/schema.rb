@@ -181,20 +181,6 @@ ActiveRecord::Schema.define(version: 20150205141451) do
   add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
   add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
 
-  create_table "user_roles", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "protocol_id"
-    t.string   "rights"
-    t.string   "role"
-    t.string   "role_other"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "user_roles", ["protocol_id"], name: "index_user_roles_on_protocol_id", using: :btree
-  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
-
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false

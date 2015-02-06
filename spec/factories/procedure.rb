@@ -6,6 +6,7 @@ FactoryGirl.define do
     follow_up_date Time.now
 
     trait :complete do
+      status "complete"
       completed_date Time.current
     end
 

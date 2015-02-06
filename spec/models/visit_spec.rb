@@ -18,7 +18,7 @@ RSpec.describe Visit, type: :model do
 
         expect(visit.procedures.count).to eq(3)
         expect(visit.procedures.complete.count).to eq(3)
-        expect(visit.procedures.incomplete.count).to eq(0)
+        expect(visit.procedures.untouched.count).to eq(0)
       end
     end
 
@@ -64,6 +64,35 @@ RSpec.describe Visit, type: :model do
         visit       = create(:visit, visit_group: visit_group)
 
         expect(visit.position).to eq(1)
+      end
+    end
+
+    describe 'update procedures' do
+
+      it 'should delete procedures' do
+        protocol = create(:protocol)
+        arm = create(:arm_imported_from_sparc, protocol: protocol)
+        appointment = arm.visit_groups.first.appointments.first
+        visit = arm.visit_groups.first.visits.first
+        service = visit.line_item.service
+        3.times do
+          create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
+        end
+        visit.update_procedures 2
+        expect(visit.procedures.count).to eq(2)
+      end
+
+      it 'should create procedures' do
+        protocol = create(:protocol)
+        arm = create(:arm_imported_from_sparc, protocol: protocol)
+        appointment = arm.visit_groups.first.appointments.first
+        visit = arm.visit_groups.first.visits.first
+        service = visit.line_item.service
+        3.times do
+          create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
+        end
+        visit.update_procedures 5
+        expect(visit.procedures.count).to eq(5)
       end
     end
   end

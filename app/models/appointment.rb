@@ -19,6 +19,10 @@ class Appointment < ActiveRecord::Base
     has_completed
   end
 
+  def procedures_grouped_by_core
+    self.procedures.group_by(&:sparc_core_id)
+  end
+
   def set_completed_date
     self.completed_date = Time.now
   end
@@ -40,18 +44,17 @@ class Appointment < ActiveRecord::Base
             service_name: li.service.name,
             service_cost: li.service.cost,
             service_id: li.service.id,
-            status: "incomplete",
             sparc_core_id: li.service.sparc_core_id,
             sparc_core_name: li.service.sparc_core_name
           }
           visit.research_billing_qty.times do
             proc = Procedure.new(attributes)
-            proc.billing_type = 'R'
+            proc.billing_type = 'research_billing_qty'
             proc.save
           end
           visit.insurance_billing_qty.times do
             proc = Procedure.new(attributes)
-            proc.billing_type = 'T'
+            proc.billing_type = 'insurance_billing_qty'
             proc.save
           end
         end
