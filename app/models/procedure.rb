@@ -7,6 +7,7 @@ class Procedure < ActiveRecord::Base
 
   has_many :notes
 
-  scope :incomplete,  -> { where('completed_date IS NULL') }
-  scope :complete,    -> { where('completed_date IS NOT NULL') }
+  scope :untouched,   -> { where('status IS NULL')              }
+  scope :incomplete,  -> { where('completed_date IS NULL')      }
+  scope :complete,    -> { where('completed_date IS NOT NULL')  }
 end

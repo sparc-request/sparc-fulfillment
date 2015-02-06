@@ -11,7 +11,7 @@ class Visit < ActiveRecord::Base
   delegate :position, to: :visit_group
 
   def destroy
-    procedures.incomplete.map(&:destroy)
+    procedures.untouched.map(&:destroy)
 
     super
   end
