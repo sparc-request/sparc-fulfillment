@@ -29,7 +29,7 @@ class ServiceCalendarController < ApplicationController
     name = params[:name]
 
     @visit_group.update_attributes(name: name)
-    # TODO: Need to change appointments name to new visit group name
+    @visit_group.appointments.update_all(name: name)
   end
 
   def change_quantity
