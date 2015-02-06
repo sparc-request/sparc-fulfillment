@@ -24,12 +24,8 @@ class Appointment < ActiveRecord::Base
   end
 
   def destroy_if_incomplete
-    unless completed_date
-      if has_completed_procedures?
-        set_completed_date
-      else
-        self.destroy
-      end
+    if not (completed_date || has_completed_procedures?)
+      self.destroy
     end
   end
 
