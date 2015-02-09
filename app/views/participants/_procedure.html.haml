@@ -1,7 +1,7 @@
-.row.procedure.text-center{id: "procedure_#{procedure.id}"}
-  .col-xs-2=procedure.service_name
-  .col-xs-1
-    =select_tag "quantity_type", options_for_select(["r","t","o"],"r"), class: "form-control"
+.row.procedure{id: "procedure_#{procedure.id}"}
+  .col-xs-2.col= procedure.service_name
+  .col-xs-1.billing_type
+    .col= select_tag "quantity_type", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
   .col-xs-2
     .form-group
       %div
@@ -11,12 +11,15 @@
         %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "incomplete"}
         Incomplete
   .col-xs-2
-    =select_tag "reason", options_for_select(["r","t","o"],"r"), class: "form-control"
+    .col= select_tag "reason", options_for_select(["r","t","o"],"r"), class: "form-control"
   .col-xs-2.text-center
-    = text_field "follow_up_date", procedure.follow_up_date, class: procedure.follow_up_date ? "" : "hidden"
-    .glyphicon.glyphicon-calendar.btn.btn-warning
+    .col.follow_up_date
+      = text_field_tag "follow_up_date_#{procedure.id}", procedure.display_follow_up, class: procedure.follow_up_date.blank? ? "hidden" : "", readonly: true
+      .glyphicon.glyphicon-calendar.btn.btn-warning{class: procedure.follow_up_date.blank? ? "" : "hidden"}
   .col-xs-2.text-center
-    .glyphicon.glyphicon-plus.btn.btn-success
-    .glyphicon.glyphicon-list-alt.btn.btn-primary
+    .col
+      .glyphicon.glyphicon-plus.btn.btn-success
+      .glyphicon.glyphicon-list-alt.btn.btn-primary
   .col-xs-1.text-center
-    .glyphicon.glyphicon-remove.btn.btn-danger
+    .col
+      .glyphicon.glyphicon-remove.btn.btn-danger
