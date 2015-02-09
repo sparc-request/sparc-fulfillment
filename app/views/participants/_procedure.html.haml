@@ -5,18 +5,21 @@
   .col-xs-2
     .form-group
       %div
-        %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "complete"}
+        %input{name: "status_for_#{procedure.id}", type: "radio", id: "status_complete", value: "#{procedure.id}"}
         Complete
       %div
-        %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "incomplete"}
+        %input{name: "status_for_#{procedure.id}", type: "radio", id: "status_incomplete", value: "#{procedure.id}"}
         Incomplete
   .col-xs-2
     =select_tag "reason", options_for_select(["r","t","o"],"r"), class: "form-control"
   .col-xs-2.text-center
     = text_field "follow_up_date", procedure.follow_up_date, class: procedure.follow_up_date ? "" : "hidden"
-    .glyphicon.glyphicon-calendar.btn.btn-warning
+    .glyphicon.glyphicon-calendar.btn.btn-warning#follow_up
+      = link_to '', '#'
   .col-xs-2.text-center
-    .glyphicon.glyphicon-plus.btn.btn-success
-    .glyphicon.glyphicon-list-alt.btn.btn-primary
+    .glyphicon.glyphicon-plus.btn.btn-success#add_note
+      = link_to '', '#'
+    .glyphicon.glyphicon-list-alt.btn.btn-primary#remove_procedure
+      = link_to '', '#'
   .col-xs-1.text-center
     .glyphicon.glyphicon-remove.btn.btn-danger
