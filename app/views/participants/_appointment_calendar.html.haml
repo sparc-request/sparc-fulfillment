@@ -10,7 +10,10 @@
     .col-xs-2.text-center=t(:appointment)[:follow_up]
     .col-xs-2.text-center=t(:appointment)[:notes]
     .col-xs-1.text-center=t(:appointment)[:remove]
-  .row.core
-  -appointment.procedures.each do |proc|
-    = proc.service_name + ': ' + proc.billing_type
-    %br
+  -appointment.procedures_grouped_by_core.each do |core_id, procedures|
+    .row.core{id: "procedure_service_#{core_id}"}
+      .col-xs-12= "Core: #{procedures.first.sparc_core_name}"
+    -procedures.each do |procedure|
+      = render partial: 'participants/procedure', locals: {procedure: procedure}
+
+

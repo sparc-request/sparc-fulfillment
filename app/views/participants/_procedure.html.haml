@@ -1,0 +1,22 @@
+.row.procedure.text-center{id: "procedure_#{procedure.id}"}
+  .col-xs-2=procedure.service_name
+  .col-xs-1
+    =select_tag "quantity_type", options_for_select(["r","t","o"],"r"), class: "form-control"
+  .col-xs-2
+    .form-group
+      %div
+        %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "complete"}
+        Complete
+      %div
+        %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "incomplete"}
+        Incomplete
+  .col-xs-2
+    =select_tag "reason", options_for_select(["r","t","o"],"r"), class: "form-control"
+  .col-xs-2.text-center
+    = text_field "follow_up_date", procedure.follow_up_date, class: procedure.follow_up_date ? "" : "hidden"
+    .glyphicon.glyphicon-calendar.btn.btn-warning
+  .col-xs-2.text-center
+    .glyphicon.glyphicon-plus.btn.btn-success
+    .glyphicon.glyphicon-list-alt.btn.btn-primary
+  .col-xs-1.text-center
+    .glyphicon.glyphicon-remove.btn.btn-danger
