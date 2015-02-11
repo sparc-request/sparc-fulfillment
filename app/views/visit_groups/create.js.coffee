@@ -1,6 +1,6 @@
 $("#visit_group_modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>")
 <% if @errors == nil %>
-$("#flashes_container").html("<%= escape_javascript(render(:partial =>'application/flash')) %>")
+$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
 $("#visit_modal").modal 'hide'
 $("#visits_select_for_<%= @arm.id %>").replaceWith( " <%= escape_javascript(build_visits_select(@arm, @current_page)) %>")
 change_arm() # calling this method refreshes the dropdown to reflect the addition of a new visit
