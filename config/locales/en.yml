@@ -107,11 +107,12 @@ en:
     procedure: "Procedure"
     r_t: "R/T"
     status: "Status"
-    incompletion: "Incompletion Reason"
+    reason: "Reason"
     follow_up: "Follow Up"
     date_completed: "Date Completed"
     notes: "Notes"
     remove: "Remove"
+    add_service: "Add Service"
 
   services:
     name: "Selected Service"
