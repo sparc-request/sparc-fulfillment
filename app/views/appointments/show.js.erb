@@ -1,1 +1,1 @@
-$(".appointment").html("<%= escape_javascript(render(partial: 'appointment', locals: {appointment: @appointment})) %>")
+$(".appointment").html("<%= escape_javascript(render(partial: 'participant_calendar/calendar', locals: {appointment: @appointment})) %>")

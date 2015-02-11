@@ -1,0 +1,11 @@
+= hidden_field_tag :participant_id, participant.id
+.fixed-table-container
+  %table.participant.details.custom_striped{id: "participant-info", "data-toggle" => 'table', "data-url" => "/protocols/#{protocol.id}/participants/#{participant.id}.json"}
+    %thead
+      %tr
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "id"}= t(:participant)[:id]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "name"}= t(:participant)[:full_name]
+        %th{"data-align" => "left", "data-sortable" => "false", "data-field" => "arm"}= t(:participant)[:arm]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "status"}= t(:participant)[:status]
+        %th{"data-align" => "left", "data-sortable" => "true", "data-field" => "protocol_sparc_id"}= t(:appointment)[:protocol_id]
+        %th{"data-align" => "left", "data-sortable" => "false", "data-field" => ""}= t(:index_page)[:coordinators]

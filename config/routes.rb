@@ -3,7 +3,12 @@ Rails.application.routes.draw do
   mount API::Base => '/'
   root 'protocols#index'
 
-  resources :appointments, only: [:show]
+  resources :appointments, only: [:show] do
+    collection do
+      get 'completed_appointments'
+    end
+  end
+
   resources :protocols do
     member do
     end
@@ -20,8 +25,21 @@ Rails.application.routes.draw do
     resources :participants do
       get 'change_arm(/:id)', to: 'participants#edit_arm'
       post 'change_arm(/:id)', to: 'participants#update_arm'
-      get 'completed_appointments', to: 'participants#completed_appointments'
-      get 'select_appointment/(:id)', to: 'participants#select_appointment'
+
+    end
+  end
+
+  resources :procedures do
+    resources :notes do
+    end
+  end
+
+  resources :participant_calendar, only: [] do
+    collection do
+      put 'complete_procedure'
+      put 'incomplete_procedure'
+      put 'create_follow_up'
+      put 'update_follow_up'
     end
   end
 
