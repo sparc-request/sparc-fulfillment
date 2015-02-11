@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe ParticipantCalendarController do
   before :each do
-    sign_in
+    @user = create(:user)
+    sign_in @user
     @protocol = create(:protocol_imported_from_sparc)
     @service = create(:service)
   end
@@ -16,7 +17,7 @@ RSpec.describe ParticipantCalendarController do
       }
       procedure = Procedure.find(procedure.id)
       expect(procedure.status).to eq "complete"
-      excpect(assigns :note)).to be_a_new(Note)
+      expect(procedure.notes.pluck(:comment)).to include "Set to completed"
     end
 
   end
