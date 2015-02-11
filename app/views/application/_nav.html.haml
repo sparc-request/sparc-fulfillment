@@ -9,8 +9,8 @@
             Sign out
       .navbar-right
         %ul.nav.navbar-nav
+          = yield :nav_buttons
           %li
             = button_to root_path, method: :get, class: "btn btn-primary navbar-btn" do
               %span.glyphicon.glyphicon-home{"aria-hidden" => "true"}
               Home
-          = yield :nav_buttons

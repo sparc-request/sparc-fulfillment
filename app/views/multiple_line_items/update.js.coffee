@@ -22,4 +22,4 @@ if core_header.next().attr('id') == "arm_<%= arm_id %>_end_of_core_<%= @core_id 
 <% end %>
 
 $("#line_item_modal").modal 'hide'
-$("#flashes_container").html("<%= escape_javascript(render(:partial =>'shared/flash_messages')) %>");
+$("#flashes_container").html("<%= escape_javascript(render('flash')) %>");

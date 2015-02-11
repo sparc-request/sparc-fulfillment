@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   mount API::Base => '/'
   root 'protocols#index'
 
+  resources :appointments, only: [:show]
   resources :protocols do
     member do
     end
