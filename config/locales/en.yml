@@ -25,7 +25,7 @@ en:
     edit: "Edit"
     delete: "Delete"
     save: "Save"
-    change_arm: "Change Arm"
+    change_arm: "Assign Arm"
     new_participant: "Create New Participant"
     save_participant: "Save Participant"
 
