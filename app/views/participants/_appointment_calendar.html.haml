@@ -16,4 +16,5 @@
     -procedures.each do |procedure|
       = render partial: 'participants/procedure', locals: {procedure: procedure}
 
-
+.modal.fade#appointment_modal{tabindex: '-1', role: 'dialog', aria: {labelledby: "appointmentModal", hidden: 'true'}}
+  #appointment_modal_place

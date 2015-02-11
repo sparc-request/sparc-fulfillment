@@ -113,6 +113,13 @@ en:
     notes: "Notes"
     remove: "Remove"
 
+  notes:
+    index_header: "Procedure Notes"
+    user: "User"
+    date: "Date"
+    action: "Action"
+    note: "Note"
+
   services:
     name: "Selected Service"
     arm: "Select Arm(s)"
