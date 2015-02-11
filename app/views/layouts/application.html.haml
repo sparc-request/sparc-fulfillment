@@ -1,19 +1,16 @@
 !!!
 %html
   %head
-    %title ClinicalWorkFulfillment
+    %title Clinical Work Fulfillment
     = javascript_include_tag 'libraries'
     = stylesheet_link_tag    'application', media: 'all'
     = csrf_meta_tags
-  %body{class:body_class}
-    #header_top
-      .container
-        = link_to image_tag("sctr_logo.png"), "http://sctr.musc.edu", :id => "logo_left", :class => "pull-left"
-        = link_to image_tag("musc_logo.gif"), "http://www.musc.edu", :id => "logo_right", :class => "pull-right"
-    = render "nav"
+  %body{class: body_class}
+    .container-fluid
+      .row.header= render "header"
+      .row.nav= render "nav"
     .container
-      #flashes_container
-        = render :partial => 'shared/flash_messages', :locals => {:flash => flash}
+      .row.flash= render "flash"
       = yield
     = javascript_include_tag 'application'
     - unless Rails.env.test?

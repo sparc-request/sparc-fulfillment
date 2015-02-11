@@ -25,7 +25,7 @@ en:
     edit: "Edit"
     delete: "Delete"
     save: "Save"
-    change_arm: "Change Arm"
+    change_arm: "Assign Arm"
     new_participant: "Create New Participant"
     save_participant: "Save Participant"
 
@@ -43,9 +43,9 @@ en:
     udak_project_number: "IRB #"
     start_date: "Study Start Date"
     end_date: "Study End Date"
-    study_cost: "Study Costs"
-    subsidy_amount: "Subsidy Amount"
-    subsidy_committed: "Subsidy Committed"
+    study_cost: "Total Study Costs"
+    subsidy_amount: "Percent Subsidy"
+    subsidy_committed: "Subsidy Amount"
     subsidy_expended: "Subsidy Expended"
 
   protocol_tabs:

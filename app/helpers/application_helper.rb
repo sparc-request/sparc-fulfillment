@@ -1,4 +1,13 @@
 module ApplicationHelper
+
+  def format_date(date)
+    if date.present?
+      date.strftime('%x')
+    else
+      ''
+    end
+  end
+
   def pretty_tag(tag)
     tag.to_s.gsub(/\s/, "_").gsub(/[^-\w]/, "").downcase
   end

@@ -1,0 +1,42 @@
+.row
+  .col-md-12
+    .page-header
+      %h3= "Appointment: #{appointment.name}"
+.row
+  .col-md-3
+    %form.form-horizontal
+      .form-group
+        %label.col-md-5.control-label{for: "appointment_start_date"} Start date:
+        .col-md-6= text_field_tag 'appointment_start_date', format_date(appointment.start_date), class: 'form-control'
+  .col-md-3.col-md-offset-6
+    %form.form-horizontal
+      .form-group
+        %label.col-md-6.control-label{for: "appointment_completed_date"} Completed date:
+        .col-md-6= text_field_tag 'appointment_completed_date', format_date(appointment.completed_date), class: 'form-control'
+.row
+  .col-md-12
+    .calendar.participant
+      .row.header.text-center
+        .col-xs-2= t(:appointment)[:procedure]
+        .col-xs-1= t(:appointment)[:r_t]
+        .col-xs-2= t(:appointment)[:status]
+        .col-xs-2= t(:appointment)[:reason]
+        .col-xs-2= t(:appointment)[:follow_up]
+        .col-xs-2= t(:appointment)[:notes]
+        .col-xs-1= t(:appointment)[:remove]
+      - appointment.procedures_grouped_by_core.each do |core_id, procedures|
+        .row.core{id: "core_#{core_id}"}
+          .col-xs-12= "Core: #{procedures.first.sparc_core_name}"
+        - procedures.each do |procedure|
+          = render partial: 'participants/procedure', locals: {procedure: procedure}
+        .hidden{id: "end_of_core_#{core_id}"}
+      .hidden{id: "end_of_appointment_#{appointment.id}"}
+
+      .row
+        .col-xs-4
+          = select_tag "service_list", options_from_collection_for_select(Service.all_services, "id", "name"), class: 'form-control'
+        .col-xs-2
+          = text_field_tag "service_quantity", 1, class: "form-control"
+        .col-xs-2
+          .btn.btn-success.add_service{appointment_id: appointment.id}= t(:appointment)[:add_service]
+        .col-xs-4
