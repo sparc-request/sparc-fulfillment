@@ -14,8 +14,8 @@
       %th{data: {align: "left", sortable: "true", field: "ethnicity"}}= t(:participant)[:ethnicity]
       %th{data: {align: "left", sortable: "true", field: "address", visible: "false"}}= t(:participant)[:address]
       %th{data: {align: "left", sortable: "true", field: "phone", visible: "false"}}= t(:participant)[:phone]
-      %th{data: {align: "center", field: "edit", formatter: "editFormatter", events: "operateEvents", width: "5"}}= t(:actions)[:edit]
-      %th{data: {align: "center", field: "delete", formatter: "deleteFormatter", events: "operateEvents", width: "5"}}= t(:actions)[:delete]
+      %th{data: {align: "center", field: "edit", formatter: "editFormatter", width: "5"}}= t(:actions)[:edit]
+      %th{data: {align: "center", field: "delete", formatter: "deleteFormatter", width: "5"}}= t(:actions)[:delete]
 .modal.fade#participantModal{tabindex: '-1', role: 'dialog', aria: {labelledby: "CreateNewParticipant", hidden: 'true'}}
   #modalPlace
 
