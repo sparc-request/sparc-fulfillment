@@ -28,7 +28,7 @@
         .row.core{id: "core_#{core_id}"}
           .col-xs-12= "Core: #{procedures.first.sparc_core_name}"
         - procedures.each do |procedure|
-          = render partial: 'participants/procedure', locals: {procedure: procedure}
+          = render partial: 'procedure', locals: {procedure: procedure}
         .hidden{id: "end_of_core_#{core_id}"}
       .hidden{id: "end_of_appointment_#{appointment.id}"}
 
