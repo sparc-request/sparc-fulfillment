@@ -11,6 +11,14 @@ class Procedure < ActiveRecord::Base
   scope :incomplete,  -> { where('completed_date IS NULL')      }
   scope :complete,    -> { where('completed_date IS NOT NULL')  }
 
+  def destroy
+    if self.status.blank?
+      super
+    else
+      raise ActiveRecord::ActiveRecordError
+    end
+  end
+
   def self.billing_display
     [["R", "research_billing_qty"],
      ["T", "insurance_billing_qty"],

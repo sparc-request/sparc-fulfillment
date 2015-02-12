@@ -26,7 +26,6 @@ RSpec.describe ProceduresController, type: :controller do
       @procedure = create(:procedure, appointment_id: @appointment.id)
       expect{
         delete :destroy, {
-          appointment_id: @appointment.id,
           id: @procedure.id,
           format: :js
           }
@@ -37,22 +36,20 @@ RSpec.describe ProceduresController, type: :controller do
       @procedure = create(:procedure, appointment_id: @appointment.id, status: 'completed')
       expect{
         delete :destroy, {
-          appointment_id: @appointment.id,
           id: @procedure.id,
           format: :js
           }
-        }.to change(Procedure, :count).by(0)
+        }.to raise_error(ActiveRecord::ActiveRecordError)
     end
 
     it "should not remove the procedure if marked as incomplete" do
       @procedure = create(:procedure, appointment_id: @appointment.id, status: 'incomplete')
       expect{
         delete :destroy, {
-          appointment_id: @appointment.id,
           id: @procedure.id,
           format: :js
           }
-        }.to change(Procedure, :count).by(0)
+        }.to raise_error(ActiveRecord::ActiveRecordError)
     end
   end
 end

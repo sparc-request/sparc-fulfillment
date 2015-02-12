@@ -18,6 +18,12 @@ RSpec.describe Procedure, type: :model do
 
         expect(procedure.reload.persisted?).to be
       end
+
+      it 'should not destroy the record if the status is not nil' do
+        procedure = create(:procedure, status: 'complete')
+
+        expect{procedure.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
+      end
     end
   end
 end

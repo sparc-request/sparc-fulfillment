@@ -20,10 +20,7 @@ class ProceduresController < ApplicationController
     procedure = Procedure.find params[:id]
     @procedure_id = params[:id]
     @core_id = procedure.sparc_core_id
-    if procedure.status.blank?
-      procedure.destroy
-    else
-      render status: 400
-    end
+
+    procedure.destroy
   end
 end

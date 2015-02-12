@@ -25,9 +25,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :appointments do
-    resources :procedures
-  end
+  resources :procedures, only: [:create, :destroy]
 
   resources :service_calendar, only: [] do
     collection do
