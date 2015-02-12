@@ -23,11 +23,20 @@ $ ->
   )
 
   $(document).on 'click', '.add_service', ->
-    id = $(this).attr('appointment_id')
     data =
+      'appointment_id': $(this).attr('appointment_id'),
       'service_id': $('#service_list').val(),
-      'qty': $('#service_quantity').val(),
+      'qty': $('#service_quantity').val()
     $.ajax
       type: 'POST'
-      url:  "/appointments/#{id}/procedures"
+      url:  "/procedures"
       data: data
+
+  $(document).on 'click', '.remove_procedure', ->
+    id = $(this).attr('procedure_id')
+    if confirm("Are you sure you want to remove this procedure?")
+      $.ajax
+        type: 'DELETE'
+        url:  "/procedures/#{id}"
+        error: ->
+          alert("This procedure has already been marked as complete or incomplete and cannot be removed")
