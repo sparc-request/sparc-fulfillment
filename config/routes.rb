@@ -25,6 +25,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :appointments do
+    resources :procedures
+  end
+
   resources :service_calendar, only: [] do
     collection do
       get 'change_page'
