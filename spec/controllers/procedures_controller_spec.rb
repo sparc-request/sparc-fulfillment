@@ -20,5 +20,40 @@ RSpec.describe ProceduresController, type: :controller do
         }.to change(Procedure, :count).by(qty)
     end
   end
+
+  describe "DELETE #delete" do
+    it "should remove the procedure if unmarked" do
+      @procedure = create(:procedure, appointment_id: @appointment.id)
+      expect{
+        delete :destroy, {
+          appointment_id: @appointment.id,
+          id: @procedure.id,
+          format: :js
+          }
+        }.to change(Procedure, :count).by(-1)
+    end
+
+    it "should not remove the procedure if marked as completed" do
+      @procedure = create(:procedure, appointment_id: @appointment.id, status: 'completed')
+      expect{
+        delete :destroy, {
+          appointment_id: @appointment.id,
+          id: @procedure.id,
+          format: :js
+          }
+        }.to change(Procedure, :count).by(0)
+    end
+
+    it "should not remove the procedure if marked as incomplete" do
+      @procedure = create(:procedure, appointment_id: @appointment.id, status: 'incomplete')
+      expect{
+        delete :destroy, {
+          appointment_id: @appointment.id,
+          id: @procedure.id,
+          format: :js
+          }
+        }.to change(Procedure, :count).by(0)
+    end
+  end
 end
 

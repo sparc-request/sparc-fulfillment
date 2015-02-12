@@ -31,3 +31,13 @@ $ ->
       type: 'POST'
       url:  "/appointments/#{id}/procedures"
       data: data
+
+  $(document).on 'click', '.remove_procedure', ->
+    id = $(this).attr('procedure_id')
+    appointment_id = $(this).attr('appointment_id')
+    if confirm("Are you sure you want to remove this procedure?")
+      $.ajax
+        type: 'DELETE'
+        url:  "/appointments/#{appointment_id}/procedures/#{id}"
+        error: ->
+          alert("This procedure has already been marked as complete or incomplete and cannot be removed")
