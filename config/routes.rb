@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :procedures, only: [:create, :destroy]
+
   resources :service_calendar, only: [] do
     collection do
       get 'change_page'
