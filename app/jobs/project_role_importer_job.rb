@@ -48,6 +48,7 @@ class ProjectRoleImporterJob < Struct.new(:sparc_id, :callback_url, :action)
                           last_name: remote_identity['identity']['last_name'],
                           email: remote_identity['identity']['email'],
                           password: '1234567890')
+      # TODO: Implement a method of creating a User without a password
     end
 
     user

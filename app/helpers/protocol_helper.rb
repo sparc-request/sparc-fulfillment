@@ -4,7 +4,6 @@ module ProtocolHelper
     html = '-'
 
     if coordinators.any?
-      Rails.logger.debug "DEBUG: #{coordinators}"
       li = Array.new
 
       span = raw content_tag(:span, '', class: 'caret')
