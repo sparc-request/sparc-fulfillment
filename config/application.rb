@@ -31,5 +31,10 @@ module ClinicalWorkFulfillment
 
     # Response compression
     config.middleware.use Rack::Deflater
+
+    # Set RSpec as test framework
+    config.generators do |generate|
+      generate.test_framework :rspec
+    end
   end
 end

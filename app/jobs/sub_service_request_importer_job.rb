@@ -1,4 +1,4 @@
-class SubServiceRequestCreaterJob < Struct.new(:sparc_id, :callback_url)
+class SubServiceRequestImporterJob < Struct.new(:sparc_id, :callback_url, :action)
 
   class SparcApiError < StandardError
   end
@@ -10,7 +10,14 @@ class SubServiceRequestCreaterJob < Struct.new(:sparc_id, :callback_url)
   end
 
   def perform
-    import_protocol
+    case action
+    when 'create'
+      #create
+    when 'update'
+      import_protocol
+    when 'destroy'
+      #destroy
+    end
   end
 
   private

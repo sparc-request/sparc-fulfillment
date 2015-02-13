@@ -5,21 +5,21 @@
     %table.protocols.custom_striped{id: "protocol-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: "/protocols.json", "sort-name" => "sparc_id", "sort-order" => 'asc', striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel', 'csv']}}
       %thead
         %tr
-          %th{data: {align: 'left', field: 'updates'}}= t(:index_page)[:updates]
-          %th{data: {align: 'left', sortable: "true", field: 'sparc_id'}}= t(:index_page)[:sparc_id]
-          %th{data: {align: 'left', sortable: "true", field: "status"}}= t(:index_page)[:status]
-          %th{data: {align: 'left', sortable: "true", field: "short_title"}}= t(:index_page)[:short_title]
-          %th{data: {align: 'left', sortable: "true", field: ""}}= t(:index_page)[:principal_investigator]
-          %th{data: {align: 'left', sortable: "true", field: "coordinators"}}= t(:index_page)[:coordinators]
-          %th{data: {align: 'center', sortable: "true", field: "irb_approval_date"}}= t(:index_page)[:irb_approval_date]
-          %th{data: {align: 'center', sortable: "true", field: "irb_expiration_date"}}= t(:index_page)[:irb_expiration_date]
-          %th{data: {align: 'center', sortable: "true", field: "irb_status"}}= t(:index_page)[:irb_status]
-          %th{data: {align: 'center', sortable: "true", field: "start_date"}}= t(:index_page)[:start_date]
-          %th{data: {align: 'center', sortable: "true", field: "end_date"}}= t(:index_page)[:end_date]
-          %th{data: {align: 'center', sortable: "true", field: "study_cost", formatter: "cents_to_dollars"}}= t(:index_page)[:study_cost]
-          %th{data: {align: 'center', sortable: "true", field: "stored_percent_subsidy", formatter: "number_to_percent"}}= t(:index_page)[:subsidy_amount]
-          %th{data: {align: 'center', sortable: "true", field: "subsidy_committed"}}= t(:index_page)[:subsidy_committed]
-          %th{data: {align: 'left', sortable: "true", field: "subsidy_expended"}}= t(:index_page)[:subsidy_expended]
+          %th{data: {class: 'updates', align: 'left', field: 'updates'}}= t(:index_page)[:updates]
+          %th{data: {class: 'sparc_id', align: 'left', sortable: "true", field: 'sparc_id'}}= t(:index_page)[:sparc_id]
+          %th{data: {class: 'status', align: 'left', sortable: "true", field: "status"}}= t(:index_page)[:status]
+          %th{data: {class: 'short_title', align: 'left', sortable: "true", field: "short_title"}}= t(:index_page)[:short_title]
+          %th{data: {class: 'pi', align: 'left', sortable: "true", field: "pi"}}= t(:index_page)[:principal_investigator]
+          %th{data: {class: 'coordinators', align: 'center', sortable: "false", field: "coordinators"}}= t(:index_page)[:coordinators]
+          %th{data: {class: 'irb_approval_date', align: 'center', sortable: "true", field: "irb_approval_date"}}= t(:index_page)[:irb_approval_date]
+          %th{data: {class: 'irb_expiration_date', align: 'center', sortable: "true", field: "irb_expiration_date"}}= t(:index_page)[:irb_expire_date]
+          %th{data: {class: 'irb_status', align: 'center', sortable: "true", field: "irb_status"}}= t(:index_page)[:irb_status]
+          %th{data: {class: 'start_date', align: 'center', sortable: "true", field: "start_date"}}= t(:index_page)[:start_date]
+          %th{data: {class: 'end_date', align: 'center', sortable: "true", field: "end_date"}}= t(:index_page)[:end_date]
+          %th{data: {class: 'study_cost', align: 'center', sortable: "true", field: "study_cost", formatter: "cents_to_dollars"}}= t(:index_page)[:study_cost]
+          %th{data: {class: 'stored_percent_subsidy', align: 'center', sortable: "true", field: "stored_percent_subsidy", formatter: "number_to_percent"}}= t(:index_page)[:subsidy_amount]
+          %th{data: {class: 'subsidy_committed', align: 'center', sortable: "true", field: "subsidy_committed"}}= t(:index_page)[:subsidy_committed]
+          %th{data: {class: 'subsidy_expended', align: 'left', sortable: "true", field: "subsidy_expended"}}= t(:index_page)[:subsidy_expended]
 
 - content_for :nav_buttons do
   %li= button_to "Task List", "#", class: "btn btn-primary navbar-btn"

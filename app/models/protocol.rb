@@ -1,4 +1,4 @@
- class Protocol < ActiveRecord::Base
+class Protocol < ActiveRecord::Base
 
   STATUSES = ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold'].freeze
 
@@ -6,6 +6,7 @@
 
   has_many :arms, dependent: :destroy
   has_many :participants, dependent: :destroy
+  has_many :user_roles
 
   after_save :update_via_faye
 
@@ -20,6 +21,14 @@
   #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.
   def subsidy_expended
     "$0"
+  end
+
+  def pi
+    self.user_roles.where(role: "primary-pi").first.user
+  end
+
+  def coordinators
+    user_roles.where(role: "research-assistant-coordinator").map(&:user)
   end
 
   private
