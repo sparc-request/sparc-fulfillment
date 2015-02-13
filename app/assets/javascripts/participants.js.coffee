@@ -6,51 +6,61 @@ $ ->
     faye.subscribe "/participants/#{protocol_id}/list", (data) ->
       $('#participants-table').bootstrapTable('refresh', {silent: "true"})
 
-  window.operateEvents =
-    "click .remove-participant": (e, value, row, index) ->
-      del = confirm "Are you sure you want to delete "+capitalize(row.first_name)+" "+capitalize(row.last_name)+" from the Participant List?"
-      if del
-        $.ajax
-          type: 'DELETE'
-          url: "/protocols/#{row.protocol_id}/participants/#{row.id}"
+  $(document).on 'click', '#changeParticipantArm', ->
+    protocol_id = $(this).attr('protocol_id')
+    participant_id = $(this).attr('participant_id')
+    arm_id = $(this).attr('arm_id')
+    $.ajax
+      type: 'GET'
+      url: "/protocols/#{protocol_id}/participants/#{participant_id}/change_arm?arm_id=#{arm_id}"
 
-    "click .edit-participant": (e, value, row, index) ->
+  $(document).on 'click', '.remove-participant', ->
+    protocol_id = $(this).attr('protocol_id')
+    participant_id = $(this).attr('participant_id')
+    name = $(this).attr('participant_name')
+    del = confirm "Are you sure you want to delete #{name} from the Participant List?"
+    if del
       $.ajax
-        type: 'GET'
-        url: "/protocols/#{row.protocol_id}/participants/#{row.id}/edit"
+        type: 'DELETE'
+        url: "/protocols/#{protocol_id}/participants/#{participant_id}"
 
-    "click #changeParticipantArm": (e, value, row, index) ->
-      $.ajax
-        type: 'GET'
-        url: "/protocols/#{row.protocol_id}/participants/#{row.id}/change_arm?arm_id=#{row.arm_id}"
+  $(document).on 'click', '.edit-participant', ->
+    protocol_id = $(this).attr('protocol_id')
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/protocols/#{protocol_id}/participants/#{participant_id}/edit"
 
-    "click .calendar": (e, value, row, index) ->
-      participant_id = row.id
-      window.location = "/protocols/#{row.protocol_id}/participants/#{participant_id}"
+  $(document).on 'click', '.calendar', ->
+    protocol_id = $(this).attr('protocol_id')
+    participant_id = $(this).attr('participant_id')
+    window.location = "/protocols/#{protocol_id}/participants/#{participant_id}"
 
-    "click .stats": (e, value, row, index) ->
-      alert JSON.stringify row
+  $(document).on 'click', '.stats', ->
+    protocol_id = $(this).attr('protocol_id')
+    participant_id = $(this).attr('participant_id')
+    alert "Stats -> Protocol: #{protocol_id}, Participant: #{participant_id}"
 
   capitalize = (string) ->
     string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
 
 (exports ? this).deleteFormatter = (value, row, index) ->
   [
-    "<a class='remove remove-participant' href='#' title='Remove'>",
+    "<a class='remove remove-participant' href='#' title='Remove' protocol_id='#{row.protocol_id}' participant_id='#{row.id}' participant_name='#{row.last_name}'>",
     "<i class='glyphicon glyphicon-remove'></i>",
     "</a>"
   ].join ""
 
 (exports ? this).editFormatter = (value, row, index) ->
   [
-    "<a class='edit edit-participant ml10' href='#' title='Edit'>",
+    "<a class='edit edit-participant ml10' href='#' title='Edit' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
     "<i class='glyphicon glyphicon-edit'></i>",
     "</a>"
   ].join ""
 
 (exports ? this).changeArmFormatter = (value, row, index) ->
   [
-    "<a class='edit change-arm ml10' href='#' title='Change Arm' id='changeParticipantArm'>",
+    "<a class='edit change-arm ml10' href='#' title='Change Arm' id='changeParticipantArm' protocol_id='#{row.protocol_id}' participant_id='#{row.id}' arm_id='#{row.arm_id}'>",
     "<i class='glyphicon glyphicon-random'></i>",
     "</a>"
   ].join ""
@@ -63,14 +73,14 @@ $ ->
 
 (exports ? this).calendarFormatter = (value, row, index) ->
   [
-    "<a class='calendar' href='#' title='Calendar'>",
+    "<a class='calendar' href='#' title='Calendar' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
     "<i class='glyphicon glyphicon-calendar'></i>",
     "</a>"
   ].join ""
 
 (exports ? this).statsFormatter = (value, row, index) ->
   [
-    "<a class='stats' href='#' title='Stats'>",
+    "<a class='stats' href='#' title='Stats' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
     "<i class='glyphicon glyphicon-stats'></i>",
     "</a>"
   ].join ""
