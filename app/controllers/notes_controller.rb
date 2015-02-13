@@ -3,24 +3,18 @@ class NotesController < ApplicationController
 
   def index
     @procedure = Procedure.find(params[:procedure_id])
-    respond_to do |format|
-      format.js { render }
-      format.json do
-        respond_with @procedure.notes
-      end
-    end
   end
 
   def new
-    puts params.inspect
     @procedure = Procedure.find(params[:procedure_id])
+    @note = Note.new
   end
 
   def create
-    puts params.inspect
-    @procedure = Procedure.find(params[:procedure_id])
-    @user = current_user
-    @note = Note.create(procedure: @procedure, user: @user, user_name: @user.email, comment: params[:note])
+    unless params[:note][:comment].length == 0
+      @procedure = Procedure.find(params[:procedure_id])
+      @note = Note.create(procedure: @procedure, user_id: current_user.id, user_name: current_user.email, comment: params[:note][:comment])
+    end
   end
 
 end

@@ -4,16 +4,21 @@
       %button.close{type: 'button', data: {dismiss: 'modal'}}
         %span{aria: {hidden:'true'}} &times;
         %span.sr-only= t(:actions)[:close]
-      %h4#changeParticipantArm.modal-title.text-center= t(:notes)[:index_header]
+      %h4.modal-title.text-center= t(:notes)[:index_header]
     .modal-body
-      #notes_index
-        %table.notes{id: "notes-table", data: {toggle: 'table', url: "/procedures/#{procedure.id}/notes.json", striped: "true", show: {columns: "true", refresh: "true", toggle: "true"}}}
-          %thead
-            %tr
-              %th{data: {align: "left", sortable: "true", field: "user"}}= t(:notes)[:user]
-              %th{data: {align: "left", sortable: "true", field: "created_at"}}= t(:notes)[:date]
-              %th{data: {align: "left", sortable: "true", field: "action"}}= t(:notes)[:action]
-              %th{data: {align: "left", sortable: "true", field: "comment"}}= t(:notes)[:note]
+      -if procedure.notes.length > 0
+        .notes-index.custom_striped
+          .header.text-center
+            .col-xs-2= t(:notes)[:user]
+            .col-xs-2= t(:notes)[:date]
+            .col-xs-8= t(:notes)[:note]
+          -procedure.notes.each do |note|
+            .note
+              .col-xs-2= note.user_name
+              .col-xs-2= note.created_at.strftime('%x')
+              .col-xs-8= note.comment
+      -else
+        .text-center= "This procedure has no notes."
     .modal-footer
       .center-block{style: "width: 205px;"}
         %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
