@@ -21,7 +21,6 @@ $ ->
 
       window.location = "/protocols/#{id}"
 
-
     # if $("body.particpanttracker-particpant_tracker").length >= 0
       #insert edit excel spreadsheet and delete buttons here
 
@@ -67,13 +66,6 @@ $ ->
       $('#protocol-list').bootstrapTable('hideColumn', 'stored_percent_subsidy')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
-
-    #Faye logic
-    faye = new Faye.Client('http://localhost:9292/faye')
-    faye.disable('websocket')
-    faye.subscribe '/protocols/list', (data) ->
-      status = $('.selectpicker').val()
-      $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
   if $("body.protocols-show").length > 0
     current_tab = $.cookie("active-protocol-tab")

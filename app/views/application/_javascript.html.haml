@@ -1,0 +1,4 @@
+= javascript_include_tag 'application'
+= yield :javascript
+- unless Rails.env.test?
+  = javascript_include_tag "http://#{ENV.fetch('CWF_FAYE_HOST')}/faye/faye.js"

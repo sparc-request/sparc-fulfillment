@@ -16,8 +16,8 @@ RSpec.describe NotificationDispatcher, type: :request do
             sparc_sends_notification_post(params)
           end
 
-          it 'should create a struct:SubServiceRequestCreaterJob delayed job' do
-            expect(Delayed::Job.where("handler LIKE '%struct:SubServiceRequestCreaterJob%'").one?).to be
+          it 'should create a struct:SubServiceRequestImporterJob delayed job' do
+            expect(Delayed::Job.where("handler LIKE '%struct:SubServiceRequestImporterJob%'").one?).to be
           end
         end
       end
@@ -32,8 +32,8 @@ RSpec.describe NotificationDispatcher, type: :request do
             sparc_sends_notification_post(params)
           end
 
-          it 'should create a ProjectRoleCreaterJob delayed job' do
-            expect(Delayed::Job.where("handler LIKE '%struct:ProjectRoleCreaterJob%'").one?).to be
+          it 'should create a ProjectRoleImporterJob delayed job' do
+            expect(Delayed::Job.where("handler LIKE '%struct:ProjectRoleImporterJob%'").one?).to be
           end
         end
       end

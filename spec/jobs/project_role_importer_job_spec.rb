@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe ProjectRoleImporterJob do
+RSpec.describe ProjectRoleImporterJob, vcr: :localhost do
 
   describe '#enqueue', delay: true do
 
     it 'should create a Delayed::Job' do
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/project_roles/1.json"
 
-      ProjectRoleImporterJob.enqueue(1, callback_url)
+      ProjectRoleImporterJob.enqueue(1, callback_url, 'create')
 
       expect(Delayed::Job.where(queue: 'sparc_api_requests').count).to eq(1)
     end
@@ -55,7 +55,7 @@ RSpec.describe ProjectRoleImporterJob do
 
       describe 'API requests' do
 
-        it 'should make requests to the objects callback_url', vcr: :localhost do
+        it 'should make requests to the objects callback_url' do
           # SPARC project_role request
           expect(a_request(:get, /\/v1\/project_roles\/1.json/).
             with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
@@ -92,7 +92,7 @@ RSpec.describe ProjectRoleImporterJob do
 
       describe 'API requests' do
 
-        it 'should make requests to the objects callback_url', vcr: :localhost do
+        it 'should make requests to the objects callback_url' do
           # SPARC project_role request
           expect(a_request(:get, /\/v1\/project_roles\/1.json/).
             with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
@@ -128,7 +128,7 @@ RSpec.describe ProjectRoleImporterJob do
 
       describe 'API requests' do
 
-        it 'should make requests to the objects callback_url', vcr: :localhost do
+        it 'should make requests to the objects callback_url' do
           # SPARC project_role request
           expect(a_request(:get, /\/v1\/project_roles\/1.json/).
             with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once

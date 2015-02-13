@@ -34,3 +34,4 @@ scratch
 *.csv
 config/database.yml
 /coverage
+.env.production

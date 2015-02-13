@@ -11,7 +11,7 @@ class Participant < ActiveRecord::Base
   belongs_to :arm
   has_many :appointments
 
-  after_save :update_via_faye
+  after_save :update_faye
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :phone, :ethnicity, :race, :gender, presence: true
   validate :phone_number_format, :date_of_birth_format
@@ -47,14 +47,10 @@ class Participant < ActiveRecord::Base
     self.build_appointments
   end
 
-
   private
 
-  def update_via_faye
-    channel = "/participants/#{self.protocol.id}/list"
-    message = { channel: channel, data: "woohoo", ext: { auth_token: ENV.fetch('FAYE_TOKEN') } }
-    uri = URI.parse('http://' + ENV.fetch('CWF_FAYE_HOST') + '/faye')
-    Net::HTTP.post_form(uri, message: message.to_json)
+  def update_faye
+    FayeJob.enqueue protocol.id
   end
 
   def has_new_visit_groups?

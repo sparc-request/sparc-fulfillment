@@ -5,6 +5,7 @@
     = javascript_include_tag 'libraries'
     = stylesheet_link_tag    'application', media: 'all'
     = csrf_meta_tags
+    = include_gon
   %body{class: body_class}
     .container-fluid
       .row.header= render "header"
@@ -12,6 +13,4 @@
     .container
       .row.flash= render "flash"
       = yield
-    = javascript_include_tag 'application'
-    - unless Rails.env.test?
-      = javascript_include_tag 'http://localhost:9292/faye/faye.js'
+    = render 'javascript'

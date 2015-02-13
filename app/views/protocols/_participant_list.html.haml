@@ -1,7 +1,7 @@
 %h3= t(:participant)[:list]
 #custom-toolbar
   = link_to t(:actions)[:new_participant], new_protocol_participant_path(protocol_id: protocol.id), {class: 'btn btn-default btn-primary', id: 'new_participant_button', type: 'button', data: {toggle: 'modal', target: '#participantModal'}, remote: true}
-%table{id: "participants-list-table", data: {toggle: 'table', search: "true", toolbar: '#custom-toolbar',  url: "/protocols/#{protocol.id}/participants.json", striped: "true", height: "400", sort: {name: 'last_name', order: 'asc'}, show: {columns: "true", refresh: "true", toggle: "true", export: "true"}, export: {types: ['excel','csv']}, select: {item: {name: "toolbar1"}}}}
+%table.participants{id: "participants-list-table", data: {toggle: 'table', search: "true", toolbar: '#custom-toolbar',  url: "/protocols/#{protocol.id}/participants.json", striped: "true", height: "400", sort: {name: 'last_name', order: 'asc'}, show: {columns: "true", refresh: "true", toggle: "true", export: "true"}, export: {types: ['excel','csv']}, select: {item: {name: "toolbar1"}}}}
   %thead
     %tr
       %th{data: {align: "left", sortable: "true", field: "last_name", formatter: "nameFormatter"}}= t(:participant)[:last_name]
@@ -18,4 +18,3 @@
       %th{data: {align: "center", field: "delete", formatter: "deleteFormatter", width: "5"}}= t(:actions)[:delete]
 .modal.fade#participantModal{tabindex: '-1', role: 'dialog', aria: {labelledby: "CreateNewParticipant", hidden: 'true'}}
   #modalPlace
-

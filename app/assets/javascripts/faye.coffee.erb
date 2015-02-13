@@ -1,0 +1,17 @@
+$ ->
+
+  host = "<%= ENV.fetch('CWF_FAYE_HOST') %>"
+  faye = new Faye.Client("http://#{host}/faye")
+
+  faye.disable('websocket')
+
+  if $("body.protocols-index").length > 0
+    faye.subscribe '/protocols', (data) ->
+      status = $('.selectpicker').val()
+
+      $('table.protocols').bootstrapTable('refresh', {url: "/protocols.json?status=#{status}", silent: "true"})
+
+  if $('body.protocols-show').length > 0
+    faye.subscribe "/protocol_#{gon.protocol_id}", (data) ->
+      $('table.protocol').bootstrapTable('refresh', {silent: "true"})
+      $('table.participants').bootstrapTable('refresh', {silent: "true"})
