@@ -31,10 +31,10 @@ gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'faker', '~> 1.4.3'
 end
 
 group :development do
-  gem 'faker', '~> 1.4.3'
   gem 'puma'
   gem 'rack-mini-profiler', require: false
   gem 'spring'

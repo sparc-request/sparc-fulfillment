@@ -1,18 +1,29 @@
 FactoryGirl.define do
 
+#    first_name 'First name'
+#    last_name 'Last name'
+#    mrn 5
+#    status 'Active'
+#    date_of_birth Time.current.last_year
+#    gender 'Male'
+#    ethnicity 'Not Hispanic or Latino'
+#    race 'Caucasian'
+#    address 'Address'
+#    phone '123-456-7890'
+
   factory :participant do
     arm nil
     protocol nil
-    first_name 'First name'
-    last_name 'Last name'
-    mrn 5
-    status 'Active'
-    date_of_birth Time.current.last_year
-    gender 'Male'
-    ethnicity 'Not Hispanic or Latino'
-    race 'Caucasian'
-    address 'Address'
-    phone '123-456-7890'
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+    mrn { Faker::Number.number(8) }
+    status { Participant::STATUS_OPTIONS.sample }
+    date_of_birth { Faker::Date.between(10.years.ago, Date.today) }
+    gender { Participant::GENDER_OPTIONS.sample }
+    ethnicity { Participant::ETHNICITY_OPTIONS.sample }
+    race { Participant::RACE_OPTIONS.sample }
+    address { Faker::Address.street_address }
+    phone { Faker::Base.numerify('###-###-####') }
 
     trait :with_protocol do
       protocol
