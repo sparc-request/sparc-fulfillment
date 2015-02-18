@@ -1,4 +1,5 @@
 class AppointmentsController < ApplicationController
+  respond_to :json, :html
 
   def show
     @appointment = Appointment.find params[:id]
@@ -9,7 +10,8 @@ class AppointmentsController < ApplicationController
 
   def completed_appointments
     participant = Participant.find(params[:participant_id])
-    @appointments = participant.appointments.where("completed_date IS NOT NULL")
+    @appointments = participant.appointments.completed
+    respond_with @appointments
   end
 
 end
