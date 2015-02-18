@@ -13,7 +13,9 @@ class NotesController < ApplicationController
   def create
     unless params[:note][:comment].length == 0
       @procedure = Procedure.find(params[:procedure_id])
-      @note = Note.create(procedure: @procedure, user_id: current_user.id, user_name: current_user.email, comment: params[:note][:comment])
+      user = current_user
+      # @note = Note.create(procedure: @procedure, user_id: user.id, user_name: user.first_name+' '+user.last_name, comment: params[:note][:comment])
+      @note = Note.create(procedure: @procedure, user_id: user.id, user_name: user.email, comment: params[:note][:comment])
     end
   end
 

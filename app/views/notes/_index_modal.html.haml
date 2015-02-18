@@ -15,7 +15,7 @@
           -procedure.notes.each do |note|
             .note
               .col-xs-3= note.user_name
-              .col-xs-2= note.created_at.strftime('%x')
+              .col-xs-2= format_date(note.created_at)
               .col-xs-7= note.comment
       -else
         .text-center= "This procedure has no notes."
