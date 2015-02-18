@@ -6,6 +6,9 @@ class Appointment < ActiveRecord::Base
   belongs_to :visit_group
   has_many :procedures
 
+
+  scope :completed,   -> { where('completed_date IS NOT NULL')              }
+
   def has_completed_procedures?
     has_completed = false
     unless self.procedures.empty?

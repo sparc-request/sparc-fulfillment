@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
-  let!(:protocol1)    { create(:protocol) }
+  let!(:protocol1)    { create(:protocol_imported_from_sparc) }
   let!(:arm1)         { create(:arm_with_visit_groups, protocol_id: protocol1.id, visit_count: 5) }
   let!(:arm2)         { create(:arm_with_visit_groups, protocol_id: protocol1.id, visit_count: 1) }
   let!(:arm3)         { create(:arm_with_visit_groups, protocol_id: protocol1.id) }

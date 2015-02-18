@@ -1,4 +1,4 @@
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
+$("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
 <% if @delete %>
 change_arm()
 $("#visits_select_for_<%= @arm.id %>").replaceWith( "<%= escape_javascript(build_visits_select(@arm, @current_page)) %>")

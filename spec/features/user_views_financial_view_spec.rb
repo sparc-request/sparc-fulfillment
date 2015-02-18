@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'User clicks Financial/Management View buttons', type: :feature, js: true do
 
-  let!(:protocol1) { create(:protocol, status: "Complete", short_title: "Slappy") }
-  let!(:protocol2) { create(:protocol, status: "Draft", short_title: "Swanson") }
+  let!(:protocol1) { create(:protocol_imported_from_sparc, status: "Complete", short_title: "Slappy") }
+  let!(:protocol2) { create(:protocol_ipmorted_from_sparc, status: "Draft", short_title: "Swanson") }
 
   before :each do
     visit protocols_path
@@ -19,7 +19,7 @@ RSpec.describe 'User clicks Financial/Management View buttons', type: :feature, 
   describe 'User clicks Management view' do
 
     it 'should add the .active class to the label' do
-      
+
       find(".management").click
 
       expect(page.body).to have_css(".management.active")

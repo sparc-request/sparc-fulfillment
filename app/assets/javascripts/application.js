@@ -10,16 +10,17 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require protocols
-//= require service_calendar
-//= require participants
-//= require study_schedule_edit_buttons
 //= require appointment_calendar
-//= require appointments
-//= require global
 //= require tableExport
 //= require jquery.base64
 //= require bootstrap-table-export
 //= require bootstrap-datepicker/core
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.en-GB.js
 //= require jquery.cookie
+//= require protocols
+//= require service_calendar
+//= require participants
+//= require study_schedule_edit_buttons
+//= require appointments
+//= require global
+//= require participant_calendar

@@ -2,7 +2,12 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :appointments, only: [:show]
+  resources :appointments, only: [:show] do
+    collection do
+      get 'completed_appointments'
+    end
+  end
+
   resources :protocols do
     resources :arms do
       member do
@@ -17,8 +22,17 @@ Rails.application.routes.draw do
     resources :participants do
       get 'change_arm(/:id)', to: 'participants#edit_arm'
       post 'change_arm(/:id)', to: 'participants#update_arm'
-      get 'completed_appointments', to: 'participants#completed_appointments'
       get 'select_appointment/(:id)', to: 'participants#select_appointment'
+
+    end
+  end
+
+  resources :participant_calendar, only: [] do
+    collection do
+      put 'complete_procedure'
+      put 'incomplete_procedure'
+      put 'create_follow_up'
+      put 'update_follow_up'
     end
   end
 
