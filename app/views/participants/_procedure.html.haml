@@ -5,21 +5,24 @@
   .col-xs-2
     .form-group
       %div
-        %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "complete"}
+        %input{name: "status_for_#{procedure.id}", type: "radio", id: "status_complete", value: "#{procedure.id}"}
         Complete
       %div
-        %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "incomplete"}
+        %input{name: "status_for_#{procedure.id}", type: "radio", id: "status_incomplete", value: "#{procedure.id}"}
         Incomplete
   .col-xs-2
     .col= select_tag "reason", options_for_select(["r","t","o"],"r"), class: "form-control"
   .col-xs-2.text-center
     .col.follow_up_date
       = text_field_tag "follow_up_date_#{procedure.id}", procedure.display_follow_up, class: procedure.follow_up_date.blank? ? "hidden" : "", readonly: true
-      .glyphicon.glyphicon-calendar.btn.btn-warning{class: procedure.follow_up_date.blank? ? "" : "hidden"}
+    .glyphicon.glyphicon-calendar.btn.btn-warning#follow_up{class: procedure.follow_up_date.blank? ? "" : "hidden"}
+      = link_to '', '#'
   .col-xs-2.text-center
     .col
-      .glyphicon.glyphicon-plus.btn.btn-success
-      .glyphicon.glyphicon-list-alt.btn.btn-primary
+      .glyphicon.glyphicon-plus.btn.btn-success#add_note
+        = link_to '', '#'
+      .glyphicon.glyphicon-list-alt.btn.btn-primary#remove_procedure
+        = link_to '', '#'
   .col-xs-1.text-center
     .col
       .glyphicon.glyphicon-remove.btn.btn-danger
