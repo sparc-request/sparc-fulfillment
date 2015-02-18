@@ -14,7 +14,7 @@
 //= require service_calendar
 //= require participants
 //= require study_schedule_edit_buttons
-//= require participant_calendar
+//= require appointment_calendar
 //= require appointments
 //= require global
 //= require tableExport
