@@ -8,7 +8,7 @@ $ ->
       $(this).addClass('active')
       $(this).text("-- Hide Dashboard --")
 
-    $('#dashboard').slideToggle() 
+    $('#dashboard').slideToggle()
   )
 
   $(document).on( 'change', '#appointment_select', (event) ->
