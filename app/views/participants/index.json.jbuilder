@@ -7,7 +7,7 @@ json.(@participants) do |participant|
   json.last_name participant.last_name
   json.mrn participant.mrn
   json.status participant.status
-  json.date_of_birth participant.date_of_birth.strftime('%x')
+  json.date_of_birth participant.date_of_birth.strftime('%F')
   json.gender participant.gender
   json.ethnicity participant.ethnicity
   json.race participant.race
