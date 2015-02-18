@@ -10,6 +10,7 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require appointment_calendar
 //= require tableExport
 //= require jquery.base64
 //= require bootstrap-table-export
