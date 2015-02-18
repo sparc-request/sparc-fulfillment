@@ -1,0 +1,24 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{type: 'button', data: {dismiss: 'modal'}}
+        %span{aria: {hidden:'true'}} &times;
+        %span.sr-only= t(:actions)[:close]
+      %h4.modal-title.text-center= t(:notes)[:index_header]
+    .modal-body
+      -if procedure.notes.length > 0
+        .notes-index
+          .notes-header.text-center
+            .col-xs-3= t(:notes)[:user]
+            .col-xs-2= t(:notes)[:date]
+            .col-xs-7= t(:notes)[:note]
+          -procedure.notes.each do |note|
+            .note
+              .col-xs-3= note.user_name
+              .col-xs-2= format_date(note.created_at)
+              .col-xs-7= note.comment
+      -else
+        .text-center= "This procedure has no notes."
+    .modal-footer
+      .center-block{style: "width: 205px;"}
+        %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

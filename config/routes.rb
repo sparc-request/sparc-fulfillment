@@ -22,7 +22,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :procedures, only: [:create, :destroy]
+  resources :procedures, only: [:create, :destroy] do
+    resources :notes do
+    end
+  end
 
   resources :service_calendar, only: [] do
     collection do
