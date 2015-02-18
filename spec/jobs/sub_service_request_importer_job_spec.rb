@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe SubServiceRequestCreaterJob do
+RSpec.describe SubServiceRequestImporterJob do
 
   describe '#enqueue', delay: true do
 
     it 'should create a Delayed::Job' do
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
 
-      SubServiceRequestCreaterJob.enqueue(6213, callback_url)
+      SubServiceRequestImporterJob.enqueue(6213, callback_url)
 
       expect(Delayed::Job.where(queue: 'sparc_api_requests').count).to eq(1)
     end
@@ -17,7 +17,7 @@ RSpec.describe SubServiceRequestCreaterJob do
 
     before do
       callback_url            = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
-      sub_service_updater_job = SubServiceRequestCreaterJob.new(6213, callback_url)
+      sub_service_updater_job = SubServiceRequestImporterJob.new(6213, callback_url, 'update')
 
       sub_service_updater_job.perform
     end

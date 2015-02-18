@@ -9,7 +9,7 @@
     %li{role: 'presentation'}= link_to t(:protocol_tabs)[:audit_reporting], "#audit_reporting", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'audit_reporting'}
 
   .tab-content
-    .tab-pane.active#study_schedule{role: 'tabpanel', locals: {protocol: @protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}}
+    .tab-pane.active#study_schedule{role: 'tabpanel'}
       = render :partial => 'protocols/study_schedule/schedule_edit_buttons', locals: {protocol: @protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
       = render :partial => 'protocols/study_schedule/calendar', locals: {protocol: @protocol, page: @page}
     .tab-pane#participant_list{role: 'tabpanel'}

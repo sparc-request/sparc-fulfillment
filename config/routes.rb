@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
+
   devise_for :users
-  mount API::Base => '/'
-  root 'protocols#index'
 
   resources :appointments, only: [:show] do
     collection do
@@ -10,8 +9,6 @@ Rails.application.routes.draw do
   end
 
   resources :protocols do
-    member do
-    end
     resources :arms do
       member do
         get 'change'
@@ -43,18 +40,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :procedures do
-    resources :participant_calendar, only: [] do
-      collection do
-        put 'complete_procedure'
-        put 'incomplete_procedure'
-        put 'create_follow_up'
-        put 'update_follow_up'
-      end
-    end
-    resources :notes do
-    end
-  end
+  resources :procedures, only: [:create, :destroy]
+
+  resources :procedures, only: [:create, :destroy]
 
   resources :service_calendar, only: [] do
     collection do
@@ -74,6 +62,10 @@ Rails.application.routes.draw do
   get 'multiple_line_items/(:protocol_id)/(:service_id)/new', to: 'multiple_line_items#new'
   get 'multiple_line_items/(:protocol_id)/(:service_id)/edit', to: 'multiple_line_items#edit'
   put 'multiple_line_items/update', to: 'multiple_line_items#update'
+
+  mount API::Base => '/'
+
+  root 'protocols#index'
 end
 
 

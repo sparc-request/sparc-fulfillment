@@ -3,16 +3,15 @@ FactoryGirl.define do
   factory :arm do
     protocol nil
     sparc_id
-    sequence(:name) { |n| "Arm #{n}" }
+    sequence(:name) { Faker::App.name }
     visit_count { rand(3..15) }
     subject_count 5
 
     trait :with_line_items do
       after(:create) do |arm, evaluator|
-        service = create(:service)
-
-        2.times do
-          create(:line_item, arm: arm, service: service)
+        x = rand(12)+1
+        x.times do
+          create(:line_item, arm: arm, service: create(:service))
         end
       end
     end

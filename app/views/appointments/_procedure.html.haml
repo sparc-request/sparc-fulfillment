@@ -5,10 +5,10 @@
   .col-xs-2
     .form-group
       %div
-        %input{name: "status_for_#{procedure.id}", type: "radio", id: "status_complete", value: "#{procedure.id}"}
+        %input{class: "complete", name: "status_#{procedure.id}", type: "radio", id: "status_complete_#{procedure.id}", value: "#{procedure.id}"}
         Complete
       %div
-        %input{name: "status_for_#{procedure.id}", type: "radio", id: "status_incomplete", value: "#{procedure.id}"}
+        %input{class: "incomplete", name: "status_#{procedure.id}", type: "radio", id: "status_incomplete_#{procedure.id}", value: "#{procedure.id}"}
         Incomplete
   .col-xs-2
     .col= select_tag "reason", options_for_select(["r","t","o"],"r"), class: "form-control"

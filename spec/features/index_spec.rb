@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Index spec', type: :feature, js: true do
 
-  let!(:protocol1) { create(:protocol, status: "Complete", short_title: "Slappy") }
-  let!(:protocol2) { create(:protocol, status: "Draft", short_title: "Swanson") }
+  let!(:protocol1) { create(:protocol_imported_fron_sparc, status: "Complete", short_title: "Slappy") }
+  let!(:protocol2) { create(:protocol_imported_fron_sparc, status: "Draft", short_title: "Swanson") }
 
   before :each do
     visit protocols_path

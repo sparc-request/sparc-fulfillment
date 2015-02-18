@@ -1,0 +1,85 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@127.0.0.1:5000/v1/project_roles/1.json?depth=full
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '214'
+      X-Ua-Compatible:
+      - IE=Edge
+      Etag:
+      - '"911f35ab485145f25bcc7acc803b54f2"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 18189d8fd471095c2aa4df1a0a93788c
+      X-Runtime:
+      - '0.017982'
+      Connection:
+      - keep-alive
+      Server:
+      - thin 1.5.1 codename Straight Razor
+    body:
+      encoding: UTF-8
+      string: '{"project_role":{"sparc_id":1,"callback_url":"http://127.0.0.1:5000/v1/project_roles/1.json","identity_id":7,"protocol_id":3255,"project_rights":"approve","role":"research-assistant-coordinator","role_other":"test"}}'
+    http_version:
+  recorded_at: Thu, 29 Jan 2015 16:50:56 GMT
+- request:
+    method: get
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@127.0.0.1:5000/v1/identities/7.json?depth=full
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '192'
+      X-Ua-Compatible:
+      - IE=Edge
+      Etag:
+      - '"5518f0318ebd173a2fffce225c75037e"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 43b7a029c40606e3220a746e0c71cd41
+      X-Runtime:
+      - '0.071665'
+      Connection:
+      - keep-alive
+      Server:
+      - thin 1.5.1 codename Straight Razor
+    body:
+      encoding: UTF-8
+      string: '{"identity":{"sparc_id":7,"callback_url":"http://127.0.0.1:5000/v1/identities/7.json","email":"zimmerj@musc.edu","first_name":"Jennifer","last_name":"Zimmerman","ldap_uid":"zimmerj@musc.edu"}}'
+    http_version:
+  recorded_at: Thu, 29 Jan 2015 16:50:56 GMT
+recorded_with: VCR 2.9.3
