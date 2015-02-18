@@ -9,14 +9,14 @@
       -if procedure.notes.length > 0
         .notes-index.custom_striped
           .header.text-center
-            .col-xs-2= t(:notes)[:user]
+            .col-xs-3= t(:notes)[:user]
             .col-xs-2= t(:notes)[:date]
-            .col-xs-8= t(:notes)[:note]
+            .col-xs-7= t(:notes)[:note]
           -procedure.notes.each do |note|
             .note
-              .col-xs-2= note.user_name
+              .col-xs-3= note.user_name
               .col-xs-2= note.created_at.strftime('%x')
-              .col-xs-8= note.comment
+              .col-xs-7= note.comment
       -else
         .text-center= "This procedure has no notes."
     .modal-footer
