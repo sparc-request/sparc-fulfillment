@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     resources :participants do
       get 'change_arm(/:id)', to: 'participants#edit_arm'
       post 'change_arm(/:id)', to: 'participants#update_arm'
+      get 'completed_appointments', to: 'participants#completed_appointments'
+      get 'select_appointment/(:id)', to: 'participants#select_appointment'
 
     end
   end

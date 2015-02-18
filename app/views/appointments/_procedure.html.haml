@@ -1,7 +1,7 @@
 .row.procedure{id: "procedure_#{procedure.id}"}
   .col-xs-2.col= procedure.service_name
   .col-xs-1.billing_type
-    .col= select_tag "quantity_type", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
+    .col= select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
   .col-xs-2
     .form-group
       %div
@@ -11,7 +11,7 @@
         %input{class: "incomplete", name: "status_#{procedure.id}", type: "radio", id: "status_incomplete_#{procedure.id}", value: "#{procedure.id}"}
         Incomplete
   .col-xs-2
-    .col= select_tag "reason", options_for_select(["r","t","o"],"r"), class: "form-control"
+    .col= select_tag "reason_#{procedure.id}", options_for_select(["r","t","o"],"r"), class: "form-control"
   .col-xs-2.text-center
     .col.follow_up_date
       = text_field_tag "follow_up_date_#{procedure.id}", procedure.display_follow_up, class: procedure.follow_up_date.blank? ? "hidden" : "", readonly: true
