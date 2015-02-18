@@ -7,6 +7,7 @@ $ ->
     $('#protocol-list').bootstrapTable('hideColumn', 'stored_percent_subsidy')
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
+    $('#protocol-list').bootstrapTable('hideColumn', 'irb_status')
 
 
     $(".bootstrap-table .fixed-table-toolbar").
@@ -44,7 +45,6 @@ $ ->
       $('#protocol-list').bootstrapTable('hideColumn', 'status')
       $('#protocol-list').bootstrapTable('hideColumn', 'short_title')
       $('#protocol-list').bootstrapTable('hideColumn', 'coordinators')
-      $('#protocol-list').bootstrapTable('hideColumn', 'irb_status')
       $('#protocol-list').bootstrapTable('hideColumn', 'irb_approval_date')
       $('#protocol-list').bootstrapTable('showColumn', 'start_date')
       $('#protocol-list').bootstrapTable('showColumn', 'end_date')
@@ -60,7 +60,6 @@ $ ->
       $('#protocol-list').bootstrapTable('showColumn', 'status')
       $('#protocol-list').bootstrapTable('showColumn', 'short_title')
       $('#protocol-list').bootstrapTable('showColumn', 'coordinators')
-      $('#protocol-list').bootstrapTable('showColumn', 'irb_status')
       $('#protocol-list').bootstrapTable('showColumn', 'irb_approval_date')
       $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
       $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
