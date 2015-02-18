@@ -5,10 +5,10 @@
   .col-xs-2
     .form-group
       %div
-        %input{name: "status_for_#{procedure.id}", type: "radio", id: "status_complete", value: "#{procedure.id}"}
+        %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "complete"}
         Complete
       %div
-        %input{name: "status_for_#{procedure.id}", type: "radio", id: "status_incomplete", value: "#{procedure.id}"}
+        %input{name: "status_#{procedure.id}", type: "radio", id: "status_#{procedure.id}", value: "incomplete"}
         Incomplete
   .col-xs-2
     .col= select_tag "reason_#{procedure.id}", options_for_select(["r","t","o"],"r"), class: "form-control"
@@ -19,9 +19,7 @@
   .col-xs-2.text-center
     .col
       .glyphicon.glyphicon-plus.btn.btn-success.add_note{value: "#{procedure.id}"}
-        = link_to '', '#'
       .glyphicon.glyphicon-list-alt.btn.btn-primary.display_notes{value: "#{procedure.id}"}
-        = link_to '', '#'
   .col-xs-1.text-center
     .col
       .glyphicon.glyphicon-remove.btn.btn-danger.remove_procedure{procedure_id: procedure.id, appointment_id: procedure.appointment_id}
