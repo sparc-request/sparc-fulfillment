@@ -11,8 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20150205141451) do
+
   create_table "appointments", force: true do |t|
     t.integer  "participant_id"
     t.integer  "visit_group_id"

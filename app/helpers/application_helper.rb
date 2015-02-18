@@ -2,7 +2,15 @@ module ApplicationHelper
 
   def format_date(date)
     if date.present?
-      date.strftime('%x')
+      date.strftime('%F')
+    else
+      ''
+    end
+  end
+
+  def format_time(time)
+    if time.present?
+      time.strftime('%r')
     else
       ''
     end

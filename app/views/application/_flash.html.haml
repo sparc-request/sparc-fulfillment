@@ -5,6 +5,7 @@
         %span{:'aria-hidden' => "true"} &times;
         %span.sr-only Close
       %p= message
+  - flash.clear
 
 :coffeescript
   window.setTimeout (->
