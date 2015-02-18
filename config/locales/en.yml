@@ -114,6 +114,10 @@ en:
     remove: "Remove"
     add_service: "Add Service"
 
+  line_item:
+    change_service: "Change Service"
+    service: "Service Name"
+
   notes:
     index_header: "Procedure Notes"
     new_header: "Add Note"
