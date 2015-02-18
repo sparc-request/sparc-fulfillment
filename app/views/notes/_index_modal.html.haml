@@ -7,8 +7,8 @@
       %h4.modal-title.text-center= t(:notes)[:index_header]
     .modal-body
       -if procedure.notes.length > 0
-        .notes-index.custom_striped
-          .header.text-center
+        .notes-index
+          .notes-header.text-center
             .col-xs-3= t(:notes)[:user]
             .col-xs-2= t(:notes)[:date]
             .col-xs-7= t(:notes)[:note]
