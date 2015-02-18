@@ -1,9 +1,8 @@
-.participants
-  = render partial: 'participant', locals: { protocol: @protocol, participant: @participant }
-  = render partial: 'dashboard', locals: { protocol: @protocol, participant: @participant }
-  = render partial: 'appointments_dropdown', locals: { protocol: @protocol, participant: @participant }
+= render partial: 'participant', locals: { protocol: @protocol, participant: @participant }
+= render partial: 'dashboard', locals: { protocol: @protocol, participant: @participant }
+= render partial: 'appointments/dropdown', locals: { protocol: @protocol, participant: @participant }
 
-  #participant_calendar
+.appointment
 
 - content_for :nav_buttons do
   %li

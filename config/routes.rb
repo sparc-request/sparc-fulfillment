@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users
-  mount API::Base => '/'
-  root 'protocols#index'
 
+  devise_for :users
+
+  resources :appointments, only: [:show]
   resources :protocols do
-    member do
-    end
     resources :arms do
       member do
         get 'change'
@@ -24,7 +22,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :procedures do
+  resources :procedures, only: [:create, :destroy] do
     resources :notes do
     end
   end
@@ -47,6 +45,10 @@ Rails.application.routes.draw do
   get 'multiple_line_items/(:protocol_id)/(:service_id)/new', to: 'multiple_line_items#new'
   get 'multiple_line_items/(:protocol_id)/(:service_id)/edit', to: 'multiple_line_items#edit'
   put 'multiple_line_items/update', to: 'multiple_line_items#update'
+
+  mount API::Base => '/'
+
+  root 'protocols#index'
 end
 
 
