@@ -31,7 +31,7 @@ $ ->
       type: 'GET'
       url: "/protocols/#{protocol_id}/participants/#{participant_id}/edit"
 
-  $(document).on 'click', '.calendar', ->
+  $(document).on 'click', '.participant-calendar', ->
     protocol_id = $(this).attr('protocol_id')
     participant_id = $(this).attr('participant_id')
     window.location = "/protocols/#{protocol_id}/participants/#{participant_id}"
@@ -73,7 +73,7 @@ $ ->
 
 (exports ? this).calendarFormatter = (value, row, index) ->
   [
-    "<a class='calendar' href='#' title='Calendar' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
+    "<a class='participant-calendar' href='#' title='Calendar' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
     "<i class='glyphicon glyphicon-calendar'></i>",
     "</a>"
   ].join ""
