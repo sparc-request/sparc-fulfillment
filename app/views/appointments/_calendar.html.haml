@@ -1,20 +1,24 @@
 .row
-  .col-md-12
+  .col-xs-12
     .page-header
       %h3= "Visit: #{appointment.name}"
 .row
-  .col-md-3
+  .col-lg-6
     %form.form-horizontal
       .form-group
-        %label.col-md-5.control-label{for: "appointment_start_date"} Start date:
-        .col-md-6= text_field_tag 'appointment_start_date', format_date(appointment.start_date), class: 'form-control'
-  .col-md-3.col-md-offset-6
+        %label.col-xs-3.control-label{for: "appointment_start_date"}= t(:appointment)[:start_date]
+        .col-xs-3= text_field_tag 'appointment_start_date', format_date(appointment.start_date), class: 'form-control'
+        %label.col-xs-3.control-label{for: "appointment_start_time"}= t(:appointment)[:start_time]
+        .col-xs-3= text_field_tag 'appointment_start_time', format_time(appointment.start_date), class: 'form-control'
+  .col-lg-6
     %form.form-horizontal
       .form-group
-        %label.col-md-6.control-label{for: "appointment_completed_date"} Completed date:
-        .col-md-6= text_field_tag 'appointment_completed_date', format_date(appointment.completed_date), class: 'form-control'
+        %label.col-xs-3.control-label{for: "appointment_completed_date"}= t(:appointment)[:completed_date]
+        .col-xs-3= text_field_tag 'appointment_completed_date', format_date(appointment.completed_date), class: 'form-control'
+        %label.col-xs-3.control-label{for: "appointment_completed_time"}= t(:appointment)[:completed_time]
+        .col-xs-3= text_field_tag 'appointment_completed_time', format_time(appointment.completed_date), class: 'form-control'
 .row
-  .col-md-12
+  .col-xs-12
     .calendar.participant
       .row.header.text-center
         .col-xs-2= t(:appointment)[:procedure]
@@ -32,14 +36,15 @@
         .hidden{id: "end_of_core_#{core_id}"}
       .hidden{id: "end_of_appointment_#{appointment.id}"}
 
-      .row
-        .col-xs-4
-          = select_tag "service_list", options_from_collection_for_select(Service.all_services, "id", "name"), class: 'form-control'
-        .col-xs-2
-          = text_field_tag "service_quantity", 1, class: "form-control"
-        .col-xs-2
-          .btn.btn-success.add_service{appointment_id: appointment.id}= t(:appointment)[:add_service]
-        .col-xs-4
+      %br
+    .row
+      .col-xs-4
+        = select_tag "service_list", options_from_collection_for_select(Service.all_services, "id", "name"), class: 'form-control'
+      .col-xs-2
+        = text_field_tag "service_quantity", 1, class: "form-control"
+      .col-xs-2
+        .btn.btn-success.add_service{appointment_id: appointment.id}= t(:appointment)[:add_service]
+      .col-xs-4
+
 .modal.fade#appointment_modal{tabindex: '-1', role: 'dialog', aria: {labelledby: "appointmentModal", hidden: 'true'}}
   #appointment_modal_place
-
