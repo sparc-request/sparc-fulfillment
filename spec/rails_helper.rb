@@ -2,6 +2,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 
 require File.expand_path("../../config/environment", __FILE__)
+
 require 'spec_helper'
 require 'rspec/rails'
 require 'webmock/rspec'
@@ -55,4 +56,5 @@ RSpec.configure do |config|
   # Helpers
   config.include ApiAuthenticationHelper
   config.include SparcHelper
+  config.include DelayedJobHelpers
 end

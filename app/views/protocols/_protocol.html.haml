@@ -1,6 +1,5 @@
-= hidden_field_tag :protocol_id, protocol.id
 .fixed-table-container.protocol
-  %table.protocol.details.custom_striped{id: "protocol-info", "data-toggle" => 'table', "data-url" => "/protocols/#{protocol.sparc_id}.json"}
+  %table.protocol.details.custom_striped{id: dom_id(protocol), "data-toggle" => 'table', "data-url" => "/protocols/#{protocol.sparc_id}.json"}
     %thead
       %tr
         %th{data: {class: "sparc_id", align: "left", sortable: "false", field: "sparc_id"}}= t(:index_page)[:sparc_id]

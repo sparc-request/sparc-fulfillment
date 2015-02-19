@@ -22,7 +22,7 @@ class NotificationDispatcher
   def import_indirectly
     case @notification_object_class
     when 'SubServiceRequest'
-      SubServiceRequestCreaterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
+      SubServiceRequestImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
     when 'ProjectRole'
       ProjectRoleImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
     end

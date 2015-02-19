@@ -23,7 +23,7 @@ RSpec.describe Protocol, type: :model do
       it 'should callback :update_via_faye after save' do
         protocol = create(:protocol)
 
-        expect(protocol).to callback(:update_via_faye).after(:save)
+        expect(protocol).to callback(:update_faye).after(:save)
       end
     end
   end

@@ -3,8 +3,8 @@ class SubServiceRequestImporterJob < Struct.new(:sparc_id, :callback_url, :actio
   class SparcApiError < StandardError
   end
 
-  def self.enqueue(sparc_id, callback_url)
-    job = new(sparc_id, callback_url)
+  def self.enqueue(sparc_id, callback_url, action)
+    job = new(sparc_id, callback_url, action)
 
     Delayed::Job.enqueue job, queue: 'sparc_api_requests'
   end

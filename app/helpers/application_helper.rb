@@ -26,13 +26,6 @@ module ApplicationHelper
     "#{qualified_controller_name} #{qualified_controller_name}-#{controller.action_name}"
   end
 
-  # Faye pub/sub methods
-  def broadcast(channel, &block)
-    message = {:channel => channel, :data => capture(&block)}
-    uri = URI.parse("http://localhost:9292/faye")
-    Net::HTTP.post_form(uri, :message => message.to_json)
-  end
-
   ##Sets css bootstrap classes for rails flash message types##
   def twitterized_type(type)
     case type.to_sym

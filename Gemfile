@@ -9,8 +9,9 @@ gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-r
 gem 'coffee-rails', '~> 4.0.0'
 gem 'delayed_job_active_record'
 gem 'devise'
-gem 'dotenv-deployment', '~> 0.2.0'
+gem 'dotenv-rails'
 gem 'faye'
+gem 'gon', '~> 5.2.3'
 gem 'grape', '~> 0.9.0'
 gem 'haml-rails'
 gem 'hashie_rails', '~> 0.0.1'
@@ -19,6 +20,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'mysql2'
 gem 'omniauth'
 gem 'paranoia', '~> 2.0'
+gem 'puma'
 gem 'rails', '4.1.6'
 gem 'rest-client'
 gem 'sass-rails'
@@ -32,7 +34,6 @@ gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'faker', '~> 1.4.3'
-  gem 'puma'
 end
 
 group :development do
@@ -50,7 +51,7 @@ group :test do
   gem 'rspec-rails', '~> 3.1.0'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', require: false
+  gem 'shoulda-matchers', "~> 2.8.0", require: false
   gem 'webmock', '~> 1.20.4'
   gem 'vcr', '~> 2.9.3'
 end

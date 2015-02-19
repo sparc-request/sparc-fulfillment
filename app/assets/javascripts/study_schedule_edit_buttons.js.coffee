@@ -1,10 +1,4 @@
 $ ->
-  #Faye logic
-  faye = new Faye.Client('http://localhost:9292/faye')
-  faye.disable('websocket')
-  faye.subscribe '/protocols/list', (data) ->
-    status = $('.selectpicker').val()
-    $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
   if $("body.protocols-show").length > 0
     # initialize visit group select list

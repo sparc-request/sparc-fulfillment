@@ -21,5 +21,7 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by_sparc_id(params[:id])
     @services = Service.all
     @page = 1
+
+    gon.push({ protocol_id: @protocol.id })
   end
 end

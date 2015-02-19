@@ -8,7 +8,7 @@ class Protocol < ActiveRecord::Base
   has_many :participants, dependent: :destroy
   has_many :user_roles
 
-  after_save :update_via_faye
+  after_save :update_faye
 
   #For displaying the subsidy committed on the index page
   def subsidy_committed
@@ -33,10 +33,7 @@ class Protocol < ActiveRecord::Base
 
   private
 
-  def update_via_faye
-    channel = "/protocols/list"
-    message = { channel: channel, data: "woohoo", ext: { auth_token: ENV.fetch('FAYE_TOKEN') } }
-    uri = URI.parse('http://' + ENV.fetch('CWF_FAYE_HOST') + '/faye')
-    Net::HTTP.post_form(uri, message: message.to_json)
+  def update_faye
+    FayeJob.enqueue id
   end
 end
