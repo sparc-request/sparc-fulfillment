@@ -21,5 +21,5 @@ if core_header.next().attr('id') == "arm_<%= arm_id %>_end_of_core_<%= @core_id 
 <% end %>
 <% end %>
 
-$("#line_item_modal").modal 'hide'
+$("#modal_place").modal 'hide'
 $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
