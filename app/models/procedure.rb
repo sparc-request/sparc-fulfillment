@@ -1,5 +1,7 @@
 class Procedure < ActiveRecord::Base
 
+  REASONS = ["this", "that"]
+
   acts_as_paranoid
 
   belongs_to :appointment

@@ -27,10 +27,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :participant_calendar, only: [] do
+  resources :appointment_calendar, only: [] do
     collection do
       put 'complete_procedure'
-      put 'incomplete_procedure'
+      get 'new_incomplete_procedure'
+      post 'create_incomplete_procedure'
       put 'create_follow_up'
       put 'update_follow_up'
     end

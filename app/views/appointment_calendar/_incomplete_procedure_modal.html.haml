@@ -1,0 +1,20 @@
+.modal-dialog
+  .modal-content
+    = form_tag({controller: "appointment_calendar", action: "create_incomplete_procedure"}, method: "post", class: "form-horizontal", remote: true) do
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4.modal-title.text-center= t(:notes)[:incomplete_header]
+      .modal-body
+        .form-group{style: "padding: 0px 100px 0px 100px;"}
+          %div
+            = select_tag 'reasons_selectpicker', options_for_select(Procedure::REASONS, 'All'), :class => "form-control"
+          %div{style: "padding: 25px 0px 0px 0px;"}
+            = text_area_tag "comment", " ", size: "60x7"
+          %div
+            = hidden_field_tag :procedure_id, procedure.id
+      .modal-footer
+        .center-block{style: "width: 150px;"}
+          %button.btn.btn-default{id: "close_incomplete", value: "#{procedure.id}" ,type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

@@ -124,6 +124,7 @@ en:
     date: "Date"
     action: "Action"
     note: "Note"
+    incomplete_header: "Reason for Incompletion"
 
   services:
     name: "Selected Service"
