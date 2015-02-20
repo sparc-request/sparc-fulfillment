@@ -19,9 +19,11 @@
       = link_to '', '#', {class: 'btn btn-danger glyphicon glyphicon-remove ', id: 'remove_service_button', type: 'button', "data-toggle" => 'modal', "data-target" => '#line_item_modal'}
       %div
         = select_tag 'services', options_from_collection_for_select(services, 'id', 'name'), class: 'selectpicker'
-.modal.fade#arm_modal{"aria-hidden" => true}
+.modal.fade#arm_modal{tabindex: '-1', role: 'dialog', aria: {hidden: 'true'}}
   #arm_form
-.modal.fade#visit_modal
+.modal.fade#visit_modal{tabindex: '-1', role: 'dialog', aria: {hidden: 'true'}}
   #visit_form
-.modal.fade#line_item_modal
+.modal.fade#line_item_modal{tabindex: '-1', role: 'dialog', aria: {hidden: 'true'}}
   #line_item_form
+.modal.fade#change_service_modal{tabindex: '-1', role: 'dialog', aria: {hidden: 'true'}}
+  #change_service_form
