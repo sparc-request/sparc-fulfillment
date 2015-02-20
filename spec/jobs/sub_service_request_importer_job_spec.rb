@@ -7,13 +7,13 @@ RSpec.describe SubServiceRequestImporterJob do
     it 'should create a Delayed::Job' do
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
 
-      SubServiceRequestImporterJob.enqueue(6213, callback_url)
+      SubServiceRequestImporterJob.enqueue(6213, callback_url, 'create')
 
       expect(Delayed::Job.where(queue: 'sparc_api_requests').count).to eq(1)
     end
   end
 
-  describe '#perform' do
+  describe '#perform', vcr: :localhost do
 
     before do
       callback_url            = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
@@ -22,7 +22,7 @@ RSpec.describe SubServiceRequestImporterJob do
       sub_service_updater_job.perform
     end
 
-    it 'should make requests to the objects callback_url', vcr: :localhost do
+    it 'should make requests to the objects callback_url' do
       # SPARC sub_service_request
       expect(a_request(:get, /\/v1\/sub_service_requests\/6213.json/).
         with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
@@ -36,7 +36,7 @@ RSpec.describe SubServiceRequestImporterJob do
         with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
     end
 
-    it 'should import the full Protocol', vcr: :localhost do
+    it 'should import the full Protocol' do
       expect(Protocol.count).to eq(1)
       expect(Protocol.where('sparc_id IS NULL').any?).to_not be
       expect(Protocol.first.arms.any?).to be
@@ -59,6 +59,16 @@ RSpec.describe SubServiceRequestImporterJob do
       expect(Visit.where('sparc_id IS NULL').any?).to_not be
       expect(Visit.where('visit_group_id IS NULL').any?).to_not be
       expect(Visit.where('line_item_id IS NULL').any?).to_not be
+    end
+
+    it "should POST once to the Faye server on the 'protocols' channel", delay: false do
+      expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/).with{ |request| request.body.match(/protocols/) }).to have_been_made.once
+    end
+
+    it "should POST once to the Faye server on the 'protocol_id' channel", delay: false do
+      protocol = Protocol.first
+
+      expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/).with { |request| request.body.match(/protocol_#{protocol.id}/) }).to have_been_made.once
     end
   end
 end
