@@ -1,6 +1,6 @@
 .modal-dialog
   .modal-content
-    = form_for line_item, {remote: true, url: "/service_calendar/update_service", html: {class: "form-horizontal", role: "form", method: "post"}} do |p|
+    = form_for line_item, {remote: true, url: "/service_calendar/update_service", html: {class: "form-horizontal", role: "form"}} do |p|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
