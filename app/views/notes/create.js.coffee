@@ -1,1 +1,1 @@
-$("#appointment_modal").modal 'hide'
+$("#modal_place").modal 'hide'
