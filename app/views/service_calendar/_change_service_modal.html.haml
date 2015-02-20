@@ -9,7 +9,7 @@
       .modal-body
         .row
           .col-md-12
-            .form-group{style: "padding: 0px 100px 0px 100px;"}
+            .form-group
               = p.hidden_field :id
               = p.label "service", t(:line_item)[:service], class: "col-sm-4 control-label"
               .col-sm-7= p.select "service_id", options_from_collection_for_select(Service.all_services, "id", "name", line_item.service_id), {}, :class => "form-control"
