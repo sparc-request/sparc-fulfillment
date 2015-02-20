@@ -35,7 +35,7 @@ Rails.application.routes.draw do
       put 'change_quantity'
       put 'change_visit_name'
       get 'edit_service'
-      post 'update_service'
+      patch 'update_service'
       put 'check_row'
       put 'check_column'
       put 'remove_line_item'
