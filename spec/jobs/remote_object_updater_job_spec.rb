@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RemoteObjectUpdaterJob do
+RSpec.describe RemoteObjectUpdaterJob, type: :job do
 
   describe '#enqueue', delay: true do
 
@@ -15,7 +15,7 @@ RSpec.describe RemoteObjectUpdaterJob do
 
   describe '#perform', vcr: true do
 
-    context 'Protocol update', vcr: :localhost do
+    context 'Protocol update' do
 
       before do
         @protocol                 = create( :protocol,
@@ -36,7 +36,7 @@ RSpec.describe RemoteObjectUpdaterJob do
       end
     end
 
-    context 'Service update', vcr: :localhost do
+    context 'Service update' do
 
       before do
         @service                  = create( :service_created_by_sparc,

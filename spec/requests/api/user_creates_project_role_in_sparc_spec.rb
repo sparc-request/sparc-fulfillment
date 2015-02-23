@@ -4,9 +4,9 @@ RSpec.describe 'User creates ProjectRole in SPARC', type: :request, delay: false
 
   describe 'full lifecycle' do
 
-    context 'User does not exist in CWF', sparc_api: :get_project_role_1 do
+    context 'User does not exist in CWF' do
 
-      it 'should create a User' do
+      it 'should create a User', sparc_api: :get_project_role_1 do
         user_creates_project_role_in_sparc
 
         expect(User.count).to eq(1)

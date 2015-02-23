@@ -4,26 +4,26 @@ FactoryGirl.define do
     sparc_id 1
     kind 'Protocol'
     action 'create'
-    callback_url 'http://localhost:5000/protocols/1.json'
+    callback_url 'http://localhost:5000/v1/protocols/1.json'
 
     trait :protocol do
       kind 'Protocol'
-      callback_url 'http://localhost:5000/protocols/1.json'
+      callback_url 'http://localhost:5000/v1/protocols/1.json'
     end
 
     trait :service do
       kind 'Service'
-      callback_url 'http://localhost:5000/services/1.json'
+      callback_url 'http://localhost:5000/v1/services/1.json'
     end
 
     trait :sub_service_request do
       kind 'SubServiceRequest'
-      callback_url 'http://localhost:5000/sub_service_requests/1.json'
+      callback_url 'http://localhost:5000/v1/sub_service_requests/1.json'
     end
 
     trait :project_role do
       kind 'ProjectRole'
-      callback_url 'http://localhost:5000/project_roles/1.json'
+      callback_url 'http://localhost:5000/v1/project_roles/1.json'
     end
 
     trait :create do
