@@ -1,33 +1,26 @@
-class SubServiceRequestImporterJob < Struct.new(:sparc_id, :callback_url, :action)
-
-  class SparcApiError < StandardError
-  end
-
-  def self.enqueue(sparc_id, callback_url, action)
-    job = new(sparc_id, callback_url, action)
-
-    Delayed::Job.enqueue job, queue: 'sparc_api_requests'
-  end
+class SubServiceRequestImporterJob < ImporterJob
 
   def perform
-    case action
-    when 'create'
-      #create
-    when 'update'
-      import_protocol
-    when 'destroy'
-      #destroy
-    end
+    super {
+      case action
+      when 'create'
+        #create
+      when 'update'
+        import_protocol
+      when 'destroy'
+        #destroy
+      end
+    }
   end
 
   private
 
   def import_protocol
     normalized_attributes = RemoteObjectNormalizer.new('Protocol', remote_protocol['protocol']).normalize!
-
-    local_protocol = Protocol.create(normalized_attributes.merge!({ sparc_id: remote_protocol['protocol']['sparc_id'] }))
+    local_protocol        = Protocol.create(normalized_attributes.merge!({ sparc_id: remote_protocol['protocol']['sparc_id'] }))
 
     import_arms(local_protocol)
+    update_faye(local_protocol)
   end
 
   def import_arms(local_protocol)

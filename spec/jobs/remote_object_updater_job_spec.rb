@@ -30,6 +30,10 @@ RSpec.describe RemoteObjectUpdaterJob do
       it 'should update the existing protocol' do
         expect(@protocol.reload.short_title).to eq('GS-US-321-0106')
       end
+
+      it "should not POST to the Faye server" do
+        expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/)).to_not have_been_made
+      end
     end
 
     context 'Service update', vcr: :localhost do

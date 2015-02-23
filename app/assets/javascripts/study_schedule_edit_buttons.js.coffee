@@ -20,6 +20,12 @@ $ ->
           type: 'DELETE'
           url: "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/#{visit_group_id}.js?page=#{page}&calendar_tab=#{calendar_tab}"
 
+    $(document).on 'click', '#add_arm_button', ->
+      protocol_id = $('#arms').data('protocol_id')
+      $.ajax
+        type: 'GET'
+        url: "/protocols/#{protocol_id}/arms/new"
+
     $(document).on 'click', '#remove_arm_button', ->
       protocol_id = $('#arms').data('protocol_id')
       arm_id = $("#arms").val()

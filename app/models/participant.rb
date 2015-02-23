@@ -51,7 +51,7 @@ class Participant < ActiveRecord::Base
   private
 
   def update_faye
-    FayeJob.enqueue protocol.id
+    FayeJob.enqueue protocol
   end
 
   def has_new_visit_groups?

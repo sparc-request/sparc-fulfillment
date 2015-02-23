@@ -1,23 +1,16 @@
-class ProjectRoleImporterJob < Struct.new(:sparc_id, :callback_url, :action)
-
-  class SparcApiError < StandardError
-  end
-
-  def self.enqueue(sparc_id, callback_url, action)
-    job = new(sparc_id, callback_url, action)
-
-    Delayed::Job.enqueue job, queue: 'sparc_api_requests'
-  end
+class ProjectRoleImporterJob < ImporterJob
 
   def perform
-    case action
-    when 'create'
-      create_project_role
-    when 'update'
-      update_project_role
-    when 'destroy'
-      destroy_project_role
-    end
+    super {
+      case action
+      when 'create'
+        create_project_role
+      when 'update'
+        update_project_role
+      when 'destroy'
+        destroy_project_role
+      end
+    }
   end
 
   private

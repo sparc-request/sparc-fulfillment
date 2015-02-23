@@ -16,7 +16,12 @@ RSpec.describe ProjectRoleImporterJob, vcr: :localhost do
   describe '#perform' do
 
     before do
+      Protocol.skip_callback :save, :after, :update_faye
+
       @protocol     = create(:protocol, sparc_id: 3255)
+
+      Protocol.set_callback :save, :after, :update_faye
+
       @callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/project_roles/1.json"
     end
 
@@ -65,6 +70,13 @@ RSpec.describe ProjectRoleImporterJob, vcr: :localhost do
             with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
         end
       end
+
+      describe 'Faye' do
+
+        it "should not POST to the Faye server" do
+          expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/)).to_not have_been_made
+        end
+      end
     end
 
     context 'update' do
@@ -102,6 +114,13 @@ RSpec.describe ProjectRoleImporterJob, vcr: :localhost do
             with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
         end
       end
+
+      describe 'Faye' do
+
+        it "should not POST to the Faye server" do
+          expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/)).to_not have_been_made
+        end
+      end
     end
 
     context 'destroy' do
@@ -136,6 +155,13 @@ RSpec.describe ProjectRoleImporterJob, vcr: :localhost do
           # SPARC identity request
           expect(a_request(:get, /\/v1\/identities\/7.json/).
             with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
+        end
+      end
+
+      describe 'Faye' do
+
+        it "should not POST to the Faye server" do
+          expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/)).to_not have_been_made
         end
       end
     end
