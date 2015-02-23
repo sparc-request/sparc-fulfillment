@@ -34,6 +34,6 @@ class Protocol < ActiveRecord::Base
   private
 
   def update_faye
-    FayeJob.enqueue id
+    FayeJob.enqueue self
   end
 end
