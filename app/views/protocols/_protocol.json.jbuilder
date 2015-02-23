@@ -3,8 +3,8 @@ json.(protocol)
 json.sparc_id protocol.sparc_id
 json.status protocol.status
 json.short_title protocol.short_title
-json.irb_approval_date protocol.irb_approval_date.strftime('%F')
-json.irb_expiration_date protocol.irb_expiration_date.strftime('%F')
+json.irb_approval_date format_date(protocol.irb_approval_date)
+json.irb_expiration_date format_date(protocol.irb_expiration_date)
 json.udak_project_number protocol.udak_project_number
 json.irb_status protocol.irb_status
 json.start_date protocol.start_date.strftime('%F')
