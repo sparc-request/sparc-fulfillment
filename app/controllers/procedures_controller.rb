@@ -23,4 +23,26 @@ class ProceduresController < ApplicationController
 
     procedure.destroy
   end
+
+  def edit
+    @procedure = Procedure.find(params[:id])
+    @note = Note.new
+  end
+
+  def update
+    @procedure = Procedure.find(params[:id])
+    @date = params[:procedure][:follow_up_date]
+    @has_date = @date.length > 0
+
+    if @has_date or not @procedure.follow_up_date.blank?
+      @procedure.update_attributes(follow_up_date: @date)
+      if @has_date
+        end_comment = "Follow Up - #{@date}"
+      else
+        end_comment = "Follow Up Date Removed"
+      end
+      end_comment += " - #{params[:note][:comment]}" if params[:note][:comment].length > 0
+      Note.create(procedure: @procedure, user_id: current_user.id, user_name: current_user.full_name, comment: end_comment)
+    end
+  end
 end

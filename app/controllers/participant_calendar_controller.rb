@@ -8,11 +8,4 @@ class ParticipantCalendarController < ApplicationController
 
   def incomplete_procedure
   end
-
-  def create_follow_up
-  end
-
-  def update_follow_up
-  end
-
 end

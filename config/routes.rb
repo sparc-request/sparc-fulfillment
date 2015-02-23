@@ -36,7 +36,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :procedures, only: [:create, :destroy] do
+  resources :procedures do
     resources :notes do
     end
   end

@@ -13,9 +13,9 @@
   .col-xs-2
     .col= select_tag "reason_#{procedure.id}", options_for_select(["r","t","o"],"r"), class: "form-control"
   .col-xs-2.text-center
-    .col.follow_up_date
-      = text_field_tag "follow_up_date_#{procedure.id}", procedure.display_follow_up, class: procedure.follow_up_date.blank? ? "hidden" : "", readonly: true
-    .glyphicon.glyphicon-calendar.btn.btn-warning#follow_up{class: procedure.follow_up_date.blank? ? "" : "hidden"}
+    .col.follow_up_date{value: "#{procedure.id}"}
+      = text_field_tag "follow_up_date_#{procedure.id}", format_date(procedure.follow_up_date), class: procedure.follow_up_date.blank? ? "hidden" : "", readonly: true
+    .glyphicon.glyphicon-calendar.btn.btn-warning.follow_up_date{class: procedure.follow_up_date.blank? ? "" : "hidden", value: "#{procedure.id}"}
       = link_to '', '#'
   .col-xs-2.text-center
     .col
