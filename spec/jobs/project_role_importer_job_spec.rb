@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ProjectRoleImporterJob, type: :job do
+RSpec.describe ProjectRoleImporterJob, type: :job, vcr: true do
 
   describe '#enqueue', delay: true do
 
