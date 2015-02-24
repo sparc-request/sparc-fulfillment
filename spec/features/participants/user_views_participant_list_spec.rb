@@ -10,7 +10,11 @@ feature 'User views Participant list', js: true do
   end
 
   scenario 'and sees Participants' do
-    expect(page).to have_css('table.participants tbody td', count: 3)
+    participant_first_names = Participant.all.map(&:first_name)
+
+    participant_first_names.each do |first_name|
+      expect(page).to have_css('table.participants tbody td.first_name', text: first_name)
+    end
   end
 
   scenario 'and searches for an existing Participant' do

@@ -18,6 +18,7 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
     context 'Protocol update' do
 
       before do
+        Protocol.skip_callback :save, :after, :update_faye
         @protocol                 = create( :protocol,
                                             sparc_id: 6213,
                                             short_title: 'Short Title')
