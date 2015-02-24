@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'User clicks Financial/Management View buttons', type: :feature, js: true do
 
   let!(:protocol1) { create(:protocol_imported_from_sparc, status: "Complete", short_title: "Slappy") }
-  let!(:protocol2) { create(:protocol_ipmorted_from_sparc, status: "Draft", short_title: "Swanson") }
+  let!(:protocol2) { create(:protocol_imported_from_sparc, status: "Draft", short_title: "Swanson") }
 
   before :each do
     visit protocols_path
