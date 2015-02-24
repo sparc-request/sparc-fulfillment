@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
-  let!(:protocol1)    { create(:protocol_with_pi) }
-  let!(:arm1)         { create(:arm_imported_from_sparc, protocol_id: protocol1.id, visit_count: 5) }
-  let!(:arm2)         { create(:arm_imported_from_sparc, protocol_id: protocol1.id, visit_count: 1) }
-  let!(:service1)     { Service.first }
+  let!(:protocol)    { create(:protocol_with_pi) }
+  let!(:arm1)        { create(:arm_imported_from_sparc, protocol_id: protocol.id, visit_count: 5) }
+  let!(:arm2)        { create(:arm_imported_from_sparc, protocol_id: protocol.id, visit_count: 1) }
+  let!(:service)     { create(:service, sparc_id: 5000, sparc_core_id: 999, sparc_core_name: 'supercalifragilisticexpialidocious', name: "SCGSBRA") }
 
   before :each do
-    visit protocol_path(protocol1.sparc_id)
+    visit protocol_path(protocol.sparc_id)
     # wait_for_javascript_to_finish
   end
 
@@ -47,7 +47,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       it "should add an arm with services" do
         find('#add_arm_button').click()
         fill_in 'Arm Name', with: 'arm name'
-        find(:css, "#services_[value='#{service1.id}']").set(true)
+        find(:css, "#services_[value='#{Service.first.id}']").set(true)
         fill_in 'Subject Count', with: 1
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
@@ -105,8 +105,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
     describe "the add visit group button" do
       it "should validate the visit group form" do
-        create(:line_item, arm_id: arm1.id, service_id: service1.id)
-        visit current_path
         find('#add_visit_button').click()
         click_button 'Add'
         wait_for_javascript_to_finish
@@ -163,52 +161,53 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
     describe 'add modal' do
       it "should add a service to one or multiple arms" do
-        expect(page).not_to have_css("div#arm_#{arm1.id}_core_#{service1.sparc_core_id}")
-        expect(page).not_to have_css("div#arm_#{arm2.id}_core_#{service1.sparc_core_id}")
+        expect(page).not_to have_css("div#arm_#{arm1.id}_core_#{service.sparc_core_id}")
+        expect(page).not_to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")
         find('#add_service_button').click()
         wait_for_javascript_to_finish
         expect(page).to have_content "Add a Service"
-        select service1.name, from: "service_id"
+        select service.name, from: "service_id"
         find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
         find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
         click_button 'Add Service'
         wait_for_javascript_to_finish
         expect(page).to have_content "Service(s) have been added to the chosen arms"
-        expect(page).to have_css("div#arm_#{arm1.id}_core_#{service1.sparc_core_id}")
-        expect(page).to have_css("div#arm_#{arm2.id}_core_#{service1.sparc_core_id}")
+        expect(page).to have_css("div#arm_#{arm1.id}_core_#{service.sparc_core_id}")
+        expect(page).to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")
       end
     end
 
     describe 'remove modal' do
 
       before :each do
-        li_1 = create(:line_item, arm: arm1, service: service1)
-        li_2 = create(:line_item, arm: arm2, service: service1)
+        li_1 = create(:line_item, arm: arm1, service: service)
+        li_2 = create(:line_item, arm: arm2, service: service)
         visit current_path
       end
 
       it "should remove service from one or more arms" do
-        expect(page).to have_css("div#arm_#{arm1.id}_core_#{service1.sparc_core_id}")
-        expect(page).to have_css("div#arm_#{arm2.id}_core_#{service1.sparc_core_id}")
+        expect(page).to have_css("div#arm_#{arm1.id}_core_#{service.sparc_core_id}")
+        expect(page).to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")
         find('#remove_service_button').click()
         expect(page).to have_content "Remove Services"
-        select service1.name, from: "service_id"
+        select service.name, from: "service_id"
         find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
         find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
         click_button 'Remove'
         wait_for_javascript_to_finish
         expect(page).to have_content "Service(s) have been removed from the chosen arms"
-        expect(page).not_to have_css("div#arm_#{arm1.id}_core_#{service1.sparc_core_id}")
-        expect(page).not_to have_css("div#arm_#{arm2.id}_core_#{service1.sparc_core_id}")
+        expect(page).not_to have_css("div#arm_#{arm1.id}_core_#{service.sparc_core_id}")
+        expect(page).not_to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")
       end
 
       it 'dropdown should populate only with currently added services' do
         find('#remove_service_button').click()
-        assert_selector("#service_id > option", count: 1)
+        assert_selector("#service_id > option", count: Service.count)
       end
 
       it 'arm checkbox should only display if service selected is on arm' do
         find('#remove_service_button').click()
+        select service.name, from: "service_id"
         assert_selector(".arm-checkbox > label", count: 2)
       end
     end
