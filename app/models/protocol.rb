@@ -24,7 +24,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def pi
-    self.user_roles.where(role: "primary-pi").first.user
+    user_roles.where(role: "primary-pi").first.user
   end
 
   def coordinators
