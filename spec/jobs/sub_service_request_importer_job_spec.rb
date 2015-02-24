@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SubServiceRequestImporterJob, type: :job do
+RSpec.describe SubServiceRequestImporterJob, type: :job, vcr: true do
 
   describe '#enqueue', delay: true do
 
