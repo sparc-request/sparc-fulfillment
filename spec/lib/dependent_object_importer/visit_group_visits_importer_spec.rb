@@ -13,8 +13,8 @@ RSpec.describe VisitGroupVisitsImporter do
   describe '#create_dependents' do
 
     before do
-      arm                               = create(:arm_with_line_items)
-      visit_group                       = build(:visit_group, arm: arm)
+      @arm                              = create(:arm_with_line_items)
+      visit_group                       = build(:visit_group, arm: @arm)
       @visit_group_visit_group_creator  = VisitGroupVisitsImporter.new(visit_group)
 
       @visit_group_visit_group_creator.save_and_create_dependents
@@ -25,7 +25,7 @@ RSpec.describe VisitGroupVisitsImporter do
     end
 
     it 'should create and associate VisitGroups' do
-      expect(@visit_group_visit_group_creator.visit_group).to have(2).visits
+      expect(@visit_group_visit_group_creator.visit_group).to have(@arm.line_items.count).visits
     end
   end
 end

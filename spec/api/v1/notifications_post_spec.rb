@@ -25,7 +25,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true, delay: t
         expect(expected_notification.sparc_id).to eq(1)
         expect(expected_notification.kind).to eq('Protocol')
         expect(expected_notification.action).to eq('create')
-        expect(expected_notification.callback_url).to eq('http://localhost:5000/protocols/1.json')
+        expect(expected_notification.callback_url).to eq('http://localhost:5000/v1/protocols/1.json')
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true, delay: t
 
           it 'should respond with an HTTP status of: 400' do
 
-            bad_params = { action: 'create', callback_url: 'http://localhost:5000/sub_service_requests/1.json' }
+            bad_params = { action: 'create', callback_url: 'http://localhost:5000/v1/sub_service_requests/1.json' }
 
             sparc_sends_notification_post(bad_params)
 
@@ -49,7 +49,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true, delay: t
 
           it 'should respond with an HTTP status of: 400' do
 
-            bad_params = { id: 1, callback_url: 'http://localhost:5000/sub_service_requests/1.json' }
+            bad_params = { id: 1, callback_url: 'http://localhost:5000/v1/sub_service_requests/1.json' }
 
             sparc_sends_notification_post(bad_params)
 
@@ -76,7 +76,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true, delay: t
 
           it 'must be type: Integer' do
 
-            bad_params = { id: '1a', action: 'create', callback_url: 'http://localhost:5000/sub_service_requests/1.json' }
+            bad_params = { id: '1a', action: 'create', callback_url: 'http://localhost:5000/v1/sub_service_requests/1.json' }
 
             sparc_sends_notification_post(bad_params)
 
@@ -88,7 +88,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true, delay: t
 
           it 'must be either: create or update' do
 
-            bad_params = { id: '1a', action: 'delete', callback_url: 'http://localhost:5000/sub_service_requests/1.json' }
+            bad_params = { id: '1a', action: 'delete', callback_url: 'http://localhost:5000/v1/sub_service_requests/1.json' }
 
             sparc_sends_notification_post(bad_params)
 

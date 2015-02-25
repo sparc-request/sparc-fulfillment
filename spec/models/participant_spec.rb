@@ -70,7 +70,7 @@ RSpec.describe Participant, type: :model do
       it 'should callback :update_via_faye after save' do
         participant = create(:participant_with_protocol)
 
-        expect(participant).to callback(:update_via_faye).after(:save)
+        expect(participant).to callback(:update_faye).after(:save)
       end
     end
 

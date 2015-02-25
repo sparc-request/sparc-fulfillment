@@ -1,6 +1,6 @@
 $ ->
 
-  $(document).on 'click', '#changeParticipantArm', ->
+  $('table.participants').on 'click', 'td.change_arm a', ->
     protocol_id = $(this).attr('protocol_id')
     participant_id = $(this).attr('participant_id')
     arm_id = $(this).attr('arm_id')
@@ -54,7 +54,7 @@ $ ->
 
 (exports ? this).changeArmFormatter = (value, row, index) ->
   [
-    "<a class='edit change-arm ml10' href='#' title='Change Arm' id='changeParticipantArm' protocol_id='#{row.protocol_id}' participant_id='#{row.id}' arm_id='#{row.arm_id}'>",
+    "<a class='edit change-arm ml10' href='#' title='Change Arm' protocol_id='#{row.protocol_id}' participant_id='#{row.id}' arm_id='#{row.arm_id}'>",
     "<i class='glyphicon glyphicon-random'></i>",
     "</a>"
   ].join ""

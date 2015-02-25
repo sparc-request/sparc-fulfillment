@@ -18,7 +18,7 @@ feature 'Navigation', js: true do
 
     page.find('table.protocols tbody tr:first-child').click
     click_link 'Participant Tracker'
-    page.find('table.participants tbody tr:first-child td a.calendar').click
+    page.find('table.participants tbody tr:first-child td.calendar a').click
     click_browser_back_button
 
     expect(page.body).to have_css('.tab-pane.active#participant_tracker')

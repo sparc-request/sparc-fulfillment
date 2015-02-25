@@ -49,7 +49,8 @@ RSpec.describe ProtocolsController, type: :controller do
     end
 
     it "renders the #show view" do
-      get :show, id: create(:protocol)
+      protocol = create(:protocol, sparc_id: 1)
+      get :show, id: protocol.sparc_id
       expect(response).to render_template :show
     end
   end

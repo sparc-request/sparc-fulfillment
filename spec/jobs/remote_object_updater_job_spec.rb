@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RemoteObjectUpdaterJob do
+RSpec.describe RemoteObjectUpdaterJob, type: :job do
 
   describe '#enqueue', delay: true do
 
@@ -15,9 +15,10 @@ RSpec.describe RemoteObjectUpdaterJob do
 
   describe '#perform', vcr: true do
 
-    context 'Protocol update', vcr: :localhost do
+    context 'Protocol update' do
 
       before do
+        Protocol.skip_callback :save, :after, :update_faye
         @protocol                 = create( :protocol,
                                             sparc_id: 6213,
                                             short_title: 'Short Title')
@@ -31,12 +32,12 @@ RSpec.describe RemoteObjectUpdaterJob do
         expect(@protocol.reload.short_title).to eq('GS-US-321-0106')
       end
 
-      it "should not POST to the Faye server" do
+      it 'should not POST to the Faye server' do
         expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/)).to_not have_been_made
       end
     end
 
-    context 'Service update', vcr: :localhost do
+    context 'Service update' do
 
       before do
         @service                  = create( :service_created_by_sparc,

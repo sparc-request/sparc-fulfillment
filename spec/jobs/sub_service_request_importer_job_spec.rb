@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SubServiceRequestImporterJob do
+RSpec.describe SubServiceRequestImporterJob, type: :job, vcr: true do
 
   describe '#enqueue', delay: true do
 
@@ -13,7 +13,7 @@ RSpec.describe SubServiceRequestImporterJob do
     end
   end
 
-  describe '#perform', vcr: :localhost do
+  describe '#perform' do
 
     before do
       callback_url            = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
