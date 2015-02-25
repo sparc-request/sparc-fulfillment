@@ -1,16 +1,20 @@
 body.protocols
 
-  table.protocols
-    overflow-x: visible !important
-    overflow-y: visible !important
-
   &.protocols-index
+
+    .fixed-table-body
+      overflow-x: visible !important
+      overflow-y: visible !important
 
     .fixed-table-toolbar .columns label
       padding: 6px 12px
       clear: right
 
   &.protocols-show
+
+    .fixed-table-container.protocol .fixed-table-body
+      overflow-x: visible !important
+      overflow-y: visible !important
 
     .nav-tabs
       li.active a
