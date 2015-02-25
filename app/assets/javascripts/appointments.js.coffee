@@ -14,12 +14,11 @@ $ ->
   $(document).on( 'change', '#appointment_select', (event) ->
     id = $(this).val()
 
-    if id
+    if id != "-1"
       $.ajax
         type: 'GET'
         url: "/appointments/#{id}.js"
-      event.stopPropagation()
-    $('.btn-group').removeClass('open')
+    event.stopPropagation()
   )
 
   $(document).on 'click', '.add_service', ->

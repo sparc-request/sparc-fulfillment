@@ -2,7 +2,7 @@
   .modal-content
     = form_tag({controller: "appointment_calendar", action: "create_incomplete_procedure"}, method: "post", class: "form-horizontal", remote: true) do
       .modal-header
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
+        %button.close#not_incomplete{value: "#{procedure.id}", type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only= t(:actions)[:close]
         %h4.modal-title.text-center= t(:notes)[:incomplete_header]
