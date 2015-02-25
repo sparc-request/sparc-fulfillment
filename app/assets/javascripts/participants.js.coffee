@@ -79,6 +79,7 @@ $ ->
     "</a>"
   ].join ""
 
-(exports ? this).refreshParticipantTables = (protocol_id) ->
+(exports ? this).refreshParticipantTables = (protocol_id, participant_id) ->
   $("#participants-list-table").bootstrapTable 'refresh', {url: "/protocols/#{protocol_id}/participants.json"}
   $("#participants-tracker-table").bootstrapTable 'refresh', {url: "/protocols/#{protocol_id}/participants.json"}
+  $("#participant-info").bootstrapTable 'refresh', {url: "/protocols/#{protocol_id}/participants/#{participant_id}.json"}

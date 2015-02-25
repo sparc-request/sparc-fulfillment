@@ -1,5 +1,6 @@
 json.(participant)
 
+json.protocol_id participant.protocol_id
 json.name participant.first_name + ' ' + participant.last_name
 json.id participant.id
 json.status participant.status
