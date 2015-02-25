@@ -9,7 +9,7 @@
       .modal-body
         .form-group{style: "padding: 0px 100px 0px 100px;"}
           %div
-            = select_tag 'reasons_selectpicker', options_for_select(Procedure::REASONS, 'All'), :class => "form-control"
+            = select_tag 'reasons_selectpicker', options_for_select(Procedure::REASONS, procedure.reason), :class => "form-control"
           %div{style: "padding: 25px 0px 0px 0px;"}
             = text_area_tag "comment", " ", size: "60x7"
           %div

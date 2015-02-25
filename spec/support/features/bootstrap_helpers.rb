@@ -6,7 +6,7 @@ module Features
       bootstrap_select  = page.find("select#{class_or_id} + .bootstrap-select")
       bootstrap_select.click
       within bootstrap_select do
-        element = page.find('a', text: choice).click
+        page.find('a', text: choice).click
       end
     end
 

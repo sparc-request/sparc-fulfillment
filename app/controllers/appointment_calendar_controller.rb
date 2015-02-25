@@ -13,13 +13,7 @@ class AppointmentCalendarController < ApplicationController
   def create_incomplete_procedure
     @procedure = Procedure.find(params[:procedure_id])
     @procedure.update_attributes(status: "incomplete", reason: params[:reasons_selectpicker])
-    comment = params[:comment] == " " ? "Set to incomplete because of #{params[:reasons_selectpicker]}" : params[:comment]
+    comment = params[:comment] == " " ? params[:reasons_selectpicker] : params[:reasons_selectpicker] + " - " + params[:comment]
     Note.create(procedure_id: @procedure.id, comment: comment, user_id: current_user.id, user_name: current_user.full_name)
-  end
-
-  def create_follow_up
-  end
-
-  def update_follow_up
   end
 end
