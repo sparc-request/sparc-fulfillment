@@ -7,8 +7,8 @@ json.irb_approval_date format_date(protocol.irb_approval_date)
 json.irb_expiration_date format_date(protocol.irb_expiration_date)
 json.udak_project_number protocol.udak_project_number
 json.irb_status protocol.irb_status
-json.start_date protocol.start_date.strftime('%F')
-json.end_date protocol.end_date.strftime('%F')
+json.start_date format_date(protocol.start_date)
+json.end_date format_date(protocol.end_date)
 json.study_cost protocol.study_cost
 json.stored_percent_subsidy protocol.stored_percent_subsidy
 json.subsidy_committed number_to_currency(protocol.subsidy_committed)
