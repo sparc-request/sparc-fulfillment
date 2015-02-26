@@ -6,6 +6,7 @@ class Procedure < ActiveRecord::Base
   belongs_to :visit
 
   has_many :notes
+  has_many :tasks
 
   scope :untouched,   -> { where('status IS NULL')              }
   scope :incomplete,  -> { where('completed_date IS NULL')      }
