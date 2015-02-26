@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Index spec', type: :feature, js: true do
 
-  let!(:protocol1) { create(:protocol_imported_fron_sparc, status: "Complete", short_title: "Slappy") }
-  let!(:protocol2) { create(:protocol_imported_fron_sparc, status: "Draft", short_title: "Swanson") }
+  let!(:protocol1) { create(:protocol_imported_from_sparc, status: "Complete", short_title: "Slappy") }
+  let!(:protocol2) { create(:protocol_imported_from_sparc, status: "Draft", short_title: "Swanson") }
 
   before :each do
     visit protocols_path
@@ -12,11 +12,10 @@ RSpec.describe 'Index spec', type: :feature, js: true do
   describe 'status select' do
 
     it "should filter the table by statuses" do
-      visit protocols_path
-
-      bootstrap_select '.selectpicker', 'Complete'
+      bootstrap_select '#index_selectpicker', 'Complete'
 
       wait_for_javascript_to_finish
+
       expect(page.body).to have_css("table#protocol-list", text: "Slappy")
       expect(page.body).to_not have_css("table#protocol-list", text: "Swanson")
     end
@@ -25,7 +24,7 @@ RSpec.describe 'Index spec', type: :feature, js: true do
   describe 'financial view' do
 
     it "should display and hide the proper columns when financial button is clicked" do
-      visit protocols_path
+      wait_for_javascript_to_finish
 
       find('.financial').click
 

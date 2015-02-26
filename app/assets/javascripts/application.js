@@ -16,7 +16,6 @@
 //= require tableExport
 //= require jquery.base64
 //= require jquery.cookie
-//= require faye
 
 //= require protocols
 //= require service_calendar
@@ -24,3 +23,4 @@
 //= require study_schedule_edit_buttons
 //= require appointment_calendar
 //= require appointments
+//= require faye

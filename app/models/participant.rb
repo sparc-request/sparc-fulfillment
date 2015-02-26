@@ -14,7 +14,7 @@ class Participant < ActiveRecord::Base
   after_save :update_faye
   after_destroy :update_faye
 
-  validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :phone, :ethnicity, :race, :gender, presence: true
+  validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, presence: true
   validate :phone_number_format, :date_of_birth_format
 
   def phone_number_format

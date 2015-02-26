@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Service Calendar', type: :feature, js: true do
 
-  let!(:protocol)    { create(:protocol_imported_from_sparc) }
+  let!(:protocol)    { create(:protocol_with_pi) }
   let!(:arm)         { create(:arm_imported_from_sparc, protocol_id: protocol.id, visit_count: 10)}
 
   before :each do

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe FayeJob, delay: true do
+RSpec.describe FayeJob, type: :job, delay: true do
 
   describe '#enqueue' do
 

@@ -17,19 +17,25 @@ class SubServiceRequestImporterJob < ImporterJob
 
   def import_protocol
     normalized_attributes = RemoteObjectNormalizer.new('Protocol', remote_protocol['protocol']).normalize!
-    local_protocol        = Protocol.create(normalized_attributes.merge!({ sparc_id: remote_protocol['protocol']['sparc_id'] }))
+    attributes_to_merge   = {
+      sparc_id: remote_protocol['protocol']['sparc_id'],
+      study_cost: remote_sub_service_request['sub_service_request']['grand_total'],
+      stored_percent_subsidy: remote_sub_service_request['sub_service_request']['stored_percent_subsidy'],
+      status: remote_sub_service_request['sub_service_request']['status']
+    }
+    local_protocol        = Protocol.create(normalized_attributes.merge!(attributes_to_merge))
 
     import_arms(local_protocol)
     update_faye(local_protocol)
   end
 
   def import_arms(local_protocol)
-    remote_protocol_arms_sparc_ids = remote_protocol['protocol']['arms'].map { |arm| arm.values_at('sparc_id') }.compact.flatten
+    remote_protocol_arms_sparc_ids  = remote_protocol['protocol']['arms'].map { |arm| arm.values_at('sparc_id') }.compact.flatten
 
     remote_arms(remote_protocol_arms_sparc_ids)['arms'].each do |remote_arm|
-      normalized_attributes = RemoteObjectNormalizer.new('Arm', remote_arm).normalize!
-      local_arm             = Arm.create(sparc_id: remote_arm['sparc_id'])
-      attributes            = normalized_attributes.merge!({ protocol: local_protocol })
+      normalized_attributes         = RemoteObjectNormalizer.new('Arm', remote_arm).normalize!
+      local_arm                     = Arm.create(sparc_id: remote_arm['sparc_id'])
+      attributes                    = normalized_attributes.merge!({ protocol: local_protocol })
 
       local_arm.update_attributes attributes
 
@@ -42,9 +48,9 @@ class SubServiceRequestImporterJob < ImporterJob
     remote_arm_visit_groups_ids = remote_arm['visit_groups'].map { |visit_group| visit_group.values_at('sparc_id') }.compact.flatten
 
     remote_visit_groups(remote_arm_visit_groups_ids)['visit_groups'].each do |remote_visit_group|
-      normalized_attributes         = RemoteObjectNormalizer.new('VisitGroup', remote_visit_group).normalize!
-      local_visit_group             = VisitGroup.create(sparc_id: remote_visit_group['sparc_id'])
-      attributes                    = normalized_attributes.merge!({ arm: local_arm })
+      normalized_attributes     = RemoteObjectNormalizer.new('VisitGroup', remote_visit_group).normalize!
+      local_visit_group         = VisitGroup.create(sparc_id: remote_visit_group['sparc_id'])
+      attributes                = normalized_attributes.merge!({ arm: local_arm })
 
       local_visit_group.update_attributes attributes
 
