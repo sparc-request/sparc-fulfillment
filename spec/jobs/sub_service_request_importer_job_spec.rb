@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SubServiceRequestImporterJob do
+RSpec.describe SubServiceRequestImporterJob, type: :job, vcr: true do
 
   describe '#enqueue', delay: true do
 
@@ -13,7 +13,7 @@ RSpec.describe SubServiceRequestImporterJob do
     end
   end
 
-  describe '#perform', vcr: :localhost do
+  describe '#perform' do
 
     before do
       callback_url            = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
@@ -37,7 +37,13 @@ RSpec.describe SubServiceRequestImporterJob do
     end
 
     it 'should import the full Protocol' do
-      expect(Protocol.count).to eq(1)
+      protocol = Protocol.find_by(sparc_id: 7564)
+
+      # Local attributes
+      expect(protocol.study_cost).to eq(1320300)
+      expect(protocol.stored_percent_subsidy).to eq(9.9)
+      expect(protocol.status).to eq('complete')
+
       expect(Protocol.where('sparc_id IS NULL').any?).to_not be
       expect(Protocol.first.arms.any?).to be
       expect(Protocol.first.arms.first.visit_groups.any?).to be

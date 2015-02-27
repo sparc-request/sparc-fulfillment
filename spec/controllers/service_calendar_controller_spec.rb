@@ -99,13 +99,23 @@ RSpec.describe ServiceCalendarController do
     end
   end
 
-  describe "PUT #change_service" do
+  describe "GET #edit_service" do
+    it "should retrieve the correct line_item" do
+      line_item = LineItem.first
+      xhr :get, :edit_service, {
+        line_item_id: line_item.id,
+        format: :js
+      }
+      expect(assigns(:line_item)).to eq(line_item)
+    end
+  end
+
+  describe "PATCH #update_service" do
     it "should change the service id of the line item" do
       line_item = LineItem.first
       service = create(:service)
-      put :change_service, {
-        line_item_id: line_item.id,
-        service_id: service.id,
+      patch :update_service, {
+        line_item: {id: line_item.id, service_id: service.id},
         format: :js
       }
       expect(assigns(:line_item).service_id).to eq(service.id)

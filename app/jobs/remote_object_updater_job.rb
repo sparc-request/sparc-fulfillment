@@ -10,7 +10,9 @@ class RemoteObjectUpdaterJob < Struct.new(:object_id, :object_class, :callback_u
   end
 
   def perform
+    skip_faye_callbacks
     update_local_object_from_remote_object
+    set_faye_callbacks
   end
 
   private
@@ -29,5 +31,15 @@ class RemoteObjectUpdaterJob < Struct.new(:object_id, :object_class, :callback_u
 
   def normalized_attributes
     RemoteObjectNormalizer.new(object_class, remote_object[object_class]).normalize!
+  end
+
+  def skip_faye_callbacks
+    Protocol.skip_callback    :save, :after, :update_faye
+    Participant.skip_callback :save, :after, :update_faye
+  end
+
+  def set_faye_callbacks
+    Protocol.set_callback    :save, :after, :update_faye
+    Participant.set_callback :save, :after, :update_faye
   end
 end

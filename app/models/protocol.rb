@@ -20,11 +20,11 @@ class Protocol < ActiveRecord::Base
 
   #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.
   def subsidy_expended
-    "$0"
+    "$0.00"
   end
 
   def pi
-    self.user_roles.where(role: "primary-pi").first.user
+    user_roles.where(role: "primary-pi").first.user
   end
 
   def coordinators

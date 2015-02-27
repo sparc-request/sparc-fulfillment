@@ -13,14 +13,28 @@ RSpec.configure do |config|
     VCR.eject_cassette
   end
 
-  config.before(:each, vcr: :localhost) do
+  config.before(:each, type: :request) do
 
     VCR.configure do |config|
       config.ignore_localhost = false
     end
   end
 
-  config.after(:each, vcr: :localhost) do
+  config.after(:each, type: :request) do
+
+    VCR.configure do |config|
+      config.ignore_localhost = true
+    end
+  end
+
+  config.before(:each, type: :job) do
+
+    VCR.configure do |config|
+      config.ignore_localhost = false
+    end
+  end
+
+  config.after(:each, type: :job) do
 
     VCR.configure do |config|
       config.ignore_localhost = true
