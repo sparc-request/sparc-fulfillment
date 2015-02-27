@@ -66,5 +66,5 @@ $ ->
     procedure_id = $(this).attr('value')
     $.ajax
       type: 'GET'
-      url: "/procedures/#{procedure_id}/edit"
+      url: "/appointment_calendar/edit_follow_up/#{procedure_id}"
   )

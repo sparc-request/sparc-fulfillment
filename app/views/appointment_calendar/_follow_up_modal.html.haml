@@ -1,6 +1,6 @@
 .modal-dialog
   .modal-content
-    = form_for procedure, {remote: true, html: {class: "form-horizontal", role: "form"}} do |p|
+    = form_for procedure, {remote: true, url: "/appointment_calendar/update_follow_up/#{procedure.id}", html: {class: "form-horizontal", role: "form"}} do |p|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
