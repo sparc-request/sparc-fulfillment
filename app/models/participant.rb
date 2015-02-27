@@ -18,8 +18,8 @@ class Participant < ActiveRecord::Base
 
   def phone_number_format
     if phone != ""
-      unless /^\d{3}-\d{3}-\d{4}$/.match phone.to_s
-        errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX")
+      if not( /^\d{3}-\d{3}-\d{4}$/.match phone.to_s or /^\d{10}$/.match phone.to_s )
+        errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX or XXXXXXXXXX")
       end
     end
   end
