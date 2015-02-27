@@ -25,6 +25,9 @@ module ClinicalWorkFulfillment
     config.paths.add File.join('lib'), glob: File.join('**', '*.rb')
     config.autoload_paths += Dir[Rails.root.join('lib')]
 
+    # Importers
+    config.autoload_paths += Dir[Rails.root.join('lib/importers')]
+
     # DependentObjectImporter
     config.autoload_paths += Dir[Rails.root.join('lib/dependent_object_importers')]
 
