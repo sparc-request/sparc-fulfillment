@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ParticipantCalendarController do
+RSpec.describe AppointmentCalendarController do
   before :each do
     @user = create(:user)
     sign_in @user
