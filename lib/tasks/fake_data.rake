@@ -13,5 +13,8 @@ namespace :data do
 
     # Create 10 Protocols
     FactoryGirl.create_list(:protocol_imported_from_sparc, 10)
+
+    # Create 10 tasks
+    FactoryGirl.create_list(:task, 10)
   end
 end
