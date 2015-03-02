@@ -9,3 +9,4 @@ json.arm_name task.arm_name
 json.task task.task
 json.assignment task.assignment
 json.due_date format_date(task.due_date)
+json.reschedule format_reschedule(task.id)
