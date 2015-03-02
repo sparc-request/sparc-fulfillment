@@ -10,6 +10,8 @@ class CreateTasks < ActiveRecord::Migration
       t.string :assignment
       t.date :due_date
       t.boolean :is_complete
+      t.datetime :deleted_at
+      t.timestamps
     end
   end
 end

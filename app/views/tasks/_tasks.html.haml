@@ -1,0 +1,14 @@
+%h1 Task List
+%table.tasks.custom_striped{id: "task-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: "/tasks.json", "sort-order" => 'asc', striped: "true"}}
+  %thead
+    %tr
+      %th{data: {class: 'created_by', align: 'left', field: 'created_by'}}= t(:task_index)[:created_by]
+      %th{data: {class: 'is_complete', align: 'center', field: 'is_complete'}}= t(:task_index)[:completed]
+      %th{data: {class: 'participant_name', align: 'left', field: 'participant_name'}}= t(:task_index)[:participant_name]
+      %th{data: {class: 'protocol_id', align: 'center', field: 'protocol_id'}}= t(:task_index)[:protocol_id]
+      %th{data: {class: 'visit_name', align: 'left', field: 'visit_name'}}= t(:task_index)[:visit_name]
+      %th{data: {class: 'arm_name', align: 'left', field: 'arm_name'}}= t(:task_index)[:arm_name]
+      %th{data: {class: 'task', align: 'left', field: 'task'}}= t(:task_index)[:task]
+      %th{data: {class: 'assignment', align: 'left', field: 'assignment'}}= t(:task_index)[:assignment]
+      %th{data: {class: 'due_date', align: 'left', field: 'due_date'}}= t(:task_index)[:due_date]
+      / %th{data: {class: 'reschedule', align: 'left', field: 'reschedule'}}= t(:task_index)[:reschedule]

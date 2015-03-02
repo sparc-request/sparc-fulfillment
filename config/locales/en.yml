@@ -48,6 +48,18 @@ en:
     subsidy_committed: "Subsidy Amount"
     subsidy_expended: "Subsidy Expended"
 
+  task_index:
+    created_by: "Created By"
+    completed: "Completed"
+    participant_name: "Patient Name"
+    protocol_id: "Protocol"
+    visit_name: "Visit"
+    arm_name: "Arm"
+    task: "Task/Service"
+    assignment: "Assignment"
+    due_date: "Due Date"
+    reschedule: "Reschedule"
+
   protocol_tabs:
     study_schedule: "Study Schedule"
     participant_list: "Participant List"
