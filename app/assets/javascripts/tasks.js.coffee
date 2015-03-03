@@ -4,7 +4,7 @@ $ ->
     task_id = $(this).attr('task_id')
     data = {'is_complete' : true}
     $.ajax
-      type: 'PUT'
+      type: 'PATCH'
       url: "/tasks/#{task_id}"
       data: data
       success: ->
