@@ -24,14 +24,14 @@ RSpec.describe 'Appointment calendar spec', type: :feature, js: true do
       end
       it "should not affect the previous radio button setting if the modal is closed" do
         choose "status_incomplete_#{procedure1.id}"
-        click_button "close_incomplete"
-        find("#status_complete_#{procedure1.id}").should be_checked
+        click_button "Close"
+        expect(find("#status_complete_#{procedure1.id}")).to be_checked
       end
 
       it "should submit the incomplete procedure form" do
         choose "status_incomplete_#{procedure1.id}"
         click_button 'Save'
-        find("#status_incomplete_#{procedure1.id}").should be_checked
+        expect(find("#status_incomplete_#{procedure1.id}")).to be_checked
       end
     end
   end

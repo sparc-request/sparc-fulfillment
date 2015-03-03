@@ -21,15 +21,25 @@ RSpec.describe AppointmentCalendarController do
     end
   end
 
-  describe "POST create_incomplete_procedure" do
+  describe "GET #edit_incomplete_procedure" do
+    it 'should find the correct procedure' do
+      procedure = create(:procedure, appointment: @protocol.participants.first.appointments.first)
+      xhr :get, :edit_incomplete_procedure, {
+        procedure_id: procedure
+      }
+      expect(assigns(:procedure)).to eq(procedure)
+    end
+  end
+
+  describe "PATCH update_incomplete_procedure" do
     it "should update the attributes of the procedure" do
       procedure = create(:procedure, appointment: @protocol.participants.first.appointments.first)
-      post :create_incomplete_procedure, {
+      patch :update_incomplete_procedure, {
         procedure_id: procedure.id,
-        reasons_selectpicker: 'that reason',
+        procedure: {reason: 'that reason'},
         user_id: @user.id,
         user_name: @user.full_name,
-        comment: "commented",
+        note: {comment: "commented"},
         format: :js
       }
       expect(assigns(:procedure).status).to eq('incomplete')
@@ -39,13 +49,13 @@ RSpec.describe AppointmentCalendarController do
     it "should create a new note" do
       procedure = create(:procedure, appointment: @protocol.participants.first.appointments.first)
       expect{
-        post :create_incomplete_procedure, {
-          procedure_id: procedure.id,
-          reasons_selectpicker: 'that reason',
-          user_id: @user.id,
-          user_name: @user.full_name,
-          comment: "commented",
-          format: :js
+        patch :update_incomplete_procedure, {
+        procedure_id: procedure.id,
+        procedure: {reason: 'that reason'},
+        user_id: @user.id,
+        user_name: @user.full_name,
+        note: {comment: "commented"},
+        format: :js
         }
       }.to change(Note, :count).by(1)
     end

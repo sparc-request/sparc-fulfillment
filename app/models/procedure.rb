@@ -1,6 +1,6 @@
 class Procedure < ActiveRecord::Base
 
-  REASONS = ["this", "that"]
+  REASONS = ['this', 'that', 'and', 'the', 'other', 'thing']
 
   acts_as_paranoid
 
