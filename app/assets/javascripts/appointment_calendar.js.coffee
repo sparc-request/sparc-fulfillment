@@ -56,7 +56,7 @@ $ ->
 
   $(document).on('change', '.complete',  ->
     procedure_id = $(this).val()
-    $(this).attr('checked', true)
+
     $.ajax
       type: 'PUT'
       url: "/appointment_calendar/complete_procedure?procedure_id=#{procedure_id}"
