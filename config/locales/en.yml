@@ -129,6 +129,10 @@ en:
     action: "Action"
     note: "Note"
 
+  procedure:
+    follow_up: "Follow Up"
+    fud: "Follow Up Date"
+
   services:
     name: "Selected Service"
     arm: "Select Arm(s)"
