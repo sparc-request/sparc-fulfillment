@@ -10,10 +10,14 @@ module ApplicationHelper
 
   def format_time(time)
     if time.present?
-      time.strftime('%r')
+      time.strftime('%l:%M %p')
     else
       ''
     end
+  end
+
+  def hidden_class(val)
+    :hidden if val == true
   end
 
   def pretty_tag(tag)

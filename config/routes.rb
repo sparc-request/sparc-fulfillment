@@ -6,6 +6,12 @@ Rails.application.routes.draw do
     collection do
       get 'completed_appointments'
     end
+    member do
+      patch 'completed_time'
+      patch 'completed_date'
+      patch 'start_time'
+      patch 'start_date'
+    end
   end
 
   resources :protocols do

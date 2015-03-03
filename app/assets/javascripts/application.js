@@ -16,6 +16,7 @@
 //= require tableExport
 //= require jquery.base64
 //= require jquery.cookie
+//= require bootstrap-timepicker
 
 //= require protocols
 //= require service_calendar

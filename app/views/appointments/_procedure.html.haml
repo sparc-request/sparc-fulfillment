@@ -14,9 +14,8 @@
     .col= select_tag "reason_#{procedure.id}", options_for_select(["r","t","o"],"r"), class: "form-control"
   .col-xs-2.text-center
     .col.follow_up_date
-      = text_field_tag "follow_up_date_#{procedure.id}", procedure.display_follow_up, class: procedure.follow_up_date.blank? ? "hidden" : "", readonly: true
-    .glyphicon.glyphicon-calendar.btn.btn-warning#follow_up{class: procedure.follow_up_date.blank? ? "" : "hidden"}
-      = link_to '', '#'
+      = text_field_tag "follow_up_date_#{procedure.id}", procedure.display_follow_up, class: "text-center #{hidden_class(procedure.follow_up_date.blank?)}"
+    .glyphicon.glyphicon-calendar.btn.btn-warning#follow_up{class: "#{hidden_class(!procedure.follow_up_date.blank?)}"}
   .col-xs-2.text-center
     .col
       .glyphicon.glyphicon-plus.btn.btn-success.add_note{value: "#{procedure.id}"}
