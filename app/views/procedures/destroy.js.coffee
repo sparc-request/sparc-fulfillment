@@ -1,5 +1,8 @@
-$("#procedure_<%= @procedure_id %>").remove()
+procedure = $(".row.procedure[data-id='<%= @procedure.id %>']")
 
-core = $("#core_<%= @core_id %>")
-if core.next().attr('id') == "end_of_core_<%= @core_id %>"
-  core.remove()
+if procedure.siblings().length == 0
+  parent = procedure.parents(".row.core")
+
+  parent.remove()
+else
+  procedure.remove()
