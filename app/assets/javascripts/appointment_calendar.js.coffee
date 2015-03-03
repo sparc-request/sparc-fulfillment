@@ -64,7 +64,7 @@ $ ->
 
   $(document).on('change', '.incomplete',  ->
     procedure_id = $(this).val()
-    selected_procedure_status = $(this).attr
+
     $.ajax
       type: 'GET'
       url:  "/appointment_calendar/edit_incomplete_procedure?procedure_id=#{procedure_id}"
