@@ -8,7 +8,7 @@
         %h4.modal-title.text-center= t(:notes)[:incomplete_header]
       .modal-body
         .form-group
-          = p.label :reason, "Select a Reason", class: "col-sm-4 control-label"
+          = p.label :reason, t(:procedure)[:select_reason], class: "col-sm-4 control-label"
           .col-sm-7= p.select :reason, Procedure::REASONS, {}, {class: 'form-control'}
         = fields_for note do |n|
           .form-group

@@ -133,6 +133,7 @@ en:
   procedure:
     follow_up: "Follow Up"
     fud: "Follow Up Date"
+    select_reason: "Select a Reason"
 
   services:
     name: "Selected Service"
