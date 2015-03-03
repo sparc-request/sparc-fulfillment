@@ -17,7 +17,6 @@ RSpec.describe Participant, type: :model do
     it { should validate_presence_of(:last_name) }
     it { should validate_presence_of(:mrn) }
     it { should validate_presence_of(:date_of_birth) }
-    it { should validate_presence_of(:phone) }
     it { should validate_presence_of(:ethnicity) }
     it { should validate_presence_of(:race) }
     it { should validate_presence_of(:gender) }

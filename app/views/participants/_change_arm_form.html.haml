@@ -15,6 +15,6 @@
               = p.label "arm_id", t(:participant)[:arm], class: "col-sm-4 control-label"
               .col-sm-7= p.select "arm_id", options_from_collection_for_select(protocol.arms, "id", "name", participant.arm_id), {include_blank: true}, :class => "form-control"
       .modal-footer
-        .center-block{style: "width: 205px;"}
+        .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
           %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

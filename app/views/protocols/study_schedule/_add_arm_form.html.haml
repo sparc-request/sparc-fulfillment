@@ -29,6 +29,6 @@
                       = check_box_tag "services[]", [s.id]
                       = s.name
       .modal-footer
-        .center-block{style: "width: 205px;"}
+        .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
           %input.btn.btn-primary{type: 'submit', value: "Add Arm"}

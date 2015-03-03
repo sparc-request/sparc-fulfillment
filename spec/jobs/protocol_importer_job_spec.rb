@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe SubServiceRequestImporterJob, type: :job, vcr: true do
+RSpec.describe ProtocolImporterJob, type: :job, vcr: true do
 
   describe '#enqueue', delay: true do
 
     it 'should create a Delayed::Job' do
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
 
-      SubServiceRequestImporterJob.enqueue(6213, callback_url, 'create')
+      ProtocolImporterJob.enqueue(6213, callback_url, 'create')
 
       expect(Delayed::Job.where(queue: 'sparc_api_requests').count).to eq(1)
     end
@@ -16,10 +16,10 @@ RSpec.describe SubServiceRequestImporterJob, type: :job, vcr: true do
   describe '#perform' do
 
     before do
-      callback_url            = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
-      sub_service_updater_job = SubServiceRequestImporterJob.new(6213, callback_url, 'update')
+      callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
+      protocol_job = ProtocolImporterJob.new(6213, callback_url, 'update')
 
-      sub_service_updater_job.perform
+      protocol_job.perform
     end
 
     it 'should make requests to the objects callback_url' do
@@ -37,24 +37,34 @@ RSpec.describe SubServiceRequestImporterJob, type: :job, vcr: true do
     end
 
     it 'should import the full Protocol' do
-      expect(Protocol.count).to eq(1)
-      expect(Protocol.where('sparc_id IS NULL').any?).to_not be
-      expect(Protocol.first.arms.any?).to be
-      expect(Protocol.first.arms.first.visit_groups.any?).to be
-      expect(Protocol.first.arms.first.visit_groups.first.visits.any?).to be
+      protocol = Protocol.find_by(sparc_id: 7564)
 
-      expect(Arm.any?).to be
+      # Protocol
+      expect(Protocol.where('sparc_id IS NULL').any?).to_not be
+      expect(protocol.study_cost).to eq(1320300)
+      expect(protocol.stored_percent_subsidy).to eq(9.9)
+      expect(protocol.status).to eq('complete')
+
+      # UserRoles
+      expect(protocol.user_roles.any?).to be
+
+      # Arms
       expect(Arm.where('sparc_id IS NULL').any?).to_not be
       expect(Arm.where('protocol_id IS NULL').any?).to_not be
+      expect(protocol.arms.any?).to be
+      expect(protocol.arms.first.visit_groups.any?).to be
+      expect(protocol.arms.first.visit_groups.first.visits.any?).to be
 
+      # VisitGroups
       expect(VisitGroup.any?).to be
       expect(VisitGroup.where('sparc_id IS NULL').any?).to_not be
       expect(VisitGroup.where('arm_id IS NULL').any?).to_not be
 
+      # LineItems
       expect(LineItem.any?).to be
-      # expect(LineItem.where('service_id IS NULL').any?).to_not be
       expect(LineItem.where('arm_id IS NULL').any?).to_not be
 
+      # Visits
       expect(Visit.any?).to be
       expect(Visit.where('sparc_id IS NULL').any?).to_not be
       expect(Visit.where('visit_group_id IS NULL').any?).to_not be
@@ -66,7 +76,7 @@ RSpec.describe SubServiceRequestImporterJob, type: :job, vcr: true do
     end
 
     it "should POST once to the Faye server on the 'protocol_id' channel", delay: false do
-      protocol = Protocol.first
+      protocol = Protocol.find_by(sparc_id: 7564)
 
       expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/).with { |request| request.body.match(/protocol_#{protocol.id}/) }).to have_been_made.once
     end

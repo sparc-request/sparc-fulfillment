@@ -19,4 +19,19 @@ feature 'User views protocols', js: true do
 
     expect(page).to have_css('table.protocols td.short_title', text: 'Test 123')
   end
+
+  scenario 'and sees a the Protocols table even when :irb_expiration_date is NULL' do
+    create(:protocol_imported_from_sparc, irb_expiration_date: nil)
+    visit root_path
+
+    expect(page).to have_css('table.protocols td.irb_expiration_date', text: '')
+  end
+
+  scenario 'and sees a the Protocols table even when :irb_approval_date is NULL' do
+    create(:protocol_imported_from_sparc, irb_approval_date: nil)
+    visit root_path
+
+    expect(page).to have_css('table.protocols td.irb_approval_date', text: '')
+  end
 end
+

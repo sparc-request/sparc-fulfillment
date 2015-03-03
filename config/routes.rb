@@ -32,8 +32,9 @@ Rails.application.routes.draw do
       put 'complete_procedure'
       get 'new_incomplete_procedure'
       post 'create_incomplete_procedure'
-      put 'create_follow_up'
-      put 'update_follow_up'
+      put 'incomplete_procedure'
+      get 'edit_follow_up/(:procedure_id)', to: 'appointment_calendar#edit_follow_up'
+      patch 'update_follow_up/(:procedure_id)', to: 'appointment_calendar#update_follow_up'
     end
   end
 

@@ -130,6 +130,10 @@ en:
     note: "Note"
     incomplete_header: "Reason for Incompletion"
 
+  procedure:
+    follow_up: "Follow Up"
+    fud: "Follow Up Date"
+
   services:
     name: "Selected Service"
     arm: "Select Arm(s)"

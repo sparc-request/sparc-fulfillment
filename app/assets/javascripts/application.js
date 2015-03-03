@@ -15,11 +15,10 @@
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.en-GB
 //= require tableExport
 //= require jquery.base64
-//= require jquery.cookie
+
 //= require protocols
 //= require service_calendar
 //= require participants
 //= require study_schedule_edit_buttons
 //= require appointment_calendar
-//= require appointments
 //= require faye
