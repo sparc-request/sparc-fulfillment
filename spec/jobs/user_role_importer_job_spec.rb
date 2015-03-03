@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe ProjectRoleImporterJob, type: :job, vcr: true do
+RSpec.describe UserRoleImporterJob, type: :job, vcr: true do
 
   describe '#enqueue', delay: true do
 
     it 'should create a Delayed::Job' do
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/project_roles/1.json"
 
-      ProjectRoleImporterJob.enqueue(1, callback_url, 'create')
+      UserRoleImporterJob.enqueue(1, callback_url, 'create')
 
       expect(Delayed::Job.where(queue: 'sparc_api_requests').count).to eq(1)
     end
@@ -28,7 +28,7 @@ RSpec.describe ProjectRoleImporterJob, type: :job, vcr: true do
     context 'create' do
 
       before do
-        project_role_importer_job = ProjectRoleImporterJob.new(1, @callback_url, 'create')
+        project_role_importer_job = UserRoleImporterJob.new(1, @callback_url, 'create')
 
         project_role_importer_job.perform
       end
@@ -89,7 +89,7 @@ RSpec.describe ProjectRoleImporterJob, type: :job, vcr: true do
                                             rights: 'rights',
                                             role: 'role',
                                             role_other: 'role_other')
-        project_role_importer_job = ProjectRoleImporterJob.new(1, @callback_url, 'update')
+        project_role_importer_job = UserRoleImporterJob.new(1, @callback_url, 'update')
 
         project_role_importer_job.perform
       end
@@ -133,7 +133,7 @@ RSpec.describe ProjectRoleImporterJob, type: :job, vcr: true do
                                             rights: 'rights',
                                             role: 'role',
                                             role_other: 'role_other')
-        project_role_importer_job = ProjectRoleImporterJob.new(1, @callback_url, 'destroy')
+        project_role_importer_job = UserRoleImporterJob.new(1, @callback_url, 'destroy')
 
         project_role_importer_job.perform
       end

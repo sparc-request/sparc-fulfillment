@@ -1,0 +1,20 @@
+.modal-dialog
+  .modal-content
+    = form_for procedure, {remote: true, url: "/appointment_calendar/update_follow_up/#{procedure.id}", html: {class: "form-horizontal", role: "form"}} do |p|
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4.modal-title.text-center= t(:procedure)[:follow_up]
+      .modal-body
+        .form-group
+          = p.label "follow_up_date", t(:procedure)[:fud], class: "col-sm-4 control-label"
+          .col-sm-7= p.text_field "follow_up_date", {class: 'form-control', value: format_date(procedure.follow_up_date), data: {provide: "datepicker", 'date-format' => 'yyyy-mm-dd'}}
+        = fields_for note do |n|
+          .form-group
+            = n.label "comment", t(:notes)[:note], class: "col-sm-4 control-label"
+            .col-sm-7= n.text_area "comment", {class: 'form-control', rows: "4"}
+      .modal-footer
+        .center-block{style: "width: 205px;"}
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}
