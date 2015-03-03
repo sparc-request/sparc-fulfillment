@@ -2,10 +2,12 @@ $ ->
 
   $(document).on 'click', '.task-complete', ->
     task_id = $(this).attr('task_id')
-    checked = $(this).val()
-    console.log task_id
-    console.log checked
+    data = {'is_complete' : true}
     $.ajax
-      type: "PUT'
+      type: 'PUT'
+      url: "/tasks/#{task_id}"
+      data: data
+      success: ->
+        $('#task-list').bootstrapTable('refresh', {url: "/tasks.json", silent: "true"})
 
 

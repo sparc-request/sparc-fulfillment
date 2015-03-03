@@ -155,3 +155,5 @@ en:
       saved: "Participant Saved"
       removed: "Participant Removed"
       arm_change: "Participant Successfully Changed Arms"
+    task:
+      completed: "Task Marked as Complete"
