@@ -14,9 +14,14 @@ class TasksController < ApplicationController
 
   def update
     @task = Task.find(params[:id])
-    if params[:is_complete]
-      @task.update_attributes(is_complete: true)
+    if @task.update_attributes(task_params)
       flash[:success] = t(:flash_messages)[:task][:completed] if @task.valid?
     end
+  end
+
+  private
+
+  def task_params
+    params.require(:task).permit(:is_complete)
   end
 end
