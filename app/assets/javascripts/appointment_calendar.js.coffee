@@ -76,7 +76,7 @@ $ ->
     if procedure_status == "complete"
       $("#status_complete_#{procedure_id}").prop('checked', true)
     else
-      $("#status_incomplete_#{procedure_id}").attr('checked', false)
+      $("#status_incomplete_#{procedure_id}").prop('checked', false)
   )
 
   $(document).on('click', '.follow_up_date',  ->
