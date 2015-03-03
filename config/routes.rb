@@ -55,7 +55,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :tasks
+  resources :tasks do
+    collection do
+      put 'update_completed'
+    end
+  end
 
   get 'multiple_line_items/(:protocol_id)/(:service_id)/necessary_arms', to: 'multiple_line_items#necessary_arms'
   get 'multiple_line_items/(:protocol_id)/(:service_id)/new', to: 'multiple_line_items#new'

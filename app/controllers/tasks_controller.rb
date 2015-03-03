@@ -11,4 +11,12 @@ class TasksController < ApplicationController
       end
     end
   end
+
+  def update_completed
+
+  end
+
+  def update
+    puts params
+  end
 end

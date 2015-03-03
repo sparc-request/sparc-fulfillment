@@ -7,4 +7,11 @@ module TaskHelper
 
     html
   end
+
+  def format_checkbox(task_id)
+    html = '-'
+    html = raw content_tag(:input, '', class: 'task-complete', type: 'checkbox', task_id: task_id)
+
+    html
+  end
 end
