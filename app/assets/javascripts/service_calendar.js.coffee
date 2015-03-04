@@ -21,7 +21,7 @@ $ ->
   $(document).on 'change', '.visit_dropdown', ->
     page = $(this).find('option:selected').attr('parent_page')
     cur_page = $(this).attr('page')
-
+    tab = $('#current_tab').val()
     if page == undefined || page == false
       page = $(this).val()
 
@@ -33,6 +33,7 @@ $ ->
     data =
       'arm_id': $(this).data('arm_id')
       'page'  : page
+      'tab'   : tab
     $.ajax
       type: 'GET'
       url:  '/service_calendar/change_page'
