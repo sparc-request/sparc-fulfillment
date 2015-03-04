@@ -14,12 +14,11 @@ $ ->
   $(document).on( 'change', '#appointment_select', (event) ->
     id = $(this).val()
 
-    if id
+    if id != "-1"
       $.ajax
         type: 'GET'
         url: "/appointments/#{id}.js"
-      event.stopPropagation()
-    $('.btn-group').removeClass('open')
+    event.stopPropagation()
   )
 
   $(document).on 'click', '.add_service', ->
@@ -57,9 +56,27 @@ $ ->
 
   $(document).on('change', '.complete',  ->
     procedure_id = $(this).val()
+
     $.ajax
       type: 'PUT'
-      url: "/participant_calendar/complete_procedure?procedure_id=#{procedure_id}"
+      url: "/appointment_calendar/complete_procedure?procedure_id=#{procedure_id}"
+  )
+
+  $(document).on('change', '.incomplete',  ->
+    procedure_id = $(this).val()
+
+    $.ajax
+      type: 'GET'
+      url:  "/appointment_calendar/edit_incomplete_procedure?procedure_id=#{procedure_id}"
+    )
+
+  $(document).on('click', '.close_incomplete', ->
+    procedure_id = $(this).attr('value')
+    procedure_status = $("#procedure_#{procedure_id}").attr("procedure-status")
+    if procedure_status == "complete"
+      $("#status_complete_#{procedure_id}").prop('checked', true)
+    else
+      $("#status_incomplete_#{procedure_id}").prop('checked', false)
   )
 
   $(document).on('click', '.follow_up_date',  ->
