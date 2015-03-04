@@ -1,21 +1,21 @@
-.row.procedure{id: "procedure_#{procedure.id}"}
+.row.procedure{id: "procedure_#{procedure.id}", "procedure-status" => procedure.status || ""}
   .col-xs-2.col= procedure.service_name
   .col-xs-1.billing_type
     .col= select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
   .col-xs-2
     .form-group
       %div
-        %input{class: "complete", name: "status_#{procedure.id}", type: "radio", id: "status_complete_#{procedure.id}", value: "#{procedure.id}"}
+        %input{class: "complete", name: "status_#{procedure.id}", type: "radio", id: "status_complete_#{procedure.id}", value: "#{procedure.id}", checked: procedure.status == 'complete'}
         Complete
       %div
-        %input{class: "incomplete", name: "status_#{procedure.id}", type: "radio", id: "status_incomplete_#{procedure.id}", value: "#{procedure.id}"}
+        %input{class: "incomplete", name: "status_#{procedure.id}", type: "radio", id: "status_incomplete_#{procedure.id}", value: "#{procedure.id}", checked: procedure.status == 'incomplete'}
         Incomplete
   .col-xs-2
-    .col= select_tag "reason_#{procedure.id}", options_for_select(["r","t","o"],"r"), class: "form-control"
+    .col= select_tag "reason_#{procedure.id}", options_for_select(Procedure::REASONS, procedure.reason), class: "form-control" if procedure.reason
   .col-xs-2.text-center
-    .col.follow_up_date
-      = text_field_tag "follow_up_date_#{procedure.id}", procedure.display_follow_up, class: procedure.follow_up_date.blank? ? "hidden" : "", readonly: true
-    .glyphicon.glyphicon-calendar.btn.btn-warning#follow_up{class: procedure.follow_up_date.blank? ? "" : "hidden"}
+    .col.follow_up_date{value: "#{procedure.id}"}
+      = text_field_tag "follow_up_date_#{procedure.id}", format_date(procedure.follow_up_date), class: procedure.follow_up_date.blank? ? "hidden" : "", readonly: true
+    .glyphicon.glyphicon-calendar.btn.btn-warning.follow_up_date{class: procedure.follow_up_date.blank? ? "" : "hidden", value: "#{procedure.id}"}
       = link_to '', '#'
   .col-xs-2.text-center
     .col

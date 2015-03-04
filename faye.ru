@@ -1,4 +1,6 @@
 require 'faye'
+require 'dotenv'
+Dotenv.load
 
 class ServerAuth
   def incoming(message, callback)

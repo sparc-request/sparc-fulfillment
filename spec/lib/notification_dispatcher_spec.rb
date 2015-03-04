@@ -16,8 +16,8 @@ RSpec.describe NotificationDispatcher, type: :request do
             sparc_sends_notification_post(params)
           end
 
-          it 'should create a struct:SubServiceRequestImporterJob delayed job' do
-            expect(Delayed::Job.where("handler LIKE '%struct:SubServiceRequestImporterJob%'").one?).to be
+          it 'should create a struct:ProtocolImporterJob delayed job' do
+            expect(Delayed::Job.where("handler LIKE '%struct:ProtocolImporterJob%'").one?).to be
           end
         end
       end
@@ -32,8 +32,8 @@ RSpec.describe NotificationDispatcher, type: :request do
             sparc_sends_notification_post(params)
           end
 
-          it 'should create a ProjectRoleImporterJob delayed job' do
-            expect(Delayed::Job.where("handler LIKE '%struct:ProjectRoleImporterJob%'").one?).to be
+          it 'should create a UserRoleImporterJob delayed job' do
+            expect(Delayed::Job.where("handler LIKE '%struct:UserRoleImporterJob%'").one?).to be
           end
         end
       end
@@ -46,39 +46,18 @@ RSpec.describe NotificationDispatcher, type: :request do
         before do
           @object = build(:service, sparc_id: 1)
           @params = { notification: attributes_for(:notification_service_create) }
+
+          sparc_sends_notification_post(@params)
         end
 
-        context 'object not present' do
+        it 'should create an object with a :sparc_id' do
+          expected_service = Service.where(sparc_id: 1).first
 
-          before { sparc_sends_notification_post(@params) }
-
-          it 'should create an object with a :sparc_id' do
-            expected_service = Service.where(sparc_id: 1).first
-
-            expect(expected_service).to be
-          end
-
-          it 'should create a RemoteObjectUpdaterJob delayed job' do
-            expect(Delayed::Job.where("handler LIKE '%RemoteObjectUpdaterJob%'").one?).to be
-          end
+          expect(expected_service).to be
         end
 
-        context 'object already present' do
-
-          before do
-            @object.save
-            sparc_sends_notification_post(@params)
-          end
-
-          it 'should not create a new object' do
-            sparc_sends_notification_post(@params)
-
-            expect(Service.count).to eq(1)
-          end
-
-          it 'should not create a RemoteObjectUpdaterJob delayed job' do
-            expect(Delayed::Job.count).to eq(0)
-          end
+        it 'should create a RemoteObjectUpdaterJob delayed job' do
+          expect(Delayed::Job.where("handler LIKE '%RemoteObjectUpdaterJob%'").one?).to be
         end
       end
 

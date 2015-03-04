@@ -3,24 +3,75 @@ require 'rails_helper'
 feature 'Navigation', js: true do
 
   scenario 'User clicks on Home button' do
-    create_protocols
-    visit root_path
-
-    page.find('table.protocols tbody tr:first-child').click
-    click_button 'Home'
-
-    expect(page.body).to have_css('table.protocols')
+    given_i_am_viewing_a_protocol
+    and_i_click_the_home_button
+    then_i_should_be_on_the_home_page
   end
 
   scenario 'User returns to protocol page from Participant Tracker page' do
-    create_protocols
-    visit root_path
+    given_i_am_on_the_participant_page
+    and_i_click_the_browser_back_button
+    then_i_should_see_the_participant_tracker_tab_is_active
+  end
 
-    page.find('table.protocols tbody tr:first-child').click
+  scenario 'User switches between Protocols and views active tabs' do
+    given_there_are_two_protocols
+    and_i_view_the_first_protocol_participant_tracker
+    and_i_visit_the_home_page
+    and_i_view_the_second_protocol
+    then_the_study_schedule_tab_should_be_active
+  end
+
+  def given_there_are_two_protocols
+    create_list(:protocol_imported_from_sparc, 2)
+  end
+
+  def and_i_view_the_first_protocol_participant_tracker
+    protocol = Protocol.first
+
+    visit protocol_path(protocol.sparc_id)
+    click_link 'Participant Tracker'
+  end
+
+  def and_i_visit_the_home_page
+    visit root_path
+  end
+
+  def and_i_view_the_second_protocol
+    protocol = Protocol.second
+
+    visit protocol_path(protocol.sparc_id)
+  end
+
+  def then_the_study_schedule_tab_should_be_active
+    expect(page.body).to have_css('.tab-pane.active#study_schedule')
+  end
+
+  def given_i_am_viewing_a_protocol
+    protocol = create(:protocol_imported_from_sparc)
+
+    visit protocol_path(protocol.sparc_id)
+  end
+
+  def and_i_click_the_home_button
+    click_button 'Home'
+  end
+
+  def then_i_should_be_on_the_home_page
+    expect(page.body).to have_css('table.protocols')
+  end
+
+  def given_i_am_on_the_participant_page
+    given_i_am_viewing_a_protocol
     click_link 'Participant Tracker'
     page.find('table.participants tbody tr:first-child td.calendar a').click
-    click_browser_back_button
+  end
 
+  def and_i_click_the_browser_back_button
+    click_browser_back_button
+  end
+
+  def then_i_should_see_the_participant_tracker_tab_is_active
     expect(page.body).to have_css('.tab-pane.active#participant_tracker')
   end
 end

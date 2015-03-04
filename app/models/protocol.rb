@@ -9,6 +9,7 @@ class Protocol < ActiveRecord::Base
   has_many :user_roles
 
   after_save :update_faye
+  after_destroy :update_faye
 
   #For displaying the subsidy committed on the index page
   def subsidy_committed

@@ -1,5 +1,7 @@
 class Procedure < ActiveRecord::Base
 
+  REASONS = ['this', 'that', 'and', 'the', 'other', 'thing']
+
   acts_as_paranoid
 
   belongs_to :appointment
@@ -23,9 +25,5 @@ class Procedure < ActiveRecord::Base
     [["R", "research_billing_qty"],
      ["T", "insurance_billing_qty"],
      ["O", "other_billing_qty"]]
-  end
-
-  def display_follow_up
-    self.follow_up_date.strftime('%x') unless self.follow_up_date.blank?
   end
 end
