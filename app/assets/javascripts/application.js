@@ -21,6 +21,5 @@
 //= require participants
 //= require study_schedule_edit_buttons
 //= require appointment_calendar
-//= require appointments
 //= require tasks
 //= require faye
