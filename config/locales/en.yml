@@ -48,6 +48,18 @@ en:
     subsidy_committed: "Subsidy Amount"
     subsidy_expended: "Subsidy Expended"
 
+  task_index:
+    created_by: "Created By"
+    completed: "Completed"
+    participant_name: "Patient Name"
+    protocol_id: "Protocol"
+    visit_name: "Visit"
+    arm_name: "Arm"
+    task: "Task/Service"
+    assignment: "Assignment"
+    due_date: "Due Date"
+    reschedule: "Reschedule"
+
   protocol_tabs:
     study_schedule: "Study Schedule"
     participant_list: "Participant List"
@@ -128,6 +140,12 @@ en:
     date: "Date"
     action: "Action"
     note: "Note"
+    incomplete_header: "Reason for Incompletion"
+
+  procedure:
+    follow_up: "Follow Up"
+    fud: "Follow Up Date"
+    select_reason: "Select a Reason"
 
   services:
     name: "Selected Service"
@@ -143,3 +161,5 @@ en:
       saved: "Participant Saved"
       removed: "Participant Removed"
       arm_change: "Participant Successfully Changed Arms"
+    task:
+      updated: "Task Has Been Updated"

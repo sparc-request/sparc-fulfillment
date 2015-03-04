@@ -181,6 +181,21 @@ ActiveRecord::Schema.define(version: 20150227193115) do
   add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
   add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
 
+  create_table "tasks", force: true do |t|
+    t.string   "participant_name"
+    t.string   "created_by"
+    t.integer  "protocol_id"
+    t.string   "visit_name"
+    t.string   "arm_name"
+    t.string   "task"
+    t.string   "assignment"
+    t.date     "due_date"
+    t.boolean  "is_complete"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_roles", force: true do |t|
     t.integer  "user_id"
     t.integer  "protocol_id"

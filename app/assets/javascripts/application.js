@@ -15,7 +15,6 @@
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.en-GB
 //= require tableExport
 //= require jquery.base64
-//= require jquery.cookie
 //= require bootstrap-timepicker
 
 //= require protocols
@@ -23,5 +22,5 @@
 //= require participants
 //= require study_schedule_edit_buttons
 //= require appointment_calendar
-//= require appointments
+//= require tasks
 //= require faye
