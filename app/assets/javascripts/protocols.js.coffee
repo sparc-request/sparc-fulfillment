@@ -1,5 +1,9 @@
 $ ->
   if $("body.protocols-index").length > 0
+
+    # Delete Protocol tab-remembering cookie
+    $.removeCookie("active-protocol-tab")
+
     #Setting the default state of the index page on initial load
     $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
     $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
@@ -75,7 +79,7 @@ $ ->
 
     $('a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
       tab = String(e.target).split("#")[1]
-      $.cookie("active-protocol-tab", tab, expires: 1)
+      $.cookie("active-protocol-tab", tab, expires: 1, path: '/')
 
 (exports ? this).cents_to_dollars = (value) ->
   cents = value / 100
