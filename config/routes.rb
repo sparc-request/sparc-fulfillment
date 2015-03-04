@@ -23,7 +23,6 @@ Rails.application.routes.draw do
       get 'change_arm(/:id)', to: 'participants#edit_arm'
       post 'change_arm(/:id)', to: 'participants#update_arm'
       get 'select_appointment/(:id)', to: 'participants#select_appointment'
-
     end
   end
 
@@ -57,6 +56,8 @@ Rails.application.routes.draw do
       put 'remove_line_item'
     end
   end
+
+  resources :tasks
 
   get 'multiple_line_items/(:protocol_id)/(:service_id)/necessary_arms', to: 'multiple_line_items#necessary_arms'
   get 'multiple_line_items/(:protocol_id)/(:service_id)/new', to: 'multiple_line_items#new'

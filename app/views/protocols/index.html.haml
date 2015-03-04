@@ -3,5 +3,7 @@
     .col-md-12= render 'protocols'
 
 - content_for :nav_buttons do
-  %li= button_to "Task List", "#", class: "btn btn-primary navbar-btn"
+  %li
+    = button_to tasks_path, method: :get, class: "btn btn-primary navbar-btn" do
+      Task List
   %li= button_to "Billing/Auditing Report", "#", class: "btn btn-primary navbar-btn"
