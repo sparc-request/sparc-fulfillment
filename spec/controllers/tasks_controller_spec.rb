@@ -41,10 +41,10 @@ RSpec.describe TasksController do
     end
   end
 
-  describe "PATCH #update" do
+  describe "PUT #update" do
 
     it "should update a task" do
-      patch :update, {
+      put :update, {
         id: @task.id,
         task: attributes_for(:task, participant_name: 'Burt Macklin'),
         format: :js
