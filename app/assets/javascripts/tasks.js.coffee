@@ -2,9 +2,9 @@ $ ->
 
   $(document).on 'click', '.task-complete', ->
     task_id = $(this).attr('task_id')
-    data = 'task': 'is_complete' : true
+    data = 'task': 'is_complete' : 'true'
     $.ajax
-      type: 'PATCH'
+      type: 'PUT'
       url: "/tasks/#{task_id}"
       data: data
       success: ->

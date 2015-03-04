@@ -15,7 +15,7 @@ class TasksController < ApplicationController
   def update
     @task = Task.find(params[:id])
     if @task.update_attributes(task_params)
-      flash[:success] = t(:flash_messages)[:task][:completed]
+      flash[:success] = t(:flash_messages)[:task][:updated]
     end
   end
 
