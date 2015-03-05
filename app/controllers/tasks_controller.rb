@@ -19,9 +19,13 @@ class TasksController < ApplicationController
     end
   end
 
+  def task_reschedule
+    @task = Task.find(params[:id])
+  end
+
   private
 
   def task_params
-    params.require(:task).permit(:is_complete, :participant_name)
+    params.require(:task).permit(:is_complete, :participant_name, :due_date)
   end
 end
