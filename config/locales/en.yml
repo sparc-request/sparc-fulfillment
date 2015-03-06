@@ -50,6 +50,7 @@ en:
 
   task_index:
     created_by: "Created By"
+    task_type: "Task Type"
     completed: "Completed"
     participant_name: "Patient Name"
     protocol_id: "Protocol"

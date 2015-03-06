@@ -3,6 +3,7 @@ FactoryGirl.define do
   factory :task do
 
     participant_name { Faker::Name.name }
+    task_type { "Participant-level Task" }
     created_by { Faker::Name.name }
     protocol_id { rand(5000) }
     visit_name { "Visit" + " #{rand(50)}" }
