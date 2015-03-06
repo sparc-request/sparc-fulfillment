@@ -58,7 +58,20 @@ $ ->
     $(this).timepicker({disableFocus: true})
   )
 
+  $(document).on('focus', '.adatepicker', ->
+    $(this).datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true
+    })
+  )
+
   $(document).on('hide.datepicker', (e) ->
+    # Without this, hide.timepicker is also being called.
+    # Need to leave this in for now.
+    e.stopImmediatePropagation()
+  )
+
+  $(document).on('hide', '.adatepicker', (e) ->
     id = $(e.target).attr('appointment_id')
     data =
       'date': $(e.target).val()
@@ -66,10 +79,6 @@ $ ->
       type: 'PATCH'
       url: "/appointments/#{id}/#{e.target.id}"
       data: data
-
-    # Without this, hide.timepicker is also being called.
-    # Need to leave this in for now.
-    e.stopImmediatePropagation()
   )
 
   $(document).on('hide.timepicker', (e) ->
