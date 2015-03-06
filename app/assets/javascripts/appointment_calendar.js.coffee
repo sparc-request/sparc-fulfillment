@@ -55,7 +55,10 @@ $ ->
   )
 
   $(document).on('focus', '.atimepicker', ->
-    $(this).timepicker({disableFocus: true})
+    $(this).timepicker({
+      disableFocus: true,
+      showMeridian: false
+    })
   )
 
   $(document).on('focus', '.adatepicker', ->
@@ -85,8 +88,7 @@ $ ->
     id = $(e.target).attr('appointment_id')
     data =
       'hour': e.time.hours,
-      'minute': e.time.minutes,
-      'meridian': e.time.meridian
+      'minute': e.time.minutes
     $.ajax
       type: 'PATCH'
       url: "/appointments/#{id}/#{e.target.id}"

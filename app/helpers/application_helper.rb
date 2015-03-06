@@ -10,7 +10,7 @@ module ApplicationHelper
 
   def format_time(time)
     if time.present?
-      time.strftime('%l:%M %p')
+      time.strftime('%H:%M')
     else
       ''
     end

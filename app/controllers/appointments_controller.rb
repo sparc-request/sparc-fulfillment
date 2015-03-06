@@ -17,14 +17,13 @@ class AppointmentsController < ApplicationController
   def completed_time
     @appointment = Appointment.find params[:id]
     date = show_time @appointment.completed_date
-    hour = Time.strptime(params[:hour] + params[:meridian], "%I%P").strftime("%H")
-    updated_date = date.change({hour: hour, min: params[:minute]})
+    updated_date = date.change({hour: params[:hour], min: params[:minute]})
     @appointment.update_attributes(completed_date: updated_date)
   end
 
   def completed_date
     @appointment = Appointment.find params[:id]
-    updated_date = ''
+    updated_date = nil
 
     if not params[:date].blank?
       year, month, day = params[:date].split('-')
@@ -38,14 +37,13 @@ class AppointmentsController < ApplicationController
   def start_time
     @appointment = Appointment.find params[:id]
     date = show_time @appointment.start_date
-    hour = Time.strptime(params[:hour] + params[:meridian], "%I%P").strftime("%H")
-    updated_date = date.change({hour: hour, min: params[:minute]})
+    updated_date = date.change({hour: params[:hour], min: params[:minute]})
     @appointment.update_attributes(start_date: updated_date)
   end
 
   def start_date
     @appointment = Appointment.find params[:id]
-    updated_date = ''
+    updated_date = nil
 
     if not params[:date].blank?
       year, month, day = params[:date].split('-')
