@@ -1,6 +1,7 @@
 json.(task)
 
 json.created_by task.created_by
+json.task_type task.task_type
 json.is_complete  format_checkbox(task.id)
 json.participant_name task.participant_name
 json.protocol_id task.protocol_id
