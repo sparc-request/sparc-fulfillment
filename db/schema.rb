@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150227193115) do
+ActiveRecord::Schema.define(version: 20150306150815) do
 
   create_table "appointments", force: true do |t|
     t.integer  "participant_id"
@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(version: 20150227193115) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "task_type"
   end
 
   create_table "user_roles", force: true do |t|

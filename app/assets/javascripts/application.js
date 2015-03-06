@@ -15,6 +15,7 @@
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.en-GB
 //= require tableExport
 //= require jquery.base64
+//= require bootstrap-timepicker
 
 //= require protocols
 //= require service_calendar

@@ -6,17 +6,17 @@
   .col-lg-6
     %form.form-horizontal
       .form-group
-        %label.col-xs-3.control-label{for: "appointment_start_date"}= t(:appointment)[:start_date]
-        .col-xs-3= text_field_tag 'appointment_start_date', format_date(appointment.start_date), class: 'form-control'
-        %label.col-xs-3.control-label{for: "appointment_start_time"}= t(:appointment)[:start_time]
-        .col-xs-3= text_field_tag 'appointment_start_time', format_time(appointment.start_date), class: 'form-control'
+        %label.col-xs-3.control-label{for: 'start_date'}= t(:appointment)[:start_date]
+        .col-xs-3= text_field_tag 'start_date', format_date(appointment.start_date), class: 'adatepicker form-control', appointment_id: appointment.id
+        %label.col-xs-3.control-label{for: 'start_time'}= t(:appointment)[:start_time]
+        .col-xs-3= text_field_tag 'start_time', format_time(appointment.start_date), class: 'atimepicker form-control', appointment_id: appointment.id
   .col-lg-6
     %form.form-horizontal
       .form-group
-        %label.col-xs-3.control-label{for: "appointment_completed_date"}= t(:appointment)[:completed_date]
-        .col-xs-3= text_field_tag 'appointment_completed_date', format_date(appointment.completed_date), class: 'form-control'
-        %label.col-xs-3.control-label{for: "appointment_completed_time"}= t(:appointment)[:completed_time]
-        .col-xs-3= text_field_tag 'appointment_completed_time', format_time(appointment.completed_date), class: 'form-control'
+        %label.col-xs-3.control-label{for: 'completed_date'}= t(:appointment)[:completed_date]
+        .col-xs-3= text_field_tag 'completed_date', format_date(appointment.completed_date), class: 'adatepicker form-control', appointment_id: appointment.id
+        %label.col-xs-3.control-label{for: 'completed_time'}= t(:appointment)[:completed_time]
+        .col-xs-3= text_field_tag 'completed_time', format_time(appointment.completed_date), class: 'atimepicker form-control', appointment_id: appointment.id
 .row
   .col-xs-12
     .calendar.participant
