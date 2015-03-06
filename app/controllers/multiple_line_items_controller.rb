@@ -44,7 +44,7 @@ class MultipleLineItemsController < ApplicationController
     @arm_hash = {}
     params[:arm_ids].each do |set|
       arm_id, page = set.split
-      line_item = LineItem.new(arm_id: arm_id, service_id: @service_id)
+      line_item = LineItem.new(arm_id: arm_id, service_id: @service_id, subject_count: Arm.find(arm_id).subject_count)
       importer = LineItemVisitsImporter.new(line_item)
       importer.save_and_create_dependents
       @arm_hash[arm_id] = {page: page, line_item: line_item}

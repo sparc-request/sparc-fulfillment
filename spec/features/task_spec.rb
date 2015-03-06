@@ -26,4 +26,20 @@ RSpec.describe 'Task Index spec', type: :feature, js: true do
       expect(page).to have_selector('.task-complete', count: 1)
     end
   end
+
+  describe 'rescheduling a task' do
+
+    before :each do
+      first('.task-reschedule').click
+    end
+
+    it 'should open the modal' do
+      expect(page).to have_css "h4.modal-title.text-center", text: "Reschedule"
+    end
+
+    it 'close the modal if save is clicked' do
+      click_button "Save"
+      expect(page).to_not have_css "h4.modal-title.text-center", text: "Reschedule"
+    end
+  end
 end
