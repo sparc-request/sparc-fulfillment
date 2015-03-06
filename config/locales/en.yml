@@ -50,6 +50,7 @@ en:
 
   task_index:
     created_by: "Created By"
+    task_type: "Task Type"
     completed: "Completed"
     participant_name: "Patient Name"
     protocol_id: "Protocol"
@@ -144,7 +145,7 @@ en:
 
   procedure:
     follow_up: "Follow Up"
-    fud: "Follow Up Date"
+    fud: "Due Date"
     select_reason: "Select a Reason"
 
   services:
