@@ -110,6 +110,9 @@ ActiveRecord::Schema.define(version: 20150309172654) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "total_cost"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zipcode"
     t.string   "recruitment_source"
     t.string   "external_id"
     t.string   "middle_initial",     limit: 1

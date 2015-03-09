@@ -50,6 +50,14 @@ RSpec.describe Participant, type: :model do
       it 'should validate middle initial format to be invalid' do
         expect(build(:participant_with_protocol, middle_initial: "1a")).not_to be_valid
       end
+
+      it 'should validate zipcode format to be valid' do
+        expect(build(:participant_with_protocol, zipcode: "29485")).to be_valid
+      end
+
+      it 'should validate zipcode format to be invalid' do
+        expect(build(:participant_with_protocol, zipcode: "1234")).not_to be_valid
+      end
     end
   end
 
