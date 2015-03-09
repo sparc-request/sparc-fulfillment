@@ -15,12 +15,20 @@ class Participant < ActiveRecord::Base
   after_destroy :update_faye
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, presence: true
-  validate :phone_number_format, :date_of_birth_format
+  validate :phone_number_format, :date_of_birth_format, :zip_code_format
 
   def phone_number_format
     if phone != ""
       if not( /^\d{3}-\d{3}-\d{4}$/.match phone.to_s or /^\d{10}$/.match phone.to_s )
         errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX or XXXXXXXXXX")
+      end
+    end
+  end
+
+  def zip_code_format
+    if zipcode != ""
+      if not( /^\d{5}$/.match zipcode.to_s )
+        errors.add(:zipcode, "is not a zip code in the format XXXXX")
       end
     end
   end

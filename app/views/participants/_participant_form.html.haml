@@ -37,6 +37,12 @@
             .form-group
               = p.label "address", t(:participant)[:address], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "address", {class: 'form-control'}
+              = p.label "city", t(:participant)[:city], class: "col-sm-4 control-label"
+              .col-sm-7= p.text_field "city", {class: 'form-control'}
+              = p.label "state", t(:participant)[:state], class: "col-sm-4 control-label"
+              .col-sm-7= p.select "state", options_for_select(us_states, participant.state), {include_blank: true}, :class => "form-control"
+              = p.label "zipcode", t(:participant)[:zip], class: "col-sm-4 control-label"
+              .col-sm-7= p.text_field "zipcode", {class: 'form-control'}
             .form-group
               = p.label "phone", t(:participant)[:phone], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "phone", {class: 'form-control'}
