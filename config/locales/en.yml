@@ -99,7 +99,7 @@ en:
     tracker: "Participant Tracker"
     last_name: "Last Name"
     first_name: "First Name"
-    mrn: "MRN"
+    mrn: "Subject MRN"
     status: "Participant Status"
     dob: "Date of Birth"
     gender: "Gender"
@@ -113,7 +113,7 @@ en:
     report: "Report"
 
   appointment:
-    protocol_id: "Protocol SPARC ID"
+    protocol_id: "Protocol ID"
     appointment_dropdown: "Please select a visit:"
     completed: "Completed Visits"
     date_of_visit: "Date of Participant Visit"
