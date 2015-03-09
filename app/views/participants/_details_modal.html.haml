@@ -1,0 +1,38 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{type: 'button', data: {dismiss: 'modal'}}
+        %span{aria: {hidden:'true'}} &times;
+        %span.sr-only= t(:actions)[:close]
+      %h4.modal-title.text-center= t(:participant)[:details]
+    .modal-body
+      .details-table
+        .details-header.text-center
+          .col-xs-12= participant.full_name
+        .detail
+          .field.col-xs-4= t(:participant)[:mrn]
+          .col-xs-8= participant.mrn
+        .detail
+          .field.col-xs-4= t(:participant)[:status]
+          .col-xs-8= participant.status
+        .detail
+          .field.col-xs-4= t(:participant)[:dob]
+          .col-xs-8= participant.date_of_birth
+        .detail
+          .field.col-xs-4= t(:participant)[:gender]
+          .col-xs-8= participant.gender
+        .detail
+          .field.col-xs-4= t(:participant)[:ethnicity]
+          .col-xs-8= participant.ethnicity
+        .detail
+          .field.col-xs-4= t(:participant)[:race]
+          .col-xs-8= participant.race
+        .detail
+          .field.col-xs-4= t(:participant)[:address]
+          .col-xs-8= participant.address
+        .detail
+          .field.col-xs-4= t(:participant)[:phone]
+          .col-xs-8= participant.phone
+    .modal-footer
+      .center-block
+        %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

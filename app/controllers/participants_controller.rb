@@ -67,6 +67,11 @@ class ParticipantsController < ApplicationController
     flash[:success] = t(:flash_messages)[:participant][:arm_change]
   end
 
+  def details
+    @protocol = Protocol.find(params[:protocol_id])
+    @participant = Participant.find(params[:participant_id])
+  end
+
   private
 
   def participant_params

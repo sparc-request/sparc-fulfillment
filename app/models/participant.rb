@@ -48,6 +48,10 @@ class Participant < ActiveRecord::Base
     self.build_appointments
   end
 
+  def full_name
+    [first_name, last_name].join(' ')
+  end
+
   private
 
   def update_faye

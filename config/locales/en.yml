@@ -22,6 +22,7 @@
 en:
   actions:
     close: "Close"
+    details: "Details"
     edit: "Edit"
     delete: "Delete"
     save: "Save"
@@ -111,6 +112,7 @@ en:
     stats: "Stats"
     arm: "Current Arm"
     report: "Report"
+    details: "Participant Details"
 
   appointment:
     protocol_id: "Protocol SPARC ID"
