@@ -12,6 +12,9 @@ FactoryGirl.define do
     ethnicity { Participant::ETHNICITY_OPTIONS.sample }
     race { Participant::RACE_OPTIONS.sample }
     address { Faker::Address.street_address }
+    city { Faker::Address.city }
+    state { Faker::Address.state }
+    zipcode { Faker::Base.numerify('#####') }
     phone { Faker::Base.numerify('###-###-####') }
 
     trait :with_protocol do
