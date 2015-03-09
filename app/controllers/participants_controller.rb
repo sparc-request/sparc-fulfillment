@@ -70,7 +70,7 @@ class ParticipantsController < ApplicationController
   private
 
   def participant_params
-    params.require(:participant).permit(:last_name, :first_name, :mrn, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone)
+    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
   end
 
 
