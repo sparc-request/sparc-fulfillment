@@ -16,12 +16,20 @@ class Participant < ActiveRecord::Base
   after_destroy :update_faye
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, presence: true
-  validate :phone_number_format, :date_of_birth_format
+  validate :phone_number_format, :date_of_birth_format, :middle_initial_format
 
   def phone_number_format
     if phone != ""
       if not( /^\d{3}-\d{3}-\d{4}$/.match phone.to_s or /^\d{10}$/.match phone.to_s )
         errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX or XXXXXXXXXX")
+      end
+    end
+  end
+
+  def middle_initial_format
+    if middle_initial != ""
+      if not( /^[A-z]{1}$/.match middle_initial.to_s )
+        errors.add(:middle_initial, "must be only one character")
       end
     end
   end
@@ -47,6 +55,10 @@ class Participant < ActiveRecord::Base
   def update_appointments_on_arm_change
     self.appointments.each{ |appt| appt.destroy_if_incomplete }
     self.build_appointments
+  end
+
+  def full_name
+    [first_name, middle_initial, last_name].join(' ')
   end
 
   private
