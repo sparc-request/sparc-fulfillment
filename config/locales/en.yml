@@ -107,6 +107,7 @@ en:
     race: "Race"
     address: "Address"
     phone: "Phone"
+    recruitment_source: "Recruitment Source"
     calendar: "Calendar"
     stats: "Stats"
     arm: "Current Arm"

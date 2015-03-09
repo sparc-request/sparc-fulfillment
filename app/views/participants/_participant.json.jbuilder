@@ -7,6 +7,7 @@ json.id participant.id
 json.status participant.status
 json.protocol_sparc_id participant.protocol.sparc_id
 json.coordinators formatted_coordinators(participant.protocol.coordinators.map(&:full_name))
+json.recruitment_source participant.recruitment_source
 
 if participant.arm
   json.arm participant.arm.name

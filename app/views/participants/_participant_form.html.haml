@@ -40,6 +40,9 @@
             .form-group
               = p.label "phone", t(:participant)[:phone], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "phone", {class: 'form-control'}
+            .form-group
+              = p.label "recruitment_source", t(:participant)[:recruitment_source], class: "col-sm-4 control-label"
+              .col-sm-7= p.select "recruitment_source", Participant::RECRUITMENT_OPTIONS, {include_blank: true}, :class => "form-control"
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

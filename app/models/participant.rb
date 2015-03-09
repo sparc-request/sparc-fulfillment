@@ -1,9 +1,10 @@
 class Participant < ActiveRecord::Base
 
-  ETHNICITY_OPTIONS = ['Hispanic or Latino', 'Not Hispanic or Latino'].freeze
-  RACE_OPTIONS      = ['Caucasian', 'African American/Black', 'Asian', 'Middle Eastern', 'Pacific Islander', 'Native American/Alaskan', 'Other'].freeze
-  STATUS_OPTIONS    = ['Active', 'Inactive', 'Complete'].freeze
-  GENDER_OPTIONS    = ['Male', 'Female'].freeze
+  ETHNICITY_OPTIONS   = ['Hispanic or Latino', 'Not Hispanic or Latino'].freeze
+  RACE_OPTIONS        = ['Caucasian', 'African American/Black', 'Asian', 'Middle Eastern', 'Pacific Islander', 'Native American/Alaskan', 'Other'].freeze
+  STATUS_OPTIONS      = ['Active', 'Inactive', 'Complete'].freeze
+  GENDER_OPTIONS      = ['Male', 'Female'].freeze
+  RECRUITMENT_OPTIONS = ['Here', 'There', 'Other'].freeze
 
   acts_as_paranoid
 
