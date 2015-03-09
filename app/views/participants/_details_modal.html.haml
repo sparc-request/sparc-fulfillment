@@ -13,6 +13,9 @@
           .field.col-xs-4= t(:participant)[:mrn]
           .col-xs-8= participant.mrn
         .detail
+          .field.col-xs-4= t(:participant)[:id]
+          .col-xs-8= participant.external_id
+        .detail
           .field.col-xs-4= t(:participant)[:status]
           .col-xs-8= participant.status
         .detail
@@ -31,8 +34,20 @@
           .field.col-xs-4= t(:participant)[:address]
           .col-xs-8= participant.address
         .detail
+          .field.col-xs-4= t(:participant)[:city]
+          .col-xs-8= participant.city
+        .detail
+          .field.col-xs-4= t(:participant)[:state]
+          .col-xs-8= participant.state
+        .detail
+          .field.col-xs-4= t(:participant)[:zip]
+          .col-xs-8= participant.zipcode
+        .detail
           .field.col-xs-4= t(:participant)[:phone]
           .col-xs-8= participant.phone
+        .detail
+          .field.col-xs-4= t(:participant)[:recruitment_source]
+          .col-xs-8= participant.recruitment_source
     .modal-footer
       .center-block
         %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
