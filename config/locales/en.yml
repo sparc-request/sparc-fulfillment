@@ -94,12 +94,13 @@ en:
 
   participant:
     full_name: "Participant Name"
-    id: "ID"
+    id: "Participant ID"
     list: "Participant List"
     tracker: "Participant Tracker"
     last_name: "Last Name"
     first_name: "First Name"
-    mrn: "MRN"
+    middle_initial: "Middle Initial"
+    mrn: "Participant MRN"
     status: "Participant Status"
     dob: "Date of Birth"
     gender: "Gender"
@@ -107,13 +108,14 @@ en:
     race: "Race"
     address: "Address"
     phone: "Phone"
+    recruitment_source: "Recruitment Source"
     calendar: "Calendar"
     stats: "Stats"
     arm: "Current Arm"
     report: "Report"
 
   appointment:
-    protocol_id: "Protocol SPARC ID"
+    protocol_id: "Protocol ID"
     appointment_dropdown: "Please select a visit:"
     completed: "Completed Visits"
     date_of_visit: "Date of Participant Visit"

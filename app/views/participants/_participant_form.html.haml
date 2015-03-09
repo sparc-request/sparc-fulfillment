@@ -13,12 +13,16 @@
             .form-group
               = p.label "last_name", t(:participant)[:last_name], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "last_name", {class: 'form-control'}
-            .form-group
               = p.label "first_name", t(:participant)[:first_name], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "first_name", {class: 'form-control'}
+              = p.label "middle_initial", t(:participant)[:middle_initial], class: "col-sm-4 control-label"
+              .col-sm-7= p.text_field "middle_initial", {class: 'form-control'}
             .form-group
               = p.label "mrn", t(:participant)[:mrn], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "mrn", {class: 'form-control'}
+            .form-group
+              = p.label "external_id", t(:participant)[:id], class: "col-sm-4 control-label"
+              .col-sm-7= p.text_field "external_id", {class: 'form-control'}
             .form-group
               = p.label "status", t(:participant)[:status], class: "col-sm-4 control-label"
               .col-sm-7= p.select "status", Participant::STATUS_OPTIONS, {include_blank: true}, :class => "form-control"
@@ -40,6 +44,9 @@
             .form-group
               = p.label "phone", t(:participant)[:phone], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "phone", {class: 'form-control'}
+            .form-group
+              = p.label "recruitment_source", t(:participant)[:recruitment_source], class: "col-sm-4 control-label"
+              .col-sm-7= p.select "recruitment_source", Participant::RECRUITMENT_OPTIONS, {include_blank: true}, :class => "form-control"
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

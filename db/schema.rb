@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150306150815) do
+ActiveRecord::Schema.define(version: 20150309172654) do
 
   create_table "appointments", force: true do |t|
     t.integer  "participant_id"
@@ -110,6 +110,9 @@ ActiveRecord::Schema.define(version: 20150306150815) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "total_cost"
+    t.string   "recruitment_source"
+    t.string   "external_id"
+    t.string   "middle_initial",     limit: 1
   end
 
   add_index "participants", ["arm_id"], name: "index_participants_on_arm_id", using: :btree

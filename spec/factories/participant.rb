@@ -5,6 +5,7 @@ FactoryGirl.define do
     protocol nil
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
+    middle_initial { Faker::Base.letterify('?') }
     mrn { Faker::Number.number(8) }
     status { Participant::STATUS_OPTIONS.sample }
     date_of_birth { Faker::Date.between(10.years.ago, Date.today) }
