@@ -115,7 +115,7 @@ en:
   appointment:
     protocol_id: "Protocol SPARC ID"
     appointment_dropdown: "Please select a visit:"
-    completed: "Completed Appointments"
+    completed: "Completed Visits"
     date_of_visit: "Date of Participant Visit"
     procedure: "Procedure"
     r_t: "R/T"
