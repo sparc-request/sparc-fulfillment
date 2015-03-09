@@ -94,7 +94,7 @@ en:
 
   participant:
     full_name: "Participant Name"
-    id: "ID"
+    id: "Participant ID"
     list: "Participant List"
     tracker: "Participant Tracker"
     last_name: "Last Name"

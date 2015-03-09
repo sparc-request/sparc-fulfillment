@@ -20,6 +20,9 @@
               = p.label "mrn", t(:participant)[:mrn], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "mrn", {class: 'form-control'}
             .form-group
+              = p.label "external_id", t(:participant)[:id], class: "col-sm-4 control-label"
+              .col-sm-7= p.text_field "external_id", {class: 'form-control'}
+            .form-group
               = p.label "status", t(:participant)[:status], class: "col-sm-4 control-label"
               .col-sm-7= p.select "status", Participant::STATUS_OPTIONS, {include_blank: true}, :class => "form-control"
             .form-group
