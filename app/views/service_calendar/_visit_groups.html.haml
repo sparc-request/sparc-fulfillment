@@ -6,4 +6,8 @@
       .col-xs-4.day_window= visit_group.window_after || 0
     = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "form-control visit_group_#{index} visit_name", :'data-visit_group_id' => visit_group.id
 - (visit_groups.size...Visit.per_page).each do |index|
-  .col-xs-2{class: "visit_group_#{index}"} &nbsp
+  .col-xs-2{class: "visit_group_#{index}"}
+    &nbsp
+    .row
+      .col-xs-12 &nbsp
+
