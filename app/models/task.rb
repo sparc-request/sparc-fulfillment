@@ -4,4 +4,5 @@ class Task < ActiveRecord::Base
 
   acts_as_paranoid
 
+  validates :assignment, :due_date, presence: true
 end

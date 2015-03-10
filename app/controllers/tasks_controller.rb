@@ -21,6 +21,8 @@ class TasksController < ApplicationController
     if @task.valid?
       @task.save
       flash[:success] = t(:flash_messages)[:task][:created]
+    else
+      @errors = @task.errors
     end
   end
 
