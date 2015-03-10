@@ -17,6 +17,8 @@ module Features
       fill_in 'Arm', with: task.arm_name
       fill_in 'Task/Service', with: task.task
       select user.full_name, from: 'Assignment'
+      page.execute_script %Q{ $('#task_due_date').trigger("focus") }
+      page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     end
   end
 end

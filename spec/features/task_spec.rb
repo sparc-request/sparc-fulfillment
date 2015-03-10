@@ -55,10 +55,18 @@ RSpec.describe 'Task Index spec', type: :feature, js: true do
 
     it "should create a new task" do
       user_fills_in_new_task_form
+      wait_for_javascript_to_finish
       tasks_size = Task.all.count
       click_button 'Save'
       wait_for_javascript_to_finish
       expect(Task.all.count).to eq(tasks_size + 1)
+    end
+
+    it "should not create a task if the correct fields are not filled out." do
+      tasks_size = Task.all.count
+      click_button 'Save'
+      wait_for_javascript_to_finish
+      expect(Task.all.count).to_not eq(tasks_size + 1)
     end
   end
 end
