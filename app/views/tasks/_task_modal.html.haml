@@ -1,0 +1,42 @@
+.modal-dialog
+  .modal-content
+    = form_for task, {remote: true, html: {class: "form-horizontal", role: "form"}} do |f|
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4.modal-title.text-center= t(:task_index)[:create_task]
+      .modal-body
+        .row
+          .col-md-12
+            .form-group
+              = f.label "created_by", t(:task_index)[:created_by], class: "col-sm-4 control-label"
+              .col-sm-7= f.text_field "created_by", {class: 'form-control', value: current_user.full_name}
+            .form-group
+              = f.label "task_type", t(:task_index)[:task_type], class: "col-sm-4 control-label"
+              .col-sm-7= f.select "task_type", Task::TASK_TYPES, { include_blank: true }, { class: "form-control" }
+            .form-group
+              = f.label "participant_name", t(:task_index)[:participant_name], class: "col-sm-4 control-label"
+              .col-sm-7= f.text_field "participant_name", { class: "form-control" }
+            .form-group
+              = f.label "protocol_id", t(:task_index)[:protocol_id], class: "col-sm-4 control-label"
+              .col-sm-7= f.text_field "protocol_id", { class: "form-control" }
+            .form-group
+              = f.label "visit_name", t(:task_index)[:visit_name], class: "col-sm-4 control-label"
+              .col-sm-7= f.text_field "visit_name", { class: "form-control" }
+            .form-group
+              = f.label "arm_name", t(:task_index)[:arm_name], class: "col-sm-4 control-label"
+              .col-sm-7= f.text_field "arm_name", { class: "form-control" }
+            .form-group
+              = f.label "task", t(:task_index)[:task], class: "col-sm-4 control-label"
+              .col-sm-7= f.text_field "task", { class: "form-control" }
+            .form-group
+              = f.label "assignment", t(:task_index)[:assignment], class: "col-sm-4 control-label"
+              .col-sm-7= f.select "assignment", user_names, { include_blank: true }, { class: "form-control" }
+            .form-group
+              = f.label "follow_up_date", t(:task_index)[:due_date], class: "col-sm-4 control-label"
+              .col-sm-7= f.text_field "due_date", {class: 'form-control', value: format_date(task.due_date), data: {provide: "datepicker", 'date-format' => 'yyyy-mm-dd'}}
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

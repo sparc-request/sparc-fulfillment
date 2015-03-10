@@ -1,0 +1,1 @@
+$("#modal_area").html("<%= escape_javascript(render(:partial =>'task_modal', locals: {task: @task})) %>");

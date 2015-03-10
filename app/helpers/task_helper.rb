@@ -14,4 +14,14 @@ module TaskHelper
 
     html
   end
+
+  def user_names
+    names = []
+    users = User.all
+    users.each do |user|
+      names << user.full_name
+    end
+
+    names
+  end
 end

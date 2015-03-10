@@ -13,3 +13,5 @@
       %th{data: {class: 'due_date', align: 'left', sortable: "true", field: 'due_date'}}= t(:task_index)[:due_date]
       %th{data: {class: 'is_complete', align: 'center', field: 'is_complete'}}= t(:task_index)[:completed]
       %th{data: {class: 'reschedule', align: 'center', field: 'reschedule', formatter: "rescheduleFormatter", width: "5"}}= t(:task_index)[:reschedule]
+#custom-toolbar
+  = link_to t(:actions)[:new_task], new_task_path, {class: 'btn btn-default btn-primary', id: 'new_task_button', type: 'button', data: {toggle: 'modal', target: '#modal_place'}, remote: true}
