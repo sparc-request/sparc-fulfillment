@@ -20,7 +20,7 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
     if @task.valid?
       @task.save
-      flash[:success] = t(:flash_messages)[:participant][:created]
+      flash[:success] = t(:flash_messages)[:task][:created]
     end
   end
 
