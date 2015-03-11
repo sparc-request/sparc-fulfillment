@@ -28,6 +28,8 @@ en:
     change_arm: "Assign Arm"
     new_participant: "Create New Participant"
     save_participant: "Save Participant"
+    start_visit: "Start Visit"
+    complete_visit: "Complete Visit"
 
 
   index_page:

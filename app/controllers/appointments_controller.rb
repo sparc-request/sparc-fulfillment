@@ -14,44 +14,32 @@ class AppointmentsController < ApplicationController
     respond_with @appointments
   end
 
-  def completed_time
+  def start_date
     @appointment = Appointment.find params[:id]
-    date = show_time @appointment.completed_date
-    updated_date = date.change({hour: params[:hour], min: params[:minute]})
-    @appointment.update_attributes(completed_date: updated_date)
+    updated_date = Time.current
+    # updated_date = nil
+
+    # if not params[:date].blank?
+    #   year, month, day = params[:date].split('-')
+    #   updated_date = show_time @appointment.start_date
+    #   updated_date = updated_date.change({year: year, month: month, day: day})
+    # end
+
+    @appointment.update_attributes(start_date: updated_date)
   end
 
   def completed_date
     @appointment = Appointment.find params[:id]
-    updated_date = nil
+    updated_date = Time.current
+    # updated_date = nil
 
-    if not params[:date].blank?
-      year, month, day = params[:date].split('-')
-      updated_date = show_time @appointment.completed_date
-      updated_date = updated_date.change({year: year, month: month, day: day})
-    end
+    # if not params[:date].blank?
+    #   year, month, day = params[:date].split('-')
+    #   updated_date = show_time @appointment.completed_date
+    #   updated_date = updated_date.change({year: year, month: month, day: day})
+    # end
 
     @appointment.update_attributes(completed_date: updated_date)
-  end
-
-  def start_time
-    @appointment = Appointment.find params[:id]
-    date = show_time @appointment.start_date
-    updated_date = date.change({hour: params[:hour], min: params[:minute]})
-    @appointment.update_attributes(start_date: updated_date)
-  end
-
-  def start_date
-    @appointment = Appointment.find params[:id]
-    updated_date = nil
-
-    if not params[:date].blank?
-      year, month, day = params[:date].split('-')
-      updated_date = show_time @appointment.start_date
-      updated_date = updated_date.change({year: year, month: month, day: day})
-    end
-
-    @appointment.update_attributes(start_date: updated_date)
   end
 
   private

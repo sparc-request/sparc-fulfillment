@@ -21,6 +21,18 @@ $ ->
     event.stopPropagation()
   )
 
+  $(document).on 'click', '.start_visit', ->
+    appointment_id = $(this).attr('appointment_id')
+    $.ajax
+      type: 'PATCH'
+      url:  "/appointments/#{appointment_id}/start_date"
+
+  $(document).on 'click', '.complete_visit', ->
+    appointment_id = $(this).attr('appointment_id')
+    $.ajax
+      type: 'PATCH'
+      url:  "/appointments/#{appointment_id}/completed_date"
+
   $(document).on 'click', '.add_service', ->
     data =
       'appointment_id': $(this).attr('appointment_id'),
@@ -52,47 +64,6 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/procedures/#{procedure_id}/notes/new"
-  )
-
-  $(document).on('focus', '.atimepicker', ->
-    $(this).timepicker({
-      disableFocus: true,
-      showMeridian: false
-    })
-  )
-
-  $(document).on('focus', '.adatepicker', ->
-    $(this).datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true
-    })
-  )
-
-  $(document).on('hide.datepicker', (e) ->
-    # Without this, hide.timepicker is also being called.
-    # Need to leave this in for now.
-    e.stopImmediatePropagation()
-  )
-
-  $(document).on('hide', '.adatepicker', (e) ->
-    id = $(e.target).attr('appointment_id')
-    data =
-      'date': $(e.target).val()
-    $.ajax
-      type: 'PATCH'
-      url: "/appointments/#{id}/#{e.target.id}"
-      data: data
-  )
-
-  $(document).on('hide.timepicker', (e) ->
-    id = $(e.target).attr('appointment_id')
-    data =
-      'hour': e.time.hours,
-      'minute': e.time.minutes
-    $.ajax
-      type: 'PATCH'
-      url: "/appointments/#{id}/#{e.target.id}"
-      data: data
   )
 
   $(document).on('change', '.complete',  ->
