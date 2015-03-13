@@ -1,0 +1,35 @@
+.modal-dialog
+  .modal-content
+    = form_for note, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
+      = form.hidden_field :notable_type
+      = form.hidden_field :notable_id
+      = form.hidden_field :kind
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only
+            = t(:actions)[:close]
+        %h4.modal-title.text-center
+          = t(:notes)[:new_header]
+      .modal-body
+        - if note.notable.present?
+          - if note.reason?
+            .form-group
+              = form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
+              .col-sm-8
+                = form.select :reason, Note::REASON_TYPES, {}, class: "form-control"
+          - elsif note.followup?
+            = form.fields_for note.notable do |notable_form|
+              .form-group
+                = notable_form.label "followup", t(:notes)[:followup], class: "col-sm-3 control-label"
+                .col-sm-8
+                  = notable_form.text_field :follow_up_date, {class: 'form-control', data: {provide: "datepicker", 'date-format' => 'yyyy-mm-dd'}}
+        .form-group
+          = form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
+          .col-sm-8
+            = form.text_area :comment, {class: 'form-control', rows: "6"}
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+            = t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

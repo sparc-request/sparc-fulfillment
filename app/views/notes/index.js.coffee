@@ -1,2 +1,2 @@
-$("#modal_area").html("<%= escape_javascript(render(:partial =>'index_modal', locals: {procedure: @procedure})) %>");
+$("#modal_area").html("<%= escape_javascript(render(partial: 'index', locals: { notes: @notes })) %>");
 $("#modal_place").modal 'show'

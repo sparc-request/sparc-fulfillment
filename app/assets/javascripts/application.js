@@ -11,16 +11,16 @@
 // about supported directives.
 
 //= require bootstrap-table-export
-//= require bootstrap-datepicker/core
-//= require bootstrap-datepicker/locales/bootstrap-datepicker.en-GB
 //= require tableExport
 //= require jquery.base64
-//= require bootstrap-timepicker
+//= require moment
+//= require bootstrap-datetimepicker
+//= require moment/en-gb
 
 //= require protocols
 //= require service_calendar
 //= require participants
 //= require study_schedule_edit_buttons
-//= require appointment_calendar
+//= require appointments
 //= require tasks
 //= require faye
