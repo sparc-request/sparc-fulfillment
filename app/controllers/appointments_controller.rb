@@ -16,28 +16,22 @@ class AppointmentsController < ApplicationController
 
   def start_date
     @appointment = Appointment.find params[:id]
-    updated_date = Time.current
-    # updated_date = nil
-
-    # if not params[:date].blank?
-    #   year, month, day = params[:date].split('-')
-    #   updated_date = show_time @appointment.start_date
-    #   updated_date = updated_date.change({year: year, month: month, day: day})
-    # end
+    if params[:new_date]
+      updated_date = Time.at(params[:new_date].to_i / 1000)
+    else
+      updated_date = Time.current
+    end
 
     @appointment.update_attributes(start_date: updated_date)
   end
 
   def completed_date
     @appointment = Appointment.find params[:id]
-    updated_date = Time.current
-    # updated_date = nil
-
-    # if not params[:date].blank?
-    #   year, month, day = params[:date].split('-')
-    #   updated_date = show_time @appointment.completed_date
-    #   updated_date = updated_date.change({year: year, month: month, day: day})
-    # end
+    if params[:new_date]
+      updated_date = Time.at(params[:new_date].to_i / 1000)
+    else
+      updated_date = Time.current
+    end
 
     @appointment.update_attributes(completed_date: updated_date)
   end

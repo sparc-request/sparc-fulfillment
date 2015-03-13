@@ -8,9 +8,9 @@ module ApplicationHelper
     end
   end
 
-  def format_time(time)
-    if time.present?
-      time.strftime('%H:%M')
+  def format_datetime(date)
+    if date.present?
+      date.strftime('%F %H:%M')
     else
       ''
     end

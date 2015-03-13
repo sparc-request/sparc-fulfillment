@@ -8,7 +8,7 @@
       %form.form-horizontal
         .form-group
           %label.col-xs-6.control-label{for: 'start_date'}= t(:appointment)[:start_date]
-          .col-xs-6= text_field_tag 'start_date', format_date(appointment.start_date), class: 'adatepicker form-control', appointment_id: appointment.id
+          .col-xs-6= text_field_tag 'start_date', '', class: 'form-control', appointment_id: appointment.id
     .start_date_btn{class: appointment.start_date ? "hidden" : ""}
       .btn.btn-success.start_visit{appointment_id: appointment.id}= t(:actions)[:start_visit]
   .col-xs-4.col-xs-offset-4.complete-col
@@ -16,7 +16,7 @@
       %form.form-horizontal
         .form-group
           %label.col-xs-6.control-label{for: 'completed_date'}= t(:appointment)[:completed_date]
-          .col-xs-6= text_field_tag 'completed_date', format_date(appointment.completed_date), class: 'adatepicker form-control', appointment_id: appointment.id
+          .col-xs-6= text_field_tag 'completed_date', '', class: 'form-control', appointment_id: appointment.id
     .completed_date_btn{class: appointment.completed_date ? "hidden" : ""}
       .btn.btn-danger.complete_visit{class: appointment.start_date ? "" : "disabled", appointment_id: appointment.id}= t(:actions)[:complete_visit]
 .row
