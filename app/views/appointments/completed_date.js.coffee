@@ -6,7 +6,10 @@ if completed_input_div.hasClass('hidden')
   completed_btn_div.addClass('hidden')
   completed_input_div.removeClass('hidden')
   $('#completed_date').datetimepicker(defaultDate: "<%= format_datetime(@appointment.completed_date) %>")
+  $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
+  $('#start_date').data("DateTimePicker").maxDate($('#completed_date').data("DateTimePicker").date())
   $('#completed_date').on 'dp.hide', (e) ->
+    $('#start_date').data("DateTimePicker").maxDate(e.date)
     appointment_id = $(this).attr('appointment_id')
     $.ajax
       type: 'PATCH'

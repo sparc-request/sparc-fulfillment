@@ -31,6 +31,9 @@ class AppointmentsController < ApplicationController
       updated_date = Time.at(params[:new_date].to_i / 1000)
     else
       updated_date = Time.current
+      if @appointment.start_date > updated_date #completed date cannot be before start date
+        updated_date = @appointment.start_date
+      end
     end
 
     @appointment.update_attributes(completed_date: updated_date)

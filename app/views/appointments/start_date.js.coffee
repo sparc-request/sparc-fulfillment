@@ -5,6 +5,8 @@ if start_input_div.hasClass('hidden')
   start_input_div.removeClass('hidden')
   $('#start_date').datetimepicker(defaultDate: "<%= format_datetime(@appointment.start_date) %>")
   $('#start_date').on 'dp.hide', (e) ->
+    if !$('.completed_date_input').hasClass('hidden')
+      $('#completed_date').data("DateTimePicker").minDate(e.date)
     appointment_id = $(this).attr('appointment_id')
     $.ajax
       type: 'PATCH'
