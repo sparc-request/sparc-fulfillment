@@ -1,0 +1,30 @@
+.modal-dialog
+  .modal-content
+    = form_for procedure, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only
+            = t(:actions)[:close]
+        %h4.modal-title.text-center
+          = t(:procedure)[:edit_header]
+      .modal-body
+        .form-group
+          = form.label "follow_up_date", t(:procedure)[:follow_up_date], class: "col-sm-3 control-label"
+          .col-sm-8
+            .input-group.date{id: dom_id(procedure)}
+              = form.text_field :follow_up_date, {class: 'form-control'}
+              %span.input-group-addon
+                %span.glyphicon.glyphicon-calendar
+        .form-group
+          = form.fields_for :notes, Note.new do |notes_form|
+            = notes_form.hidden_field :kind, value: 'followup'
+            = notes_form.hidden_field :user_id, value: current_user.id
+            = notes_form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
+            .col-sm-8
+              = notes_form.text_area :comment, {class: 'form-control', rows: "6"}
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+            = t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

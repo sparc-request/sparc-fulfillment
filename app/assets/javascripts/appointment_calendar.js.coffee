@@ -21,18 +21,6 @@ $ ->
     event.stopPropagation()
   )
 
-  $(document).on 'click', '.start_visit', ->
-    appointment_id = $(this).attr('appointment_id')
-    $.ajax
-      type: 'PATCH'
-      url:  "/appointments/#{appointment_id}/start_date"
-
-  $(document).on 'click', '.complete_visit', ->
-    appointment_id = $(this).attr('appointment_id')
-    $.ajax
-      type: 'PATCH'
-      url:  "/appointments/#{appointment_id}/completed_date"
-
   $(document).on 'click', '.add_service', ->
     data =
       'appointment_id': $(this).attr('appointment_id'),
