@@ -32,8 +32,11 @@ Rails.application.routes.draw do
       get 'change_arm(/:id)', to: 'participants#edit_arm'
       post 'change_arm(/:id)', to: 'participants#update_arm'
       get 'select_appointment/(:id)', to: 'participants#select_appointment'
-      get 'details', to: 'participants#details'
     end
+  end
+
+  resources :participants do
+    get 'details', to: 'participants#details'
   end
 
   resources :service_calendar, only: [] do

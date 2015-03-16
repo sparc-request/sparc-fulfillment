@@ -68,7 +68,6 @@ class ParticipantsController < ApplicationController
   end
 
   def details
-    @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:participant_id])
   end
 
