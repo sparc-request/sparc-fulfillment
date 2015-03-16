@@ -39,133 +39,59 @@ RSpec.describe AppointmentsController do
 
   describe "PATCH #completed_date" do
     it "should set the completed date if one doesn't exist" do
-      tomorrow = Time.now.tomorrow.strftime("%F")
+      today = Time.current.strftime("%F")
       appointment = create(:appointment, completed_date: nil)
       expect(appointment.completed_date).to eq(nil)
       patch :completed_date, {
         id: appointment.id,
-        date: tomorrow,
         format: :js
       }
-      expect(assigns(:appointment).completed_date.strftime("%F")).to eq(tomorrow)
+      expect(assigns(:appointment).start_date.strftime("%F")).to eq(today)
     end
 
     it "should change the completed date to the new date" do
-      tomorrow = Time.now.tomorrow.strftime("%F")
+      tomorrow = Time.now.tomorrow
       appointment = create(:appointment, completed_date: Time.now)
       patch :completed_date, {
         id: appointment.id,
-        date: tomorrow,
+        new_date: (tomorrow.to_i)*1000, #expects milliseconds
         format: :js
       }
-      expect(assigns(:appointment).completed_date.strftime("%F")).to eq(tomorrow)
+      expect(assigns(:appointment).completed_date.strftime("%F")).to eq(tomorrow.strftime("%F"))
     end
 
-    it "should blank the completed date if the date is removed" do
-      appointment = create(:appointment, completed_date: Time.now)
-      patch :completed_date, {
-        id: appointment.id,
-        date: '',
-        format: :js
-      }
-      expect(assigns(:appointment).completed_date).to eq(nil)
-    end
-  end
-
-  describe "PATCH #completed_time" do
-    it "should set the completed time if there isn't one" do
-      now = Time.now.change({hour: rand(24), minute: rand(60)})
-      hour = now.strftime("%H")
-      minute = now.strftime("%M")
-      appointment = create(:appointment, completed_date: nil)
+    it "should change the completed date to the start date if the completed date is nil and the start date is in the future" do
+      appointment = create(:appointment, completed_date: nil, start_date: Time.now.tomorrow)
       expect(appointment.completed_date).to eq(nil)
-      patch :completed_time, {
+      patch :completed_date, {
         id: appointment.id,
-        hour: hour,
-        minute: minute,
         format: :js
       }
-      expect(assigns(:appointment).completed_date.strftime('%H:%M')).to eq("#{hour}:#{minute}")
-    end
-
-    it "should change the completed time to the new time" do
-      now = Time.now.change({hour: rand(24), minute: rand(60)})
-      hour = now.strftime("%H")
-      minute = now.strftime("%M")
-      appointment = create(:appointment, completed_date: Time.now)
-      patch :completed_time, {
-        id: appointment.id,
-        hour: hour,
-        minute: minute,
-        format: :js
-      }
-      expect(assigns(:appointment).completed_date.strftime('%H:%M')).to eq("#{hour}:#{minute}")
+      expect(assigns(:appointment).completed_date.strftime("%F")).to eq(assigns(:appointment).start_date.strftime("%F"))
     end
   end
 
   describe "PATCH #start_date" do
     it "should set the start date if one doesn't exist" do
-      tomorrow = Time.now.tomorrow.strftime("%F")
+      today = Time.current.strftime("%F")
       appointment = create(:appointment, start_date: nil)
       expect(appointment.start_date).to eq(nil)
       patch :start_date, {
         id: appointment.id,
-        date: tomorrow,
         format: :js
       }
-      expect(assigns(:appointment).start_date.strftime("%F")).to eq(tomorrow)
+      expect(assigns(:appointment).start_date.strftime("%F")).to eq(today)
     end
 
     it "should change the start date to the new date" do
-      tomorrow = Time.now.tomorrow.strftime("%F")
+      tomorrow = Time.now.tomorrow
       appointment = create(:appointment, start_date: Time.now)
       patch :start_date, {
         id: appointment.id,
-        date: tomorrow,
+        new_date: (tomorrow.to_i)*1000, #expects milliseconds
         format: :js
       }
-      expect(assigns(:appointment).start_date.strftime("%F")).to eq(tomorrow)
-    end
-
-    it "should blank the start date if the date is removed" do
-      appointment = create(:appointment, start_date: Time.now)
-      patch :start_date, {
-        id: appointment.id,
-        date: '',
-        format: :js
-      }
-      expect(assigns(:appointment).start_date).to eq(nil)
-    end
-  end
-
-  describe "PATCH #start_time" do
-    it "should set the start time if there isn't one" do
-      now = Time.now.change({hour: rand(24), minute: rand(60)})
-      hour = now.strftime("%H")
-      minute = now.strftime("%M")
-      appointment = create(:appointment, start_date: nil)
-      expect(appointment.start_date).to eq(nil)
-      patch :start_time, {
-        id: appointment.id,
-        hour: hour,
-        minute: minute,
-        format: :js
-      }
-      expect(assigns(:appointment).start_date.strftime('%H:%M')).to eq("#{hour}:#{minute}")
-    end
-
-    it "should change the start time to the new time" do
-      now = Time.now.change({hour: rand(24), minute: rand(60)})
-      hour = now.strftime("%H")
-      minute = now.strftime("%M")
-      appointment = create(:appointment, start_date: Time.now)
-      patch :start_time, {
-        id: appointment.id,
-        hour: hour,
-        minute: minute,
-        format: :js
-      }
-      expect(assigns(:appointment).start_date.strftime('%H:%M')).to eq("#{hour}:#{minute}")
+      expect(assigns(:appointment).start_date.strftime("%F")).to eq(tomorrow.strftime("%F"))
     end
   end
 end
