@@ -2,6 +2,9 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  resources :notes, only: [:index, :new, :create]
+  resources :procedures, only: [:create, :edit, :update, :destroy]
+
   resources :appointments, only: [:show] do
     collection do
       get 'completed_appointments'
@@ -30,22 +33,6 @@ Rails.application.routes.draw do
       post 'change_arm(/:id)', to: 'participants#update_arm'
       get 'select_appointment/(:id)', to: 'participants#select_appointment'
       get 'details', to: 'participants#details'
-    end
-  end
-
-  resources :appointment_calendar, only: [] do
-    collection do
-      put 'complete_procedure'
-      get 'edit_incomplete_procedure'
-      patch 'update_incomplete_procedure'
-      put 'incomplete_procedure'
-      get 'edit_follow_up/(:procedure_id)', to: 'appointment_calendar#edit_follow_up'
-      patch 'update_follow_up/(:procedure_id)', to: 'appointment_calendar#update_follow_up'
-    end
-  end
-
-  resources :procedures, only: [:create, :destroy] do
-    resources :notes do
     end
   end
 

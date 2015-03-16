@@ -1,4 +1,5 @@
 class AppointmentsController < ApplicationController
+
   respond_to :json, :html
 
   def show
@@ -59,5 +60,4 @@ class AppointmentsController < ApplicationController
   def show_time in_time
     in_time.blank? ? Time.now : in_time
   end
-
 end

@@ -7,8 +7,7 @@
 @import "bootstrap-table.min"
 @import "protocols"
 @import "participants"
-@import "bootstrap-datepicker3"
-@import "bootstrap-timepicker"
+@import "bootstrap-datetimepicker"
 
 .status_select
   margin-left: -200px
@@ -119,8 +118,8 @@ table.custom_striped.details
 .calendar
   .row.header > div
     border-right: 1px solid white
-    padding-top: 32px
-    padding-bottom: 31px
+    padding-top: 50px
+    padding-bottom: 48px
     &:last-child
       border: 0px
 
@@ -138,8 +137,14 @@ table.custom_striped.details
     &:last-child
       border: 0px
 
+  .day_window
+    padding-left: 0px
+    padding-right: 0px
+
   .header
     background: #113967
+    padding: 0px
+    height: auto
     color: white
     input,
     select
@@ -165,12 +170,6 @@ table.custom_striped.details
   .even_shorter_text
     width: 25px
     padding: 0px 2px
-  .btn
-    padding: 2px 6px
-    font-size: 13px
-  .form-control
-    height: 26px
-    padding: 0px 6px
   .visit
     margin-top: 6px
 

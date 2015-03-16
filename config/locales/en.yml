@@ -128,7 +128,7 @@ en:
     r_t: "R/T"
     status: "Status"
     reason: "Reason"
-    follow_up: "Follow Up"
+    followup: "Follow Up"
     start_date: "Start Date:"
     start_time: "Start Time:"
     completed_date: "Completed Date:"
@@ -147,13 +147,17 @@ en:
     user: "User"
     date: "Date"
     action: "Action"
-    note: "Note"
+    reason: "Reason"
+    followup: "Follow up"
+    comment: "Comment"
     incomplete_header: "Reason for Incompletion"
 
   procedure:
     follow_up: "Follow Up"
     fud: "Due Date"
     select_reason: "Select a Reason"
+    edit_header: "Follow up"
+    follow_up_date: "Follow up date"
 
   services:
     name: "Selected Service"

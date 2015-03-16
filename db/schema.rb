@@ -73,14 +73,19 @@ ActiveRecord::Schema.define(version: 20150309172654) do
   add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree
 
   create_table "notes", force: true do |t|
-    t.integer  "procedure_id"
     t.integer  "user_id"
-    t.string   "user_name"
     t.string   "comment"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "notable_id"
+    t.string   "notable_type"
+    t.string   "reason"
+    t.string   "kind",         default: "note"
   end
+
+  add_index "notes", ["notable_id", "notable_type"], name: "index_notes_on_notable_id_and_notable_type", using: :btree
+  add_index "notes", ["user_id"], name: "index_notes_on_user_id", using: :btree
 
   create_table "notifications", force: true do |t|
     t.integer  "sparc_id"

@@ -1,0 +1,8 @@
+- if procedure.follow_up_date.present?
+  .input-group.date.followup{id: dom_id(procedure)}
+    %input{type: "text", class: "form-control"}
+    %span.input-group-addon
+      %span.glyphicon.glyphicon-calendar
+- else
+  %button.btn.btn-warning.followup.new{type: "button", aria: {label: "New Followup"}}
+    %span.glyphicon.glyphicon-calendar{aria: {hidden: "true"}}

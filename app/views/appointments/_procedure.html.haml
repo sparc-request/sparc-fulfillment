@@ -1,25 +1,25 @@
-.row.procedure{id: "procedure_#{procedure.id}", "procedure-status" => procedure.status || ""}
-  .col-xs-2.col= procedure.service_name
+.row.procedure{data: {id: procedure.id}}
+  .col-xs-2.name= procedure.service_name
   .col-xs-1.billing_type
-    .col= select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
-  .col-xs-2
-    .form-group
-      %div
-        %input{class: "complete", name: "status_#{procedure.id}", type: "radio", id: "status_complete_#{procedure.id}", value: "#{procedure.id}", checked: procedure.status == 'complete'}
-        Complete
-      %div
-        %input{class: "incomplete", name: "status_#{procedure.id}", type: "radio", id: "status_incomplete_#{procedure.id}", value: "#{procedure.id}", checked: procedure.status == 'incomplete'}
-        Incomplete
-  .col-xs-2
-    .col= select_tag "reason_#{procedure.id}", options_for_select(Procedure::REASONS, procedure.reason), class: "form-control" if procedure.reason
-  .col-xs-2.text-center
-    .col.follow_up_date{value: "#{procedure.id}"}
-      = text_field_tag "follow_up_date_#{procedure.id}", format_date(procedure.follow_up_date), class: "text-center #{hidden_class(procedure.follow_up_date.blank?)}", readonly: true
-    .glyphicon.glyphicon-calendar.btn.btn-warning.follow_up_date{class: "#{hidden_class(!procedure.follow_up_date.blank?)}", value: "#{procedure.id}"}
-  .col-xs-2.text-center
-    .col
-      .glyphicon.glyphicon-plus.btn.btn-success.add_note{value: "#{procedure.id}"}
-      .glyphicon.glyphicon-list-alt.btn.btn-primary.display_notes{value: "#{procedure.id}"}
-  .col-xs-1.text-center
-    .col
-      .glyphicon.glyphicon-remove.btn.btn-danger.remove_procedure{procedure_id: procedure.id, appointment_id: procedure.appointment_id}
+    .text-center
+      = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
+  .col-xs-3.status
+    .text-center
+      .btn-group{data: {toggle: "buttons"}}
+        %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'active' : ''}"}
+          %input{class: "procedure_status", type: "radio", value: "complete", autocomplete: "off"} Complete
+        %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active' : ''}"}
+          %input{class: "procedure_status", type: "radio", value: "incomplete", autocomplete: "off"} Incomplete
+  .col-xs-3.followup
+    .text-center
+      = render partial: "appointments/followup_calendar", locals: {procedure: procedure}
+  .col-xs-2.notes
+    .text-center
+      %button.btn.btn-primary.note.new{type: "button", aria: {label: "New Note"}}
+        %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
+      %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}}
+        %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+  .col-xs-1
+    .text-center
+      %button.btn.btn-danger.procedure.delete{type: "button", aria: {label: "Remove Procedure"}}
+        %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}
