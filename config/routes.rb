@@ -35,6 +35,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :participants do
+    get 'details', to: 'participants#details'
+  end
+
   resources :service_calendar, only: [] do
     collection do
       get 'change_page'
