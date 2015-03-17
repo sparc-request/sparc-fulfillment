@@ -42,6 +42,22 @@ RSpec.describe Participant, type: :model do
       it 'should validate phone format to be invalid' do
         expect(build(:participant_with_protocol, phone: "123-123-123")).not_to be_valid
       end
+
+      it 'should validate middle initial format to be valid' do
+        expect(build(:participant_with_protocol, middle_initial: "A")).to be_valid
+      end
+
+      it 'should validate middle initial format to be invalid' do
+        expect(build(:participant_with_protocol, middle_initial: "1a")).not_to be_valid
+      end
+
+      it 'should validate zipcode format to be valid' do
+        expect(build(:participant_with_protocol, zipcode: "29485")).to be_valid
+      end
+
+      it 'should validate zipcode format to be invalid' do
+        expect(build(:participant_with_protocol, zipcode: "1234")).not_to be_valid
+      end
     end
   end
 
@@ -61,6 +77,14 @@ RSpec.describe Participant, type: :model do
         participant.delete
 
         expect(participant.persisted?).to be
+      end
+    end
+
+    describe 'full_name' do
+
+      it 'should return the full name of the participant' do
+        participant = create(:participant_with_protocol)
+        expect(participant.full_name).to eq(participant.first_name + ' ' + participant.middle_initial + ' ' + participant.last_name)
       end
     end
 

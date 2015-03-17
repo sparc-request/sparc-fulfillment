@@ -6,6 +6,7 @@ json.(@participants) do |participant|
   json.first_name participant.first_name
   json.last_name participant.last_name
   json.mrn participant.mrn
+  json.external_id participant.external_id
   json.status participant.status
   json.date_of_birth format_date(participant.date_of_birth)
   json.gender participant.gender

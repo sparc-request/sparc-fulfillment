@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150306150815) do
+ActiveRecord::Schema.define(version: 20150309172654) do
 
   create_table "appointments", force: true do |t|
     t.integer  "participant_id"
@@ -73,14 +73,19 @@ ActiveRecord::Schema.define(version: 20150306150815) do
   add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree
 
   create_table "notes", force: true do |t|
-    t.integer  "procedure_id"
     t.integer  "user_id"
-    t.string   "user_name"
     t.string   "comment"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "notable_id"
+    t.string   "notable_type"
+    t.string   "reason"
+    t.string   "kind",         default: "note"
   end
+
+  add_index "notes", ["notable_id", "notable_type"], name: "index_notes_on_notable_id_and_notable_type", using: :btree
+  add_index "notes", ["user_id"], name: "index_notes_on_user_id", using: :btree
 
   create_table "notifications", force: true do |t|
     t.integer  "sparc_id"
@@ -110,6 +115,12 @@ ActiveRecord::Schema.define(version: 20150306150815) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "total_cost"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zipcode"
+    t.string   "recruitment_source"
+    t.string   "external_id"
+    t.string   "middle_initial",     limit: 1
   end
 
   add_index "participants", ["arm_id"], name: "index_participants_on_arm_id", using: :btree

@@ -16,7 +16,7 @@ RSpec.describe Visit, type: :model do
 
         visit.destroy
 
-        expect(visit.procedures.count).to eq(3)
+        expect(visit.procedures.count).to eq(6)
         expect(visit.procedures.complete.count).to eq(3)
         expect(visit.procedures.untouched.count).to eq(0)
       end

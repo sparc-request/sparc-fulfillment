@@ -5,6 +5,7 @@ FactoryGirl.define do
     protocol nil
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
+    middle_initial { Faker::Base.letterify('?') }
     mrn { Faker::Number.number(8) }
     status { Participant::STATUS_OPTIONS.sample }
     date_of_birth { Faker::Date.between(10.years.ago, Date.today) }
@@ -12,6 +13,9 @@ FactoryGirl.define do
     ethnicity { Participant::ETHNICITY_OPTIONS.sample }
     race { Participant::RACE_OPTIONS.sample }
     address { Faker::Address.street_address }
+    city { Faker::Address.city }
+    state { Faker::Address.state }
+    zipcode { Faker::Base.numerify('#####') }
     phone { Faker::Base.numerify('###-###-####') }
 
     trait :with_protocol do

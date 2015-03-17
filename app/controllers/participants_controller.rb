@@ -67,10 +67,14 @@ class ParticipantsController < ApplicationController
     flash[:success] = t(:flash_messages)[:participant][:arm_change]
   end
 
+  def details
+    @participant = Participant.find(params[:participant_id])
+  end
+
   private
 
   def participant_params
-    params.require(:participant).permit(:last_name, :first_name, :mrn, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :phone)
+    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
   end
 
 

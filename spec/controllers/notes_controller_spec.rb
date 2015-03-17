@@ -1,43 +1,56 @@
 require 'rails_helper'
 
-RSpec.describe NotesController do
+RSpec.describe NotesController, type: :controller do
 
-  before :each do
-    @user = create(:user)
-    @procedure = create(:procedure)
-    sign_in @user
-  end
+  login_user
 
-  describe "GET #index" do
-    it "should assign procedure" do
-      xhr :get, :index, {
-        procedure_id: @procedure.id,
-        format: :js
+  describe 'GET #index' do
+
+    it 'should assign @notes' do
+      procedure = create(:procedure_with_notes)
+      params    = {
+        notable: {
+          type: 'Procedure',
+          id: procedure.id
+        }
       }
-      expect(assigns(:procedure)).to eq(@procedure)
+
+      xhr :get, :index, params, format: :js
+
+      expect(assigns(:notes).length).to eq(3)
     end
   end
 
-  describe "GET #new" do
-    it "should instantiate a new note" do
-      xhr :get, :new, {
-        procedure_id: @procedure.id,
-        format: :js
+  describe 'GET #new' do
+
+    it 'should instantiate a new note' do
+      params = {
+        note: {
+          notable_type: 'Procedure',
+          notable_id: 1
+        }
       }
+
+      xhr :get, :new, params
+
       expect(assigns(:note)).to be_a_new(Note)
     end
   end
 
-  describe "POST #create" do
-    it "should create a new note" do
-      expect{
-        post :create, {
-          procedure_id: @procedure.id,
-          note: {comment: "okay"},
-          format: :js
-        }
-      }.to change(Note, :count).by(1)
-      expect(assigns(:note)).to have_attributes(comment: "okay")
+  describe 'POST #create' do
+
+    it 'should create a new note' do
+      params = {
+        note: {
+          notable_type: 'Procedure',
+          notable_id: 1,
+          comment: 'okay'
+        },
+        format: :js
+      }
+
+      expect{ post :create, params }.to change(Note, :count).by(1)
+      expect(assigns(:note)).to have_attributes(comment: 'okay')
     end
   end
 end

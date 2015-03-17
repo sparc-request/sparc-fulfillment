@@ -1,9 +1,10 @@
 class Participant < ActiveRecord::Base
 
-  ETHNICITY_OPTIONS = ['Hispanic or Latino', 'Not Hispanic or Latino'].freeze
-  RACE_OPTIONS      = ['Caucasian', 'African American/Black', 'Asian', 'Middle Eastern', 'Pacific Islander', 'Native American/Alaskan', 'Other'].freeze
-  STATUS_OPTIONS    = ['Active', 'Inactive', 'Complete'].freeze
-  GENDER_OPTIONS    = ['Male', 'Female'].freeze
+  ETHNICITY_OPTIONS   = ['Hispanic or Latino', 'Not Hispanic or Latino'].freeze
+  RACE_OPTIONS        = ['Caucasian', 'African American/Black', 'Asian', 'Middle Eastern', 'Pacific Islander', 'Native American/Alaskan', 'Other'].freeze
+  STATUS_OPTIONS      = ['Active', 'Inactive', 'Complete'].freeze
+  GENDER_OPTIONS      = ['Male', 'Female'].freeze
+  RECRUITMENT_OPTIONS = ['Participating Site Referral', 'Primary Physician / or Healthcare Provider Referred', 'Other Physician / or Healthcare Provider Referred', 'Local Advertising (Flyer, Brochure, Newspaper, etc.)', 'Friends or Family Referred', 'SC Research.org', 'MUSC Heroes.org', 'Clinical Trials.gov', 'Billboard Ad Campaign', 'TV Ad Campaign', 'Other'].freeze
 
   acts_as_paranoid
 
@@ -15,12 +16,28 @@ class Participant < ActiveRecord::Base
   after_destroy :update_faye
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, presence: true
-  validate :phone_number_format, :date_of_birth_format
+  validate :phone_number_format, :date_of_birth_format, :middle_initial_format, :zip_code_format
 
   def phone_number_format
     if phone != ""
       if not( /^\d{3}-\d{3}-\d{4}$/.match phone.to_s or /^\d{10}$/.match phone.to_s )
         errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX or XXXXXXXXXX")
+      end
+    end
+  end
+
+  def zip_code_format
+    if zipcode != ""
+      if not( /^\d{5}$/.match zipcode.to_s )
+        errors.add(:zipcode, "is not a zip code in the format XXXXX")
+      end
+    end
+  end
+
+  def middle_initial_format
+    if middle_initial != ""
+      if not( /^[A-z]{1}$/.match middle_initial.to_s )
+        errors.add(:middle_initial, "must be only one character")
       end
     end
   end
@@ -46,6 +63,10 @@ class Participant < ActiveRecord::Base
   def update_appointments_on_arm_change
     self.appointments.each{ |appt| appt.destroy_if_incomplete }
     self.build_appointments
+  end
+
+  def full_name
+    [first_name, middle_initial, last_name].join(' ')
   end
 
   private

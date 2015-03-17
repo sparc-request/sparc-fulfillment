@@ -1,21 +1,28 @@
 class NotesController < ApplicationController
+
   respond_to :json, :html
 
+  before_action :find_notable, only: [:index]
+
   def index
-    @procedure = Procedure.find(params[:procedure_id])
+    @notes = @notable.notes
   end
 
   def new
-    @procedure = Procedure.find(params[:procedure_id])
-    @note = Note.new
+    @note = Note.new(note_params)
   end
 
   def create
-    unless params[:note][:comment].length == 0
-      @procedure = Procedure.find(params[:procedure_id])
-      user = current_user
-      @note = Note.create(procedure: @procedure, user_id: user.id, user_name: user.full_name, comment: params[:note][:comment])
-    end
+    @note = Note.create(note_params.merge!({ user: current_user }))
   end
 
+  private
+
+  def note_params
+    params.require(:note).permit(:notable_type, :notable_id, :comment, :kind)
+  end
+
+  def find_notable
+    @notable = params[:notable][:type].constantize.find params[:notable][:id]
+  end
 end
