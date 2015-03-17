@@ -14,10 +14,4 @@ module TaskHelper
 
     html
   end
-
-  def user_name(id)
-    user = User.find(id)
-
-    user.full_name
-  end
 end

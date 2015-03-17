@@ -12,7 +12,7 @@
           .col-md-12
             .form-group
               = f.label "user_id", t(:task_index)[:user_name], class: "col-sm-4 control-label"
-              .col-sm-7= f.text_field "user_id", {class: 'form-control disabled', value: current_user.full_name}
+              .col-sm-7= f.text_field "user_id", {class: 'form-control', disabled: true, value: current_user.full_name}
             .form-group
               = f.label "task_type", t(:task_index)[:task_type], class: "col-sm-4 control-label"
               .col-sm-7= f.select "task_type", Task::TASK_TYPES, { include_blank: true }, { class: "form-control" }
