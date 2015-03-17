@@ -50,7 +50,7 @@ en:
     subsidy_expended: "Subsidy Expended"
 
   task_index:
-    created_by: "Created By"
+    user_name: "Created By"
     task_type: "Task Type"
     completed: "Completed"
     participant_name: "Patient Name"
@@ -58,7 +58,7 @@ en:
     visit_name: "Visit"
     arm_name: "Arm"
     task: "Task/Service"
-    assignment: "Assignment"
+    assignee_name: "Assignment"
     due_date: "Due Date"
     reschedule: "Reschedule"
     create_task: "Create Task"

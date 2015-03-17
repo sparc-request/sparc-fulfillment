@@ -17,7 +17,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    @task = Task.new(task_params)
+    @task = Task.new(task_params.merge!({ user: current_user}))
     if @task.valid?
       @task.save
       flash[:success] = t(:flash_messages)[:task][:created]
@@ -40,7 +40,7 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:is_complete, :participant_name, :due_date, :created_by, :protocol_id, :visit_name, 
-                                  :arm_name, :task, :assignment, :task_type)
+    params.require(:task).permit(:is_complete, :participant_name, :due_date, :protocol_id, :visit_name, 
+                                  :arm_name, :task, :assignee_id, :task_type)
   end
 end

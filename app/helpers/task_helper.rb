@@ -15,13 +15,9 @@ module TaskHelper
     html
   end
 
-  def user_names
-    names = []
-    users = User.all
-    users.each do |user|
-      names << user.full_name
-    end
+  def user_name(id)
+    user = User.find(id)
 
-    names
+    user.full_name
   end
 end
