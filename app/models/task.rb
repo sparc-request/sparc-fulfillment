@@ -6,5 +6,5 @@ class Task < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :assignee, class_name: "User"
-  validates :due_date, presence: true
+  validates :assignee_id, :due_date, presence: true
 end
