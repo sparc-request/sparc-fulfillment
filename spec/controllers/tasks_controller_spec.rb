@@ -53,4 +53,37 @@ RSpec.describe TasksController do
       expect(@task.participant_name).to eq 'Burt Macklin'
     end
   end
+
+  describe "GET #task_reschedule" do
+
+    it "renders the reschedule modal" do
+      xhr :get, :task_reschedule, { 
+      id: @task.id, 
+      format: :js }
+
+      expect(response).to be_success
+    end
+  end
+
+  describe "GET #new" do
+    it "should instantiate a new task" do
+      xhr :get, :new, {
+        id: @task.id,
+        format: :js
+      }
+      expect(assigns(:task)).to be_a_new(Task)
+    end
+  end
+
+  describe "POST #create" do
+    it "should create a new task" do
+      expect{
+        post :create, {
+          id: @task.id,
+          task: attributes_for(:task),
+          format: :js
+        }
+      }.to change(Task, :count).by(1)
+    end
+  end
 end
