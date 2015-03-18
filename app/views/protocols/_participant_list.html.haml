@@ -15,5 +15,6 @@
       %th{data: {class: 'ethnicity', align: "left", sortable: "true", field: "ethnicity"}}= t(:participant)[:ethnicity]
       %th{data: {class: 'address', align: "left", sortable: "true", field: "address", visible: "false"}}= t(:participant)[:address]
       %th{data: {class: 'phone', align: "left", sortable: "true", field: "phone", visible: "false"}}= t(:participant)[:phone]
+      %th{data: {class: 'details', align: "center", field: "details", formatter: "detailsFormatter", width: "5"}}= t(:actions)[:details]
       %th{data: {class: 'edit', align: "center", field: "edit", formatter: "editFormatter", width: "5"}}= t(:actions)[:edit]
       %th{data: {class: 'delete', align: "center", field: "delete", formatter: "deleteFormatter", width: "5"}}= t(:actions)[:delete]

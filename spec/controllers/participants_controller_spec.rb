@@ -100,4 +100,15 @@ RSpec.describe ParticipantsController do
       expect(@participant.arm_id).to eq @arm.id
     end
   end
+
+  describe "GET #details" do
+    it "should select an instantiated participant" do
+      xhr :get, :details, {
+        protocol_id: @protocol.id,
+        participant_id: @participant.id,
+        format: :js
+      }
+      expect(assigns(:participant)).to eq(@participant)
+    end
+  end
 end
