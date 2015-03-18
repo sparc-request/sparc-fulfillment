@@ -77,10 +77,11 @@ RSpec.describe TasksController do
 
   describe "POST #create" do
     it "should create a new task" do
+      assignee = create(:user)
       expect{
         post :create, {
           id: @task.id,
-          task: attributes_for(:task),
+          task: attributes_for(:task).merge!(assignee_id: assignee.id),
           format: :js
         }
       }.to change(Task, :count).by(1)

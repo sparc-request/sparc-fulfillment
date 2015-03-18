@@ -24,6 +24,16 @@ class Procedure < ActiveRecord::Base
      ["O", "other_billing_qty"]]
   end
 
+  def update_attributes(attributes)
+    if attributes[:status].present? &&
+        attributes[:status] == "complete" &&
+        (incomplete? || status.nil?)
+      attributes.merge!(completed_date: Time.current)
+    end
+
+    super attributes
+  end
+
   def complete?
     status == 'complete'
   end

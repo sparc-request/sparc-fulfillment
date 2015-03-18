@@ -30,8 +30,8 @@ feature 'View Notes', js: true do
 
     given_i_am_viewing_a_procedure
     find('label.status.incomplete').click
-    select reason, from: 'note_reason'
-    fill_in 'note_comment', with: 'Test comment'
+    select reason, from: 'procedure_notes_attributes_0_reason'
+    fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
   end
 

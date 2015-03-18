@@ -32,26 +32,35 @@ $ ->
 
   # Procedure buttons
 
-  $(document).on 'click', 'label.status', ->
-    procedure_id  = $(this).parents('.row.procedure').data('id')
-    element       = $(this).children('input')
-    status        = element.val()
-    data          = procedure: status: status
+  $(document).on 'click', 'label.status.complete', ->
+    procedure_id  = $(this).parents('.procedure').data('id')
+    data          = procedure:
+                      status: "complete"
 
     $.ajax
       type: 'PUT'
       data: data
       url: "/procedures/#{procedure_id}.js"
 
+  $(document).on 'click', 'label.status.incomplete', ->
+    procedure_id  = $(this).parents('.procedure').data('id')
+    data          = partial: "incomplete", procedure:
+                      status: "incomplete"
+
+    $.ajax
+      type: 'GET'
+      data: data
+      url: "/procedures/#{procedure_id}/edit.js"
+
   $(document).on 'click', 'button.followup.new', ->
-    procedure_id  = $(this).parents('.row.procedure').data('id')
+    procedure_id  = $(this).parents('.procedure').data('id')
 
     $.ajax
       type: 'GET'
       url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', 'button.note.new',  ->
-    procedure_id  = $(this).parents('.row.procedure').data('id')
+    procedure_id  = $(this).parents('.procedure').data('id')
     data          = note:
                       notable_id: procedure_id,
                       notable_type: 'Procedure'
@@ -62,7 +71,7 @@ $ ->
       data: data
 
   $(document).on 'click', 'button.notes.list',  ->
-    procedure_id  = $(this).parents('.row.procedure').data('id')
+    procedure_id  = $(this).parents('.procedure').data('id')
     data          = notable: id: procedure_id, type: 'Procedure'
 
     $.ajax
@@ -70,8 +79,8 @@ $ ->
       url: '/notes.js'
       data: data
 
-  $(document).on 'click', 'button.procedure.delete', ->
-    procedure_id = $(this).parents('.row.procedure').data('id')
+  $(document).on 'click', '.procedure button.delete', ->
+    procedure_id = $(this).parents(".procedure").data("id")
 
     if confirm('Are you sure you want to remove this procedure?')
       $.ajax

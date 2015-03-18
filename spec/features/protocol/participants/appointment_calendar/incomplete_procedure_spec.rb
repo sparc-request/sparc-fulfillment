@@ -17,11 +17,18 @@ feature 'Complete Procedure', js: true do
     then_i_shoud_see_two_incomplete_notes
   end
 
-  scenario 'User marks a complete Procedure as incomplete' do
+  scenario 'User marks a complete Procedure as incomplete and supplies a Note' do
     as_a_user_who_is_viewing_a_procedure_marked_as_complete
     when_i_incomplete_the_procedure
     and_i_view_the_notes_list
     then_i_shoud_see_one_complete_note_and_one_incomplete_note
+  end
+
+  scenario 'User marks a complete Procedure as incomplete and then cancels' do
+    as_a_user_who_has_added_a_procedure_to_an_appointment
+    when_i_click_the_incommplete_button
+    and_i_cancel_the_incomplete
+    then_i_shoud_see_that_the_procedure_status_has_not_changed
   end
 
   def as_a_user_who_has_added_a_procedure_to_an_appointment
@@ -42,17 +49,29 @@ feature 'Complete Procedure', js: true do
     find('label.status.complete').click
   end
 
+  def when_i_click_the_incommplete_button
+    find('label.status.incomplete').click
+  end
+
+  def and_i_cancel_the_incomplete
+    first(".modal button.close")
+  end
+
   def when_i_incomplete_the_procedure
     reason = Note::REASON_TYPES.first
 
-    find('label.status.incomplete').click
-    select reason, from: 'note_reason'
-    fill_in 'note_comment', with: 'Test comment'
+    when_i_click_the_incommplete_button
+    select reason, from: 'procedure_notes_attributes_0_reason'
+    fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
   end
 
   def and_i_view_the_notes_list
     find('button.notes.list').click
+  end
+
+  def then_i_shoud_see_that_the_procedure_status_has_not_changed
+    expect(page).to have_css("tr.procedure .date input[disabled]")
   end
 
   def then_i_shoud_see_one_incomplete_note

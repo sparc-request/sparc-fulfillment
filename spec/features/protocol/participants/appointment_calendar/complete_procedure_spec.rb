@@ -44,6 +44,7 @@ feature 'Complete Procedure', js: true do
 
   def when_i_complete_the_procedure
     find('label.status.complete').click
+    wait_for_ajax
   end
 
   def and_i_view_the_notes_list
