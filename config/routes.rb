@@ -55,6 +55,10 @@ Rails.application.routes.draw do
   end
 
   resources :tasks do
+    collection do
+      patch 'incomplete_tasks'
+      get 'completed_tasks'
+    end
     member do
       get 'task_reschedule'
     end

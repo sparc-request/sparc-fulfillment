@@ -3,7 +3,10 @@ module Features
   module TaskHelpers
 
     def create_tasks(count=1)
-      create_list(:task, count)
+      protocol1 = create(:protocol)
+      count.times do
+        create(:task, protocol_id: protocol1.id)
+      end
     end
 
     def user_fills_in_new_task_form

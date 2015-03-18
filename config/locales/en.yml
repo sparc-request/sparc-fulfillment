@@ -64,6 +64,10 @@ en:
     reschedule: "Reschedule"
     create_task: "Create Task"
     task_type: "Task Type"
+    completed_tasks_header: "Completed Tasks"
+    no_completed_tasks: "There are currently no completed tasks"
+    incompletion: "Set to Incomplete"
+
 
   protocol_tabs:
     study_schedule: "Study Schedule"
@@ -179,3 +183,5 @@ en:
     task:
       updated: "Task Updated"
       created: "Task Created"
+      updated: "Task Has Been Updated"
+      incompleted: "The selected task(s) have been set to incomplete"

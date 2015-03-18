@@ -57,8 +57,8 @@ RSpec.describe TasksController do
   describe "GET #task_reschedule" do
 
     it "renders the reschedule modal" do
-      xhr :get, :task_reschedule, { 
-      id: @task.id, 
+      xhr :get, :task_reschedule, {
+      id: @task.id,
       format: :js }
 
       expect(response).to be_success
@@ -86,4 +86,27 @@ RSpec.describe TasksController do
       }.to change(Task, :count).by(1)
     end
   end
+
+  describe "GET #completed_tasks" do
+    it "should identifiy the completed tasks" do
+      @task.update_attributes(is_complete: true)
+      xhr :get, :completed_tasks,{
+        format: :js
+      }
+      expect(assigns(:completed_tasks)).to include(@task)
+    end
+  end
+
+  describe "PATCH #incomplete_tasks" do
+    it "should set completed tasks to incomplete" do
+      @task.update_attributes(is_complete: true)
+      patch :incomplete_tasks,{
+        incompletes: [@task.id],
+        format: :js
+      }
+      @task.reload
+      expect(@task.is_complete).to be nil
+    end
+  end
+
 end

@@ -37,10 +37,25 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
   end
 
+  def completed_tasks
+    @completed_tasks = Task.where("is_complete")
+  end
+
+  def incomplete_tasks
+    @incompleted_tasks = params[:incompletes]
+    if not @incompleted_tasks.nil?
+      @incompleted_tasks.each do|task|
+        task = Task.find(task)
+        task.update_attributes(is_complete: nil)
+      end
+      flash[:success] = t(:flash_messages)[:task][:incompleted]
+    end
+  end
+
   private
 
   def task_params
-    params.require(:task).permit(:is_complete, :participant_name, :due_date, :protocol_id, :visit_name, 
+    params.require(:task).permit(:is_complete, :participant_name, :due_date, :protocol_id, :visit_name,
                                   :arm_name, :task, :assignee_id, :task_type)
   end
 end
