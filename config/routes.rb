@@ -5,13 +5,9 @@ Rails.application.routes.draw do
   resources :notes, only: [:index, :new, :create]
   resources :procedures, only: [:create, :edit, :update, :destroy]
 
-  resources :appointments, only: [:show] do
+  resources :appointments, only: [:show, :update] do
     collection do
       get 'completed_appointments'
-    end
-    member do
-      patch 'completed_date'
-      patch 'start_date'
     end
   end
 

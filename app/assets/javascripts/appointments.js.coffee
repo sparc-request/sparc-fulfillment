@@ -34,13 +34,13 @@ $ ->
     appointment_id = $(this).attr('appointment_id')
     $.ajax
       type: 'PATCH'
-      url:  "/appointments/#{appointment_id}/start_date"
+      url:  "/appointments/#{appointment_id}?field=start_date"
 
   $(document).on 'click', '.complete_visit', ->
     appointment_id = $(this).attr('appointment_id')
     $.ajax
       type: 'PATCH'
-      url:  "/appointments/#{appointment_id}/completed_date"
+      url:  "/appointments/#{appointment_id}?field=completed_date"
 
   # Procedure buttons
 

@@ -15,29 +15,23 @@ class AppointmentsController < ApplicationController
     respond_with @appointments
   end
 
-  def start_date
+  def update
     @appointment = Appointment.find params[:id]
-    if params[:new_date]
-      updated_date = Time.at(params[:new_date].to_i / 1000)
-    else
-      updated_date = Time.current
-    end
 
-    @appointment.update_attributes(start_date: updated_date)
-  end
-
-  def completed_date
-    @appointment = Appointment.find params[:id]
-    if params[:new_date]
-      updated_date = Time.at(params[:new_date].to_i / 1000)
-    else
-      updated_date = Time.current
-      if @appointment.start_date > updated_date #completed date cannot be before start date
-        updated_date = @appointment.start_date
+    if ['start_date', 'completed_date'].include? params[:field]
+      @field = params[:field]
+      if params[:new_date]
+        updated_date = Time.at(params[:new_date].to_i / 1000)
+      else
+        updated_date = Time.current
+      end
+      if @field == 'start_date'
+        @appointment.update_attributes(start_date: updated_date)
+      elsif @field == 'completed_date'
+        updated_date = @appointment.start_date if @appointment.start_date > updated_date #completed date cannot be before start date
+        @appointment.update_attributes(completed_date: updated_date)
       end
     end
-
-    @appointment.update_attributes(completed_date: updated_date)
   end
 
   private
