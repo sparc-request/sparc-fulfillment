@@ -3,7 +3,7 @@ module Features
   module TaskHelpers
 
     def create_tasks(count=1)
-      protocol1 = create(:protocol_imported_from_sparc)
+      protocol1 = create(:protocol)
       count.times do
         create(:task, protocol_id: protocol1.id)
       end

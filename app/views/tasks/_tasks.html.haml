@@ -2,7 +2,7 @@
 .bootstrap-table-dropdown-overflow
   #custom_tool_buttons
     = link_to t(:actions)[:new_task], new_task_path, {class: 'btn btn-default btn-primary', id: 'new_task_button', type: 'button', data: {toggle: 'modal', target: '#modal_place'}, remote: true}
-    %button.btn.btn-success#completed_tasks_button{value: "completed_tasks"}= t(:task_index)[:completed_tasks_header]
+    = link_to t(:task_index)[:completed_tasks_header], completed_tasks_tasks_path, {class: 'btn btn btn-success', id: "completed_tasks_button", value: "completed_tasks", type: "button", data: {toggle: 'modal', target: '#modal_place'}, remote: true }
 %table.tasks.custom_striped{style: "padding: 0px 0px;",id: "task-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: "/tasks.json", "sort-name" => "due_date", "sort-order" => 'asc', striped: "true", toolbar: "#custom_tool_buttons"}}
   %thead
     %tr

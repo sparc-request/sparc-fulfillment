@@ -16,8 +16,3 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/tasks/#{task_id}/task_reschedule"
-
-  $(document).on 'click', '#completed_tasks_button', ->
-    $.ajax
-      type: 'GET'
-      url: "/tasks/completed_tasks"
