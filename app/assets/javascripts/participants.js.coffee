@@ -25,6 +25,12 @@ $ ->
       type: 'GET'
       url: "/protocols/#{protocol_id}/participants/#{participant_id}/edit"
 
+  $(document).on 'click', '.participant-details', ->
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/details"
+
   $(document).on 'click', '.participant-calendar', ->
     protocol_id = $(this).attr('protocol_id')
     participant_id = $(this).attr('participant_id')

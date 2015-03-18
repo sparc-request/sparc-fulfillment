@@ -14,6 +14,7 @@ json.(@participants) do |participant|
   json.race participant.race
   json.address participant.address
   json.phone participant.phone
+  json.details detailsFormatter(participant)
   json.edit editFormatter(participant)
   json.delete deleteFormatter(participant)
   json.calendar calendarFormatter(participant)
