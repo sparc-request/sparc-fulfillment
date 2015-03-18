@@ -25,6 +25,12 @@ $ ->
       type: 'GET'
       url: "/protocols/#{protocol_id}/participants/#{participant_id}/edit"
 
+  $(document).on 'click', '.participant-details', ->
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/details"
+
   $(document).on 'click', '.participant-calendar', ->
     protocol_id = $(this).attr('protocol_id')
     participant_id = $(this).attr('participant_id')
@@ -49,6 +55,13 @@ $ ->
   [
     "<a class='edit edit-participant ml10' href='#' title='Edit' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
     "<i class='glyphicon glyphicon-edit'></i>",
+    "</a>"
+  ].join ""
+
+(exports ? this).detailsFormatter = (value, row, index) ->
+  [
+    "<a class='details participant-details ml10' href='#' title='Details' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
+    "<i class='glyphicon glyphicon-sunglasses'></i>",
     "</a>"
   ].join ""
 

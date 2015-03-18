@@ -22,12 +22,14 @@
 en:
   actions:
     close: "Close"
+    details: "Details"
     edit: "Edit"
     delete: "Delete"
     save: "Save"
     change_arm: "Assign Arm"
     new_participant: "Create New Participant"
     save_participant: "Save Participant"
+    new_task: "Create New Task"
 
 
   index_page:
@@ -49,7 +51,7 @@ en:
     subsidy_expended: "Subsidy Expended"
 
   task_index:
-    created_by: "Created By"
+    user_name: "Created By"
     task_type: "Task Type"
     completed: "Completed"
     participant_name: "Patient Name"
@@ -57,9 +59,11 @@ en:
     visit_name: "Visit"
     arm_name: "Arm"
     task: "Task/Service"
-    assignment: "Assignment"
+    assignee_name: "Assignment"
     due_date: "Due Date"
     reschedule: "Reschedule"
+    create_task: "Create Task"
+    task_type: "Task Type"
 
   protocol_tabs:
     study_schedule: "Study Schedule"
@@ -116,6 +120,7 @@ en:
     stats: "Stats"
     arm: "Current Arm"
     report: "Report"
+    details: "Participant Details"
 
   appointment:
     protocol_id: "Protocol ID"
@@ -172,4 +177,5 @@ en:
       removed: "Participant Removed"
       arm_change: "Participant Successfully Changed Arms"
     task:
-      updated: "Task Has Been Updated"
+      updated: "Task Updated"
+      created: "Task Created"
