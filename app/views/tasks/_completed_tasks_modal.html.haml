@@ -1,0 +1,31 @@
+.modal-dialog.modal-lg#incomplete_tasks_modal
+  .modal-content
+    = form_tag({controller: "tasks", action: "incomplete_tasks"}, method: "patch", class: "form-horizontal", remote: true) do
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4.modal-title.text-center=t(:task_index)[:completed_tasks_header]
+      .modal-body
+        -if not completed_tasks.nil?
+          .completed-tasks-index
+            .tasks-header.text-center
+              .col-xs-4= t(:task_index)[:task]
+              .col-xs-4= t(:task_index)[:user_name]
+              .col-xs-4= t(:task_index)[:incompletion]
+            -completed_tasks.each do |task|
+              .task{id: "completed_task_#{task.id}"}
+                .form-group
+                  .col-xs-4
+                    %a.text-center{"data-toggle" => "tooltip", "data-placement" => "left", title: task_info(task)}
+                      =task.task
+                  .col-xs-4.a.text-center= task.user_id
+                  .col-xs-4.checkbox.text-center
+                    %label
+                      = check_box_tag "incompletes[]", [task.id]
+        -else
+          .text-center=t(:task_index)[:no_completed_tasks]
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

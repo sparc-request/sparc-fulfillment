@@ -69,4 +69,35 @@ RSpec.describe 'Task Index spec', type: :feature, js: true do
       expect(Task.all.count).to_not eq(tasks_size + 1)
     end
   end
+
+  describe "setting a task back to incomplete" do
+
+    before :each do
+      @complete_task = Task.first
+      @complete_task.update_attributes(is_complete: true)
+      click_button "completed_tasks"
+    end
+
+    it "should render the modal" do
+      expect(page).to have_css "#incomplete_tasks_modal"
+    end
+
+    it "should have completed tasks listed in the modal" do
+      expect(page).to have_css "#completed_task_#{@complete_task.id}"
+    end
+
+    it "should incomplete tasks using checkboxes and submitting the form" do
+      find(:css, "input#incompletes_[value='#{@complete_task.id}']").set(true)
+      click_button "Save"
+      expect(page).to have_css ".alert.alert-dismissable.alert-success"
+    end
+
+    it "should update the task table" do
+      find(:css, "input#incompletes_[value='#{@complete_task.id}']").set(true)
+      click_button "Save"
+      expect(page).to have_css ".alert.alert-dismissable.alert-success"
+      expect(page).to have_content "#{@complete_task.task}"
+    end
+
+  end
 end

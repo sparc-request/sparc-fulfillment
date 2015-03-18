@@ -1,4 +1,5 @@
 $ ->
+  $('[data-toggle="tooltip"]').tooltip()
 
   $(document).on 'click', '.task-complete', ->
     task_id = $(this).attr('task_id')
@@ -15,3 +16,8 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/tasks/#{task_id}/task_reschedule"
+
+  $(document).on 'click', '#completed_tasks_button', ->
+    $.ajax
+      type: 'GET'
+      url: "/tasks/completed_tasks"
