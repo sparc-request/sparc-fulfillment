@@ -19,7 +19,7 @@
                   .col-xs-4
                     %a.text-center{"data-toggle" => "tooltip", "data-placement" => "left", title: task_info(task)}
                       =task.task
-                  .col-xs-4.a.text-center= task.user_id
+                  .col-xs-4.a.text-center= User.find(task.user_id).full_name
                   .col-xs-4.checkbox.text-center
                     %label
                       = check_box_tag "incompletes[]", [task.id]
