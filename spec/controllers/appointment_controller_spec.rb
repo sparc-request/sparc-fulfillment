@@ -37,13 +37,14 @@ RSpec.describe AppointmentsController do
     end
   end
 
-  describe "PATCH #completed_date" do
+  describe "PATCH #update" do
     it "should set the completed date if one doesn't exist" do
       today = Time.current.strftime("%F")
       appointment = create(:appointment, completed_date: nil)
       expect(appointment.completed_date).to eq(nil)
-      patch :completed_date, {
+      patch :update, {
         id: appointment.id,
+        field: 'completed_date',
         format: :js
       }
       expect(assigns(:appointment).start_date.strftime("%F")).to eq(today)
@@ -52,8 +53,9 @@ RSpec.describe AppointmentsController do
     it "should change the completed date to the new date" do
       tomorrow = Time.now.tomorrow
       appointment = create(:appointment, completed_date: Time.now)
-      patch :completed_date, {
+      patch :update, {
         id: appointment.id,
+        field: 'completed_date',
         new_date: (tomorrow.to_i)*1000, #expects milliseconds
         format: :js
       }
@@ -63,21 +65,21 @@ RSpec.describe AppointmentsController do
     it "should change the completed date to the start date if the completed date is nil and the start date is in the future" do
       appointment = create(:appointment, completed_date: nil, start_date: Time.now.tomorrow)
       expect(appointment.completed_date).to eq(nil)
-      patch :completed_date, {
+      patch :update, {
         id: appointment.id,
+        field: 'completed_date',
         format: :js
       }
       expect(assigns(:appointment).completed_date.strftime("%F")).to eq(assigns(:appointment).start_date.strftime("%F"))
     end
-  end
 
-  describe "PATCH #start_date" do
     it "should set the start date if one doesn't exist" do
       today = Time.current.strftime("%F")
       appointment = create(:appointment, start_date: nil)
       expect(appointment.start_date).to eq(nil)
-      patch :start_date, {
+      patch :update, {
         id: appointment.id,
+        field: 'start_date',
         format: :js
       }
       expect(assigns(:appointment).start_date.strftime("%F")).to eq(today)
@@ -86,8 +88,9 @@ RSpec.describe AppointmentsController do
     it "should change the start date to the new date" do
       tomorrow = Time.now.tomorrow
       appointment = create(:appointment, start_date: Time.now)
-      patch :start_date, {
+      patch :update, {
         id: appointment.id,
+        field: 'start_date',
         new_date: (tomorrow.to_i)*1000, #expects milliseconds
         format: :js
       }
