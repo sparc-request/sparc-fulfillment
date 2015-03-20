@@ -23,7 +23,7 @@ feature 'Delete Procedure', js: true do
     visit protocol_participant_path(protocol, participant)
 
     bootstrap_select('#appointment_select', visit_group.name)
-    select service.name, from: 'service_list'
+    find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '2'
     find('button.add_service').trigger('click')
   end
@@ -37,7 +37,7 @@ feature 'Delete Procedure', js: true do
     visit protocol_participant_path(protocol, participant)
 
     bootstrap_select('#appointment_select', visit_group.name)
-    select service.name, from: 'service_list'
+    find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '1'
     find('button.add_service').trigger('click')
   end

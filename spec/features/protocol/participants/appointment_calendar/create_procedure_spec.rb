@@ -26,7 +26,7 @@ feature 'Create Procedure', js: true do
     service     = Service.first
 
     bootstrap_select('#appointment_select', visit_group.name)
-    select service.name, from: 'service_list'
+    find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '1'
     page.find('button.add_service').trigger('click')
   end
@@ -40,7 +40,7 @@ feature 'Create Procedure', js: true do
     service     = Service.first
 
     bootstrap_select('#appointment_select', visit_group.name)
-    select service.name, from: 'service_list'
+    find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '2'
     page.find('button.add_service').trigger('click')
   end
