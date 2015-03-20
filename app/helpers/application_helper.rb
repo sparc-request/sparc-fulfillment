@@ -20,6 +20,10 @@ module ApplicationHelper
     :hidden if val == true
   end
 
+  def disabled_class(val)
+    :disabled if val == true
+  end
+
   def pretty_tag(tag)
     tag.to_s.gsub(/\s/, "_").gsub(/[^-\w]/, "").downcase
   end
