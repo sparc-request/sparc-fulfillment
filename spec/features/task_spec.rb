@@ -75,7 +75,7 @@ RSpec.describe 'Task Index spec', type: :feature, js: true do
     before :each do
       @complete_task = Task.first
       @complete_task.update_attributes(is_complete: true)
-      click_button "completed_tasks"
+      click_link "Completed Tasks"
     end
 
     it "should render the modal" do

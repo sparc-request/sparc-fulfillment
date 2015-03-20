@@ -2,11 +2,10 @@ FactoryGirl.define do
 
   factory :task do
     user
-    assignee factory: :user
-    assignee_id { rand(10) }
+    assignee_id { FactoryGirl.create(:user).id }
     participant_name { Faker::Name.name }
     task_type { "Participant-level Task" }
-    protocol_id { rand(10) }
+    protocol_id { FactoryGirl.create(:protocol).id }
     visit_name { "Visit" + " #{rand(50)}" }
     arm_name { "Arm" + " #{rand(10)}" }
     task { Faker::Lorem.word }
