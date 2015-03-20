@@ -24,6 +24,7 @@ if "<%= @field %>" == "completed_date"
 
     $('#completed_date').datetimepicker(defaultDate: "<%= format_datetime(@appointment.completed_date) %>")
     $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
+    $('#start_date').data("DateTimePicker").maxDate($('#completed_date').data("DateTimePicker").date())
     $('#completed_date').on 'dp.hide', (e) ->
       appointment_id = $(this).attr('appointment_id')
       $.ajax
