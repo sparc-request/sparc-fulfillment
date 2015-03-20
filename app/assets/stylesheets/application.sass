@@ -5,9 +5,11 @@
 @import "bootstrap"
 @import "bootstrap-select"
 @import "bootstrap-table.min"
+@import "bootstrap-datetimepicker"
+@import "nav"
 @import "protocols"
 @import "participants"
-@import "bootstrap-datetimepicker"
+@import "notifications"
 
 .status_select
   margin-left: -200px
@@ -21,19 +23,14 @@
 /************Main Layout Styling************/
 .header
   background-color: #113967
-  height: 100px
-  padding: 13px 0 7px
+  padding: 13px 0
+  vertical-align: center
+
+  > div:first-child
+    padding-top: 15px
+
   #logo_left
     margin-top: 17px
-.navbar
-  border: none
-  border-radius: 0
-  background-color: #416185
-  .container
-    padding-left: 0
-  .navbar-text
-    color: white
-    margin-left: 0
 
 /************Participant Details Styling************/
 .details-table

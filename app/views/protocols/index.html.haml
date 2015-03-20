@@ -1,9 +1,16 @@
 #protocols_index
   .row
-    .col-md-12= render 'protocols'
+    .col-md-12
+      = render 'protocols'
 
 - content_for :nav_buttons do
   %li
-    = button_to tasks_path, method: :get, class: "btn btn-primary navbar-btn" do
-      Task List
-  %li= button_to "Billing/Auditing Report", "#", class: "btn btn-primary navbar-btn"
+    = link_to tasks_path "#" do
+      %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+      Tasks
+      %span.notification.tasks
+        = current_user.tasks_count
+  %li
+    = link_to "#" do
+      %span.glyphicon.glyphicon-print{aria: {hidden: "true"}}
+      Billing/Auditing Report

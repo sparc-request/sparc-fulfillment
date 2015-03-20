@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150317140639) do
+ActiveRecord::Schema.define(version: 20150320173537) do
 
   create_table "appointments", force: true do |t|
     t.integer  "participant_id"
@@ -240,6 +240,7 @@ ActiveRecord::Schema.define(version: 20150317140639) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "time_zone",              default: "Eastern Time (US & Canada)"
+    t.integer  "tasks_count",            default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
