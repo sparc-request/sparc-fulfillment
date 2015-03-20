@@ -1,41 +1,27 @@
-.row
-  .col-xs-12
-    .page-header
-      %h3= "Visit: #{appointment.name}"
-.row
-  .col-xs-4.start-col
-    .start_date_input{class: hidden_class(appointment.start_date.blank?) }
-      %form.form-horizontal
-        .form-group
-          %label.col-xs-6.control-label{for: 'start_date'}= t(:appointment)[:start_date]
-          .col-xs-6= text_field_tag 'start_date', '', class: 'form-control', appointment_id: appointment.id
-    .start_date_btn{class: hidden_class(!appointment.start_date.blank?) }
-      .btn.btn-success.start_visit{appointment_id: appointment.id}= t(:actions)[:start_visit]
-  .col-xs-4.col-xs-offset-4.complete-col
-    .completed_date_input{class: hidden_class(appointment.completed_date.blank?) }
-      %form.form-horizontal
-        .form-group
-          %label.col-xs-6.control-label{for: 'completed_date'}= t(:appointment)[:completed_date]
-          .col-xs-6= text_field_tag 'completed_date', '', class: 'form-control', appointment_id: appointment.id
-    .completed_date_btn{class: hidden_class(!appointment.completed_date.blank?) }
-      .btn.btn-danger.complete_visit{class: disabled_class(appointment.start_date.blank?), appointment_id: appointment.id}= t(:actions)[:complete_visit]
-.row
-  .col-xs-12
-    .calendar.participant
-      .row.header.text-center
-        .col-xs-2= t(:appointment)[:procedure]
-        .col-xs-1= t(:appointment)[:r_t]
-        .col-xs-3= t(:appointment)[:status]
-        .col-xs-3= t(:appointment)[:followup]
-        .col-xs-2= t(:appointment)[:notes]
-        .col-xs-1= t(:appointment)[:remove]
-      - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-        = render partial: 'core', locals: {core_id: core_id, procedures: procedures}
-    .row
-      .col-xs-4
-        = select_tag "service_list", options_from_collection_for_select(Service.all_services, "id", "name"), class: 'form-control'
-      .col-xs-2
-        = text_field_tag "service_quantity", 1, class: "form-control"
-      .col-xs-2
-        %button.btn.btn-success.add_service{appointment_id: appointment.id}= t(:appointment)[:add_service]
-      .col-xs-4
+.row.appointment{data: {id: appointment.id}}
+  .row
+    .col-xs-12
+      .page-header
+        %h3= "Visit: #{appointment.name}"
+  .row
+    = render partial: 'start_complete_buttons', locals: {appointment: appointment}
+  .row
+    .col-xs-12
+      .calendar.participant
+        .row.header.text-center
+          .col-xs-2= t(:appointment)[:procedure]
+          .col-xs-1= t(:appointment)[:r_t]
+          .col-xs-3= t(:appointment)[:status]
+          .col-xs-3= t(:appointment)[:followup]
+          .col-xs-2= t(:appointment)[:notes]
+          .col-xs-1= t(:appointment)[:remove]
+        - appointment.procedures_grouped_by_core.each do |core_id, procedures|
+          = render partial: 'core', locals: {core_id: core_id, procedures: procedures}
+      .row
+        .col-xs-4
+          = select_tag "service_list", options_from_collection_for_select(Service.all_services, "id", "name"), class: 'form-control'
+        .col-xs-2
+          = text_field_tag "service_quantity", 1, class: "form-control"
+        .col-xs-2
+          %button.btn.btn-success.add_service= t(:appointment)[:add_service]
+        .col-xs-4

@@ -21,7 +21,7 @@ $ ->
 
   $(document).on 'click', '.add_service', ->
     data =
-      'appointment_id': $(this).attr('appointment_id'),
+      'appointment_id': $(this).parents('.row.appointment').data('id'),
       'service_id': $('#service_list').val(),
       'qty': $('#service_quantity').val()
 
@@ -31,13 +31,13 @@ $ ->
       data: data
 
   $(document).on 'click', '.start_visit', ->
-    appointment_id = $(this).attr('appointment_id')
+    appointment_id = $(this).parents('.row.appointment').data('id')
     $.ajax
       type: 'PATCH'
       url:  "/appointments/#{appointment_id}?field=start_date"
 
   $(document).on 'click', '.complete_visit', ->
-    appointment_id = $(this).attr('appointment_id')
+    appointment_id = $(this).parents('.row.appointment').data('id')
     $.ajax
       type: 'PATCH'
       url:  "/appointments/#{appointment_id}?field=completed_date"
