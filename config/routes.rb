@@ -37,6 +37,8 @@ Rails.application.routes.draw do
 
   resources :participants do
     get 'details', to: 'participants#details'
+    patch 'set_recruitment_source', to: 'participants#set_recruitment_source'
+
   end
 
   resources :service_calendar, only: [] do

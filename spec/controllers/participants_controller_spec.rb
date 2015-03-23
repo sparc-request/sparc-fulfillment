@@ -111,4 +111,17 @@ RSpec.describe ParticipantsController do
       expect(assigns(:participant)).to eq(@participant)
     end
   end
+
+  describe "PATCH #set_recruitment_source" do
+    it "should update the recruitment status" do
+      patch :set_recruitment_source, {
+        participant_id: @participant.id,
+        source: "dummy source",
+        format: :js
+      }
+      @participant.reload
+      expect(@participant.recruitment_source).to eq("dummy source")
+    end
+  end
+
 end

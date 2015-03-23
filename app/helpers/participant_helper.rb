@@ -15,6 +15,11 @@ module ParticipantHelper
     appts.map{|x| x.visit_group.arm}.uniq
   end
 
+  def recruitment_formatter participant
+    button = raw content_tag(:select, options_for_select(Participant::RECRUITMENT_OPTIONS, participant.recruitment_source), class: 'form-control recruitment_source_dropdown', id: "recruitment_source_#{participant.id}", data:{id: "#{participant.id}"})
+    html = raw content_tag(:div, button, class: 'btn-group')
+  end
+
   def us_states
     ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
   end
@@ -66,4 +71,6 @@ module ParticipantHelper
       "</a>"
     ].join ""
   end
+
+
 end
