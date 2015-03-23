@@ -74,10 +74,8 @@ class ParticipantsController < ApplicationController
   def set_recruitment_source
     source = params[:source] == "" ? nil : params[:source]
     @participant = Participant.find(params[:participant_id])
-    if not @participant.recruitment_source == source
-      @participant.update_attributes(recruitment_source: source)
-      flash[:success] = t(:flash_messages)[:participant][:recruitment_source]
-    end
+    @participant.update_attributes(recruitment_source: source)
+    flash[:success] = t(:flash_messages)[:participant][:recruitment_source]
   end
 
   private

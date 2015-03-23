@@ -122,6 +122,17 @@ RSpec.describe ParticipantsController do
       @participant.reload
       expect(@participant.recruitment_source).to eq("dummy source")
     end
+
+    it "should set the recruitment status to nil" do
+      @participant.update_attributes(recruitment_source: "dummy source")
+      patch :set_recruitment_source, {
+        participant_id: @participant.id,
+        source: "",
+        format: :js
+      }
+      @participant.reload
+      expect(@participant.recruitment_source).not_to be
+    end
   end
 
 end
