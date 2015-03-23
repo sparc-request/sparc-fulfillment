@@ -3,8 +3,8 @@ json.(@participants) do |participant|
   json.protocol_id participant.protocol_id
   json.arm_id participant.arm_id
   json.arm_name participant.arm.name if participant.arm
-  json.first_name participant.first_name
-  json.last_name participant.last_name
+  json.first_name participant.first_name.humanize
+  json.last_name participant.last_name.humanize
   json.mrn participant.mrn
   json.external_id participant.external_id
   json.status participant.status
@@ -14,4 +14,10 @@ json.(@participants) do |participant|
   json.race participant.race
   json.address participant.address
   json.phone participant.phone
+  json.details detailsFormatter(participant)
+  json.edit editFormatter(participant)
+  json.delete deleteFormatter(participant)
+  json.calendar calendarFormatter(participant)
+  json.report statsFormatter(participant)
+  json.chg_arm changeArmFormatter(participant)
 end
