@@ -41,6 +41,13 @@ $ ->
     participant_id = $(this).attr('participant_id')
     alert "Stats -> Protocol: #{protocol_id}, Participant: #{participant_id}"
 
+  $(document).on 'change', '.recruitment_source_dropdown', ->
+    id = $(this).data('id')
+    option = $(this).val()
+    $.ajax
+      type: 'PATCH'
+      url: "/participants/#{id}/set_recruitment_source?source=#{option}"
+
   capitalize = (string) ->
     string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
 

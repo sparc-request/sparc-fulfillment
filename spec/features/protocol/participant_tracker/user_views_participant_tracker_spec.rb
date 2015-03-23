@@ -24,4 +24,10 @@ feature 'User views Participant Tracker', js: true do
 
     expect(page).to have_css('table.participants tbody tr:first-child td.first_name', text: participant.first_name)
   end
+
+  scenario 'and updates the participant recruitment source' do
+    participant = Participant.first
+    find("#recruitment_source_#{participant.id}").select "Other"
+    expect(page).to have_css ".alert-success"
+  end
 end

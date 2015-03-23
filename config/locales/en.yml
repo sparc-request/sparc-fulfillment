@@ -180,6 +180,7 @@ en:
       saved: "Participant Saved"
       removed: "Participant Removed"
       arm_change: "Participant Successfully Changed Arms"
+      recruitment_source: "Recruitment Source has been updated"
     task:
       updated: "Task Updated"
       created: "Task Created"
