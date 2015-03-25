@@ -14,4 +14,8 @@ module TaskHelper
 
     html
   end
+
+  def task_info(task)
+    "Participant name: " + task.participant_name + "\nProtocol: " + Protocol.find(task.protocol_id).short_title + "\nVisit Name: " + task.visit_name + "\nArm Name: " + task.arm_name + "\nDue Date: " + task.due_date.strftime("%m/%d/%Y")
+  end
 end

@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 
   resources :participants do
     get 'details', to: 'participants#details'
+    patch 'set_recruitment_source', to: 'participants#set_recruitment_source'
+
   end
 
   resources :service_calendar, only: [] do
@@ -49,6 +51,10 @@ Rails.application.routes.draw do
   end
 
   resources :tasks do
+    collection do
+      patch 'incomplete_tasks'
+      get 'completed_tasks'
+    end
     member do
       get 'task_reschedule'
     end

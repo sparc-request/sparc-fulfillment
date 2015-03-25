@@ -20,30 +20,60 @@ body.participants
     .calendar
       padding-bottom: 20px
 
-      .row.core-title
-        padding: 0 5px
+      table.cores
 
-      .row.procedures > div, .row.core-title > div
-        padding-right: 0
-        padding-left: 0
+        & > thead
+          background-color: #113967
 
-      .row.procedures
-        padding: 5px 0
-        background-color: #fff
+          th
+            text-align: center
+            color: #fff
+            padding: 2em 0
 
-        .row.procedure
-          margin-bottom: 4px
+        td, th
+          text-align: center
+          white-space: nowrap
+          overflow: hidden
+          text-overflow: ellipsis
 
-          &:last-child
-            margin-bottom: 0
+          &.title
+            padding-left: 0.5em
+            text-align: left
+            background-color: #ccc
 
-        .name
-          line-height: 35px
+          &.name
+            vertical-align: middle
+            width: 17%
 
-        .billing_type
-          padding-left: 5px !important
-          padding-right: 5px !important
+          &.r-t
+            width: 10%
 
-        .follow_up_date
-          input
-            width: 100%
+          &.status
+            width: 20%
+
+          &.followup, &.completed-date
+            width: 18%
+
+          &.completed-date
+            vertical-align: middle
+
+          &.notes
+            width: 9%
+
+          &.remove
+            width: 8%
+
+        & > tbody
+
+          & > tr > td
+            padding: 0
+
+          td
+
+            &.title
+              font-weight: bold
+
+            &.name
+              padding-left: 0.5em
+              text-align: left
+

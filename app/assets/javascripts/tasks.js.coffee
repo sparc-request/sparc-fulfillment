@@ -1,4 +1,5 @@
 $ ->
+  $('[data-toggle="tooltip"]').tooltip()
 
   $(document).on 'click', '.task-complete', ->
     task_id = $(this).attr('task_id')

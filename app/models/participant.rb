@@ -1,10 +1,10 @@
 class Participant < ActiveRecord::Base
 
   ETHNICITY_OPTIONS   = ['Hispanic or Latino', 'Not Hispanic or Latino'].freeze
-  RACE_OPTIONS        = ['Caucasian', 'African American/Black', 'Asian', 'Middle Eastern', 'Pacific Islander', 'Native American/Alaskan', 'Other'].freeze
-  STATUS_OPTIONS      = ['Active', 'Inactive', 'Complete'].freeze
+  RACE_OPTIONS        = ['American Indian/Alaska Native', 'Asian', 'Native Hawaiian or other Pacific Islander', 'Black or African American', 'White', 'Unknown/Other/Unreported'].freeze
+  STATUS_OPTIONS      = ['Consented','Screening', 'Enrolled – receiving treatment', 'Follow-up', 'Completed'].freeze
   GENDER_OPTIONS      = ['Male', 'Female'].freeze
-  RECRUITMENT_OPTIONS = ['Participating Site Referral', 'Primary Physician / or Healthcare Provider Referred', 'Other Physician / or Healthcare Provider Referred', 'Local Advertising (Flyer, Brochure, Newspaper, etc.)', 'Friends or Family Referred', 'SC Research.org', 'MUSC Heroes.org', 'Clinical Trials.gov', 'Billboard Ad Campaign', 'TV Ad Campaign', 'Other'].freeze
+  RECRUITMENT_OPTIONS = ['', 'Participating Site Referral', 'Primary Physician / or Healthcare Provider Referred', 'Other Physician / or Healthcare Provider Referred', 'Local Advertising (Flyer, Brochure, Newspaper, etc.)', 'Friends or Family Referred', 'SC Research.org', 'MUSC Heroes.org', 'Clinical Trials.gov', 'Billboard Ad Campaign', 'TV Ad Campaign', 'Other'].freeze
 
   acts_as_paranoid
 

@@ -26,13 +26,13 @@ feature 'Create Procedure', js: true do
     service     = Service.first
 
     bootstrap_select('#appointment_select', visit_group.name)
-    select service.name, from: 'service_list'
+    find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '1'
     page.find('button.add_service').trigger('click')
   end
 
   def then_i_should_see_the_procedure_in_the_appointment_calendar
-    expect(page).to have_css('.row.procedure', count: 1)
+    expect(page).to have_css('.procedures .procedure', count: 1)
   end
 
   def and_i_add_two_procedures
@@ -40,12 +40,12 @@ feature 'Create Procedure', js: true do
     service     = Service.first
 
     bootstrap_select('#appointment_select', visit_group.name)
-    select service.name, from: 'service_list'
+    find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '2'
     page.find('button.add_service').trigger('click')
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar
-    expect(page).to have_css('.row.procedure', count: 2)
+    expect(page).to have_css('.procedures .procedure', count: 2)
   end
 end

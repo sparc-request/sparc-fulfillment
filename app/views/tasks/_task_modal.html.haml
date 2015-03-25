@@ -36,7 +36,11 @@
               .col-sm-7= f.select "assignee_id", options_from_collection_for_select(User.all, 'id', 'full_name'), { include_blank: true }, { class: "form-control" }
             .form-group
               = f.label "follow_up_date", t(:task_index)[:due_date], class: "col-sm-4 control-label"
-              .col-sm-7= f.text_field "due_date", {class: 'form-control', value: format_date(task.due_date), data: {provide: "datepicker", 'date-format' => 'yyyy-mm-dd'}}
+              .col-sm-7
+                .input-group.date
+                  = f.text_field "due_date", {class: 'form-control', value: format_date(task.due_date)}
+                  %span.input-group-addon
+                    %span.glyphicon.glyphicon-calendar
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

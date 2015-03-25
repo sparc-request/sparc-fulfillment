@@ -8,7 +8,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
   before :each do
     visit protocol_path(protocol.sparc_id)
-    # wait_for_javascript_to_finish
   end
 
   describe "arm buttons" do
@@ -40,7 +39,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
         new_arm = all(".calendar.service").last()
-        wait_for_javascript_to_finish
         expect(new_arm).not_to have_css ".row.line_item"
       end
 
@@ -53,7 +51,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
         new_arm = all(".calendar.service").last()
-        wait_for_javascript_to_finish
         expect(new_arm).to have_css ".row.line_item"
       end
 
@@ -73,7 +70,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Subject Count', with: 1
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
-        wait_for_javascript_to_finish
         expect(page).to have_content "Arm: arm name"
       end
     end
@@ -88,7 +84,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       it "should remove the arm from the service calendar" do
         find('#remove_arm_button').click()
         page.driver.browser.accept_js_confirms
-        wait_for_javascript_to_finish
         expect(page).to have_content "Arm Destroyed"
         expect(page).not_to have_content "Arm: #{arm1.name}"
       end
@@ -107,7 +102,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       it "should validate the visit group form" do
         find('#add_visit_button').click()
         click_button 'Add'
-        wait_for_javascript_to_finish
         expect(page).to have_content "Name can't be blank Day can't be blank Day is not a number"
       end
 
@@ -116,7 +110,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Visit Name', with: "visit name"
         fill_in 'Visit Day', with: 3
         click_button 'Add'
-        wait_for_javascript_to_finish
         expect(page).to have_content "Visit Created"
       end
 
@@ -134,16 +127,13 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       it "should remove a visit group" do
         find('#remove_visit_button').click()
         page.driver.browser.accept_js_confirms
-        wait_for_javascript_to_finish
         expect(page).to have_content "Visit Destroyed"
       end
 
       it "should remove all but the last visit group" do
         bootstrap_select "#arms", "#{arm2.name}"
-        wait_for_javascript_to_finish
         find('#remove_visit_button').click()
         page.driver.browser.accept_js_confirms
-        wait_for_javascript_to_finish
         expect(page).to have_content "Arms must have at least one visit. Add another visit before deleting this one"
       end
 
@@ -164,13 +154,11 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).not_to have_css("div#arm_#{arm1.id}_core_#{service.sparc_core_id}")
         expect(page).not_to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")
         find('#add_service_button').click()
-        wait_for_javascript_to_finish
         expect(page).to have_content "Add a Service"
         select service.name, from: "service_id"
         find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
         find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
         click_button 'Add Service'
-        wait_for_javascript_to_finish
         expect(page).to have_content "Service(s) have been added to the chosen arms"
         expect(page).to have_css("div#arm_#{arm1.id}_core_#{service.sparc_core_id}")
         expect(page).to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")
@@ -194,7 +182,6 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
         find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
         click_button 'Remove'
-        wait_for_javascript_to_finish
         expect(page).to have_content "Service(s) have been removed from the chosen arms"
         expect(page).not_to have_css("div#arm_#{arm1.id}_core_#{service.sparc_core_id}")
         expect(page).not_to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")

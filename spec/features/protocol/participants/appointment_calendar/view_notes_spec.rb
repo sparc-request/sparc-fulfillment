@@ -30,8 +30,8 @@ feature 'View Notes', js: true do
 
     given_i_am_viewing_a_procedure
     find('label.status.incomplete').click
-    select reason, from: 'note_reason'
-    fill_in 'note_comment', with: 'Test comment'
+    select reason, from: 'procedure_notes_attributes_0_reason'
+    fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
   end
 
@@ -43,7 +43,7 @@ feature 'View Notes', js: true do
 
     visit protocol_participant_path protocol, participant
     bootstrap_select '#appointment_select', visit_group.name
-    select service.name, from: 'service_list'
+    find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
   end

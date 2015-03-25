@@ -1,4 +1,5 @@
 class ParticipantsController < ApplicationController
+
   respond_to :json, :html
 
   def index
@@ -69,6 +70,13 @@ class ParticipantsController < ApplicationController
 
   def details
     @participant = Participant.find(params[:participant_id])
+  end
+
+  def set_recruitment_source
+    source = params[:source] == "" ? nil : params[:source]
+    @participant = Participant.find(params[:participant_id])
+    @participant.update_attributes(recruitment_source: source)
+    flash[:success] = t(:flash_messages)[:participant][:recruitment_source]
   end
 
   private

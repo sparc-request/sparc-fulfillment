@@ -1,8 +1,8 @@
-.row.core{data: {core: {id: core_id}}}
-  .col-xs-12
-    .row.core-title
-      .col-xs-12
-        = "Core: #{procedures.first.sparc_core_name}"
-    .row.procedures
-      .col-xs-12
+%tr.core{data: {core: {id: core_id}}}
+  %td{colspan: 7}
+    %table.table.procedures
+      %thead
+        %th.title{colspan: 7}
+          = "Core: #{procedures.first.sparc_core_name}"
+      %tbody
         = render partial: 'appointments/procedure', collection: procedures, as: :procedure

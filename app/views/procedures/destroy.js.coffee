@@ -1,7 +1,7 @@
-procedure = $(".row.procedure[data-id='<%= @procedure.id %>']")
+procedure = $(".procedure[data-id='<%= @procedure.id %>']")
 
 if procedure.siblings().length == 0
-  parent = procedure.parents(".row.core")
+  parent = procedure.parents(".core")
 
   parent.remove()
 else

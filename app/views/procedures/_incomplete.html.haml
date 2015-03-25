@@ -1,0 +1,29 @@
+.modal-dialog
+  .modal-content
+    = form_for procedure, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only
+            = t(:actions)[:close]
+        %h4.modal-title.text-center
+          = t(:notes)[:new_header]
+      .modal-body
+        = form.hidden_field :status, value: "incomplete"
+        = form.hidden_field :completed_date, value: ""
+        = form.fields_for :notes, note do |note_form|
+          = note_form.hidden_field :user_id, value: current_user.id
+          .form-group
+            = note_form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
+            .col-sm-8
+              = note_form.select :reason, Note::REASON_TYPES, {}, class: "form-control"
+          .form-group
+            = note_form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
+            .col-sm-8
+              = note_form.text_area :comment, {class: 'form-control', rows: "6"}
+      .modal-footer
+        .center-block
+          %button.btn.btn-default.cancel{type: 'button', data: {dismiss: 'modal'}}
+            = t(:actions)[:close]
+          %button.btn.btn-primary.save{type: 'submit'}
+            = t(:actions)[:save]

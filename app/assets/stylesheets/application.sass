@@ -174,12 +174,12 @@ table.custom_striped.details
     margin-top: 6px
 
 /************ Notes Index Styling ************/
-.notes-index
+.notes-index, .completed-tasks-index
   padding: 15px 0px 15px 0px
   height: 400px
   overflow: scroll
 
-  .notes-header > div
+  .notes-header > div,.tasks-header > div
     background: #113967
     padding: 10px 10px 10px 10px
     color: white
@@ -187,12 +187,12 @@ table.custom_striped.details
     &:last-child
       border: 0px
 
-  .note
+  .note, .task
     padding: 0px 10px 0px 10px
     overflow: hidden
 
-  .note:nth-child(2n),
-  .note:nth-child(2n):hover
+  .note:nth-child(2n),.task:nth-child(2n),
+  .note:nth-child(2n):hover,.task:nth-child(2n):hover
     background-color: #90B9CD
     color: white
 

@@ -41,56 +41,15 @@ $ ->
     participant_id = $(this).attr('participant_id')
     alert "Stats -> Protocol: #{protocol_id}, Participant: #{participant_id}"
 
+  $(document).on 'change', '.recruitment_source_dropdown', ->
+    id = $(this).data('id')
+    option = $(this).val()
+    $.ajax
+      type: 'PATCH'
+      url: "/participants/#{id}/set_recruitment_source?source=#{option}"
+
   capitalize = (string) ->
     string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
-
-(exports ? this).deleteFormatter = (value, row, index) ->
-  [
-    "<a class='remove remove-participant' href='#' title='Remove' protocol_id='#{row.protocol_id}' participant_id='#{row.id}' participant_name='#{row.last_name}'>",
-    "<i class='glyphicon glyphicon-remove'></i>",
-    "</a>"
-  ].join ""
-
-(exports ? this).editFormatter = (value, row, index) ->
-  [
-    "<a class='edit edit-participant ml10' href='#' title='Edit' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
-    "<i class='glyphicon glyphicon-edit'></i>",
-    "</a>"
-  ].join ""
-
-(exports ? this).detailsFormatter = (value, row, index) ->
-  [
-    "<a class='details participant-details ml10' href='#' title='Details' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
-    "<i class='glyphicon glyphicon-sunglasses'></i>",
-    "</a>"
-  ].join ""
-
-(exports ? this).changeArmFormatter = (value, row, index) ->
-  [
-    "<a class='edit change-arm ml10' href='#' title='Change Arm' protocol_id='#{row.protocol_id}' participant_id='#{row.id}' arm_id='#{row.arm_id}'>",
-    "<i class='glyphicon glyphicon-random'></i>",
-    "</a>"
-  ].join ""
-
-(exports ? this).nameFormatter = (value, row, index) ->
-  value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
-
-(exports ? this).view_buttons = (value) ->
-  '<i class="glyphicon glyphicon-calendar" participant_id=' + value + '></i>' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-stats" participant_id=' + value + '></i>'
-
-(exports ? this).calendarFormatter = (value, row, index) ->
-  [
-    "<a class='participant-calendar' href='#' title='Calendar' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
-    "<i class='glyphicon glyphicon-calendar'></i>",
-    "</a>"
-  ].join ""
-
-(exports ? this).statsFormatter = (value, row, index) ->
-  [
-    "<a class='stats' href='#' title='Stats' protocol_id='#{row.protocol_id}' participant_id='#{row.id}'>",
-    "<i class='glyphicon glyphicon-stats'></i>",
-    "</a>"
-  ].join ""
 
 (exports ? this).refreshParticipantTables = (protocol_id, participant_id) ->
   $("#participants-list-table").bootstrapTable 'refresh', {url: "/protocols/#{protocol_id}/participants.json"}

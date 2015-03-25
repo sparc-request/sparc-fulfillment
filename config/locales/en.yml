@@ -65,6 +65,10 @@ en:
     reschedule: "Reschedule"
     create_task: "Create Task"
     task_type: "Task Type"
+    completed_tasks_header: "Completed Tasks"
+    no_completed_tasks: "There are currently no completed tasks"
+    incompletion: "Set to Incomplete"
+
 
   protocol_tabs:
     study_schedule: "Study Schedule"
@@ -128,17 +132,11 @@ en:
     appointment_dropdown: "Please select a visit:"
     completed: "Completed Visits"
     date_of_visit: "Date of Participant Visit"
-    procedure: "Procedure"
-    r_t: "R/T"
-    status: "Status"
     reason: "Reason"
-    followup: "Follow Up"
     start_date: "Start Date:"
     start_time: "Start Time:"
     completed_date: "Completed Date:"
     completed_time: "Completed Time:"
-    notes: "Notes"
-    remove: "Remove"
     add_service: "Add Service"
 
   line_item:
@@ -157,11 +155,17 @@ en:
     incomplete_header: "Reason for Incompletion"
 
   procedure:
-    follow_up: "Follow Up"
+    followup: "Follow Up"
     fud: "Due Date"
     select_reason: "Select a Reason"
     edit_header: "Follow up"
+    notes: "Notes"
+    remove: "Remove"
     follow_up_date: "Follow up date"
+    completed_date: "Completed Date"
+    procedure: "Procedure"
+    r_t: "R/T"
+    status: "Status"
 
   services:
     name: "Selected Service"
@@ -177,6 +181,9 @@ en:
       saved: "Participant Saved"
       removed: "Participant Removed"
       arm_change: "Participant Successfully Changed Arms"
+      recruitment_source: "Recruitment Source has been updated"
     task:
       updated: "Task Updated"
       created: "Task Created"
+      updated: "Task Has Been Updated"
+      incompleted: "The selected task(s) have been set to incomplete"

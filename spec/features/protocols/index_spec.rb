@@ -14,7 +14,7 @@ RSpec.describe 'Index spec', type: :feature, js: true do
     it "should filter the table by statuses" do
       bootstrap_select '#index_selectpicker', 'Complete'
 
-      wait_for_javascript_to_finish
+      wait_for_ajax
 
       expect(page.body).to have_css("table#protocol-list", text: "Slappy")
       expect(page.body).to_not have_css("table#protocol-list", text: "Swanson")
@@ -24,11 +24,11 @@ RSpec.describe 'Index spec', type: :feature, js: true do
   describe 'financial view' do
 
     it "should display and hide the proper columns when financial button is clicked" do
-      wait_for_javascript_to_finish
+      wait_for_ajax
 
       find('.financial').click
 
-      wait_for_javascript_to_finish
+      wait_for_ajax
       expect(page).to have_content('Subsidy Amount')
       expect(page).to_not have_content('Status')
     end
