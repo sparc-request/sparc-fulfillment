@@ -77,7 +77,6 @@ feature 'Start Complete Buttons', js: true do
 
     visit protocol_participant_path @protocol, @participant
     bootstrap_select '#appointment_select', @visit_group.name
-    # wait_for_javascript_to_finish
   end
 
   def given_there_is_a_start_date
@@ -95,7 +94,6 @@ feature 'Start Complete Buttons', js: true do
   def when_i_load_the_page
     visit current_path
     bootstrap_select '#appointment_select', @visit_group.name
-    # wait_for_javascript_to_finish
   end
 
   def when_i_click_the_start_button
