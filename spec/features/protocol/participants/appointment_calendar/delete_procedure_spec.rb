@@ -47,15 +47,15 @@ feature 'Delete Procedure', js: true do
     procedure = Procedure.first
 
     accept_confirm do
-      first('button.procedure.delete').click
+      first('.procedure button.delete').click
     end
   end
 
   def i_should_not_see_the_first_procedure
-    expect(page).to have_css('.row.procedure', count: 1)
+    expect(page).to have_css('.procedures .procedure', count: 1)
   end
 
   def i_should_not_see_the_core
-    expect(page).to have_css('.row.core', count: 0)
+    expect(page).to have_css('.cores .core', count: 0)
   end
 end

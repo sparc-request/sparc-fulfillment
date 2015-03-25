@@ -131,17 +131,11 @@ en:
     appointment_dropdown: "Please select a visit:"
     completed: "Completed Visits"
     date_of_visit: "Date of Participant Visit"
-    procedure: "Procedure"
-    r_t: "R/T"
-    status: "Status"
     reason: "Reason"
-    followup: "Follow Up"
     start_date: "Start Date:"
     start_time: "Start Time:"
     completed_date: "Completed Date:"
     completed_time: "Completed Time:"
-    notes: "Notes"
-    remove: "Remove"
     add_service: "Add Service"
 
   line_item:
@@ -160,11 +154,17 @@ en:
     incomplete_header: "Reason for Incompletion"
 
   procedure:
-    follow_up: "Follow Up"
+    followup: "Follow Up"
     fud: "Due Date"
     select_reason: "Select a Reason"
     edit_header: "Follow up"
+    notes: "Notes"
+    remove: "Remove"
     follow_up_date: "Follow up date"
+    completed_date: "Completed Date"
+    procedure: "Procedure"
+    r_t: "R/T"
+    status: "Status"
 
   services:
     name: "Selected Service"

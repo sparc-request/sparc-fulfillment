@@ -32,7 +32,7 @@ feature 'Create Procedure', js: true do
   end
 
   def then_i_should_see_the_procedure_in_the_appointment_calendar
-    expect(page).to have_css('.row.procedure', count: 1)
+    expect(page).to have_css('.procedures .procedure', count: 1)
   end
 
   def and_i_add_two_procedures
@@ -46,6 +46,6 @@ feature 'Create Procedure', js: true do
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar
-    expect(page).to have_css('.row.procedure', count: 2)
+    expect(page).to have_css('.procedures .procedure', count: 2)
   end
 end

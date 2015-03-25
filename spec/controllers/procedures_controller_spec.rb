@@ -13,37 +13,145 @@ RSpec.describe ProceduresController, type: :controller do
 
     context 'with Notable change' do
 
-      before do
-        procedure = create(:procedure)
-        params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+      context 'Procedure status is not set' do
 
-        put :update, params
+        context 'User marks Procedure as complete' do
+
+          before do
+            procedure = create(:procedure)
+            params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+
+            put :update, params
+          end
+
+          it 'should update the Procedure status' do
+            expect(assigns(:procedure).status).to eq('complete')
+          end
+
+          it 'should update the Procedure completed_date to: Time.current' do
+            expect(assigns(:procedure).completed_date).to be
+          end
+
+          it 'should create a Note' do
+            expect(assigns(:procedure).reload.notes).to be_one
+          end
+        end
+
+        context 'User marks Procedure as incomplete' do
+
+          before do
+            procedure = create(:procedure)
+            params    = { id: procedure.id, procedure: { status: 'incomplete' }, format: :js }
+
+            put :update, params
+          end
+
+          it 'should update the Procedure status' do
+            expect(assigns(:procedure).status).to eq('incomplete')
+          end
+
+          it 'should update the Procedure completed_date to: nil' do
+            expect(assigns(:procedure).completed_date).to_not be
+          end
+
+          it 'should create a Note' do
+            expect(assigns(:procedure).reload.notes).to be_one
+          end
+        end
       end
 
-      it 'should update the Procedure status' do
-        expect(assigns(:procedure).status).to eq('complete')
+      context 'Procedure status is: complete' do
+
+        context 'User marks Procedure as complete' do
+
+          before do
+            procedure = create(:procedure_complete)
+            params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+
+            put :update, params
+          end
+
+          it 'should update the Procedure status' do
+            expect(assigns(:procedure).status).to eq('complete')
+          end
+
+          it 'should update the Procedure completed_date to: Time.current' do
+            expect(assigns(:procedure).completed_date).to be
+          end
+
+          it 'should not create a Note' do
+            expect(assigns(:procedure).reload.notes.count).to be_zero
+          end
+        end
+
+        context 'User marks Procedure as incomplete' do
+
+          before do
+            procedure = create(:procedure_complete)
+            params    = { id: procedure.id, procedure: { status: 'incomplete', completed_date: "" }, format: :js }
+
+            put :update, params
+          end
+
+          it 'should update the Procedure status' do
+            expect(assigns(:procedure).status).to eq('incomplete')
+          end
+
+          it 'should update the Procedure completed_date to: nil' do
+            expect(assigns(:procedure).reload.completed_date).to_not be
+          end
+
+          it 'should create a Note' do
+            expect(assigns(:procedure).reload.notes).to be_one
+          end
+        end
       end
 
-      it 'should create a Note' do
-        expect(assigns(:procedure).notes.one?).to be
-      end
-    end
+      context 'Procedure status is: incomplete' do
 
-    context 'without Notable change' do
+        context 'User marks Procedure as complete' do
 
-      before do
-        procedure = create(:procedure_complete)
-        params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+          before do
+            procedure = create(:procedure_complete)
+            params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
 
-        put :update, params
-      end
+            put :update, params
+          end
 
-      it 'should update the Procedure status' do
-        expect(assigns(:procedure).status).to eq('complete')
-      end
+          it 'should update the Procedure status' do
+            expect(assigns(:procedure).status).to eq('complete')
+          end
 
-      it 'should not create a Note' do
-        expect(assigns(:procedure).notes.one?).to_not be
+          it 'should update the Procedure completed_date to: Time.current' do
+            expect(assigns(:procedure).completed_date).to be
+          end
+
+          it 'should not create a Note' do
+            expect(assigns(:procedure).reload.notes.count).to be_zero
+          end
+        end
+
+        context 'User marks Procedure as incomplete' do
+
+          before do
+            procedure = create(:procedure_complete)
+            params    = { id: procedure.id, procedure: { status: 'incomplete', completed_date: "" }, format: :js }
+
+            put :update, params
+          end
+
+          it 'should update the Procedure status' do
+            expect(assigns(:procedure).status).to eq('incomplete')
+          end
+
+          it 'should update the Procedure completed_date to: nil' do
+            expect(assigns(:procedure).reload.completed_date).to_not be
+          end
+
+          it 'should create a Note' do
+            expect(assigns(:procedure).reload.notes).to be_one
+          end
+        end
       end
     end
   end
