@@ -3,35 +3,35 @@
     .col-xs-12
       .page-header
         %h3= "Visit: #{appointment.name}"
-.row
-  = render partial: 'start_complete_buttons', locals: {appointment: appointment}
-.row.calendar
-  .col-xs-12
-    %table.table.table-bordered.table-hover.cores
-      %thead
-        %tr
-          %th.name
-            = t(:procedure)[:procedure]
-          %th.r-t
-            = t(:procedure)[:r_t]
-          %th.status
-            = t(:procedure)[:status]
-          %th.followup
-            = t(:procedure)[:followup]
-          %th.completed-date
-            = t(:procedure)[:completed_date]
-          %th.notes
-            = t(:procedure)[:notes]
-          %th.remove
-            = t(:procedure)[:remove]
-      %tbody
-        - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-          = render partial: "core", locals: {core_id: core_id, procedures: procedures}
-.row.services
-  .col-xs-4
-    = select_tag "service_list", options_from_collection_for_select(Service.all_services, "id", "name"), class: 'form-control'
-  .col-xs-2
-    = text_field_tag "service_quantity", 1, class: "form-control"
-  .col-xs-2
-    %button.btn.btn-success.add_service{appointment_id: appointment.id}
-      = t(:appointment)[:add_service]
+  .row
+    = render partial: 'start_complete_buttons', locals: {appointment: appointment}
+  .row.calendar
+    .col-xs-12
+      %table.table.table-bordered.table-hover.cores
+        %thead
+          %tr
+            %th.name
+              = t(:procedure)[:procedure]
+            %th.r-t
+              = t(:procedure)[:r_t]
+            %th.status
+              = t(:procedure)[:status]
+            %th.followup
+              = t(:procedure)[:followup]
+            %th.completed-date
+              = t(:procedure)[:completed_date]
+            %th.notes
+              = t(:procedure)[:notes]
+            %th.remove
+              = t(:procedure)[:remove]
+        %tbody
+          - appointment.procedures_grouped_by_core.each do |core_id, procedures|
+            = render partial: "core", locals: {core_id: core_id, procedures: procedures}
+  .row.services
+    .col-xs-4
+      = select_tag "service_list", options_from_collection_for_select(Service.all_services, "id", "name"), class: 'form-control'
+    .col-xs-2
+      = text_field_tag "service_quantity", 1, class: "form-control"
+    .col-xs-2
+      %button.btn.btn-success.add_service
+        = t(:appointment)[:add_service]
