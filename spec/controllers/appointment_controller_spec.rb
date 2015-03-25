@@ -40,7 +40,7 @@ RSpec.describe AppointmentsController do
   describe "PATCH #update" do
     it "should set the completed date if one doesn't exist" do
       today = Time.current.strftime("%F")
-      appointment = create(:appointment, completed_date: nil)
+      appointment = create(:appointment, start_date: Time.current, completed_date: nil)
       expect(appointment.completed_date).to eq(nil)
       patch :update, {
         id: appointment.id,
@@ -52,7 +52,7 @@ RSpec.describe AppointmentsController do
 
     it "should change the completed date to the new date" do
       tomorrow = Time.now.tomorrow
-      appointment = create(:appointment, completed_date: Time.now)
+      appointment = create(:appointment, start_date: Time.current, completed_date: Time.now)
       patch :update, {
         id: appointment.id,
         field: 'completed_date',

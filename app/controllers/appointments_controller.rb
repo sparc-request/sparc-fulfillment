@@ -28,7 +28,7 @@ class AppointmentsController < ApplicationController
       if @field == 'start_date'
         @appointment.update_attributes(start_date: updated_date)
       elsif @field == 'completed_date'
-        updated_date = @appointment.start_date if @appointment.start_date > updated_date #completed date cannot be before start date
+        updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date #completed date cannot be before start date
         @appointment.update_attributes(completed_date: updated_date)
       end
     end
