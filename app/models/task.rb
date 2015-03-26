@@ -5,7 +5,11 @@ class Task < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :user
-  belongs_to :assignee, class_name: "User"
+  belongs_to :assignee,
+             class_name: "User",
+             counter_cache: true
 
-  validates :assignee_id, :due_date, presence: true
+  validates :assignee_id,
+            :due_date,
+            presence: true
 end

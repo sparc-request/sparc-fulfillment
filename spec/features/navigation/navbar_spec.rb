@@ -54,7 +54,7 @@ feature 'Navigation', js: true do
   end
 
   def and_i_click_the_home_button
-    click_button 'Home'
+    click_link 'Home'
   end
 
   def then_i_should_be_on_the_home_page

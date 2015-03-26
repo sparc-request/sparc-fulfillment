@@ -1,16 +1,14 @@
 .navbar.navbar-default
   .container
     - if user_signed_in?
-      %p.navbar-text= current_user.email
-      %ul.nav.navbar-nav
+      %ul.nav.navbar-nav.navbar-left
         %li
-          = button_to destroy_user_session_path, method: :delete, class: "btn btn-danger navbar-btn" do
-            %span.glyphicon.glyphicon-log-out
+          = link_to root_path do
+            %span.glyphicon.glyphicon-home{aria: {hidden: "true"}}
+            Home
+        = yield :nav_buttons
+      %ul.nav.navbar-nav.navbar-right
+        %li
+          = link_to destroy_user_session_path do
+            %span.glyphicon.glyphicon-log-out{aria: {hidden: "true"}}
             Sign out
-      .navbar-right
-        %ul.nav.navbar-nav
-          = yield :nav_buttons
-          %li
-            = button_to root_path, method: :get, class: "btn btn-primary navbar-btn" do
-              %span.glyphicon.glyphicon-home{"aria-hidden" => "true"}
-              Home
