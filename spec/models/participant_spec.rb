@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Participant, type: :model do
 
-  it { should belong_to(:protocol) }
-  it { should belong_to(:arm) }
-  it { should have_many(:appointments) }
+  it { is_expected.to belong_to(:protocol) }
+  it { is_expected.to belong_to(:arm) }
+
+  it { is_expected.to have_many(:appointments) }
 
   before :each do
     @participant = create(:participant_with_protocol)
@@ -12,14 +13,14 @@ RSpec.describe Participant, type: :model do
 
   context 'validations' do
 
-    it { should validate_presence_of(:protocol_id) }
-    it { should validate_presence_of(:first_name) }
-    it { should validate_presence_of(:last_name) }
-    it { should validate_presence_of(:mrn) }
-    it { should validate_presence_of(:date_of_birth) }
-    it { should validate_presence_of(:ethnicity) }
-    it { should validate_presence_of(:race) }
-    it { should validate_presence_of(:gender) }
+    it { is_expected.to validate_presence_of(:protocol_id) }
+    it { is_expected.to validate_presence_of(:first_name) }
+    it { is_expected.to validate_presence_of(:last_name) }
+    it { is_expected.to validate_presence_of(:mrn) }
+    it { is_expected.to validate_presence_of(:date_of_birth) }
+    it { is_expected.to validate_presence_of(:ethnicity) }
+    it { is_expected.to validate_presence_of(:race) }
+    it { is_expected.to validate_presence_of(:gender) }
 
     context 'custom validations' do
 

@@ -2,10 +2,15 @@ require 'rails_helper'
 
 RSpec.describe Procedure, type: :model do
 
+  it { is_expected.to have_one(:protocol) }
+  it { is_expected.to have_one(:arm) }
+  it { is_expected.to have_one(:participant) }
+
   it { is_expected.to belong_to(:appointment) }
   it { is_expected.to belong_to(:visit) }
 
   it { is_expected.to have_many(:notes) }
+  it { is_expected.to have_many(:tasks) }
 
   it { should accept_nested_attributes_for(:notes) }
 

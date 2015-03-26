@@ -4,15 +4,21 @@ class Procedure < ActiveRecord::Base
 
   acts_as_paranoid
 
+  has_one :protocol,    through: :appointment
+  has_one :arm,         through: :appointment
+  has_one :participant, through: :appointment
+
   belongs_to :appointment
   belongs_to :visit
 
   has_many :notes, as: :notable
+  has_many :tasks, as: :assignable
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
 
   accepts_nested_attributes_for :notes
+  accepts_nested_attributes_for :tasks
 
   scope :untouched,   -> { where('status IS NULL')              }
   scope :incomplete,  -> { where('completed_date IS NULL')      }

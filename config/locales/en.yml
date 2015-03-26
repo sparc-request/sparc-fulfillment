@@ -51,23 +51,30 @@ en:
     subsidy_expended: "Subsidy Expended"
 
   task_index:
-    user_name: "Created By"
-    task_type: "Task Type"
+    user_name: "Created by"
     completed: "Completed"
-    participant_name: "Patient Name"
+    assignable_type: "Type"
     protocol_id: "Protocol"
     visit_name: "Visit"
     arm_name: "Arm"
-    task: "Task/Service"
-    assignee_name: "Assignment"
-    due_date: "Due Date"
+    body: "Task"
+    assignee_name: "Assigned to"
+    due_at: "Due date"
     reschedule: "Reschedule"
     create_task: "Create Task"
-    task_type: "Task Type"
+    task_type: "Task type"
     completed_tasks_header: "Completed Tasks"
     no_completed_tasks: "There are currently no completed tasks"
     incompletion: "Set to Incomplete"
-
+    show_title: "Task"
+    participant:
+      full_name: "Participant name"
+    protocol:
+      short_title: "Protocol"
+    visit:
+      id: "Visit"
+    arm:
+      name: "Arm"
 
   protocol_tabs:
     study_schedule: "Study Schedule"

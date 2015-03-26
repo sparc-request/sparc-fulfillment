@@ -1,0 +1,32 @@
+.modal-dialog
+  .modal-content
+    = form_for task, {remote: true, html: {class: "form-horizontal", role: "form"}} do |f|
+      = f.hidden_field :assignable_type, value: "User"
+      = f.hidden_field :assignable_id, value: current_user.id
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4.modal-title.text-center= t(:task_index)[:create_task]
+      .modal-body
+        #modal_errors
+        .row
+          .col-md-12
+            .form-group
+              = f.label "task_assignee_id", t(:task_index)[:assignee_name], class: "col-sm-4 control-label"
+              .col-sm-7= f.select :assignee_id, options_from_collection_for_select(User.all, 'id', 'full_name'), { include_blank: true }, { class: "form-control" }
+            .form-group
+              = f.label "follow_up_date", t(:task_index)[:due_date], class: "col-sm-4 control-label"
+              .col-sm-7
+                .input-group.date
+                  = f.text_field :due_at, {class: 'form-control'}
+                  %span.input-group-addon
+                    %span.glyphicon.glyphicon-calendar
+            .form-group
+              = f.label "task_body", t(:task_index)[:body], class: "col-sm-4 control-label"
+              .col-sm-7= f.text_area :body, { class: "form-control", rows: 4 }
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+            = t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}
