@@ -30,7 +30,7 @@ feature 'Complete Procedure', js: true do
     visit_group = participant.appointments.first.visit_group
     service     = Service.first
 
-    visit protocol_participant_path protocol, participant
+    visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
     find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: 1

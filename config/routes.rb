@@ -22,17 +22,13 @@ Rails.application.routes.draw do
       end
       resources :visit_groups
     end
-    resources :participants do
-      get 'change_arm(/:id)', to: 'participants#edit_arm'
-      post 'change_arm(/:id)', to: 'participants#update_arm'
-      get 'select_appointment/(:id)', to: 'participants#select_appointment'
-    end
   end
 
   resources :participants do
+    get 'change_arm(/:id)', to: 'participants#edit_arm'
+    post 'change_arm(/:id)', to: 'participants#update_arm'
     get 'details', to: 'participants#details'
     patch 'set_recruitment_source', to: 'participants#set_recruitment_source'
-
   end
 
   resources :service_calendar, only: [] do

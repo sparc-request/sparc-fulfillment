@@ -18,7 +18,7 @@ feature 'Create Procedure', js: true do
     protocol      = create(:protocol_imported_from_sparc)
     @participant  = protocol.participants.first
 
-    visit protocol_participant_path(protocol, @participant)
+    visit participant_path(@participant)
   end
 
   def and_i_add_a_procedure

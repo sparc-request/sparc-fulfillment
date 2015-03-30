@@ -75,7 +75,7 @@ feature 'Start Complete Buttons', js: true do
     @appointment = @participant.appointments.first
     @visit_group = @appointment.visit_group
 
-    visit protocol_participant_path @protocol, @participant
+    visit participant_path(@participant)
     bootstrap_select '#appointment_select', @visit_group.name
   end
 
