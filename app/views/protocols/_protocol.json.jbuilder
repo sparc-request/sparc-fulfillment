@@ -9,9 +9,9 @@ json.udak_project_number protocol.udak_project_number
 json.irb_status protocol.irb_status.capitalize
 json.start_date format_date(protocol.start_date)
 json.end_date format_date(protocol.end_date)
-json.study_cost protocol.study_cost
+json.study_cost display_cost(protocol.study_cost)
 json.stored_percent_subsidy protocol.stored_percent_subsidy
-json.subsidy_committed number_to_currency(protocol.subsidy_committed)
+json.subsidy_committed number_to_currency(protocol.subsidy_committed, seperator: ",")
 json.subsidy_expended protocol.subsidy_expended
 json.pi protocol.pi.full_name
 json.coordinators formatted_coordinators(protocol.coordinators.map(&:full_name))
