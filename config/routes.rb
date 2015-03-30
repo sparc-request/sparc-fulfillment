@@ -14,15 +14,12 @@ Rails.application.routes.draw do
   resources :protocols do
     resources :arms do
       member do
-        get 'change'
+        get 'refresh_vg_dropdown'
       end
-      resources :services do
-        resources :line_items do
-        end
-      end
-      resources :visit_groups
     end
   end
+
+  resources :visit_groups
 
   resources :participants do
     get 'change_arm(/:id)', to: 'participants#edit_arm'

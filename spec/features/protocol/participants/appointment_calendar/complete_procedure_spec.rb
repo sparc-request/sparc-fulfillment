@@ -40,6 +40,7 @@ feature 'Complete Procedure', js: true do
   def as_a_user_who_is_viewing_a_procedure_marked_as_incomplete
     as_a_user_who_has_added_a_procedure_to_an_appointment
     find('label.status.incomplete').click
+    click_button "Save"
   end
 
   def when_i_complete_the_procedure

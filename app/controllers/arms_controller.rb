@@ -2,7 +2,7 @@ class ArmsController < ApplicationController
 
   respond_to :json, :html
 
-  def change
+  def refresh_vg_dropdown
     @arm = Arm.find(params[:id])
     @visit_groups = @arm.visit_groups
     respond_with @visit_groups
