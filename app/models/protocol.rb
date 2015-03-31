@@ -16,7 +16,7 @@ class Protocol < ActiveRecord::Base
     study_cost  = self.study_cost / 100.00
     subsidy     = self.stored_percent_subsidy / 100.00
 
-    sprintf('%.2f', (study_cost * subsidy))
+    ((study_cost * subsidy) * 100).to_i
   end
 
   #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.

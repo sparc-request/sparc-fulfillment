@@ -32,10 +32,10 @@ RSpec.describe Protocol, type: :model do
 
     describe 'subsidy_committed' do
 
-      it 'should return the correct amount formatted for currency' do
+      it 'should return the correct amount in cents' do
         protocol = create(:protocol, study_cost: 5000, stored_percent_subsidy: 10.00)
 
-        expect(protocol.subsidy_committed).to eq('5.00')
+        expect(protocol.subsidy_committed).to eq(500)
       end
     end
   end
