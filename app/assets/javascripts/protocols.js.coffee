@@ -81,11 +81,5 @@ $ ->
       tab = String(e.target).split("#")[1]
       $.cookie("active-protocol-tab", tab, expires: 1, path: '/')
 
-(exports ? this).cents_to_dollars = (value) ->
-  cents = value / 100
-  dollars = '$' + cents.toFixed(2)
-
-  dollars
-
 (exports ? this).number_to_percent = (value) ->
   value + '%'
