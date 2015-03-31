@@ -42,7 +42,6 @@ en:
     coordinators: "Coordinators"
     irb_approval_date: "IRB Approval Date"
     irb_expiration_date: "Current IRB Expiration Date"
-    irb_status: "IRB Status"
     udak_project_number: "IRB #"
     start_date: "Study Start Date"
     end_date: "Study End Date"
