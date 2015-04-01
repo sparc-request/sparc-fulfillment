@@ -3,7 +3,7 @@ class MultipleLineItemsController < ApplicationController
   #this controller exsists in order to seperate the mass creation of line items
   #from single line item creation and deletion which will happen on the service calendar
 
-  def new
+  def new_line_items
     #called to render modal to mass create line items
     @selected_service = params[:service_id]
     @services = Service.all
@@ -12,7 +12,7 @@ class MultipleLineItemsController < ApplicationController
     @calendar_tab = params[:calendar_tab]
   end
 
-  def edit
+  def edit_line_items
     #called to render modal to mass remove line items
     @selected_service = params[:service_id]
     @protocol = Protocol.find(params[:protocol_id])
@@ -21,7 +21,7 @@ class MultipleLineItemsController < ApplicationController
     @calendar_tab = params[:calendar_tab]
   end
 
-  def update
+  def update_line_items
     #handles submission of the line item form
     if params[:arm_ids]
       @service_id = params[:service_id]
@@ -39,6 +39,14 @@ class MultipleLineItemsController < ApplicationController
       end
     end
   end
+
+  def necessary_arms
+    protocol = Protocol.find(params[:protocol_id])
+    service_id = params[:service_id]
+    @arm_ids = protocol.arms.map{ |arm| arm.id if arm.line_items.detect{|li| li.service_id.to_s == service_id} }
+  end
+
+  private
 
   def create (params)
     @arm_hash = {}
@@ -59,15 +67,9 @@ class MultipleLineItemsController < ApplicationController
       line_items = LineItem.where("arm_id = #{arm_id} AND service_id = #{@service_id}")
       if line_items.count > 0
         @line_item_ids[arm_id] = line_items.pluck(:id)
-        line_items.delete_all
+        line_items.destroy_all
       end
     end
     flash.now[:success] = t(:services)[:deleted]
-  end
-
-  def necessary_arms
-    protocol = Protocol.find(params[:protocol_id])
-    service_id = params[:service_id]
-    @arm_ids = protocol.arms.map{ |arm| arm.id if arm.line_items.detect{|li| li.service_id.to_s == service_id} }
   end
 end

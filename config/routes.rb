@@ -2,8 +2,33 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :notes, only: [:index, :new, :create]
+  resources :protocols
+  resources :visit_groups
   resources :procedures, only: [:create, :edit, :update, :destroy]
+  resources :notes, only: [:index, :new, :create]
+
+  resources :arms, only: [:new, :create, :destroy] do
+    member do
+      get 'refresh_vg_dropdown'
+    end
+  end
+
+  resources :participants do
+    get 'change_arm(/:id)', to: 'participants#edit_arm'
+    post 'change_arm(/:id)', to: 'participants#update_arm'
+    get 'details', to: 'participants#details'
+    patch 'set_recruitment_source', to: 'participants#set_recruitment_source'
+  end
+
+  resources :tasks do
+    collection do
+      patch 'incomplete_tasks'
+      get 'completed_tasks'
+    end
+    member do
+      get 'task_reschedule'
+    end
+  end
 
   resources :appointments, only: [:show, :update] do
     collection do
@@ -11,21 +36,13 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :protocols do
-    resources :arms do
-      member do
-        get 'refresh_vg_dropdown'
-      end
+  resources :multiple_line_items, only: [] do
+    collection do
+      get 'new_line_items'
+      get 'edit_line_items'
+      get 'necessary_arms'
+      put 'update_line_items'
     end
-  end
-
-  resources :visit_groups
-
-  resources :participants do
-    get 'change_arm(/:id)', to: 'participants#edit_arm'
-    post 'change_arm(/:id)', to: 'participants#update_arm'
-    get 'details', to: 'participants#details'
-    patch 'set_recruitment_source', to: 'participants#set_recruitment_source'
   end
 
   resources :service_calendar, only: [] do
@@ -42,21 +59,6 @@ Rails.application.routes.draw do
       put 'remove_line_item'
     end
   end
-
-  resources :tasks do
-    collection do
-      patch 'incomplete_tasks'
-      get 'completed_tasks'
-    end
-    member do
-      get 'task_reschedule'
-    end
-  end
-
-  get 'multiple_line_items/(:protocol_id)/(:service_id)/necessary_arms', to: 'multiple_line_items#necessary_arms'
-  get 'multiple_line_items/(:protocol_id)/(:service_id)/new', to: 'multiple_line_items#new'
-  get 'multiple_line_items/(:protocol_id)/(:service_id)/edit', to: 'multiple_line_items#edit'
-  put 'multiple_line_items/update', to: 'multiple_line_items#update'
 
   mount API::Base => '/'
 
