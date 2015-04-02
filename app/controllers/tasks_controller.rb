@@ -1,15 +1,22 @@
 class TasksController < ApplicationController
+
+  before_action :find_task, only: [:show, :update, :task_reschedule]
+
   respond_to :json, :html
 
   def index
     respond_to do |format|
       format.html { render }
       format.json do
-        @tasks = Task.where(is_complete: nil)
+        @tasks = Task.where(complete: false)
 
         render
       end
     end
+  end
+
+  def show
+    @partial = ["show", @task.assignable_type.downcase, "task"].join("_")
   end
 
   def new
@@ -27,35 +34,23 @@ class TasksController < ApplicationController
   end
 
   def update
-    @task = Task.find(params[:id])
     if @task.update_attributes(task_params)
       flash[:success] = t(:flash_messages)[:task][:updated]
     end
   end
 
   def task_reschedule
-    @task = Task.find(params[:id])
-  end
-
-  def completed_tasks
-    @completed_tasks = Task.where("is_complete")
-  end
-
-  def incomplete_tasks
-    @incompleted_tasks = params[:incompletes]
-    if not @incompleted_tasks.nil?
-      @incompleted_tasks.each do|task|
-        task = Task.find(task)
-        task.update_attributes(is_complete: nil)
-      end
-      flash[:success] = t(:flash_messages)[:task][:incompleted]
-    end
   end
 
   private
 
+  def find_task
+    @task = Task.find(params[:id])
+  end
+
   def task_params
-    params.require(:task).permit(:is_complete, :participant_name, :due_date, :protocol_id, :visit_name,
-                                  :arm_name, :task, :assignee_id, :task_type)
+    params.
+      require(:task).
+      permit(:complete, :body, :due_at, :assignee_id, :assignable_type, :assignable_id)
   end
 end

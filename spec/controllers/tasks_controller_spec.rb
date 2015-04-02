@@ -1,9 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe TasksController do
+RSpec.describe TasksController, type: :controller do
 
   before :each do
     @task = create(:task)
+
     sign_in
   end
 
@@ -44,13 +45,15 @@ RSpec.describe TasksController do
   describe "PUT #update" do
 
     it "should update a task" do
+      expected_body = "New body"
+
       put :update, {
         id: @task.id,
-        task: attributes_for(:task, participant_name: 'Burt Macklin'),
+        task: attributes_for(:task, body: expected_body),
         format: :js
       }
       @task.reload
-      expect(@task.participant_name).to eq 'Burt Macklin'
+      expect(@task.body).to eq expected_body
     end
   end
 
@@ -76,6 +79,7 @@ RSpec.describe TasksController do
   end
 
   describe "POST #create" do
+
     it "should create a new task" do
       assignee = create(:user)
       expect{
@@ -87,27 +91,4 @@ RSpec.describe TasksController do
       }.to change(Task, :count).by(1)
     end
   end
-
-  describe "GET #completed_tasks" do
-    it "should identifiy the completed tasks" do
-      @task.update_attributes(is_complete: true)
-      xhr :get, :completed_tasks,{
-        format: :js
-      }
-      expect(assigns(:completed_tasks)).to include(@task)
-    end
-  end
-
-  describe "PATCH #incomplete_tasks" do
-    it "should set completed tasks to incomplete" do
-      @task.update_attributes(is_complete: true)
-      patch :incomplete_tasks,{
-        incompletes: [@task.id],
-        format: :js
-      }
-      @task.reload
-      expect(@task.is_complete).to be nil
-    end
-  end
-
 end

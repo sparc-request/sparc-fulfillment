@@ -10,6 +10,7 @@ class Participant < ActiveRecord::Base
 
   belongs_to :protocol
   belongs_to :arm
+
   has_many :appointments
 
   after_save :update_faye

@@ -2,10 +2,13 @@ require 'rails_helper'
 
 RSpec.describe Appointment, type: :model do
 
-  it { should belong_to(:participant) }
-  it { should belong_to(:visit_group) }
+  it { is_expected.to have_one(:protocol) }
+  it { is_expected.to have_one(:arm) }
 
-  it { should have_many(:procedures) }
+  it { is_expected.to belong_to(:participant) }
+  it { is_expected.to belong_to(:visit_group) }
+
+  it { is_expected.to have_many(:procedures) }
 
   context 'instance methods' do
 

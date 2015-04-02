@@ -192,21 +192,20 @@ ActiveRecord::Schema.define(version: 20150331191236) do
   add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
 
   create_table "tasks", force: :cascade do |t|
-    t.string   "participant_name", limit: 255
-    t.integer  "protocol_id",      limit: 4
-    t.string   "visit_name",       limit: 255
-    t.string   "arm_name",         limit: 255
-    t.string   "task",             limit: 255
-    t.date     "due_date"
-    t.boolean  "is_complete",      limit: 1
+    t.date     "due_at"
+    t.boolean  "complete",        limit: 1,     default: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "task_type",        limit: 255
-    t.integer  "user_id",          limit: 4
-    t.integer  "assignee_id",      limit: 4
+    t.integer  "user_id",         limit: 4
+    t.integer  "assignee_id",     limit: 4
+    t.string   "assignable_type", limit: 255
+    t.integer  "assignable_id",   limit: 4
+    t.text     "body",            limit: 65535
   end
 
+  add_index "tasks", ["assignable_id", "assignable_type"], name: "index_tasks_on_assignable_id_and_assignable_type", using: :btree
+  add_index "tasks", ["assignee_id"], name: "index_tasks_on_assignee_id", using: :btree
   add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
 
   create_table "user_roles", force: :cascade do |t|

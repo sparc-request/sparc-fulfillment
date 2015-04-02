@@ -2,8 +2,12 @@ class Appointment < ActiveRecord::Base
 
   acts_as_paranoid
 
+  has_one :protocol,  through: :participant
+  has_one :arm,       through: :visit_group
+
   belongs_to :participant
   belongs_to :visit_group
+
   has_many :procedures
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
