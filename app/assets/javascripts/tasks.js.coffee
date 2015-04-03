@@ -22,6 +22,10 @@ $ ->
       type: 'PUT'
       url: "/tasks/#{task_id}.js"
       data: data
+      success: ->
+        $('tr:not(.hidden)').each (index) ->
+          $(this).toggleClass 'stripe', !!(index & 1)
+
 
   $(document).on 'click', '.task-reschedule', ->
     task_id = $(this).attr('task_id')
