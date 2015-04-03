@@ -51,6 +51,7 @@ feature 'Complete Procedure', js: true do
 
   def when_i_click_the_incommplete_button
     find('label.status.incomplete').click
+    wait_for_ajax
   end
 
   def and_i_cancel_the_incomplete

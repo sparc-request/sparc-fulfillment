@@ -1,11 +1,12 @@
 class Task < ActiveRecord::Base
 
-  TASK_TYPES = ["Study-level Task", "Participant-level Task"].freeze
-
   acts_as_paranoid
 
   belongs_to :user
-  belongs_to :assignee, class_name: "User"
+  belongs_to :assignee,
+             class_name: "User",
+             counter_cache: true
+  belongs_to :assignable, polymorphic: true
 
-  validates :assignee_id, :due_date, presence: true
+  validates :assignee_id, presence: true
 end

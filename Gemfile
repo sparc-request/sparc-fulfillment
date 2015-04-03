@@ -22,7 +22,7 @@ gem 'mysql2'
 gem 'omniauth'
 gem 'paranoia', '~> 2.0'
 gem 'puma'
-gem 'rails', '4.1.6'
+gem 'rails', '4.2.1'
 gem 'rest-client'
 gem 'sass-rails'
 gem 'sdoc', '~> 0.4.0', group: :doc

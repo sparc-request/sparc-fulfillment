@@ -11,7 +11,6 @@ $ ->
     $('#protocol-list').bootstrapTable('hideColumn', 'stored_percent_subsidy')
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
-    $('#protocol-list').bootstrapTable('hideColumn', 'irb_status')
 
 
     $(".bootstrap-table .fixed-table-toolbar").
@@ -80,12 +79,6 @@ $ ->
     $('a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
       tab = String(e.target).split("#")[1]
       $.cookie("active-protocol-tab", tab, expires: 1, path: '/')
-
-(exports ? this).cents_to_dollars = (value) ->
-  cents = value / 100
-  dollars = '$' + cents.toFixed(2)
-
-  dollars
 
 (exports ? this).number_to_percent = (value) ->
   value + '%'

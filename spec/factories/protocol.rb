@@ -11,7 +11,6 @@ FactoryGirl.define do
     end_date Time.current
     recruitment_start_date { Faker::Date.between(10.years.ago, 3.days.ago) }
     recruitment_end_date Time.current
-    irb_status 'Approved'
     irb_approval_date { Faker::Date.between(10.years.ago, 3.days.ago) }
     irb_expiration_date Time.current
     stored_percent_subsidy 0.0

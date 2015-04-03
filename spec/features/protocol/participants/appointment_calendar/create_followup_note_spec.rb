@@ -20,11 +20,26 @@ feature 'Followup note', js: true do
     i_should_see_the_note_i_created
   end
 
+  scenario 'User views Tasks list after creating a followup note' do
+    as_a_user_who_has_created_a_followup_note
+    when_i_visit_the_tasks_index_page
+    then_i_should_see_the_newly_created_task
+  end
+
+  def when_i_visit_the_tasks_index_page
+    visit tasks_path
+  end
+
+  def then_i_should_see_the_newly_created_task
+    expect(page).to have_css("table.tasks tbody td.body", text: "Test comment")
+  end
+
   def as_a_user_who_has_created_a_procedure
     protocol    = create(:protocol_imported_from_sparc)
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
     service     = Service.first
+    @assignee   = create(:user)
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
@@ -39,6 +54,7 @@ feature 'Followup note', js: true do
 
   def and_i_fill_out_and_submit_the_followup_form
     fill_in 'procedure_follow_up_date', with: '2015-03-11'
+    select @assignee.full_name, from: 'procedure_tasks_attributes_0_assignee_id'
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'
   end

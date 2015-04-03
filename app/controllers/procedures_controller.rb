@@ -30,7 +30,11 @@ class ProceduresController < ApplicationController
   end
 
   def update
-    @procedure.update_attributes(procedure_params)
+    if create_followup_task?
+      merge_task_params!
+    end
+
+    @procedure.update_attributes(@procedure_params)
   end
 
   def destroy
@@ -38,6 +42,22 @@ class ProceduresController < ApplicationController
   end
 
   private
+
+  def create_followup_task?
+    @procedure_params[:tasks_attributes].present? &&
+      @procedure_params[:follow_up_date].present? &&
+      @procedure_params[:notes_attributes]["0"][:comment].present?
+  end
+
+  def merge_task_params!
+    attributes_to_merge     = {
+      due_at: procedure_params[:follow_up_date],
+      body: procedure_params[:notes_attributes]["0"][:comment]
+    }
+    merged_task_attributes  = @procedure_params[:tasks_attributes]["0"].merge!(attributes_to_merge)
+
+    @procedure_params.merge!(tasks_attributes: { "0" => merged_task_attributes })
+  end
 
   def save_original_procedure_status
     @original_procedure_status = @procedure.status
@@ -64,9 +84,11 @@ class ProceduresController < ApplicationController
   end
 
   def procedure_params
-    params.
-      require(:procedure).
-      permit(:status, :follow_up_date, :completed_date, notes_attributes: [:comment, :kind, :user_id, :reason])
+    @procedure_params = params.
+                        require(:procedure).
+                        permit(:status, :follow_up_date, :completed_date,
+                                notes_attributes: [:comment, :kind, :user_id, :reason],
+                                tasks_attributes: [:assignee_id, :user_id, :body, :due_at])
   end
 
   def find_procedure
