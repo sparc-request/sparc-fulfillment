@@ -8,7 +8,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        @tasks = Task.where(complete: false)
+        @tasks = Task.mine(current_user)
 
         render
       end

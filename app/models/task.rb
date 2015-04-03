@@ -9,4 +9,6 @@ class Task < ActiveRecord::Base
   belongs_to :assignable, polymorphic: true
 
   validates :assignee_id, presence: true
+
+  scope :mine, -> (user) { where("assignee_id = ? OR user_id = ?", user.id, user.id) }
 end
