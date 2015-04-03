@@ -138,11 +138,11 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       end
 
       it "should remove the visit group from the service calendar" do
-        page.driver.browser.accept_js_confirms
-        vg_id = arm1.visit_groups.first.id
-        bootstrap_select "#visits", "#{arm1.visit_groups.first.name}"
+        vg = arm1.visit_groups.first
+        bootstrap_select "#visits", "#{vg.id}"
         find('#remove_visit_button').click()
-        expect(page).not_to have_css "#visit_group_#{vg_id}"
+        page.driver.browser.accept_js_confirms
+        expect(page).to have_content "Visit Destroyed"
       end
     end
   end
