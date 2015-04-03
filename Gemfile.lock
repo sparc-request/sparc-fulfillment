@@ -161,7 +161,7 @@ GEM
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
     hashie (3.4.0)
-    hashie_rails (0.0.4)
+    hashie-forbidden_attributes (0.1.1)
       hashie (>= 3.0)
     hike (1.2.3)
     html2haml (2.0.0)
@@ -360,7 +360,7 @@ DEPENDENCIES
   gon (~> 5.2.3)
   grape (~> 0.9.0)
   haml-rails
-  hashie_rails (~> 0.0.1)
+  hashie-forbidden_attributes
   jbuilder (~> 2.0)
   jquery-rails
   launchy
