@@ -8,12 +8,6 @@ feature "View Tasks", js: true do
     then_i_should_see_that_i_have_no_tasks
   end
 
-  scenario "User with incomplete Tasks present views Tasks list" do
-    as_a_user_with_incomplete_tasks
-    when_i_visit_the_tasks_page
-    then_i_should_see_that_i_have_tasks
-  end
-
   scenario "User views complete Tasks" do
     as_a_user_with_complete_tasks
     when_i_view_complete_tasks
@@ -77,10 +71,6 @@ feature "View Tasks", js: true do
 
   def then_i_should_see_that_i_have_no_tasks
     expect(page).to have_css("table.tasks", text: "No matching records found")
-  end
-
-  def then_i_should_see_that_i_have_tasks
-    expect(page).to have_css("table.tasks tbody td.user_name", text: @user.full_name)
   end
 
   def then_i_should_see_complete_tasks

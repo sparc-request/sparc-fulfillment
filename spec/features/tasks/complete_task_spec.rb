@@ -17,7 +17,7 @@ feature "Completing a Task", js: true do
   end
 
   def when_i_mark_the_task_as_complete
-    first('input.task-complete').click
+    first('input.complete').click
   end
 
   def i_should_not_see_the_task
