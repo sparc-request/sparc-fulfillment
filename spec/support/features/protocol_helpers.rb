@@ -13,7 +13,8 @@ module Features
       fill_in 'Last Name', with: participant.last_name
       fill_in 'MRN', with: participant.mrn
       select participant.status, from: 'Participant Status'
-      fill_in 'Date of Birth', with: participant.date_of_birth
+      page.execute_script %Q{ $('#dob_time_picker').trigger("focus") }
+      page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
       select participant.gender, from: 'Gender'
       select participant.ethnicity, from: 'Ethnicity'
       select participant.race, from: 'Race'
