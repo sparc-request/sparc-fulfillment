@@ -10,26 +10,26 @@ RSpec.describe MultipleLineItemsController do
   describe "GET #new" do
 
     it "renders a template to add a service to mutliple arms" do
-      xhr :get, :new, {
+      xhr :get, :new_line_items, {
         protocol_id: @protocol.id,
         service_id: @service.id,
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:selected_service)).to eq(@service.id.to_s)
+      expect(assigns(:selected_service)).to eq(@service.id)
       expect(assigns(:services)).to eq(Service.all)
     end
   end
 
   describe "GET #edit" do
     it "renders a template to remove a service from mutliple arms" do
-      xhr :get, :new, {
+      xhr :get, :new_line_items, {
         protocol_id: @protocol.id,
         service_id: @service.id,
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:selected_service)).to eq(@service.id.to_s)
+      expect(assigns(:selected_service)).to eq(@service.id)
       expect(assigns(:services)).to eq(Service.all)
     end
   end
@@ -39,7 +39,7 @@ RSpec.describe MultipleLineItemsController do
     it "should create multiple line items" do
       arm1 = create(:arm)
       arm2 = create(:arm)
-      put :update, {
+      put :update_line_items, {
         header_text: "Add",
         arm_ids: [arm1.id.to_s, arm2.id.to_s],
         service_id: @service.id,
@@ -60,7 +60,7 @@ RSpec.describe MultipleLineItemsController do
       line_item2 = create(:line_item, arm_id: arm2.id, service_id: @service.id)
       arm1.reload
       arm2.reload
-      put :update, {
+      put :update_line_items, {
         header_text: "Remove",
         arm_ids: [arm1.id.to_s, arm2.id.to_s],
         service_id: @service.id,

@@ -2,12 +2,6 @@ class ArmsController < ApplicationController
 
   respond_to :json, :html
 
-  def change
-    @arm = Arm.find(params[:id])
-    @visit_groups = @arm.visit_groups
-    respond_with @visit_groups
-  end
-
   def new
     @protocol = Protocol.find(params[:protocol_id])
     services_on_protocol = []
@@ -34,10 +28,6 @@ class ArmsController < ApplicationController
     end
   end
 
-  def arm_params
-    params.require(:arm).permit(:protocol_id, :name, :visit_count, :subject_count)
-  end
-
   def destroy
     @arm = Arm.find(params[:id])
     if Arm.where("protocol_id = ?",params[:protocol_id]).count == 1
@@ -47,5 +37,17 @@ class ArmsController < ApplicationController
       @arm.delay.destroy
       flash.now[:alert] = t(:arm)[:deleted]
     end
+  end
+
+  def refresh_vg_dropdown
+    @arm = Arm.find(params[:id])
+    @visit_groups = @arm.visit_groups
+    respond_with @visit_groups
+  end
+
+  private
+
+  def arm_params
+    params.require(:arm).permit(:protocol_id, :name, :visit_count, :subject_count)
   end
 end

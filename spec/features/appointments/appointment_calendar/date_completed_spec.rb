@@ -29,7 +29,7 @@ feature 'Date completed', js: true do
     protocol      = create(:protocol_imported_from_sparc)
     @participant  = protocol.participants.first
 
-    visit protocol_participant_path(protocol, @participant)
+    visit participant_path(@participant)
   end
 
   def given_i_am_viewing_a_procedure

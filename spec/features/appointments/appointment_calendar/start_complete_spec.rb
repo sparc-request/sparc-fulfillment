@@ -75,7 +75,7 @@ feature 'Start Complete Buttons', js: true do
     @appointment = @participant.appointments.first
     @visit_group = @appointment.visit_group
 
-    visit protocol_participant_path @protocol, @participant
+    visit participant_path(@participant)
     bootstrap_select '#appointment_select', @visit_group.name
   end
 
@@ -107,7 +107,7 @@ feature 'Start Complete Buttons', js: true do
   def when_i_set_the_start_date date
     find('input#start_date').click
     within '.bootstrap-datetimepicker-widget' do
-      first("td.day", text: "#{date.day}").click
+      first("td.day:not(.old)", text: "#{date.day}").click
     end
     find(".control-label", text: "Start Date:").click
   end
@@ -115,7 +115,7 @@ feature 'Start Complete Buttons', js: true do
   def when_i_set_the_completed_date date
     find('input#completed_date').click
     within '.bootstrap-datetimepicker-widget' do
-      first("td.day", text: "#{date.day}").click
+      first("td.day:not(.old)", text: "#{date.day}").click
     end
     find(".control-label", text: "Completed Date:").click
   end

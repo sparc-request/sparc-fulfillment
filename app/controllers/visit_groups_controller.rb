@@ -23,14 +23,10 @@ class VisitGroupsController < ApplicationController
     end
   end
 
-  def visit_group_params
-    params.require(:visit_group).permit(:arm_id, :position, :name, :day, :window_before, :window_after)
-  end
-
   def destroy
-    @arm = Arm.find(params[:arm_id])
     @current_page = params[:page]
     @visit_group = VisitGroup.find(params[:id])
+    @arm = @visit_group.arm
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     @calendar_tab = params[:calendar_tab]
     if @arm.visit_count == 1
@@ -43,4 +39,9 @@ class VisitGroupsController < ApplicationController
     end
   end
 
+  private
+
+  def visit_group_params
+    params.require(:visit_group).permit(:arm_id, :position, :name, :day, :window_before, :window_after)
+  end
 end

@@ -14,15 +14,13 @@ class ParticipantsController < ApplicationController
   end
 
   def show
-    @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:id])
+    @protocol = @participant.protocol
     @participant.build_appointments
   end
 
   def create
-    @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.new(participant_params)
-    @participant.protocol_id = @protocol.id
     if @participant.valid?
       @participant.save
       flash[:success] = t(:flash_messages)[:participant][:created]
@@ -32,39 +30,36 @@ class ParticipantsController < ApplicationController
   end
 
   def edit
-    @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:id])
   end
 
   def update
-    @protocol = Protocol.find(params[:protocol_id])
-    @participant = Participant.new(participant_params)
-    @participant.protocol_id = @protocol.id
-    if @participant.valid?
-      @participant = Participant.find(params[:id])
+    @participant = Participant.find(params[:id])
+    participant_validation = Participant.new(participant_params)
+    participant_validation.protocol_id = @participant.protocol_id
+    if participant_validation.valid?
       @participant.update(participant_params)
       flash[:success] = t(:flash_messages)[:participant][:saved]
     else
-      @errors = @participant.errors
+      @errors = participant.errors
     end
   end
 
   def destroy
-    @protocol = Protocol.find(params[:protocol_id])
-    Participant.destroy(params[:id])
+    participant = Participant.find(params[:id])
+    @protocol_id = participant.protocol_id
+    participant.destroy
     flash[:alert] = t(:flash_messages)[:participant][:removed]
   end
 
   def edit_arm
-    @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.find(params[:participant_id])
   end
 
   def update_arm
-    @protocol = Protocol.find(params[:protocol_id])
-    participant = Participant.find(params[:participant_id])
-    participant.update_attributes(arm_id: params[:participant][:arm_id])
-    participant.update_appointments_on_arm_change
+    @participant = Participant.find(params[:participant_id])
+    @participant.update_attributes(arm_id: params[:participant][:arm_id])
+    @participant.update_appointments_on_arm_change
     flash[:success] = t(:flash_messages)[:participant][:arm_change]
   end
 
@@ -82,7 +77,7 @@ class ParticipantsController < ApplicationController
   private
 
   def participant_params
-    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
+    params.require(:participant).permit(:protocol_id, :last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
   end
 
 

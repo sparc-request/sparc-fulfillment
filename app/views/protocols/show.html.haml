@@ -16,7 +16,7 @@
       = render partial: 'participant_list', locals: {protocol: @protocol, participant: @participant}
 
     .tab-pane#participant_tracker{role: 'tabpanel'}
-      = render 'participant_tracker'
+      = render partial: 'participant_tracker', locals: {protocol: @protocol}
 
     .tab-pane#study_level_charges{role: 'tabpanel'}
       = render 'study_level_charges'

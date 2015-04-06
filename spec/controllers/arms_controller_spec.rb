@@ -8,9 +8,9 @@ RSpec.describe ArmsController do
     @arm = create(:arm, protocol_id: @protocol.id)
   end
 
-  describe "GET #change" do
+  describe "GET #refresh_vg_dropdown" do
     it "should respond with visit_groups" do
-      xhr :get, :change, {
+      xhr :get, :refresh_vg_dropdown, {
         protocol_id: @protocol.id,
         id: @arm.id,
         format: :json
