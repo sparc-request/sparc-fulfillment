@@ -32,9 +32,9 @@ $ ->
       url: "/tasks/#{task_id}/task_reschedule"
 
   - if $("body.tasks-index").length > 0
-
+  
     $(".bootstrap-table .fixed-table-toolbar").
-      prepend('<div class="pull-right columns completed--tasks"><button type="button" class="btn btn-default complete" data-toggle="button" aria-pressed="false" autocomplete="off" title="Show completed"><i class="glyphicon glyphicon-check"></i></button></div>')
+      prepend('<div class="pull-right columns completed--tasks"><button type="button" class="btn btn-default complete" data-toggle="button" aria-pressed="false" autocomplete="off" title="Show completed"><i class="glyphicon glyphicon-unchecked"></i></button></div>')
 
     $("table.tasks").bootstrapTable('hideColumn', 'id')
 
