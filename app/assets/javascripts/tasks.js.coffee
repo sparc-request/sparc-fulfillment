@@ -2,9 +2,6 @@ $ ->
 
   $('[data-toggle="tooltip"]').tooltip()
 
-  $(".bootstrap-table .fixed-table-toolbar").
-    prepend('<div class="pull-right columns"><button type="button" class="btn btn-default complete" data-toggle="button" aria-pressed="false" autocomplete="off" title="Show completed"><i class="glyphicon glyphicon-unchecked"></i></button></div>')
-
   $(document).on 'click', 'table.tasks tbody td:not(td.complete, td.reschedule)', ->
     row_id  = $(this).parents("tr").attr("data-index")
     task_id = $(this).parents("table").bootstrapTable("getData")[row_id].id
@@ -35,6 +32,9 @@ $ ->
       url: "/tasks/#{task_id}/task_reschedule"
 
   - if $("body.tasks-index").length > 0
+
+    $(".bootstrap-table .fixed-table-toolbar").
+      prepend('<div class="pull-right columns completed--tasks"><button type="button" class="btn btn-default complete" data-toggle="button" aria-pressed="false" autocomplete="off" title="Show completed"><i class="glyphicon glyphicon-check"></i></button></div>')
 
     $("table.tasks").bootstrapTable('hideColumn', 'id')
 
