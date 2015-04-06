@@ -32,14 +32,15 @@ $ ->
       url: "/tasks/#{task_id}/task_reschedule"
 
   - if $("body.tasks-index").length > 0
-  
-    $(".bootstrap-table .fixed-table-toolbar").
-      prepend('<div class="pull-right columns completed--tasks"><button type="button" class="btn btn-default complete" data-toggle="button" aria-pressed="false" autocomplete="off" title="Show completed"><i class="glyphicon glyphicon-unchecked"></i></button></div>')
 
     $("table.tasks").bootstrapTable('hideColumn', 'id')
 
     $(document).on "load-success.bs.table", "table.tasks", ->
       $("table.tasks tbody input.complete:checked").parents("tr").toggle()
 
-    $(document).on "click", "button.complete", ->
+    $(document).on "click", "#complete", ->
+      if $(this).text() == "Show Complete"
+        $(this).text("Show Incomplete")
+      else
+        $(this).text("Show Complete")
       $("table.tasks tbody tr").toggle()
