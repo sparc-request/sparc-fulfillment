@@ -35,9 +35,8 @@ class ParticipantsController < ApplicationController
 
   def update
     @participant = Participant.find(params[:id])
-    @protocol = @participant.protocol
     participant_validation = Participant.new(participant_params)
-    participant_validation.protocol_id = @protocol.id
+    participant_validation.protocol_id = @participant.protocol_id
     if participant_validation.valid?
       @participant.update(participant_params)
       flash[:success] = t(:flash_messages)[:participant][:saved]

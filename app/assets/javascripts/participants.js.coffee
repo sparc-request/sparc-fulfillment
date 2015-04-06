@@ -48,7 +48,6 @@ $ ->
   capitalize = (string) ->
     string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
 
-(exports ? this).refreshParticipantTables = (protocol_id, participant_id) ->
+(exports ? this).refreshParticipantTables = (protocol_id) ->
   $("#participants-list-table").bootstrapTable 'refresh', {url: "/participants.json?protocol_id=#{protocol_id}"}
   $("#participants-tracker-table").bootstrapTable 'refresh', {url: "/participants.json?protocol_id=#{protocol_id}"}
-  $("#participant-info").bootstrapTable 'refresh', {url: "/participants/#{participant_id}.json"}

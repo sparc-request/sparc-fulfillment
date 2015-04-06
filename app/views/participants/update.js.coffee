@@ -2,4 +2,4 @@ $("#modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_e
 if $("#modal_errors > .alert.alert-danger > p").length == 0
   $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
   $("#modal_place").modal 'hide'
-  refreshParticipantTables("<%= @protocol.id %>", "<%= @participant.id %>")
+  refreshParticipantTables("<%= @participant.protocol_id %>")

@@ -1,6 +1,6 @@
 .modal-dialog
   .modal-content
-    = form_tag('/multiple_line_items/update_line_items', method: "put", class: "form-horizontal new_visit", remote: true) do
+    = form_tag(update_line_items_multiple_line_items_path, method: "put", class: "form-horizontal new_visit", remote: true) do
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
