@@ -2,7 +2,7 @@
   .col-md-12
     = hidden_field_tag :participant_id, participant.id
     .fixed-table-container
-      %table.participant.details.custom_striped{id: "participant-info", data: {toggle: 'table', url: "/protocols/#{protocol.id}/participants/#{participant.id}.json"}}
+      %table.participant.details.custom_striped{id: "participant-info", data: {toggle: 'table', url: "/participants/#{participant.id}.json?protocol_id=#{protocol.id}"}}
         %thead
           %tr
             %th{data: {align: "left", sortable: "true", field: "name"}}= t(:participant)[:full_name]

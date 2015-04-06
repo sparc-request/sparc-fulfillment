@@ -2,29 +2,16 @@ $ ->
 
   if $("body.protocols-show").length > 0
     # initialize visit group select list
-    change_arm()
+    refresh_vg_dropdown()
 
     $(document).on 'change', '#arms', ->
-      change_arm()
-
-
-    $(document).on 'click', '#remove_visit_button', ->
-      calendar_tab = $('#current_tab').attr('value')
-      visit_group_id = $("#visits").val()
-      protocol_id = $('#arms').data('protocol_id')
-      arm_id = $("#arms").val()
-      page = $("#visits_select_for_#{arm_id}").val()
-      del = confirm "Are you sure you want to delete the selected visit from all particpants?"
-      if del
-        $.ajax
-          type: 'DELETE'
-          url: "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/#{visit_group_id}.js?page=#{page}&calendar_tab=#{calendar_tab}"
+      refresh_vg_dropdown()
 
     $(document).on 'click', '#add_arm_button', ->
       protocol_id = $('#arms').data('protocol_id')
       $.ajax
         type: 'GET'
-        url: "/protocols/#{protocol_id}/arms/new"
+        url: "/arms/new?protocol_id=#{protocol_id}"
 
     $(document).on 'click', '#remove_arm_button', ->
       protocol_id = $('#arms').data('protocol_id')
@@ -33,15 +20,35 @@ $ ->
       if del
         $.ajax
           type: 'DELETE'
-          url: "/protocols/#{protocol_id}/arms/#{arm_id}"
-
+          url: "/arms/#{arm_id}?protocol_id=#{protocol_id}"
 
     $(document).on 'click', '#add_visit_button', ->
       calendar_tab = $('#current_tab').attr('value')
-      protocol_id = $('#arms').data('protocol_id')
       arm_id = $('#arms').val()
       page = $("#visits_select_for_#{arm_id}").val()
-      $.get "/protocols/#{protocol_id}/arms/#{arm_id}/visit_groups/new?page=#{page}&calendar_tab=#{calendar_tab}"
+      data =
+        'arm_id': arm_id
+        'page': page
+        'calendar_tab': calendar_tab
+      $.ajax
+        type: 'GET'
+        url: "/visit_groups/new"
+        data: data
+
+    $(document).on 'click', '#remove_visit_button', ->
+      calendar_tab = $('#current_tab').attr('value')
+      visit_group_id = $("#visits").val()
+      arm_id = $('#arms').val()
+      page = $("#visits_select_for_#{arm_id}").val()
+      del = confirm "Are you sure you want to delete the selected visit from all particpants?"
+      data =
+        'page': page
+        'calendar_tab': calendar_tab
+      if del
+        $.ajax
+          type: 'DELETE'
+          url: "/visit_groups/#{visit_group_id}.js"
+          data: data
 
     $(document).on 'click', '#add_service_button', ->
       calendar_tab = $('#current_tab').attr('value')
@@ -50,14 +57,16 @@ $ ->
         key = $(this).data('arm_id')
         value = $(this).attr('page')
         page_hash[key] = value
+      protocol_id = $('#arms').data('protocol_id')
+      service_id = $('#services').val()
       data =
         'page_hash': page_hash
         'calendar_tab': calendar_tab
-      protocol_id = $('#arms').data('protocol_id')
-      service_id = $('#services').val()
+        'protocol_id': protocol_id
+        'service_id': service_id
       $.ajax
         type: 'GET'
-        url: "/multiple_line_items/#{protocol_id}/#{service_id}/new"
+        url: "/multiple_line_items/new_line_items"
         data: data
 
     $(document).on 'click', '#remove_service_button', ->
@@ -67,14 +76,16 @@ $ ->
         key = $(this).data('arm_id')
         value = $(this).attr('page')
         page_hash[key] = value
+      protocol_id = $('#arms').data('protocol_id')
+      service_id = $('#services').val()
       data =
         'page_hash': page_hash
         'calendar_tab': calendar_tab
-      protocol_id = $('#arms').data('protocol_id')
-      service_id = $('#services').val()
+        'protocol_id': protocol_id
+        'service_id': service_id
       $.ajax
         type: 'GET'
-        url: "/multiple_line_items/#{protocol_id}/#{service_id}/edit"
+        url: "/multiple_line_items/edit_line_items"
         data: data
 
     $(document).on 'change', "#service_id", ->
@@ -84,21 +95,25 @@ $ ->
 
 (exports ? this).change_service = (service_id) ->
   protocol_id = $('#arms').data('protocol_id')
+  data =
+    'protocol_id': protocol_id
+    'service_id': service_id
   $.ajax
     type: 'GET'
-    url: "/multiple_line_items/#{protocol_id}/#{service_id}/necessary_arms"
+    url: "/multiple_line_items/necessary_arms"
+    data: data
 
 (exports ? this).create_arm = (name, id) ->
   $select = $('#arms')
   $select.append('<option value=' + id + '>' + name + '</option>')
   $select.selectpicker('refresh')
 
-(exports ? this).change_arm = ->
+(exports ? this).refresh_vg_dropdown = ->
   $select = $('#visits')
   protocol_id = $('#arms').data('protocol_id')
   arm_id = $('#arms').val()
 
-  $.get "/protocols/#{protocol_id}/arms/#{arm_id}/change", (data) ->
+  $.get "/arms/#{arm_id}/refresh_vg_dropdown", (data) ->
     visit_groups = data
     $select.find('option').remove()
 

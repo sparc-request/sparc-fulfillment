@@ -41,7 +41,7 @@ feature 'Followup note', js: true do
     service     = Service.first
     @assignee   = create(:user)
 
-    visit protocol_participant_path protocol, participant
+    visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
     find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '1'

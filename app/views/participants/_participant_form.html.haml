@@ -1,6 +1,6 @@
 .modal-dialog
   .modal-content
-    = form_for [protocol, participant], {remote: true, html: {class: "form-horizontal new_participant", role: "form"}} do |p|
+    = form_for participant, {remote: true, html: {class: "form-horizontal new_participant", role: "form"}} do |p|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
@@ -10,6 +10,7 @@
         #modal_errors
         .row
           .col-md-12
+            = p.hidden_field :protocol_id
             .form-group
               = p.label "last_name", t(:participant)[:last_name], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "last_name", {class: 'form-control'}

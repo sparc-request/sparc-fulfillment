@@ -1,6 +1,6 @@
 $("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
 <% if @delete %>
-change_arm()
+refresh_vg_dropdown()
 $("#visits_select_for_<%= @arm.id %>").replaceWith( "<%= escape_javascript(build_visits_select(@arm, @current_page)) %>")
 <% if  on_current_page?(@current_page, @visit_group) %>
   # Overwrite the visit_groups

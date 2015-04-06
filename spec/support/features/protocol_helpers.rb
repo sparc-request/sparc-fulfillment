@@ -7,7 +7,7 @@ module Features
     end
 
     def user_fills_in_new_participant_form
-      participant = build(:participant)
+      participant = build(:participant_with_protocol)
 
       fill_in 'First Name', with: participant.first_name
       fill_in 'Last Name', with: participant.last_name

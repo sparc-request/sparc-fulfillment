@@ -32,8 +32,7 @@ RSpec.describe ParticipantsController do
     it "should create a new participant" do
       expect{
         post :create, {
-          protocol_id: @protocol.id,
-          participant: attributes_for(:participant),
+          participant: @participant.attributes,
           format: :js
         }
       }.to change(Participant, :count).by(1)

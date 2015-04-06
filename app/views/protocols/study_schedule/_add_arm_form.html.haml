@@ -1,6 +1,6 @@
 .modal-dialog
   .modal-content
-    = form_for [protocol, arm], {remote: true, html: {class: "form-horizontal new_visit", role: "form"}} do |a|
+    = form_for arm, {remote: true, html: {class: "form-horizontal new_visit", role: "form"}} do |a|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
