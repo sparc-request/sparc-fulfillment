@@ -5,6 +5,8 @@ class ProtocolImporter
   end
 
   def create
+    PaperTrail.enabled = false
+
     normalized_attributes = RemoteObjectNormalizer.new('Protocol', remote_protocol['protocol']).normalize!
     attributes_to_merge   = {
       sparc_id: remote_protocol['protocol']['sparc_id'],
@@ -16,6 +18,8 @@ class ProtocolImporter
 
     import_user_roles
     import_arms_and_their_decendents
+
+    PaperTrail.enabled = true
 
     update_faye(@local_protocol)
   end

@@ -80,5 +80,11 @@ RSpec.describe ProtocolImporterJob, type: :job, vcr: true do
 
       expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/).with { |request| request.body.match(/protocol_#{protocol.id}/) }).to have_been_made.once
     end
+
+    it "should NOT utilize PaperTrail on import", delay: false do
+      protocol = Protocol.find_by(sparc_id: 7564)
+
+      expect(protocol.versions.count).to eq(0)
+    end
   end
 end
