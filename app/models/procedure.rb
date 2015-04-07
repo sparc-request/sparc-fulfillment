@@ -7,6 +7,7 @@ class Procedure < ActiveRecord::Base
   has_one :protocol,    through: :appointment
   has_one :arm,         through: :appointment
   has_one :participant, through: :appointment
+  has_one :visit_group, through: :appointment
 
   belongs_to :appointment
   belongs_to :visit
