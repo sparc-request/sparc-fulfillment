@@ -7,3 +7,4 @@
 //= require bootstrap-select
 //= require bootstrap-table.min
 //= require jquery.cookie
+//= require bootstrap-table-custom

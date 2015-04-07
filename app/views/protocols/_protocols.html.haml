@@ -16,13 +16,13 @@
           = t(:index_page)[:principal_investigator]
         %th{data: {class: 'coordinators', align: 'center', sortable: "false", field: "coordinators"}}
           = t(:index_page)[:coordinators]
-        %th{data: {class: 'irb_approval_date', align: 'center', sortable: "true", field: "irb_approval_date"}}
+        %th{data: {class: 'irb_approval_date', align: 'center', sortable: "true", sorter: "dateSorter", field: "irb_approval_date"}}
           = t(:index_page)[:irb_approval_date]
-        %th{data: {class: 'irb_expiration_date', align: 'center', sortable: "true", field: "irb_expiration_date"}}
+        %th{data: {class: 'irb_expiration_date', align: 'center', sortable: "true", sorter: "dateSorter", field: "irb_expiration_date"}}
           = t(:index_page)[:irb_expiration_date]
-        %th{data: {class: 'start_date', align: 'center', sortable: "true", field: "start_date"}}
+        %th{data: {class: 'start_date', align: 'center', sortable: "true", sorter: "dateSorter", field: "start_date"}}
           = t(:index_page)[:start_date]
-        %th{data: {class: 'end_date', align: 'center', sortable: "true", field: "end_date"}}
+        %th{data: {class: 'end_date', align: 'center', sortable: "true", sorter: "dateSorter", field: "end_date"}}
           = t(:index_page)[:end_date]
         %th{data: {class: 'study_cost', align: 'right', sortable: "true", field: "study_cost"}}
           = t(:index_page)[:study_cost]
