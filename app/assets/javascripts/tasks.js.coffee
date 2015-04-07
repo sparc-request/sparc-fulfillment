@@ -14,14 +14,14 @@ $ ->
     task_id = $(this).attr('task_id')
     checked = $(this).is(':checked')
     data    = 'task': 'complete' : checked
+    if checked == false
+      $('#complete').text("Show Complete")
+      $('#complete').prop('value', 'true')
 
     $.ajax
       type: 'PUT'
       url: "/tasks/#{task_id}.js"
       data: data
-      success: ->
-        $('tr:not(.hidden)').each (index) ->
-          $(this).toggleClass 'stripe', !!(index & 1)
 
 
   $(document).on 'click', '.task-reschedule', ->
@@ -35,12 +35,15 @@ $ ->
 
     $("table.tasks").bootstrapTable('hideColumn', 'id')
 
-    $(document).on "load-success.bs.table", "table.tasks", ->
-      $("table.tasks tbody input.complete:checked").parents("tr").toggle()
 
     $(document).on "click", "#complete", ->
+      show_complete = $(this).prop('value')
+    
       if $(this).text() == "Show Complete"
         $(this).text("Show Incomplete")
+        $(this).prop('value', 'false')
       else
         $(this).text("Show Complete")
-      $("table.tasks tbody tr").toggle()
+        $(this).prop('value', 'true')
+      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?complete=" + show_complete, silent: "true"})
+
