@@ -43,9 +43,13 @@
           = t(:task_index)[:arm][:name]
         %dd
           = task.assignable.arm.name
+        %dt
+          = t(:task_index)[:procedure][:name]
+        %dd
+          = task.assignable.service_name
       %dl.dl-horizontal
         %dt
-          = t(:task_index)[:body]
+          = t(:task_index)[:message]
         %dd
           = task.body
     .modal-footer

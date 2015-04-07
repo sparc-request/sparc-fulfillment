@@ -14,4 +14,12 @@ module TaskHelper
 
     html
   end
+
+  def format_task_column(task)
+    if task.assignable_type == "User"
+      return task.body
+    else
+      return task.assignable.service_name
+    end
+  end
 end

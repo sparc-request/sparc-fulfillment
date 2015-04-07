@@ -58,6 +58,7 @@ en:
     protocol_id: "Protocol"
     visit_name: "Visit"
     arm_name: "Arm"
+    message: "Message"
     body: "Task"
     assignee_name: "Assigned to"
     due_at: "Due date"
@@ -76,6 +77,8 @@ en:
       id: "Visit"
     arm:
       name: "Arm"
+    procedure:
+      name: "Task"
 
   protocol_tabs:
     study_schedule: "Study Schedule"
