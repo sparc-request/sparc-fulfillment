@@ -39,7 +39,7 @@ $ ->
     $(document).on "click", "#complete", ->
       show_complete = $(this).prop('value')
     
-      if $(this).text() == "Show Complete"
+      if show_complete == 'true'
         $(this).text("Show Incomplete")
         $(this).prop('value', 'false')
       else
