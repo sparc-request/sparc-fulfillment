@@ -62,7 +62,7 @@ feature "View Tasks", js: true do
 
   def when_i_view_complete_tasks
     when_i_visit_the_tasks_page
-    find("button.complete").click
+    find("#complete").click
   end
 
   def when_i_visit_the_tasks_page
