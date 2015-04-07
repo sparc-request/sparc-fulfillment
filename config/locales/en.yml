@@ -53,6 +53,7 @@ en:
   task_index:
     user_name: "Created by"
     completed: "Completed"
+    show_complete: "Show Complete"
     assignable_type: "Type"
     protocol_id: "Protocol"
     visit_name: "Visit"
