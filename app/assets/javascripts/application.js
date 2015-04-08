@@ -11,6 +11,7 @@
 // about supported directives.
 
 //= require bootstrap-table-export
+//= require bootstrap-table-custom
 //= require tableExport
 //= require jquery.base64
 //= require moment
@@ -24,4 +25,3 @@
 //= require appointments
 //= require tasks
 //= require faye
-//= require bootstrap-table-custom
