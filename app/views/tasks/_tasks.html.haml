@@ -15,7 +15,7 @@
         = t(:task_index)[:assignable_type]
       %th{data: {class: 'body', align: 'left', sortable: "true", field: 'body'}}
         = t(:task_index)[:body]
-      %th{data: {class: 'due_at', align: 'left', sortable: "true", field: 'due_at'}}
+      %th{data: {class: 'due_at', align: 'left', sortable: "true", sorter: "dateSorter", field: 'due_at'}}
         = t(:task_index)[:due_at]
       %th{data: {class: 'complete', align: 'center', field: 'complete'}}
         = t(:task_index)[:completed]
