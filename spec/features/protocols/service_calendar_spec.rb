@@ -36,12 +36,13 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
     end
 
     it "should remove the core when all line items for that core have been removed" do
+      core_id = @line_item.sparc_core_id
       arm.line_items.each do |line_item|
         within("#line_item_#{line_item.id}") do
           find(".remove_line_item").click()
         end
       end
-      expect(page).not_to have_css("#arm_#{arm.id}_core_#{@line_item.sparc_core_id}")
+      expect(page).not_to have_css("#arm_#{arm.id}_core_#{core_id}")
     end
 
   end

@@ -17,7 +17,8 @@ feature "rescheduling a Task", js: true do
   end
 
   def when_i_reschedule_the_task
-    @next_month = (Time.current + 1.month).strftime('%F')
+    @next_month = (Time.current + 1.month)
+    @next_month_formatted = @next_month.strftime('%m/%d/%Y')
 
     page.all('.task-reschedule').last.click
     fill_in "task_due_at", with: @next_month
@@ -25,7 +26,7 @@ feature "rescheduling a Task", js: true do
   end
 
   def then_i_should_see_the_task_has_been_rescheduled
-    expect(page).to have_css("table.tasks tbody td.due_at", text: @next_month)
-    expect(page).to have_css("tr[data-index='0'] td.due_at", text: @next_month)
+    expect(page).to have_css("table.tasks tbody td.due_at", text: @next_month_formatted)
+    expect(page).to have_css("tr[data-index='0'] td.due_at", text: @next_month_formatted)
   end
 end
