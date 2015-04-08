@@ -10,7 +10,7 @@ $ ->
 
   bs_tables = $("table[data-toggle='table']")
 
-  $(bs_tables).on "load-success.bs.table", ->
+  $(document).on "load-success.bs.table", bs_tables, ->
     $(this).
       find(".th-inner.sortable i").
       remove()
