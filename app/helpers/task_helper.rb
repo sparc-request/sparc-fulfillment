@@ -15,11 +15,11 @@ module TaskHelper
     html
   end
 
-  def format_task_column(task)
-    if task.assignable_type == "User"
-      return task.body
+  def format_task_type(task)
+    if task.assignable_type == "Procedure"
+      return task.assignable_type + " (#{task.assignable.service_name})"
     else
-      return task.assignable.service_name
+      return task.assignable_type
     end
   end
 end
