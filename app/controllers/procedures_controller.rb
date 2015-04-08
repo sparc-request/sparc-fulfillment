@@ -14,8 +14,8 @@ class ProceduresController < ApplicationController
                                       service_id: service.id,
                                       service_name: service.name,
                                       billing_type: 'research_billing_qty',
-                                      sparc_core_id: @core_id,
-                                      sparc_core_name: @core_name)
+                                      sparc_core_id: service.sparc_core_id,
+                                      sparc_core_name: service.sparc_core_name)
     end
   end
 
