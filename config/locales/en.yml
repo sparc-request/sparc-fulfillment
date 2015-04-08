@@ -76,6 +76,8 @@ en:
       id: "Visit"
     arm:
       name: "Arm"
+    procedure:
+      name: "Procedure"
 
   protocol_tabs:
     study_schedule: "Study Schedule"
