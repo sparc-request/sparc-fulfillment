@@ -8,7 +8,8 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        @tasks = Task.where(complete: false)
+        show_complete = to_boolean(params[:complete])
+        @tasks = Task.mine(current_user, show_complete)
 
         render
       end
@@ -43,6 +44,14 @@ class TasksController < ApplicationController
   end
 
   private
+
+  def to_boolean string
+    if string == 'true'
+      return true
+    elsif string == 'false'
+      return false
+    end
+  end
 
   def find_task
     @task = Task.find(params[:id])
