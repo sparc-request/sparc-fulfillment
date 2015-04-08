@@ -25,4 +25,3 @@
 //= require appointments
 //= require tasks
 //= require faye
-//= require bootstrap-table-custom
