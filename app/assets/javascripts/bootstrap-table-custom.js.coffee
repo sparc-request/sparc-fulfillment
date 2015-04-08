@@ -12,9 +12,11 @@ $ ->
 
   $(bs_tables).on "load-success.bs.table", ->
     $(this).
+      find(".th-inner.sortable i").
+      remove()
+    $(this).
       find(".th-inner.sortable").
       append("<i class='glyphicon glyphicon-sort opacity50'></i>")
-
 
   $.each bs_tables, (index, table) ->
     $(table).on "sort.bs.table", (e, name, order) ->
