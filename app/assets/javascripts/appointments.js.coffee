@@ -46,6 +46,7 @@ $ ->
 
   $(document).on 'click', 'label.status.complete', ->
     procedure_id  = $(this).parents('.procedure').data('id')
+    $(this).addClass('selected_before')
     data          = procedure:
                       status: "complete"
 
@@ -63,6 +64,12 @@ $ ->
       type: 'GET'
       data: data
       url: "/procedures/#{procedure_id}/edit.js"
+
+  $(document).on 'click', '.close_modal', ->
+    id = $(this).parents('.modal-content').data('id')
+    $("#incomplete_button_#{id}").parent().removeClass('active')
+    if $("#complete_button_#{id}").parent().hasClass('selected_before')
+      $("#complete_button_#{id}").parent().addClass('active')
 
   $(document).on 'click', 'button.followup.new', ->
     procedure_id  = $(this).parents('.procedure').data('id')
