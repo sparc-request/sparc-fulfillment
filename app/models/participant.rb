@@ -67,7 +67,7 @@ class Participant < ActiveRecord::Base
   end
 
   def full_name
-    [first_name, middle_initial, last_name].join(' ')
+    [first_name.humanize, middle_initial, last_name.humanize].join(' ')
   end
 
   private
