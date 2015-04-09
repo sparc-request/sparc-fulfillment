@@ -1,4 +1,6 @@
 class Visit < ActiveRecord::Base
+
+  STATUSES = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window']
   self.per_page = 6
 
   acts_as_paranoid
