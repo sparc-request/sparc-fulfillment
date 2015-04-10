@@ -5,5 +5,9 @@
   .col-md-12
     %select.selectpicker.pull-right#appointment_indications{multiple: "", title: "Please Select"}
       - Appointment::STATUSES.each do |status|
-        %option= status
+        -if @appointment.appointment_statuses.include? status
+          %option.selected= status
+        -else
+          %option= status
+
       

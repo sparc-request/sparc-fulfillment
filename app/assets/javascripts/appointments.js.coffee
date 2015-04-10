@@ -108,6 +108,11 @@ $ ->
         error: ->
           alert('This procedure has already been marked as complete or incomplete and cannot be removed')
 
+  $(document).on 'change', '#appointment_indications', ->
+    appointment_id = $(this).parents('.row.appointment').data('id')
+    checked = $(this)
+    $.ajax
+
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)
     $('#start_date').on 'dp.hide', (e) ->
