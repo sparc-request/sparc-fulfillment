@@ -33,7 +33,7 @@ class ProceduresController < ApplicationController
     if create_followup_task?
       merge_task_params!
     end
-
+    
     @procedure.update_attributes(@procedure_params)
   end
 
@@ -64,15 +64,24 @@ class ProceduresController < ApplicationController
   end
 
   def create_note_before_update
-    if incomplete_status_detected?
+    if reset_status_detected?
       @procedure.notes.create(user: current_user,
-                              comment: 'Set to incomplete',
+                              comment: 'Status reset',
+                              kind: 'log')
+    elsif incomplete_status_detected?
+      @procedure.notes.create(user: current_user,
+                              comment: 'Status set to incomplete',
                               kind: 'log')
     elsif complete_status_detected?
       @procedure.notes.create(user: current_user,
-                              comment: 'Set to complete',
+                              comment: 'Status set to complete',
                               kind: 'log')
+    
     end
+  end
+
+  def reset_status_detected?
+    procedure_params[:status] == ""
   end
 
   def incomplete_status_detected?

@@ -45,10 +45,14 @@ $ ->
   # Procedure buttons
 
   $(document).on 'click', 'label.status.complete', ->
+    active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    $(this).addClass('selected_before')
+    
+    # undo complete status 
+    status = if active then null else "complete"
+
     data          = procedure:
-                      status: "complete"
+                      status: status
 
     $.ajax
       type: 'PUT'
@@ -56,14 +60,27 @@ $ ->
       url: "/procedures/#{procedure_id}.js"
 
   $(document).on 'click', 'label.status.incomplete', ->
+    active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    data          = partial: "incomplete", procedure:
-                      status: "incomplete"
+    
+    # undo incomplete status 
+    if active
+      data          = procedure:
+                        status: null
 
-    $.ajax
-      type: 'GET'
-      data: data
-      url: "/procedures/#{procedure_id}/edit.js"
+      $.ajax
+        type: 'PUT'
+        data: data
+        url: "/procedures/#{procedure_id}.js"
+
+    else
+      data          = partial: "incomplete", procedure:
+                        status: "incomplete"
+
+      $.ajax
+        type: 'GET'
+        data: data
+        url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', '.close_modal', ->
     id = $(this).parents('.modal-content').data('id')
