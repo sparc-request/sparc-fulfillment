@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150331191236) do
+ActiveRecord::Schema.define(version: 20150410151801) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer  "participant_id",       limit: 4
@@ -105,7 +105,7 @@ ActiveRecord::Schema.define(version: 20150331191236) do
     t.string   "last_name",          limit: 255
     t.integer  "mrn",                limit: 4
     t.string   "status",             limit: 255
-    t.date     "date_of_birth"
+    t.datetime "date_of_birth"
     t.string   "gender",             limit: 255
     t.string   "ethnicity",          limit: 255
     t.string   "race",               limit: 255

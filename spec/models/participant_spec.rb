@@ -28,14 +28,6 @@ RSpec.describe Participant, type: :model do
         expect(@participant).to be_valid
       end
 
-      it 'should validate date_of_birth format to be valid' do
-        expect(build(:participant_with_protocol, date_of_birth: "2014-12-16")).to be_valid
-      end
-
-      it 'should validate date_of_birth format to be invalid' do
-        expect(build(:participant_with_protocol, date_of_birth: "2014-12")).not_to be_valid
-      end
-
       it 'should validate phone format to be valid' do
         expect(build(:participant_with_protocol, phone: "123-123-1234")).to be_valid
       end
