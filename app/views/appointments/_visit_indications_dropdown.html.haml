@@ -3,6 +3,7 @@
     %h4.pull-right.indications_header= "Visit Indications"
 .row
   .col-md-12
-    %select.selectpicker.pull-right#visit_indications{multiple: "", title: "Please Select"}
-      %option= "An option"
-      %option= "Another option"
+    %select.selectpicker.pull-right#appointment_indications{multiple: "", title: "Please Select"}
+      - Appointment::STATUSES.each do |status|
+        %option= status
+      

@@ -10,4 +10,4 @@ if !$('.completed_date_input').hasClass('hidden')
 $(".date#<%= dom_id(procedure) %>").datetimepicker(format: 'YYYY-MM-DD', defaultDate: "<%= format_date(procedure.follow_up_date) %>")
 <% end %>
 
-$('#visit_indications').selectpicker()
+$('#appointment_indications').selectpicker()

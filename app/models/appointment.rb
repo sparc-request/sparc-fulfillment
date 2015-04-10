@@ -1,9 +1,12 @@
 class Appointment < ActiveRecord::Base
 
+  STATUSES = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window']
+
   acts_as_paranoid
 
   has_one :protocol,  through: :participant
   has_one :arm,       through: :visit_group
+  has_many :appointment_statuses, dependent: :destroy
 
   belongs_to :participant
   belongs_to :visit_group
