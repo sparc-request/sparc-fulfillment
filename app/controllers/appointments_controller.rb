@@ -4,6 +4,7 @@ class AppointmentsController < ApplicationController
 
   def show
     @appointment = Appointment.find params[:id]
+    @statuses = @appointment.appointment_statuses.map{|x| x.status}
     if @appointment.procedures.empty?
       @appointment.initialize_procedures
     end

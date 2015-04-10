@@ -110,8 +110,14 @@ $ ->
 
   $(document).on 'change', '#appointment_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
-    checked = $(this)
+    statuses = $(this).val()
+    data = 
+          'appointment_id' : appointment_id,
+          'statuses'       : statuses
     $.ajax
+      type: 'POST'
+      data: data
+      url: '/appointment_statuses/change_statuses'
 
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)
