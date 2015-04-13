@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UserRoleImporterJob, type: :job, vcr: true do
+RSpec.describe UserRoleImporterJob, type: :job do
 
   describe '#enqueue', delay: true do
 
@@ -13,7 +13,7 @@ RSpec.describe UserRoleImporterJob, type: :job, vcr: true do
     end
   end
 
-  describe '#perform' do
+  describe '#perform', sparc_api: :get_project_role_1 do
 
     before do
       Protocol.skip_callback :save, :after, :update_faye

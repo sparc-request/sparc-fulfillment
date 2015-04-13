@@ -18,7 +18,6 @@ feature "rescheduling a Task", js: true do
 
   def when_i_reschedule_the_task
     @next_day = (Time.current + 1.day).strftime('%m/%d/%y')
-
     page.all('.task-reschedule').last.click
     fill_in "task_due_at", with: @next_month
     click_button "Save"

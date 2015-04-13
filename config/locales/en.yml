@@ -76,6 +76,8 @@ en:
       id: "Visit"
     arm:
       name: "Arm"
+    procedure:
+      name: "Procedure"
 
   protocol_tabs:
     study_schedule: "Study Schedule"
@@ -110,14 +112,14 @@ en:
 
   participant:
     full_name: "Participant Name"
-    id: "Participant ID"
+    id: "ID"
     list: "Participant List"
     tracker: "Participant Tracker"
     last_name: "Last Name"
     first_name: "First Name"
     middle_initial: "Middle Initial"
-    mrn: "Participant MRN"
-    status: "Participant Status"
+    mrn: "MRN"
+    status: "Status"
     dob: "Date of Birth"
     gender: "Gender"
     ethnicity: "Ethnicity"

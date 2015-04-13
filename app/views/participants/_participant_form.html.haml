@@ -14,10 +14,13 @@
             .form-group
               = p.label "last_name", t(:participant)[:last_name], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "last_name", {class: 'form-control'}
+            .form-group
               = p.label "first_name", t(:participant)[:first_name], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "first_name", {class: 'form-control'}
+            .form-group
               = p.label "middle_initial", t(:participant)[:middle_initial], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "middle_initial", {class: 'form-control'}
+            %hr
             .form-group
               = p.label "mrn", t(:participant)[:mrn], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "mrn", {class: 'form-control'}
@@ -40,15 +43,20 @@
             .form-group
               = p.label "race", t(:participant)[:race], class: "col-sm-4 control-label"
               .col-sm-7= p.select "race", Participant::RACE_OPTIONS, {include_blank: true}, :class => "form-control"
+            %hr
             .form-group
               = p.label "address", t(:participant)[:address], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "address", {class: 'form-control'}
+            .form-group
               = p.label "city", t(:participant)[:city], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "city", {class: 'form-control'}
+            .form-group
               = p.label "state", t(:participant)[:state], class: "col-sm-4 control-label"
               .col-sm-7= p.select "state", options_for_select(us_states, participant.state), {include_blank: true}, :class => "form-control"
+            .form-group
               = p.label "zipcode", t(:participant)[:zip], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "zipcode", {class: 'form-control'}
+            %hr
             .form-group
               = p.label "phone", t(:participant)[:phone], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "phone", {class: 'form-control'}
