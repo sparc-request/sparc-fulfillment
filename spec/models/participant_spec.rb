@@ -62,6 +62,22 @@ RSpec.describe Participant, type: :model do
     let!(:visit_group2) { create(:visit_group, arm: arm, name: 'Ferguson', position: 2) }
     let!(:participant)  { create(:participant, arm: arm, protocol_id: protocol.id) }
 
+    describe "date_of_birth formatting" do
+      it "should change the format to a datetime object friendly format" do
+        participant = create(:participant_with_protocol)
+
+        expect(participant.date_of_birth).to be
+      end
+
+      it "should fail the validation if date_of_birth is nil" do
+        expect(build(:participant, date_of_birth: nil)).not_to be_valid
+      end
+
+      it "should fail the validation if the date_of_birth is empty" do
+        expect(build(:participant, date_of_birth: ""))
+      end
+    end
+
     describe '#delete' do
 
       it 'should not permanently delete the record' do

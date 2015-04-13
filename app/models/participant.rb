@@ -20,7 +20,7 @@ class Participant < ActiveRecord::Base
   validate :phone_number_format, :middle_initial_format, :zip_code_format
 
   def date_of_birth=(dob)
-    write_attribute(:date_of_birth, Time.strptime(dob, "%m-%d-%Y"))
+    write_attribute(:date_of_birth, Time.strptime(dob, "%m-%d-%Y")) unless dob == "" || dob == nil
   end
 
   def phone_number_format
