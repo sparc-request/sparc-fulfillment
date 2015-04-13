@@ -5,7 +5,7 @@ class AppointmentStatusesController < ApplicationController
   def change_statuses
     @appointment = Appointment.find(params[:appointment_id])
     previous_statuses = @appointment.appointment_statuses.map{|x| x.status}
-    current_statuses = params[:statuses]
+    current_statuses = [params[:statuses]].flatten
 
     if previous_statuses.size > current_statuses.size
       to_destroy = previous_statuses - current_statuses
