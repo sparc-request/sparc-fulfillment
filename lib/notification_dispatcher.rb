@@ -1,7 +1,7 @@
 class NotificationDispatcher
 
-  DIRECTLY_IMPORTABLE_CLASSES   = %w(Service Protocol).freeze
-  INDIRECTLY_IMPORTABLE_CLASSES = %w(SubServiceRequest ProjectRole).freeze
+  DIRECTLY_IMPORTABLE_CLASSES   = %w(Protocol).freeze
+  INDIRECTLY_IMPORTABLE_CLASSES = %w(SubServiceRequest ProjectRole Service).freeze
 
   def initialize(notification)
     @notification               = notification
@@ -25,6 +25,8 @@ class NotificationDispatcher
       ProtocolImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
     when 'ProjectRole'
       UserRoleImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
+    when 'Service'
+      ServiceImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
     end
   end
 

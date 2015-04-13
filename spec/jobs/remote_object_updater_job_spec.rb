@@ -13,16 +13,16 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
     end
   end
 
-  describe '#perform', vcr: true do
+  describe '#perform' do
 
-    context 'Protocol update' do
+    context 'Protocol update', sparc_api: :get_protocol_1 do
 
       before do
         Protocol.skip_callback :save, :after, :update_faye
         @protocol                 = create( :protocol,
-                                            sparc_id: 6213,
+                                            sparc_id: 1,
                                             short_title: 'Short Title')
-        callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/protocols/6213.json"
+        callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/protocols/1.json"
         remote_object_updater_job = RemoteObjectUpdaterJob.new(@protocol.id, 'protocol', callback_url)
 
         remote_object_updater_job.perform
@@ -37,20 +37,20 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
       end
     end
 
-    context 'Service update' do
+    context 'Service update', sparc_api: :get_service_1 do
 
       before do
         @service                  = create( :service_created_by_sparc,
-                                            sparc_id: 3545,
+                                            sparc_id: 1,
                                             name: 'Service Name')
-        callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/services/3545.json"
+        callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/services/1.json"
         remote_object_updater_job = RemoteObjectUpdaterJob.new(@service.id, 'service', callback_url)
 
         remote_object_updater_job.perform
       end
 
       it 'should update the existing service' do
-        expect(@service.reload.name).to eq("DOPPLER ECHO CONT WAVE; F U-LTD - TECH")
+        expect(@service.reload.name).to eq("Molestiae sint aliquam totam.")
       end
     end
   end
