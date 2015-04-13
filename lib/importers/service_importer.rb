@@ -9,9 +9,11 @@ class ServiceImporter
   end
 
   def update(sparc_id)
-    service = Service.find_by(sparc_id: sparc_id)
-
-    service.update_attributes(normalized_attributes)
+    if service = Service.find_by(sparc_id: sparc_id)
+      service.update_attributes(normalized_attributes)
+    else
+      create
+    end
   end
 
   private
