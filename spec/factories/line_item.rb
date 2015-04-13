@@ -3,6 +3,7 @@ FactoryGirl.define do
   factory :line_item do
     arm nil
     service nil
+    protocol nil
     sparc_id
     otf false
 

@@ -11,8 +11,8 @@ FactoryGirl.define do
       after(:create) do |arm, evaluator|
         x = rand(12)+1
         x.times do
-          create(:line_item_otf, service: create(:service))
-          create(:line_item, arm: arm, service: create(:service))
+          create(:line_item_otf, protocol: arm.protocol, service: create(:service))
+          create(:line_item, protocol: arm.protocol, arm: arm, service: create(:service))
         end
       end
     end
