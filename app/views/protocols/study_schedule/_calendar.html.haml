@@ -5,9 +5,9 @@
   %ul.nav.nav-tabs{role: 'tablist'}
   %div{role: 'tablist'}
     %ul.nav.nav-tabs{id: 'service_calendar_tabs', role: 'navigation'}
-      %li.active{role: 'presentation'}= link_to "Template", "#template", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/template', :'data-tab' => 'template'
-      %li{role: 'presentation'}= link_to "Quantity/Billing Tab", "#quantity_billing", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing', :'data-tab' => 'quantity'
-      %li{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated_request", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
+      %li.active.custom-tab{role: 'presentation'}= link_to "Template", "#template", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/template', :'data-tab' => 'template'
+      %li.custom-tab{role: 'presentation'}= link_to "Quantity/Billing Tab", "#quantity_billing", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing', :'data-tab' => 'quantity'
+      %li.custom-tab{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated_request", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
   .tab-content
     .tab-pane.active#template{role: 'tabpanel'}
 
