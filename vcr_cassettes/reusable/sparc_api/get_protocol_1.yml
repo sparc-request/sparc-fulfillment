@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@sparc.musc.edu/v1/protocols/1.json
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/v1/protocols/1.json
     body:
       encoding: US-ASCII
       string: ''

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'User creates ProjectRole in SPARC', type: :request, delay: false do
 
-  describe 'full lifecycle' do
+  describe 'full lifecycle', sparc_api: :get_project_role_1 do
 
     context 'User does not exist in CWF' do
 

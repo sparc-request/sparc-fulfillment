@@ -9,7 +9,7 @@ RSpec.describe 'User updates Service in SPARC', type: :request, delay: false do
 
       user_updates_service_in_sparc
 
-      expect(service.reload.name).to eq('Biostatistical Education')
+      expect(service.reload.name).to eq("Molestiae sint aliquam totam.")
     end
   end
 
@@ -22,7 +22,7 @@ RSpec.describe 'User updates Service in SPARC', type: :request, delay: false do
         sparc_id: notification.sparc_id,
         kind: notification.kind,
         action: notification.action,
-        callback_url: "http://sparc.musc.edu/v1/services/1.json"
+        callback_url: "http://localhost:5000/v1/services/1.json"
       }
     }
 

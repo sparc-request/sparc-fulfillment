@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@sparc.musc.edu/v1/services/1.json
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/v1/services/1.json?depth=full
     body:
       encoding: US-ASCII
       string: ''
@@ -38,9 +38,7 @@ http_interactions:
       - thin 1.5.1 codename Straight Razor
     body:
       encoding: UTF-8
-      string: '{"service":{"sparc_id":1,"name":"Biostatistical Education","abbreviation":"Biostatistical
-        Education","order":1,"description":"Consultation and assistance in understanding
-        one or more biostatistical concepts","is_available":true,"service_center_cost":null,"cpt_code":null,"charge_code":null,"revenue_code":null,"organization_id":1,"cdm_code":null,"send_to_epic":false,"created_at":"2011-12-05T07:33:29-05:00","updated_at":"2013-01-13T05:42:02-05:00"}}'
+      string: '{"service":{"sparc_id":1, "callback_url":"https://localhost:5000/v1/services/1.json", "name":"Molestiae sint aliquam totam.", "abbreviation":"eius", "description":"Voluptas rerum occaecati reiciendis neque omnis ea. Alias quam temporibus distinctio nemo cum. Voluptatibus distinctio nobis dolores vel facilis et repellat. Voluptatem rerum explicabo. Repellendus a eum vel. Pariatur ex id illum id.", "is_available":true, "service_center_cost":"1.0", "charge_code":"assumenda", "revenue_code":"quasi", "organization_id":1, "send_to_epic":false, "process_ssrs_organization":{"sparc_id":1, "callback_url":"https://localhost:5000/v1/organizations/1.json", "name":"Sed nesciunt aut veniam."}}}'
     http_version:
   recorded_at: Wed, 03 Dec 2014 13:38:50 GMT
 recorded_with: VCR 2.9.3
