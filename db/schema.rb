@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(version: 20150413154240) do
     t.integer  "quantity",      limit: 4
     t.boolean  "otf",           limit: 1
     t.float    "cost",          limit: 53
+    t.integer  "protocol_id",   limit: 4
   end
 
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
