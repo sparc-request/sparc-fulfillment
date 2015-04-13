@@ -22,7 +22,7 @@ RSpec.describe 'User updates Protocol in SPARC', type: :request, delay: false do
         sparc_id: notification.sparc_id,
         kind: notification.kind,
         action: notification.action,
-        callback_url: "http://sparc.musc.edu/v1/protocols/1.json"
+        callback_url: "http://localhost:5000/v1/protocols/1.json"
       }
     }
 
