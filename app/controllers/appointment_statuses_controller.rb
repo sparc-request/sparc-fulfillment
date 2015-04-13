@@ -4,15 +4,15 @@ class AppointmentStatusesController < ApplicationController
 
   def change_statuses
     @appointment = Appointment.find(params[:appointment_id])
-    previous_statuses = @appointment.appointment_statuses
+    previous_statuses = @appointment.appointment_statuses.map{|x| x.status}
     current_statuses = params[:statuses]
-    to_create = current_statuses - previous_statuses
-    to_destroy = previous_statuses - current_statuses
 
-    if to_create.size > to_destroy.size
-      create(to_create.first)
-    else
+    if previous_statuses.size > current_statuses.size
+      to_destroy = previous_statuses - current_statuses
       destroy(to_destroy.first)
+    elsif previous_statuses.size < current_statuses.size
+      to_create = current_statuses - previous_statuses
+      create(to_create.first)
     end
   end
 
@@ -23,6 +23,6 @@ class AppointmentStatusesController < ApplicationController
   end
 
   def destroy status
-    @appointment.appointment_statuses.where(status: status).destroy
+    @appointment.appointment_statuses.where(status: status).first.destroy
   end
 end
