@@ -87,21 +87,6 @@ $ ->
       success: =>
         $(this).attr('previous_qty', quantity)
 
-  $(document).on 'change', '.visit_name', ->
-    visit_group_id = $(this).data('visit_group_id')
-    name = $(this).val()
-    data =
-      'visit_group_id': visit_group_id,
-      'name':           name
-    $.ajax
-      type: 'PUT'
-      url:  '/service_calendar/change_visit_name'
-      data: data
-      success: ->
-        # Need to find out if this is actually necessary
-        # or if we can use faye
-        $(".visit_dropdown option[value=#{visit_group_id}]").text("- #{name}")
-
   $(document).on 'click', '.change_line_item_service', ->
     data =
       'line_item_id': $(this).attr('line_item_id')
@@ -154,11 +139,3 @@ $ ->
           check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
         else
           check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
-
-  $(document).on 'click', '.remove_line_item', ->
-    if confirm("Are you sure you want to remove this line item?")
-      data = 'line_item_id': $(this).data('line_item_id')
-      $.ajax
-        type: 'PUT'
-        url:  '/service_calendar/remove_line_item'
-        data: data
