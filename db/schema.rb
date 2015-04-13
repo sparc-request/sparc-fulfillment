@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(version: 20150413154240) do
     t.integer  "subject_count", limit: 4
     t.integer  "quantity",      limit: 4
     t.boolean  "otf",           limit: 1
-    t.float    "cost",          limit: 53
+    t.integer  "cost",          limit: 4
     t.integer  "protocol_id",   limit: 4
   end
 

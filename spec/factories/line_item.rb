@@ -10,7 +10,7 @@ FactoryGirl.define do
     trait :otf do
       otf true
       quantity { Faker::Number.number(3) }
-      cost { Faker::Commerce.price }
+      cost { Faker::Number.number(8) }
     end
 
     factory :line_item_otf, traits:[:otf]
