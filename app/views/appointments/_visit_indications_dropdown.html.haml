@@ -1,12 +1,10 @@
 .row
   .col-md-12
-    %h4.pull-right.indications_header= "Visit Indications"
-.row
-  .col-md-12
-    %select.selectpicker.pull-right#appointment_indications{multiple: "", title: "Please Select"}
+    %select.selectpicker.pull-right#appointment_indications{multiple: "", title: "Please Select", 'data-width' => 'auto', 'data-selected-text-format' => 'count>2'}
       - historical_statuses(@statuses).each do |status|
         %option{disabled: true}= status
       - Appointment::STATUSES.each do |status|
         %option= status
+    %span.indications_title= "Visit Indications:"
 
       
