@@ -5,7 +5,9 @@
         .col-xs-12
           .page-header
             %h3= "Visit: #{appointment.name}"
-            = render partial: 'visit_indications_dropdown'
+            .row
+              .col-md-12
+                = render partial: 'visit_indications_dropdown'
       .row
         = render partial: 'start_complete_buttons', locals: {appointment: appointment}
       .row.calendar
