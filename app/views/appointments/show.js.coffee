@@ -9,3 +9,6 @@ if !$('.completed_date_input').hasClass('hidden')
 <% @appointment.procedures.each do |procedure| %>
 $(".date#<%= dom_id(procedure) %>").datetimepicker(format: 'YYYY-MM-DD', defaultDate: "<%= format_date(procedure.follow_up_date) %>")
 <% end %>
+
+$('#appointment_content_indications').selectpicker()
+$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
