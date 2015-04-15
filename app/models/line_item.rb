@@ -17,13 +17,15 @@ class LineItem < ActiveRecord::Base
             to: :service
 
   def quantity_remaining
-    if otf and fulfillments
+    if otf and !fulfillments.empty?
       remaining = quantity
       fulfillments.each do |f|
         remaining -= f.quantity
       end
 
       remaining
+    else
+      quantity
     end
   end
 

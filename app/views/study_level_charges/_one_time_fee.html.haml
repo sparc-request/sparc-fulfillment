@@ -14,8 +14,11 @@
   %td.components
     = line_item.quantity
   %td.notes
-    = line_item.quantity
+    %button.btn.btn-primary.otf_notes.list{type: "button", aria: {label: "Notes List"}}
+      %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   %td.documents
-    = line_item.quantity
+    %button.btn.btn-primary.otf_documents.list{type: "button", aria: {label: "Notes List"}}
+      %span.glyphicon.glyphicon-cloud-upload{aria: {hidden: "true"}}
   %td.fulfillments
-    = line_item.quantity
+    %button.btn.btn-primary.otf_fulfillments.list{type: "button", aria: {label: "Notes List"}}
+      %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
