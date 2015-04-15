@@ -196,3 +196,15 @@ en:
       created: "Task Created"
       updated: "Task Has Been Updated"
       incompleted: "The selected task(s) have been set to incomplete"
+
+  study_level_charges:
+    service: "Service"
+    qty_req: "Quantity Requested"
+    qty_type: "Quantity Type"
+    qty_rem: "Quantity Remaining"
+    started: "Date Started"
+    last_fulfillment: "Last Fulfillment Date"
+    components: "Service Components"
+    notes: "Notes"
+    documents: "Documents"
+    fulfillments: "Fulfillments"
