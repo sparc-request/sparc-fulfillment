@@ -6,6 +6,7 @@ class CreateFulfillments < ActiveRecord::Migration
       t.belongs_to :service_component
       t.integer :quantity
       t.string :tracking_type
+      t.datetime :deleted_at
       t.timestamps
     end
   end
