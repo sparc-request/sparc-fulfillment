@@ -14,7 +14,7 @@ RSpec.describe LineItemVisitsImporter do
 
     before do
       arm                             = create(:arm_with_visit_groups, visit_count: 5)
-      line_item                       = build(:line_item, arm: arm)
+      line_item                       = build(:line_item, protocol: arm.protocol, arm: arm)
       @line_item_visit_group_creator  = LineItemVisitsImporter.new(line_item)
 
       @line_item_visit_group_creator.save_and_create_dependents

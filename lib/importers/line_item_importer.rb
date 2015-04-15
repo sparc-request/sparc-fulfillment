@@ -15,7 +15,7 @@ class LineItemImporter
 
       remote_line_item_service_id   = remote_line_item['line_item']['service_id']
       local_service                 = Service.where(sparc_id: remote_line_item_service_id).first
-      local_line_item_attributes    = { arm: @local_arm, service: local_service }
+      local_line_item_attributes    = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service }
 
       local_line_item               = LineItem.create(local_line_item_attributes)
 

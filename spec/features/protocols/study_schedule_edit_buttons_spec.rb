@@ -45,7 +45,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       it "should add an arm with services" do
         find('#add_arm_button').click()
         fill_in 'Arm Name', with: 'arm name'
-        find(:css, "#services_[value='#{Service.first.id}']").set(true)
+        first("#services_").set(true)
         fill_in 'Subject Count', with: 1
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
@@ -189,7 +189,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
       it 'dropdown should populate only with currently added services' do
         find('#remove_service_button').click()
-        assert_selector("#service_id > option", count: Service.count)
+        service_count = protocol.arms.map{|a| a.line_items.map{|li| li.service.name}}.flatten.uniq.size
+        assert_selector("#service_id > option", count: service_count)
       end
 
       it 'arm checkbox should only display if service selected is on arm' do

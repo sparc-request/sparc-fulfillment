@@ -124,7 +124,7 @@ RSpec.describe ServiceCalendarController do
 
   describe "PUT #check_row" do
     it "should set all visits for the line_item to have a research_billing_qty of 1 when checked" do
-      line_item = LineItem.first
+      line_item = LineItem.where(arm: @arm).first
       put :check_row, {
         line_item_id: line_item.id,
         check: 'true',
@@ -135,7 +135,7 @@ RSpec.describe ServiceCalendarController do
     end
 
     it "should set all visits for the line_item to have a research_billing_qty of 0 when unchecked" do
-      line_item = LineItem.first
+      line_item = LineItem.where(arm: @arm).first
       put :check_row, {
         line_item_id: line_item.id,
         check: 'false',
