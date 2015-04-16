@@ -34,11 +34,18 @@ class Procedure < ActiveRecord::Base
   def update_attributes(attributes)
     if attributes[:status].present? &&
         attributes[:status] == "complete" &&
-        (incomplete? || status.nil?)
+        (incomplete? || status.nil? || reset?)
       attributes.merge!(completed_date: Time.current)
+    elsif attributes[:status].blank? &&
+        attributes[:status] == ''
+      attributes.merge!(completed_date: nil)
     end
 
     super attributes
+  end
+
+  def reset?
+    status == ''
   end
 
   def complete?

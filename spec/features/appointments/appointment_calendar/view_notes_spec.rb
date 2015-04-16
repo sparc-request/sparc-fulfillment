@@ -53,11 +53,11 @@ feature 'View Notes', js: true do
   end
 
   def then_i_should_see_a_complete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Set to complete')
+    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to complete')
   end
 
   def then_i_should_see_an_incomplete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Set to incomplete')
+    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to incomplete')
   end
 
   def then_i_should_be_notified_that_there_are_no_notes
