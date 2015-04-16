@@ -32,6 +32,14 @@ class AppointmentsController < ApplicationController
         updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date #completed date cannot be before start date
         @appointment.update_attributes(completed_date: updated_date)
       end
+
+    elsif params[:statuses]
+      new_statuses = get_current_statuses(params[:statuses])
+      @appointment.appointment_statuses.destroy_all
+
+      new_statuses.each do |status|
+        @appointment.appointment_statuses.create(status: status)
+      end
     end
   end
 
@@ -39,5 +47,13 @@ class AppointmentsController < ApplicationController
 
   def show_time in_time
     in_time.blank? ? Time.now : in_time
+  end
+
+  def get_current_statuses statuses
+    if statuses == ""
+      return []
+    else
+      return statuses
+    end
   end
 end

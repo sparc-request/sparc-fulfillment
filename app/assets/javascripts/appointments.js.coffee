@@ -111,13 +111,12 @@ $ ->
   $(document).on 'change', '#appointment_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     statuses = $(this).val()
-    data = 
-          'appointment_id' : appointment_id,
-          'statuses'       : statuses
+    data = 'statuses'       : statuses
+
     $.ajax
-      type: 'POST'
+      type: 'PUT'
       data: data
-      url: '/appointment_statuses/change_statuses'
+      url: "/appointments/#{appointment_id}/"
 
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)

@@ -56,12 +56,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :appointment_statuses, only: [] do
-    collection do
-      post 'change_statuses'
-    end
-  end
-
   mount API::Base => '/'
 
   root 'protocols#index'
