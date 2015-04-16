@@ -9,7 +9,7 @@ $(".procedure[data-id='<%= @procedure.id %>']").
 $(".procedure[data-id='<%= @procedure.id %>']").
   find(".status label.incomplete").
   removeClass('active')
-<% elsif @procedure.incomplete? || @procedure.reset? %>
+<% elsif @procedure.incomplete? %>
 $(".procedure[data-id='<%= @procedure.id %>']").
   find(".completed-date input").
   attr("disabled", true).
