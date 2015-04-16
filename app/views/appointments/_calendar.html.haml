@@ -9,8 +9,9 @@
               .col-md-6
                 %label Visit Contents:
                 %select#appointment_content_indications.selectpicker{title: "Select if Applicable"}
-                  %option Lab Only
-                  %option Space Only
+                  %option{value: ""} Select if Applicable
+                  %option{value: "Lab Only"} Lab Only
+                  %option{value: "Space Only"} Space Only
               .col-md-6
       .row
         = render partial: 'start_complete_buttons', locals: {appointment: appointment}

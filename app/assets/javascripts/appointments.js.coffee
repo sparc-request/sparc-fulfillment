@@ -111,10 +111,9 @@ $ ->
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     contents = $(this).val()
-    data =
-        'contents' : contents
+    data = 'contents' : contents
     $.ajax
-      type: 'PATCH'
+      type: 'PUT'
       data: data
       url:  "/appointments/#{appointment_id}"
 
