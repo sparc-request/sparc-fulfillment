@@ -48,9 +48,10 @@ $ ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
     
+    status = null
+
     # undo complete status 
     if active
-      status = null
       $(this).removeClass('selected_before')
     else
       status= "complete"
