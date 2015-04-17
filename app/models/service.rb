@@ -1,4 +1,6 @@
 class Service < ActiveRecord::Base
+  
+  has_paper_trail
   acts_as_paranoid
 
   has_many :line_items, dependent: :destroy

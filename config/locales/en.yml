@@ -147,6 +147,7 @@ en:
     completed_date: "Completed Date:"
     completed_time: "Completed Time:"
     add_service: "Add Service"
+    visit_indications: "Visit Indications:"
 
   line_item:
     change_service: "Change Service"

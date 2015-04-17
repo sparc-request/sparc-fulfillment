@@ -66,7 +66,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-webkit (1.4.1)
+    capybara-webkit (1.5.0)
       capybara (>= 2.3.0, < 2.5.0)
       json
     coercible (1.0.0)
@@ -203,6 +203,9 @@ GEM
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
     orm_adapter (0.5.0)
+    paper_trail (4.0.0.beta2)
+      activerecord (>= 3.0, < 6.0)
+      activesupport (>= 3.0, < 6.0)
     paranoia (2.1.1)
       activerecord (~> 4.0)
     puma (2.11.1)
@@ -347,7 +350,7 @@ DEPENDENCIES
   bootstrap-sass
   bootstrap-select-rails!
   bootstrap3-datetimepicker-rails (~> 4.0.0)
-  capybara-webkit (~> 1.4.1)
+  capybara-webkit (~> 1.5.0)
   coffee-rails (~> 4.0.0)
   database_cleaner
   delayed_job_active_record
@@ -367,6 +370,7 @@ DEPENDENCIES
   momentjs-rails (>= 2.8.1)
   mysql2
   omniauth
+  paper_trail (~> 4.0.0.beta)
   paranoia (~> 2.0)
   puma
   rack-mini-profiler
