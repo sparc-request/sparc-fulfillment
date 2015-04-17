@@ -5,7 +5,7 @@
 .row.appointments
 
 - content_for :nav_buttons do
-  %li
-    = button_to :back, method: :get, class: "btn btn-primary navbar-btn" do
-      %span.glyphicon.glyphicon-arrow-left{"aria-hidden" => "true"}
+  %li.participant_back
+    = link_to :back, method: :get  do
+      %span.glyphicon.glyphicon-arrow-left{aria: {hidden: "true"}}
       Back

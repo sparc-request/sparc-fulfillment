@@ -1,6 +1,7 @@
 class VisitGroup < ActiveRecord::Base
   self.per_page = Visit.per_page
 
+  has_paper_trail
   acts_as_paranoid
 
   after_create :reorder_visit_groups_up
