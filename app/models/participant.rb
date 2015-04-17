@@ -6,6 +6,7 @@ class Participant < ActiveRecord::Base
   GENDER_OPTIONS      = ['Male', 'Female'].freeze
   RECRUITMENT_OPTIONS = ['', 'Participating Site Referral', 'Primary Physician / or Healthcare Provider Referred', 'Other Physician / or Healthcare Provider Referred', 'Local Advertising (Flyer, Brochure, Newspaper, etc.)', 'Friends or Family Referred', 'SC Research.org', 'MUSC Heroes.org', 'Clinical Trials.gov', 'Billboard Ad Campaign', 'TV Ad Campaign', 'Other'].freeze
 
+  has_paper_trail
   acts_as_paranoid
 
   belongs_to :protocol
