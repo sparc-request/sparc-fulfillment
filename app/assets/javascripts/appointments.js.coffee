@@ -45,10 +45,20 @@ $ ->
   # Procedure buttons
 
   $(document).on 'click', 'label.status.complete', ->
+    active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    $(this).addClass('selected_before')
+    
+    status = null
+
+    # undo complete status 
+    if active
+      $(this).removeClass('selected_before')
+    else
+      status= "complete"
+      $(this).addClass('selected_before')
+
     data          = procedure:
-                      status: "complete"
+                      status: status
 
     $.ajax
       type: 'PUT'
@@ -56,14 +66,27 @@ $ ->
       url: "/procedures/#{procedure_id}.js"
 
   $(document).on 'click', 'label.status.incomplete', ->
+    active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    data          = partial: "incomplete", procedure:
-                      status: "incomplete"
+    
+    # undo incomplete status 
+    if active
+      data          = procedure:
+                        status: null
 
-    $.ajax
-      type: 'GET'
-      data: data
-      url: "/procedures/#{procedure_id}/edit.js"
+      $.ajax
+        type: 'PUT'
+        data: data
+        url: "/procedures/#{procedure_id}.js"
+
+    else
+      data          = partial: "incomplete", procedure:
+                        status: "incomplete"
+
+      $.ajax
+        type: 'GET'
+        data: data
+        url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', '.close_modal', ->
     id = $(this).parents('.modal-content').data('id')
@@ -116,6 +139,16 @@ $ ->
       type: 'PUT'
       data: data
       url:  "/appointments/#{appointment_id}"
+  
+  $(document).on 'change', '#appointment_indications', ->
+    appointment_id = $(this).parents('.row.appointment').data('id')
+    statuses = $(this).val()
+    data = 'statuses'       : statuses
+
+    $.ajax
+      type: 'PUT'
+      data: data
+      url: "/appointments/#{appointment_id}/"
 
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)

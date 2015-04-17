@@ -28,14 +28,6 @@ RSpec.describe Participant, type: :model do
         expect(@participant).to be_valid
       end
 
-      it 'should validate date_of_birth format to be valid' do
-        expect(build(:participant_with_protocol, date_of_birth: "2014-12-16")).to be_valid
-      end
-
-      it 'should validate date_of_birth format to be invalid' do
-        expect(build(:participant_with_protocol, date_of_birth: "2014-12")).not_to be_valid
-      end
-
       it 'should validate phone format to be valid' do
         expect(build(:participant_with_protocol, phone: "123-123-1234")).to be_valid
       end
@@ -69,6 +61,22 @@ RSpec.describe Participant, type: :model do
     let!(:visit_group1) { create(:visit_group, arm: arm, name: 'Turd', position: 1) }
     let!(:visit_group2) { create(:visit_group, arm: arm, name: 'Ferguson', position: 2) }
     let!(:participant)  { create(:participant, arm: arm, protocol_id: protocol.id) }
+
+    describe "date_of_birth formatting" do
+      it "should change the format to a datetime object friendly format" do
+        participant = create(:participant_with_protocol)
+
+        expect(participant.date_of_birth).to be
+      end
+
+      it "should fail the validation if date_of_birth is nil" do
+        expect(build(:participant, date_of_birth: nil)).not_to be_valid
+      end
+
+      it "should fail the validation if the date_of_birth is empty" do
+        expect(build(:participant, date_of_birth: ""))
+      end
+    end
 
     describe '#delete' do
 

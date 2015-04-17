@@ -1,34 +1,48 @@
 require 'rails_helper'
 
-feature 'Complete Procedure', js: true do
+feature 'Incomplete Procedure', js: true do
 
   scenario 'User marks a Procedure as incomplete once' do
     as_a_user_who_has_added_a_procedure_to_an_appointment
     when_i_incomplete_the_procedure
     and_i_view_the_notes_list
-    then_i_shoud_see_one_incomplete_note
+    then_i_should_see_one_incomplete_note
   end
 
-  scenario 'User marks a Procedure as incomplete twice' do
+  scenario 'User marks a Procedure as incomplete, then complete, then incomplete again' do
     as_a_user_who_has_added_a_procedure_to_an_appointment
     when_i_incomplete_the_procedure
+    then_i_complete_the_procedure 
     and_i_incomplete_the_procedure_again
     and_i_view_the_notes_list
-    then_i_shoud_see_two_incomplete_notes
+    then_i_should_see_two_incomplete_notes
   end
 
   scenario 'User marks a complete Procedure as incomplete and supplies a Note' do
     as_a_user_who_is_viewing_a_procedure_marked_as_complete
     when_i_incomplete_the_procedure
     and_i_view_the_notes_list
-    then_i_shoud_see_one_complete_note_and_one_incomplete_note
+    then_i_should_see_one_complete_note_and_one_incomplete_note
   end
 
   scenario 'User marks a complete Procedure as incomplete and then cancels' do
     as_a_user_who_has_added_a_procedure_to_an_appointment
     when_i_click_the_incommplete_button
     and_i_cancel_the_incomplete
-    then_i_shoud_see_that_the_procedure_status_has_not_changed
+    then_i_should_see_that_the_procedure_status_has_not_changed
+  end
+
+  scenario 'User marks a Procedure as incomplete and then changes their mind, clicking incomplete again' do
+    as_a_user_who_has_added_a_procedure_to_an_appointment
+    when_i_incomplete_the_procedure
+    and_i_view_the_notes_list
+    then_i_should_see_one_incomplete_note
+    then_i_close_the_notes_list
+    when_i_click_the_incommplete_button_again
+    and_i_view_the_notes_list
+    then_i_should_see_one_status_reset_note
+    then_i_close_the_notes_list
+    then_i_should_see_that_the_procedure_status_has_been_reset
   end
 
   def as_a_user_who_has_added_a_procedure_to_an_appointment
@@ -53,9 +67,14 @@ feature 'Complete Procedure', js: true do
     find('label.status.incomplete').click
     wait_for_ajax
   end
+  
+  def then_i_complete_the_procedure
+    find('label.status.complete').click
+    wait_for_ajax
+  end
 
   def and_i_cancel_the_incomplete
-    first(".modal button.close")
+    first(".modal button.close").click
   end
 
   def when_i_incomplete_the_procedure
@@ -71,26 +90,33 @@ feature 'Complete Procedure', js: true do
     find('button.notes.list').click
   end
 
-  def then_i_shoud_see_that_the_procedure_status_has_not_changed
+  def then_i_should_see_that_the_procedure_status_has_not_changed
     expect(page).to have_css("tr.procedure .date input[disabled]")
   end
 
-  def then_i_shoud_see_one_incomplete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Set to incomplete', count: 1)
+  def then_i_should_see_one_incomplete_note
+    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to incomplete', count: 1)
+  end
+  
+  def then_i_should_see_one_status_reset_note
+    expect(page).to have_css('.modal-body .note .comment', text: 'Status reset', count: 1)
   end
 
-  def then_i_shoud_see_one_complete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Set to complete', count: 1)
+  def then_i_should_see_one_complete_note
+    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to complete', count: 1)
   end
 
-  def then_i_shoud_see_two_incomplete_notes
-    expect(page).to have_css('.modal-body .note .comment', text: 'Set to incomplete', count: 2)
+  def then_i_should_see_two_incomplete_notes
+    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to incomplete', count: 2)
   end
 
-  def then_i_shoud_see_one_complete_note_and_one_incomplete_note
-    then_i_shoud_see_one_complete_note
-    then_i_shoud_see_one_incomplete_note
+  def then_i_should_see_one_complete_note_and_one_incomplete_note
+    then_i_should_see_one_complete_note
+    then_i_should_see_one_incomplete_note
   end
 
   alias :and_i_incomplete_the_procedure_again :when_i_incomplete_the_procedure
+  alias :when_i_click_the_incommplete_button_again :when_i_click_the_incommplete_button
+  alias :then_i_should_see_that_the_procedure_status_has_been_reset :then_i_should_see_that_the_procedure_status_has_not_changed
+  alias :then_i_close_the_notes_list :and_i_cancel_the_incomplete
 end

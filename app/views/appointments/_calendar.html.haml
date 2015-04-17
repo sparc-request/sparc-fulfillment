@@ -13,6 +13,7 @@
                   %option{value: "Lab Only"} Lab Only
                   %option{value: "Space Only"} Space Only
               .col-md-6
+                = render partial: 'visit_indications_dropdown'
       .row
         = render partial: 'start_complete_buttons', locals: {appointment: appointment}
       .row.calendar
