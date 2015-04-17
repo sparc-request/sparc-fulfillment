@@ -1,4 +1,5 @@
 class Visit < ActiveRecord::Base
+
   self.per_page = 6
 
   has_paper_trail

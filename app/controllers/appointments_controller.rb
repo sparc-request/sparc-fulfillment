@@ -4,6 +4,7 @@ class AppointmentsController < ApplicationController
 
   def show
     @appointment = Appointment.find params[:id]
+    @statuses = @appointment.appointment_statuses.map{|x| x.status}
     if @appointment.procedures.empty?
       @appointment.initialize_procedures
     end
@@ -30,6 +31,16 @@ class AppointmentsController < ApplicationController
       elsif @field == 'completed_date'
         updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date #completed date cannot be before start date
         @appointment.update_attributes(completed_date: updated_date)
+      end
+
+    elsif params[:statuses]
+      new_statuses = params[:statuses]
+      @appointment.appointment_statuses.destroy_all
+
+      if params[:statuses].present?
+        new_statuses.each do |status|
+          @appointment.appointment_statuses.create(status: status)
+        end
       end
     end
   end
