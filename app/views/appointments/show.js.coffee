@@ -6,6 +6,9 @@ if !$('.start_date_input').hasClass('hidden')
 if !$('.completed_date_input').hasClass('hidden')
   completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
 
+$('#appointment_content_indications').selectpicker()
+$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
+
 statuses = []
 <% @statuses.each do |status| %>
 statuses[statuses.length] =  "<%= status %>"

@@ -47,7 +47,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-webkit', '~> 1.4.1'
+  gem 'capybara-webkit', '~> 1.5.0'
   gem 'database_cleaner'
   gem 'launchy'
   gem 'rspec-rails'

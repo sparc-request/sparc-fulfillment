@@ -19,6 +19,10 @@ class AppointmentsController < ApplicationController
   def update
     @appointment = Appointment.find params[:id]
 
+    if params[:contents]
+      @appointment.update_attributes(contents: params[:contents])
+    end
+
     if ['start_date', 'completed_date'].include? params[:field]
       @field = params[:field]
       if params[:new_date]
