@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150413154240) do
+ActiveRecord::Schema.define(version: 20150417174703) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -65,29 +65,18 @@ ActiveRecord::Schema.define(version: 20150413154240) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
-  create_table "fulfillments", force: :cascade do |t|
-    t.integer  "line_item_id",         limit: 4
-    t.integer  "user_id",              limit: 4
-    t.integer  "service_component_id", limit: 4
-    t.integer  "quantity",             limit: 4
-    t.string   "tracking_type",        limit: 255
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "line_items", force: :cascade do |t|
-    t.integer  "sparc_id",      limit: 4
-    t.integer  "arm_id",        limit: 4
-    t.integer  "service_id",    limit: 4
+    t.integer  "sparc_id",           limit: 4
+    t.integer  "arm_id",             limit: 4
+    t.integer  "service_id",         limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.integer  "subject_count", limit: 4
-    t.integer  "quantity",      limit: 4
-    t.boolean  "otf",           limit: 1
-    t.integer  "cost",          limit: 4
-    t.integer  "protocol_id",   limit: 4
+    t.integer  "subject_count",      limit: 4
+    t.integer  "quantity_requested", limit: 4,   default: 0
+    t.string   "quantity_type",      limit: 255
+    t.datetime "started_at"
+    t.integer  "protocol_id",        limit: 4
   end
 
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
@@ -197,10 +186,6 @@ ActiveRecord::Schema.define(version: 20150413154240) do
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
-
-  create_table "service_components", force: :cascade do |t|
-    t.string "service_component", limit: 255
-  end
 
   create_table "services", force: :cascade do |t|
     t.integer  "sparc_id",        limit: 4
