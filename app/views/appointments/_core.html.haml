@@ -3,6 +3,6 @@
     %table.table.procedures
       %thead
         %th.title{colspan: 7}
-          = "Core: #{procedures.first.sparc_core_name}"
+          = "#{procedures.first.sparc_core_name}"
       %tbody
         = render partial: 'appointments/procedure', collection: procedures, as: :procedure

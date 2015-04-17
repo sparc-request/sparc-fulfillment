@@ -1,8 +1,9 @@
 - visit_groups.each_with_index do |visit_group, index|
-  .col-xs-2.visit_name{:data_visit_group_id => visit_group.id}= visit_group.name
+  .col-md-1.visit_name.text-center{:data_visit_group_id => visit_group.id}= visit_group.name
 - (visit_groups.size...Visit.per_page).each do |index|
-  .col-xs-2{class: "visit_group_#{index}"}
+  .col-md-1.text-center{class: "visit_group_#{index}"}
     &nbsp
     .row
-      .col-xs-12 &nbsp
+      .col-md-12 &nbsp
+
 

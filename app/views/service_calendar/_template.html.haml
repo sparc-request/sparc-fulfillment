@@ -3,10 +3,9 @@
 .calendar.service{class: "arm_#{arm.id}"}
   -# Headers (Services, Number of Participants, Visit Navigation, Empty for deleting line items)
   .row.header
-    .col-xs-4.text-center Services
-    .col-xs-1 &nbsp;
-    .col-xs-6.text-center
-      .row
+    .col-xs-2.text-center Services
+    .col-xs-10.text-center
+      %div
         -# The previous page arrow
         .col-xs-2
           .btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
@@ -16,12 +15,13 @@
         -# The next page arrow
         .col-xs-2
           .btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page}
-      .row{class: "visit_groups visit_groups_for_#{arm.id}"}
-        = render partial: '/service_calendar/visit_groups', locals: {arm: arm, visit_groups: visit_groups}
-    .col-xs-1 &nbsp;
+  .row.arm-name
+    .col-xs-3
+    %div{class: "check_columns_for_arm_#{arm.id}"}
+      = render partial: '/service_calendar/visit_groups', locals: {arm: arm, visit_groups: visit_groups}
   -# Display Arm Name
   .row.arm-name
-    .col-xs-5= "Arm: #{arm.name}"
+    .col-xs-3= "Arm: #{arm.name}"
     %div{class: "check_columns_for_arm_#{arm.id}"}
       = render partial: '/service_calendar/check_visit_columns', locals: {visit_groups: visit_groups}
     .col-xs-1

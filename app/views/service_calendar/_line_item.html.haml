@@ -1,8 +1,7 @@
 .row.line_item{id: "line_item_#{line_item.id}"}
-  .col-xs-3
+  .col-xs-2
     %span.line_item_service_name= line_item.service.name
     .btn.glyphicon.glyphicon-edit.change_line_item_service{line_item_id: line_item.id}
-  .col-xs-1.text-center= line_item.subject_count
   .col-xs-1.text-center
     .glyphicon.check_row.btn.btn-primary{:'data-line_item_id' => line_item.id, check: "#{set_check(line_item)}", class: "#{glyph_class(line_item)}"}
   %div{class: "visits_for_line_item_#{line_item.id}"}

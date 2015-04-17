@@ -1,6 +1,6 @@
 class Visit < ActiveRecord::Base
 
-  self.per_page = 6
+  self.per_page = 8
 
   has_paper_trail
   acts_as_paranoid
