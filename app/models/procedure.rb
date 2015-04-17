@@ -2,6 +2,7 @@ class Procedure < ActiveRecord::Base
 
   STATUS_TYPES = %w(complete incomplete).freeze
 
+  has_paper_trail
   acts_as_paranoid
 
   has_one :protocol,    through: :appointment

@@ -31,9 +31,9 @@
               = p.label "status", t(:participant)[:status], class: "col-sm-4 control-label"
               .col-sm-7= p.select "status", Participant::STATUS_OPTIONS, {include_blank: true}, :class => "form-control"
             .form-group
-              = p.label "date_of_birth", t(:participant)[:dob], class: "col-sm-4 control-label"
+              = p.label "date_of_birth", t(:participant)[:dob], class: "col-sm-4 control-label "
               .col-sm-7
-                = p.text_field "date_of_birth", {class: 'form-control', id: "dob_time_picker"}
+                = p.text_field "date_of_birth", {class: 'form-control datetimepicker', id: "dob_time_picker", value: format_date(participant.date_of_birth)}
             .form-group
               = p.label "gender", t(:participant)[:gender], class: "col-sm-4 control-label"
               .col-sm-7= p.select "gender", Participant::GENDER_OPTIONS, {include_blank: true}, :class => "form-control"
