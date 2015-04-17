@@ -12,13 +12,13 @@
   %td.last_fulfillment
     = line_item.last_fulfillment
   %td.components
-    = line_item.quantity
+    = line_item.service.name + " Components"
   %td.notes
     %button.btn.btn-primary.otf_notes.list{type: "button", aria: {label: "Notes List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   %td.documents
-    %button.btn.btn-primary.otf_documents.list{type: "button", aria: {label: "Notes List"}}
+    %button.btn.btn-primary.otf_documents.list{type: "button", aria: {label: "Documents List"}}
       %span.glyphicon.glyphicon-cloud-upload{aria: {hidden: "true"}}
   %td.fulfillments
-    %button.btn.btn-primary.otf_fulfillments.list{type: "button", aria: {label: "Notes List"}}
+    %button.btn.btn-primary.otf_fulfillments.list{type: "button", aria: {label: "Fulfillments"}}
       %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
