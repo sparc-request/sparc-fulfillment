@@ -1,5 +1,9 @@
 $ ->
 
+  #this method is used on all the datepickers in the application
+  $(document).on 'dp.hide', '.datetimepicker', ->
+    $(this).blur()
+
   $('table.participants').on 'click', 'td.change_arm a', ->
     participant_id = $(this).attr('participant_id')
     arm_id = $(this).attr('arm_id')

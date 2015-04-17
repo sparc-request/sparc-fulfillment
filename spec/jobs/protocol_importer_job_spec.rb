@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ProtocolImporterJob, type: :job, vcr: true do
+RSpec.describe ProtocolImporterJob, type: :job do
 
   describe '#enqueue', delay: true do
 
@@ -13,7 +13,7 @@ RSpec.describe ProtocolImporterJob, type: :job, vcr: true do
     end
   end
 
-  describe '#perform' do
+  describe '#perform', sparc_api: :get_sub_service_request_1 do
 
     before do
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
@@ -79,6 +79,12 @@ RSpec.describe ProtocolImporterJob, type: :job, vcr: true do
       protocol = Protocol.find_by(sparc_id: 7564)
 
       expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/).with { |request| request.body.match(/protocol_#{protocol.id}/) }).to have_been_made.once
+    end
+
+    it "should NOT utilize PaperTrail on import", delay: false do
+      protocol = Protocol.find_by(sparc_id: 7564)
+
+      expect(protocol.versions.count).to eq(0)
     end
   end
 end

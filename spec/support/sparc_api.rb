@@ -62,6 +62,6 @@ RSpec.configure do |config|
   end
 
   config.before(:each, sparc_api: :unavailable) do
-    stub_request(:get, /sparc.musc.edu/).to_return(status: 500)
+    stub_request(:get, /localhost:5000/).to_return(status: 500)
   end
 end

@@ -53,7 +53,7 @@ feature 'Followup note', js: true do
   end
 
   def and_i_fill_out_and_submit_the_followup_form
-    fill_in 'procedure_follow_up_date', with: '2015-03-11'
+    fill_in 'procedure_follow_up_date', with: '03-11-2015'
     select @assignee.full_name, from: 'procedure_tasks_attributes_0_assignee_id'
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'
@@ -77,7 +77,7 @@ feature 'Followup note', js: true do
     procedure = Procedure.first
     value     = evaluate_script("$('.date#procedure_#{procedure.id}').data('date');")
 
-    expect(value).to eq('2015-03-11')
+    expect(value).to eq('03-11-2015')
   end
 
   def i_should_see_the_followup_button

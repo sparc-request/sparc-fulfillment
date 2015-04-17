@@ -6,6 +6,12 @@
           = link_to root_path do
             %span.glyphicon.glyphicon-home{aria: {hidden: "true"}}
             Home
+        %li
+          = link_to tasks_path do
+            %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+            Tasks
+            %span.notification.task-notifications
+              = current_user.tasks_count
         = yield :nav_buttons
       %ul.nav.navbar-nav.navbar-right
         %li

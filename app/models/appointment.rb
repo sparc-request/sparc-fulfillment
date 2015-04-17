@@ -2,6 +2,7 @@ class Appointment < ActiveRecord::Base
 
   STATUSES = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window']
 
+  has_paper_trail
   acts_as_paranoid
 
   has_one :protocol,  through: :participant

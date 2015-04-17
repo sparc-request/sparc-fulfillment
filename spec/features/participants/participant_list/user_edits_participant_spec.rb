@@ -9,6 +9,8 @@ feature 'User edits Participant', js: true do
     click_link 'Participant List'
     page.find('table.participants tbody tr:first-child td.edit a').click
     fill_in 'First Name', with: 'Starlord'
+    page.execute_script %Q{ $('#dob_time_picker').trigger("focus") }
+    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     find("input[value='Save Participant']").click
     refresh_bootstrap_table 'table.participants'
 
