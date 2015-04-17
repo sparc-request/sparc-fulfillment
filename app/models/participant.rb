@@ -18,7 +18,11 @@ class Participant < ActiveRecord::Base
   after_destroy :update_faye
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, presence: true
-  validate :phone_number_format, :date_of_birth_format, :middle_initial_format, :zip_code_format
+  validate :phone_number_format, :middle_initial_format, :zip_code_format
+
+  def date_of_birth=(dob)
+    write_attribute(:date_of_birth, Time.strptime(dob, "%m-%d-%Y")) if dob.present?
+  end
 
   def phone_number_format
     if !phone.blank?
@@ -41,12 +45,6 @@ class Participant < ActiveRecord::Base
       if not( /^[A-z]{1}$/.match middle_initial.to_s )
         errors.add(:middle_initial, "must be only one character")
       end
-    end
-  end
-
-  def date_of_birth_format
-    unless /^\d{4}-\d{2}-\d{2}$/.match date_of_birth.to_s
-      errors.add(:date_of_birth, "is not a date in the format YYYY-MM-DD")
     end
   end
 

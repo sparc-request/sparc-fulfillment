@@ -105,7 +105,7 @@ ActiveRecord::Schema.define(version: 20150406183910) do
     t.string   "last_name",          limit: 255
     t.integer  "mrn",                limit: 4
     t.string   "status",             limit: 255
-    t.date     "date_of_birth"
+    t.datetime "date_of_birth"
     t.string   "gender",             limit: 255
     t.string   "ethnicity",          limit: 255
     t.string   "race",               limit: 255
