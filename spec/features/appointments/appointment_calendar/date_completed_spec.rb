@@ -71,6 +71,6 @@ feature 'Date completed', js: true do
 
   def then_i_should_see_an_enabled_datepicker_with_the_current_date
     expect(page).to_not have_css(".completed_date_field input[disabled]")
-    expect(page).to have_css(".completed_date_field input[value='#{Time.current.strftime('%m/%d/%Y')}']")
+    expect(page).to have_css("input[value='#{Time.current.strftime('%m/%d/%Y')}']")
   end
 end
