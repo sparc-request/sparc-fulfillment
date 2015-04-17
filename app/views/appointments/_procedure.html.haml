@@ -1,7 +1,6 @@
 %tr.procedure{data: {"id" => procedure.id}}
-  %td.name
-    = procedure.service_name
-  %td.billing_type
+  %td.name.truncate= procedure.service_name
+  %td.r-t
     = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
   %td.status
     .btn-group{data: {toggle: "buttons"}}

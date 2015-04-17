@@ -37,8 +37,7 @@ body.participants
 
         td, th
           text-align: center
-          white-space: nowrap
-          text-overflow: ellipsis
+          max-width: 0
 
           &.title
             padding-left: 0.5em
@@ -81,3 +80,7 @@ body.participants
               padding-left: 0.5em
               text-align: left
 
+    .truncate
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
