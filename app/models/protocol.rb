@@ -6,6 +6,7 @@ class Protocol < ActiveRecord::Base
   acts_as_paranoid
 
   has_many :arms, dependent: :destroy
+  has_many :line_items, dependent: :destroy
   has_many :participants, dependent: :destroy
   has_many :user_roles
 
