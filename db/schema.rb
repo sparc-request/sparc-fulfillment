@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150331191236) do
+ActiveRecord::Schema.define(version: 20150420152129) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer  "participant_id",       limit: 4
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20150331191236) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "contents",             limit: 255
   end
 
   create_table "arms", force: :cascade do |t|
@@ -56,6 +57,20 @@ ActiveRecord::Schema.define(version: 20150331191236) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "documents", force: :cascade do |t|
+    t.integer  "documentable_id",   limit: 4
+    t.string   "documentable_type", limit: 255
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "doc_file_name",     limit: 255
+    t.string   "doc_content_type",  limit: 255
+    t.integer  "doc_file_size",     limit: 4
+    t.datetime "doc_updated_at"
+  end
+
+  add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
 
   create_table "line_items", force: :cascade do |t|
     t.integer  "sparc_id",      limit: 4

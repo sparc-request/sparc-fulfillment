@@ -7,6 +7,7 @@ class LineItem < ActiveRecord::Base
 
   has_many :visit_groups, through: :arm
   has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, dependent: :destroy
+  has_many :documents, as: :documentable
 
   delegate  :name,
             :cost,
