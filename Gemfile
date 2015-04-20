@@ -20,6 +20,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'momentjs-rails', '>= 2.8.1'
 gem 'mysql2'
 gem 'omniauth'
+gem 'paper_trail', '~> 4.0.0.beta'
 gem 'paranoia', '~> 2.0'
 gem 'puma'
 gem 'rails', '4.2.1'
@@ -47,7 +48,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-webkit', '~> 1.4.1'
+  gem 'capybara-webkit', '~> 1.5.0'
   gem 'database_cleaner'
   gem 'launchy'
   gem 'rspec-rails'

@@ -9,6 +9,7 @@ RSpec.describe Appointment, type: :model do
   it { is_expected.to belong_to(:visit_group) }
 
   it { is_expected.to have_many(:procedures) }
+  it { is_expected.to have_many(:appointment_statuses) }
 
   context 'instance methods' do
 

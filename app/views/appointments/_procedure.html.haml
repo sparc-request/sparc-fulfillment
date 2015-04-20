@@ -1,19 +1,18 @@
 %tr.procedure{data: {"id" => procedure.id}}
-  %td.name
-    = procedure.service_name
-  %td.billing_type
+  %td.name.truncate= procedure.service_name
+  %td.r-t
     = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
   %td.status
     .btn-group{data: {toggle: "buttons"}}
       %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : ''}"}
         %input{class: "procedure_status", type: "radio", value: "complete", autocomplete: "off", id: "complete_button_#{procedure.id}"} Complete
-      %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? '.active': ''}"}
+      %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''}"}
         %input{class: "procedure_status", type: "radio", value: "incomplete", autocomplete: "off", id: "incomplete_button_#{procedure.id}"} Incomplete
   %td.followup
     = render partial: "appointments/followup_calendar", locals: {procedure: procedure}
   %td.completed-date
     .input-group.date
-      %input{type: "text", class: "form-control", disabled: !procedure.completed_date.present?, value: format_date(procedure.completed_date)}
+      %input.completed_date_field.datetimepicker{type: "text", class: "form-control", disabled: !procedure.completed_date.present?, value: format_date(procedure.completed_date)}
       %span.input-group-addon
         %span.glyphicon.glyphicon-calendar
   %td.notes

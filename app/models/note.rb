@@ -1,8 +1,9 @@
 class Note < ActiveRecord::Base
 
   KIND_TYPES    = %w(log note reason followup).freeze
-  REASON_TYPES  = ['Skipped visit', 'Visit happened elsewhere', 'Patient missed visit', 'Visit happened outside of window', 'Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained', 'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment', 'Assessment performed by other personnel/study staff', 'Participant refused assessment', 'Assessment not performed due to equipment failure'].freeze
+  REASON_TYPES  = ['Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained', 'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment', 'Assessment performed by other personnel/study staff', 'Participant refused assessment', 'Assessment not performed due to equipment failure'].freeze
 
+  has_paper_trail
   acts_as_paranoid
 
   belongs_to :notable, polymorphic: true

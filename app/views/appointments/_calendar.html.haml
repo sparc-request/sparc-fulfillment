@@ -5,6 +5,15 @@
         .col-xs-12
           .page-header
             %h3= "Visit: #{appointment.name}"
+            .row
+              .col-md-6
+                %label Visit Contents:
+                %select#appointment_content_indications.selectpicker{title: "Select if Applicable"}
+                  %option{value: ""} Select if Applicable
+                  %option{value: "Lab Only"} Lab Only
+                  %option{value: "Space Only"} Space Only
+              .col-md-6
+                = render partial: 'visit_indications_dropdown'
       .row
         = render partial: 'start_complete_buttons', locals: {appointment: appointment}
       .row.calendar

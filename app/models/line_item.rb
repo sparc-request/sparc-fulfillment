@@ -1,7 +1,9 @@
 class LineItem < ActiveRecord::Base
 
+  has_paper_trail
   acts_as_paranoid
 
+  belongs_to :protocol
   belongs_to :arm
   belongs_to :service
 
