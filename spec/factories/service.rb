@@ -8,5 +8,13 @@ FactoryGirl.define do
     sequence(:cost)
     description 'Description'
     abbreviation 'Abbreviation'
+
+    trait :with_components do
+      after(:create) do |service, evaluator|
+        create_list(:component_of_service, 3, composable_id: service.id)
+      end
+    end
+
+    factory :service_with_components, traits: [:with_components]
   end
 end
