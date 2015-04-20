@@ -18,7 +18,8 @@ class Procedure < ActiveRecord::Base
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
-  validates :follow_up_date, presence: true, on: :update
+  #TODO remove follow up date and only use the task association
+  #validates :follow_up_date, presence: true, on: :update
   accepts_nested_attributes_for :notes
   accepts_nested_attributes_for :tasks
 
