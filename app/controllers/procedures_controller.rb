@@ -33,12 +33,7 @@ class ProceduresController < ApplicationController
     if create_followup_task?
       merge_task_params!
     end
-    validate_proecedure = Procedure.new(@procedure_params)
-    if validate_proecedure.valid?
-      @procedure.update_attributes(@procedure_params)
-    else
-      @errors = validate_proecedure.errors
-    end
+    @procedure.update_attributes(@procedure_params)
   end
 
   def destroy
