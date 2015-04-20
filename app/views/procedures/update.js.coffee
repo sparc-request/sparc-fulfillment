@@ -1,5 +1,5 @@
-<% if !(@errors.nil?) %>
-$("#procedure_modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>");
+<% if !(@procedure.errors.nil?) %>
+$("#procedure_modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @procedure.errors})) %>");
 <% else %>
 <% if @procedure.reset? %>
 $(".procedure[data-id='<%= @procedure.id %>']").
