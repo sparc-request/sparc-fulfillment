@@ -9,6 +9,6 @@ class Fulfillment < ActiveRecord::Base
   has_many :notes, as: :notable
   has_many :documents
 
-  delegates :quantity_type, :line_item
+  delegate :quantity_type, to: :line_item
 
 end
