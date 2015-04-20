@@ -10,6 +10,7 @@ class Task < ActiveRecord::Base
   belongs_to :assignable, polymorphic: true
 
   validates :assignee_id, presence: true
+  validates :due_at, presence: true
 
   after_update :update_counter
 

@@ -9,6 +9,12 @@
         %h4.modal-title.text-center
           = t(:procedure)[:edit_header]
       .modal-body
+        #procedure_modal_errors
+        .form-group
+          = form.fields_for :tasks, Task.new do |tasks_form|
+            = tasks_form.hidden_field :user_id, value: current_user.id
+            = tasks_form.label "task_assignee_id", t(:task_index)[:assignee_name], class: "col-sm-3 control-label"
+            .col-sm-8= tasks_form.select :assignee_id, options_from_collection_for_select(User.all, 'id', 'full_name'), { include_blank: true }, { class: "form-control" }
         .form-group
           = form.label "follow_up_date", t(:procedure)[:follow_up_date], class: "col-sm-3 control-label"
           .col-sm-8
@@ -16,11 +22,6 @@
               = form.text_field :follow_up_date, {class: 'form-control'}
               %span.input-group-addon
                 %span.glyphicon.glyphicon-calendar
-        .form-group
-          = form.fields_for :tasks, Task.new do |tasks_form|
-            = tasks_form.hidden_field :user_id, value: current_user.id
-            = tasks_form.label "task_assignee_id", t(:task_index)[:assignee_name], class: "col-sm-3 control-label"
-            .col-sm-8= tasks_form.select :assignee_id, options_from_collection_for_select(User.all, 'id', 'full_name'), { include_blank: true }, { class: "form-control" }
         .form-group
           = form.fields_for :notes, Note.new do |notes_form|
             = notes_form.hidden_field :kind, value: 'followup'

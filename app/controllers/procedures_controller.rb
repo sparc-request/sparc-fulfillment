@@ -33,8 +33,12 @@ class ProceduresController < ApplicationController
     if create_followup_task?
       merge_task_params!
     end
-    
-    @procedure.update_attributes(@procedure_params)
+    validate_proecedure = Procedure.new(@procedure_params)
+    if validate_proecedure.valid?
+      @procedure.update_attributes(@procedure_params)
+    else
+      @errors = validate_proecedure.errors
+    end
   end
 
   def destroy
@@ -45,8 +49,7 @@ class ProceduresController < ApplicationController
 
   def create_followup_task?
     @procedure_params[:tasks_attributes].present? &&
-      @procedure_params[:follow_up_date].present? &&
-      @procedure_params[:notes_attributes]["0"][:comment].present?
+      @procedure_params[:follow_up_date].present?
   end
 
   def merge_task_params!
@@ -76,7 +79,7 @@ class ProceduresController < ApplicationController
       @procedure.notes.create(user: current_user,
                               comment: 'Status set to complete',
                               kind: 'log')
-    
+
     end
   end
 
