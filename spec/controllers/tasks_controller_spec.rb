@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe TasksController, type: :controller do
 
   before :each do
-    @task = create(:task)
+    @task = create(:task, due_at: "09-09-2009")
 
     sign_in
   end
@@ -46,10 +46,12 @@ RSpec.describe TasksController, type: :controller do
 
     it "should update a task" do
       expected_body = "New body"
-
+      attributes = attributes_for(:task)
+      attributes[:due_at] = "09-09-2009"
+      attributes[:body] = expected_body
       put :update, {
         id: @task.id,
-        task: attributes_for(:task, body: expected_body),
+        task: attributes,
         format: :js
       }
       @task.reload
@@ -82,10 +84,12 @@ RSpec.describe TasksController, type: :controller do
 
     it "should create a new task" do
       assignee = create(:user)
+      attributes = attributes_for(:task)
+      attributes[:due_at] = "09-09-2009"
       expect{
         post :create, {
           id: @task.id,
-          task: attributes_for(:task).merge!(assignee_id: assignee.id),
+          task: attributes.merge!(assignee_id: assignee.id),
           format: :js
         }
       }.to change(Task, :count).by(1)
