@@ -1,4 +1,4 @@
-<% if !(@procedure.errors.nil?) %>
+<% if !(@procedure.errors.empty?) %>
 $("#procedure_modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @procedure.errors})) %>");
 <% else %>
 <% if @procedure.reset? %>
