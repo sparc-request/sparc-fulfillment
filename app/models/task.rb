@@ -13,6 +13,10 @@ class Task < ActiveRecord::Base
 
   after_update :update_counter
 
+  def due_at=(due_date)
+    write_attribute(:due_at, Time.strptime(due_date, "%m-%d-%Y")) if due_date.present?
+  end
+
   def update_counter
     if self.complete_changed?(from: false, to: true)
       User.decrement_counter(:tasks_count, self.assignee.id)
