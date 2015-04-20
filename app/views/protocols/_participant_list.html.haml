@@ -6,14 +6,12 @@
     %tr
       %th{data: {class: 'last_name', align: "left", sortable: "true", field: "last_name"}}
         = t(:participant)[:last_name]
-      %th{data: {class: 'first_name', align: "left", sortable: "true", field: "first_name"}}
+      %th{data: {class: 'first_name', align: "left", sortable: "true", field: "first_middle"}}
         = t(:participant)[:first_name]
       %th{data: {class: 'mrn', align: "left", sortable: "true", field: "mrn"}}
         = t(:participant)[:mrn]
       %th{data: {class: 'external_id', align: "left", sortable: "true", field: "external_id"}}
         = t(:participant)[:id]
-      %th{data: {class: 'status', align: "left", sortable: "true", field: "status"}}
-        = t(:participant)[:status]
       %th{data: {class: 'date_of_birth', align: "center", sortable: "true", sorter: "dateSorter", field: "date_of_birth"}}
         = t(:participant)[:dob]
       %th{data: {class: 'gender', align: "left", sortable: "true", field: "gender"}}
@@ -26,6 +24,8 @@
         = t(:participant)[:address]
       %th{data: {class: 'phone', align: "left", sortable: "true", field: "phone", visible: "false"}}
         = t(:participant)[:phone]
+      %th{data: {class: 'recruitment_source', align: "left", sortable: "true", field: "recruitment_source"}}
+        = t(:participant)[:recruitment_source]
       %th{data: {class: 'details', align: "center", field: "details", width: "5"}}
         = t(:actions)[:details]
       %th{data: {class: 'edit', align: "center", field: "edit", width: "5"}}

@@ -69,6 +69,10 @@ class Participant < ActiveRecord::Base
     [first_name.humanize, middle_initial, last_name.humanize].join(' ')
   end
 
+  def first_middle
+    first_name.humanize + ' ' + middle_initial
+  end
+
   private
 
   def update_faye
