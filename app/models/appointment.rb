@@ -8,7 +8,6 @@ class Appointment < ActiveRecord::Base
   acts_as_paranoid
   acts_as_list scope: [:arm_id, :participant_id]
 
-  
   include CustomPositioning #custom methods around positioning, acts_as_list
   
   has_one :protocol,  through: :participant
@@ -21,6 +20,8 @@ class Appointment < ActiveRecord::Base
   has_many :procedures
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
+  
+  validates :participant_id, :name, :arm_id, presence: true
 
   def has_completed_procedures?
     has_completed = false
@@ -50,7 +51,7 @@ class Appointment < ActiveRecord::Base
   end
 
   def initialize_procedures
-    if self.visit_group_id.present?
+    unless self.is_a? CustomAppointment # custom appointments don't inherit from the study schedule so there is nothing to build out
       ActiveRecord::Base.transaction do
         self.visit_group.arm.line_items.each do |li|
           visit = li.visits.where("visit_group_id = #{self.visit_group.id}").first

@@ -105,8 +105,6 @@ $ ->
       data: data
       url: "/appointments/new"
 
-
-
   $(document).on 'click', 'button.followup.new', ->
     procedure_id  = $(this).parents('.procedure').data('id')
 

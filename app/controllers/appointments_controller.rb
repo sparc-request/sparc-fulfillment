@@ -2,15 +2,23 @@ class AppointmentsController < ApplicationController
 
   respond_to :json, :html
   
+  #### BEGIN CUSTOM APPOINTMENTS ####
+  
   def new 
     @appointment = CustomAppointment.new(appointment_params)
   end
 
-  def create
+  def create 
     ##### TODO, figure out a way to not have to use base model
-    @appointment = Appointment.create(appointment_params)
-    @appointment.update_attribute(:type, "CustomAppointment")
+    @appointment = Appointment.new(appointment_params)
+
+    if @appointment.valid?
+      @appointment.save
+      @appointment.update_attribute(:type, "CustomAppointment")
+    end
   end
+  
+  #### END CUSTOM APPOINTMENTS ####
 
   def show
     @appointment = Appointment.find params[:id]
@@ -66,6 +74,6 @@ class AppointmentsController < ApplicationController
   end
 
   def appointment_params
-    params.require(:appointment).permit(:arm_id, :participant_id, :name, :position, :type)
+    params.require(:appointment).permit(:arm_id, :participant_id, :name, :position)
   end
 end
