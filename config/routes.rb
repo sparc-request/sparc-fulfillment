@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :appointments, only: [:show, :update] do
+  resources :appointments do
     collection do
       get 'completed_appointments'
     end

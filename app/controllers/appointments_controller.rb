@@ -1,6 +1,16 @@
 class AppointmentsController < ApplicationController
 
   respond_to :json, :html
+  
+  def new 
+    @appointment = CustomAppointment.new(appointment_params)
+  end
+
+  def create
+    ##### TODO, figure out a way to not have to use base model
+    @appointment = Appointment.create(appointment_params)
+    @appointment.update_attribute(:type, "CustomAppointment")
+  end
 
   def show
     @appointment = Appointment.find params[:id]
@@ -53,5 +63,9 @@ class AppointmentsController < ApplicationController
 
   def show_time in_time
     in_time.blank? ? Time.now : in_time
+  end
+
+  def appointment_params
+    params.require(:appointment).permit(:arm_id, :participant_id, :name, :position, :type)
   end
 end

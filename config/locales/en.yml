@@ -152,6 +152,9 @@ en:
     completed_time: "Completed Time:"
     add_service: "Add Service"
     visit_indications: "Visit Indications:"
+    name: "Visit Name"
+    position: "Insert into Position"
+    edit_header: "Custom Visit"
 
   line_item:
     change_service: "Change Service"

@@ -2,15 +2,21 @@ class Appointment < ActiveRecord::Base
 
   STATUSES = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window']
 
+  default_scope {order(:position)}
+  
   has_paper_trail
   acts_as_paranoid
+  acts_as_list scope: [:arm_id, :participant_id]
 
+  
+  include CustomPositioning #custom methods around positioning, acts_as_list
+  
   has_one :protocol,  through: :participant
-  has_one :arm,       through: :visit_group
   has_many :appointment_statuses, dependent: :destroy
 
   belongs_to :participant
   belongs_to :visit_group
+  belongs_to :arm
 
   has_many :procedures
 
@@ -44,28 +50,30 @@ class Appointment < ActiveRecord::Base
   end
 
   def initialize_procedures
-    ActiveRecord::Base.transaction do
-      self.visit_group.arm.line_items.each do |li|
-        visit = li.visits.where("visit_group_id = #{self.visit_group.id}").first
-        if visit and visit.has_billing?
-          attributes = {
-            appointment_id: self.id,
-            visit_id: visit.id,
-            service_name: li.service.name,
-            service_cost: li.service.cost,
-            service_id: li.service.id,
-            sparc_core_id: li.service.sparc_core_id,
-            sparc_core_name: li.service.sparc_core_name
-          }
-          visit.research_billing_qty.times do
-            proc = Procedure.new(attributes)
-            proc.billing_type = 'research_billing_qty'
-            proc.save
-          end
-          visit.insurance_billing_qty.times do
-            proc = Procedure.new(attributes)
-            proc.billing_type = 'insurance_billing_qty'
-            proc.save
+    if self.visit_group_id.present?
+      ActiveRecord::Base.transaction do
+        self.visit_group.arm.line_items.each do |li|
+          visit = li.visits.where("visit_group_id = #{self.visit_group.id}").first
+          if visit and visit.has_billing?
+            attributes = {
+              appointment_id: self.id,
+              visit_id: visit.id,
+              service_name: li.service.name,
+              service_cost: li.service.cost,
+              service_id: li.service.id,
+              sparc_core_id: li.service.sparc_core_id,
+              sparc_core_name: li.service.sparc_core_name
+            }
+            visit.research_billing_qty.times do
+              proc = Procedure.new(attributes)
+              proc.billing_type = 'research_billing_qty'
+              proc.save
+            end
+            visit.insurance_billing_qty.times do
+              proc = Procedure.new(attributes)
+              proc.billing_type = 'insurance_billing_qty'
+              proc.save
+            end
           end
         end
       end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150417174703) do
+ActiveRecord::Schema.define(version: 20150421140047) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -33,7 +33,11 @@ ActiveRecord::Schema.define(version: 20150417174703) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "contents",             limit: 255
+    t.integer  "arm_id",               limit: 4
+    t.string   "type",                 limit: 255, default: "Appointment"
   end
+
+  add_index "appointments", ["arm_id"], name: "index_appointments_on_arm_id", using: :btree
 
   create_table "arms", force: :cascade do |t|
     t.integer  "sparc_id",      limit: 4

@@ -94,6 +94,19 @@ $ ->
     if $("#complete_button_#{id}").parent().hasClass('selected_before')
       $("#complete_button_#{id}").parent().addClass('active')
 
+  $(document).on 'click', 'button.appointment.new', ->
+    participant_id = $(this).data('participant-id')
+    arm_id = $(this).data('arm-id')
+
+    data = appointment: participant_id: participant_id, arm_id: arm_id
+
+    $.ajax
+      type: 'GET'
+      data: data
+      url: "/appointments/new"
+
+
+
   $(document).on 'click', 'button.followup.new', ->
     procedure_id  = $(this).parents('.procedure').data('id')
 

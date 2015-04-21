@@ -4,6 +4,8 @@ class VisitGroup < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
 
+  include CustomPositioning #custom methods around positioning, acts_as_list
+
   after_create :reorder_visit_groups_up
   after_destroy :reorder_visit_groups_down
   before_destroy :check_for_completed_data
@@ -20,10 +22,6 @@ class VisitGroup < ActiveRecord::Base
             :name,
             presence: true
   validates :day, presence: true, numericality: true
-
-  def insertion_name
-    "insert before " + self.name
-  end
 
   private
 
