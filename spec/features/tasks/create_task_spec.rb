@@ -34,7 +34,7 @@ feature "create Task", js: true do
 
     click_link "Create New Task"
     select @assignee.full_name, from: 'task_assignee_id'
-    page.execute_script %Q{ $('#task_due_date').trigger("focus") }
+    page.execute_script %Q{ $('#task_due_at').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
     click_button 'Save'

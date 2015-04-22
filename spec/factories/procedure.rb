@@ -3,7 +3,7 @@ FactoryGirl.define do
   factory :procedure do
     appointment nil
     visit nil
-    follow_up_date Time.now
+    follow_up_date "09-09-2009"
 
     trait :complete do
       status 'complete'
