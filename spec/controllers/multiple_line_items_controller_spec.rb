@@ -17,7 +17,7 @@ RSpec.describe MultipleLineItemsController do
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:selected_service)).to eq(@service.id)
-      expect(assigns(:services)).to eq(Service.all)
+      expect(assigns(:services)).to eq(Service.per_participant_visits)
     end
   end
 
@@ -30,7 +30,7 @@ RSpec.describe MultipleLineItemsController do
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:selected_service)).to eq(@service.id)
-      expect(assigns(:services)).to eq(Service.all)
+      expect(assigns(:services)).to eq(Service.per_participant_visits)
     end
   end
 

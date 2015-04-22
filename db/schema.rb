@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150420152607) do
+ActiveRecord::Schema.define(version: 20150422135623) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -239,6 +239,7 @@ ActiveRecord::Schema.define(version: 20150420152607) do
     t.datetime "deleted_at"
     t.integer  "sparc_core_id",   limit: 4
     t.string   "sparc_core_name", limit: 255
+    t.boolean  "one_time_fee",    limit: 1
   end
 
   add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree

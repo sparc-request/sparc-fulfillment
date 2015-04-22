@@ -8,6 +8,7 @@ FactoryGirl.define do
     sequence(:cost)
     description 'Description'
     abbreviation 'Abbreviation'
+    one_time_fee false
 
     trait :with_components do
       after(:create) do |service, evaluator|
@@ -15,6 +16,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :of_otf do
+      one_time_fee true
+    end
+
     factory :service_with_components, traits: [:with_components]
+    factory :service_of_otf, traits: [:of_otf]
+    factory :service_of_otf_with_components, traits: [:of_otf, :with_components]
   end
 end
