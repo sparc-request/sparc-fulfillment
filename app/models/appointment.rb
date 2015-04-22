@@ -1,6 +1,7 @@
 class Appointment < ActiveRecord::Base
 
-  STATUSES = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window']
+  STATUSES = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window'].freeze
+  NOTABLE_REASONS = ['Assessment not performed', 'SAE/Follow-up for SAE', 'Patient Visit Conflict', 'Study Visit Assessments Inconclusive'].freeze
 
   default_scope {order(:position)}
   
@@ -18,10 +19,13 @@ class Appointment < ActiveRecord::Base
   belongs_to :arm
 
   has_many :procedures
+  has_many :notes, as: :notable
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
   
   validates :participant_id, :name, :arm_id, presence: true
+  
+  accepts_nested_attributes_for :notes
 
   def has_completed_procedures?
     has_completed = false

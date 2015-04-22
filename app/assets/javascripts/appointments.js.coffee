@@ -113,10 +113,12 @@ $ ->
       url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', 'button.note.new',  ->
-    procedure_id  = $(this).parents('.procedure').data('id')
+    id = $(this).data('notable-id')
+    type = $(this).data('notable-type')
+
     data          = note:
-                      notable_id: procedure_id,
-                      notable_type: 'Procedure'
+                      notable_id: id,
+                      notable_type: type
 
     $.ajax
       type: 'GET'
@@ -124,8 +126,12 @@ $ ->
       data: data
 
   $(document).on 'click', 'button.notes.list',  ->
-    procedure_id  = $(this).parents('.procedure').data('id')
-    data          = notable: id: procedure_id, type: 'Procedure'
+    id = $(this).data('notable-id')
+    type = $(this).data('notable-type')
+
+    data          = note:
+                      notable_id: id,
+                      notable_type: type
 
     $.ajax
       type: 'GET'

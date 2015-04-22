@@ -161,7 +161,6 @@ en:
     service: "Service Name"
 
   notes:
-    index_header: "Procedure Notes"
     new_header: "Add Note"
     user: "User"
     date: "Date"
@@ -170,6 +169,12 @@ en:
     followup: "Follow up"
     comment: "Comment"
     incomplete_header: "Reason for Incompletion"
+    procedure:
+      index_header: "Procedure Notes"
+      none: "This procedure has no notes."
+    appointment:
+      index_header: "Appointment Notes"
+      none: "This appointment has no notes."
 
   procedure:
     followup: "Follow Up"

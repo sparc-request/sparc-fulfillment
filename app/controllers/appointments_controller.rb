@@ -6,6 +6,7 @@ class AppointmentsController < ApplicationController
   
   def new 
     @appointment = CustomAppointment.new(appointment_params)
+    @note = @appointment.notes.new(kind: 'reason')
   end
 
   def create 
@@ -74,6 +75,8 @@ class AppointmentsController < ApplicationController
   end
 
   def appointment_params
-    params.require(:appointment).permit(:arm_id, :participant_id, :name, :position)
+    params.require(:appointment)
+          .permit(:arm_id, :participant_id, :name, :position, 
+                 notes_attributes: [:comment, :kind, :user_id, :reason])
   end
 end

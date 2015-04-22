@@ -17,7 +17,7 @@
             .form-group
               = form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
               .col-sm-8
-                = form.select :reason, Note::REASON_TYPES, {}, class: "form-control"
+                = form.select :reason, note.notable.class::NOTABLE_REASONS, {}, class: "form-control"
           - elsif note.followup?
             = form.fields_for note.notable do |notable_form|
               .form-group
