@@ -3,7 +3,7 @@ FactoryGirl.define do
   factory :task do
     user
     assignee factory: :user
-    due_at Time.current + 1.day
+    due_at "09-09-2025"
     body { Faker::Lorem.sentence }
 
     trait :complete do

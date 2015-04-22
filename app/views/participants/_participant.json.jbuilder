@@ -3,6 +3,7 @@ json.id participant.id
 json.protocol_id participant.protocol_id
 json.arm_id participant.arm_id
 json.arm_name participant.arm.name if participant.arm
+json.first_middle participant.first_middle
 json.first_name participant.first_name.humanize
 json.middle_initial participant.middle_initial
 json.last_name participant.last_name.humanize
