@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   resources :protocols
   resources :visit_groups
+  resources :line_items
+
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
 

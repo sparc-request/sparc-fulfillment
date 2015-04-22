@@ -25,3 +25,4 @@
 //= require appointments
 //= require tasks
 //= require faye
+//= require study_level_activities

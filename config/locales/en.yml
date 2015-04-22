@@ -203,6 +203,7 @@ en:
       incompleted: "The selected task(s) have been set to incomplete"
 
   study_level_activities:
+    header: "Study Level Activities"
     service: "Service"
     qty_req: "Quantity Requested"
     qty_type: "Quantity Type"
