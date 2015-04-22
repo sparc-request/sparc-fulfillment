@@ -9,6 +9,8 @@ class LineItem < ActiveRecord::Base
 
   has_many :visit_groups, through: :arm
   has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, dependent: :destroy
+  has_many :notes, as: :notable
+  has_many :documents, as: :documentable
   has_many :fulfillments
   has_many :components, as: :composable
 
