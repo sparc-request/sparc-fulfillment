@@ -32,6 +32,7 @@ gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
 gem 'will_paginate'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
+gem 'paperclip'
 
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'
