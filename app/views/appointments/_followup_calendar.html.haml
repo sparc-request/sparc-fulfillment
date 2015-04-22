@@ -1,6 +1,6 @@
 - if procedure.follow_up_date.present?
   .input-group.date.followup{id: dom_id(procedure)}
-    %input{type: "text", class: "form-control"}
+    %input{type: "text", class: "form-control", value: format_date(procedure.follow_up_date), id: "follow_up_datepicker"}
     %span.input-group-addon
       %span.glyphicon.glyphicon-calendar
 - else

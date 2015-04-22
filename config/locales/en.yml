@@ -20,6 +20,10 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  activerecord:
+    attributes:
+      task:
+        due_at: "Follow up date"
   actions:
     close: "Close"
     details: "Details"
