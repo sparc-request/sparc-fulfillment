@@ -8,6 +8,7 @@ RSpec.describe LineItem, type: :model do
   it { should have_many(:visits).dependent(:destroy) }
   it { should have_many(:visit_groups) }
   it { should have_many(:fulfillments) }
+  it { should have_many(:components) }
 
   context 'instance methods' do
 
