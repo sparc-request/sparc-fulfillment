@@ -18,5 +18,6 @@ class LineItem < ActiveRecord::Base
             :cost,
             :sparc_core_id,
             :sparc_core_name,
+            :one_time_fee,
             to: :service
 end
