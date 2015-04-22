@@ -90,6 +90,8 @@ ActiveRecord::Schema.define(version: 20150420152607) do
     t.datetime "deleted_at"
   end
 
+  add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
+
   create_table "line_items", force: :cascade do |t|
     t.integer  "sparc_id",           limit: 4
     t.integer  "arm_id",             limit: 4
