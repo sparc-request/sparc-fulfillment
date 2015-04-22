@@ -35,7 +35,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def one_time_fee_line_items
-    line_items.select{ |li| li if li.one_time_fee}
+    line_items.includes(:service).where(:services => {:one_time_fee => true})
   end
 
   private
