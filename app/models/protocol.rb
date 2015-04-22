@@ -34,6 +34,10 @@ class Protocol < ActiveRecord::Base
     user_roles.where(role: "research-assistant-coordinator").map(&:user)
   end
 
+  def one_time_fee_line_items
+    line_items.select{ |li| li if li.one_time_fee}
+  end
+
   private
 
   def update_faye

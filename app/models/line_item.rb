@@ -20,4 +20,29 @@ class LineItem < ActiveRecord::Base
             :sparc_core_name,
             :one_time_fee,
             to: :service
+
+  def quantity_remaining
+    if one_time_fee and !fulfillments.empty?
+      remaining = quantity_requested
+      fulfillments.each do |f|
+        remaining -= f.quantity
+      end
+
+      remaining
+    else
+      quantity_requested
+    end
+  end
+
+  def date_started
+    if one_time_fee and !fulfillments.empty?
+      fulfillments.dato.first.created_at
+    end
+  end
+
+  def last_fulfillment
+    if one_time_fee and !fulfillments.empty?
+      fulfillments.dato.last.updated_at
+    end
+  end
 end

@@ -87,7 +87,7 @@ en:
     study_schedule: "Study Schedule"
     participant_list: "Participant List"
     participant_tracker: "Participant Tracker"
-    study_level_charges: "Study Level Charges"
+    study_level_activities: "Study Level Activities"
     audit_reporting: "Audit Reporting"
 
   study_schedule_tab:
@@ -201,3 +201,15 @@ en:
       created: "Task Created"
       updated: "Task Has Been Updated"
       incompleted: "The selected task(s) have been set to incomplete"
+
+  study_level_activities:
+    service: "Service"
+    qty_req: "Quantity Requested"
+    qty_type: "Quantity Type"
+    qty_rem: "Quantity Remaining"
+    started: "Date Started"
+    last_fulfillment: "Last Fulfillment Date"
+    components: "Service Components"
+    notes: "Notes"
+    documents: "Documents"
+    fulfillments: "Fulfillments"
