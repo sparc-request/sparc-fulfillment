@@ -51,6 +51,7 @@ group :test do
   gem 'capybara-webkit', '~> 1.5.0'
   gem 'database_cleaner'
   gem 'launchy'
+  gem 'nyan-cat-formatter'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
