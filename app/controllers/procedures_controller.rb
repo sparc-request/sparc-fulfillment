@@ -20,9 +20,9 @@ class ProceduresController < ApplicationController
   end
 
   def edit
+    @task = Task.new()
     if params[:partial].present?
       @note = @procedure.notes.new(kind: 'reason')
-
       render params[:partial]
     else
       render
@@ -30,9 +30,6 @@ class ProceduresController < ApplicationController
   end
 
   def update
-    if create_followup_task?
-      merge_task_params!
-    end
     @procedure.update_attributes(@procedure_params)
   end
 
@@ -41,21 +38,6 @@ class ProceduresController < ApplicationController
   end
 
   private
-
-  def create_followup_task?
-    @procedure_params[:tasks_attributes].present? &&
-      @procedure_params[:follow_up_date].present?
-  end
-
-  def merge_task_params!
-    attributes_to_merge     = {
-      due_at: procedure_params[:follow_up_date],
-      body: procedure_params[:notes_attributes]["0"][:comment]
-    }
-    merged_task_attributes  = @procedure_params[:tasks_attributes]["0"].merge!(attributes_to_merge)
-
-    @procedure_params.merge!(tasks_attributes: { "0" => merged_task_attributes })
-  end
 
   def save_original_procedure_status
     @original_procedure_status = @procedure.status

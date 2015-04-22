@@ -39,7 +39,7 @@ feature 'Followup note', js: true do
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
     service     = Service.first
-    @assignee   = create(:user)
+    @assignee   = User.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
@@ -53,9 +53,10 @@ feature 'Followup note', js: true do
   end
 
   def and_i_fill_out_and_submit_the_followup_form
-    fill_in 'procedure_follow_up_date', with: '03-11-2015'
-    select @assignee.full_name, from: 'procedure_tasks_attributes_0_assignee_id'
+    fill_in 'task_due_at', with: '03-11-2015'
+    select @assignee.full_name, from: 'task_assignee_id'
     fill_in 'Comment', with: 'Test comment'
+    save_and_open_screenshot
     click_button 'Save'
   end
 
@@ -70,13 +71,14 @@ feature 'Followup note', js: true do
   end
 
   def i_should_see_the_note_i_created
+    save_and_open_screenshot
     expect(page).to have_css('.modal-body .comment', text: 'Test comment')
   end
 
   def then_i_should_see_a_text_field_with_the_followup_date
     procedure = Procedure.first
     value     = evaluate_script("$('.date#procedure_#{procedure.id}').data('date');")
-
+    save_and_open_screenshot
     expect(value).to eq('03-11-2015')
   end
 

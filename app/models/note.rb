@@ -18,7 +18,7 @@ class Note < ActiveRecord::Base
     when 'followup'
       [
         'Followup',
-        notable.follow_up_date.strftime('%F'),
+        notable.task.due_at.strftime('%F'),
         read_attribute(:comment)
       ].join(': ')
     else

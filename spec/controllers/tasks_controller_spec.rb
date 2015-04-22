@@ -82,7 +82,7 @@ RSpec.describe TasksController, type: :controller do
 
   describe "POST #create" do
 
-    it "should create a new task" do
+    it "should create a new task without a note" do
       assignee = create(:user)
       attributes = attributes_for(:task)
       attributes[:due_at] = "09-09-2009"
@@ -93,6 +93,20 @@ RSpec.describe TasksController, type: :controller do
           format: :js
         }
       }.to change(Task, :count).by(1)
+    end
+
+    it "should create a task with a note" do
+      assignee = create(:user)
+      attributes = attributes_for(:task)
+      attributes[:due_at] = "09-09-2009"
+      attributes[:notes] = {comment: "commente"}
+      expect{
+        post :create, {
+          id: @task.id,
+          task: attributes.merge!(assignee_id: assignee.id),
+          format: :js
+        }
+      }.to change(Note, :count).by(1)
     end
   end
 end
