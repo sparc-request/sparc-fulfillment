@@ -65,7 +65,7 @@ feature 'Complete Procedure', js: true do
   end
 
   def and_i_view_the_notes_list
-    find('button.notes.list').click
+    find('.procedure td.notes button.notes.list').click
   end
 
   def then_i_should_see_complete_notes count=1

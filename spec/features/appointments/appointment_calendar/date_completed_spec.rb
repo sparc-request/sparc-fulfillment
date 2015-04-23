@@ -47,7 +47,7 @@ feature 'Date completed', js: true do
   end
 
   def when_i_incomplete_the_procedure
-    reason = Note::REASON_TYPES.first
+    reason = Procedure::NOTABLE_REASONS.first
 
     find('label.status.incomplete').click
     select reason, from: 'procedure_notes_attributes_0_reason'

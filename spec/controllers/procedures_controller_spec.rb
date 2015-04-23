@@ -5,7 +5,7 @@ RSpec.describe ProceduresController, type: :controller do
   login_user
 
   before :each do
-    @appointment  = create(:appointment)
+    @appointment  = create(:appointment, :participant_id => 1, :name => "Visit 1", :arm_id => 1)
     @service      = create(:service)
   end
 

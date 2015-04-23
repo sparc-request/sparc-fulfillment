@@ -9,9 +9,9 @@ RSpec.describe NotesController, type: :controller do
     it 'should assign @notes' do
       procedure = create(:procedure_with_notes)
       params    = {
-        notable: {
-          type: 'Procedure',
-          id: procedure.id
+        note: {
+          notable_type: 'Procedure',
+          notable_id: procedure.id
         }
       }
 

@@ -83,7 +83,7 @@ RSpec.describe VisitGroup, type: :model do
           @vg_b        = create(:visit_group, name: 'B', position: 2, arm_id: @arm.id)
           @vg_c        = create(:visit_group, name: 'C', position: 3, arm_id: @arm.id)
           @participant = create(:participant, arm: @arm, protocol: @protocol)
-          @appointment = create(:appointment, visit_group: @vg_a, participant: @participant)
+          @appointment = create(:appointment, visit_group: @vg_a, participant: @participant, name: @vg_a.name, arm_id: @vg_a.arm_id)
           @procedure   = create(:procedure, appointment: @appointment)
         end
 

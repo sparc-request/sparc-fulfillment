@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Appointment, type: :model do
 
   it { is_expected.to have_one(:protocol) }
-  it { is_expected.to have_one(:arm) }
+  it { is_expected.to belong_to(:arm) }
 
   it { is_expected.to belong_to(:participant) }
   it { is_expected.to belong_to(:visit_group) }
@@ -15,7 +15,10 @@ RSpec.describe Appointment, type: :model do
 
     describe 'has_completed_procedures?' do
       before :each do
-        @appt = create(:appointment)
+        protocol = create(:protocol)
+        arm = create(:arm, protocol: protocol)
+        participant = create(:participant, protocol: protocol, arm: arm)
+        @appt = create(:appointment, arm: arm, name: "Visit 1", participant: participant)
         @proc1 = create(:procedure, appointment: @appt)
         @proc2 = create(:procedure, appointment: @appt)
       end
@@ -43,7 +46,7 @@ RSpec.describe Appointment, type: :model do
         visit_group = create(:visit_group, arm: arm)
         @visit_li1 = create(:visit, visit_group: visit_group, line_item: line_item1)
         @visit_li2 = create(:visit, visit_group: visit_group, line_item: line_item2)
-        @appt = create(:appointment, visit_group: visit_group, participant: participant)
+        @appt = create(:appointment, visit_group: visit_group, participant: participant, arm: arm, name: visit_group.name)
       end
 
       it 'should not create a procedure if there is no visit for a line_item' do
