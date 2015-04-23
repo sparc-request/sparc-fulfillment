@@ -1,0 +1,15 @@
+require 'rails_helper'
+
+RSpec.describe Document, type: :model do
+  it { is_expected.to belong_to(:documentable) }
+
+  describe 'attachment' do
+    it 'should attach a document and then return it' do
+      @document = Document.new
+      @document.doc = File.new("spec/support/paperclip_test_document.txt")
+      @document.save
+
+      expect(@document.doc_file_name).to eq("paperclip_test_document.txt")
+    end
+  end
+end
