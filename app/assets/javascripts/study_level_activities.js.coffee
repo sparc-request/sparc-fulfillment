@@ -3,25 +3,35 @@ $ ->
   $('.date_started_field').datetimepicker(format: 'MM-DD-YYYY', useCurrent: false)
   $('.fulfillment_date_field').datetimepicker(format: 'MM-DD-YYYY', useCurrent: false)
 
-  $(document).on 'click', '.otf_notes_new', ->
+  $(document).on 'click', '.otf_note_new', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    alert 'add note here'
+    alert 'add line_item note modal here'
 
   $(document).on 'click', '.otf_notes', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    alert 'view notes here'
+    alert 'view line_item notes modal here'
 
-  $(document).on 'click', '.otf_documents_new', ->
+  $(document).on 'click', '.otf_document_new', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    alert 'add document here'
+    alert 'add line_item document modal here'
 
   $(document).on 'click', '.otf_documents', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    alert 'view documents here'
+    alert 'view line_item documents modal here'
 
-  $(document).on 'click', '.otf_fulfillments_new', ->
+  $(document).on 'click', '.otf_fulfillment_new', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    alert 'add fulfillment here'
+    alert 'add line_item fulfillment modal here'
+
+  $(document).on 'change', '.quantity_requested_field', ->
+    line_item_id = $(this).parents('.row.line_item').data('id')
+    new_qty = $(this).val()
+    alert "change qty requested to: #{new_qty} and update qty_remaining"
+
+  $('.date_started_field').on 'dp.change', (e) ->
+    line_item_id = $(this).parents('.row.line_item').data('id')
+    new_date = e.date
+    alert "change start date now to: #{new_date}"
 
   $(document).on 'click', '.otf_fulfillments', ->
     table = $(this).parents('.fulfillments').next()
@@ -39,12 +49,43 @@ $ ->
       table.addClass('slide-active')
       table.slideToggle()
 
-  $(document).on 'change', '.quantity_requested_field', ->
-    line_item_id = $(this).parents('.row.line_item').data('id')
-    new_qty = $(this).val()
-    alert "change qty requested to: #{new_qty}"
-
-  $('.date_started_field').on 'dp.change', (e) ->
-    line_item_id = $(this).parents('.row.line_item').data('id')
+  $('.fulfillment_date_field').on 'dp.change', (e) ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
     new_date = e.date
-    alert "change start date now to: #{new_date}"
+    alert "change fulfillment date now to: #{new_date}"
+
+  $(document).on 'change', '.quantity_fulfilled_field', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    new_qty = $(this).val()
+    alert "change qty fulfilled to: #{new_qty} and update qty_remaining"
+
+  $(document).on 'change', '.fulfillment_performed_by', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    new_qty = $(this).val()
+    alert "change performed_by to: #{new_qty}"
+
+  $(document).on 'click', '.fulfillment_note_new', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    alert 'add fulfillment note modal here'
+
+  $(document).on 'click', '.fulfillment_notes', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    alert 'view fulfillment notes modal here'
+
+  $(document).on 'click', '.fulfillment_document_new', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    alert 'add fulfillment document modal here'
+
+  $(document).on 'click', '.fulfillment_documents', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    alert 'view fulfillment documents modal here'
+
+  $(document).on 'change', '.fulfillment_component', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    new_qty = $(this).val()
+    alert "change component to: #{new_qty} by creating new fulfillment component and deleting old one"
+
+  $(document).on 'change', '.component_check', ->
+    component_id = $(this).val()
+    alert "set component #{component_id} to selected"
+

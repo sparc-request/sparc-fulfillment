@@ -5,7 +5,7 @@ class Fulfillment < ActiveRecord::Base
 
   belongs_to :line_item
 
-  has_many :components, as: :composable
+  has_one :component, as: :composable
   has_many :notes, as: :notable
   has_many :documents
 

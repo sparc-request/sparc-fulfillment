@@ -10,22 +10,24 @@
   .col-xs-2.text-center.started
     %input.date_started_field.datetimepicker.form-control{type: "text", value: format_date(line_item.date_started)}
   .col-xs-1.text-center.last_fulfillment.text-center
-    = line_item.last_fulfillment
+    = format_date(line_item.last_fulfillment)
   .col-xs-1.text-center.components
-    -line_item.service.components.each do |c|
-      %li= c.component
+    -line_item.components.each do |c|
+      .row
+        = check_box_tag "component_check_#{c.id}", c.id, c.selected, class: 'component_check'
+        = c.component
   .col-xs-1.text-center.notes
-    %button.btn.btn-primary.otf_notes_new.list{type: "button", aria: {label: "New Note"}}
+    %button.btn.btn-primary.otf_note_new{type: "button", aria: {label: "New Note"}}
       %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
     %button.btn.btn-primary.otf_notes.list{type: "button", aria: {label: "Notes List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   .col-xs-1.text-center.documents
-    %button.btn.btn-primary.otf_documents_new.list{type: "button", aria: {label: "New Document"}}
+    %button.btn.btn-primary.otf_document_new{type: "button", aria: {label: "New Document"}}
       %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
     %button.btn.btn-primary.otf_documents.list{type: "button", aria: {label: "Documents List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   .col-xs-1.text-center.fulfillments
-    %button.btn.btn-primary.otf_fulfillments_new.list{type: "button", aria: {label: "New Fulfillment"}}
+    %button.btn.btn-primary.otf_fulfillment_new{type: "button", aria: {label: "New Fulfillment"}}
       %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
     %button.btn.btn-primary.otf_fulfillments.list{type: "button", aria: {label: "Fulfillments List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
