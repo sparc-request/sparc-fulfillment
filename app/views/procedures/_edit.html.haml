@@ -9,7 +9,7 @@
         %h4.modal-title.text-center
           = t(:procedure)[:edit_header]
       .modal-body
-        #procedure_modal_errors
+        #modal_errors
         .form-group
           = form.hidden_field :assignable_type, value: 'Procedure'
           = form.hidden_field :assignable_id, value: procedure.id

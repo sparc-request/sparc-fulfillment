@@ -29,12 +29,12 @@ class TasksController < ApplicationController
     if task_params[:notes]
       task_parameters[:body] = task_params[:notes][:comment]
     end
-    puts task_parameters
     @task = Task.new(task_parameters.merge!({ user: current_user}))
     if @task.valid?
       @task.save
+      @procedure = Procedure.find(task_params[:assignable_id]) unless task_params[:assignable_type] != "Procedure"
       if task_params[:notes]
-        create_note
+        create_note(task_parameters)
       end
       flash[:success] = t(:flash_messages)[:task][:created]
     else
@@ -53,9 +53,10 @@ class TasksController < ApplicationController
 
   private
 
-  def create_note
-    unless task_params[:notes][:comment].empty?
+  def create_note(task_parameters)
+    unless task_parameters[:body].empty?
       notes_params = task_params[:notes]
+      notes_params[:user] = current_user
       Note.create(notes_params)
     end
   end

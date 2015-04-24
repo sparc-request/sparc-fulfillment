@@ -56,7 +56,6 @@ feature 'Followup note', js: true do
     fill_in 'task_due_at', with: '03-11-2015'
     select @assignee.full_name, from: 'task_assignee_id'
     fill_in 'Comment', with: 'Test comment'
-    save_and_open_screenshot
     click_button 'Save'
   end
 
@@ -71,15 +70,12 @@ feature 'Followup note', js: true do
   end
 
   def i_should_see_the_note_i_created
-    save_and_open_screenshot
     expect(page).to have_css('.modal-body .comment', text: 'Test comment')
   end
 
   def then_i_should_see_a_text_field_with_the_followup_date
     procedure = Procedure.first
-    value     = evaluate_script("$('.date#procedure_#{procedure.id}').data('date');")
-    save_and_open_screenshot
-    expect(value).to eq('03-11-2015')
+    expect(page).to have_css("input#follow_up_datepicker_#{procedure.id}[value='03/11/2015']")
   end
 
   def i_should_see_the_followup_button

@@ -97,9 +97,12 @@ RSpec.describe TasksController, type: :controller do
 
     it "should create a task with a note" do
       assignee = create(:user)
+      procedure = create(:procedure)
       attributes = attributes_for(:task)
       attributes[:due_at] = "09-09-2009"
-      attributes[:notes] = {comment: "commente"}
+      attributes[:notes] = {comment: "comment"}
+      attributes[:assignable_type] = "Procedure"
+      attributes[:assignable_id] = procedure.id
       expect{
         post :create, {
           id: @task.id,
