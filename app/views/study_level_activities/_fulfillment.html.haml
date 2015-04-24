@@ -1,0 +1,21 @@
+.row.fulfillment{data: {id: fulfillment.id}}
+  .col-xs-2.text-center.fulfillment_date
+    %input.fulfillment_date_field.datetimepicker.form-control{type: "text", value: format_date(fulfillment.fulfilled_at)}
+  .col-xs-1.text-center.quantity
+    %input.quantity_fulfilled_field.form-control{type: "text", value: fulfillment.quantity}
+  .col-xs-1.text-center.qty_type
+    = fulfillment.line_item.quantity_type
+  .col-xs-2.text-center.performed_by
+    = select_tag "performed_by", options_from_collection_for_select(User.all, 'id', 'full_name'), class: 'form-control', value: fulfillment.performed_by
+  .col-xs-2.text-center.notes
+    %button.btn.btn-primary.fulfillment_note_new{type: "button", aria: {label: "New Note"}}
+      %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
+    %button.btn.btn-primary.fulfillment_notes.list{type: "button", aria: {label: "Notes List"}}
+      %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+  .col-xs-2.text-center.documents
+    %button.btn.btn-primary.fulfillment_document_new{type: "button", aria: {label: "New Document"}}
+      %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
+    %button.btn.btn-primary.fulfillment_documents.list{type: "button", aria: {label: "Documents List"}}
+      %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+  .col-xs-2.text-center.component
+    = select_tag "component", options_from_collection_for_select(fulfillment.line_item.components, 'id', 'component'), class: 'form-control'

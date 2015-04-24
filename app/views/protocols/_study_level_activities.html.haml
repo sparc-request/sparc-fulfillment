@@ -1,31 +1,27 @@
 %h3= t(:study_level_activities)[:header]
 
 .col-xs-12
-  .row
-    .col-xs-12
-      %table.table.table-bordered.table-hover.study_level_activities
-        %thead
-          %tr
-            %th.service
-              = t(:study_level_activities)[:service]
-            %th.qty_req
-              = t(:study_level_activities)[:qty_req]
-            %th.qty_type
-              = t(:study_level_activities)[:qty_type]
-            %th.qty_rem
-              = t(:study_level_activities)[:qty_rem]
-            %th.started
-              = t(:study_level_activities)[:started]
-            %th.last_fulfillment
-              = t(:study_level_activities)[:last_fulfillment]
-            %th.components
-              = t(:study_level_activities)[:components]
-            %th.notes
-              = t(:study_level_activities)[:notes]
-            %th.documents
-              = t(:study_level_activities)[:documents]
-            %th.fulfillments
-              = t(:study_level_activities)[:fulfillments]
-        %tbody
-          -protocol.one_time_fee_line_items.each do |li|
-            = render partial: "/study_level_activities/one_time_fee", locals: {line_item: li}
+  .calendar.study_level_activities
+    .row.sla_header
+      .col-xs-2.text-center.service
+        = t(:study_level_activities)[:service]
+      .col-xs-1.text-center.qty_req
+        = t(:study_level_activities)[:qty_req]
+      .col-xs-1.text-center.qty_type
+        = t(:study_level_activities)[:qty_type]
+      .col-xs-1.text-center.qty_rem
+        = t(:study_level_activities)[:qty_rem]
+      .col-xs-2.text-center.started
+        = t(:study_level_activities)[:started]
+      .col-xs-1.text-center.last_fulfillment
+        = t(:study_level_activities)[:last_fulfillment]
+      .col-xs-1.text-center.components
+        = t(:study_level_activities)[:components]
+      .col-xs-1.text-center.notes
+        = t(:study_level_activities)[:notes]
+      .col-xs-1.text-center.documents
+        = t(:study_level_activities)[:documents]
+      .col-xs-1.text-center.fulfillments
+        = t(:study_level_activities)[:fulfillments]
+    -protocol.one_time_fee_line_items.each do |li|
+      = render partial: "/study_level_activities/one_time_fee", locals: {line_item: li}

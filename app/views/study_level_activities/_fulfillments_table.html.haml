@@ -1,1 +1,18 @@
-%h3{id: "fulfillments_table_#{line_item.id}"}= line_item.id
+.calendar.fulfillments
+  .row.sla_header
+    .col-xs-2.text-center.fulfillment_date
+      = t(:study_level_activities)[:fulfillment_date]
+    .col-xs-1.text-center.quantity
+      = t(:study_level_activities)[:quantity]
+    .col-xs-1.text-center.qty_type
+      = t(:study_level_activities)[:qty_type]
+    .col-xs-2.text-center.performed_by
+      = t(:study_level_activities)[:performed_by]
+    .col-xs-2.text-center.notes
+      = t(:study_level_activities)[:notes]
+    .col-xs-2.text-center.documents
+      = t(:study_level_activities)[:documents]
+    .col-xs-2.text-center.component
+      = t(:study_level_activities)[:component]
+  -line_item.fulfillments.each do |f|
+    = render partial: "/study_level_activities/fulfillment", locals: {fulfillment: f}
