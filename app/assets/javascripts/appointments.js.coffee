@@ -98,7 +98,7 @@ $ ->
     participant_id = $(this).data('participant-id')
     arm_id = $(this).data('arm-id')
 
-    data = appointment: participant_id: participant_id, arm_id: arm_id
+    data = custom_appointment: participant_id: participant_id, arm_id: arm_id
 
     $.ajax
       type: 'GET'

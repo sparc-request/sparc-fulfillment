@@ -32,6 +32,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :custom_appointments, :controller => :appointments
+
   resources :multiple_line_items, only: [] do
     collection do
       get 'new_line_items'

@@ -5,13 +5,13 @@ class AppointmentsController < ApplicationController
   #### BEGIN CUSTOM APPOINTMENTS ####
   
   def new 
-    @appointment = CustomAppointment.new(appointment_params)
+    @appointment = CustomAppointment.new(custom_appointment_params)
     @note = @appointment.notes.new(kind: 'reason')
   end
 
   def create 
     ##### TODO, figure out a way to not have to use base model
-    @appointment = Appointment.new(appointment_params)
+    @appointment = Appointment.new(custom_appointment_params)
 
     if @appointment.valid?
       @appointment.save
@@ -74,8 +74,8 @@ class AppointmentsController < ApplicationController
     in_time.blank? ? Time.now : in_time
   end
 
-  def appointment_params
-    params.require(:appointment)
+  def custom_appointment_params
+    params.require(:custom_appointment)
           .permit(:arm_id, :participant_id, :name, :position, 
                  notes_attributes: [:comment, :kind, :user_id, :reason])
   end
