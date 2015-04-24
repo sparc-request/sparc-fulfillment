@@ -8,7 +8,32 @@ RSpec.describe AppointmentsController do
     @service = create(:service)
     @arm = @protocol.arms.first
     @participant = create(:participant, arm: @arm, protocol: @protocol)
+    @custom_appointment = create(:custom_appointment, participant: @participant, arm: @arm, name: "Custom Visit")
+  end
 
+  describe "GET #new" do
+    it "should instantiate a new custom appointment" do
+      xhr :get, :new, {
+        custom_appointment: { participant_id: @participant.id, arm_id: @arm.id },
+        format: :js
+      }
+      expect(assigns(:appointment)).to be_a_new(CustomAppointment)
+      expect(assigns(:note)).to be_a_new(Note)
+    end
+  end
+
+  describe "POST #create" do
+    it "should create a new custom appointment" do
+      attributes = @custom_appointment.attributes
+      bad_attributes = ["id", "deleted_at", "created_at", "updated_at"]
+      attributes.delete_if {|key| bad_attributes.include?(key)}
+      expect{
+        post :create, {
+          custom_appointment: attributes,
+          format: :js
+        }
+      }.to change(CustomAppointment, :count).by(1)
+    end
   end
 
   describe "GET #show" do

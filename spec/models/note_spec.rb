@@ -21,9 +21,9 @@ RSpec.describe Note, type: :model do
 
       it 'should return a formatted comment' do
         procedure = create(:procedure)
-        note      = create(:note, notable: procedure, comment: 'Test comment')
+        note      = create(:note_reason, notable: procedure, comment: 'Test comment', reason: Procedure::NOTABLE_REASONS.first)
 
-        expect(note.comment).to eq('Test comment')
+        expect(note.comment).to eq("#{Procedure::NOTABLE_REASONS.first}: Test comment")
       end
     end
 

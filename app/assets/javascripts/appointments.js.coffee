@@ -103,7 +103,7 @@ $ ->
     $.ajax
       type: 'GET'
       data: data
-      url: "/appointments/new"
+      url: "/custom_appointments/new"
 
   $(document).on 'click', 'button.followup.new', ->
     procedure_id  = $(this).parents('.procedure').data('id')

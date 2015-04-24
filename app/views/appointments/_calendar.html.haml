@@ -4,7 +4,7 @@
       .row
         .col-xs-12
           .page-header
-            %h3
+            %h3.appointment_header
               = "Visit: #{appointment.name}"
               \-
               %button.btn.btn-primary.note.new{type: "button", aria: {label: "New Note"}, data: {notable_id: appointment.id, notable_type: "Appointment"}}

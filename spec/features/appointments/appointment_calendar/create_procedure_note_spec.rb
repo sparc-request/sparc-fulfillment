@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Create Note', js: true do
+feature 'Create Procedure Note', js: true do
 
   scenario 'User creates a Note and views the Notes list' do
     as_a_user_who_has_added_a_procedure_to_the_appointment_calendar

@@ -12,6 +12,21 @@ RSpec.describe Appointment, type: :model do
   it { is_expected.to have_many(:appointment_statuses) }
 
   context 'instance methods' do
+    describe 'validations' do
+      it 'should validate properly' do
+        protocol = create(:protocol)
+        arm = create(:arm, protocol: protocol)
+        participant = create(:participant, protocol: protocol, arm: arm)
+
+        @appt = build(:appointment)
+        expect(@appt.valid?).to be false
+
+        @appt.participant_id = participant.id
+        @appt.arm_id = arm.id
+        @appt.name = "Visit 1"
+        expect(@appt.valid?).to be true
+      end
+    end
 
     describe 'has_completed_procedures?' do
       before :each do
@@ -69,6 +84,12 @@ RSpec.describe Appointment, type: :model do
         @appt.initialize_procedures
         services_of_procedures = @appt.procedures.map{ |proc| proc.service_name }
         expect(services_of_procedures).to eq(['A','B'])
+      end
+      
+      it 'should not create procedures for each line_item on a custom appointment' do
+        @appt.update_attribute(:type, 'CustomAppointment')
+        @appt.initialize_procedures
+        expect(@appt.procedures.count).to eq 0
       end
     end
   end
