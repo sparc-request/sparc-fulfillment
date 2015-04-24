@@ -50,6 +50,19 @@ ActiveRecord::Schema.define(version: 20150422150431) do
   add_index "arms", ["protocol_id"], name: "index_arms_on_protocol_id", using: :btree
   add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", unique: true, using: :btree
 
+  create_table "components", force: :cascade do |t|
+    t.string   "component",       limit: 255
+    t.integer  "position",        limit: 4
+    t.integer  "composable_id",   limit: 4
+    t.string   "composable_type", limit: 255
+    t.boolean  "selected",        limit: 1,   default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "components", ["composable_id", "composable_type"], name: "index_components_on_composable_id_and_composable_type", using: :btree
+
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   limit: 4,     default: 0, null: false
     t.integer  "attempts",   limit: 4,     default: 0, null: false
@@ -65,6 +78,33 @@ ActiveRecord::Schema.define(version: 20150422150431) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "documents", force: :cascade do |t|
+    t.integer  "documentable_id",   limit: 4
+    t.string   "documentable_type", limit: 255
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "doc_file_name",     limit: 255
+    t.string   "doc_content_type",  limit: 255
+    t.integer  "doc_file_size",     limit: 4
+    t.datetime "doc_updated_at"
+  end
+
+  add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
+
+  create_table "fulfillments", force: :cascade do |t|
+    t.integer  "line_item_id", limit: 4
+    t.datetime "fulfilled_at"
+    t.integer  "quantity",     limit: 4
+    t.integer  "performed_by", limit: 4
+    t.integer  "created_by",   limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
 
   create_table "line_items", force: :cascade do |t|
     t.integer  "sparc_id",           limit: 4
@@ -198,6 +238,7 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.datetime "deleted_at"
     t.integer  "sparc_core_id",   limit: 4
     t.string   "sparc_core_name", limit: 255
+    t.boolean  "one_time_fee",    limit: 1
   end
 
   add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
