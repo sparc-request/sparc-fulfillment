@@ -17,6 +17,7 @@ feature "rescheduling a Task", js: true do
   end
 
   def when_i_reschedule_the_task
+    wait_for_ajax
     @next_day = (Time.current + 1.day).strftime('%m/%d/%y')
     page.all('.task-reschedule').last.click
     fill_in "task_due_at", with: @next_month
