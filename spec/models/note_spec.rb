@@ -23,9 +23,8 @@ RSpec.describe Note, type: :model do
     context 'followup' do
 
       it 'should return a formatted comment' do
-        Timecop.travel('01/01/2015')
-
-        procedure = create(:procedure, follow_up_date: Time.current)
+        procedure = create(:procedure)
+        task      = create(:task, assignable_type: "Procedure", assignable_id: procedure.id, due_at: "01-01-2015")
         note      = create(:note_followup, notable: procedure, comment: 'Test comment')
 
         expect(note.comment).to eq('Followup: 2015-01-01: Test comment')

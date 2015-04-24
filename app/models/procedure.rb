@@ -9,6 +9,7 @@ class Procedure < ActiveRecord::Base
   has_one :arm,         through: :appointment
   has_one :participant, through: :appointment
   has_one :visit_group, through: :appointment
+  has_one :task,        as: :assignable
 
   belongs_to :appointment
   belongs_to :visit
@@ -18,18 +19,12 @@ class Procedure < ActiveRecord::Base
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
-  #TODO remove follow up date and only use the task association
-  #validates :follow_up_date, presence: true, on: :update
+
   accepts_nested_attributes_for :notes
-  accepts_nested_attributes_for :tasks
 
   scope :untouched,   -> { where('status IS NULL')              }
   scope :incomplete,  -> { where('completed_date IS NULL')      }
   scope :complete,    -> { where('completed_date IS NOT NULL')  }
-
-  def follow_up_date=(follow_up)
-    write_attribute(:follow_up_date, Time.strptime(follow_up, "%m-%d-%Y")) if follow_up.present?
-  end
 
   def self.billing_display
     [["R", "research_billing_qty"],
