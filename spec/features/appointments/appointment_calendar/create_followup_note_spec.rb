@@ -66,7 +66,7 @@ feature 'Followup note', js: true do
   end
 
   def when_i_view_the_notes_list
-    find('button.notes.list').click
+    find('.procedure td.notes button.notes.list').click
   end
 
   def i_should_see_the_note_i_created

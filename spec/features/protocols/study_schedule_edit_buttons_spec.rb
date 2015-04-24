@@ -143,6 +143,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         wait_for_ajax
         find('#remove_visit_button').click()
         page.driver.browser.accept_js_confirms
+        wait_for_ajax
         expect(page).to have_content "Visit Destroyed"
       end
     end

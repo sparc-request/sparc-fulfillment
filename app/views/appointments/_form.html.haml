@@ -1,0 +1,37 @@
+.modal-dialog
+  .modal-content
+    = form_for appointment, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
+      = form.hidden_field :participant_id
+      = form.hidden_field :arm_id
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only
+            = t(:actions)[:close]
+        %h4.modal-title.text-center
+          = t(:appointment)[:edit_header]
+      .modal-body
+        #appointment_modal_errors
+        .form-group
+          = form.label "name", t(:appointment)[:name], class: "col-sm-3 control-label"
+          .col-sm-8
+            = form.text_field :name, {class: 'form-control'}
+        .form-group
+          = form.label "position", t(:appointment)[:position], class: "col-sm-3 control-label"
+          .col-sm-8= form.select "position", options_from_collection_for_select(appointment.arm.appointments.where(participant_id: appointment.participant_id), 'position', 'insertion_name'), {include_blank: 'add as last'}, :class => "form-control"
+        = form.fields_for :notes, note do |note_form|
+          = note_form.hidden_field :kind
+          = note_form.hidden_field :user_id, value: current_user.id
+          .form-group
+            = note_form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
+            .col-sm-8
+              = note_form.select :reason, Appointment::NOTABLE_REASONS, {}, class: "form-control"
+          .form-group
+            = note_form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
+            .col-sm-8
+              = note_form.text_area :comment, {class: 'form-control', rows: "6"}
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+            = t(:actions)[:close]
+          %button.btn.btn-primary{type: 'submit'}=t(:actions)[:save]

@@ -7,6 +7,7 @@ RSpec.describe Arm, type: :model do
   it { should have_many(:line_items).dependent(:destroy) }
   it { should have_many(:visit_groups).dependent(:destroy) }
   it { should have_many(:participants) }
+  it { should have_many(:appointments) }
 
   it { should validate_presence_of(:name) }
   it { should validate_numericality_of(:subject_count).is_greater_than_or_equal_to(1) }

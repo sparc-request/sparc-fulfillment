@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'addressable'
 gem 'activerecord-import'
+gem 'acts_as_list'
+gem 'addressable'
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-rails.git'
@@ -51,7 +52,6 @@ group :test do
   gem 'capybara-webkit', '~> 1.5.0'
   gem 'database_cleaner'
   gem 'launchy'
-  gem 'nyan-cat-formatter'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'

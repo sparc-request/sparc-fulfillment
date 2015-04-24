@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Create Note', js: true do
+feature 'Create Procedure Note', js: true do
 
   scenario 'User creates a Note and views the Notes list' do
     as_a_user_who_has_added_a_procedure_to_the_appointment_calendar
@@ -23,13 +23,13 @@ feature 'Create Note', js: true do
   end
 
   def when_i_add_a_note_to_a_procedure
-    find('button.note.new').click
+    find('.procedure td.notes button.note.new').click
     fill_in 'note_comment', with: 'Test comment'
     click_button 'Save'
   end
 
   def and_i_view_the_notes_list
-    find('button.notes.list').click
+    find('.procedure td.notes button.notes.list').click
   end
 
   def then_i_shoud_see_the_note

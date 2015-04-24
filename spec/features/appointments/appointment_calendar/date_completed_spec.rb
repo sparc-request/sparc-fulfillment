@@ -47,7 +47,7 @@ feature 'Date completed', js: true do
   end
 
   def when_i_incomplete_the_procedure
-    reason = Note::REASON_TYPES.first
+    reason = Procedure::NOTABLE_REASONS.first
 
     find('label.status.incomplete').click
     select reason, from: 'procedure_notes_attributes_0_reason'
@@ -57,10 +57,10 @@ feature 'Date completed', js: true do
 
   def when_i_add_a_procedure
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.first
 
     bootstrap_select('#appointment_select', visit_group.name)
-    select service.name, from: 'service_list'
+    wait_for_ajax
+    all('#service_list option')[0].select_option
     fill_in 'service_quantity', with: '1'
     page.find('button.add_service').trigger('click')
   end

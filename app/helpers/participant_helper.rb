@@ -3,7 +3,7 @@ module ParticipantHelper
   def appointments_for_select arm, participant
     appointments = []
     participant.appointments.each do |appt|
-      if appt.visit_group.arm.name == arm.name
+      if appt.arm.name == arm.name
         appointments << appt
       end
     end
@@ -12,7 +12,7 @@ module ParticipantHelper
   end
 
   def arms_for_appointments appts
-    appts.map{|x| x.visit_group.arm}.uniq
+    appts.map{|x| x.arm}.uniq
   end
 
   def recruitment_formatter participant

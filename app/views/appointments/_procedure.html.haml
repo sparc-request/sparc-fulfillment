@@ -16,9 +16,9 @@
       %span.input-group-addon
         %span.glyphicon.glyphicon-calendar
   %td.notes
-    %button.btn.btn-primary.note.new{type: "button", aria: {label: "New Note"}}
+    %button.btn.btn-primary.note.new{type: "button", aria: {label: "New Note"}, data: {notable_id: procedure.id, notable_type: "Procedure"}}
       %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
-    %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}}
+    %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: procedure.id, notable_type: "Procedure"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   %td.remove
     %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}

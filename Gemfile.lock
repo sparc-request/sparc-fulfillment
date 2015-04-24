@@ -44,6 +44,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    acts_as_list (0.6.0)
+      activerecord (>= 3.0)
     addressable (2.3.8)
     arel (6.0.0)
     autoprefixer-rails (5.1.8)
@@ -203,8 +205,6 @@ GEM
     netrc (0.10.3)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
-    nyan-cat-formatter (0.11)
-      rspec (>= 2.99, >= 2.14.2, < 4)
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
@@ -264,10 +264,6 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    rspec (3.2.0)
-      rspec-core (~> 3.2.0)
-      rspec-expectations (~> 3.2.0)
-      rspec-mocks (~> 3.2.0)
     rspec-collection_matchers (1.1.2)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.2.2)
@@ -360,6 +356,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
+  acts_as_list
   addressable
   autoprefixer-rails
   bootstrap-sass
@@ -384,7 +381,6 @@ DEPENDENCIES
   launchy
   momentjs-rails (>= 2.8.1)
   mysql2
-  nyan-cat-formatter
   omniauth
   paper_trail (~> 4.0.0.beta)
   paperclip

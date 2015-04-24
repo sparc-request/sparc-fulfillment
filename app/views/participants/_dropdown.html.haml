@@ -1,10 +1,11 @@
-.row
-  .col-md-12
-    #appointment_select
-      %span= t(:appointment)[:appointment_dropdown]
-      %select.selectpicker#appointment_select
-        %option{value: -1} Please Select
-        - arms_for_appointments(participant.appointments).each do |arm|
-          %option{:disabled => true, :style => 'font-weight:bold;'}= arm.name.humanize + ':'
-          = options_from_collection_for_select(appointments_for_select(arm, participant), 'id', 'name')
-          %option{'data-divider' => true, :disabled => true}
+.col-md-12
+  .appointment-select-container
+    %span= t(:appointment)[:appointment_dropdown]
+    %select.selectpicker#appointment_select
+      %option{value: -1} Please Select
+      - arms_for_appointments(participant.appointments).each do |arm|
+        %option{:disabled => true, :style => 'font-weight:bold;'}= arm.name.humanize + ':'
+        = options_from_collection_for_select(appointments_for_select(arm, participant), 'id', 'name')
+        %option{'data-divider' => true, :disabled => true}
+    %button.btn.btn-primary.appointment.new{type: "button", aria: {label: "Custom Visit"}, data: {participant_id: participant.id, arm_id: participant.arm_id}}
+      %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}

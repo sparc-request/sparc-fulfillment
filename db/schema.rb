@@ -33,7 +33,12 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "contents",             limit: 255
+    t.string   "type",                 limit: 255, default: "Appointment"
+    t.integer  "arm_id",               limit: 4
   end
+
+  add_index "appointments", ["arm_id"], name: "index_appointments_on_arm_id", using: :btree
+  add_index "appointments", ["type"], name: "index_appointments_on_type", using: :btree
 
   create_table "arms", force: :cascade do |t|
     t.integer  "sparc_id",      limit: 4

@@ -7,7 +7,7 @@ class Fulfillment < ActiveRecord::Base
 
   has_many :components, as: :composable
   has_many :notes, as: :notable
-  has_many :documents
+  has_many :documents, as: :documentable
 
   delegate :quantity_type, to: :line_item
 
