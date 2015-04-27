@@ -37,6 +37,20 @@ RSpec.describe ProceduresController, type: :controller do
           end
         end
 
+        context 'User edits completed_date' do
+           before do
+            procedure = create(:procedure, status: 'complete')
+            params    = { id: procedure.id, procedure: { completed_date: '01-01-2025' }, format: :js }
+
+            put :update, params
+          end
+
+          it "should update the completed date" do
+            expect(assigns(:procedure).completed_date).to eq Time.parse "01/01/2025"
+          end
+        end
+
+
         context 'User marks Procedure as incomplete' do
 
           before do

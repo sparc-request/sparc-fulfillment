@@ -47,10 +47,10 @@ $ ->
   $(document).on 'click', 'label.status.complete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    
+
     status = null
 
-    # undo complete status 
+    # undo complete status
     if active
       $(this).removeClass('selected_before')
     else
@@ -65,11 +65,20 @@ $ ->
       data: data
       url: "/procedures/#{procedure_id}.js"
 
+  $(document).on 'dp.change', '.completed_date_field.datetimepicker', ->
+    procedure = $(this).parents(".procedure").data("id")
+    data = procedure:
+            completed_date: $(this).val()
+    $.ajax
+      type: 'PUT'
+      data: data
+      url: "/procedures/#{procedure}.js"
+
   $(document).on 'click', 'label.status.incomplete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    
-    # undo incomplete status 
+
+    # undo incomplete status
     if active
       data          = procedure:
                         status: null
@@ -156,7 +165,7 @@ $ ->
       type: 'PUT'
       data: data
       url:  "/appointments/#{appointment_id}"
-  
+
   $(document).on 'change', '#appointment_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     statuses = $(this).val()
