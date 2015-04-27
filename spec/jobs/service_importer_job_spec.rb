@@ -34,6 +34,12 @@ RSpec.describe ServiceImporterJob, type: :job do
 
         expect(service).to be
       end
+
+      it "should import associated ServiceLevelComponents" do
+        service = Service.find_by(sparc_id: 1)
+
+        expect(service.components.count).to eq(3)
+      end
     end
 
     context "#update" do
@@ -47,7 +53,7 @@ RSpec.describe ServiceImporterJob, type: :job do
       end
 
       it "should update the local Service" do
-        expect(@service.reload.name).to eq("Molestiae sint aliquam totam.")
+        expect(@service.reload.name).to eq("Biostatistical Education")
       end
 
       it "should make a request to the objects callback_url" do
