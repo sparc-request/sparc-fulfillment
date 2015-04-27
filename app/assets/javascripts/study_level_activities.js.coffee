@@ -25,13 +25,28 @@ $ ->
 
   $(document).on 'change', '.quantity_requested_field', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    new_qty = $(this).val()
-    alert "change qty requested to: #{new_qty} and update qty_remaining"
+    data = line_item: quantity_requested : $(this).val()
+    $.ajax
+      type: 'PATCH'
+      url:  "/line_items/#{line_item_id}"
+      data: data
+    alert "update quantity remaining now"
 
   $('.date_started_field').on 'dp.change', (e) ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    new_date = e.date
-    alert "change start date now to: #{new_date}"
+    data = line_item: started_at : "#{e.date}"
+    $.ajax
+      type: 'PATCH'
+      url:  "/line_items/#{line_item_id}"
+      data: data
+
+  $(document).on 'change', '.component_check', ->
+    component_id = $(this).val()
+    data = component: selected: $(this).is(':checked')
+    $.ajax
+      type: 'PATCH'
+      url:  "/components/#{component_id}"
+      data: data
 
   $(document).on 'click', '.otf_fulfillments', ->
     table = $(this).parents('.fulfillments').next()
@@ -84,8 +99,3 @@ $ ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
     new_qty = $(this).val()
     alert "change component to: #{new_qty} by creating new fulfillment component and deleting old one"
-
-  $(document).on 'change', '.component_check', ->
-    component_id = $(this).val()
-    alert "set component #{component_id} to selected"
-
