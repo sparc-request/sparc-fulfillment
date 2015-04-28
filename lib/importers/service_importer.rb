@@ -13,7 +13,7 @@ class ServiceImporter
     if service = Service.find_by(sparc_id: sparc_id)
       service.update_attributes(normalized_service_attributes)
     else
-      create
+      create_service
     end
   end
 

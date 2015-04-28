@@ -35,7 +35,7 @@ RSpec.describe ServiceImporterJob, type: :job do
         expect(service).to be
       end
 
-      it "should import associated ServiceLevelComponents" do
+      it "should create associated ServiceLevelComponents" do
         service = Service.find_by(sparc_id: 1)
 
         expect(service.components.count).to eq(3)
@@ -45,7 +45,7 @@ RSpec.describe ServiceImporterJob, type: :job do
     context "#update" do
 
       before do
-        @service              = create(:service, sparc_id: 1, name: "Test name")
+        @service              = create(:service_with_components, sparc_id: 1, name: "Test name")
         callback_url          = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/services/1.json"
         service_importer_job  = ServiceImporterJob.new(1, callback_url, 'update')
 
