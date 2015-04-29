@@ -203,6 +203,8 @@ en:
       incompleted: "The selected task(s) have been set to incomplete"
     line_item:
         updated: "Line Item Updated"
+    fulfillment:
+        updated: "Fulfillment Updated"
 
   study_level_activities:
     header: "Study Level Activities"

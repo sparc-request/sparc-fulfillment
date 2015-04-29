@@ -30,7 +30,7 @@ $ ->
       type: 'PATCH'
       url:  "/line_items/#{line_item_id}"
       data: data
-    alert "update quantity remaining now"
+    alert "update quantity remaining"
 
   $('.date_started_field').on 'dp.change', (e) ->
     line_item_id = $(this).parents('.row.line_item').data('id')
@@ -66,18 +66,29 @@ $ ->
 
   $('.fulfillment_date_field').on 'dp.change', (e) ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
-    new_date = e.date
-    alert "change fulfillment date now to: #{new_date}"
+    data = fulfillment: fulfilled_at : "#{e.date}"
+    $.ajax
+      type: 'PATCH'
+      url:  "/fulfillments/#{fulfillment_id}"
+      data: data
+    alert "if latest, update last fulfillment to: #{new_date}"
 
   $(document).on 'change', '.quantity_fulfilled_field', ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
-    new_qty = $(this).val()
-    alert "change qty fulfilled to: #{new_qty} and update qty_remaining"
+    data = fulfillment: quantity: $(this).val()
+    $.ajax
+      type: 'PATCH'
+      url:  "/fulfillments/#{fulfillment_id}"
+      data: data
+    alert "update qty_remaining"
 
   $(document).on 'change', '.fulfillment_performed_by', ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
-    new_qty = $(this).val()
-    alert "change performed_by to: #{new_qty}"
+    data = fulfillment: performed_by: $(this).val()
+    $.ajax
+      type: 'PATCH'
+      url:  "/fulfillments/#{fulfillment_id}"
+      data: data
 
   $(document).on 'click', '.fulfillment_note_new', ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')

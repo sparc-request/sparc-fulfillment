@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :visit_groups
   resources :line_items, only: [:update]
   resources :components, only: [:update]
+  resources :fulfillments, only: [:update]
 
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
