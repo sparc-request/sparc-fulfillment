@@ -11,7 +11,7 @@ feature 'User creates Participant', js: true do
     user_fills_in_new_participant_form
     find("input[value='Save Participant']").click
     refresh_bootstrap_table 'table.participants'
-
+    save_and_open_screenshot
     expect(page).to have_css('#flashes_container', text: 'Participant Created')
     expect(page).to have_css('table.participants tbody tr', count: 4)
   end

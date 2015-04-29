@@ -11,8 +11,8 @@
   %td.followup{id: "follow_up_#{procedure.id}"}
     = render partial: "appointments/followup_calendar", locals: {procedure: procedure}
   %td.completed-date
-    .input-group.date
-      %input.completed_date_field.datetimepicker{type: "text", class: "form-control", disabled: !procedure.completed_date.present?, value: format_date(procedure.completed_date)}
+    .input-group.date.completed_date_field
+      %input.datetimepicker{type: "text", class: "form-control", disabled: !procedure.completed_date.present?, value: format_date(procedure.completed_date)}
       %span.input-group-addon
         %span.glyphicon.glyphicon-calendar
   %td.notes

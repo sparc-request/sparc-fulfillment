@@ -1,16 +1,12 @@
 .col-xs-4.start-col
   .start_date_input{class: hidden_class(appointment.start_date.blank?) }
-    %form.form-horizontal
-      .form-group
-        %label.col-xs-6.control-label{for: 'start_date'}= t(:appointment)[:start_date]
-        .col-xs-6= text_field_tag 'start_date', '', class: 'form-control'
+    %label.control-label.pull-left{for: 'start_date'}= t(:appointment)[:start_date]
+    = text_field_tag 'start_date', '', class: 'form-control'
   .start_date_btn{class: hidden_class(!appointment.start_date.blank?) }
     %button.btn.btn-success.start_visit= t(:actions)[:start_visit]
 .col-xs-4.col-xs-offset-4.complete-col
   .completed_date_input{class: hidden_class(appointment.completed_date.blank?) }
-    %form.form-horizontal
-      .form-group
-        %label.col-xs-6.control-label{for: 'completed_date'}= t(:appointment)[:completed_date]
-        .col-xs-6= text_field_tag 'completed_date', '', class: 'form-control'
+    %label.control-label.pull-left{for: 'completed_date'}= t(:appointment)[:completed_date]
+    = text_field_tag 'completed_date', '', class: 'form-control'
   .completed_date_btn{class: hidden_class(!appointment.completed_date.blank?) }
     %button.btn.btn-danger.complete_visit{class: disabled_class(appointment.start_date.blank?) }= t(:actions)[:complete_visit]
