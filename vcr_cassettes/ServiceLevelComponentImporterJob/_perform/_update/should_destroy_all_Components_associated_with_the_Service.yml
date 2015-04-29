@@ -1,0 +1,128 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/v1/service_level_components/7.json?depth=full_with_shallow_reflections
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '237'
+      X-Ua-Compatible:
+      - IE=Edge
+      Etag:
+      - '"b8419c5c501a4f7505c6f28c025075ad"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - c056810cf74a4ab440070253b6bf2072
+      X-Runtime:
+      - '0.146700'
+      Connection:
+      - keep-alive
+      Server:
+      - thin 1.5.1 codename Straight Razor
+    body:
+      encoding: UTF-8
+      string: '{"service_level_component":{"sparc_id":7,"callback_url":"http://127.0.0.1:5000/v1/service_level_components/7.json","component":"slc5","position":5,"service":{"sparc_id":3547,"callback_url":"http://127.0.0.1:5000/v1/services/3547.json"}}}'
+    http_version: 
+  recorded_at: Wed, 29 Apr 2015 18:51:07 GMT
+- request:
+    method: get
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/v1/services/3547.json?depth=full_with_shallow_reflections
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '631'
+      X-Ua-Compatible:
+      - IE=Edge
+      Etag:
+      - '"b7c7aa7744e1990356d49be8db328382"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 8090d28c05496bc49f7469c3776611c0
+      X-Runtime:
+      - '0.041756'
+      Connection:
+      - keep-alive
+      Server:
+      - thin 1.5.1 codename Straight Razor
+    body:
+      encoding: UTF-8
+      string: '{"service":{"sparc_id":3547,"callback_url":"http://127.0.0.1:5000/v1/services/3547.json","name":"New
+        Service","abbreviation":"New Service","order":1,"description":"xxx","is_available":true,"service_center_cost":null,"cpt_code":"","charge_code":"","revenue_code":"","organization_id":84,"send_to_epic":false,"revenue_code_range_id":null,"service_level_components_count":1,"process_ssrs_organization":{"sparc_id":84,"callback_url":"http://127.0.0.1:5000/v1/programs/84.json","name":"Test
+        Program"},"line_items":[],"service_level_components":[{"sparc_id":7,"callback_url":"http://127.0.0.1:5000/v1/service_level_components/7.json"}]}}'
+    http_version: 
+  recorded_at: Wed, 29 Apr 2015 18:51:07 GMT
+- request:
+    method: get
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/v1/service_level_components.json?depth=full&ids%5B%5D=7
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '151'
+      X-Ua-Compatible:
+      - IE=Edge
+      Etag:
+      - '"f7cddaf4d06b9785e73d4aab961ace4a"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 8d95d6b5e93a24b1a7fe0c432c17bf91
+      X-Runtime:
+      - '0.025199'
+      Connection:
+      - keep-alive
+      Server:
+      - thin 1.5.1 codename Straight Razor
+    body:
+      encoding: UTF-8
+      string: '{"service_level_components":[{"sparc_id":7,"callback_url":"http://127.0.0.1:5000/v1/service_level_components/7.json","component":"slc5","position":5}]}'
+    http_version: 
+  recorded_at: Wed, 29 Apr 2015 18:51:08 GMT
+recorded_with: VCR 2.9.3

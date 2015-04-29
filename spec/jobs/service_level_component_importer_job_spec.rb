@@ -13,31 +13,68 @@ RSpec.describe ServiceLevelComponentImporterJob, type: :job do
     end
   end
 
-  describe '#perform', sparc_api: :get_service_level_component_1 do
+  describe "#perform" do
 
-    context "#update" do
+    context "#create", vcr: true do
 
       before do
-        service                               = create(:service, sparc_id: 1)
-        @component                            = create(:component_of_service,
-                                                        composable_id: service.id,
-                                                        sparc_id: 1,
-                                                        component: "Test component",
-                                                        position: 10)
-        callback_url                          = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/service_level_components/1.json?depth=full"
-        service_level_component_importer_job  = ServiceLevelComponentImporterJob.new(@component.sparc_id, callback_url, 'update')
+        @service        = create(:service_with_components, sparc_id: 3547)
+        @component_ids  = @service.components.pluck(:id)
+
+        callback_url                          = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/service_level_components/7.json?depth=full"
+        service_level_component_importer_job  = ServiceLevelComponentImporterJob.new(7, callback_url, 'create')
 
         service_level_component_importer_job.perform
       end
 
-      it "should update the local Component" do
-        expect(@component.reload.component).to eq("Service Level Component 1")
-        expect(@component.reload.position).to eq(1)
+      it "should destroy all Components associated with the Service" do
+        expect(@service.components.where(id: @component_ids).count).to eq(0)
       end
 
-      it "should make a request to the objects callback_url" do
-        expect(a_request(:get, /\/v1\/service_level_components\/1.json/).
-          with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
+      it "should create new Components associated with the Service" do
+        expect(@service.components.count).to eq(1)
+      end
+    end
+
+    context "#update", vcr: true do
+
+      before do
+        @service        = create(:service_with_components, sparc_id: 3547)
+        @component_ids  = @service.components.pluck(:id)
+
+        callback_url                          = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/service_level_components/7.json?depth=full"
+        service_level_component_importer_job  = ServiceLevelComponentImporterJob.new(7, callback_url, 'update')
+
+        service_level_component_importer_job.perform
+      end
+
+      it "should destroy all Components associated with the Service" do
+        expect(@service.components.where(id: @component_ids).count).to eq(0)
+      end
+
+      it "should create new Components associated with the Service" do
+        expect(@service.components.count).to eq(1)
+      end
+    end
+
+    context "#destroy", vcr: true do
+
+      before do
+        @service        = create(:service_with_components, sparc_id: 3547)
+        @component_ids  = @service.components.pluck(:id)
+
+        callback_url                          = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/service_level_components/7.json?depth=full"
+        service_level_component_importer_job  = ServiceLevelComponentImporterJob.new(7, callback_url, 'destroy')
+
+        service_level_component_importer_job.perform
+      end
+
+      it "should destroy all Components associated with the Service" do
+        expect(@service.components.where(id: @component_ids).count).to eq(0)
+      end
+
+      it "should create new Components associated with the Service" do
+        expect(@service.components.count).to eq(1)
       end
     end
   end

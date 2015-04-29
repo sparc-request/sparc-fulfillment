@@ -4,11 +4,11 @@ class ServiceLevelComponentImporterJob < ImporterJob
     super {
       case action
       when 'create'
-        #create
+        ServiceLevelComponentImporter.new(callback_url).create
       when 'update'
-        ServiceLevelComponentImporter.new(callback_url).update(sparc_id)
+        ServiceLevelComponentImporter.new(callback_url).update
       when 'destroy'
-        #destroy
+        ServiceLevelComponentImporter.new(callback_url).destroy
       end
     }
   end

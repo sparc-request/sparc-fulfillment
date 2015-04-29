@@ -15,7 +15,7 @@ RSpec.describe ServiceImporterJob, type: :job do
 
   describe '#perform', sparc_api: :get_service_1 do
 
-    context "create" do
+    context "#create" do
 
       before do
         callback_url          = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/services/1.json"
