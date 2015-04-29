@@ -6,7 +6,7 @@
   .col-xs-1.text-center.qty_type
     = fulfillment.line_item.quantity_type
   .col-xs-2.text-center.performed_by
-    = select_tag "performed_by", options_from_collection_for_select(User.all, 'id', 'full_name'), class: 'form-control fulfillment_performed_by', value: fulfillment.performed_by
+    = select_tag "performed_by", options_from_collection_for_select(User.all, 'id', 'full_name', selected:  fulfillment.performed_by), class: 'form-control fulfillment_performed_by'
   .col-xs-2.text-center.notes
     %button.btn.btn-primary.fulfillment_note_new{type: "button", aria: {label: "New Note"}}
       %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
@@ -18,4 +18,4 @@
     %button.btn.btn-primary.fulfillment_documents.list{type: "button", aria: {label: "Documents List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   .col-xs-2.text-center.component
-    = select_tag "component", options_from_collection_for_select(fulfillment.line_item.components, 'id', 'component'), prompt: "Please Select", class: 'form-control fulfillment_component', value: fulfillment.component
+    = select_tag "component", options_from_collection_for_select(fulfillment.line_item.components, 'component', 'component', selected: fulfillment.component.component), class: 'form-control fulfillment_component', data: {id: fulfillment.component.id}

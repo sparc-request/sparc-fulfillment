@@ -34,23 +34,9 @@ class LineItem < ActiveRecord::Base
     end
   end
 
-  def date_started
-    if one_time_fee and !fulfillments.empty?
-      if fulfillments.size > 1
-        fulfillments.dato.first.created_at
-      else
-        fulfillments.first.created_at
-      end
-    end
-  end
-
   def last_fulfillment
     if one_time_fee and !fulfillments.empty?
-      if fulfillments.size > 1
-        fulfillments.dato.first.updated_at
-      else
-        fulfillments.first.updated_at
-      end
+      fulfillments.order('fulfilled_at DESC').first.fulfilled_at
     end
   end
 end

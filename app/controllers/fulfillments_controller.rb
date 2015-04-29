@@ -3,7 +3,6 @@ class FulfillmentsController < ApplicationController
   before_action :find_fulfillment, only: [:update]
 
   def update
-    puts fulfillment_params
     @fulfillment.update_attributes(fulfillment_params)
     flash[:success] = t(:flash_messages)[:fulfillment][:updated]
   end

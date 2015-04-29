@@ -8,7 +8,7 @@
   .col-xs-1.text-center.qty_rem
     = line_item.quantity_remaining
   .col-xs-2.text-center.started
-    %input.date_started_field.datetimepicker.form-control{type: "text", value: format_date(line_item.date_started)}
+    %input.date_started_field.datetimepicker.form-control{type: "text", value: format_date(line_item.started_at)}
   .col-xs-1.text-center.last_fulfillment.text-center
     = format_date(line_item.last_fulfillment)
   .col-xs-1.text-center.components

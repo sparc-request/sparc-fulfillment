@@ -30,7 +30,6 @@ $ ->
       type: 'PATCH'
       url:  "/line_items/#{line_item_id}"
       data: data
-    alert "update quantity remaining"
 
   $('.date_started_field').on 'dp.change', (e) ->
     line_item_id = $(this).parents('.row.line_item').data('id')
@@ -71,7 +70,6 @@ $ ->
       type: 'PATCH'
       url:  "/fulfillments/#{fulfillment_id}"
       data: data
-    alert "if latest, update last fulfillment to: #{new_date}"
 
   $(document).on 'change', '.quantity_fulfilled_field', ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
@@ -80,7 +78,6 @@ $ ->
       type: 'PATCH'
       url:  "/fulfillments/#{fulfillment_id}"
       data: data
-    alert "update qty_remaining"
 
   $(document).on 'change', '.fulfillment_performed_by', ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
@@ -107,6 +104,9 @@ $ ->
     alert 'view fulfillment documents modal here'
 
   $(document).on 'change', '.fulfillment_component', ->
-    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
-    new_qty = $(this).val()
-    alert "change component to: #{new_qty} by creating new fulfillment component and deleting old one"
+    component_id = $(this).data('id')
+    data = component: component: $(this).val()
+    $.ajax
+      type: 'PATCH'
+      url:  "/components/#{component_id}"
+      data: data
