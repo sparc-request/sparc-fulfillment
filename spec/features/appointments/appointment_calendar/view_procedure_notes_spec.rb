@@ -26,7 +26,7 @@ feature 'View Notes', js: true do
   end
 
   def given_i_have_marked_a_procedure_as_incomplete
-    reason = Note::REASON_TYPES.first
+    reason = Procedure::NOTABLE_REASONS.first
 
     given_i_am_viewing_a_procedure
     find('label.status.incomplete').click
@@ -49,7 +49,7 @@ feature 'View Notes', js: true do
   end
 
   def when_i_view_the_notes_list
-    find('button.notes.list').click
+    find('.procedure td.notes button.notes.list').click
   end
 
   def then_i_should_see_a_complete_note

@@ -94,6 +94,17 @@ $ ->
     if $("#complete_button_#{id}").parent().hasClass('selected_before')
       $("#complete_button_#{id}").parent().addClass('active')
 
+  $(document).on 'click', 'button.appointment.new', ->
+    participant_id = $(this).data('participant-id')
+    arm_id = $(this).data('arm-id')
+
+    data = custom_appointment: participant_id: participant_id, arm_id: arm_id
+
+    $.ajax
+      type: 'GET'
+      data: data
+      url: "/custom_appointments/new"
+
   $(document).on 'click', 'button.followup.new', ->
     procedure_id  = $(this).parents('.procedure').data('id')
 
@@ -102,10 +113,12 @@ $ ->
       url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', 'button.note.new',  ->
-    procedure_id  = $(this).parents('.procedure').data('id')
+    id = $(this).data('notable-id')
+    type = $(this).data('notable-type')
+
     data          = note:
-                      notable_id: procedure_id,
-                      notable_type: 'Procedure'
+                      notable_id: id,
+                      notable_type: type
 
     $.ajax
       type: 'GET'
@@ -113,8 +126,12 @@ $ ->
       data: data
 
   $(document).on 'click', 'button.notes.list',  ->
-    procedure_id  = $(this).parents('.procedure').data('id')
-    data          = notable: id: procedure_id, type: 'Procedure'
+    id = $(this).data('notable-id')
+    type = $(this).data('notable-type')
+
+    data          = note:
+                      notable_id: id,
+                      notable_type: type
 
     $.ajax
       type: 'GET'

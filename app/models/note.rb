@@ -1,7 +1,6 @@
 class Note < ActiveRecord::Base
 
   KIND_TYPES    = %w(log note reason followup).freeze
-  REASON_TYPES  = ['Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained', 'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment', 'Assessment performed by other personnel/study staff', 'Participant refused assessment', 'Assessment not performed due to equipment failure'].freeze
 
   has_paper_trail
   acts_as_paranoid
@@ -10,17 +9,23 @@ class Note < ActiveRecord::Base
   belongs_to :user
 
   validates_inclusion_of :kind, in: KIND_TYPES
-  validates_inclusion_of :reason, in: REASON_TYPES,
+  validates_inclusion_of :reason, in: Proc.new { |note| note.notable_type.constantize::NOTABLE_REASONS },
                                   if: Proc.new { |note| note.reason.present? }
+
 
   def comment
     case kind
     when 'followup'
       [
         'Followup',
-        notable.follow_up_date.strftime('%F'),
+        notable.task.due_at.strftime('%F'),
         read_attribute(:comment)
-      ].join(': ')
+      ].compact.join(': ')
+    when 'reason'
+      [
+        read_attribute(:reason),
+        read_attribute(:comment)
+      ].compact.join(': ')
     else
       read_attribute(:comment)
     end

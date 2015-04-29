@@ -43,7 +43,7 @@ RSpec.describe NotificationDispatcher, type: :request do
         context 'create action' do
 
           before do
-            params = { notification: attributes_for(:service) }
+            params = { notification: attributes_for(:notification_service_create) }
 
             sparc_sends_notification_post(params)
           end

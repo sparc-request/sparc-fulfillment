@@ -78,7 +78,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def when_i_incomplete_the_procedure
-    reason = Note::REASON_TYPES.first
+    reason = Procedure::NOTABLE_REASONS.first
 
     when_i_click_the_incommplete_button
     select reason, from: 'procedure_notes_attributes_0_reason'
@@ -87,7 +87,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def and_i_view_the_notes_list
-    find('button.notes.list').click
+    find('.procedure td.notes button.notes.list').click
   end
 
   def then_i_should_see_that_the_procedure_status_has_not_changed

@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'addressable'
 gem 'activerecord-import'
+gem 'acts_as_list'
+gem 'addressable'
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-rails.git'

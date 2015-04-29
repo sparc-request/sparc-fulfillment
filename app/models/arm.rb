@@ -7,6 +7,7 @@ class Arm < ActiveRecord::Base
 
   has_many :line_items, dependent: :destroy
   has_many :visit_groups, dependent: :destroy
+  has_many :appointments
   has_many :participants
 
   validates :name, presence: true

@@ -1,0 +1,2 @@
+class CustomAppointment < Appointment
+end

@@ -39,7 +39,7 @@ feature 'Followup note', js: true do
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
     service     = Service.first
-    @assignee   = create(:user)
+    @assignee   = User.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
@@ -53,8 +53,8 @@ feature 'Followup note', js: true do
   end
 
   def and_i_fill_out_and_submit_the_followup_form
-    fill_in 'procedure_follow_up_date', with: '03-11-2015'
-    select @assignee.full_name, from: 'procedure_tasks_attributes_0_assignee_id'
+    fill_in 'task_due_at', with: '03-11-2015'
+    select @assignee.full_name, from: 'task_assignee_id'
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'
   end
@@ -66,7 +66,7 @@ feature 'Followup note', js: true do
   end
 
   def when_i_view_the_notes_list
-    find('button.notes.list').click
+    find('.procedure td.notes button.notes.list').click
   end
 
   def i_should_see_the_note_i_created
@@ -75,9 +75,7 @@ feature 'Followup note', js: true do
 
   def then_i_should_see_a_text_field_with_the_followup_date
     procedure = Procedure.first
-    value     = evaluate_script("$('.date#procedure_#{procedure.id}').data('date');")
-
-    expect(value).to eq('03-11-2015')
+    expect(page).to have_css("input#follow_up_datepicker_#{procedure.id}[value='03/11/2015']")
   end
 
   def i_should_see_the_followup_button

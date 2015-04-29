@@ -4,7 +4,7 @@
       %button.close{type: 'button', data: {dismiss: 'modal'}}
         %span{aria: {hidden:'true'}} &times;
         %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= t(:notes)[:index_header]
+      %h4.modal-title.text-center= t(:notes)[notable_type][:index_header]
     .modal-body
       - if notes.any?
         .notes-index
@@ -18,7 +18,7 @@
               .col-xs-2.created-at= format_datetime(note.created_at)
               .col-xs-7.comment= note.comment
       -else
-        .text-center= "This procedure has no notes."
+        .text-center= t(:notes)[notable_type][:none]
     .modal-footer
       .center-block
         %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
