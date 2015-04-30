@@ -31,6 +31,7 @@
       %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
     %button.btn.btn-primary.otf_fulfillments.list{type: "button", aria: {label: "Fulfillments List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
-
-  .row.col-xs-10.slide-toggle-hidden.slide-inactive
+.row
+  .col-xs-10.slide-toggle-hidden.slide-inactive{id: "fulfillments_list_#{line_item.id}"}
     = render partial: "/study_level_activities/fulfillments_table", locals: {line_item: line_item}
+  .col-xs-2

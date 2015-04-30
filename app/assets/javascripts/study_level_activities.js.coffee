@@ -48,7 +48,8 @@ $ ->
       data: data
 
   $(document).on 'click', '.otf_fulfillments', ->
-    table = $(this).parents('.fulfillments').next()
+    id = $(this).parents('.row.line_item').data('id')
+    table = $("#fulfillments_list_#{id}")
     if table.hasClass('slide-active')
       table.removeClass('slide-active')
       table.addClass('slide-inactive')
