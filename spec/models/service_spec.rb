@@ -17,5 +17,19 @@ RSpec.describe Service, type: :model do
         expect(service.persisted?).to be
       end
     end
+
+    describe '.default_scope' do
+
+      it 'should order services by name' do
+        orange_service = create(:service, name: "Orange")
+        apple_service = create(:service, name: "Apple")
+
+        all_services = Service.all
+        apple_index = all_services.index(apple_service)
+        orange_index = all_services.index(orange_service)
+        
+        expect(apple_index < orange_index).to be
+      end
+    end
   end
 end
