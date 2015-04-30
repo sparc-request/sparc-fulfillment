@@ -11,7 +11,7 @@
     %input.date_started_field.datetimepicker.form-control{type: "text", value: format_date(line_item.started_at)}
   .col-xs-1.text-center.last_fulfillment.text-center
     = format_date(line_item.last_fulfillment)
-  .col-xs-1.text-center.components
+  .col-xs-1.text-left.components
     -line_item.components.each do |c|
       .row
         = check_box_tag "component_check_#{c.id}", c.id, c.selected, class: 'component_check'

@@ -1,5 +1,5 @@
 .calendar.fulfillments
-  .row.sla_header
+  .row.study_level_activities_header.fulfillments
     .col-xs-2.text-center.fulfillment_date
       = t(:study_level_activities)[:fulfillment_date]
     .col-xs-1.text-center.quantity
@@ -14,5 +14,5 @@
       = t(:study_level_activities)[:documents]
     .col-xs-2.text-center.component
       = t(:study_level_activities)[:component]
-  -line_item.fulfillments.each do |f|
-    = render partial: "/study_level_activities/fulfillment", locals: {fulfillment: f}
+    -line_item.fulfillments.each do |f|
+      = render partial: "/study_level_activities/fulfillment", locals: {fulfillment: f}
