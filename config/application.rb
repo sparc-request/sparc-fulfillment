@@ -40,5 +40,8 @@ module ClinicalWorkFulfillment
     end
 
     config.active_record.raise_in_transactional_callbacks = true
+
+    # ActiveJob
+    config.active_job.queue_adapter = :delayed_job
   end
 end
