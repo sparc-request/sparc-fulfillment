@@ -39,7 +39,7 @@ RSpec.describe ProceduresController, type: :controller do
 
         context 'User edits completed_date' do
            before do
-            procedure = create(:procedure, status: 'complete')
+            procedure = create(:procedure, status: 'complete', completed_date: '01-01-2024')
             params    = { id: procedure.id, procedure: { completed_date: '01-01-2025' }, format: :js }
 
             put :update, params
@@ -47,6 +47,10 @@ RSpec.describe ProceduresController, type: :controller do
 
           it "should update the completed date" do
             expect(assigns(:procedure).completed_date).to eq Time.parse "01/01/2025"
+          end
+
+          it "should create a note" do
+            expect(assigns(:procedure).reload.notes).to be_two
           end
         end
 

@@ -44,6 +44,16 @@ $ ->
 
   # Procedure buttons
 
+  $(document).on 'dp.hide', ".completed_date_field", ->
+    procedure_id = $(this).parents(".procedure").data("id")
+    completed_date = $(this).children("input").val()
+    data = procedure:
+            completed_date: completed_date
+    $.ajax
+      type: 'PATCH'
+      url: "/procedures/#{procedure_id}"
+      data: data
+
   $(document).on 'click', 'label.status.complete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
@@ -54,7 +64,7 @@ $ ->
     if active
       $(this).removeClass('selected_before')
     else
-      status= "complete"
+      status = "complete"
       $(this).addClass('selected_before')
 
     data          = procedure:
@@ -64,15 +74,6 @@ $ ->
       type: 'PUT'
       data: data
       url: "/procedures/#{procedure_id}.js"
-
-  $(document).on 'dp.change', '.completed_date_field.datetimepicker', ->
-    procedure = $(this).parents(".procedure").data("id")
-    data = procedure:
-            completed_date: $(this).val()
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/procedures/#{procedure}.js"
 
   $(document).on 'click', 'label.status.incomplete', ->
     active = $(this).hasClass('active')
@@ -146,6 +147,8 @@ $ ->
       type: 'GET'
       url: '/notes.js'
       data: data
+
+
 
   $(document).on 'click', '.procedure button.delete', ->
     procedure_id = $(this).parents(".procedure").data("id")

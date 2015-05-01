@@ -52,12 +52,19 @@ class ProceduresController < ApplicationController
       @procedure.notes.create(user: current_user,
                               comment: 'Status set to incomplete',
                               kind: 'log')
+    elsif change_in_completed_date_detected?
+      @procedure.notes.create(user: current_user,
+                              comment: "Completed date updated to #{procedure_params[:completed_date]} ",
+                              kind: 'log')
     elsif complete_status_detected?
       @procedure.notes.create(user: current_user,
                               comment: 'Status set to complete',
                               kind: 'log')
-
     end
+  end
+
+  def change_in_completed_date_detected?
+    procedure_params[:completed_date] != @procedure.completed_date
   end
 
   def reset_status_detected?
