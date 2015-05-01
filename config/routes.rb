@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   resources :protocols
   resources :visit_groups
-  resources :line_items, only: [:update]
+  resources :line_items, only: [:update, :create]
   resources :components, only: [:update]
   resources :fulfillments, only: [:update]
 

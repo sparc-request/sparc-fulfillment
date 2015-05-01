@@ -104,6 +104,17 @@ $ ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
     alert 'view fulfillment documents modal here'
 
+  $(document).on 'click', ".otf_service_new", ->
+    service_id = $('#otf_select').find('option:selected').val()
+    protocol_id = $('#protocol_id').val()q
+    data = 
+          'service_id': service_id
+          'protocol_id': protocol_id
+    $.ajax
+      type: 'POST'
+      url: "/line_items"
+      data: data
+
   $(document).on 'change', '.fulfillment_component', ->
     component_id = $(this).data('id')
     data = component: component: $(this).val()

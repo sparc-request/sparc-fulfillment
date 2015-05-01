@@ -25,3 +25,16 @@
         = t(:study_level_activities)[:fulfillments]
     -protocol.one_time_fee_line_items.each do |li|
       = render partial: "/study_level_activities/one_time_fee", locals: {line_item: li}
+    .row.add_otf_line_item
+      .col-xs-3
+        %select.selectpicker#otf_select
+          %option{value: -1} Please Select
+          = options_from_collection_for_select(Service.where(one_time_fee: true), 'id', 'name')
+      .col-xs-1.text-center.otf_service
+        = hidden_field_tag :protocol_id, protocol.id
+        %button.btn.btn-primary.otf_service_new{type: "button", aria: {label: "New Service"}}
+          %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
+      .col-xs-8
+
+
+

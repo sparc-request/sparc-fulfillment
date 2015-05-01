@@ -7,6 +7,15 @@ class LineItemsController < ApplicationController
     flash[:success] = t(:flash_messages)[:line_item][:updated]
   end
 
+  def create
+    service = Service.find(params[:service_id])
+    @protocol = Protocol.find(params[:protocol_id])
+    @line_item = LineItem.new(service_id: service.id, protocol_id: @protocol.id)
+    if @line_item.valid?
+      @line_item.save
+    end
+  end
+
   private
 
   def line_item_params
