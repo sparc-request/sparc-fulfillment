@@ -2,7 +2,7 @@
   .start_date_input{class: hidden_class(appointment.start_date.blank?) }
     %form.form-horizontal
       .form-group
-        %label.col-xs-6.control-label{for: 'start_date'}= t(:appointment)[:start_date]
+        %label.col-xs-6.control-label#start-date-label{for: 'start_date'}= t(:appointment)[:start_date]
         .col-xs-6= text_field_tag 'start_date', '', class: 'form-control'
   .start_date_btn{class: hidden_class(!appointment.start_date.blank?) }
     %button.btn.btn-success.start_visit= t(:actions)[:start_visit]
