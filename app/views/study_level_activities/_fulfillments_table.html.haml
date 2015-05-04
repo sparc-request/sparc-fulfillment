@@ -14,5 +14,5 @@
       = t(:study_level_activities)[:documents]
     .col-xs-2.text-center.component
       = t(:study_level_activities)[:component]
-    -line_item.fulfillments.each do |f|
-      = render partial: "/study_level_activities/fulfillment", locals: {fulfillment: f}
+  -line_item.fulfillments.each do |f|
+    = render partial: "/study_level_activities/fulfillment", locals: {fulfillment: f}

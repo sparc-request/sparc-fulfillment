@@ -13,10 +13,17 @@ class LineItemsController < ApplicationController
     @line_item = LineItem.new(service_id: service.id, protocol_id: @protocol.id)
     if @line_item.valid?
       @line_item.save
+      create_line_item_components
     end
   end
 
   private
+
+  def create_line_item_components
+    @line_item.service.components.each do |c|
+      Component.create(composable_type: 'LineItem', composable_id: @line_item.id, component: c.component, position: c.position)
+    end
+  end
 
   def line_item_params
     @line_item_params = params.require(:line_item).permit(:quantity_requested, :started_at)
