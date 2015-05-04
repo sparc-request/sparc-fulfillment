@@ -9,7 +9,7 @@ RSpec.describe 'User updates Service in SPARC', type: :request, delay: false do
 
       user_updates_service_in_sparc
 
-      expect(service.reload.name).to eq("Molestiae sint aliquam totam.")
+      expect(service.reload.name).to eq("Biostatistical Education")
     end
   end
 

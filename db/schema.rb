@@ -119,6 +119,8 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.integer  "subject_count",      limit: 4
+    t.boolean  "one_time_fee",       limit: 1
+    t.integer  "per_unit_cost",      limit: 4,   default: 0
     t.integer  "quantity_requested", limit: 4,   default: 0
     t.string   "quantity_type",      limit: 255
     t.datetime "started_at"
@@ -221,6 +223,7 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.string   "irb_status",                   limit: 255
     t.datetime "irb_approval_date"
     t.datetime "irb_expiration_date"
     t.float    "stored_percent_subsidy",       limit: 24

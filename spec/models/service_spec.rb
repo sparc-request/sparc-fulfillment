@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Service, type: :model do
 
-  it { should have_many(:line_items).dependent(:destroy) }
-  it { should have_many(:components) }
+  it { is_expected.to have_many(:line_items).dependent(:destroy) }
+  it { is_expected.to have_many(:components) }
 
   context 'class methods' do
 

@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/v1/services/1.json
+    body:
+      encoding: UTF-8
+      string: '{"service":{"line_items_count":1}}'
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '34'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '4'
+      X-Ua-Compatible:
+      - IE=Edge
+      Etag:
+      - '"72054d9a6fbdcc7df012e19f32345b65"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 9baafb09f7733eb25cc1d366141c112b
+      X-Runtime:
+      - '0.793499'
+      Connection:
+      - keep-alive
+      Server:
+      - thin 1.5.1 codename Straight Razor
+    body:
+      encoding: UTF-8
+      string: '"ok"'
+    http_version: 
+  recorded_at: Fri, 01 May 2015 18:57:26 GMT
+recorded_with: VCR 2.9.3

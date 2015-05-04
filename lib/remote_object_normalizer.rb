@@ -15,7 +15,8 @@ class RemoteObjectNormalizer
     attributes                  = Hash.new
     local_object_attribute_keys = class_attribute_filter(klass)
 
-    remote_object_attributes.reject { |key, value| !local_object_attribute_keys.include?(key) }.
+    remote_object_attributes.
+      reject { |key, value| !local_object_attribute_keys.include?(key) }.
       each { |key, value| attributes.merge! Hash[key, value] }
 
     attributes
