@@ -2,38 +2,53 @@ require 'rails_helper'
 
 feature 'Complete Procedure', js: true do
 
-  scenario 'User marks a Procedure as complete once' do
-    as_a_user_who_has_added_a_procedure_to_an_appointment
-    when_i_complete_the_procedure
-    and_i_view_the_notes_list
-    then_i_should_see_complete_notes
+  context "appointment started" do
+
+    scenario 'User marks a Procedure as complete once' do
+      as_a_user_who_has_added_a_procedure_to_an_appointment
+      then_begins_appointment
+      when_i_complete_the_procedure
+      and_i_view_the_notes_list
+      then_i_should_see_complete_notes
+    end
+
+    scenario 'User marks a Procedure as complete, then incomplete, then complete again' do
+      as_a_user_who_has_added_a_procedure_to_an_appointment
+      then_begins_appointment
+      when_i_complete_the_procedure
+      then_i_incomplete_the_procedure
+      and_i_complete_the_procedure_again
+      and_i_view_the_notes_list
+      then_i_should_see_complete_notes 2
+    end
+
+    scenario 'User marks a Procedure as complete and then changes their mind, clicking complete again' do
+      as_a_user_who_has_added_a_procedure_to_an_appointment
+      then_begins_appointment
+      when_i_complete_the_procedure
+      and_i_view_the_notes_list
+      then_i_should_see_complete_notes
+      then_i_close_the_notes_list
+      and_i_complete_the_procedure_again
+      and_i_view_the_notes_list
+      then_i_should_see_reset_notes
+    end
+
+    scenario 'User marks an incomplete Procedure as complete' do
+      as_a_user_who_has_added_a_procedure_to_an_appointment
+      then_begins_appointment
+      when_i_incomplete_the_procedure
+      and_i_complete_the_procedure
+      and_i_view_the_notes_list
+      then_i_should_see_complete_notes
+    end
   end
 
-  scenario 'User marks a Procedure as complete, then incomplete, then complete again' do
-    as_a_user_who_has_added_a_procedure_to_an_appointment
-    when_i_complete_the_procedure
-    then_i_incomplete_the_procedure 
-    and_i_complete_the_procedure_again
-    and_i_view_the_notes_list
-    then_i_should_see_complete_notes 2
-  end
-
-  scenario 'User marks a Procedure as complete and then changes their mind, clicking complete again' do
-    as_a_user_who_has_added_a_procedure_to_an_appointment
-    when_i_complete_the_procedure
-    and_i_view_the_notes_list
-    then_i_should_see_complete_notes
-    then_i_close_the_notes_list
-    and_i_complete_the_procedure_again
-    and_i_view_the_notes_list
-    then_i_should_see_reset_notes
-  end
-
-  scenario 'User marks an incomplete Procedure as complete' do
-    as_a_user_who_is_viewing_a_procedure_marked_as_incomplete
-    when_i_complete_the_procedure
-    and_i_view_the_notes_list
-    then_i_should_see_complete_notes
+  context "appointment not started" do
+    scenario 'User attempts to mark a Procedure as complete' do
+      as_a_user_who_has_added_a_procedure_to_an_appointment
+      when_i_try_to_complete_the_procedure_i_should_see_a_helpful_message
+    end
   end
 
   def as_a_user_who_has_added_a_procedure_to_an_appointment
@@ -49,12 +64,16 @@ feature 'Complete Procedure', js: true do
     find('button.add_service').click
   end
 
+  def then_begins_appointment
+    find('button.start_visit').click
+  end
+
   def as_a_user_who_is_viewing_a_procedure_marked_as_incomplete
     as_a_user_who_has_added_a_procedure_to_an_appointment
     find('label.status.incomplete').click
     click_button "Save"
   end
-  
+
   def then_i_close_the_notes_list
     first(".modal button.close").click
   end
@@ -82,5 +101,14 @@ feature 'Complete Procedure', js: true do
     wait_for_ajax
   end
 
+  def when_i_try_to_complete_the_procedure_i_should_see_a_helpful_message
+    accept_alert(with: 'Please click Start Visit and enter a start date to continue.') do
+      find('label.status.complete').trigger('click')
+      wait_for_ajax
+    end
+  end
+
   alias :and_i_complete_the_procedure_again :when_i_complete_the_procedure
+  alias :and_i_complete_the_procedure :when_i_complete_the_procedure
+  alias :when_i_incomplete_the_procedure :then_i_incomplete_the_procedure
 end
