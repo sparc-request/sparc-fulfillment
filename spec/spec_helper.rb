@@ -17,6 +17,8 @@
 
 require 'shoulda-matchers'
 require 'simplecov'
+require 'rspec/active_job'
+
 SimpleCov.start do
   add_group "Models", "app/models"
   add_group "Controllers", "app/controllers"

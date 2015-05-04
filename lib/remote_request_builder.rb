@@ -33,6 +33,19 @@ class RemoteRequestBuilder
     url.to_s
   end
 
+  def build_and_authorize
+    url = Addressable::URI.parse "#{scheme}://#{host}/#{segments}.json"
+
+    url.user     = ENV.fetch('SPARC_API_USERNAME')
+    url.password = ENV.fetch('SPARC_API_PASSWORD')
+
+    if @query.any? || @ids.is_a?(Array)
+      url.query_values = query_values
+    end
+
+    url.to_s
+  end
+
   private
 
   def site

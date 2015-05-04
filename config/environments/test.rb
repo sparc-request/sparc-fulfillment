@@ -41,4 +41,7 @@ Rails.application.configure do
   config.included_models = ActiveRecord::Base.descendants.map!(&:name)
   # Solves Rails 4: 'Circular dependency detected while autoloading constant' RSPEC error
   config.dependency_loading = false
+
+  # ActiveJob
+  config.active_job.queue_adapter = :test
 end
