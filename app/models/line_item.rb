@@ -19,4 +19,16 @@ class LineItem < ActiveRecord::Base
             :sparc_core_id,
             :sparc_core_name,
             to: :service
+
+  after_create :increment_sparc_service_counter
+  after_destroy :decrement_sparc_service_counter
+
+  def increment_sparc_service_counter
+    RemoteServiceUpdaterJob.perform_later(self.service, 1)
+  end
+
+  def decrement_sparc_service_counter
+    RemoteServiceUpdaterJob.perform_later(self.service, -1)
+  end 
+
 end
