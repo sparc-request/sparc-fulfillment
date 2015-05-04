@@ -1,35 +1,32 @@
-.row.line_item{data: {id: line_item.id}}
+.row.table_row.line_item{data: {id: line_item.id}}
   .col-xs-2.text-center.truncate.service
     = line_item.name
   .col-xs-1.text-center.qty_req
-    %input.quantity_requested_field.form-control{type: "text", value: line_item.quantity_requested}
+    = line_item.quantity_requested
   .col-xs-1.text-center.qty_type
     = line_item.quantity_type
   .col-xs-1.text-center.qty_rem
     = line_item.quantity_remaining
-  .col-xs-2.text-center.started
-    %input.date_started_field.datetimepicker.form-control{type: "text", value: format_date(line_item.started_at)}
-  .col-xs-1.text-center.last_fulfillment.text-center
-    = format_date(line_item.last_fulfillment)
+  .col-xs-1.text-center.started
+    = format_date(line_item.started_at)
   .col-xs-1.text-left.components
     -line_item.components.each do |c|
       .row
         = check_box_tag "component_check_#{c.id}", c.id, c.selected, class: 'component_check'
         = c.component
   .col-xs-1.text-center.notes
-    %button.btn.btn-primary.otf_note_new{type: "button", aria: {label: "New Note"}}
-      %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
     %button.btn.btn-primary.otf_notes.list{type: "button", aria: {label: "Notes List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   .col-xs-1.text-center.documents
-    %button.btn.btn-primary.otf_document_new{type: "button", aria: {label: "New Document"}}
-      %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
     %button.btn.btn-primary.otf_documents.list{type: "button", aria: {label: "Documents List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+  .col-xs-1.text-center.last_fulfillment
+    = format_date(line_item.last_fulfillment)
   .col-xs-1.text-center.fulfillments
-    %button.btn.btn-primary.otf_fulfillment_new{type: "button", aria: {label: "New Fulfillment"}}
-      %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
     %button.btn.btn-primary.otf_fulfillments.list{type: "button", aria: {label: "Fulfillments List"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+  .col-xs-1.text-center.line_item_edit
+    %button.btn.btn-warning.otf_edit{type: "button", aria: {label: "Edit Line Item"}}
+      %span.glyphicon.glyphicon-edit{aria: {hidden: "true"}}
 
 = render partial: "/study_level_activities/fulfillments_table", locals: {line_item: line_item}

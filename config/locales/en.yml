@@ -33,6 +33,8 @@ en:
     change_arm: "Assign Arm"
     new_participant: "Create New Participant"
     save_participant: "Save Participant"
+    new_li: "Create New Line Item"
+    save_li: "Save Line Item"
     start_visit: "Start Visit"
     complete_visit: "Complete Visit"
     new_task: "Create New Task"
@@ -211,8 +213,10 @@ en:
       incompleted: "The selected task(s) have been set to incomplete"
     line_item:
         updated: "Line Item Updated"
+        created: "Line Item Created"
     fulfillment:
         updated: "Fulfillment Updated"
+        created: "Fulfillment Created"
 
   study_level_activities:
     header: "Study Level Activities"
@@ -226,6 +230,7 @@ en:
     component: "Service Component"
     notes: "Notes"
     documents: "Documents"
+    add_fulfillment: "Add Fulfillment"
     fulfillments: "Fulfillments"
     fulfillment_date: "Fullfillment Date"
     quantity: "Quantity"

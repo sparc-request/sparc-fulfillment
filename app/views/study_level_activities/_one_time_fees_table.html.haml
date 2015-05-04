@@ -1,0 +1,30 @@
+= hidden_field_tag :protocol_id, protocol.id
+.one_time_fees
+  .col-xs-12
+    = render partial: "/study_level_activities/add_one_time_fee_button", locals: {protocol: protocol}
+    .row
+      .col-xs-2.table_row.study_level_activities_header.text-center.service
+        = t(:study_level_activities)[:service]
+      .col-xs-1.table_row.study_level_activities_header.text-center.qty_req
+        = t(:study_level_activities)[:qty_req]
+      .col-xs-1.table_row.study_level_activities_header.text-center.qty_type
+        = t(:study_level_activities)[:qty_type]
+      .col-xs-1.table_row.study_level_activities_header.text-center.qty_rem
+        = t(:study_level_activities)[:qty_rem]
+      .col-xs-1.table_row.study_level_activities_header.text-center.started
+        = t(:study_level_activities)[:started]
+      .col-xs-1.table_row.study_level_activities_header.text-center.components
+        = t(:study_level_activities)[:components]
+      .col-xs-1.table_row.study_level_activities_header.text-center.notes
+        = t(:study_level_activities)[:notes]
+      .col-xs-1.table_row.study_level_activities_header.text-center.documents
+        = t(:study_level_activities)[:documents]
+      .col-xs-1.table_row.study_level_activities_header.text-center.fulfillments
+        = t(:study_level_activities)[:last_fulfillment]
+      .col-xs-1.table_row.study_level_activities_header.text-center.last_fulfillment
+        = t(:study_level_activities)[:fulfillments]
+      .col-xs-1.table_row.study_level_activities_header.text-center.line_item_edit
+        = t(:actions)[:edit]
+    -protocol.one_time_fee_line_items.each do |li|
+      = render partial: "/study_level_activities/one_time_fee", locals: {line_item: li}
+      .row.border

@@ -1,35 +1,35 @@
 class LineItemsController < ApplicationController
 
-  before_action :find_line_item, only: [:update]
+  before_action :find_line_item, only: [:edit, :update]
+
+  def new
+    @protocol = Protocol.find(params[:protocol_id])
+    @line_item = LineItem.new(protocol: @protocol)
+  end
+
+  def create
+    @line_item = LineItem.new(line_item_params)
+    if @line_item.valid?
+      @line_item.save
+      flash[:success] = t(:flash_messages)[:line_item][:created]
+    else
+      @errors = @line_item.errors
+    end
+  end
+
+  def edit
+    @protocol = @line_item.protocol
+  end
 
   def update
     @line_item.update_attributes(line_item_params)
     flash[:success] = t(:flash_messages)[:line_item][:updated]
   end
 
-  def create
-    service = Service.find(params[:service_id])
-    @protocol = Protocol.find(params[:protocol_id])
-    @line_item = LineItem.new(service_id: service.id, protocol_id: @protocol.id)
-    if @line_item.valid?
-      @line_item.save
-      create_line_item_components
-    end
-  end
-
   private
 
-  def create_line_item_components
-    @line_item.service.components.each do |c|
-      Component.create(composable_type: 'LineItem', composable_id: @line_item.id, component: c.component, position: c.position)
-    end
-  end
-
   def line_item_params
-    @line_item_params = params.require(:line_item).permit(:quantity_requested, :started_at)
-    @line_item_params[:started_at] = Time.at(@line_item_params[:started_at].to_i / 1000) if @line_item_params[:started_at]
-
-    @line_item_params
+    params.require(:line_item).permit(:protocol_id, :quantity_requested, :quantity_type, :service_id, :started_at)
   end
 
   def find_line_item
