@@ -22,6 +22,11 @@
               = form.label "performed_by", t(:study_level_activities)[:performed_by], class: "col-sm-4 control-label"
               .col-sm-7
                 = form.select "performed_by", options_from_collection_for_select(User.all, 'id', 'full_name', fulfillment.performed_by), {include_blank: true}, :class => 'form-control'
+            .form-group
+              = form.fields_for :components, component do |components_form|
+                = components_form.label "component", t(:study_level_activities)[:component], class: "col-sm-4 control-label"
+                .col-sm-7
+                  = components_form.select "component", options_from_collection_for_select(fulfillment.line_item.components, 'component', 'component', component.component), {include_blank: true}, :class => 'form-control'
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

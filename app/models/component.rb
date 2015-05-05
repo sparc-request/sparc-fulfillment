@@ -7,4 +7,5 @@ class Component < ActiveRecord::Base
 
   default_scope {order(:position)}
 
+  validates :component, presence: true
 end
