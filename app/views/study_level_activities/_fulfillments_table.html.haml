@@ -20,6 +20,6 @@
           = t(:actions)[:edit]
       -line_item.fulfillments.each do |f|
         = render partial: "/study_level_activities/fulfillment", locals: {fulfillment: f}
-      .row.new_fulfillment
+      .row.new_fulfillment{id: "new_line_item_#{line_item.id}_fulfillment"}
         .col-xs-12.text-right
           %button.btn.btn-success.otf_fulfillment_new{type: "button", aria: {label: "Add Fulfillment"}} Add Fulfillment
