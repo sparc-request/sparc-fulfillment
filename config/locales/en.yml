@@ -202,7 +202,7 @@ en:
   flash_messages:
     participant:
       created: "Participant Created"
-      saved: "Participant Saved"
+      updated: "Participant Updated"
       removed: "Participant Removed"
       arm_change: "Participant Successfully Changed Arms"
       recruitment_source: "Recruitment Source has been updated"

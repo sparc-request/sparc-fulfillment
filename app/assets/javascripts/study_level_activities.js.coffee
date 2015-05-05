@@ -16,10 +16,6 @@ $ ->
     line_item_id = $(this).parents('.row.line_item').data('id')
     alert 'view line_item documents modal here'
 
-  $(document).on 'click', '.otf_fulfillment_new', ->
-    line_item_id = $(this).parents('.row.line_item').data('id')
-    alert 'add line_item fulfillment modal here'
-
   $(document).on 'change', '.component_check', ->
     component_id = $(this).val()
     data = component: selected: $(this).is(':checked')
@@ -66,3 +62,18 @@ $ ->
       type: 'PATCH'
       url:  "/components/#{component_id}"
       data: data
+
+  $(document).on 'click', '.otf_fulfillment_new', ->
+    line_item_id = $(this).parents('.fulfillments').data('line-item-id')
+    data = line_item_id: line_item_id
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments/new"
+      data: data
+
+  $(document).on 'click', '.otf_fulfillment_edit', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments/#{fulfillment_id}/edit"
+

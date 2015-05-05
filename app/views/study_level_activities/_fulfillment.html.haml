@@ -17,5 +17,5 @@
     %select.selectpicker.fulfillment_component.form-control{data: {id: fulfillment.component.id}}
       = options_from_collection_for_select(fulfillment.line_item.components, 'component', 'component', selected: fulfillment.component.component)
   .col-xs-1.text-center.li_fulfillment_edit
-    %button.btn.btn-warning.fulfillment_edit{type: "button", aria: {label: "Edit Fulfillment"}}
+    %button.btn.btn-warning.otf_fulfillment_edit{type: "button", aria: {label: "Edit Fulfillment"}}
       %span.glyphicon.glyphicon-edit{aria: {hidden: "true"}}

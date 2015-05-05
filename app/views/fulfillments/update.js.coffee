@@ -1,9 +1,7 @@
-<% if @fulfillment_params[:quantity] %>
-$(".line_item[data-id=<%= @fulfillment.line_item_id %>] > .qty_rem").html("<%= @fulfillment.line_item.quantity_remaining %>")
-<% end %>
-
-<% if @fulfillment_params[:fulfilled_at] %>
-$(".line_item[data-id=<%= @fulfillment.line_item_id %>] > .last_fulfillment").html("<%= format_date(@fulfillment.line_item.last_fulfillment) %>")
-<% end %>
-
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
+$("#modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>");
+if $("#modal_errors > .alert.alert-danger > p").length == 0
+  $(".line_item[data-id=<%= @line_item.id %>] > .qty_rem").html("<%= @line_item.quantity_remaining %>")
+  $(".fulfillment[data-id=<%= @fulfillment.id %>]").replaceWith("<%= escape_javascript(render(:partial =>'study_level_activities/fulfillment', locals: {fulfillment: @fulfillment})) %>")
+  $(".fulfillment_component[data-id=<%= @fulfillment.component.id %>]").selectpicker()
+  $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
+  $("#modal_place").modal 'hide'
