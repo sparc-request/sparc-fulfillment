@@ -9,10 +9,10 @@
     = User.find(fulfillment.performed_by).full_name
   .col-xs-2.text-center.notes
     %button.btn.btn-primary.fulfillment_notes.list{type: "button", aria: {label: "Notes List"}}
-      %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+      %span.glyphicon.glyphicon-envelope{aria: {hidden: "true"}}
   .col-xs-2.text-center.documents
     %button.btn.btn-primary.fulfillment_documents.list{type: "button", aria: {label: "Documents List"}}
-      %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+      %span.glyphicon.glyphicon-open-file{aria: {hidden: "true"}}
   .col-xs-2.text-center.component
     %select.selectpicker.fulfillment_component.form-control{data: {id: fulfillment.component.id}}
       = options_from_collection_for_select(fulfillment.line_item.components, 'component', 'component', selected: fulfillment.component.component)
