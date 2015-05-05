@@ -13,4 +13,8 @@ class Fulfillment < ActiveRecord::Base
 
   validates :line_item_id, :fulfilled_at, :quantity, :performed_by, presence: true
   validates_numericality_of :quantity
+
+  def fulfilled_at=(date)
+    write_attribute(:fulfilled_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
+  end
 end

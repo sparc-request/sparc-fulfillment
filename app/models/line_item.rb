@@ -25,6 +25,10 @@ class LineItem < ActiveRecord::Base
   validates_numericality_of :quantity_requested
   after_create :create_line_item_components
 
+  def started_at=(date)
+    write_attribute(:started_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
+  end
+
   def quantity_remaining
     if one_time_fee and !fulfillments.empty?
       remaining = quantity_requested
