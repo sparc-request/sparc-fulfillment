@@ -50,7 +50,7 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
       end
 
       it 'should update the existing service' do
-        expect(@service.reload.name).to eq("Molestiae sint aliquam totam.")
+        expect(@service.reload.name).to eq("Biostatistical Education")
       end
     end
   end

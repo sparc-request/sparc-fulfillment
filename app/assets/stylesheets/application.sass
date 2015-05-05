@@ -212,8 +212,19 @@ table.custom_striped.details
 .indications_header
   padding-right: 44px
 
-/* Support Bootstrap dropdowns overflow in bootstrap-table
-.bootstrap-table-dropdown-overflow
-  .fixed-table-body
-    overflow-x: visible !important
-    overflow-y: visible !important
+// Support Bootstrap dropdowns overflow in bootstrap-table
+// .bootstrap-table-dropdown-overflow
+//   .fixed-table-body
+//     overflow-x: visible !important
+//     overflow-y: visible !important
+
+td.truncate
+  max-width: 0
+
+.truncate
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+div.tooltip-inner
+  max-width: 800px

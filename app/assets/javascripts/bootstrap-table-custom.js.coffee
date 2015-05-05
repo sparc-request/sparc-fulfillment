@@ -10,6 +10,14 @@ $ ->
 
   bs_tables = $("table[data-toggle='table']")
 
+  $(document).on "all.bs.table", bs_tables, ->
+    $(this).find('[data-toggle="tooltip"]').tooltip()
+
+  $(document).on "sort.bs.table", bs_tables, ->
+    setTimeout (->
+      $('table [data-toggle="tooltip"]').tooltip()
+    ), 2500
+
   $(document).on "load-success.bs.table", bs_tables, ->
     $(this).
       find(".th-inner.sortable i").

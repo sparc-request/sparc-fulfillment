@@ -26,4 +26,4 @@
 //= require tasks
 //= require study_level_activities
 //= require faye
-
+//= require global

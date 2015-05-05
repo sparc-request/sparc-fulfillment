@@ -21,6 +21,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'momentjs-rails', '>= 2.8.1'
 gem 'mysql2'
 gem 'omniauth'
+gem 'paperclip'
 gem 'paper_trail', '~> 4.0.0.beta'
 gem 'paranoia', '~> 2.0'
 gem 'puma'
@@ -33,7 +34,6 @@ gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
 gem 'will_paginate'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
-gem 'paperclip'
 
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'
@@ -41,17 +41,18 @@ group :development, :test, :testing do
 end
 
 group :development do
+  gem 'foreman'
   gem 'rack-mini-profiler', require: false
   gem 'spring'
   gem 'spring-commands-rspec', '~> 1.0.2'
   gem 'simplecov', :require => false, :group => :testend
-  gem 'foreman'
 end
 
 group :test do
   gem 'capybara-webkit', '~> 1.5.0'
   gem 'database_cleaner'
   gem 'launchy'
+  gem 'rspec-activejob', '~> 0.4.0'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
