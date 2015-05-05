@@ -22,6 +22,14 @@ feature 'Navigation', js: true do
     then_the_study_schedule_tab_should_be_active
   end
 
+  scenario 'User clicks on the sign out click' do
+    visit root_path
+    accept_confirm do
+      click_link 'sign-out-link'
+    end
+    page.has_css?('body.devise-sessions-new')
+  end
+
   def given_there_are_two_protocols
     create_list(:protocol_imported_from_sparc, 2)
   end
