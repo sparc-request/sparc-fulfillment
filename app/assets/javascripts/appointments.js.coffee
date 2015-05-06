@@ -50,16 +50,14 @@ $ ->
     data = procedure:
             completed_date: completed_date
     $.ajax
-      type: 'PATCH'
+      type: 'PUT'
       url: "/procedures/#{procedure_id}"
       data: data
 
   $(document).on 'click', 'label.status.complete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-
     status = null
-
     # undo complete status
     if active
       $(this).removeClass('selected_before')
@@ -78,7 +76,6 @@ $ ->
   $(document).on 'click', 'label.status.incomplete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-
     # undo incomplete status
     if active
       data          = procedure:
@@ -147,8 +144,6 @@ $ ->
       type: 'GET'
       url: '/notes.js'
       data: data
-
-
 
   $(document).on 'click', '.procedure button.delete', ->
     procedure_id = $(this).parents(".procedure").data("id")
