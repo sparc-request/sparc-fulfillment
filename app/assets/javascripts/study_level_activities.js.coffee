@@ -27,18 +27,26 @@ $ ->
   $(document).on 'click', '.otf_fulfillments', ->
     id = $(this).parents('.row.line_item').data('id')
     table = $("#fulfillments_list_#{id}")
+    span = $(this).children('.glyphicon')
     if table.hasClass('slide-active')
       table.removeClass('slide-active')
       table.addClass('slide-inactive')
+      span.removeClass("glyphicon-chevron-down")
+      span.addClass("glyphicon-chevron-right")
       table.slideToggle()
     else
       activeSlide = $('.slide-active')
       if activeSlide.length != 0
+        activeSpan = $(".glyphicon-chevron-down")
         activeSlide.removeClass('slide-active')
         activeSlide.addClass('slide-inactive')
+        activeSpan.removeClass("glyphicon-chevron-down")
+        activeSpan.addClass("glyphicon-chevron-right")
         activeSlide.slideToggle()
       table.removeClass('slide-inactive')
       table.addClass('slide-active')
+      span.removeClass("glyphicon-chevron-right")
+      span.addClass("glyphicon-chevron-down")
       table.slideToggle()
 
   $(document).on 'click', '.otf_edit', ->
@@ -64,7 +72,7 @@ $ ->
       data: data
 
   $(document).on 'click', '.otf_fulfillment_new', ->
-    line_item_id = $(this).parents('.fulfillments').data('line-item-id')
+    line_item_id = $(this).parents('.fulfillments').data('id')
     data = line_item_id: line_item_id
     $.ajax
       type: 'GET'
