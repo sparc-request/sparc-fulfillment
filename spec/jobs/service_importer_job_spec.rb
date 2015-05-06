@@ -15,7 +15,7 @@ RSpec.describe ServiceImporterJob, type: :job do
 
   describe '#perform', sparc_api: :get_service_1 do
 
-    context "create" do
+    context "#create" do
 
       before do
         callback_url          = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/services/1.json"
@@ -34,12 +34,18 @@ RSpec.describe ServiceImporterJob, type: :job do
 
         expect(service).to be
       end
+
+      it "should create associated ServiceLevelComponents" do
+        service = Service.find_by(sparc_id: 1)
+
+        expect(service.components.count).to eq(3)
+      end
     end
 
     context "#update" do
 
       before do
-        @service              = create(:service, sparc_id: 1, name: "Test name")
+        @service              = create(:service_with_components, sparc_id: 1, name: "Test name")
         callback_url          = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/services/1.json"
         service_importer_job  = ServiceImporterJob.new(1, callback_url, 'update')
 
@@ -47,7 +53,7 @@ RSpec.describe ServiceImporterJob, type: :job do
       end
 
       it "should update the local Service" do
-        expect(@service.reload.name).to eq("Molestiae sint aliquam totam.")
+        expect(@service.reload.name).to eq("Biostatistical Education")
       end
 
       it "should make a request to the objects callback_url" do
