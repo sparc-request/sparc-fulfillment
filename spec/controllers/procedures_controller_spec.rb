@@ -96,6 +96,10 @@ RSpec.describe ProceduresController, type: :controller do
           it 'should update the Procedure completed_date to: Time.current' do
             expect(assigns(:procedure).completed_date).to be
           end
+
+          it 'should create a Note' do
+            expect(assigns(:procedure).reload.notes).to be_one
+          end
         end
 
         context 'User marks Procedure as incomplete' do
@@ -138,6 +142,10 @@ RSpec.describe ProceduresController, type: :controller do
 
           it 'should update the Procedure completed_date to: Time.current' do
             expect(assigns(:procedure).completed_date).to be
+          end
+
+          it 'should create a Note' do
+            expect(assigns(:procedure).reload.notes).to be_one
           end
         end
 
