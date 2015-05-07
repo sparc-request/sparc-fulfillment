@@ -10,7 +10,7 @@ class ServiceImporter
   end
 
   def update(sparc_id)
-    if service = Service.find_by(sparc_id: sparc_id)
+    if service = Service.find(sparc_id)
       service.update_attributes(normalized_service_attributes)
     else
       create_service
@@ -35,13 +35,7 @@ class ServiceImporter
   end
 
   def normalized_service_attributes
-    remote_service_attributes     = RemoteObjectNormalizer.new('Service', remote_service['service']).normalize!
-    servivce_attributes_to_merge  = {
-      sparc_core_id: remote_service['service']['process_ssrs_organization']['sparc_id'],
-      sparc_core_name: remote_service['service']['process_ssrs_organization']['name']
-    }
-
-    remote_service_attributes.merge!(servivce_attributes_to_merge)
+    @remote_service_attributes ||= RemoteObjectNormalizer.new('Service', remote_service['service']).normalize!
   end
 
   def remote_service

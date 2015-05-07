@@ -1,16 +1,27 @@
 class Service < ActiveRecord::Base
 
-  has_paper_trail
-  acts_as_paranoid
+  include SparcShard
 
-  has_many :line_items, dependent: :destroy
-  has_many :components, as: :composable
+  belongs_to :organization
+
+  has_many :line_items
+  has_many :service_level_components
+  has_many :pricing_maps
 
   default_scope { order(name: :asc) }
 
-  def self.all_services
-    Rails.cache.fetch("cache_all_services", expires_in: 1.hour) do
+  def self.all_cached
+    Rails.cache.fetch("services_all", expires_in: 1.hour) do
       Service.all
+    end
+  end
+
+  # TODO Determine exact cost calculation
+  def cost
+    if pricing_map = pricing_maps.current(Time.current).first
+      return pricing_map.full_rate
+    else
+      raise ArgumentError, "Service has no pricing maps"
     end
   end
 
@@ -26,5 +37,12 @@ class Service < ActiveRecord::Base
 
   def self.one_time_fees
     Service.where(one_time_fee: 1)
+
+  def sparc_core_id
+    organization.id
+  end
+
+  def sparc_core_name
+    organization.name
   end
 end

@@ -36,7 +36,7 @@ feature 'Fulfillments', js: true do
 
   def as_a_user_who_has_study_level_activities
     @protocol    = create(:protocol_imported_from_sparc)
-    service     = create(:service_of_otf_with_components)
+    service     = create(:service_with_one_time_fee_with_components)
     @line_item  = create(:line_item, protocol: @protocol, service: service)
     @components = @line_item.components
   end

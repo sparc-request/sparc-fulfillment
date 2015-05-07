@@ -8,7 +8,7 @@ class Protocol < ActiveRecord::Base
   has_many :arms, dependent: :destroy
   has_many :line_items, dependent: :destroy
   has_many :participants, dependent: :destroy
-  has_many :user_roles
+  has_many :project_roles
 
   has_many :appointments, through: :participants
   has_many :procedures, through: :appointments
@@ -30,11 +30,11 @@ class Protocol < ActiveRecord::Base
   end
 
   def pi
-    user_roles.where(role: "primary-pi").first.user
+    project_roles.where(role: "primary-pi").first.identity
   end
 
   def coordinators
-    user_roles.where(role: "research-assistant-coordinator").map(&:user)
+    project_roles.where(role: "research-assistant-coordinator").map(&:identity)
   end
 
   def short_title_with_sparc_id

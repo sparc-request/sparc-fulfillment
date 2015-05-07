@@ -83,7 +83,7 @@ RSpec.describe TasksController, type: :controller do
   describe "POST #create" do
 
     it "should create a new task without a note" do
-      assignee = create(:user)
+      assignee = create(:identity)
       attributes = attributes_for(:task)
       attributes[:due_at] = "09-09-2009"
       expect{
@@ -96,7 +96,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it "should create a task with a note" do
-      assignee = create(:user)
+      assignee = create(:identity)
       procedure = create(:procedure)
       attributes = attributes_for(:task)
       attributes[:due_at] = "09-09-2009"
