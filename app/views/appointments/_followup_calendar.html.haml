@@ -5,6 +5,6 @@
       %span.glyphicon.glyphicon-calendar
 - else
   -# div used for capturing click events when button is disabled
-  .btn-group{class: "#{ appt_started ? '' : 'pre_start_disabled' }"}
-    %button.btn.btn-warning.followup.new{type: "button", class: "#{ appt_started ? '' : 'disabled' }", aria: {label: "New Followup"}}
+  .btn-group{class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }"}
+    %button.btn.btn-warning.followup.new{type: "button", class: "#{ procedure.appt_started? ? '' : 'disabled' }", aria: {label: "New Followup"}}
       %span.glyphicon.glyphicon-calendar{aria: {hidden: "true"}}

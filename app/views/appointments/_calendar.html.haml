@@ -43,7 +43,7 @@
                   = t(:procedure)[:remove]
             %tbody
               - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-                = render partial: "core", locals: {core_id: core_id, procedures: procedures}
+                = render partial: "core", locals: {core_id: core_id, procedures: procedures, appointment_started: appointment.start_date.present? }
       .row.services
         .col-xs-4
           = select_tag "service_list", options_from_collection_for_select(Service.all_services, "id", "name"), class: 'form-control'
