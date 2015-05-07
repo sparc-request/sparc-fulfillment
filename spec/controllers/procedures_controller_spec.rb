@@ -37,24 +37,6 @@ RSpec.describe ProceduresController, type: :controller do
           end
         end
 
-        context 'User edits completed_date' do
-           before do
-            procedure = create(:procedure, status: 'complete', completed_date: '01-01-2024')
-            params    = { id: procedure.id, procedure: { completed_date: '01-01-2025' }, format: :js }
-
-            put :update, params
-          end
-
-          it "should update the completed date" do
-            expect(assigns(:procedure).completed_date).to eq Time.parse "01/01/2025"
-          end
-
-          it "should create a note" do
-            expect(assigns(:procedure).reload.notes).to be_one
-          end
-        end
-
-
         context 'User marks Procedure as incomplete' do
 
           before do
@@ -80,24 +62,19 @@ RSpec.describe ProceduresController, type: :controller do
 
       context 'Procedure status is: complete' do
 
-        context 'User marks Procedure as complete' do
-
-          before do
-            procedure = create(:procedure_complete)
-            params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+        context 'User edits completed_date' do
+           before do
+            procedure = create(:procedure, status: 'complete', completed_date: '01-01-2024')
+            params    = { id: procedure.id, procedure: { completed_date: '01-01-2025' }, format: :js }
 
             put :update, params
           end
 
-          it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('complete')
+          it "should update the completed date" do
+            expect(assigns(:procedure).completed_date).to eq Time.parse "01/01/2025"
           end
 
-          it 'should update the Procedure completed_date to: Time.current' do
-            expect(assigns(:procedure).completed_date).to be
-          end
-
-          it 'should create a Note' do
+          it "should create a note" do
             expect(assigns(:procedure).reload.notes).to be_one
           end
         end
@@ -130,7 +107,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as complete' do
 
           before do
-            procedure = create(:procedure_complete)
+            procedure = create(:procedure)
             params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
 
             put :update, params
@@ -152,7 +129,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as incomplete' do
 
           before do
-            procedure = create(:procedure_complete)
+            procedure = create(:procedure)
             params    = { id: procedure.id, procedure: { status: 'incomplete', completed_date: "" }, format: :js }
 
             put :update, params

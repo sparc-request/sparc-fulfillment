@@ -64,7 +64,11 @@ class ProceduresController < ApplicationController
   end
 
   def change_in_completed_date_detected?
-    procedure_params[:completed_date] != @procedure.completed_date
+    if @procedure_params[:completed_date]
+      Time.strptime(@procedure_params[:completed_date], "%m-%d-%Y") != @procedure.completed_date
+    else
+      return false
+    end
   end
 
   def reset_status_detected?

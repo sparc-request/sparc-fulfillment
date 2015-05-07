@@ -55,9 +55,10 @@ feature 'Complete Procedure', js: true do
     find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
+    wait_for_ajax
 
     visit_group.appointments.first.procedures.reload
-    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id)
+    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
   end
 
   def as_a_user_who_is_viewing_a_procedure_marked_as_incomplete
@@ -96,11 +97,11 @@ feature 'Complete Procedure', js: true do
   def then_i_edit_the_completed_date
     page.execute_script %Q{ $(".datetimepicker").siblings(".input-group-addon").trigger("click")}
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    wait_for_ajax
   end
 
   def and_it_updates_the_completed_date
-    @procedure = @procedure.first.reload
-
+    @procedure.reload
     expect(@procedure.completed_date).to eq Time.new(Time.now.year, Time.now.month,15)
   end
 
