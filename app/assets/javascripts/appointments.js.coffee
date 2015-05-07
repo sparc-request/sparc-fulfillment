@@ -61,6 +61,7 @@ $ ->
     # undo complete status
     if active
       $(this).removeClass('selected_before')
+      $(".procedure[data-id='#{procedure_id}']").find(".completed_date_field input").val(null)
     else
       status = "complete"
       $(this).addClass('selected_before')

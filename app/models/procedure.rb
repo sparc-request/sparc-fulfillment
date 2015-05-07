@@ -40,7 +40,7 @@ class Procedure < ActiveRecord::Base
       attributes.merge!(completed_date: Time.current)
     elsif attributes[:status].blank? &&
         attributes[:status] == ''
-      attributes.merge!(completed_date: attributes[:completed_date])
+      attributes.merge!(completed_date: nil)
     elsif attributes[:completed_date].present?
       attributes[:completed_date] = Time.strptime(attributes[:completed_date], "%m-%d-%Y")
     end
