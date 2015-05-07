@@ -54,6 +54,16 @@ $ ->
       url: "/procedures/#{procedure_id}"
       data: data
 
+  $(document).on 'dp.hide', ".followup_procedure_datepicker", ->
+    task_id = $(this).children("input").data("taskId")
+    due_at = $(this).children("input").val()
+    data = task:
+            due_at: due_at
+    $.ajax
+      type: 'PUT'
+      url: "/tasks/#{task_id}"
+      data: data
+
   $(document).on 'click', 'label.status.complete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
