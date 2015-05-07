@@ -45,6 +45,7 @@ group :development do
   gem 'foreman'
   gem 'rack-mini-profiler', require: false
   gem 'spring'
+  gem 'spring-commands-rspec'
   gem 'simplecov', :require => false, :group => :testend
 end
 
