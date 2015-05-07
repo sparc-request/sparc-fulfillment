@@ -29,6 +29,19 @@ $ ->
       url: '/notes.js'
       data: data
 
+  $(document).on 'click', 'button.note.line_item.new',  ->
+    id = $(this).data('notable-id')
+    type = 'LineItem'
+
+    data  = note:
+              notable_id: id,
+              notable_type: type
+
+    $.ajax
+      type: 'GET'
+      url: '/notes/new.js'
+      data: data
+
   $(document).on 'click', '.otf_documents', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
     alert 'view line_item documents modal here'
