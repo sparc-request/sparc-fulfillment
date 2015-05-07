@@ -13,7 +13,7 @@ module Features
       fill_in 'Last Name', with: participant.last_name
       fill_in 'MRN', with: participant.mrn
       select participant.status, from: 'Status'
-      page.execute_script %Q{ $('#dob_time_picker').trigger("focus") }
+      page.execute_script %Q{ $("#participant_date_of_birth").siblings(".input-group-addon").trigger("click") }
       page.execute_script %Q{ $("td.year:contains('0')").trigger("click") }
       page.execute_script %Q{ $("td.month:contains('Mar')").trigger("click") }
       page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
