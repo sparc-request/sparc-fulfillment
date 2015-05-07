@@ -8,6 +8,14 @@ $ ->
       url: "/line_items/new"
       data: data
 
+  $(document).on 'change', '.components > .selectpicker', ->
+    line_item_id = $(this).parents('.row.line_item').data('id')
+    data = components: $(this).val()
+    $.ajax
+      type: 'PATCH'
+      url: "/line_items/#{line_item_id}/update_components"
+      data: data
+
   ######## Notes Logic
 
   $(document).on 'click', '.otf_notes', ->
@@ -68,13 +76,33 @@ $ ->
     line_item_id = $(this).parents('.row.line_item').data('id')
     alert 'view line_item documents modal here'
 
-  $(document).on 'change', '.component_check', ->
-    component_id = $(this).val()
-    data = component: selected: $(this).is(':checked')
+  $(document).on 'click', '.otf_edit', ->
+    line_item_id = $(this).parents('.row.line_item').data('id')
     $.ajax
-      type: 'PATCH'
-      url:  "/components/#{component_id}"
+      type: 'GET'
+      url: "/line_items/#{line_item_id}/edit"
+
+  $(document).on 'click', '.otf_fulfillment_new', ->
+    line_item_id = $(this).parents('.fulfillments').data('id')
+    data = line_item_id: line_item_id
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments/new"
       data: data
+
+  $(document).on 'click', '.fulfillment_notes', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    alert 'view fulfillment notes modal here'
+
+  $(document).on 'click', '.fulfillment_documents', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    alert 'view fulfillment documents modal here'
+
+  $(document).on 'click', '.otf_fulfillment_edit', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments/#{fulfillment_id}/edit"
 
   $(document).on 'click', '.otf_fulfillments', ->
     id = $(this).parents('.row.line_item').data('id')
@@ -100,6 +128,7 @@ $ ->
       span.removeClass("glyphicon-chevron-right")
       span.addClass("glyphicon-chevron-down")
       table.slideToggle()
+<<<<<<< HEAD
 
   $(document).on 'click', '.otf_edit', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
@@ -133,3 +162,5 @@ $ ->
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
 
+=======
+>>>>>>> 83b3f48056a219e1504291357d3c960f6dd6979e
