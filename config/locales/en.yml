@@ -177,6 +177,9 @@ en:
     appointment:
       index_header: "Appointment Notes"
       none: "This appointment has no notes."
+    lineitem:
+      index_header: "Line Item Notes"
+      none: This line item has no notes
 
   procedure:
     followup: "Follow Up"
