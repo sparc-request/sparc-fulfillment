@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'activerecord-import'
 gem 'acts_as_list'
 gem 'addressable'
+gem 'ar-octopus', '~> 0.8.5'
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-rails.git'
@@ -44,7 +45,6 @@ group :development do
   gem 'foreman'
   gem 'rack-mini-profiler', require: false
   gem 'spring'
-  gem 'spring-commands-rspec', '~> 1.0.2'
   gem 'simplecov', :require => false, :group => :testend
 end
 

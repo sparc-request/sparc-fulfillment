@@ -47,6 +47,9 @@ GEM
     acts_as_list (0.6.0)
       activerecord (>= 3.0)
     addressable (2.3.8)
+    ar-octopus (0.8.5)
+      activerecord (>= 3.2.0)
+      activesupport (>= 3.2.0)
     arel (6.0.0)
     autoprefixer-rails (5.1.8)
       execjs
@@ -361,6 +364,7 @@ DEPENDENCIES
   activerecord-import
   acts_as_list
   addressable
+  ar-octopus (~> 0.8.5)
   autoprefixer-rails
   bootstrap-sass
   bootstrap-select-rails!
@@ -401,7 +405,7 @@ DEPENDENCIES
   shoulda-matchers (~> 2.8.0)
   simplecov
   spring
-  spring-commands-rspec (~> 1.0.2)
+  spring-commands-rspec
   sprockets-rails
   timecop
   turbolinks
