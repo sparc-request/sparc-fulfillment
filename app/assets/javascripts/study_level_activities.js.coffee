@@ -21,11 +21,9 @@ $ ->
   $(document).on 'click', '.otf_notes', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
     type = 'LineItem'
-
     data  = note:
               notable_id: line_item_id,
               notable_type: type
-
     $.ajax
       type: 'GET'
       url: '/notes.js'
@@ -34,11 +32,9 @@ $ ->
   $(document).on 'click', 'button.note.line_item.new',  ->
     id = $(this).data('notable-id')
     type = 'LineItem'
-
     data  = note:
               notable_id: id,
               notable_type: type
-
     $.ajax
       type: 'GET'
       url: '/notes/new.js'
@@ -47,11 +43,9 @@ $ ->
   $(document).on 'click', '.fulfillment_notes', ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
     type = 'Fulfillment'
-
     data  = note:
               notable_id: fulfillment_id,
               notable_type: type
-
     $.ajax
       type: 'GET'
       url: '/notes.js'
@@ -60,11 +54,9 @@ $ ->
   $(document).on 'click', 'button.note.fulfillment_note.new',  ->
     id = $(this).data('notable-id')
     type = 'Fulfillment'
-
     data  = note:
               notable_id: id,
               notable_type: type
-
     $.ajax
       type: 'GET'
       url: '/notes/new.js'
@@ -89,10 +81,6 @@ $ ->
       type: 'GET'
       url: "/fulfillments/new"
       data: data
-
-  $(document).on 'click', '.fulfillment_notes', ->
-    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
-    alert 'view fulfillment notes modal here'
 
   $(document).on 'click', '.fulfillment_documents', ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')
@@ -128,7 +116,6 @@ $ ->
       span.removeClass("glyphicon-chevron-right")
       span.addClass("glyphicon-chevron-down")
       table.slideToggle()
-<<<<<<< HEAD
 
   $(document).on 'click', '.otf_edit', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
@@ -162,5 +149,3 @@ $ ->
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
 
-=======
->>>>>>> 83b3f48056a219e1504291357d3c960f6dd6979e
