@@ -8,6 +8,8 @@ $ ->
       url: "/line_items/new"
       data: data
 
+  ######## Notes Logic
+
   $(document).on 'click', '.otf_notes', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
     type = 'LineItem'
@@ -33,6 +35,34 @@ $ ->
       type: 'GET'
       url: '/notes/new.js'
       data: data
+
+  $(document).on 'click', '.fulfillment_notes', ->
+    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
+    type = 'Fulfillment'
+
+    data  = note:
+              notable_id: fulfillment_id,
+              notable_type: type
+
+    $.ajax
+      type: 'GET'
+      url: '/notes.js'
+      data: data
+
+  $(document).on 'click', 'button.note.fulfillment_note.new',  ->
+    id = $(this).data('notable-id')
+    type = 'Fulfillment'
+
+    data  = note:
+              notable_id: id,
+              notable_type: type
+
+    $.ajax
+      type: 'GET'
+      url: '/notes/new.js'
+      data: data
+
+  ######## End Notes Logic
 
   $(document).on 'click', '.otf_documents', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
@@ -76,10 +106,6 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/line_items/#{line_item_id}/edit"
-
-  $(document).on 'click', '.fulfillment_notes', ->
-    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
-    alert 'view fulfillment notes modal here'
 
   $(document).on 'click', '.fulfillment_documents', ->
     fulfillment_id = $(this).parents('.row.fulfillment').data('id')

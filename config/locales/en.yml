@@ -179,7 +179,10 @@ en:
       none: "This appointment has no notes."
     lineitem:
       index_header: "Line Item Notes"
-      none: This line item has no notes
+      none: "This line item has no notes"
+    fulfillment:
+      index_header: "Fulfillment Notes"
+      none: "This fulfillment has no notes."
 
   procedure:
     followup: "Follow Up"
