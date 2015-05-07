@@ -19,7 +19,8 @@ class LineItem < ActiveRecord::Base
             :sparc_core_id,
             :sparc_core_name,
             :one_time_fee,
-            to: :service
+            to: :service,
+            allow_nil: true
 
   validates :protocol_id, :service_id, :quantity_requested, :quantity_type, presence: true
   validates_numericality_of :quantity_requested
