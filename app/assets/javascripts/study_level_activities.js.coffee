@@ -10,7 +10,16 @@ $ ->
 
   $(document).on 'click', '.otf_notes', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    alert 'view line_item notes modal here'
+    type = 'LineItem'
+
+    data  = note:
+              notable_id: line_item_id,
+              notable_type: type
+
+    $.ajax
+      type: 'GET'
+      url: '/notes.js'
+      data: data
 
   $(document).on 'click', '.otf_documents', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
