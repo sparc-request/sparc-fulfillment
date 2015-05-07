@@ -227,7 +227,6 @@ en:
     started: "Date Started"
     last_fulfillment: "Last Fulfillment"
     components: "Service Components"
-    component: "Service Component"
     notes: "Notes"
     documents: "Documents"
     add_fulfillment: "Add Fulfillment"
@@ -235,3 +234,4 @@ en:
     fulfillment_date: "Fullfillment Date"
     quantity: "Quantity"
     performed_by: "Performed By"
+    options: "Options"

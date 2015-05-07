@@ -1,22 +1,19 @@
 .row.slide-toggle-hidden.slide-inactive.fulfillments{id: "fulfillments_list_#{line_item.id}", data: {id: line_item.id}}
   .col-xs-12
     .row
-      .col-xs-1.table_row.fulfillments_header.text-center.fulfillment_date
+      .col-xs-2.table_row.fulfillments_header.text-center.fulfillment_date
         = t(:study_level_activities)[:fulfillment_date]
       .col-xs-1.table_row.fulfillments_header.text-center.quantity
         = t(:study_level_activities)[:quantity]
-      .col-xs-1.table_row.fulfillments_header.text-center.qty_type
+      .col-xs-2.table_row.fulfillments_header.text-center.qty_type
         = t(:study_level_activities)[:qty_type]
       .col-xs-2.table_row.fulfillments_header.text-center.performed_by
         = t(:study_level_activities)[:performed_by]
       .col-xs-2.table_row.fulfillments_header.text-center.component
-        = t(:study_level_activities)[:component]
-      .col-xs-2.table_row.fulfillments_header.text-center.notes
-        = t(:study_level_activities)[:notes]
-      .col-xs-2.table_row.fulfillments_header.text-center.documents
-        = t(:study_level_activities)[:documents]
-      .col-xs-1.table_row.fulfillments_header.text-center.li_fulfillment_edit
-        = t(:actions)[:edit]
+        = t(:study_level_activities)[:components]
+      .col-xs-1.table_row.fulfillments_header
+      .col-xs-2.table_row.fulfillments_header.text-center.options
+        = t(:study_level_activities)[:options]
     -line_item.fulfillments.each do |f|
       = render partial: "/study_level_activities/fulfillment", locals: {fulfillment: f}
     .row.new_fulfillment{id: "new_line_item_#{line_item.id}_fulfillment"}
