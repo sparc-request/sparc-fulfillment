@@ -50,6 +50,11 @@ class Procedure < ActiveRecord::Base
     super attributes
   end
 
+  # Has this procedure's appointment started?
+  def appt_started?
+    appointment.start_date.present?
+  end
+
   def reset?
     status == ''
   end
