@@ -8,5 +8,6 @@ $("#modal_place").modal 'hide'
 <% if @procedure.present? %>
 $("#follow_up_<%= @procedure.id %>").html("<%= escape_javascript(render(:partial =>'appointments/followup_calendar', locals: {procedure: @procedure})) %>")
 <% end %>
+$(".followup_procedure_datepicker").datetimepicker(format: 'MM-DD-YYYY')
 <% end %>
 

@@ -4,13 +4,13 @@
 %table.participants{id: "participants-list-table", data: {toggle: 'table', search: "true", toolbar: '#custom-toolbar',  url: "/participants.json?protocol_id=#{protocol.id}", striped: "true", height: "400", sort: {name: 'last_name', order: 'asc'}, show: {columns: "true", refresh: "true", toggle: "true", export: "true"}, export: {types: ['excel','csv']}, select: {item: {name: "toolbar1"}}}}
   %thead
     %tr
-      %th{data: {class: 'last_name', align: "left", sortable: "true", field: "last_name"}}
+      %th{data: {class: 'last_name truncate', align: "left", sortable: "true", field: "last_name"}}
         = t(:participant)[:last_name]
-      %th{data: {class: 'first_name', align: "left", sortable: "true", field: "first_middle"}}
+      %th{data: {class: 'first_name truncate', align: "left", sortable: "true", field: "first_middle"}}
         = t(:participant)[:first_name]
-      %th{data: {class: 'mrn', align: "left", sortable: "true", field: "mrn"}}
+      %th{data: {class: 'mrn truncate', align: "left", sortable: "true", field: "mrn"}}
         = t(:participant)[:mrn]
-      %th{data: {class: 'external_id', align: "left", sortable: "true", field: "external_id"}}
+      %th{data: {class: 'external_id truncate', align: "left", sortable: "true", field: "external_id"}}
         = t(:participant)[:id]
       %th{data: {class: 'date_of_birth', align: "center", sortable: "true", sorter: "dateSorter", field: "date_of_birth"}}
         = t(:participant)[:dob]
@@ -20,7 +20,7 @@
         = t(:participant)[:race]
       %th{data: {class: 'ethnicity', align: "left", sortable: "true", field: "ethnicity"}}
         = t(:participant)[:ethnicity]
-      %th{data: {class: 'address', align: "left", sortable: "true", field: "address", visible: "false"}}
+      %th{data: {class: 'address truncate', align: "left", sortable: "true", field: "address", visible: "false"}}
         = t(:participant)[:address]
       %th{data: {class: 'phone', align: "left", sortable: "true", field: "phone", visible: "false"}}
         = t(:participant)[:phone]
