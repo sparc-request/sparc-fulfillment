@@ -13,7 +13,7 @@ module SparcShard
     allow_shard :sparc
 
     def readonly?
-      true
+      !Rails.env.test?
     end
   end
 end

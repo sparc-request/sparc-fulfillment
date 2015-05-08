@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150422150431) do
+ActiveRecord::Schema.define(version: 20150508134303) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -54,6 +54,16 @@ ActiveRecord::Schema.define(version: 20150422150431) do
   add_index "arms", ["deleted_at"], name: "index_arms_on_deleted_at", using: :btree
   add_index "arms", ["protocol_id"], name: "index_arms_on_protocol_id", using: :btree
   add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", unique: true, using: :btree
+
+  create_table "clinical_providers", force: :cascade do |t|
+    t.integer  "user_id",         limit: 4
+    t.integer  "organization_id", limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "clinical_providers", ["organization_id"], name: "index_clinical_providers_on_organization_id", using: :btree
+  add_index "clinical_providers", ["user_id"], name: "index_clinical_providers_on_user_id", using: :btree
 
   create_table "components", force: :cascade do |t|
     t.string   "component",       limit: 255
@@ -158,6 +168,13 @@ ActiveRecord::Schema.define(version: 20150422150431) do
 
   add_index "notifications", ["sparc_id"], name: "index_notifications_on_sparc_id", using: :btree
 
+  create_table "organizations", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.string   "type",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
   create_table "participants", force: :cascade do |t|
     t.integer  "protocol_id",        limit: 4
     t.integer  "arm_id",             limit: 4
@@ -234,23 +251,6 @@ ActiveRecord::Schema.define(version: 20150422150431) do
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
-
-  create_table "services", force: :cascade do |t|
-    t.integer  "sparc_id",        limit: 4
-    t.decimal  "cost",                          precision: 10
-    t.string   "name",            limit: 255
-    t.string   "abbreviation",    limit: 255
-    t.text     "description",     limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-    t.integer  "sparc_core_id",   limit: 4
-    t.string   "sparc_core_name", limit: 255
-    t.boolean  "one_time_fee",    limit: 1
-  end
-
-  add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
-  add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
 
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"
@@ -351,4 +351,6 @@ ActiveRecord::Schema.define(version: 20150422150431) do
   add_index "visits", ["sparc_id"], name: "index_visits_on_sparc_id", unique: true, using: :btree
   add_index "visits", ["visit_group_id"], name: "index_visits_on_visit_group_id", using: :btree
 
+  add_foreign_key "clinical_providers", "organizations"
+  add_foreign_key "clinical_providers", "users"
 end

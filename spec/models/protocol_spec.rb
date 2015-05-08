@@ -10,11 +10,11 @@ RSpec.describe Protocol, type: :model do
     describe '#delete' do
 
       it 'should not permanently delete the record' do
-        service = create(:service)
+        protocol = create(:protocol)
 
-        service.delete
+        protocol.delete
 
-        expect(service.persisted?).to be
+        expect(protocol.persisted?).to be
       end
     end
 
