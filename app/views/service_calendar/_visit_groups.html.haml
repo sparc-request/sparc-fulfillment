@@ -1,5 +1,11 @@
 - visit_groups.each_with_index do |visit_group, index|
-  .col-md-1.visit_name.text-center{:data_visit_group_id => visit_group.id}= visit_group.name
+  .col-xs-1
+    .row.visit_group_day_windows.text-center
+      .col-xs-4.text-center.day_window= visit_group.window_before || 0
+      .col-xs-4.text-center.day_window= visit_group.day
+      .col-xs-4.text-center.day_window= visit_group.window_after || 0
+    .row.visit_group_names.text-center
+      %visit_name.text-center{:data_visit_group_id => visit_group.id}= visit_group.name
 - (visit_groups.size...Visit.per_page).each do |index|
   .col-md-1.text-center{class: "visit_group_#{index}"}
     &nbsp
