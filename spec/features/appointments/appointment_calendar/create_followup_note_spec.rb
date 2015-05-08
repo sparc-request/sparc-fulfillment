@@ -43,7 +43,6 @@ feature 'Followup note', js: true do
   end
 
   def and_the_date_should_change
-    puts @procedure.task.due_at
     expect(@procedure.task.due_at.strftime("%m/%d/%Y")).to eq Time.new(Time.now.year,Time.now.month,15).strftime("%m/%d/%Y")
   end
 
