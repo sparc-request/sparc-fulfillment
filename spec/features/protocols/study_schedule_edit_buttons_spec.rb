@@ -170,8 +170,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     describe 'remove modal' do
 
       before :each do
-        li_1 = create(:line_item, arm: arm1, service: service)
-        li_2 = create(:line_item, arm: arm2, service: service)
+        li_1 = create(:line_item, arm: arm1, service: service, protocol: protocol)
+        li_2 = create(:line_item, arm: arm2, service: service, protocol: protocol)
         visit current_path
       end
 
