@@ -7,13 +7,13 @@
       %h4.modal-title.text-center= t(:notes)[notable_type][:index_header]
     .modal-body
       - if notes.any?
-        .notes-index
-          .notes-header.text-center
+        .polymorphic-index
+          .polymorphic-header.text-center
             .col-xs-3= t(:notes)[:user]
             .col-xs-2= t(:notes)[:date]
             .col-xs-7= t(:notes)[:comment]
           - notes.each do |note|
-            .note
+            .polymorphic
               .col-xs-3.name= note.user.full_name
               .col-xs-2.created-at= format_datetime(note.created_at)
               .col-xs-7.comment= note.comment
