@@ -13,6 +13,28 @@ RSpec.describe LineItem, type: :model do
   it { is_expected.to have_many(:documents) }
   it { is_expected.to have_many(:components) }
 
+  context 'validations' do
+
+    it { is_expected.to validate_presence_of(:protocol_id) }
+    it { is_expected.to validate_presence_of(:service_id) }
+
+    describe 'custom validations' do
+
+      it 'should validate presence of quantity_requested and quantity type if one_time_fee' do
+        service = create(:service_of_otf) #otf true
+        line_item = LineItem.new(service: service, protocol: create(:protocol), quantity_requested: nil)
+        expect(line_item).to have(2).errors_on(:quantity_requested)
+        expect(line_item).to have(1).errors_on(:quantity_type)
+      end
+      it 'should not validate presence of quantity_requested and quantity type if not one_time_fee' do
+        service = create(:service) #otf false
+        line_item = LineItem.new(service: service, protocol: create(:protocol), quantity_requested: nil)
+        expect(line_item).to have(0).errors_on(:quantity_requested)
+        expect(line_item).to have(0).errors_on(:quantity_type)
+      end
+    end
+  end
+
   context 'instance methods' do
 
     describe '.name' do
@@ -58,7 +80,7 @@ RSpec.describe LineItem, type: :model do
     describe '.one_time_fee' do
 
       it 'should be delegated to Service' do
-        service   = create(:service, one_time_fee: true)
+        service   = create(:service_of_otf)
         line_item = create(:line_item, service: service, protocol: create(:protocol))
 
         expect(line_item.one_time_fee).to eq(true)
@@ -71,7 +93,7 @@ RSpec.describe LineItem, type: :model do
     describe 'quantity_remaining' do
 
       it 'should return the quantity_requested minus the quantity of each fulfillment' do
-        service   = create(:service, one_time_fee: true)
+        service   = create(:service_of_otf)
         line_item = create(:line_item, service: service, protocol: create(:protocol), quantity_requested: 500)
         4.times do
           create(:fulfillment, line_item: line_item, quantity: 25)
@@ -81,7 +103,7 @@ RSpec.describe LineItem, type: :model do
       end
 
       it 'should return quantity_requested if there are no fulfillments' do
-        service   = create(:service, one_time_fee: true)
+        service   = create(:service_of_otf)
         line_item = create(:line_item, service: service, protocol: create(:protocol), quantity_requested: 500)
 
         expect(line_item.quantity_remaining).to eq(500)
@@ -91,13 +113,23 @@ RSpec.describe LineItem, type: :model do
     describe 'last_fulfillment' do
 
       it 'should return the fulfilled_at date of the latest fulfillment' do
-        service   = create(:service, one_time_fee: true)
+        service   = create(:service_of_otf)
         line_item = create(:line_item, service: service, protocol: create(:protocol))
         fill_1 = create(:fulfillment, line_item: line_item, fulfilled_at: "08-10-2015")
         fill_2 = create(:fulfillment, line_item: line_item, fulfilled_at: "09-10-2015")
         fill_3 = create(:fulfillment, line_item: line_item, fulfilled_at: "10-10-2015")
 
         expect(line_item.last_fulfillment).to eq(fill_3.fulfilled_at)
+      end
+    end
+
+    describe 'create_line_item_components' do
+
+      it 'should create components for the line_item after creation' do
+        service = create(:service_of_otf_with_components)
+        expect{
+          create(:line_item, service: service, protocol: create(:protocol))
+        }.to change(Component, :count).by(3)
       end
     end
   end
