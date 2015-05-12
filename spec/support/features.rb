@@ -7,5 +7,4 @@ RSpec.configure do |config|
   config.include Features::ProtocolHelpers, type: :feature
   config.include Features::BrowserHelpers, type: :feature
   config.include Features::TaskHelpers, type: :feature
-  config.include Features::StudyLevelActivitiesHelpers, type: :feature
 end
