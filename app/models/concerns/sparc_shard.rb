@@ -15,5 +15,9 @@ module SparcShard
     def readonly?
       !Rails.env.test?
     end
+
+    def self.sparc_record?
+      true
+    end
   end
 end
