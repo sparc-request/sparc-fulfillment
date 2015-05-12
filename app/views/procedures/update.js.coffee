@@ -22,6 +22,7 @@ $(".procedure[data-id='<%= @procedure.id %>']").
   find(".completed-date input").
   attr("disabled", false).
   attr("value", "<%= format_date(@procedure.completed_date) %>")
+$(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
 <% end %>
 
 

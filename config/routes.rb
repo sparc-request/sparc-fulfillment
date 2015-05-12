@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :fulfillments, only: [:new, :create, :edit, :update]
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
+  resources :documents, only: [:index, :new, :create]
 
   resources :line_items, only: [:new, :create, :edit, :update] do
     member do

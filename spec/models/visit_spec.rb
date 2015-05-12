@@ -20,6 +20,20 @@ RSpec.describe Visit, type: :model do
         expect(visit.procedures.complete.count).to eq(3)
         expect(visit.procedures.untouched.count).to eq(0)
       end
+
+      it 'should not destroy Procedures belonging to begun Appointments' do
+        protocol = create(:protocol)
+        arm = create(:arm_imported_from_sparc, protocol: protocol)
+        appointment = arm.visit_groups.first.appointments.first
+        appointment.update_attribute(:start_date, Time.now)
+        visit = arm.visit_groups.first.visits.first
+        service = visit.line_item.service
+        3.times do
+          create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
+        end
+        visit.destroy
+        expect(visit.procedures.count).to eq(3)
+      end
     end
 
     describe '#delete' do
@@ -80,6 +94,20 @@ RSpec.describe Visit, type: :model do
         end
         visit.update_procedures 2
         expect(visit.procedures.count).to eq(2)
+      end
+
+      it 'should not delete Procedures belonging to started Appointments' do
+        protocol = create(:protocol)
+        arm = create(:arm_imported_from_sparc, protocol: protocol)
+        appointment = arm.visit_groups.first.appointments.first
+        appointment.update_attribute(:start_date, Time.now)
+        visit = arm.visit_groups.first.visits.first
+        service = visit.line_item.service
+        3.times do
+          create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
+        end
+        visit.update_procedures 0
+        expect(visit.procedures.count).to eq(3)
       end
 
       it 'should create procedures' do
