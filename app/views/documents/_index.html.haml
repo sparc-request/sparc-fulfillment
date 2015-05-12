@@ -20,9 +20,5 @@
     .modal-footer
       .center-block
         %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-        - if (documentable_type == :lineitem)
-          %button.btn.btn-primary.document.line_item.new{type: "button", aria: {label: "New Note"}, data: {documentable_id: documentable_id}}
-            %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
-        - elsif (documentable_type == :fulfillment)
-          %button.btn.btn-primary.document.fulfillment_note.new{type: "button", aria: {label: "New Note"}, data: {documentable_id: documentable_id}}
-            %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
+        %button.btn.btn-primary.document.new{type: "button", class: documentable_type == :lineitem ? 'line_item_doc' : 'fulfillment_doc', aria: {label: "New Document"}, data: {documentable_id: documentable_id}}
+          %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
