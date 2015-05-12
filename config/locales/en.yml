@@ -162,6 +162,17 @@ en:
     change_service: "Change Service"
     service: "Service Name"
 
+  documents:
+    new_header: "Add Document"
+    date: "Date Uploaded"
+    doc: "Document"
+    lineitem:
+      index_header: "Line Item Documents"
+      none: "This line item has no documents"
+    fulfillment:
+      index_header: "Fulfillment Documents"
+      none: "This fulfillment has no documents."
+
   notes:
     new_header: "Add Note"
     user: "User"
@@ -218,11 +229,13 @@ en:
       updated: "Task Has Been Updated"
       incompleted: "The selected task(s) have been set to incomplete"
     line_item:
-        updated: "Line Item Updated"
-        created: "Line Item Created"
+      updated: "Line Item Updated"
+      created: "Line Item Created"
     fulfillment:
-        updated: "Fulfillment Updated"
-        created: "Fulfillment Created"
+      updated: "Fulfillment Updated"
+      created: "Fulfillment Created"
+    document:
+      created: "Document Created"
 
   study_level_activities:
     header: "Study Level Activities"

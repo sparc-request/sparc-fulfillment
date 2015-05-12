@@ -17,6 +17,7 @@
 //= require moment
 //= require bootstrap-datetimepicker
 //= require moment/en-gb
+//= require jquery.remotipart
 
 //= require protocols
 //= require service_calendar
