@@ -4,10 +4,6 @@ RSpec.describe PricingMap, type: :model do
 
   describe ".current" do
 
-    before :each do
-      PricingMap.delete_all
-    end
-
     context "no PricingMaps present" do
 
       it "should return an empty Array" do
