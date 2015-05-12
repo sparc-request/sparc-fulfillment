@@ -10,6 +10,9 @@ class Protocol < ActiveRecord::Base
   has_many :participants, dependent: :destroy
   has_many :user_roles
 
+  has_many :appointments, through: :participants
+  has_many :procedures, through: :appointments
+
   after_save :update_faye
   after_destroy :update_faye
 

@@ -35,6 +35,10 @@ gem 'uglifier', '>= 1.3.0'
 gem 'will_paginate'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
 
+#requirements for excel export
+gem 'axlsx'
+gem 'axlsx_rails'
+
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'faker', '~> 1.4.3'

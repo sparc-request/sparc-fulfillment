@@ -14,6 +14,7 @@ class Procedure < ActiveRecord::Base
 
   belongs_to :appointment
   belongs_to :visit
+  belongs_to :service
 
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
