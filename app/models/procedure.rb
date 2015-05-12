@@ -27,6 +27,9 @@ class Procedure < ActiveRecord::Base
   scope :incomplete,  -> { where('completed_date IS NULL')      }
   scope :complete,    -> { where('completed_date IS NOT NULL')  }
 
+  # select Procedures that belong to an Appointment without a start date
+  scope :belonging_to_unbegun_appt, -> { joins(:appointment).where('appointments.start_date IS NULL') }
+
   def self.billing_display
     [["R", "research_billing_qty"],
      ["T", "insurance_billing_qty"],
@@ -41,9 +44,15 @@ class Procedure < ActiveRecord::Base
     elsif attributes[:status].blank? &&
         attributes[:status] == ''
       attributes.merge!(completed_date: nil)
+    elsif attributes[:completed_date].present?
+      attributes[:completed_date] = Time.strptime(attributes[:completed_date], "%m-%d-%Y")
     end
-
     super attributes
+  end
+
+  # Has this procedure's appointment started?
+  def appt_started?
+    appointment.start_date.present?
   end
 
   def reset?

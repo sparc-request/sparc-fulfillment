@@ -13,7 +13,7 @@ class Visit < ActiveRecord::Base
   delegate :position, to: :visit_group
 
   def destroy
-    procedures.untouched.map(&:destroy)
+    procedures.untouched.belonging_to_unbegun_appt.map(&:destroy)
 
     super
   end
@@ -33,7 +33,7 @@ class Visit < ActiveRecord::Base
       next if appointment.nil?
       procedures_available = self.procedures.where("billing_type = ? AND service_id = ? AND appointment_id = ?", selected_qty_type, service.id, appointment.id)
       current_qty = procedures_available.count
-      if current_qty > updated_qty
+      if current_qty > updated_qty and appointment.start_date.nil?    # don't delete procedures from begun appointments
         procedures_to_delete = procedures_available.untouched.limit(current_qty - updated_qty)
         if not procedures_to_delete.empty?
           procedures_to_delete.destroy_all

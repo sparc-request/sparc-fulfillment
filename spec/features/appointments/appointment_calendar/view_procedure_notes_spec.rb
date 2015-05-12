@@ -22,6 +22,7 @@ feature 'View Notes', js: true do
 
   def given_i_have_marked_a_procedure_as_complete
     given_i_am_viewing_a_procedure
+    after_appointment_starts
     find('label.status.complete').click
   end
 
@@ -29,10 +30,15 @@ feature 'View Notes', js: true do
     reason = Procedure::NOTABLE_REASONS.first
 
     given_i_am_viewing_a_procedure
+    after_appointment_starts
     find('label.status.incomplete').click
     select reason, from: 'procedure_notes_attributes_0_reason'
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
+  end
+
+  def after_appointment_starts
+    find('button.start_visit').click
   end
 
   def given_i_am_viewing_a_procedure
