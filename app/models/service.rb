@@ -10,6 +10,7 @@ class Service < ActiveRecord::Base
 
   default_scope { order(name: :asc) }
 
+  # TODO Determine exact cost calculation
   def cost
     if pricing_map = pricing_maps.current(Time.current).first
       return pricing_map.full_rate
