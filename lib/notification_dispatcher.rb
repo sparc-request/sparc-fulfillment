@@ -25,8 +25,6 @@ class NotificationDispatcher
       ProtocolImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
     when 'ProjectRole'
       UserRoleImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
-    when 'Service'
-      ServiceImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
     end
   end
 
