@@ -37,9 +37,9 @@ RSpec.describe DocumentsController do
   describe "POST #create" do
     it "should save a new document if valid" do
       file = ActionDispatch::Http::UploadedFile.new({
-              :filename => 'sctr_logo.png',
-              :content_type => 'image/png',
-              :tempfile => File.new("#{Rails.root}/app/assets/images/sctr_logo.png")
+              :filename => 'text_document.txt',
+              :content_type => 'text/plain',
+              :tempfile => File.new(Rails.root.join('spec', 'support', 'text_document.txt'))
             })
       expect{
         post :create, {
