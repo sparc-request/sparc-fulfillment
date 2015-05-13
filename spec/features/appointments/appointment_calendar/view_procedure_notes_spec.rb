@@ -45,7 +45,7 @@ feature 'View Notes', js: true do
     protocol    = create(:protocol_imported_from_sparc)
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant_visits.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
@@ -59,11 +59,11 @@ feature 'View Notes', js: true do
   end
 
   def then_i_should_see_a_complete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to complete')
+    expect(page).to have_css('.modal-body .polymorphic .comment', text: 'Status set to complete')
   end
 
   def then_i_should_see_an_incomplete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to incomplete')
+    expect(page).to have_css('.modal-body .polymorphic .comment', text: 'Status set to incomplete')
   end
 
   def then_i_should_be_notified_that_there_are_no_notes

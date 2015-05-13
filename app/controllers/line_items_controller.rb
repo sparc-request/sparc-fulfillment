@@ -28,6 +28,7 @@ class LineItemsController < ApplicationController
       @line_item.update(line_item_params)
       flash[:success] = t(:flash_messages)[:line_item][:updated]
     else
+      puts line_item_validation.errors.inspect
       @errors = line_item_validation.errors
     end
   end

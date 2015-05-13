@@ -23,7 +23,7 @@ feature 'Create Procedure', js: true do
 
   def and_i_add_a_procedure
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant_visits.first
 
     bootstrap_select('#appointment_select', visit_group.name)
     find("#service_list > option[value='#{service.id}']").select_option
@@ -37,7 +37,7 @@ feature 'Create Procedure', js: true do
 
   def and_i_add_two_procedures
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant_visits.first
 
     bootstrap_select('#appointment_select', visit_group.name)
     find("#service_list > option[value='#{service.id}']").select_option

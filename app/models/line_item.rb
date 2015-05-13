@@ -22,12 +22,20 @@ class LineItem < ActiveRecord::Base
             to: :service,
             allow_nil: true
 
-  validates :protocol_id, :service_id, :quantity_requested, :quantity_type, presence: true
-  validates_numericality_of :quantity_requested
+  validates :protocol_id, :service_id, presence: true
+  validate :one_time_fee_fields
   after_create :create_line_item_components
 
   def started_at=(date)
     write_attribute(:started_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
+  end
+
+  def one_time_fee_fields
+    if one_time_fee
+      errors.add(:quantity_requested, "can't be blank") if not quantity_requested.present?
+      errors.add(:quantity_requested, "is not a number") if not quantity_requested.is_a? Integer
+      errors.add(:quantity_type, "can't be blank") if not quantity_type.present?
+    end
   end
 
   def quantity_remaining
