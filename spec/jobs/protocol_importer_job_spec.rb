@@ -16,6 +16,9 @@ RSpec.describe ProtocolImporterJob, type: :job do
   describe '#perform', sparc_api: :get_sub_service_request_1 do
 
     before do
+      service = create(:service)
+      Service.stub(:find).and_return(service)
+
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
       protocol_job = ProtocolImporterJob.new(6213, callback_url, 'update')
 
