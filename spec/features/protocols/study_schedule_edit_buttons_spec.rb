@@ -4,7 +4,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   let!(:protocol)    { create(:protocol_with_pi) }
   let!(:arm1)        { create(:arm_imported_from_sparc, protocol_id: protocol.id, visit_count: 5) }
   let!(:arm2)        { create(:arm_imported_from_sparc, protocol_id: protocol.id, visit_count: 1) }
-  let!(:service)     { create(:service, sparc_id: 5000, sparc_core_id: 999, sparc_core_name: 'supercalifragilisticexpialidocious', name: "SCGSBRA") }
+  let!(:service)     { create(:service) }
 
   before :each do
     visit protocol_path(protocol.sparc_id)

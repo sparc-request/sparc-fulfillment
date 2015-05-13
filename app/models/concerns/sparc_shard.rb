@@ -13,11 +13,19 @@ module SparcShard
     allow_shard :sparc
 
     def readonly?
-      !Rails.env.test?
+      Rails.env.production?
     end
 
     def self.sparc_record?
       true
+    end
+
+    # Allow queries (in particular, JOINs) across both SPARC and
+    # CWF databases by explicitly prefixing the appropriate SPARC
+    # database name to tables belonging to it.
+    def self.table_name_prefix
+      renv = ENV['RAILS_ENV'] || ENV['RACK_ENV']
+      (renv.empty? ? "sparc-rails." : "sparc-rails_#{renv}.")
     end
   end
 end
