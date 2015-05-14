@@ -1,8 +1,8 @@
 FactoryGirl.define do
 
   factory :task do
-    user
-    assignee factory: :user
+    identity
+    assignee factory: :identity
     due_at "09-09-2025"
     body { Faker::Lorem.sentence }
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150508134303) do
+ActiveRecord::Schema.define(version: 20150514141207) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -54,16 +54,6 @@ ActiveRecord::Schema.define(version: 20150508134303) do
   add_index "arms", ["deleted_at"], name: "index_arms_on_deleted_at", using: :btree
   add_index "arms", ["protocol_id"], name: "index_arms_on_protocol_id", using: :btree
   add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", unique: true, using: :btree
-
-  create_table "clinical_providers", force: :cascade do |t|
-    t.integer  "user_id",         limit: 4
-    t.integer  "organization_id", limit: 4
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-  end
-
-  add_index "clinical_providers", ["organization_id"], name: "index_clinical_providers_on_organization_id", using: :btree
-  add_index "clinical_providers", ["user_id"], name: "index_clinical_providers_on_user_id", using: :btree
 
   create_table "components", force: :cascade do |t|
     t.string   "component",       limit: 255
@@ -121,6 +111,29 @@ ActiveRecord::Schema.define(version: 20150508134303) do
 
   add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
 
+  create_table "identity_counters", force: :cascade do |t|
+    t.integer  "identity_id", limit: 4
+    t.integer  "tasks_count", limit: 4, default: 0
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "identity_counters", ["identity_id"], name: "index_identity_counters_on_identity_id", using: :btree
+
+  create_table "identity_roles", force: :cascade do |t|
+    t.integer  "identity_id", limit: 4
+    t.integer  "protocol_id", limit: 4
+    t.string   "rights",      limit: 255
+    t.string   "role",        limit: 255
+    t.string   "role_other",  limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "identity_roles", ["identity_id"], name: "index_identity_roles_on_identity_id", using: :btree
+  add_index "identity_roles", ["protocol_id"], name: "index_identity_roles_on_protocol_id", using: :btree
+
   create_table "line_items", force: :cascade do |t|
     t.integer  "sparc_id",           limit: 4
     t.integer  "arm_id",             limit: 4
@@ -143,7 +156,7 @@ ActiveRecord::Schema.define(version: 20150508134303) do
   add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree
 
   create_table "notes", force: :cascade do |t|
-    t.integer  "user_id",      limit: 4
+    t.integer  "identity_id",  limit: 4
     t.string   "comment",      limit: 255
     t.datetime "deleted_at"
     t.datetime "created_at"
@@ -154,8 +167,8 @@ ActiveRecord::Schema.define(version: 20150508134303) do
     t.string   "kind",         limit: 255, default: "note"
   end
 
+  add_index "notes", ["identity_id"], name: "index_notes_on_identity_id", using: :btree
   add_index "notes", ["notable_id", "notable_type"], name: "index_notes_on_notable_id_and_notable_type", using: :btree
-  add_index "notes", ["user_id"], name: "index_notes_on_user_id", using: :btree
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "sparc_id",     limit: 4
@@ -258,7 +271,7 @@ ActiveRecord::Schema.define(version: 20150508134303) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id",         limit: 4
+    t.integer  "identity_id",     limit: 4
     t.integer  "assignee_id",     limit: 4
     t.string   "assignable_type", limit: 255
     t.integer  "assignable_id",   limit: 4
@@ -267,43 +280,7 @@ ActiveRecord::Schema.define(version: 20150508134303) do
 
   add_index "tasks", ["assignable_id", "assignable_type"], name: "index_tasks_on_assignable_id_and_assignable_type", using: :btree
   add_index "tasks", ["assignee_id"], name: "index_tasks_on_assignee_id", using: :btree
-  add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
-
-  create_table "user_roles", force: :cascade do |t|
-    t.integer  "user_id",     limit: 4
-    t.integer  "protocol_id", limit: 4
-    t.string   "rights",      limit: 255
-    t.string   "role",        limit: 255
-    t.string   "role_other",  limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "user_roles", ["protocol_id"], name: "index_user_roles_on_protocol_id", using: :btree
-  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "email",                  limit: 255, default: "",                           null: false
-    t.string   "encrypted_password",     limit: 255, default: "",                           null: false
-    t.string   "reset_password_token",   limit: 255
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,   default: 0,                            null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "first_name",             limit: 255
-    t.string   "last_name",              limit: 255
-    t.string   "time_zone",              limit: 255, default: "Eastern Time (US & Canada)"
-    t.integer  "tasks_count",            limit: 4,   default: 0
-  end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "tasks", ["identity_id"], name: "index_tasks_on_identity_id", using: :btree
 
   create_table "versions", force: :cascade do |t|
     t.string   "item_type",  limit: 255,   null: false
@@ -351,6 +328,4 @@ ActiveRecord::Schema.define(version: 20150508134303) do
   add_index "visits", ["sparc_id"], name: "index_visits_on_sparc_id", unique: true, using: :btree
   add_index "visits", ["visit_group_id"], name: "index_visits_on_visit_group_id", using: :btree
 
-  add_foreign_key "clinical_providers", "organizations"
-  add_foreign_key "clinical_providers", "users"
 end
