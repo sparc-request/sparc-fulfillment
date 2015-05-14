@@ -35,3 +35,6 @@ scratch
 config/database.yml
 /coverage
 .env.production
+/public/system/documents/*
+/public/assets/*
+

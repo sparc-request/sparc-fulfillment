@@ -6,11 +6,12 @@
     .col-xs-3.text-center Services
     .col-xs-9.text-center
       %div
+        .col-xs-1
         -# The previous page arrow
         .col-xs-2
           .btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
         -# The visit jump to drop down
-        .col-xs-8{id: "select_for_arm_#{arm.id}"}
+        .col-xs-4{id: "select_for_arm_#{arm.id}"}
           = build_visits_select(arm, page)
         -# The next page arrow
         .col-xs-2
@@ -29,7 +30,7 @@
     .scrolling-div.col-xs-12
       - arm.line_items_grouped_by_core.each do |core_id, line_items|
         .row.core{id: "arm_#{arm.id}_core_#{core_id}"}
-          .col-xs-12= "Core: #{line_items[0].sparc_core_name}"
+          .col-xs-12= "#{line_items[0].sparc_core_name}"
         - line_items.each do |li|
           = render partial: 'service_calendar/line_item', locals: {line_item: li, page: page}
         %div{id: "arm_#{arm.id}_end_of_core_#{core_id}"}
