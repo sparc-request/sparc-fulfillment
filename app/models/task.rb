@@ -11,9 +11,9 @@ class Task < ActiveRecord::Base
   validates :assignee_id, presence: true
   validates :due_at, presence: true
 
-  after_create :increment_identity_counter
-  after_update :update_identity_counter
-  after_destroy :decrement_identity_counter
+  after_create   { increment_identity_counter unless self.complete }
+  after_update   :update_identity_counter
+  before_destroy { decrement_identity_counter unless self.complete }
 
   def due_at=(due_date)
     write_attribute(:due_at, Time.strptime(due_date, "%m-%d-%Y")) if due_date.present?
