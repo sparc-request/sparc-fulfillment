@@ -9,12 +9,15 @@
     = User.find(fulfillment.performed_by).full_name if fulfillment.performed_by
   .col-xs-2.text-center.f_components
     %button.btn.btn-default.dropdown-toggle{type: "button", "aria-expanded" => "false", data: {toggle: "dropdown"}}
-      = "Fulfillment Components" \
+      = t(:fulfillment)[:components] \
       %span.caret
     %ul.dropdown-menu{role: 'menu'}
       - fulfillment.components.each do |c|
         %li
           %a= c.component
+      - if fulfillment.components.empty?
+        %li
+          %a= t(:fulfillment)[:no_components]
   .col-xs-1
   .col-xs-2.text-center.options
     %button.btn.btn-primary.fulfillment_notes.list{type: "button", aria: {label: "Notes List"}}

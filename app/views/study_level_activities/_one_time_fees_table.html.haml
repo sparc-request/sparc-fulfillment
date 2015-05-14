@@ -5,21 +5,21 @@
     .row
       .col-xs-1.table_row.study_level_activities_header.text-center.fulfillments
       .col-xs-2.table_row.study_level_activities_header.text-center.service
-        = t(:study_level_activities)[:service]
+        = t(:line_item)[:service]
       .col-xs-1.table_row.study_level_activities_header.text-center.qty_req
-        = t(:study_level_activities)[:qty_req]
+        = t(:line_item)[:qty_req]
       .col-xs-1.table_row.study_level_activities_header.text-center.qty_type
-        = t(:study_level_activities)[:qty_type]
+        = t(:line_item)[:qty_type]
       .col-xs-1.table_row.study_level_activities_header.text-center.qty_rem
-        = t(:study_level_activities)[:qty_rem]
+        = t(:line_item)[:qty_rem]
       .col-xs-1.table_row.study_level_activities_header.text-center.started
-        = t(:study_level_activities)[:started]
+        = t(:line_item)[:started]
       .col-xs-2.table_row.study_level_activities_header.text-center.components
-        = t(:study_level_activities)[:components]
+        = t(:line_item)[:components]
       .col-xs-1.table_row.study_level_activities_header.text-center.last_fulfillment
-        = t(:study_level_activities)[:last_fulfillment]
+        = t(:line_item)[:last_fulfillment]
       .col-xs-2.table_row.study_level_activities_header.text-center.options
-        = t(:study_level_activities)[:options]
+        = t(:actions)[:options]
     -protocol.one_time_fee_line_items.each do |li|
       = render partial: "/study_level_activities/study_level_activity", locals: {line_item: li}
 
