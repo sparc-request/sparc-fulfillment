@@ -10,7 +10,7 @@
         .details-table
           .details-header.text-center
             .col-xs-2= t(:documents)[:date]
-            .col-xs-10= t(:documents)[:doc]
+            .col-xs-10= t(:documents)[:object]
           - documents.each do |document|
             .detail
               .col-xs-2.created-at= format_datetime(document.created_at)

@@ -28,19 +28,6 @@ en:
     delete: "Delete"
     save: "Save"
     options: "Options"
-    change_arm: "Assign Arm"
-    new_participant: "Create New Participant"
-    save_participant: "Save Participant"
-    save_li: "Save Line Item"
-    save_fulfillment: "Save Fulfillment"
-    start_visit: "Start Visit"
-    complete_visit: "Complete Visit"
-    new_task: "Create New Task"
-
-  activerecord:
-    attributes:
-      task:
-        due_at: "Follow up date"
 
   appointment:
     protocol_id: "Protocol ID"
@@ -57,19 +44,24 @@ en:
     name: "Visit Name"
     position: "Insert into Position"
     edit_header: "Custom Visit"
+    start_visit: "Start Visit"
+    complete_visit: "Complete Visit"
+    object: "Appointment"
 
   arm:
     name: "Arm Name"
     subject_count: "Subject Count"
+    change_arm: "Assign Arm"
     visit_count: "Visit Count"
     created: "Arm Created"
     deleted: "Arm Destroyed"
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
+    object: "Arm"
 
   documents:
     new_header: "Add Document"
     date: "Date Uploaded"
-    doc: "Document"
+    object: "Document"
     lineitem:
       index_header: "Line Item Documents"
       none: "This line item has no documents"
@@ -102,11 +94,13 @@ en:
     components: "Fulfillment Components"
     no_components: "Fulfillment Has No Components"
     add_fulfillment: "Add Fulfillment"
+    save_fulfillment: "Save Fulfillment"
     fulfillments: "Fulfillments"
     fulfillment_date: "Fullfillment Date"
     quantity: "Quantity"
     qty_type: "Quantity Type"
     performed_by: "Performed By"
+    object: "Fulfillment"
 
   index_page:
     updates: "Updates"
@@ -126,6 +120,7 @@ en:
     subsidy_expended: "Subsidy Expended"
 
   line_item:
+    add_line_item: "Add Line Item"
     change_service: "Change Service"
     service: "Service"
     qty_req: "Quantity Requested"
@@ -134,6 +129,8 @@ en:
     started: "Date Started"
     last_fulfillment: "Last Fulfillment"
     components: "Service Components"
+    save_li: "Save Line Item"
+    object: "Line Item"
 
   notes:
     new_header: "Add Note"
@@ -144,6 +141,7 @@ en:
     followup: "Follow up"
     comment: "Comment"
     incomplete_header: "Reason for Incompletion"
+    object: "Note"
     procedure:
       index_header: "Procedure Notes"
       none: "This procedure has no notes."
@@ -182,6 +180,9 @@ en:
     arm: "Current Arm"
     report: "Report"
     details: "Participant Details"
+    new_participant: "Create New Participant"
+    save_participant: "Save Participant"
+    object: "Participant"
 
   procedure:
     followup: "Follow Up"
@@ -192,9 +193,12 @@ en:
     remove: "Remove"
     follow_up_date: "Follow up date"
     completed_date: "Completed Date"
-    procedure: "Procedure"
     r_t: "R/T"
     status: "Status"
+    object: "Procedure"
+
+  protocol:
+    object: "Protocol"
 
   protocol_tabs:
     study_schedule: "Study Schedule"
@@ -207,9 +211,9 @@ en:
     name: "Selected Service"
     arm: "Select Arm(s)"
     report: "Report"
-    arm: "Arm"
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
+    object: "Service"
 
   study_schedule_tab:
     buttons:
@@ -217,34 +221,20 @@ en:
       visit: "Visit | "
       services: "Services | "
 
-  task_index:
+  task:
+    new_task: "Create New Task"
     user_name: "Created by"
-    completed: "Completed"
-    show_complete: "Show Complete"
-    assignable_type: "Type"
-    protocol_id: "Protocol"
-    visit_name: "Visit"
-    arm_name: "Arm"
-    body: "Task"
     assignee_name: "Assigned to"
+    assignable_type: "Type"
     due_at: "Due date"
+    completed: "Completed"
     reschedule: "Reschedule"
+    show_complete: "Show Complete"
     create_task: "Create Task"
-    task_type: "Task type"
-    completed_tasks_header: "Completed Tasks"
-    no_completed_tasks: "There are currently no completed tasks"
-    incompletion: "Set to Incomplete"
-    show_title: "Task"
-    participant:
-      full_name: "Participant name"
-    protocol:
-      short_title: "Protocol"
-    visit:
-      id: "Visit"
-    arm:
-      name: "Arm"
-    procedure:
-      name: "Procedure"
+    object: "Task"
+
+  visit:
+    object: "Visit"
 
   visit_groups:
     name: "Visit Name"
@@ -255,3 +245,4 @@ en:
     created: "Visit Created"
     deleted: "Visit Destroyed"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
+    object: "Visit Group"
