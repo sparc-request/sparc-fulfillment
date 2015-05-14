@@ -7,12 +7,12 @@
       %h4.modal-title.text-center= t(:documents)[documentable_type][:index_header]
     .modal-body
       - if documents.any?
-        .polymorphic-index
-          .polymorphic-header.text-center
+        .details-table
+          .details-header.text-center
             .col-xs-2= t(:documents)[:date]
             .col-xs-10= t(:documents)[:doc]
           - documents.each do |document|
-            .polymorphic
+            .detail
               .col-xs-2.created-at= format_datetime(document.created_at)
               .col-xs-10.comment= link_to document.doc_file_name, document.doc.url
       -else

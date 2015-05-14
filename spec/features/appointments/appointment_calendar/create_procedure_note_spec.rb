@@ -46,7 +46,7 @@ feature 'Create Procedure Note', js: true do
   end
 
   def then_i_shoud_see_the_note
-    expect(page).to have_css('.modal-body .polymorphic .comment', text: 'Test comment')
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Test comment')
   end
 
   def when_i_try_to_add_a_procedure_note_i_should_see_a_helpful_message

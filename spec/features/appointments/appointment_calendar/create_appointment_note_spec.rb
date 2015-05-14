@@ -31,6 +31,6 @@ feature 'Create Appointment Note', js: true do
   end
 
   def then_i_shoud_see_the_note
-    expect(page).to have_css('.modal-body .polymorphic .comment', text: 'Test comment')
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Test comment')
   end
 end

@@ -111,11 +111,11 @@ feature 'Complete Procedure', js: true do
   end
 
   def then_i_should_see_complete_notes count=1
-    expect(page).to have_css('.modal-body .polymorphic .comment', text: 'Status set to complete', count: count)
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to complete', count: count)
   end
 
   def then_i_should_see_reset_notes
-    expect(page).to have_css('.modal-body .polymorphic .comment', text: 'Status reset', count: 1)
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status reset', count: 1)
   end
 
   def then_i_incomplete_the_procedure
