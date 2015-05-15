@@ -52,7 +52,7 @@ class Participant < ActiveRecord::Base
     label = nil
 
     if not external_id.blank?
-      label = "Participant ID:#{external_subject_id}"
+      label = "Participant ID:#{external_id}"
     end
 
     if not mrn.blank?
