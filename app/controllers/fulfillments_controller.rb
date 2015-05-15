@@ -37,13 +37,10 @@ class FulfillmentsController < ApplicationController
 
   def update_components
     if params[:fulfillment][:components]
+      @fulfillment.components.destroy_all
       new_components = params[:fulfillment][:components].reject(&:empty?)
-      old_components = @fulfillment.components.map(&:component)
-      (new_components - old_components).each do |to_create|
+      new_components.each do |to_create|
         Component.create(component: to_create, composable_id: @fulfillment.id, composable_type: "Fulfillment")
-      end
-      (old_components - new_components).each do |to_destroy|
-        @fulfillment.components.where(component: to_destroy).first.destroy
       end
       @fulfillment.reload
     end
