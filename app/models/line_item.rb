@@ -18,6 +18,7 @@ class LineItem < ActiveRecord::Base
             :cost,
             :sparc_core_id,
             :sparc_core_name,
+            to: :service
             :one_time_fee,
             to: :service,
             allow_nil: true
@@ -25,7 +26,17 @@ class LineItem < ActiveRecord::Base
   validates :protocol_id, :service_id, presence: true
   validate :one_time_fee_fields
   after_create :create_line_item_components
+  after_create :increment_sparc_service_counter
+  after_destroy :decrement_sparc_service_counter
 
+  def increment_sparc_service_counter
+    RemoteServiceUpdaterJob.perform_later(self.service, 1)
+  end
+
+  def decrement_sparc_service_counter
+    RemoteServiceUpdaterJob.perform_later(self.service, -1)
+  end 
+  
   def started_at=(date)
     write_attribute(:started_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
   end
@@ -66,4 +77,5 @@ class LineItem < ActiveRecord::Base
       end
     end
   end
+>>>>>>> master
 end
