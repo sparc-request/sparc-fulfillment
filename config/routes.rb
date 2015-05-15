@@ -1,16 +1,23 @@
 Rails.application.routes.draw do
-
   devise_for :users
 
   resources :protocols
   resources :visit_groups
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
+  resources :reports
+
+  post 'billing_report', to: 'reports#billing_report'
+  get 'new_billing_report', to: 'reports#new_billing_report'
 
   resources :arms, only: [:new, :create, :destroy] do
     member do
       get 'refresh_vg_dropdown'
     end
+  end
+
+  resources :reports do
+    # get 'billing', to: 'reports#billing_report'
   end
 
   resources :participants do

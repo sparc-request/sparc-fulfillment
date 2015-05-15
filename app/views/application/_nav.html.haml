@@ -15,6 +15,10 @@
         = yield :nav_buttons
       %ul.nav.navbar-nav.navbar-right
         %li
+          = link_to reports_path do
+            %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
+            Reports
+        %li
           = link_to destroy_user_session_path do
             %span.glyphicon.glyphicon-log-out{aria: {hidden: "true"}}
             Sign out

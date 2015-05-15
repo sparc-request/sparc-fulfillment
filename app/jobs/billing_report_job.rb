@@ -1,20 +1,12 @@
-require 'csv'
+class BillingReportJob < ActiveJob::Base
+  queue_as :default
+  require 'csv'
 
-namespace :report do
-  desc "Create billing only report for CWF"
-  task :billing_only_report, :start_date, :end_date, :protocol_ids do |t, args|
-
-    ##CRAP
-    start_date = args.start_date
-    end_date = args.end_date
-    protocol_ids = args.protocol_ids
-
+  def perform(report_id, start_date, end_date, protocol_ids)
     CSV.open("tmp/admin_billing_only_report.csv", "wb") do |csv|
       csv << ["From", start_date, "To", end_date]
-
       csv << [""]
       csv << [""]
-
       csv << ["Protocol ID", "Primary PI", "Patient Name", "Patient ID", "Visit Name", "Visit Date", "Service(s) Completed", "Quantity Completed", "Research Rate", "Total Cost"]
 
       if protocol_ids
@@ -32,5 +24,13 @@ namespace :report do
         end
       end
     end
+
+    report = Report.find(report_id)
+
+    if report.create_document(doc: File.open("tmp/admin_billing_only_report.csv"))
+      report.status = "Completed"
+      report.save
+    end
+    FayeJob.enqueue(report)
   end
 end

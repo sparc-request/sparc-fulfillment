@@ -37,6 +37,11 @@ class Protocol < ActiveRecord::Base
     user_roles.where(role: "research-assistant-coordinator").map(&:user)
   end
 
+  def short_title_with_sparc_id
+    list_display = "(#{self.sparc_id}) #{self.short_title}"
+    return list_display
+  end
+
   private
 
   def update_faye

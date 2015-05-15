@@ -36,6 +36,17 @@ en:
     start_visit: "Start Visit"
     complete_visit: "Complete Visit"
     new_task: "Create New Task"
+    request_report: "Request Report"
+
+  reports_page:
+    date: "Date Requested"
+    name: "Report Type/Name"
+    status: "Report Status"
+    file: "Attached File"
+    billing_report: "Billing Report"
+    protocol: "Protocol(s)"
+    start_date: "Start Date"
+    end_date: "End Date"
 
   index_page:
     updates: "Updates"
