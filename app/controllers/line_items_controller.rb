@@ -52,6 +52,6 @@ class LineItemsController < ApplicationController
   end
 
   def find_line_item
-    @line_item = LineItem.where(id: params[:id]).first
+    @line_item = LineItem.find params[:id]
   end
 end

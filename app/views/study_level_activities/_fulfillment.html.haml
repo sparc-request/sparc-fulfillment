@@ -12,12 +12,13 @@
       = t(:fulfillment)[:components] \
       %span.caret
     %ul.dropdown-menu{role: 'menu'}
-      - fulfillment.components.each do |c|
-        %li
-          %a= c.component
       - if fulfillment.components.empty?
         %li
           %a= t(:fulfillment)[:no_components]
+      -else
+        - fulfillment.components.each do |c|
+          %li
+            %a= c.component
   .col-xs-1
   .col-xs-2.text-center.options
     %button.btn.btn-primary.fulfillment_notes.list{type: "button", aria: {label: "Notes List"}}

@@ -92,6 +92,6 @@ class ProceduresController < ApplicationController
   end
 
   def find_procedure
-    @procedure = Procedure.where(id: params[:id]).first
+    @procedure = Procedure.find params[:id]
   end
 end

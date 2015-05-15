@@ -70,7 +70,7 @@ feature 'Fulfillments', js: true do
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in 'Quantity', with: "45"
-    bootstrap_select '#fulfillment_performed_by', User.first.full_name
+    bootstrap_select '#fulfillment_performer_id', User.first.full_name
     bootstrap_select '#fulfillment_components', @components.first.component
     find('.modal-header').click
   end
@@ -93,6 +93,6 @@ feature 'Fulfillments', js: true do
     expect(page).to have_content("Fulfilled at can't be blank")
     expect(page).to have_content("Quantity can't be blank")
     expect(page).to have_content("Quantity is not a number")
-    expect(page).to have_content("Performed by can't be blank")
+    expect(page).to have_content("Performer can't be blank")
   end
 end

@@ -56,6 +56,6 @@ class FulfillmentsController < ApplicationController
   end
 
   def find_fulfillment
-    @fulfillment = Fulfillment.where(id: params[:id]).first
+    @fulfillment = Fulfillment.find params[:id]
   end
 end

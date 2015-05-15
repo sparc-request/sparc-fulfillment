@@ -139,16 +139,14 @@ RSpec.describe LineItem, type: :model do
     describe "after create", delay: true do
 
       it "should create a Remote Service Updater job" do
-        service = create(:service)
-        expect { create(:line_item, service: service) }.to enqueue_a(RemoteServiceUpdaterJob).with(global_id(service), 1)
+        expect { create(:line_item, service: create(:service), protocol: create(:protocol)) }.to enqueue_a(RemoteServiceUpdaterJob).with(global_id(service), 1)
       end
     end
 
     describe "after destroy", delay: true do
 
       it "should create a Remote Service Updater job" do
-        service = create(:service)
-        line_item = create(:line_item, service: service)
+        line_item = create(:line_item, service: create(:service), protocol: create(:protocol))
         expect { line_item.destroy }.to enqueue_a(RemoteServiceUpdaterJob).with(global_id(service), -1)
       end
     end
