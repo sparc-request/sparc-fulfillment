@@ -12,10 +12,10 @@ $ ->
 
   $(document).on 'change', '.components > .selectpicker', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
-    data = components: $(this).val()
+    data = components: $(this).val(), line_item_id: line_item_id
     $.ajax
       type: 'PUT'
-      url: "/line_items/#{line_item_id}/update_components"
+      url: "/components/update"
       data: data
 
   $(document).on 'click', '.otf_notes', ->

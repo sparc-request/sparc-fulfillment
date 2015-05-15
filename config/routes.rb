@@ -9,12 +9,7 @@ Rails.application.routes.draw do
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents, only: [:index, :new, :create]
-
-  resources :line_items, only: [:new, :create, :edit, :update] do
-    member do
-      put 'update_components', to: 'line_items#update_components'
-    end
-  end
+  resources :line_items, only: [:new, :create, :edit, :update]
 
   resources :arms, only: [:new, :create, :destroy] do
     member do
