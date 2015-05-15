@@ -26,6 +26,7 @@ gem 'paper_trail', '~> 4.0.0.beta'
 gem 'paranoia', '~> 2.0'
 gem 'puma'
 gem 'rails', '4.2.1'
+gem 'remotipart'
 gem 'rest-client'
 gem 'sass-rails'
 gem 'sdoc', '~> 0.4.0', group: :doc

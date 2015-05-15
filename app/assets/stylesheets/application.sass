@@ -12,6 +12,7 @@
 @import "participants"
 @import "tasks"
 @import "notifications"
+@import "study_level_activities"
 
 .opacity50
   opacity: 0.5
@@ -25,6 +26,9 @@
 #footer
   margin: 20px 0px
 
+.slide-toggle-hidden
+  display: none
+
 /************Main Layout Styling************/
 .header
   background-color: #113967
@@ -37,30 +41,7 @@
   #logo_left
     margin-top: 17px
 
-/************Participant Details Styling************/
-.details-table
-  padding: 15px 0px 15px 0px
-  height: 400px
-  overflow: scroll
 
-  .details-header > div
-    background: #113967
-    padding: 10px 10px 10px 10px
-    color: white
-    border-right: 1px solid white
-    &:last-child
-      border: 0px
-
-  .detail
-    padding: 3px 10px 3px 10px
-    overflow: hidden
-
-    .field
-      font-weight: bold
-
-  .detail:nth-child(2n),
-  .detail:nth-child(2n):hover
-    background-color: #90B9CD
 
 /************Index Page Styling************/
 //Index Table Styling
@@ -182,13 +163,13 @@ table.custom_striped.details
   .visit
     margin-top: 6px
 
-/************ Notes Index Styling ************/
-.notes-index, .completed-tasks-index
+/************Details Table Styling (Notes, Documents, Participant Details)************/
+.details-table
   padding: 15px 0px 15px 0px
   height: 400px
   overflow: scroll
 
-  .notes-header > div,.tasks-header > div
+  .details-header > div
     background: #113967
     padding: 10px 10px 10px 10px
     color: white
@@ -196,12 +177,15 @@ table.custom_striped.details
     &:last-child
       border: 0px
 
-  .note, .task
-    padding: 0px 10px 0px 10px
+  .detail
+    padding: 1px 10px 1px 10px
     overflow: hidden
 
-  .note:nth-child(2n),.task:nth-child(2n),
-  .note:nth-child(2n):hover,.task:nth-child(2n):hover
+    .field
+      font-weight: bold
+
+  .detail:nth-child(2n),
+  .detail:nth-child(2n):hover
     background-color: #90B9CD
     color: white
 

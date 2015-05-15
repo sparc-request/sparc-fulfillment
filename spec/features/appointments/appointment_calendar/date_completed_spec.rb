@@ -10,6 +10,7 @@ feature 'Date completed', js: true do
 
   scenario 'User marks Procedure as complete and sees :date_completed updated and enabled' do
     given_i_am_viewing_a_procedure
+    after_appointment_has_started
     when_i_complete_the_procedure
     then_i_should_see_an_enabled_datepicker_with_the_current_date
   end
@@ -39,7 +40,12 @@ feature 'Date completed', js: true do
 
   def given_i_am_viewing_a_completed_procedure
     given_i_am_viewing_a_procedure
+    after_appointment_has_started
     when_i_complete_the_procedure
+  end
+
+  def after_appointment_has_started
+    find('button.start_visit').click
   end
 
   def when_i_complete_the_procedure
@@ -62,7 +68,7 @@ feature 'Date completed', js: true do
     wait_for_ajax
     all('#service_list option')[0].select_option
     fill_in 'service_quantity', with: '1'
-    page.find('button.add_service').trigger('click')
+    page.find('button.add_service').click
   end
 
   def then_i_should_see_a_disabled_datepicker

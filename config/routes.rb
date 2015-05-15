@@ -3,12 +3,21 @@ Rails.application.routes.draw do
 
   resources :protocols
   resources :visit_groups
+  resources :components, only: [:update]
+  resources :fulfillments, only: [:new, :create, :edit, :update]
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
+  resources :documents, only: [:index, :new, :create]
   resources :reports
 
   post 'billing_report', to: 'reports#billing_report'
   get 'new_billing_report', to: 'reports#new_billing_report'
+
+  resources :line_items, only: [:new, :create, :edit, :update] do
+    member do
+      patch 'update_components', to: 'line_items#update_components'
+    end
+  end
 
   resources :arms, only: [:new, :create, :destroy] do
     member do

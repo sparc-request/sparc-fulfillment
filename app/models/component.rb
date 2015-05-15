@@ -5,4 +5,7 @@ class Component < ActiveRecord::Base
 
   belongs_to :composable, polymorphic: true
 
+  default_scope {order(:position)}
+
+  validates :component, presence: true
 end

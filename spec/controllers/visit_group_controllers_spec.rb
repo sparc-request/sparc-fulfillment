@@ -5,7 +5,7 @@ RSpec.describe VisitGroupsController,type: :controller do
     sign_in
     @protocol = create(:protocol)
     @arm = create(:arm)
-    @line_item = create(:line_item)
+    @line_item = create(:line_item, protocol: @protocol, service: create(:service))
     @visit_group = create(:visit_group, arm_id: @arm.id)
   end
 

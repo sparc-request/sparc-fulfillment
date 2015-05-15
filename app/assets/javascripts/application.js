@@ -17,6 +17,7 @@
 //= require moment
 //= require bootstrap-datetimepicker
 //= require moment/en-gb
+//= require jquery.remotipart
 
 //= require protocols
 //= require service_calendar
@@ -25,5 +26,6 @@
 //= require appointments
 //= require tasks
 //= require reports
+//= require study_level_activities
 //= require faye
 //= require global

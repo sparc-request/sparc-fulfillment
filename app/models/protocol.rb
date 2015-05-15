@@ -42,6 +42,10 @@ class Protocol < ActiveRecord::Base
     return list_display
   end
 
+  def one_time_fee_line_items
+    line_items.includes(:service).where(:services => {:one_time_fee => true})
+  end
+
   private
 
   def update_faye

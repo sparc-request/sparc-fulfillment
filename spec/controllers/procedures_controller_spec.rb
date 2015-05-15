@@ -62,25 +62,41 @@ RSpec.describe ProceduresController, type: :controller do
 
       context 'Procedure status is: complete' do
 
-        context 'User marks Procedure as complete' do
-
-          before do
+        context 'User edits completed_date' do
+           before do
             procedure = create(:procedure_complete)
-            params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+            params    = { id: procedure.id, procedure: { completed_date: Time.current.tomorrow.strftime("%m-%d-%Y")}, format: :js }
 
             put :update, params
           end
 
-          it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('complete')
+          it "should update the completed date" do
+            expect(assigns(:procedure).completed_date.strftime("%m-%d-%Y")).to eq Time.current.tomorrow.strftime("%m-%d-%Y")
           end
 
-          it 'should update the Procedure completed_date to: Time.current' do
-            expect(assigns(:procedure).completed_date).to be
+          it "should create a note" do
+            expect(assigns(:procedure).reload.notes).to be_one
+          end
+        end
+
+        context 'User marks the procedure as complete' do #if the procedure is already complete, a user setting it to complete again will render the status void
+          before do
+            procedure = create(:procedure_complete)
+            params = {id: procedure.id, procedure: {status: ''}, format: :js}
+
+            put :update, params
           end
 
-          it 'should not create a Note' do
-            expect(assigns(:procedure).reload.notes.count).to be_zero
+          it "should update the completed_date to be nil" do
+            expect(assigns(:procedure).completed_date).to_not be
+          end
+
+          it "should update the status to be nil" do
+            expect(assigns(:procedure).status).to eq ''
+          end
+
+          it "should create a note" do
+            expect(assigns(:procedure).reload.notes).to be_one
           end
         end
 
@@ -112,7 +128,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as complete' do
 
           before do
-            procedure = create(:procedure_complete)
+            procedure = create(:procedure)
             params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
 
             put :update, params
@@ -126,26 +142,22 @@ RSpec.describe ProceduresController, type: :controller do
             expect(assigns(:procedure).completed_date).to be
           end
 
-          it 'should not create a Note' do
-            expect(assigns(:procedure).reload.notes.count).to be_zero
+          it 'should create a Note' do
+            expect(assigns(:procedure).reload.notes).to be_one
           end
         end
 
         context 'User marks Procedure as incomplete' do
 
           before do
-            procedure = create(:procedure_complete)
-            params    = { id: procedure.id, procedure: { status: 'incomplete', completed_date: "" }, format: :js }
+            procedure = create(:procedure)
+            params    = { id: procedure.id, procedure: { status: ''}, format: :js }
 
             put :update, params
           end
 
           it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('incomplete')
-          end
-
-          it 'should update the Procedure completed_date to: nil' do
-            expect(assigns(:procedure).reload.completed_date).to_not be
+            expect(assigns(:procedure).status).to eq('')
           end
 
           it 'should create a Note' do

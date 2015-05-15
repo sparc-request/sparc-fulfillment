@@ -19,6 +19,6 @@
             %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
             Reports
         %li
-          = link_to destroy_user_session_path do
+          = link_to(destroy_user_session_path, id: "sign-out-link", method: :delete, data: { confirm: "Are you sure you want to sign out?" }) do
             %span.glyphicon.glyphicon-log-out{aria: {hidden: "true"}}
             Sign out
