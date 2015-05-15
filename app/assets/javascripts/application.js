@@ -25,6 +25,7 @@
 //= require study_schedule_edit_buttons
 //= require appointments
 //= require tasks
+//= require reports
 //= require study_level_activities
 //= require faye
 //= require global

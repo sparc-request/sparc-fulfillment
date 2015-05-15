@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   devise_for :users
 
   resources :protocols
@@ -9,6 +8,10 @@ Rails.application.routes.draw do
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents, only: [:index, :new, :create]
+  resources :reports
+
+  post 'billing_report', to: 'reports#billing_report'
+  get 'new_billing_report', to: 'reports#new_billing_report'
 
   resources :line_items, only: [:new, :create, :edit, :update] do
     member do
@@ -20,6 +23,10 @@ Rails.application.routes.draw do
     member do
       get 'refresh_vg_dropdown'
     end
+  end
+
+  resources :reports do
+    # get 'billing', to: 'reports#billing_report'
   end
 
   resources :participants do

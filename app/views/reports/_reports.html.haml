@@ -1,0 +1,12 @@
+.bootstrap-table-dropdown-overflow
+  %table.reports.custom_striped{id: "reports-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: "/reports.json", "sort-name" => "created_at", "sort-order" => 'asc', striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel', 'csv']}}
+    %thead
+      %tr
+        %th{data: {class: 'created_at', align: 'center', field: 'created_at'}}
+          = t(:reports_page)[:date]
+        %th{data: {class: 'name', align: 'center', field: 'name'}}
+          = t(:reports_page)[:name]
+        %th{data: {class: 'status', align: 'center', field: 'status'}}
+          = t(:reports_page)[:status]
+        %th{data: {class: 'file', align: 'center', field: 'file'}}
+          = t(:reports_page)[:file]
