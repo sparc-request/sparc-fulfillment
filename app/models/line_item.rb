@@ -18,7 +18,6 @@ class LineItem < ActiveRecord::Base
             :cost,
             :sparc_core_id,
             :sparc_core_name,
-            to: :service
             :one_time_fee,
             to: :service,
             allow_nil: true
@@ -77,5 +76,4 @@ class LineItem < ActiveRecord::Base
       end
     end
   end
->>>>>>> master
 end
