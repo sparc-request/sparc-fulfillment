@@ -1,7 +1,7 @@
 module DeviseHelpers
 
   def sign_in
-    user = create(:user)
+    user = create(:identity)
 
     login_as(user, scope: :user, run_callbacks: false)
   end
@@ -13,7 +13,7 @@ module ControllerMacros
 
     before(:each) do
       @request.env['devise.mapping']  = Devise.mappings[:user]
-      user                            = create(:user)
+      user                            = create(:identity)
 
       sign_in user
     end

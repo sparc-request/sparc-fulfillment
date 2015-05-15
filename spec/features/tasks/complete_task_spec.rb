@@ -10,7 +10,7 @@ feature "Completing a Task", js: true do
 
   def as_a_user_who_has_an_assigned_task
     assignee = User.first
-    assignor = create(:user)
+    assignor = create(:identity)
     create_list(:task, 2, user: assignor, assignee: assignee)
 
     visit tasks_path

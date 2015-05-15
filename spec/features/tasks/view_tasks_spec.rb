@@ -41,7 +41,7 @@ feature "View Tasks", js: true do
   def given_i_have_assigned_tasks
     as_a_user_with_incomplete_tasks
 
-    other_user = create(:user)
+    other_user = create(:identity)
     create_list(:task, 2, user: other_user, assignee: other_user)
   end
 

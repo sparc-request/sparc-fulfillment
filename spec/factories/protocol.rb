@@ -25,19 +25,19 @@ FactoryGirl.define do
 
     trait :with_pi do
       after(:create) do |protocol, evaluator|
-        create(:user_role_pi, protocol: protocol)
+        create(:identity_role_pi, protocol: protocol)
       end
     end
 
     trait :with_coordinator do
       after(:create) do |protocol, evaluator|
-        create(:user_role_coordinator, protocol: protocol)
+        create(:identity_role_coordinator, protocol: protocol)
       end
     end
 
     trait :with_coordinators do
       after(:create) do |protocol, evaluator|
-        create_list(:user_role_coordinator, 3, protocol: protocol)
+        create_list(:identity_role_coordinator, 3, protocol: protocol)
       end
     end
 

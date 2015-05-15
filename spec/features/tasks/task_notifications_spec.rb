@@ -27,7 +27,7 @@ feature "Task notifications", js: true do
 
   def as_a_user_who_has_one_task
     assignee = User.first
-    assignor = create(:user)
+    assignor = create(:identity)
 
     create(:task, user: assignor, assignee: assignee)
   end

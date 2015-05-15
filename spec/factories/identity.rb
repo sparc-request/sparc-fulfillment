@@ -5,6 +5,7 @@ FactoryGirl.define do
     sequence(:first_name) { |n| "Sally-#{n}"}
     last_name "Smith"
     password "password"
+    password_confirmation "password"
     time_zone "Eastern Time (US & Canada)"
 
     trait :with_counter do

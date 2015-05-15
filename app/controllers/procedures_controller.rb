@@ -45,15 +45,15 @@ class ProceduresController < ApplicationController
 
   def create_note_before_update
     if reset_status_detected?
-      @procedure.notes.create(user: current_user,
+      @procedure.notes.create(identity: current_user,
                               comment: 'Status reset',
                               kind: 'log')
     elsif incomplete_status_detected?
-      @procedure.notes.create(user: current_user,
+      @procedure.notes.create(identity: current_user,
                               comment: 'Status set to incomplete',
                               kind: 'log')
     elsif complete_status_detected?
-      @procedure.notes.create(user: current_user,
+      @procedure.notes.create(identity: current_user,
                               comment: 'Status set to complete',
                               kind: 'log')
 

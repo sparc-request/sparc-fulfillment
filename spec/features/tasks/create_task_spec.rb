@@ -30,7 +30,7 @@ feature "create Task", js: true do
   end
 
   def when_i_create_a_task_assigned_to_another_user
-    @assignee = create(:user)
+    @assignee = create(:identity)
 
     click_link "Create New Task"
     select @assignee.full_name, from: 'task_assignee_id'

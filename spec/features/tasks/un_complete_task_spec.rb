@@ -10,7 +10,7 @@ feature "un-completing a Task", js: true do
 
   def given_i_have_set_a_task_to_complete
     assignee = User.first
-    assignor = create(:user)
+    assignor = create(:identity)
     create_list(:task, 2, user: assignor, assignee: assignee)
 
     visit tasks_path

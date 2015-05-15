@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  devise_for :identities
+  devise_for :users, class_name: 'Identity'
 
   resources :protocols
   resources :visit_groups

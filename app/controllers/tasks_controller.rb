@@ -29,7 +29,7 @@ class TasksController < ApplicationController
     if task_params[:notes]
       task_parameters[:body] = task_params[:notes][:comment]
     end
-    @task = Task.new(task_parameters.merge!({ user: current_user}))
+    @task = Task.new(task_parameters.merge!({ identity: current_user}))
     if @task.valid?
       @task.save
       @procedure = Procedure.find(task_params[:assignable_id]) unless task_params[:assignable_type] != "Procedure"
@@ -56,7 +56,7 @@ class TasksController < ApplicationController
   def create_note(task_parameters)
     unless task_parameters[:body].empty?
       notes_params = task_params[:notes]
-      notes_params[:user] = current_user
+      notes_params[:identity] = current_user
       Note.create(notes_params)
     end
   end
