@@ -5,7 +5,7 @@
     %li.active.custom-tab{role: 'presentation'}= link_to t(:protocol_tabs)[:study_schedule], "#study_schedule", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_schedule'}
     %li.custom-tab{role: 'presentation'}= link_to t(:protocol_tabs)[:participant_list], "#participant_list", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'participant_list'}
     %li.custom-tab{role: 'presentation'}= link_to t(:protocol_tabs)[:participant_tracker], "#participant_tracker", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'participant_tracker'}
-    %li.custom-tab{role: 'presentation'}= link_to t(:protocol_tabs)[:study_level_charges], "#study_level_charges", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_level_charges'}
+    %li.custom-tab{role: 'presentation'}= link_to t(:protocol_tabs)[:study_level_activities], "#study_level_activities", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_level_activities'}
     %li.custom-tab{role: 'presentation'}= link_to t(:protocol_tabs)[:audit_reporting], "#audit_reporting", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'audit_reporting'}
 
   .tab-content
@@ -18,8 +18,8 @@
     .tab-pane#participant_tracker{role: 'tabpanel'}
       = render partial: 'participant_tracker', locals: {protocol: @protocol}
 
-    .tab-pane#study_level_charges{role: 'tabpanel'}
-      = render 'study_level_charges'
+    .tab-pane#study_level_activities{role: 'tabpanel'}
+      = render partial: 'study_level_activities', locals: {protocol: @protocol}
 
     .tab-pane#audit_reporting{role: 'tabpanel'}
       = render 'audit_reporting'

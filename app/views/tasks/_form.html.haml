@@ -7,23 +7,23 @@
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only= t(:actions)[:close]
-        %h4.modal-title.text-center= t(:task_index)[:create_task]
+        %h4.modal-title.text-center= t(:task)[:create_task]
       .modal-body
         #modal_errors
         .row
           .col-md-12
             .form-group
-              = f.label "task_assignee_id", t(:task_index)[:assignee_name], class: "col-sm-4 control-label"
+              = f.label "task_assignee_id", t(:task)[:assignee_name], class: "col-sm-4 control-label"
               .col-sm-7= f.select :assignee_id, options_from_collection_for_select(User.all, 'id', 'full_name'), { include_blank: true }, { class: "form-control" }
             .form-group
-              = f.label "follow_up_date", t(:task_index)[:due_date], class: "col-sm-4 control-label"
+              = f.label "follow_up_date", t(:task)[:due_at], class: "col-sm-4 control-label"
               .col-sm-7
                 .input-group.date#follow_up_datepicker
                   = f.text_field :due_at, {class: 'form-control'}
                   %span.input-group-addon
                     %span.glyphicon.glyphicon-calendar
             .form-group
-              = f.label "task_body", t(:task_index)[:body], class: "col-sm-4 control-label"
+              = f.label "task_body", t(:task)[:object], class: "col-sm-4 control-label"
               .col-sm-7= f.text_area :body, { class: "form-control", rows: 4 }
       .modal-footer
         .center-block

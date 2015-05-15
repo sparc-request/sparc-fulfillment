@@ -119,7 +119,7 @@ RSpec.describe VisitGroup, type: :model do
         end
 
         it "should not allow the appointment to be deleted if it is completed" do
-          @appointment.update_attributes(completed_date: Time.current.strftime("%m-%d-%Y"))
+          @appointment.update_attributes(completed_date: Time.current)
           @vg_a.destroy
           expect(@participant.appointments.empty?).to eq(false)
         end
