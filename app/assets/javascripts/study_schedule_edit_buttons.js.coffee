@@ -4,9 +4,6 @@ $ ->
     # initialize visit group select list
     refresh_vg_dropdown()
 
-    $(document).on 'change', '#arms', ->
-      refresh_vg_dropdown()
-
     $(document).on 'click', '#add_arm_button', ->
       protocol_id = $('#arms').data('protocol_id')
       $.ajax
