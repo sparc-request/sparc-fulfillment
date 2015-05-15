@@ -9,7 +9,7 @@ class FulfillmentsController < ApplicationController
 
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
-    @fulfillment = Fulfillment.new(fulfillment_params, created_by: current_user)
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_user }))
     if @fulfillment.valid?
       @fulfillment.save
       update_components
@@ -52,7 +52,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performed_by)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id)
   end
 
   def find_fulfillment

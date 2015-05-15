@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150422150431) do
+ActiveRecord::Schema.define(version: 20150515151110) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -102,14 +102,16 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.integer  "line_item_id", limit: 4
     t.datetime "fulfilled_at"
     t.integer  "quantity",     limit: 4
-    t.integer  "performed_by", limit: 4
-    t.integer  "created_by",   limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "creator_id",   limit: 4
+    t.integer  "performer_id", limit: 4
   end
 
+  add_index "fulfillments", ["creator_id"], name: "index_fulfillments_on_creator_id", using: :btree
   add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
+  add_index "fulfillments", ["performer_id"], name: "index_fulfillments_on_performer_id", using: :btree
 
   create_table "line_items", force: :cascade do |t|
     t.integer  "sparc_id",           limit: 4
