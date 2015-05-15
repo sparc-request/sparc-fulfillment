@@ -1,6 +1,6 @@
 class LineItemsController < ApplicationController
 
-  before_action :find_line_item, only: [:edit, :update, :update_components]
+  before_action :find_line_item, only: [:edit, :update]
 
   def new
     @protocol = Protocol.find(params[:protocol_id])
@@ -22,13 +22,10 @@ class LineItemsController < ApplicationController
   end
 
   def update
-    @line_item = LineItem.find(params[:id])
-    line_item_validation = LineItem.new(line_item_params, protocol_id: @line_item.protocol_id)
-    if line_item_validation.valid?
-      @line_item.update(line_item_params)
+    if @line_item.update_attributes(line_item_params)
       flash[:success] = t(:flash_messages)[:line_item][:updated]
     else
-      @errors = line_item_validation.errors
+      @errors = @line_item.errors
     end
   end
 

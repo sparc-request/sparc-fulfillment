@@ -1,6 +1,7 @@
 class ParticipantsController < ApplicationController
 
   respond_to :json, :html
+  before_action :find_participant, only: [:show, :edit, :update, :destroy]
 
   def index
     @protocol = Protocol.find(params[:protocol_id])
@@ -14,7 +15,6 @@ class ParticipantsController < ApplicationController
   end
 
   def show
-    @participant = Participant.find(params[:id])
     @protocol = @participant.protocol
     @participant.build_appointments
   end
@@ -29,26 +29,17 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def edit
-    @participant = Participant.find(params[:id])
-  end
-
   def update
-    @participant = Participant.find(params[:id])
-    participant_validation = Participant.new(participant_params)
-    participant_validation.protocol_id = @participant.protocol_id
-    if participant_validation.valid?
-      @participant.update(participant_params)
+    if @participant.update_attributes(participant_params)
       flash[:success] = t(:flash_messages)[:participant][:updated]
     else
-      @errors = participant_validation.errors
+      @errors = @participant.errors
     end
   end
 
   def destroy
-    participant = Participant.find(params[:id])
-    @protocol_id = participant.protocol_id
-    participant.destroy
+    @protocol_id = @participant.protocol_id
+    @participant.destroy
     flash[:alert] = t(:flash_messages)[:participant][:removed]
   end
 
@@ -80,5 +71,7 @@ class ParticipantsController < ApplicationController
     params.require(:participant).permit(:protocol_id, :last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
   end
 
-
+  def find_participant
+    @participant = Participant.find(params[:id])
+  end
 end

@@ -25,13 +25,11 @@ class FulfillmentsController < ApplicationController
 
   def update
     @line_item = @fulfillment.line_item
-    fulfillment_validation = Fulfillment.new(fulfillment_params, line_item_id: @fulfillment.line_item_id)
-    if fulfillment_validation.valid?
-      @fulfillment.update(fulfillment_params)
+    if @fulfillment.update_attributes(fulfillment_params)
       update_components
       flash[:success] = t(:flash_messages)[:fulfillment][:updated]
     else
-      @errors = fulfillment_validation.errors
+      @errors = @fulfillment.errors
     end
   end
 
