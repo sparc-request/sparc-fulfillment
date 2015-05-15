@@ -20,22 +20,87 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  activerecord:
-    attributes:
-      task:
-        due_at: "Follow up date"
+
   actions:
     close: "Close"
     details: "Details"
     edit: "Edit"
     delete: "Delete"
     save: "Save"
-    change_arm: "Assign Arm"
-    new_participant: "Create New Participant"
-    save_participant: "Save Participant"
+    options: "Options"
+
+  appointment:
+    protocol_id: "Protocol ID"
+    appointment_dropdown: "Please select a visit:"
+    completed: "Completed Visits"
+    date_of_visit: "Date of Participant Visit"
+    reason: "Reason"
+    start_date: "Start Date:"
+    start_time: "Start Time:"
+    completed_date: "Completed Date:"
+    completed_time: "Completed Time:"
+    add_service: "Add Service"
+    visit_indications: "Visit Indications:"
+    name: "Visit Name"
+    position: "Insert into Position"
+    edit_header: "Custom Visit"
     start_visit: "Start Visit"
     complete_visit: "Complete Visit"
-    new_task: "Create New Task"
+    object: "Appointment"
+
+  arm:
+    name: "Arm Name"
+    subject_count: "Subject Count"
+    change_arm: "Assign Arm"
+    visit_count: "Visit Count"
+    created: "Arm Created"
+    deleted: "Arm Destroyed"
+    not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
+    object: "Arm"
+
+  documents:
+    new_header: "Add Document"
+    date: "Date Uploaded"
+    object: "Document"
+    lineitem:
+      index_header: "Line Item Documents"
+      none: "This line item has no documents"
+    fulfillment:
+      index_header: "Fulfillment Documents"
+      none: "This fulfillment has no documents."
+
+  flash_messages:
+    participant:
+      created: "Participant Created"
+      updated: "Participant Updated"
+      removed: "Participant Removed"
+      arm_change: "Participant Successfully Changed Arms"
+      recruitment_source: "Recruitment Source has been updated"
+    task:
+      updated: "Task Updated"
+      created: "Task Created"
+      updated: "Task Has Been Updated"
+      incompleted: "The selected task(s) have been set to incomplete"
+    line_item:
+      updated: "Line Item Updated"
+      created: "Line Item Created"
+    fulfillment:
+      updated: "Fulfillment Updated"
+      created: "Fulfillment Created"
+    document:
+      created: "Document Created"
+
+  fulfillment:
+    components: "Fulfillment Components"
+    no_components: "Fulfillment Has No Components"
+    add_fulfillment: "Add Fulfillment"
+    save_fulfillment: "Save Fulfillment"
+    fulfillments: "Fulfillments"
+    fulfillment_date: "Fullfillment Date"
+    quantity: "Quantity"
+    qty_type: "Quantity Type"
+    performed_by: "Performed By"
+    object: "Fulfillment"
 
   index_page:
     updates: "Updates"
@@ -54,65 +119,41 @@ en:
     subsidy_committed: "Subsidy Amount"
     subsidy_expended: "Subsidy Expended"
 
-  task_index:
-    user_name: "Created by"
-    completed: "Completed"
-    show_complete: "Show Complete"
-    assignable_type: "Type"
-    protocol_id: "Protocol"
-    visit_name: "Visit"
-    arm_name: "Arm"
-    body: "Task"
-    assignee_name: "Assigned to"
-    due_at: "Due date"
-    reschedule: "Reschedule"
-    create_task: "Create Task"
-    task_type: "Task type"
-    completed_tasks_header: "Completed Tasks"
-    no_completed_tasks: "There are currently no completed tasks"
-    incompletion: "Set to Incomplete"
-    show_title: "Task"
-    participant:
-      full_name: "Participant name"
-    protocol:
-      short_title: "Protocol"
-    visit:
-      id: "Visit"
-    arm:
-      name: "Arm"
+  line_item:
+    add_line_item: "Add Line Item"
+    change_service: "Change Service"
+    service: "Service"
+    qty_req: "Quantity Requested"
+    qty_type: "Quantity Type"
+    qty_rem: "Quantity Remaining"
+    started: "Date Started"
+    last_fulfillment: "Last Fulfillment"
+    components: "Service Components"
+    save_li: "Save Line Item"
+    object: "Line Item"
+
+  notes:
+    new_header: "Add Note"
+    user: "User"
+    date: "Date"
+    action: "Action"
+    reason: "Reason"
+    followup: "Follow up"
+    comment: "Comment"
+    incomplete_header: "Reason for Incompletion"
+    object: "Note"
     procedure:
-      name: "Procedure"
-
-  protocol_tabs:
-    study_schedule: "Study Schedule"
-    participant_list: "Participant List"
-    participant_tracker: "Participant Tracker"
-    study_level_charges: "Study Level Charges"
-    audit_reporting: "Audit Reporting"
-
-  study_schedule_tab:
-    buttons:
-      arm: "Arm | "
-      visit: "Visit | "
-      services: "Services | "
-
-  visit_groups:
-    name: "Visit Name"
-    position: "Insert into Position"
-    window_before: "Window Before"
-    window_after: "Window After"
-    day: "Visit Day"
-    created: "Visit Created"
-    deleted: "Visit Destroyed"
-    not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
-
-  arm:
-    name: "Arm Name"
-    subject_count: "Subject Count"
-    visit_count: "Visit Count"
-    created: "Arm Created"
-    deleted: "Arm Destroyed"
-    not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
+      index_header: "Procedure Notes"
+      none: "This procedure has no notes."
+    appointment:
+      index_header: "Appointment Notes"
+      none: "This appointment has no notes."
+    lineitem:
+      index_header: "Line Item Notes"
+      none: "This line item has no notes"
+    fulfillment:
+      index_header: "Fulfillment Notes"
+      none: "This fulfillment has no notes."
 
   participant:
     full_name: "Participant Name"
@@ -139,42 +180,9 @@ en:
     arm: "Current Arm"
     report: "Report"
     details: "Participant Details"
-
-  appointment:
-    protocol_id: "Protocol ID"
-    appointment_dropdown: "Please select a visit:"
-    completed: "Completed Visits"
-    date_of_visit: "Date of Participant Visit"
-    reason: "Reason"
-    start_date: "Start Date:"
-    start_time: "Start Time:"
-    completed_date: "Completed Date:"
-    completed_time: "Completed Time:"
-    add_service: "Add Service"
-    visit_indications: "Visit Indications:"
-    name: "Visit Name"
-    position: "Insert into Position"
-    edit_header: "Custom Visit"
-
-  line_item:
-    change_service: "Change Service"
-    service: "Service Name"
-
-  notes:
-    new_header: "Add Note"
-    user: "User"
-    date: "Date"
-    action: "Action"
-    reason: "Reason"
-    followup: "Follow up"
-    comment: "Comment"
-    incomplete_header: "Reason for Incompletion"
-    procedure:
-      index_header: "Procedure Notes"
-      none: "This procedure has no notes."
-    appointment:
-      index_header: "Appointment Notes"
-      none: "This appointment has no notes."
+    new_participant: "Create New Participant"
+    save_participant: "Save Participant"
+    object: "Participant"
 
   procedure:
     followup: "Follow Up"
@@ -185,27 +193,56 @@ en:
     remove: "Remove"
     follow_up_date: "Follow up date"
     completed_date: "Completed Date"
-    procedure: "Procedure"
     r_t: "R/T"
     status: "Status"
+    object: "Procedure"
+
+  protocol:
+    object: "Protocol"
+
+  protocol_tabs:
+    study_schedule: "Study Schedule"
+    participant_list: "Participant List"
+    participant_tracker: "Participant Tracker"
+    study_level_activities: "Study Level Activities"
+    audit_reporting: "Audit Reporting"
 
   services:
     name: "Selected Service"
     arm: "Select Arm(s)"
     report: "Report"
-    arm: "Arm"
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
+    object: "Service"
 
-  flash_messages:
-    participant:
-      created: "Participant Created"
-      saved: "Participant Saved"
-      removed: "Participant Removed"
-      arm_change: "Participant Successfully Changed Arms"
-      recruitment_source: "Recruitment Source has been updated"
-    task:
-      updated: "Task Updated"
-      created: "Task Created"
-      updated: "Task Has Been Updated"
-      incompleted: "The selected task(s) have been set to incomplete"
+  study_schedule_tab:
+    buttons:
+      arm: "Arm | "
+      visit: "Visit | "
+      services: "Services | "
+
+  task:
+    new_task: "Create New Task"
+    user_name: "Created by"
+    assignee_name: "Assigned to"
+    assignable_type: "Type"
+    due_at: "Due date"
+    completed: "Completed"
+    reschedule: "Reschedule"
+    show_complete: "Show Complete"
+    create_task: "Create Task"
+    object: "Task"
+
+  visit:
+    object: "Visit"
+
+  visit_groups:
+    name: "Visit Name"
+    position: "Insert into Position"
+    window_before: "Window Before"
+    window_after: "Window After"
+    day: "Visit Day"
+    created: "Visit Created"
+    deleted: "Visit Destroyed"
+    not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
+    object: "Visit Group"

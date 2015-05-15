@@ -35,6 +35,12 @@ $ ->
     $.ajax
       type: 'PATCH'
       url:  "/appointments/#{appointment_id}?field=start_date"
+      success: ->
+        # reload table of procedures, so that UI elements disabled
+        # before start of appointment can be reenabled
+        $.ajax
+          type: 'GET'
+          url: "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.complete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -44,17 +50,26 @@ $ ->
 
   # Procedure buttons
 
+  $(document).on 'dp.hide', ".completed_date_field", ->
+    procedure_id = $(this).parents(".procedure").data("id")
+    completed_date = $(this).children("input").val()
+    data = procedure:
+            completed_date: completed_date
+    $.ajax
+      type: 'PUT'
+      url: "/procedures/#{procedure_id}"
+      data: data
+
   $(document).on 'click', 'label.status.complete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    
     status = null
-
-    # undo complete status 
+    # undo complete status
     if active
       $(this).removeClass('selected_before')
+      $(".procedure[data-id='#{procedure_id}']").find(".completed_date_field input").val(null)
     else
-      status= "complete"
+      status = "complete"
       $(this).addClass('selected_before')
 
     data          = procedure:
@@ -68,8 +83,7 @@ $ ->
   $(document).on 'click', 'label.status.incomplete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    
-    # undo incomplete status 
+    # undo incomplete status
     if active
       data          = procedure:
                         status: null
@@ -156,7 +170,7 @@ $ ->
       type: 'PUT'
       data: data
       url:  "/appointments/#{appointment_id}"
-  
+
   $(document).on 'change', '#appointment_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     statuses = $(this).val()
@@ -189,3 +203,8 @@ $ ->
         url:  "/appointments/#{appointment_id}?field=completed_date&new_date=#{e.date}"
         success: ->
           $('#start_date').data("DateTimePicker").maxDate(e.date)
+
+  # Display a helpful message when user clicks on a disabled UI element
+  # that can't be edited before the appointment has started
+  $(document).on 'click', '.pre_start_disabled', ->
+      alert("Please click Start Visit and enter a start date to continue.")

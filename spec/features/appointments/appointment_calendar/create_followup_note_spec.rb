@@ -2,28 +2,44 @@ require 'rails_helper'
 
 feature 'Followup note', js: true do
 
-  scenario 'User views followup button' do
-    as_a_user_who_has_created_a_procedure
-    i_should_see_the_followup_button
+  context 'appointment started' do
+    scenario 'User views followup button' do
+      as_a_user_who_has_created_a_procedure
+      and_begins_appointment
+      i_should_see_the_followup_button
+    end
+
+    scenario 'User creates followup note' do
+      as_a_user_who_has_created_a_procedure
+      and_begins_appointment
+      when_i_click_the_followup_button
+      and_i_fill_out_and_submit_the_followup_form
+      then_i_should_see_a_text_field_with_the_followup_date
+    end
+
+    scenario 'User views Notes list after creating a followup note' do
+      as_a_user_who_has_created_a_followup_note
+      when_i_view_the_notes_list
+      i_should_see_the_note_i_created
+    end
+
+    scenario 'User views Tasks list after creating a followup note' do
+      as_a_user_who_has_created_a_followup_note
+      when_i_visit_the_tasks_index_page
+      then_i_should_see_the_newly_created_task
+    end
   end
 
-  scenario 'User creates followup note' do
-    as_a_user_who_has_created_a_procedure
-    when_i_click_the_followup_button
-    and_i_fill_out_and_submit_the_followup_form
-    then_i_should_see_a_text_field_with_the_followup_date
-  end
+  context 'appointment not started' do
+    scenario 'User views followup button' do
+      as_a_user_who_has_created_a_procedure
+      i_should_see_the_followup_button
+    end
 
-  scenario 'User views Notes list after creating a followup note' do
-    as_a_user_who_has_created_a_followup_note
-    when_i_view_the_notes_list
-    i_should_see_the_note_i_created
-  end
-
-  scenario 'User views Tasks list after creating a followup note' do
-    as_a_user_who_has_created_a_followup_note
-    when_i_visit_the_tasks_index_page
-    then_i_should_see_the_newly_created_task
+    scenario 'User attempts to add follow up notes to a Procedure' do
+      as_a_user_who_has_created_a_procedure
+      when_i_try_to_add_a_follow_up_note_i_should_see_a_helpful_message
+    end
   end
 
   def when_i_visit_the_tasks_index_page
@@ -38,7 +54,7 @@ feature 'Followup note', js: true do
     protocol    = create(:protocol_imported_from_sparc)
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant_visits.first
     @assignee   = User.first
 
     visit participant_path participant
@@ -46,6 +62,11 @@ feature 'Followup note', js: true do
     find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '1'
     find('button.add_service').click
+  end
+
+  def and_begins_appointment
+    find('button.start_visit').click
+    wait_for_ajax
   end
 
   def when_i_click_the_followup_button
@@ -61,6 +82,7 @@ feature 'Followup note', js: true do
 
   def as_a_user_who_has_created_a_followup_note
     as_a_user_who_has_created_a_procedure
+    and_begins_appointment
     when_i_click_the_followup_button
     and_i_fill_out_and_submit_the_followup_form
   end
@@ -80,5 +102,11 @@ feature 'Followup note', js: true do
 
   def i_should_see_the_followup_button
     expect(page).to have_css('button.followup.new')
+  end
+
+  def when_i_try_to_add_a_follow_up_note_i_should_see_a_helpful_message
+    accept_alert(with: 'Please click Start Visit and enter a start date to continue.') do
+      find('button.followup.new').trigger('click')
+    end
   end
 end

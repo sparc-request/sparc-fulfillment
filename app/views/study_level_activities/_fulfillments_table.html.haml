@@ -1,0 +1,21 @@
+.row.slide-toggle-hidden.slide-inactive.fulfillments{id: "fulfillments_list_#{line_item.id}", data: {id: line_item.id}}
+  .col-xs-12
+    .row
+      .col-xs-2.table_row.fulfillments_header.text-center.fulfillment_date
+        = t(:fulfillment)[:fulfillment_date]
+      .col-xs-1.table_row.fulfillments_header.text-center.quantity
+        = t(:fulfillment)[:quantity]
+      .col-xs-2.table_row.fulfillments_header.text-center.qty_type
+        = t(:fulfillment)[:qty_type]
+      .col-xs-2.table_row.fulfillments_header.text-center.performed_by
+        = t(:fulfillment)[:performed_by]
+      .col-xs-2.table_row.fulfillments_header.text-center.f_components
+        = t(:fulfillment)[:components]
+      .col-xs-1.table_row.fulfillments_header
+      .col-xs-2.table_row.fulfillments_header.text-center.options
+        = t(:actions)[:options]
+    -line_item.fulfillments.each do |f|
+      = render partial: "/study_level_activities/fulfillment", locals: {fulfillment: f}
+    .row.new_fulfillment{id: "new_line_item_#{line_item.id}_fulfillment"}
+      .col-xs-12.text-right
+        %button.btn.btn-success.otf_fulfillment_new{type: "button", aria: {label: "Add Fulfillment"}}= t(:fulfillment)[:add_fulfillment]

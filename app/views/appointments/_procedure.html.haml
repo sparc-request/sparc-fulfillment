@@ -1,23 +1,30 @@
 %tr.procedure{data: {"id" => procedure.id}}
+  -# Certain UI elements should be disabled before the appointment starts. If the appointment hasn't been started,
+  -# class their container element as pre_start_disabled, so that an on click handler can display a helpful
+  -# message if that UI element is clicked before appointment has started. Class to be removed once appointment
+  -# starts.
+
   %td.name.truncate= procedure.service_name
   %td.r-t
     = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
   %td.status
-    .btn-group{data: {toggle: "buttons"}}
-      %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : ''}"}
+    .btn-group{data: {toggle: "buttons"}, class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }"}
+      %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : ''} #{ procedure.appt_started? ? '' : 'disabled' }"}
         %input{class: "procedure_status", type: "radio", value: "complete", autocomplete: "off", id: "complete_button_#{procedure.id}"} Complete
-      %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''}"}
+      %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''} #{ procedure.appt_started? ? '' : 'disabled' }"}
         %input{class: "procedure_status", type: "radio", value: "incomplete", autocomplete: "off", id: "incomplete_button_#{procedure.id}"} Incomplete
   %td.followup{id: "follow_up_#{procedure.id}"}
-    = render partial: "appointments/followup_calendar", locals: {procedure: procedure}
+    = render partial: "appointments/followup_calendar", locals: { procedure: procedure }
   %td.completed-date
-    .input-group.date
-      %input.completed_date_field.datetimepicker{type: "text", class: "form-control", disabled: !procedure.completed_date.present?, value: format_date(procedure.completed_date)}
-      %span.input-group-addon
+    .input-group.date.completed_date_field
+      %input.datetimepicker{type: "text", class: "form-control", disabled: !(procedure.appt_started? && procedure.completed_date.present?), value: format_date(procedure.completed_date)}
+      %span.input-group-addon{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
         %span.glyphicon.glyphicon-calendar
   %td.notes
-    %button.btn.btn-primary.note.new{type: "button", aria: {label: "New Note"}, data: {notable_id: procedure.id, notable_type: "Procedure"}}
-      %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
+    -# div used for capturing click events when button is disabled
+    .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
+      %button.btn.btn-primary.note.new{type: "button", class: "#{ procedure.appt_started? ? '' : 'disabled' }", aria: {label: "New Note"}, data: {notable_id: procedure.id, notable_type: "Procedure"}}
+        %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
     %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: procedure.id, notable_type: "Procedure"}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   %td.remove
