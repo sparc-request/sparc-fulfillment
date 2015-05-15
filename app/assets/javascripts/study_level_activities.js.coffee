@@ -14,7 +14,7 @@ $ ->
     line_item_id = $(this).parents('.row.line_item').data('id')
     data = components: $(this).val()
     $.ajax
-      type: 'PATCH'
+      type: 'PUT'
       url: "/line_items/#{line_item_id}/update_components"
       data: data
 
