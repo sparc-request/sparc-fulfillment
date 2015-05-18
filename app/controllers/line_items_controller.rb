@@ -11,7 +11,7 @@ class LineItemsController < ApplicationController
     @line_item = LineItem.new(line_item_params)
     if @line_item.valid?
       @line_item.save
-      flash[:success] = t(:flash_messages)[:line_item][:created]
+      flash[:success] = t(:line_item)[:flash_messages][:created]
     else
       @errors = @line_item.errors
     end
@@ -23,7 +23,7 @@ class LineItemsController < ApplicationController
 
   def update
     if @line_item.update_attributes(line_item_params)
-      flash[:success] = t(:flash_messages)[:line_item][:updated]
+      flash[:success] = t(:line_item)[:flash_messages][:updated]
     else
       @errors = @line_item.errors
     end

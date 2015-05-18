@@ -13,7 +13,7 @@ class FulfillmentsController < ApplicationController
     if @fulfillment.valid?
       @fulfillment.save
       update_components
-      flash[:success] = t(:flash_messages)[:fulfillment][:created]
+      flash[:success] = t(:fulfillment)[:flash_messages][:created]
     else
       @errors = @fulfillment.errors
     end
@@ -27,7 +27,7 @@ class FulfillmentsController < ApplicationController
     @line_item = @fulfillment.line_item
     if @fulfillment.update_attributes(fulfillment_params)
       update_components
-      flash[:success] = t(:flash_messages)[:fulfillment][:updated]
+      flash[:success] = t(:fulfillment)[:flash_messages][:updated]
     else
       @errors = @fulfillment.errors
     end

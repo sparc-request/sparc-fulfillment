@@ -36,7 +36,7 @@ class TasksController < ApplicationController
       if task_params[:notes]
         create_note(task_parameters)
       end
-      flash[:success] = t(:flash_messages)[:task][:created]
+      flash[:success] = t(:task)[:flash_messages][:created]
     else
       @errors = @task.errors
     end
@@ -44,7 +44,7 @@ class TasksController < ApplicationController
 
   def update
     if @task.update_attributes(task_params)
-      flash[:success] = t(:flash_messages)[:task][:updated]
+      flash[:success] = t(:task)[:flash_messages][:updated]
     end
   end
 

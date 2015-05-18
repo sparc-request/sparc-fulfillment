@@ -23,7 +23,7 @@ class ParticipantsController < ApplicationController
     @participant = Participant.new(participant_params)
     if @participant.valid?
       @participant.save
-      flash[:success] = t(:flash_messages)[:participant][:created]
+      flash[:success] = t(:participant)[:flash_messages][:created]
     else
       @errors = @participant.errors
     end
@@ -31,7 +31,7 @@ class ParticipantsController < ApplicationController
 
   def update
     if @participant.update_attributes(participant_params)
-      flash[:success] = t(:flash_messages)[:participant][:updated]
+      flash[:success] = t(:participant)[:flash_messages][:updated]
     else
       @errors = @participant.errors
     end
@@ -40,7 +40,7 @@ class ParticipantsController < ApplicationController
   def destroy
     @protocol_id = @participant.protocol_id
     @participant.destroy
-    flash[:alert] = t(:flash_messages)[:participant][:removed]
+    flash[:alert] = t(:participant)[:flash_messages][:removed]
   end
 
   def edit_arm
@@ -51,7 +51,7 @@ class ParticipantsController < ApplicationController
     @participant = Participant.find(params[:participant_id])
     @participant.update_attributes(arm_id: params[:participant][:arm_id])
     @participant.update_appointments_on_arm_change
-    flash[:success] = t(:flash_messages)[:participant][:arm_change]
+    flash[:success] = t(:participant)[:flash_messages][:arm_change]
   end
 
   def details
@@ -62,7 +62,7 @@ class ParticipantsController < ApplicationController
     source = params[:source] == "" ? nil : params[:source]
     @participant = Participant.find(params[:participant_id])
     @participant.update_attributes(recruitment_source: source)
-    flash[:success] = t(:flash_messages)[:participant][:recruitment_source]
+    flash[:success] = t(:participant)[:flash_messages][:recruitment_source]
   end
 
   private
