@@ -6,8 +6,9 @@ class DocumentsController < ApplicationController
 
   def index
     @documents = @documentable.documents
-    @documentable_type = document_params[:documentable_type].downcase.to_sym
     @documentable_id = document_params[:documentable_id]
+    @documentable_type = document_params[:documentable_type]
+    @documentable_sym = @documentable_type.downcase.to_sym
   end
 
   def new

@@ -4,7 +4,7 @@
       %button.close{type: 'button', data: {dismiss: 'modal'}}
         %span{aria: {hidden:'true'}} &times;
         %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= t(:documents)[documentable_type][:index_header]
+      %h4.modal-title.text-center= t(:documents)[documentable_sym][:index_header]
     .modal-body
       - if documents.any?
         .details-table
@@ -16,9 +16,9 @@
               .col-xs-2.created-at= format_datetime(document.created_at)
               .col-xs-10.comment= link_to document.doc_file_name, document.doc.url, target: "_blank"
       -else
-        .text-center= t(:documents)[documentable_type][:none]
+        .text-center= t(:documents)[documentable_sym][:none]
     .modal-footer
       .center-block
         %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-        %button.btn.btn-primary.document.new{type: "button", class: documentable_type == :lineitem ? 'line_item_doc' : 'fulfillment_doc', aria: {label: "New Document"}, data: {documentable_id: documentable_id}}
+        %button.btn.btn-primary.document.new{type: "button", aria: {label: "New Document"}, data: {documentable_id: documentable_id, documentable_type: documentable_type}}
           %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}

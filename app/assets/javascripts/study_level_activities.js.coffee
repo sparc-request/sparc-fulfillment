@@ -18,26 +18,6 @@ $ ->
       url: "/components/update"
       data: data
 
-  $(document).on 'click', '.otf_documents', ->
-    line_item_id = $(this).parents('.row.line_item').data('id')
-    data  = document:
-              documentable_id: line_item_id,
-              documentable_type: 'LineItem'
-    $.ajax
-      type: 'GET'
-      url: '/documents.js'
-      data: data
-
-  $(document).on 'click', 'button.document.line_item_doc.new',  ->
-    line_item_id = $(this).data('documentable-id')
-    data  = document:
-              documentable_id: line_item_id,
-              documentable_type: 'LineItem'
-    $.ajax
-      type: 'GET'
-      url: '/documents/new.js'
-      data: data
-
   $(document).on 'click', '.otf_edit', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
     $.ajax
@@ -52,26 +32,6 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/fulfillments/new"
-      data: data
-
-  $(document).on 'click', '.fulfillment_documents', ->
-    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
-    data  = document:
-              documentable_id: fulfillment_id,
-              documentable_type: 'Fulfillment'
-    $.ajax
-      type: 'GET'
-      url: '/documents.js'
-      data: data
-
-  $(document).on 'click', 'button.document.fulfillment_doc.new',  ->
-    fulfillment_id = $(this).data('documentable-id')
-    data  = document:
-              documentable_id: fulfillment_id,
-              documentable_type: 'Fulfillment'
-    $.ajax
-      type: 'GET'
-      url: '/documents/new.js'
       data: data
 
   $(document).on 'click', '.otf_fulfillment_edit', ->
