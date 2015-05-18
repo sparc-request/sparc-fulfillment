@@ -93,6 +93,5 @@ feature 'Fulfillments', js: true do
     expect(page).to have_content("Fulfilled at can't be blank")
     expect(page).to have_content("Quantity can't be blank")
     expect(page).to have_content("Quantity is not a number")
-    expect(page).to have_content("Performer can't be blank")
   end
 end

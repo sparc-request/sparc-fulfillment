@@ -23,7 +23,7 @@
   %td.notes
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
-    %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: procedure.id, notable_type: "Procedure"}}
+    %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: procedure.id, notable_type: "Procedure"}, class: procedure.appt_started? ? '' : 'disabled'}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   %td.remove
     %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}

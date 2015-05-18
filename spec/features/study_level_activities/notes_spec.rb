@@ -4,33 +4,33 @@ feature 'Notes', js: true do
 
   scenario 'User views line item notes' do
     as_a_user_who_visits_study_level_activities_tab
-    when_i_click_on_notes_icon('.otf_notes')
+    when_i_click_on_notes_icon('.notes.list[data-notable-type="LineItem"]')
     then_i_should_see_the_line_item_notes_list
   end
 
   scenario 'User creates line item note' do
     as_a_user_who_visits_study_level_activities_tab
-    when_i_click_on_notes_icon('.otf_notes')
+    when_i_click_on_notes_icon('.notes.list[data-notable-type="LineItem"]')
     then_click_on_the_add_note_button
     then_i_fill_out_and_save_the_note
-    when_i_click_on_notes_icon('.otf_notes')
+    when_i_click_on_notes_icon('.notes.list[data-notable-type="LineItem"]')
     i_should_see_the_note
   end
 
   scenario 'User views fulfillment notes' do
     as_a_user_who_visits_study_level_activities_tab
     when_i_open_up_a_fulfillment
-    when_i_click_on_notes_icon('.fulfillment_notes.list')
+    when_i_click_on_notes_icon('.notes.list[data-notable-type="Fulfillment"]')
     then_i_should_see_the_fulfillment_notes_list
   end
 
   scenario 'User creates fulfillment note' do
     as_a_user_who_visits_study_level_activities_tab
     when_i_open_up_a_fulfillment
-    when_i_click_on_notes_icon('.fulfillment_notes.list')
+    when_i_click_on_notes_icon('.notes.list[data-notable-type="Fulfillment"]')
     then_click_on_the_add_note_button
     then_i_fill_out_and_save_the_note
-    when_i_click_on_notes_icon('.fulfillment_notes.list')
+    when_i_click_on_notes_icon('.notes.list[data-notable-type="Fulfillment"]')
     i_should_see_the_note
   end
 

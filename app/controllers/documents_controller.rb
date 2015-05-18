@@ -20,7 +20,7 @@ class DocumentsController < ApplicationController
     @document.doc = params[:document][:document]
     if @document.valid?
       @document.save
-      flash[:success] = t(:document)[:flash_messages][:created]
+      flash[:success] = t(:documents)[:flash_messages][:created]
     else
       @errors = @document.errors
     end

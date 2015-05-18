@@ -10,6 +10,7 @@ feature 'Create Appointment Note', js: true do
 
   scenario 'User creates a Note and views the Notes list' do
     given_i_am_viewing_a_appointment
+    and_begin_the_appointment
     when_i_add_a_note_to_a_appointment
     and_i_view_the_notes_list
     then_i_shoud_see_the_note
@@ -20,8 +21,13 @@ feature 'Create Appointment Note', js: true do
     bootstrap_select '#appointment_select', @visit_group.name
   end
 
+  def and_begin_the_appointment
+    find('button.start_visit').click
+  end
+
   def when_i_add_a_note_to_a_appointment
-    find('h3.appointment_header button.note.new').click
+    find('h3.appointment_header button.notes.list').click
+    find('button.note.new').click
     fill_in 'note_comment', with: 'Test comment'
     click_button 'Save'
   end
