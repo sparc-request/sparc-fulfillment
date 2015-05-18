@@ -14,7 +14,7 @@
           - documents.each do |document|
             .detail
               .col-xs-2.created-at= format_datetime(document.created_at)
-              .col-xs-10.comment= link_to document.doc_file_name, document.doc.url
+              .col-xs-10.comment= link_to document.doc_file_name, document.doc.url, target: "_blank"
       -else
         .text-center= t(:documents)[documentable_type][:none]
     .modal-footer

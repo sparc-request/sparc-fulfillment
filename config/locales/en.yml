@@ -120,7 +120,7 @@ en:
     subsidy_expended: "Subsidy Expended"
 
   line_item:
-    add_line_item: "Add Line Item"
+    add_line_item: "Add Service"
     change_service: "Change Service"
     service: "Service"
     qty_req: "Quantity Requested"
@@ -129,7 +129,7 @@ en:
     started: "Date Started"
     last_fulfillment: "Last Fulfillment"
     components: "Service Components"
-    save_li: "Save Line Item"
+    save_li: "Save Service"
     object: "Line Item"
 
   notes:
