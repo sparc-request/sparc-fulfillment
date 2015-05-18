@@ -175,8 +175,6 @@ en:
 
   protocol:
     object: "Protocol"
-
-  index_page:
     updates: "Updates"
     sparc_id: "SPARC ID"
     status: "Status"
@@ -192,15 +190,18 @@ en:
     subsidy_amount: "Percent Subsidy"
     subsidy_committed: "Subsidy Amount"
     subsidy_expended: "Subsidy Expended"
+    tabs:
+      study_schedule: "Study Schedule"
+      participant_list: "Participant List"
+      participant_tracker: "Participant Tracker"
+      study_level_activities: "Study Level Activities"
+      audit_reporting: "Audit Reporting"
+    study_schedule_buttons:
+      arm: "Arm | "
+      visit: "Visit | "
+      services: "Services | "
 
-  protocol_tabs:
-    study_schedule: "Study Schedule"
-    participant_list: "Participant List"
-    participant_tracker: "Participant Tracker"
-    study_level_activities: "Study Level Activities"
-    audit_reporting: "Audit Reporting"
-
-  reports_page:
+  reports:
     request_report: "Request Report"
     date: "Date Requested"
     name: "Report Type/Name"
@@ -218,12 +219,6 @@ en:
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     object: "Service"
-
-  study_schedule_tab:
-    buttons:
-      arm: "Arm | "
-      visit: "Visit | "
-      services: "Services | "
 
   task:
     new_task: "Create New Task"
