@@ -20,7 +20,7 @@ class BillingReportJob < ActiveJob::Base
           procedure = procedures.first
           participant = procedure.participant
           appointment = procedure.appointment
-          csv << [protocol.id, protocol.try(:pi).full_name, participant.full_name, participant.label, appointment.name, appointment.start_date, procedure.service_name, procedures.size, (procedure.service_cost.to_f / 100), (procedures.size * procedure.service_cost.to_f) / 100]
+          csv << [protocol.sparc_id, protocol.try(:pi).full_name, participant.full_name, participant.label, appointment.name, appointment.start_date, procedure.service_name, procedures.size, (procedure.service_cost.to_f / 100), (procedures.size * procedure.service_cost.to_f) / 100]
         end
       end
     end
