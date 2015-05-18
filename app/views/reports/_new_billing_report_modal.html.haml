@@ -19,8 +19,7 @@
             .form-group
               = label_tag "protocol", t(:reports_page)[:protocol], class: "col-sm-3 control-label"
               .col-sm-9
-                %select#protocol_select.selectpicker.form-control{multiple: "", 'data-width' => 'auto'}
-                  = options_from_collection_for_select(Protocol.all, "id", "short_title_with_sparc_id")
+                = select_tag "protocol_ids", options_from_collection_for_select(Protocol.all, "id", "short_title_with_sparc_id"), multiple: true, class: "selectpicker form-control"
 
       .modal-footer
         .center-block{style: "width: 205px;"}
