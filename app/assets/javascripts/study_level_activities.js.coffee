@@ -18,26 +18,6 @@ $ ->
       url: "/components/update"
       data: data
 
-  $(document).on 'click', '.otf_notes', ->
-    line_item_id = $(this).parents('.row.line_item').data('id')
-    data  = note:
-              notable_id: line_item_id,
-              notable_type: 'LineItem'
-    $.ajax
-      type: 'GET'
-      url: '/notes.js'
-      data: data
-
-  $(document).on 'click', 'button.note.line_item.new',  ->
-    id = $(this).data('notable-id')
-    data  = note:
-              notable_id: id,
-              notable_type: 'LineItem'
-    $.ajax
-      type: 'GET'
-      url: '/notes/new.js'
-      data: data
-
   $(document).on 'click', '.otf_documents', ->
     line_item_id = $(this).parents('.row.line_item').data('id')
     data  = document:
@@ -72,26 +52,6 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/fulfillments/new"
-      data: data
-
-  $(document).on 'click', '.fulfillment_notes', ->
-    fulfillment_id = $(this).parents('.row.fulfillment').data('id')
-    data  = note:
-              notable_id: fulfillment_id,
-              notable_type: 'Fulfillment'
-    $.ajax
-      type: 'GET'
-      url: '/notes.js'
-      data: data
-
-  $(document).on 'click', 'button.note.fulfillment_note.new',  ->
-    id = $(this).data('notable-id')
-    data  = note:
-              notable_id: id,
-              notable_type: 'Fulfillment'
-    $.ajax
-      type: 'GET'
-      url: '/notes/new.js'
       data: data
 
   $(document).on 'click', '.fulfillment_documents', ->

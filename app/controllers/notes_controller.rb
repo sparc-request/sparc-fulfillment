@@ -6,8 +6,9 @@ class NotesController < ApplicationController
 
   def index
     @notes = @notable.notes
-    @notable_type = params[:note][:notable_type].downcase.to_sym
     @notable_id = params[:note][:notable_id]
+    @notable_type = params[:note][:notable_type]
+    @notable_sym = @notable_type.downcase.to_sym
   end
 
   def new
