@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :user_roles
   has_many :tasks, as: :assignable
   has_many :notes, as: :notable
+  has_many :reports
 
   def full_name
     [first_name, last_name].join(' ')

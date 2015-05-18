@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   devise_for :users
 
   resources :protocols
@@ -15,6 +14,11 @@ Rails.application.routes.draw do
     member do
       get 'refresh_vg_dropdown'
     end
+  end
+
+  resources :reports do
+    post 'billing_report', to: 'reports#billing_report'
+    get 'new_billing_report', to: 'reports#new_billing_report'
   end
 
   resources :participants do

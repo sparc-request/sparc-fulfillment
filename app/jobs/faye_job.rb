@@ -40,10 +40,16 @@ class FayeJob < Struct.new(:object_id, :object_class)
   end
 
   def channels
-    singular_channel  = ['/', [object_class.downcase, object_id].join('_')].join
-    plural_channel    = ['/', object_class.pluralize.downcase].join
+    if object_class.downcase == "protocol"
+      singular_channel  = ['/', [object_class.downcase, object_id].join('_')].join
+      plural_channel    = ['/', object_class.pluralize.downcase].join
 
-    [singular_channel, plural_channel]
+      [singular_channel, plural_channel]
+
+    elsif object_class.downcase == "report"
+      plural_channel = ['/', object_class.pluralize.downcase].join
+      [plural_channel]
+    end
   end
 
   def uri

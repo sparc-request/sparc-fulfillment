@@ -102,6 +102,17 @@ en:
     performed_by: "Performed By"
     object: "Fulfillment"
 
+  reports_page:
+    request_report: "Request Report"
+    date: "Date Requested"
+    name: "Report Type/Name"
+    status: "Report Status"
+    file: "Attached File"
+    billing_report: "Billing Report"
+    protocol: "Protocol(s)"
+    start_date: "Start Date"
+    end_date: "End Date"
+
   index_page:
     updates: "Updates"
     sparc_id: "SPARC ID"

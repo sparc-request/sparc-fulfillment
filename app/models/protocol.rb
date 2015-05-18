@@ -10,6 +10,9 @@ class Protocol < ActiveRecord::Base
   has_many :participants, dependent: :destroy
   has_many :user_roles
 
+  has_many :appointments, through: :participants
+  has_many :procedures, through: :appointments
+
   after_save :update_faye
   after_destroy :update_faye
 
@@ -32,6 +35,11 @@ class Protocol < ActiveRecord::Base
 
   def coordinators
     user_roles.where(role: "research-assistant-coordinator").map(&:user)
+  end
+
+  def short_title_with_sparc_id
+    list_display = "(#{self.sparc_id}) #{self.short_title}"
+    return list_display
   end
 
   def one_time_fee_line_items
