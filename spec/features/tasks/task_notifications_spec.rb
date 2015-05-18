@@ -2,19 +2,19 @@ require "rails_helper"
 
 feature "Task notifications", js: true do
 
-  scenario "User sees that they have no Tasks" do
+  scenario "Identity sees that they have no Tasks" do
     as_a_user_who_has_no_tasks
     when_i_visit_the_home_page
     then_i_should_see_that_i_have_no_tasks
   end
 
-  scenario "User sees that they have one assigned Task" do
+  scenario "Identity sees that they have one assigned Task" do
     as_a_user_who_has_one_task
     when_i_visit_the_home_page
     then_i_should_see_that_i_have_one_task
   end
 
-  scenario "User clicks on Tasks notification" do
+  scenario "Identity clicks on Tasks notification" do
     as_a_user_who_has_one_task
     and_i_visit_the_home_page
     when_i_click_on_the_task_notification
@@ -26,10 +26,10 @@ feature "Task notifications", js: true do
   end
 
   def as_a_user_who_has_one_task
-    assignee = User.first
+    assignee = Identity.first
     assignor = create(:identity)
 
-    create(:task, user: assignor, assignee: assignee)
+    create(:task, identity: assignor, assignee: assignee)
   end
 
   def when_i_visit_the_home_page

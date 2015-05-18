@@ -5,8 +5,11 @@ RSpec.configure do |config|
 
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner[:active_record, model: Service].clean_with(:truncation)
-    DatabaseCleaner[:active_record, model: Service].strategy = :transaction
+    MODELS.
+      each do |model|
+        DatabaseCleaner[:active_record, model: model].clean_with(:truncation)
+        DatabaseCleaner[:active_record, model: model].strategy = :transaction
+      end
   end
 
   config.before(:each, type: :feature) do |example|
@@ -14,7 +17,7 @@ RSpec.configure do |config|
     MODELS.
       each do |model|
         DatabaseCleaner[:active_record, model: model].start
-        DatabaseCleaner[:active_record, model: Service].strategy = example.metadata[:js] ? :truncation : :transaction
+        DatabaseCleaner[:active_record, model: model].strategy = example.metadata[:js] ? :truncation : :transaction
       end
   end
 

@@ -48,13 +48,13 @@ RSpec.describe UserRoleImporterJob, type: :job do
       describe 'UserRole creation' do
 
         it 'should create a User' do
-          user_role = UserRole.first
+          identity_role = UserRole.first
 
-          expect(user_role).to be
-          expect(user_role.user).to be_present
-          expect(user_role.protocol).to be_present
-          expect(user_role.rights).to be_present
-          expect(user_role.role).to be_present
+          expect(identity_role).to be
+          expect(identity_role.user).to be_present
+          expect(identity_role.protocol).to be_present
+          expect(identity_role.rights).to be_present
+          expect(identity_role.role).to be_present
         end
       end
 
@@ -83,7 +83,7 @@ RSpec.describe UserRoleImporterJob, type: :job do
 
       before do
         @user                     = create(:user, email: 'zimmerj@musc.edu')
-        @user_role                = create(:user_role,
+        @identity_role                = create(:identity_role,
                                             user: @user,
                                             protocol: @protocol,
                                             rights: 'rights',
@@ -97,8 +97,8 @@ RSpec.describe UserRoleImporterJob, type: :job do
       describe 'UserRole update' do
 
         it 'should update existing UserRole' do
-          expect(@user_role.reload.rights).to eq('approve')
-          expect(@user_role.reload.role).to eq('research-assistant-coordinator')
+          expect(@identity_role.reload.rights).to eq('approve')
+          expect(@identity_role.reload.role).to eq('research-assistant-coordinator')
         end
       end
 
@@ -127,7 +127,7 @@ RSpec.describe UserRoleImporterJob, type: :job do
 
       before do
         @user                     = create(:user, email: 'zimmerj@musc.edu')
-        @user_role                = create(:user_role,
+        @identity_role                = create(:identity_role,
                                             user: @user,
                                             protocol: @protocol,
                                             rights: 'rights',
@@ -141,7 +141,7 @@ RSpec.describe UserRoleImporterJob, type: :job do
       describe 'UserRole destroy' do
 
         it 'should destroy existing UserRole' do
-          expect(UserRole.exists? @user_role.id)
+          expect(UserRole.exists? @identity_role.id)
         end
       end
 

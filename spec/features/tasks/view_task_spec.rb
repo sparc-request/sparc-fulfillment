@@ -1,14 +1,14 @@
 require "rails_helper"
 
-feature "User views Task", js: true do
+feature "Identity views Task", js: true do
 
-  scenario "User views a Task that have assigned to themselves" do
+  scenario "Identity views a Task that have assigned to themselves" do
     as_a_user_who_is_on_the_tasks_page
     when_i_view_a_user_task_assigned_to_myself
     then_i_should_see_the_user_task_details
   end
 
-  scenario "User views a Procedure Task they assigned to themselves" do
+  scenario "Identity views a Procedure Task they assigned to themselves" do
     as_a_user_who_has_been_assigned_a_procedure_task
     when_i_view_the_procedure_task_assigned_to_myself
     then_i_should_see_the_procedure_task_details
@@ -19,7 +19,7 @@ feature "User views Task", js: true do
   end
 
   def when_i_view_a_user_task_assigned_to_myself
-    assignee = User.first
+    assignee = Identity.first
 
     click_link "Create New Task"
     select assignee.full_name, from: 'task_assignee_id'
@@ -32,12 +32,12 @@ feature "User views Task", js: true do
 
   def as_a_user_who_has_been_assigned_a_procedure_task
     create(:protocol_imported_from_sparc)
-    user        = User.first
+    identity        = Identity.first
     appointment = Appointment.first
     visit       = Visit.first
     procedure   = create(:procedure, appointment: appointment, visit: visit)
 
-    procedure.tasks.push build(:task, user: user, assignee: user)
+    procedure.tasks.push build(:task, identity: identity, assignee: identity)
   end
 
   def when_i_view_the_procedure_task_assigned_to_myself

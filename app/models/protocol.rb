@@ -8,7 +8,7 @@ class Protocol < ActiveRecord::Base
   has_many :arms, dependent: :destroy
   has_many :line_items, dependent: :destroy
   has_many :participants, dependent: :destroy
-  has_many :user_roles
+  has_many :identity_roles
 
   after_save :update_faye
   after_destroy :update_faye
@@ -27,11 +27,11 @@ class Protocol < ActiveRecord::Base
   end
 
   def pi
-    user_roles.where(role: "primary-pi").first.user
+    identity_roles.where(role: "primary-pi").first.identity
   end
 
   def coordinators
-    user_roles.where(role: "research-assistant-coordinator").map(&:user)
+    identity_roles.where(role: "research-assistant-coordinator").map(&:identity)
   end
 
   private

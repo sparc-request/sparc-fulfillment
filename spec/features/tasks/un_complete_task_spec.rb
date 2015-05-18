@@ -2,16 +2,16 @@ require "rails_helper"
 
 feature "un-completing a Task", js: true do
 
-  scenario "User sets a completed Task to incomplete" do
+  scenario "Identity sets a completed Task to incomplete" do
     given_i_have_set_a_task_to_complete
     when_i_set_the_task_to_incomplete
     then_i_should_see_that_the_task_is_incomplete
   end
 
   def given_i_have_set_a_task_to_complete
-    assignee = User.first
+    assignee = Identity.first
     assignor = create(:identity)
-    create_list(:task, 2, user: assignor, assignee: assignee)
+    create_list(:task, 2, identity: assignor, assignee: assignee)
 
     visit tasks_path
     first('input.complete').click

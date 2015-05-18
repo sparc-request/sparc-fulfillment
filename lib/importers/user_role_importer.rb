@@ -16,13 +16,13 @@ class UserRoleImporter
   end
 
   def update
-    local_user_role.update_attributes(rights: remote_project_role['project_role']['project_rights'],
+    local_identity_role.update_attributes(rights: remote_project_role['project_role']['project_rights'],
                                       role: remote_project_role['project_role']['role'],
                                       role_other: remote_project_role['project_role']['role_other'])
   end
 
   def destroy
-    local_user_role.destroy
+    local_identity_role.destroy
   end
 
   private
@@ -49,8 +49,8 @@ class UserRoleImporter
     @remote_identity ||= RemoteObjectFetcher.new('identity', remote_identity_id, { depth: 'full' }).build_and_fetch
   end
 
-  def local_user_role
-    @local_user_role ||= UserRole.where(protocol: local_protocol, user: local_user).first
+  def local_identity_role
+    @local_identity_role ||= UserRole.where(protocol: local_protocol, user: local_user).first
   end
 
   def local_protocol

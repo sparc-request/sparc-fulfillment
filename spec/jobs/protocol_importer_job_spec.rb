@@ -49,7 +49,7 @@ RSpec.describe ProtocolImporterJob, type: :job do
       expect(protocol.status).to eq('Complete')
 
       # UserRoles
-      expect(protocol.user_roles.any?).to be
+      expect(protocol.identity_roles.any?).to be
 
       # Arms
       expect(Arm.where('sparc_id IS NULL').any?).to_not be

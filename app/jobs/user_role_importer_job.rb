@@ -2,15 +2,15 @@ class UserRoleImporterJob < ImporterJob
 
   def perform
     super {
-      user_role_importer = UserRoleImporter.new(sparc_id, callback_url)
+      identity_role_importer = UserRoleImporter.new(sparc_id, callback_url)
 
       case action
       when 'create'
-        user_role_importer.create
+        identity_role_importer.create
       when 'update'
-        user_role_importer.update
+        identity_role_importer.update
       when 'destroy'
-        user_role_importer.destroy
+        identity_role_importer.destroy
       end
     }
   end

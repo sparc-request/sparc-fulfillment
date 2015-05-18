@@ -1,9 +1,9 @@
 module DeviseHelpers
 
   def sign_in
-    user = create(:identity)
+    identity = create(:identity)
 
-    login_as(user, scope: :user, run_callbacks: false)
+    login_as(identity, run_callbacks: false)
   end
 end
 
@@ -12,10 +12,10 @@ module ControllerMacros
   def login_user
 
     before(:each) do
-      @request.env['devise.mapping']  = Devise.mappings[:user]
-      user                            = create(:identity)
+      @request.env['devise.mapping']  = Devise.mappings[:identity]
+      identity                        = create(:identity)
 
-      sign_in user
+      sign_in identity
     end
   end
 end
@@ -27,13 +27,15 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
 
-  config.before(:each, type: :feature) do
+  config.before(:suite) do
     Warden.test_mode!
+  end
 
+  config.before(:each) do
     sign_in
   end
 
-  config.after(:each, type: :feature) do
+  config.after(:each) do
     Warden.test_reset!
   end
 end

@@ -21,7 +21,7 @@
           .col-sm-8= form.select "position", options_from_collection_for_select(appointment.arm.appointments.where(participant_id: appointment.participant_id), 'position', 'insertion_name'), {include_blank: 'add as last'}, :class => "form-control"
         = form.fields_for :notes, note do |note_form|
           = note_form.hidden_field :kind
-          = note_form.hidden_field :user_id, value: current_user.id
+          = note_form.hidden_field :user_id, value: current_identity.id
           .form-group
             = note_form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
             .col-sm-8
