@@ -187,3 +187,8 @@ $ ->
         url:  "/appointments/#{appointment_id}?field=completed_date&new_date=#{e.date}"
         success: ->
           $('#start_date').data("DateTimePicker").maxDate(e.date)
+
+  # Display a helpful message when user clicks on a disabled UI element
+  # that can't be edited before the appointment has started
+  $(document).on 'click', '.pre_start_disabled', ->
+      alert("Please click Start Visit and enter a start date to continue.")
