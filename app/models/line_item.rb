@@ -45,7 +45,7 @@ class LineItem < ActiveRecord::Base
     if one_time_fee
       errors.add(:quantity_requested, "can't be blank") if not quantity_requested.present?
       errors.add(:quantity_requested, "is not a number") if not quantity_requested.is_a? Integer
-      errors.add(:quantity_type, "can't be blank") if not quantity_type.present?
+      # errors.add(:quantity_type, "can't be blank") if not quantity_type.present?
     end
   end
 

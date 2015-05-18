@@ -19,9 +19,6 @@
               = form.label "quantity_requested", t(:line_item)[:qty_req], class: "col-sm-4 control-label"
               .col-sm-7= form.text_field "quantity_requested", {class: 'form-control'}
             .form-group
-              = form.label "quantity_type", t(:line_item)[:qty_type], class: "col-sm-4 control-label"
-              .col-sm-7= form.text_field "quantity_type", {class: 'form-control'}
-            .form-group
               = form.label "started_at", t(:line_item)[:started], class: "col-sm-4 control-label "
               .col-sm-7
                 = form.text_field "started_at", {class: 'form-control datetimepicker', id: 'date_started_field', value: format_date(line_item.started_at)}

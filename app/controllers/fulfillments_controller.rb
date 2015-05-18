@@ -4,7 +4,7 @@ class FulfillmentsController < ApplicationController
 
   def new
     @line_item = LineItem.find(params[:line_item_id])
-    @fulfillment = Fulfillment.new(line_item: @line_item)
+    @fulfillment = Fulfillment.new(line_item: @line_item, performer: current_user)
   end
 
   def create
