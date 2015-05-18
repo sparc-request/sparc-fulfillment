@@ -1,9 +1,5 @@
 $ ->
 
-  if $("body.protocols-show").length > 0
-    # initialize visit group select list
-    refresh_vg_dropdown()
-
     $(document).on 'click', '#add_arm_button', ->
       protocol_id = $('#arms').data('protocol_id')
       $.ajax
@@ -104,20 +100,6 @@ $ ->
   $select = $('#arms')
   $select.append('<option value=' + id + '>' + name + '</option>')
   $select.selectpicker('refresh')
-
-(exports ? this).refresh_vg_dropdown = ->
-  $select = $('#visits')
-  protocol_id = $('#arms').data('protocol_id')
-  arm_id = $('#arms').val()
-
-  $.get "/arms/#{arm_id}/refresh_vg_dropdown", (data) ->
-    visit_groups = data
-    $select.find('option').remove()
-
-    $.each visit_groups, (key, visit_group) ->
-      $select.append('<option value=' + visit_group.id + '>' + visit_group.name + '</option>')
-
-    $select.selectpicker('refresh')
 
 (exports ? this).remove_arm = (arm_id) ->
   $select = $('#arms')
