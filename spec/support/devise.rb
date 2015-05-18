@@ -31,7 +31,7 @@ RSpec.configure do |config|
     Warden.test_mode!
   end
 
-  config.before(:each) do
+  config.before(:each, type: :feature) do
     sign_in
   end
 
