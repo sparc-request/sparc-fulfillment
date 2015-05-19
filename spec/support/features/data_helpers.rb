@@ -10,7 +10,7 @@ module Features
       @line_item = create(:line_item, arm_id: @arm.id, service_id: @service.id)
       @visit = create(:visit, line_item_id: @line_item.id, visit_group_id: @visit_group.id)
       @user = create(:identity)
-      @identity_role = create(:identity_role, user: @user, protocol: @protocol, role: 'primary-pi')
+      @project_role = create(:project_role, user: @user, protocol: @protocol, role: 'primary-pi')
     end
   end
 end

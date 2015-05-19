@@ -16,8 +16,10 @@ RSpec.describe ProtocolImporterJob, type: :job do
   describe '#perform', sparc_api: :get_sub_service_request_1 do
 
     before do
-      service = create(:service)
-      Service.stub(:find).and_return(service)
+      service   = create(:service)
+      @identity = create(:identity, email: "email@musc.edu")
+      allow(Service).to receive(:find).and_return(service)
+      allow(Identity).to receive(:find).and_return(@identity)
 
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
       protocol_job = ProtocolImporterJob.new(6213, callback_url, 'update')
@@ -27,16 +29,13 @@ RSpec.describe ProtocolImporterJob, type: :job do
 
     it 'should make requests to the objects callback_url' do
       # SPARC sub_service_request
-      expect(a_request(:get, /\/v1\/sub_service_requests\/6213.json/).
-        with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
+      expect(a_request(:get, /\/v1\/sub_service_requests\/6213.json/)).to have_been_made.once
 
       # SPARC service_request
-      expect(a_request(:get, /\/v1\/service_requests\/201780.json/).
-        with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
+      expect(a_request(:get, /\/v1\/service_requests\/201780.json/)).to have_been_made.once
 
       # SPARC protocol_request
-      expect(a_request(:get, /\/v1\/protocols\/7564.json/).
-        with( headers: {'Accept' => 'application/json', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})).to have_been_made.once
+      expect(a_request(:get, /\/v1\/protocols\/7564.json/)).to have_been_made.once
     end
 
     it 'should import the full Protocol' do
@@ -49,7 +48,7 @@ RSpec.describe ProtocolImporterJob, type: :job do
       expect(protocol.status).to eq('Complete')
 
       # UserRoles
-      expect(protocol.identity_roles.any?).to be
+      expect(protocol.project_roles.any?).to be
 
       # Arms
       expect(Arm.where('sparc_id IS NULL').any?).to_not be

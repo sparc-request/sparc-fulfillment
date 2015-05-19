@@ -1,9 +1,10 @@
 FactoryGirl.define do
 
-  factory :identity_role do
+  factory :project_role do
     identity nil
     protocol nil
     rights "to party"
+
     trait :pi do
       role "primary-pi"
       identity
@@ -14,7 +15,7 @@ FactoryGirl.define do
       identity
     end
 
-    factory :identity_role_pi, traits:[:pi]
-    factory :identity_role_coordinator, traits:[:coordinator]
+    factory :project_role_pi, traits:[:pi]
+    factory :project_role_coordinator, traits:[:coordinator]
   end
 end

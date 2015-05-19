@@ -5,7 +5,7 @@ class Identity < ActiveRecord::Base
   devise :database_authenticatable, :rememberable, :trackable
 
   has_one :identity_counter, dependent: :destroy
-  has_many :identity_roles
+  has_many :project_roles
   has_many :tasks, as: :assignable
 
   delegate :tasks_count, to: :identity_counter

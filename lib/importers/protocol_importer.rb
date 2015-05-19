@@ -35,7 +35,7 @@ class ProtocolImporter
   def import_identity_roles
     if remote_identity_roles.present?
       remote_identity_roles.each do |identity_role|
-        UserRoleImporter.new(identity_role['sparc_id'], identity_role['callback_url']).create
+        ProjectRoleImporter.new(identity_role['sparc_id'], identity_role['callback_url']).create
       end
     end
   end

@@ -1,4 +1,4 @@
-class IdentityRole < ActiveRecord::Base
+class ProjectRole < ActiveRecord::Base
 
   belongs_to :identity
   belongs_to :protocol

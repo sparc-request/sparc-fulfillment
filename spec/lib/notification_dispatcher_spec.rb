@@ -32,8 +32,8 @@ RSpec.describe NotificationDispatcher, type: :request do
             sparc_sends_notification_post(params)
           end
 
-          it 'should create a UserRoleImporterJob delayed job' do
-            expect(Delayed::Job.where("handler LIKE '%struct:UserRoleImporterJob%'").one?).to be
+          it 'should create a ProjectRoleImporterJob delayed job' do
+            expect(Delayed::Job.where("handler LIKE '%struct:ProjectRoleImporterJob%'").one?).to be
           end
         end
       end
