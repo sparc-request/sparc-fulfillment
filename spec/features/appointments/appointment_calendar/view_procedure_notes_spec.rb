@@ -22,6 +22,7 @@ feature 'View Notes', js: true do
 
   def given_i_have_marked_a_procedure_as_complete
     given_i_am_viewing_a_procedure
+    after_appointment_starts
     find('label.status.complete').click
   end
 
@@ -29,17 +30,22 @@ feature 'View Notes', js: true do
     reason = Procedure::NOTABLE_REASONS.first
 
     given_i_am_viewing_a_procedure
+    after_appointment_starts
     find('label.status.incomplete').click
     select reason, from: 'procedure_notes_attributes_0_reason'
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
   end
 
+  def after_appointment_starts
+    find('button.start_visit').click
+  end
+
   def given_i_am_viewing_a_procedure
     protocol    = create(:protocol_imported_from_sparc)
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant_visits.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
@@ -53,11 +59,11 @@ feature 'View Notes', js: true do
   end
 
   def then_i_should_see_a_complete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to complete')
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to complete')
   end
 
   def then_i_should_see_an_incomplete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to incomplete')
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to incomplete')
   end
 
   def then_i_should_be_notified_that_there_are_no_notes

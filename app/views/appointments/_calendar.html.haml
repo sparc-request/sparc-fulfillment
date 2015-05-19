@@ -28,7 +28,7 @@
             %thead
               %tr
                 %th.name
-                  = t(:procedure)[:procedure]
+                  = t(:procedure)[:object]
                 %th.r-t
                   = t(:procedure)[:r_t]
                 %th.status
@@ -43,10 +43,10 @@
                   = t(:procedure)[:remove]
             %tbody
               - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-                = render partial: "core", locals: {core_id: core_id, procedures: procedures}
+                = render partial: "core", locals: {core_id: core_id, procedures: procedures, appointment_started: appointment.start_date.present? }
       .row.services
         .col-xs-4
-          = select_tag "service_list", options_from_collection_for_select(Service.all_cached, "id", "name"), class: 'form-control'
+          = select_tag "service_list", options_from_collection_for_select(Service.all_per_participant_visit_services, "id", "name"), class: 'form-control'
         .col-xs-2
           = text_field_tag "service_quantity", 1, class: "form-control"
         .col-xs-2

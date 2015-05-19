@@ -39,9 +39,9 @@ class ParticipantsController < ApplicationController
     participant_validation.protocol_id = @participant.protocol_id
     if participant_validation.valid?
       @participant.update(participant_params)
-      flash[:success] = t(:flash_messages)[:participant][:saved]
+      flash[:success] = t(:flash_messages)[:participant][:updated]
     else
-      @errors = participant.errors
+      @errors = participant_validation.errors
     end
   end
 

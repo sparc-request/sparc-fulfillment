@@ -128,8 +128,6 @@ ActiveRecord::Schema.define(version: 20150518193832) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.integer  "subject_count",      limit: 4
-    t.boolean  "one_time_fee",       limit: 1
-    t.integer  "per_unit_cost",      limit: 4,   default: 0
     t.integer  "quantity_requested", limit: 4,   default: 0
     t.string   "quantity_type",      limit: 255
     t.datetime "started_at"
@@ -253,7 +251,6 @@ ActiveRecord::Schema.define(version: 20150518193832) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.string   "irb_status",                   limit: 255
     t.datetime "irb_approval_date"
     t.datetime "irb_expiration_date"
     t.float    "stored_percent_subsidy",       limit: 24
@@ -264,6 +261,17 @@ ActiveRecord::Schema.define(version: 20150518193832) do
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
+
+  create_table "reports", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.string   "status",     limit: 255
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "reports", ["user_id"], name: "index_reports_on_user_id", using: :btree
 
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"

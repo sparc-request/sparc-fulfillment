@@ -260,6 +260,7 @@ GEM
     rake (10.4.2)
     rdoc (4.2.0)
       json (~> 1.4)
+    remotipart (1.2.1)
     request_store (1.1.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
@@ -395,6 +396,7 @@ DEPENDENCIES
   puma
   rack-mini-profiler
   rails (= 4.2.1)
+  remotipart
   rest-client
   rspec-activejob (~> 0.4.0)
   rspec-collection_matchers

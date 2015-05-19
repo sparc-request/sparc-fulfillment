@@ -27,6 +27,7 @@ gem 'paper_trail', '~> 4.0.0.beta'
 gem 'paranoia', '~> 2.0'
 gem 'puma'
 gem 'rails', '4.2.1'
+gem 'remotipart'
 gem 'rest-client'
 gem 'sass-rails'
 gem 'sdoc', '~> 0.4.0', group: :doc
@@ -35,6 +36,10 @@ gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
 gem 'will_paginate'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
+
+# #requirements for excel export
+# gem 'axlsx'
+# gem 'axlsx_rails'
 
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'

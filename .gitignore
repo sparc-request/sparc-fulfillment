@@ -16,6 +16,8 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+/public/system/documents/*
+/public/assets/*
 
 
 .rspec

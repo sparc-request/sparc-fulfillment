@@ -4,32 +4,32 @@
       %button.close{type: 'button', data: {dismiss: 'modal'}}
         %span{aria: {hidden:'true'}} &times;
         %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= t(:task_index)[:show_title]
+      %h4.modal-title.text-center= t(:task)[:object]
     .modal-body
       %dl.dl-horizontal
         %dt
-          = t(:task_index)[:identity_name]
+          = t(:task)[:identity_name]
         %dd
           = task.identity.full_name
         %dt
-          = t(:task_index)[:assignee_name]
+          = t(:task)[:assignee_name]
         %dd
           = task.assignee.full_name
         %dt
-          = t(:task_index)[:assignable_type]
+          = t(:task)[:assignable_type]
         %dd
           = task.assignable_type
         %dt
-          = t(:task_index)[:due_at]
+          = t(:task)[:due_at]
         %dd
           = format_date(task.due_at)
         %dt
-          = t(:task_index)[:completed]
+          = t(:task)[:completed]
         %dd
           = task.complete
       %dl.dl-horizontal
         %dt
-          = t(:task_index)[:body]
+          = t(:task)[:object]
         %dd
           = task.body
     .modal-footer

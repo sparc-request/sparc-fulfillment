@@ -18,10 +18,10 @@ RSpec.describe Arm, type: :model do
     describe '.line_items_grouped_by_core' do
 
       it 'should return LineItems grouped by core' do
+        protocol  = create(:protocol)
         arm       = create(:arm)
         service_1 = create(:service)
         service_2 = create(:service)
-
         create(:line_item, arm: arm, service: service_1, subject_count: 1)
         create(:line_item, arm: arm, service: service_2, subject_count: 2)
         create(:line_item, arm: arm, service: service_2, subject_count: 2)
@@ -43,9 +43,5 @@ RSpec.describe Arm, type: :model do
         expect(arm.persisted?).to be
       end
     end
-  end
-
-  context 'instance methods' do
-
   end
 end

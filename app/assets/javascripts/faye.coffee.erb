@@ -15,3 +15,7 @@ $ ->
       faye.subscribe "/protocol_#{gon.protocol_id}", (data) ->
         $('table.protocol').bootstrapTable('refresh', {silent: "true"})
         $('table.participants').bootstrapTable('refresh', {silent: "true"})
+
+    if $('body.reports-index').length > 0
+      faye.subscribe "/reports", (data) ->
+        $('table#reports-list').bootstrapTable('refresh', {silent: "true"})

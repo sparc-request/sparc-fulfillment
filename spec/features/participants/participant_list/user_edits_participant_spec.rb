@@ -14,7 +14,7 @@ feature 'User edits Participant', js: true do
     find("input[value='Save Participant']").click
     refresh_bootstrap_table 'table.participants'
 
-    expect(page).to have_css('#flashes_container', text: 'Participant Saved')
+    expect(page).to have_css('#flashes_container', text: 'Participant Updated')
     expect(page).to have_css('table.participants tbody tr td.first_name', text: 'Starlord')
   end
 end

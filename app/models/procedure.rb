@@ -3,7 +3,7 @@ class Procedure < ActiveRecord::Base
   STATUS_TYPES = %w(complete incomplete).freeze
   NOTABLE_REASONS  = ['Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained', 'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment', 'Assessment performed by other personnel/study staff', 'Participant refused assessment', 'Assessment not performed due to equipment failure'].freeze
 
-  has_paper_trail
+  has_paper_trail if: Rails.env.production?
   acts_as_paranoid
 
   has_one :protocol,    through: :appointment
@@ -14,6 +14,7 @@ class Procedure < ActiveRecord::Base
 
   belongs_to :appointment
   belongs_to :visit
+  belongs_to :service
 
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
@@ -44,9 +45,15 @@ class Procedure < ActiveRecord::Base
     elsif attributes[:status].blank? &&
         attributes[:status] == ''
       attributes.merge!(completed_date: nil)
+    elsif attributes[:completed_date].present?
+      attributes[:completed_date] = Time.strptime(attributes[:completed_date], "%m-%d-%Y")
     end
-
     super attributes
+  end
+
+  # Has this procedure's appointment started?
+  def appt_started?
+    appointment.start_date.present?
   end
 
   def reset?

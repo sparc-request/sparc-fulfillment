@@ -2,13 +2,16 @@ class Protocol < ActiveRecord::Base
 
   STATUSES = ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold'].freeze
 
-  has_paper_trail
+  has_paper_trail if: Rails.env.production?
   acts_as_paranoid
 
   has_many :arms, dependent: :destroy
   has_many :line_items, dependent: :destroy
   has_many :participants, dependent: :destroy
   has_many :project_roles
+
+  has_many :appointments, through: :participants
+  has_many :procedures, through: :appointments
 
   after_save :update_faye
   after_destroy :update_faye
@@ -32,6 +35,15 @@ class Protocol < ActiveRecord::Base
 
   def coordinators
     project_roles.where(role: "research-assistant-coordinator").map(&:identity)
+  end
+
+  def short_title_with_sparc_id
+    list_display = "(#{self.sparc_id}) #{self.short_title}"
+    return list_display
+  end
+
+  def one_time_fee_line_items
+    line_items.includes(:service).where(:services => {:one_time_fee => true})
   end
 
   private

@@ -23,12 +23,12 @@ feature 'Create Procedure', js: true do
 
   def and_i_add_a_procedure
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant_visits.first
 
     bootstrap_select('#appointment_select', visit_group.name)
     find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '1'
-    page.find('button.add_service').trigger('click')
+    page.find('button.add_service').click
   end
 
   def then_i_should_see_the_procedure_in_the_appointment_calendar
@@ -37,12 +37,12 @@ feature 'Create Procedure', js: true do
 
   def and_i_add_two_procedures
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant_visits.first
 
     bootstrap_select('#appointment_select', visit_group.name)
     find("#service_list > option[value='#{service.id}']").select_option
     fill_in 'service_quantity', with: '2'
-    page.find('button.add_service').trigger('click')
+    page.find('button.add_service').click
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar

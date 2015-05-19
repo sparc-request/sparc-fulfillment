@@ -5,12 +5,12 @@
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only= t(:actions)[:close]
-        %h4.modal-title.text-center= t(:task_index)[:reschedule]
+        %h4.modal-title.text-center= t(:task)[:reschedule]
       .modal-body
         .form-group
-          = t.label "due_at", t(:task_index)[:due_at], class: "col-sm-4 control-label"
+          = t.label "due_at", t(:task)[:due_at], class: "col-sm-4 control-label"
           .col-sm-7
-            .input-group.date
+            .input-group.date#reschedule_datepicker
               = t.text_field "due_at", {class: 'form-control datetimepicker', value: format_date(task.due_at)}
               %span.input-group-addon
                 %span.glyphicon.glyphicon-calendar
