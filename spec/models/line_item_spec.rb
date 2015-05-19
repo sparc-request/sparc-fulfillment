@@ -51,7 +51,7 @@ RSpec.describe LineItem, type: :model do
 
       it 'should be delegated to Service' do
         service   = create(:service)
-        line_item = create(:line_item, service: service)
+        line_item = create(:line_item, service: service, protocol: create(:protocol))
 
         expect(line_item.cost).to eq(500.0)
       end
@@ -62,7 +62,7 @@ RSpec.describe LineItem, type: :model do
       it 'should be delegated to Service' do
         organization  = create(:organization_core, name: "Core A")
         service       = create(:service, organization: organization)
-        line_item     = create(:line_item, service: service)
+        line_item     = create(:line_item, service: service, protocol: create(:protocol))
 
         expect(line_item.sparc_core_name).to eq('Core A')
       end
@@ -73,7 +73,7 @@ RSpec.describe LineItem, type: :model do
       it 'should be delegated to Service' do
         service       = create(:service)
         organization  = service.organization
-        line_item     = create(:line_item, service: service)
+        line_item     = create(:line_item, service: service, protocol: create(:protocol))
 
         expect(line_item.sparc_core_id).to eq(organization.id)
       end
@@ -142,7 +142,7 @@ RSpec.describe LineItem, type: :model do
 
       it "should create a Remote Service Updater job" do
         service = create(:service)
-        expect { create(:line_item, service: service) }.to enqueue_a(RemoteServiceUpdaterJob).with(global_id(service), 1)
+        expect { create(:line_item, service: service, protocol: create(:protocol)) }.to enqueue_a(RemoteServiceUpdaterJob).with(global_id(service), 1)
       end
     end
 
@@ -150,7 +150,7 @@ RSpec.describe LineItem, type: :model do
 
       it "should create a Remote Service Updater job" do
         service = create(:service)
-        line_item = create(:line_item, service: service)
+        line_item = create(:line_item, service: service, protocol: create(:protocol))
         expect { line_item.destroy }.to enqueue_a(RemoteServiceUpdaterJob).with(global_id(service), -1)
       end
     end
