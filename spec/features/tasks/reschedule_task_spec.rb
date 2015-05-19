@@ -10,7 +10,7 @@ feature "rescheduling a Task", js: true do
 
   def as_a_identity_who_has_assigned_a_task
     @identity = Identity.first
-    create_list(:task, 2, identity: @identity)
+    create_list(:task, 2, identity: @identity, assignee: @identity)
     @task = Task.first
 
     visit tasks_path
@@ -18,10 +18,15 @@ feature "rescheduling a Task", js: true do
 
   def when_i_reschedule_the_task
     wait_for_ajax
-    @next_day = (Time.current + 1.day).strftime('%m/%d/%y')
+    @next_month = (Time.current + 1.month).strftime('%m/%d/%y')
     page.all('.task-reschedule').last.click
+    wait_for_ajax
+    
     fill_in "task_due_at", with: @next_month
+    wait_for_ajax
+    
     click_button "Save"
+    wait_for_ajax
   end
 
   def then_i_should_see_the_task_has_been_rescheduled

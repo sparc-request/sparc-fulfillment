@@ -19,15 +19,6 @@ class Task < ActiveRecord::Base
     write_attribute(:due_at, Time.strptime(due_date, "%m-%d-%Y")) if due_date.present?
   end
 
-  def self.mine identity, show_complete
-
-    if show_complete
-      return where("(assignee_id = ? OR identity_id = ?) AND complete = ?", identity.id, identity.id, show_complete)
-    else
-      return where("(assignee_id = ? OR identity_id = ?) AND complete = ?", identity.id, identity.id, false)
-    end
-  end
-
   private
 
   def increment_assignee_counter
@@ -43,6 +34,21 @@ class Task < ActiveRecord::Base
       decrement_assignee_counter
     elsif self.complete_changed?(from: true, to: false)
       increment_assignee_counter
+
+  def self.my_completed_tasks user, show_complete
+
+    if show_complete
+      return where("(assignee_id = ?) AND complete = ?", user.id, show_complete)
+    else
+      return where("(assignee_id = ?) AND complete = ?", user.id, false)
+    end
+  end
+
+  def self.my_tasks user, show_tasks
+    if show_tasks
+      return where("complete = ?", false)
+    else
+      return where("(assignee_id = ?) AND complete = ?", user.id, false)
     end
   end
 end

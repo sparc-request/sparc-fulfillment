@@ -242,6 +242,7 @@ en:
     reschedule: "Reschedule"
     show_complete: "Show Complete"
     create_task: "Create Task"
+    all_tasks: "Show All Tasks"
     object: "Task"
 
   visit:

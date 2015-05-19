@@ -47,3 +47,14 @@ $ ->
         $(this).prop('value', 'true')
       $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?complete=" + show_complete, silent: "true"})
 
+    $(document).on 'click', "#all_tasks", ->
+      show_tasks = $(this).prop('value')
+      if show_tasks == 'true'
+        $(this).text('Show My Tasks')
+        $(this).prop('value', 'false')
+      else
+        $(this).text('Show All Tasks')
+        $(this).prop('value', 'true')
+      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?show_tasks=" + show_tasks, silent: "true"})
+
+

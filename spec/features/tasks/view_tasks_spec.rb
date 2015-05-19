@@ -26,6 +26,13 @@ feature "View Tasks", js: true do
     then_i_should_see_only_incomplete_tasks
   end
 
+  scenario "Identity views tasks they assigned to someone else" do
+    given_i_have_assigned_tasks_to_another_identity
+    when_i_visit_the_tasks_page
+    then_click_on_the_view_all_tasks_button
+    then_i_should_see_all_tasks
+  end
+
   def as_a_identity_with_incomplete_tasks
     @identity = Identity.first
 
@@ -41,8 +48,14 @@ feature "View Tasks", js: true do
   def given_i_have_assigned_tasks
     as_a_identity_with_incomplete_tasks
 
-    other_identity = create(:identity)
-    create_list(:task, 2, identity: other_identity, assignee: other_identity)
+    create_list(:task, 2, identity: @identity, assignee: @identity)
+  end
+
+  def given_i_have_assigned_tasks_to_another_identity
+    as_a_identity_with_incomplete_tasks
+
+    other_user = create(:identity)
+    create_list(:task, 2, identity: @identity, assignee: other_user)
   end
 
   def given_i_have_complete_and_incomplete_tasks
@@ -83,5 +96,13 @@ feature "View Tasks", js: true do
 
   def then_i_should_see_only_incomplete_tasks
     expect(page).to_not have_css("table.tasks tbody input[checked]")
+  end
+
+  def then_click_on_the_view_all_tasks_button
+    find('#all_tasks').click
+  end
+
+  def then_i_should_see_all_tasks
+    expect(page).to have_css("table.tasks tbody tr", count: 4)
   end
 end

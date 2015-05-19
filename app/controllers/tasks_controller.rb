@@ -8,8 +8,11 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        show_complete = to_boolean(params[:complete])
-        @tasks = Task.mine(current_identity, show_complete)
+        if params[:show_tasks]
+          toggle_all_tasks(params)
+        else
+          toggle_completed_tasks(params)
+        end
 
         render
       end
@@ -78,5 +81,15 @@ class TasksController < ApplicationController
     params.
       require(:task).
       permit(:complete, :body, :due_at, :assignee_id, :assignable_type, :assignable_id, notes: [:kind, :comment, :notable_type, :notable_id])
+  end
+
+  def toggle_all_tasks params
+    show_tasks = to_boolean(params[:show_tasks])
+    @tasks = Task.my_tasks(current_user, show_tasks)
+  end
+
+  def toggle_completed_tasks params
+    show_complete = to_boolean(params[:complete])
+    @tasks = Task.my_completed_tasks(current_user, show_complete)
   end
 end
