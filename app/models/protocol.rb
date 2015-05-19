@@ -8,7 +8,7 @@ class Protocol < ActiveRecord::Base
   has_many :arms, dependent: :destroy
   has_many :line_items, dependent: :destroy
   has_many :participants, dependent: :destroy
-  has_many :project_roles
+  has_many :project_roles, dependent: :destroy
 
   has_many :appointments, through: :participants
   has_many :procedures, through: :appointments
