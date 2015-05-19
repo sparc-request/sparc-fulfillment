@@ -3,13 +3,13 @@ require "rails_helper"
 feature "View Tasks", js: true do
 
   scenario "Identity with no Tasks views Tasks list" do
-    as_a_user_with_no_tasks
+    as_a_identity_with_no_tasks
     when_i_visit_the_tasks_page
     then_i_should_see_that_i_have_no_tasks
   end
 
   scenario "Identity views complete Tasks" do
-    as_a_user_with_complete_tasks
+    as_a_identity_with_complete_tasks
     when_i_view_complete_tasks
     then_i_should_see_complete_tasks
   end
@@ -26,37 +26,37 @@ feature "View Tasks", js: true do
     then_i_should_see_only_incomplete_tasks
   end
 
-  def as_a_user_with_incomplete_tasks
+  def as_a_identity_with_incomplete_tasks
     @identity = Identity.first
 
     create_list(:task, 2, identity: @identity)
   end
 
-  def as_a_user_with_complete_tasks
+  def as_a_identity_with_complete_tasks
     @identity = Identity.first
 
     create_list(:task_complete, 2, identity: @identity)
   end
 
   def given_i_have_assigned_tasks
-    as_a_user_with_incomplete_tasks
+    as_a_identity_with_incomplete_tasks
 
-    other_user = create(:identity)
-    create_list(:task, 2, identity: other_user, assignee: other_user)
+    other_identity = create(:identity)
+    create_list(:task, 2, identity: other_identity, assignee: other_identity)
   end
 
   def given_i_have_complete_and_incomplete_tasks
-    as_a_user_with_incomplete_tasks
-    as_a_user_with_complete_tasks
+    as_a_identity_with_incomplete_tasks
+    as_a_identity_with_complete_tasks
   end
 
-  def as_a_user_with_complete_tasks
+  def as_a_identity_with_complete_tasks
     identity = Identity.first
 
     identity.tasks.push build(:task_complete, assignee_id: identity.id)
   end
 
-  def as_a_user_with_no_tasks
+  def as_a_identity_with_no_tasks
     # Devise#sign_in
   end
 

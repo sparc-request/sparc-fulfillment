@@ -11,9 +11,9 @@ class Task < ActiveRecord::Base
   validates :assignee_id, presence: true
   validates :due_at, presence: true
 
-  after_create   { increment_identity_counter unless self.complete }
-  after_update   :update_identity_counter
-  before_destroy { decrement_identity_counter unless self.complete }
+  after_create   :increment_assignee_counter, unless: :complete?
+  after_update   :update_assignee_counter
+  before_destroy :decrement_assignee_counter, unless: :complete?
 
   def due_at=(due_date)
     write_attribute(:due_at, Time.strptime(due_date, "%m-%d-%Y")) if due_date.present?
@@ -30,20 +30,19 @@ class Task < ActiveRecord::Base
 
   private
 
-  def increment_identity_counter
-    identity.update_counter(:tasks, 1)
+  def increment_assignee_counter
+    assignee.update_counter(:tasks, 1)
   end
 
-  def decrement_identity_counter
-    identity.update_counter(:tasks, -1)
+  def decrement_assignee_counter
+    assignee.update_counter(:tasks, -1)
   end
 
-  def update_identity_counter
+  def update_assignee_counter
     if self.complete_changed?(from: false, to: true)
-      decrement_identity_counter
+      decrement_assignee_counter
     elsif self.complete_changed?(from: true, to: false)
-      increment_identity_counter
+      increment_assignee_counter
     end
   end
-
 end

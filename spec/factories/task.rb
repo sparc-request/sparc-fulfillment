@@ -1,6 +1,6 @@
 FactoryGirl.define do
 
-  factory :task do
+  factory :task, aliases: [:task_incomplete] do
     identity
     assignee factory: :identity
     due_at "09-09-2025"
