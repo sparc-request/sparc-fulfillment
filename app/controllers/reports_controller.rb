@@ -6,7 +6,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        @reports = Report.where(user: current_identity)
+        @reports = Report.where(identity: current_identity)
         render
       end
     end

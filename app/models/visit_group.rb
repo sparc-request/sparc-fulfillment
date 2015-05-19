@@ -1,7 +1,7 @@
 class VisitGroup < ActiveRecord::Base
   self.per_page = Visit.per_page
 
-  has_paper_trail if: Rails.env.production?
+  has_paper_trail
   acts_as_paranoid
 
   include CustomPositioning #custom methods around positioning, acts_as_list

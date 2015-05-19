@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150518193832) do
+ActiveRecord::Schema.define(version: 20150519181014) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -165,13 +165,6 @@ ActiveRecord::Schema.define(version: 20150518193832) do
 
   add_index "notifications", ["sparc_id"], name: "index_notifications_on_sparc_id", using: :btree
 
-  create_table "organizations", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "type",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
   create_table "participants", force: :cascade do |t|
     t.integer  "protocol_id",        limit: 4
     t.integer  "arm_id",             limit: 4
@@ -263,15 +256,15 @@ ActiveRecord::Schema.define(version: 20150518193832) do
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
 
   create_table "reports", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "status",     limit: 255
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",        limit: 255
+    t.string   "status",      limit: 255
+    t.integer  "identity_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.datetime "deleted_at"
   end
 
-  add_index "reports", ["user_id"], name: "index_reports_on_user_id", using: :btree
+  add_index "reports", ["identity_id"], name: "index_reports_on_identity_id", using: :btree
 
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"
