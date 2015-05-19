@@ -11,7 +11,7 @@ module Features
 
     def user_fills_in_new_task_form
       task = build(:task)
-      user = User.first
+      user = Identity.first
 
       select 'Study-level Task', from: "Task Type"
       fill_in 'Patient Name', with: task.participant_name

@@ -36,22 +36,22 @@ RSpec.describe UserRoleImporterJob, type: :job do
       describe 'User creation' do
 
         it 'should create a User' do
-          user = User.first
+          identity = Identity.first
 
-          expect(user).to be
-          expect(user.first_name).to eq('Jennifer')
-          expect(user.last_name).to eq('Zimmerman')
-          expect(user.email).to eq('zimmerj@musc.edu')
+          expect(identity).to be
+          expect(identity.first_name).to eq('Jennifer')
+          expect(identity.last_name).to eq('Zimmerman')
+          expect(identity.email).to eq('zimmerj@musc.edu')
         end
       end
 
       describe 'UserRole creation' do
 
         it 'should create a User' do
-          identity_role = UserRole.first
+          identity_role = IdentityRole.first
 
           expect(identity_role).to be
-          expect(identity_role.user).to be_present
+          expect(identity_role.identity).to be_present
           expect(identity_role.protocol).to be_present
           expect(identity_role.rights).to be_present
           expect(identity_role.role).to be_present

@@ -24,6 +24,7 @@ RSpec.configure do |config|
 
   config.include Warden::Test::Helpers
   config.include DeviseHelpers, type: :feature
+  config.include DeviseHelpers, type: :model
   config.include Devise::TestHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
 

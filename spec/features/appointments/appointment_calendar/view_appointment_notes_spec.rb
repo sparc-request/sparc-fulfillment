@@ -5,7 +5,7 @@ feature 'View appointment notes', js: true do
     protocol    = create(:protocol_imported_from_sparc)
     @participant = protocol.participants.first
     @visit_group = @participant.appointments.first.visit_group
-    @user = create(:identity)
+    @identity = create(:identity)
   end
 
   scenario 'User views Notes list when no Notes are present' do
@@ -31,7 +31,7 @@ feature 'View appointment notes', js: true do
   end
   
   def when_i_create_a_note
-    @participant.appointments.first.notes.create :comment => "A note", :user => @user
+    @participant.appointments.first.notes.create :comment => "A note", :identity => @identity
   end
 
   def then_i_should_be_notified_that_there_are_no_notes

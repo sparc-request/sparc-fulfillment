@@ -76,8 +76,8 @@ class ProceduresController < ApplicationController
     @procedure_params = params.
                         require(:procedure).
                         permit(:status, :follow_up_date, :completed_date,
-                                notes_attributes: [:comment, :kind, :user_id, :reason],
-                                tasks_attributes: [:assignee_id, :user_id, :body, :due_at])
+                                notes_attributes: [:comment, :kind, :identity_id, :reason],
+                                tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
   end
 
   def find_procedure
