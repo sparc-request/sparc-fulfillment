@@ -2,7 +2,7 @@ class Note < ActiveRecord::Base
 
   KIND_TYPES    = %w(log note reason followup).freeze
 
-  has_paper_trail
+  has_paper_trail if: Rails.env.production?
   acts_as_paranoid
 
   belongs_to :notable, polymorphic: true

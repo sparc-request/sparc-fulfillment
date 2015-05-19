@@ -37,6 +37,7 @@ class Service < ActiveRecord::Base
 
   def self.one_time_fees
     Service.where(one_time_fee: 1)
+  end
 
   def sparc_core_id
     organization.id

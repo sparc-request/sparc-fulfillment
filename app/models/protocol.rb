@@ -2,7 +2,7 @@ class Protocol < ActiveRecord::Base
 
   STATUSES = ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold'].freeze
 
-  has_paper_trail
+  has_paper_trail if: Rails.env.production?
   acts_as_paranoid
 
   has_many :arms, dependent: :destroy

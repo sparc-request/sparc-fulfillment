@@ -4,13 +4,13 @@ class Appointment < ActiveRecord::Base
   NOTABLE_REASONS = ['Assessment not performed', 'SAE/Follow-up for SAE', 'Patient Visit Conflict', 'Study Visit Assessments Inconclusive'].freeze
 
   default_scope {order(:position)}
-  
-  has_paper_trail
+
+  has_paper_trail if: Rails.env.production?
   acts_as_paranoid
   acts_as_list scope: [:arm_id, :participant_id]
 
   include CustomPositioning #custom methods around positioning, acts_as_list
-  
+
   has_one :protocol,  through: :participant
   has_many :appointment_statuses, dependent: :destroy
 
@@ -22,9 +22,9 @@ class Appointment < ActiveRecord::Base
   has_many :notes, as: :notable
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
-  
+
   validates :participant_id, :name, :arm_id, presence: true
-  
+
   accepts_nested_attributes_for :notes
 
   def has_completed_procedures?

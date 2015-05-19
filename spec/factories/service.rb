@@ -16,7 +16,7 @@ FactoryGirl.define do
 
     trait :with_components do
       after(:create) do |service, evaluator|
-        create_list(:component_of_service, 3, composable_id: service.id)
+        create_list(:service_level_component, 3, service: service)
       end
     end
 
