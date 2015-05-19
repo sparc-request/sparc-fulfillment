@@ -6,14 +6,14 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        @reports = Report.where(user: current_user)
+        @reports = Report.where(user: current_identity)
         render
       end
     end
   end
 
   def billing_report
-    @report = current_user.reports.new(name: "Billing Report", status: "Pending")
+    @report = current_identity.reports.new(name: "Billing Report", status: "Pending")
     if params[:start_date] == ""
       @report.errors.add(:start_date, "Cannot be blank")
     end

@@ -9,7 +9,7 @@ class FulfillmentsController < ApplicationController
 
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
-    @fulfillment = Fulfillment.new(fulfillment_params, created_by: current_user)
+    @fulfillment = Fulfillment.new(fulfillment_params, created_by: current_identity)
     if @fulfillment.valid?
       @fulfillment.save
       update_components

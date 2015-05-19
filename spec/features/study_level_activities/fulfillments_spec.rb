@@ -70,7 +70,7 @@ feature 'Fulfillments', js: true do
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in 'Quantity', with: "45"
-    bootstrap_select '#fulfillment_performed_by', User.first.full_name
+    bootstrap_select '#fulfillment_performed_by', Identity.first.full_name
     bootstrap_select '#fulfillment_components', @components.first.component
     find('.modal-header').click
   end

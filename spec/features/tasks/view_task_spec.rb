@@ -56,7 +56,7 @@ feature "Identity views Task", js: true do
 
   def then_i_should_see_the_procedure_task_details
     then_i_should_see_the_identity_task_details
-    expect(page).to have_css(".modal dt", text: "Participant name")
+    expect(page).to have_css(".modal dt", text: "Participant Name")
     expect(page).to have_css(".modal dt", text: "Protocol")
     expect(page).to have_css(".modal dt", text: "Visit")
     expect(page).to have_css(".modal dt", text: "Arm")
