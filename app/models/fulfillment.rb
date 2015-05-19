@@ -1,6 +1,6 @@
 class Fulfillment < ActiveRecord::Base
 
-  has_paper_trail if: Rails.env.production?
+  has_paper_trail
   acts_as_paranoid
 
   belongs_to :line_item

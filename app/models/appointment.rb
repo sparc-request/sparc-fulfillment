@@ -5,7 +5,7 @@ class Appointment < ActiveRecord::Base
 
   default_scope {order(:position)}
 
-  has_paper_trail if: Rails.env.production?
+  has_paper_trail
   acts_as_paranoid
   acts_as_list scope: [:arm_id, :participant_id]
 

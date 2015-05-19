@@ -3,7 +3,7 @@ class Procedure < ActiveRecord::Base
   STATUS_TYPES = %w(complete incomplete).freeze
   NOTABLE_REASONS  = ['Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained', 'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment', 'Assessment performed by other personnel/study staff', 'Participant refused assessment', 'Assessment not performed due to equipment failure'].freeze
 
-  has_paper_trail if: Rails.env.production?
+  has_paper_trail
   acts_as_paranoid
 
   has_one :protocol,    through: :appointment
