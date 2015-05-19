@@ -85,6 +85,10 @@ en:
     flash_messages:
       updated: "Fulfillment Updated"
       created: "Fulfillment Created"
+    log_notes:
+      fulfilled_at: "Fulfillment Date changed to "
+      quantity: "Quantity changed to "
+      performer_id: "Performed By changed to "
 
   line_item:
     add_line_item: "Add Service"
@@ -101,6 +105,10 @@ en:
     flash_messages:
       updated: "Line Item Updated"
       created: "Line Item Created"
+    log_notes:
+      quantity_requested: "Quantity Requested changed to "
+      service_id: "Service changed to "
+      started_at: "Started At changed to "
 
   notes:
     new_header: "Add Note"
