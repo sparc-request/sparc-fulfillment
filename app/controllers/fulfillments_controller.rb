@@ -44,14 +44,17 @@ class FulfillmentsController < ApplicationController
   def detect_changes_and_create_notes
     tracked_fields = [:fulfilled_at, :quantity, :performer_id]
     tracked_fields.each do |field|
-      formatted_current = @original_attributes[field.to_s].to_s
-      formatted_new = fulfillment_params[field]
-      formatted_new = Time.strptime(fulfillment_params[field], "%m-%d-%Y").to_s if field == :fulfilled_at
-      if formatted_current != formatted_new
-        formatted_new = Time.strptime(fulfillment_params[field], "%m-%d-%Y").to_date.to_s if field == :fulfilled_at
-        formatted_new = User.find(fulfillment_params[field]).full_name if field == :performer_id
-        comment = t(:fulfillment)[:log_notes][field] + formatted_new
-        @fulfillment.notes.create(kind: 'log', comment: comment, user: current_user)
+      current_field = @original_attributes[field.to_s]
+      new_field = fulfillment_params[field]
+      unless new_field.blank?
+        unless current_field.blank?
+          current_field = (field == :fulfilled_at ? current_field.to_date.to_s : current_field.to_s)
+          new_field = (field == :fulfilled_at ? Time.strptime(new_field, "%m-%d-%Y").to_date.to_s : new_field.to_s)
+        end
+        if current_field != new_field
+          comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? User.find(new_field).full_name : new_field.to_s)
+          @fulfillment.notes.create(kind: 'log', comment: comment, user: current_user)
+        end
       end
     end
   end

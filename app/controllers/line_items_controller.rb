@@ -38,16 +38,19 @@ class LineItemsController < ApplicationController
   end
 
   def detect_changes_and_create_notes
-    tracked_fields = [:quantity_requested, :service_id, :started_at]
+    tracked_fields = ["quantity_requested", "service_id", "started_at"]
     tracked_fields.each do |field|
-      formatted_current = @original_attributes[field.to_s].to_s
-      formatted_new = line_item_params[field.to_s]
-      formatted_new = Time.strptime(line_item_params[field.to_s], "%m-%d-%Y").to_s if field == :started_at
-      if formatted_current != formatted_new
-        formatted_new = Time.strptime(line_item_params[field.to_s], "%m-%d-%Y").to_date.to_s if field == :started_at
-        formatted_new = Service.find(line_item_params[field.to_s]).name if field == :service_id
-        comment = t(:line_item)[:log_notes][field] + formatted_new
-        @line_item.notes.create(kind: 'log', comment: comment, user: current_user)
+      current_field = @original_attributes[field]
+      new_field = line_item_params[field]
+      unless new_field.blank?
+        unless current_field.blank?
+          current_field = (field == "started_at" ? current_field.to_date.to_s : current_field.to_s)
+          new_field = (field == "started_at" ? Time.strptime(new_field, "%m-%d-%Y").to_date.to_s : new_field)
+        end
+        if current_field != new_field
+          comment = t(:line_item)[:log_notes][field.to_sym] + (field == "service_id" ? Service.find(new_field).name : new_field.to_s)
+          @line_item.notes.create(kind: 'log', comment: comment, user: current_user)
+        end
       end
     end
   end
