@@ -1,6 +1,6 @@
 .modal-dialog
   .modal-content
-    = form_tag(billing_report_path, remote: true, class: "form-horizontal", role: "form") do |f|
+    = form_tag(create_billing_report_reports_path, remote: true, class: "form-horizontal", role: "form") do |f|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;

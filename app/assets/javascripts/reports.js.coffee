@@ -6,4 +6,4 @@ $ ->
   $(document).on 'click', '#billing_report_button', ->
     $.ajax
       type: 'GET'
-      url: '/new_billing_report'
+      url: '/reports/new_billing_report'
