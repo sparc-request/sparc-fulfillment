@@ -9,6 +9,8 @@ class Service < ActiveRecord::Base
   has_many :pricing_maps
 
   default_scope { order(name: :asc) }
+
+  # TODO: Limit is temporary. Eventually these will be filtered by organization
   scope :per_participant_visits,    -> { where(one_time_fee: 0).limit(50) }
   scope :one_time_fees,             -> { where(one_time_fee: 1).limit(50) }
 
