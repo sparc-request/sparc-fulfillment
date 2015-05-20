@@ -1,25 +1,25 @@
 %h1 Task List
 .bootstrap-table-dropdown-overflow
   #custom_tool_buttons
-    = link_to t(:actions)[:new_task], new_task_path, {class: 'btn btn-default btn-primary', id: 'new_task_button', type: 'button', data: {toggle: 'modal', target: '#modal_place'}, remote: true}
-    %button{class: "btn btn-default btn-primary", id: 'complete', value: 'true'}= t(:task_index)[:show_complete]
-%table.tasks.custom_striped{style: "padding: 0px 0px;",id: "task-list", data: {"idField" => "id", toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: "/tasks.json", "sort-name" => "due_at", "sort-order" => 'desc', striped: "true", toolbar: "#custom_tool_buttons"}}
+    = link_to t(:task)[:new_task], new_task_path, {class: 'btn btn-default btn-primary', id: 'new_task_button', type: 'button', data: {toggle: 'modal', target: '#modal_place'}, remote: true}
+    %button{class: "btn btn-default btn-primary", id: 'complete', value: 'true'}= t(:task)[:show_complete]
+%table.tasks.custom_striped{style: "padding: 0px 0px;",id: "task-list", data: {"idField" => "id", toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: tasks_path(format: :json), "sort-name" => "due_at", "sort-order" => 'desc', striped: "true", toolbar: "#custom_tool_buttons"}}
   %thead
     %tr
       %th{data: {class: 'id', field: 'id'}}
       %th{data: {class: 'user_name', align: 'left', sortable: "true", field: 'user_name'}}
-        = t(:task_index)[:user_name]
+        = t(:task)[:user_name]
       %th{data: {class: 'assignee_name', align: 'left', sortable: "true", field: 'assignee_name'}}
-        = t(:task_index)[:assignee_name]
+        = t(:task)[:assignee_name]
       %th{data: {class: 'assignable_type', align: 'left', sortable: "true", field: 'assignable_type'}}
-        = t(:task_index)[:assignable_type]
+        = t(:task)[:assignable_type]
       %th{data: {class: 'body', align: 'left', sortable: "true", field: 'body'}}
-        = t(:task_index)[:body]
+        = t(:task)[:object]
       %th{data: {class: 'due_at', align: 'left', sortable: "true", sorter: "dateSorter", field: 'due_at'}}
-        = t(:task_index)[:due_at]
+        = t(:task)[:due_at]
       %th{data: {class: 'complete', align: 'center', field: 'complete'}}
-        = t(:task_index)[:completed]
+        = t(:task)[:completed]
       %th{data: {class: 'reschedule', align: 'center', field: 'reschedule', formatter: "rescheduleFormatter", width: "5"}}
-        = t(:task_index)[:reschedule]
+        = t(:task)[:reschedule]
 
 

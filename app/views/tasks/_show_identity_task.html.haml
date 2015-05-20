@@ -1,0 +1,38 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{type: 'button', data: {dismiss: 'modal'}}
+        %span{aria: {hidden:'true'}} &times;
+        %span.sr-only= t(:actions)[:close]
+      %h4.modal-title.text-center= t(:task)[:object]
+    .modal-body
+      %dl.dl-horizontal
+        %dt
+          = t(:task)[:identity_name]
+        %dd
+          = task.identity.full_name
+        %dt
+          = t(:task)[:assignee_name]
+        %dd
+          = task.assignee.full_name
+        %dt
+          = t(:task)[:assignable_type]
+        %dd
+          = task.assignable_type
+        %dt
+          = t(:task)[:due_at]
+        %dd
+          = format_date(task.due_at)
+        %dt
+          = t(:task)[:completed]
+        %dd
+          = task.complete
+      %dl.dl-horizontal
+        %dt
+          = t(:task)[:object]
+        %dd
+          = task.body
+    .modal-footer
+      .center-block
+        %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+          = t(:actions)[:close]

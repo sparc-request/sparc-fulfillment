@@ -76,7 +76,7 @@ class ServiceCalendarController < ApplicationController
     @line_item_id = params[:line_item_id]
     @core_id = line_item.sparc_core_id
     line_item.destroy
-    @remove_core = LineItem.joins(:service).where("arm_id = #{@arm_id} and services.sparc_core_id = #{@core_id}").count > 0 ? false : true
+    @remove_core = LineItem.joins(:service).where("arm_id = #{@arm_id} and services.organization_id = #{@core_id}").count == 0
   end
 
 end

@@ -1,0 +1,24 @@
+.modal-dialog.modal-lg
+  .modal-content
+    .modal-header
+      %button.close{type: 'button', data: {dismiss: 'modal'}}
+        %span{aria: {hidden:'true'}} &times;
+        %span.sr-only= t(:actions)[:close]
+      %h4.modal-title.text-center= t(:documents)[documentable_type][:index_header]
+    .modal-body
+      - if documents.any?
+        .details-table
+          .details-header.text-center
+            .col-xs-2= t(:documents)[:date]
+            .col-xs-10= t(:documents)[:object]
+          - documents.each do |document|
+            .detail
+              .col-xs-2.created-at= format_datetime(document.created_at)
+              .col-xs-10.comment= link_to document.doc_file_name, document.doc.url
+      -else
+        .text-center= t(:documents)[documentable_type][:none]
+    .modal-footer
+      .center-block
+        %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+        %button.btn.btn-primary.document.new{type: "button", class: documentable_type == :lineitem ? 'line_item_doc' : 'fulfillment_doc', aria: {label: "New Document"}, data: {documentable_id: documentable_id}}
+          %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150422150431) do
+ActiveRecord::Schema.define(version: 20150519181014) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -111,6 +111,15 @@ ActiveRecord::Schema.define(version: 20150422150431) do
 
   add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
 
+  create_table "identity_counters", force: :cascade do |t|
+    t.integer  "identity_id", limit: 4
+    t.integer  "tasks_count", limit: 4, default: 0
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "identity_counters", ["identity_id"], name: "index_identity_counters_on_identity_id", using: :btree
+
   create_table "line_items", force: :cascade do |t|
     t.integer  "sparc_id",           limit: 4
     t.integer  "arm_id",             limit: 4
@@ -119,8 +128,6 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.integer  "subject_count",      limit: 4
-    t.boolean  "one_time_fee",       limit: 1
-    t.integer  "per_unit_cost",      limit: 4,   default: 0
     t.integer  "quantity_requested", limit: 4,   default: 0
     t.string   "quantity_type",      limit: 255
     t.datetime "started_at"
@@ -133,7 +140,7 @@ ActiveRecord::Schema.define(version: 20150422150431) do
   add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree
 
   create_table "notes", force: :cascade do |t|
-    t.integer  "user_id",      limit: 4
+    t.integer  "identity_id",  limit: 4
     t.string   "comment",      limit: 255
     t.datetime "deleted_at"
     t.datetime "created_at"
@@ -144,8 +151,8 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.string   "kind",         limit: 255, default: "note"
   end
 
+  add_index "notes", ["identity_id"], name: "index_notes_on_identity_id", using: :btree
   add_index "notes", ["notable_id", "notable_type"], name: "index_notes_on_notable_id_and_notable_type", using: :btree
-  add_index "notes", ["user_id"], name: "index_notes_on_user_id", using: :btree
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "sparc_id",     limit: 4
@@ -210,6 +217,20 @@ ActiveRecord::Schema.define(version: 20150422150431) do
   add_index "procedures", ["service_id"], name: "index_procedures_on_service_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
 
+  create_table "project_roles", force: :cascade do |t|
+    t.integer  "identity_id", limit: 4
+    t.integer  "protocol_id", limit: 4
+    t.string   "rights",      limit: 255
+    t.string   "role",        limit: 255
+    t.string   "role_other",  limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "project_roles", ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
+  add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
+
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",                     limit: 4
     t.text     "title",                        limit: 65535
@@ -223,7 +244,6 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.string   "irb_status",                   limit: 255
     t.datetime "irb_approval_date"
     t.datetime "irb_expiration_date"
     t.float    "stored_percent_subsidy",       limit: 24
@@ -235,22 +255,16 @@ ActiveRecord::Schema.define(version: 20150422150431) do
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
 
-  create_table "services", force: :cascade do |t|
-    t.integer  "sparc_id",        limit: 4
-    t.decimal  "cost",                          precision: 10
-    t.string   "name",            limit: 255
-    t.string   "abbreviation",    limit: 255
-    t.text     "description",     limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "reports", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.string   "status",      limit: 255
+    t.integer  "identity_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.datetime "deleted_at"
-    t.integer  "sparc_core_id",   limit: 4
-    t.string   "sparc_core_name", limit: 255
-    t.boolean  "one_time_fee",    limit: 1
   end
 
-  add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
-  add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
+  add_index "reports", ["identity_id"], name: "index_reports_on_identity_id", using: :btree
 
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"
@@ -258,7 +272,7 @@ ActiveRecord::Schema.define(version: 20150422150431) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id",         limit: 4
+    t.integer  "identity_id",     limit: 4
     t.integer  "assignee_id",     limit: 4
     t.string   "assignable_type", limit: 255
     t.integer  "assignable_id",   limit: 4
@@ -267,43 +281,7 @@ ActiveRecord::Schema.define(version: 20150422150431) do
 
   add_index "tasks", ["assignable_id", "assignable_type"], name: "index_tasks_on_assignable_id_and_assignable_type", using: :btree
   add_index "tasks", ["assignee_id"], name: "index_tasks_on_assignee_id", using: :btree
-  add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
-
-  create_table "user_roles", force: :cascade do |t|
-    t.integer  "user_id",     limit: 4
-    t.integer  "protocol_id", limit: 4
-    t.string   "rights",      limit: 255
-    t.string   "role",        limit: 255
-    t.string   "role_other",  limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "user_roles", ["protocol_id"], name: "index_user_roles_on_protocol_id", using: :btree
-  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "email",                  limit: 255, default: "",                           null: false
-    t.string   "encrypted_password",     limit: 255, default: "",                           null: false
-    t.string   "reset_password_token",   limit: 255
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,   default: 0,                            null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "first_name",             limit: 255
-    t.string   "last_name",              limit: 255
-    t.string   "time_zone",              limit: 255, default: "Eastern Time (US & Canada)"
-    t.integer  "tasks_count",            limit: 4,   default: 0
-  end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "tasks", ["identity_id"], name: "index_tasks_on_identity_id", using: :btree
 
   create_table "versions", force: :cascade do |t|
     t.string   "item_type",  limit: 255,   null: false

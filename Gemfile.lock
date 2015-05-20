@@ -47,6 +47,9 @@ GEM
     acts_as_list (0.6.0)
       activerecord (>= 3.0)
     addressable (2.3.8)
+    ar-octopus (0.8.5)
+      activerecord (>= 3.2.0)
+      activesupport (>= 3.2.0)
     arel (6.0.0)
     autoprefixer-rails (5.1.8)
       execjs
@@ -80,7 +83,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-webkit (1.5.0)
+    capybara-webkit (1.5.1)
       capybara (>= 2.3.0, < 2.5.0)
       json
     climate_control (0.0.3)
@@ -275,6 +278,7 @@ GEM
     rdoc (4.2.0)
       json (~> 1.4)
     ref (1.0.5)
+    remotipart (1.2.1)
     request_store (1.1.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
@@ -389,6 +393,7 @@ DEPENDENCIES
   activerecord-import
   acts_as_list
   addressable
+  ar-octopus (~> 0.8.5)
   autoprefixer-rails
   bootstrap-sass
   bootstrap-select-rails!
@@ -396,7 +401,7 @@ DEPENDENCIES
   capistrano-bundler (~> 1.1.2)
   capistrano-rails
   capistrano3-delayed-job (~> 1.0)
-  capybara-webkit (~> 1.5.0)
+  capybara-webkit (~> 1.5.1)
   coffee-rails (~> 4.0.0)
   database_cleaner
   delayed_job_active_record
@@ -422,6 +427,7 @@ DEPENDENCIES
   puma
   rack-mini-profiler
   rails (= 4.2.1)
+  remotipart
   rest-client
   rspec-activejob (~> 0.4.0)
   rspec-collection_matchers
@@ -433,7 +439,7 @@ DEPENDENCIES
   shoulda-matchers (~> 2.8.0)
   simplecov
   spring
-  spring-commands-rspec (~> 1.0.2)
+  spring-commands-rspec
   sprockets-rails
   therubyracer
   timecop

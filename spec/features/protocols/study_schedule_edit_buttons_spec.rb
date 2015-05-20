@@ -4,7 +4,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   let!(:protocol)    { create(:protocol_with_pi) }
   let!(:arm1)        { create(:arm_imported_from_sparc, protocol_id: protocol.id, visit_count: 5) }
   let!(:arm2)        { create(:arm_imported_from_sparc, protocol_id: protocol.id, visit_count: 1) }
-  let!(:service)     { create(:service, sparc_id: 5000, sparc_core_id: 999, sparc_core_name: 'supercalifragilisticexpialidocious', name: "SCGSBRA") }
+  let!(:service)     { create(:service) }
 
   before :each do
     visit protocol_path(protocol.sparc_id)
@@ -139,7 +139,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
       it "should remove the visit group from the service calendar" do
         vg = arm1.visit_groups.first
-        bootstrap_select "#visits", "#{vg.id}"
+        bootstrap_select "#visits", "#{vg.name}"
         wait_for_ajax
         find('#remove_visit_button').click()
         page.driver.browser.accept_js_confirms
@@ -170,8 +170,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     describe 'remove modal' do
 
       before :each do
-        li_1 = create(:line_item, arm: arm1, service: service)
-        li_2 = create(:line_item, arm: arm2, service: service)
+        li_1 = create(:line_item, arm: arm1, service: service, protocol: protocol)
+        li_2 = create(:line_item, arm: arm2, service: service, protocol: protocol)
         visit current_path
       end
 

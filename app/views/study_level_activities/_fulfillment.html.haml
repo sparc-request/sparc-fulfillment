@@ -1,0 +1,28 @@
+.row.table_row.fulfillment{data: {id: fulfillment.id}}
+  .col-xs-2.text-center.fulfillment_date
+    = format_date(fulfillment.fulfilled_at)
+  .col-xs-1.text-center.quantity
+    = fulfillment.quantity
+  .col-xs-2.text-center.qty_type
+    = fulfillment.line_item.quantity_type
+  .col-xs-2.text-center.performed_by
+    = Identity.find(fulfillment.performed_by).full_name if fulfillment.performed_by
+  .col-xs-2.text-center.f_components
+    %button.btn.btn-default.dropdown-toggle{type: "button", "aria-expanded" => "false", data: {toggle: "dropdown"}}
+      = t(:fulfillment)[:components] \
+      %span.caret
+    %ul.dropdown-menu{role: 'menu'}
+      - fulfillment.components.each do |c|
+        %li
+          %a= c.component
+      - if fulfillment.components.empty?
+        %li
+          %a= t(:fulfillment)[:no_components]
+  .col-xs-1
+  .col-xs-2.text-center.options
+    %button.btn.btn-primary.fulfillment_notes.list{type: "button", aria: {label: "Notes List"}}
+      %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+    %button.btn.btn-primary.fulfillment_documents.list{type: "button", aria: {label: "Documents List"}}
+      %span.glyphicon.glyphicon-open-file{aria: {hidden: "true"}}
+    %button.btn.btn-warning.otf_fulfillment_edit{type: "button", aria: {label: "Edit Fulfillment"}}
+      %span.glyphicon.glyphicon-edit{aria: {hidden: "true"}}
