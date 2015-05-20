@@ -8,6 +8,7 @@ if !$('.completed_date_input').hasClass('hidden')
 
 $('#appointment_content_indications').selectpicker()
 $('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
+$(".selectpicker").selectpicker()
 
 statuses = []
 <% @statuses.each do |status| %>

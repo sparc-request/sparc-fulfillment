@@ -4,3 +4,4 @@ if $("#modal_errors > .alert.alert-danger > p").length == 0
   $(".selectpicker").selectpicker()
   $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
   $("#modal_place").modal 'hide'
+  

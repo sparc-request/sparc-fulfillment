@@ -46,7 +46,7 @@
                 = render partial: "core", locals: {core_id: core_id, procedures: procedures, appointment_started: appointment.start_date.present? }
       .row.services
         .col-xs-4
-          = select_tag "service_list", options_from_collection_for_select(Service.all_per_participant_visit_services, "id", "name"), class: 'form-control'
+          = select_tag "service_list", options_from_collection_for_select(Service.all_per_participant_visit_services, "id", "name"), class: 'form-control selectpicker'
         .col-xs-2
           = text_field_tag "service_quantity", 1, class: "form-control"
         .col-xs-2
