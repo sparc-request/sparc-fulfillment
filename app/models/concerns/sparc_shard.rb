@@ -8,7 +8,7 @@ module SparcShard
 
     octopus_establish_connection(
       adapter: "mysql2",
-      database: "sparc-rails_#{Rails.env.downcase}")
+      database: ENV.fetch('SPARC_DB_PREFIX') + Rails.env.downcase)
 
     allow_shard :sparc
 
@@ -24,7 +24,7 @@ module SparcShard
     # CWF databases by explicitly prefixing the appropriate SPARC
     # database name to tables belonging to it.
     def self.table_name_prefix
-      ENV.fetch('SPARC_DB_PREFIX') + Rails.env + "."
+      ENV.fetch('SPARC_DB_PREFIX') + Rails.env.downcase + "."
     end
   end
 end
