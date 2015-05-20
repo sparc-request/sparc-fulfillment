@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :note do
-    user_id nil
+    identity nil
     kind 'note'
 
     trait :followup do

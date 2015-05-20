@@ -112,7 +112,7 @@ en:
 
   notes:
     new_header: "Add Note"
-    user: "User"
+    identity: "User"
     date: "Date"
     action: "Action"
     reason: "Reason"
@@ -230,7 +230,7 @@ en:
 
   task:
     new_task: "Create New Task"
-    user_name: "Created by"
+    identity_name: "Created by"
     assignee_name: "Assigned to"
     assignable_type: "Type"
     due_at: "Due date"

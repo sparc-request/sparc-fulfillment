@@ -4,12 +4,12 @@ class FulfillmentsController < ApplicationController
 
   def new
     @line_item = LineItem.find(params[:line_item_id])
-    @fulfillment = Fulfillment.new(line_item: @line_item, performer: current_user)
+    @fulfillment = Fulfillment.new(line_item: @line_item, performer: current_identity)
   end
 
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
-    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_user }))
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity }))
     if @fulfillment.valid?
       @fulfillment.save
       update_components
@@ -53,7 +53,7 @@ class FulfillmentsController < ApplicationController
         end
         if current_field != new_field
           comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? User.find(new_field).full_name : new_field.to_s)
-          @fulfillment.notes.create(kind: 'log', comment: comment, user: current_user)
+          @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
         end
       end
     end

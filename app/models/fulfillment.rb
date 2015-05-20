@@ -4,8 +4,8 @@ class Fulfillment < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :line_item
-  belongs_to :creator, class_name: "User"
-  belongs_to :performer, class_name: "User"
+  belongs_to :creator, class_name: "Identity"
+  belongs_to :performer, class_name: "Identity"
 
   has_many :components, as: :composable
   has_many :notes, as: :notable

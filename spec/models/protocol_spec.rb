@@ -5,17 +5,18 @@ RSpec.describe Protocol, type: :model do
   it { is_expected.to have_many(:arms).dependent(:destroy) }
   it { is_expected.to have_many(:line_items).dependent(:destroy) }
   it { is_expected.to have_many(:participants).dependent(:destroy) }
-  it { is_expected.to have_many(:user_roles) }
+  it { is_expected.to have_many(:project_roles).dependent(:destroy) }
 
   context 'class methods' do
 
     describe '#delete' do
 
       it 'should not permanently delete the record' do
-        service = create(:service)
-        service.delete
+        protocol = create(:protocol)
 
-        expect(service.persisted?).to be
+        protocol.delete
+
+        expect(protocol.persisted?).to be
       end
     end
 
@@ -52,14 +53,14 @@ RSpec.describe Protocol, type: :model do
     describe 'pi' do
 
       it 'should return the primary investigator of the protocol' do
-        expect(@protocol.pi).to eq @protocol.user_roles.where(role: "primary-pi").first.user
+        expect(@protocol.pi).to eq @protocol.project_roles.where(role: "primary-pi").first.identity
       end
     end
 
     describe 'coordinators' do
 
       it 'should return the coordinators of the protocol' do
-        expect(@protocol.coordinators).to eq @protocol.user_roles.where(role: "research-assistant-coordinator").map(&:user)
+        expect(@protocol.coordinators).to eq @protocol.project_roles.where(role: "research-assistant-coordinator").map(&:identity)
       end
     end
 

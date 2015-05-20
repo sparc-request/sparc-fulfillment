@@ -35,8 +35,8 @@ class LineItem < ActiveRecord::Base
 
   def decrement_sparc_service_counter
     RemoteServiceUpdaterJob.perform_later(self.service, -1)
-  end 
-  
+  end
+
   def started_at=(date)
     write_attribute(:started_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
   end
@@ -72,7 +72,7 @@ class LineItem < ActiveRecord::Base
 
   def create_line_item_components
     if one_time_fee
-      service.components.each do |c|
+      service.service_level_components.each do |c|
         Component.create(composable_type: 'LineItem', composable_id: id, component: c.component, position: c.position)
       end
     end

@@ -49,7 +49,7 @@ class LineItemsController < ApplicationController
         end
         if current_field != new_field
           comment = t(:line_item)[:log_notes][field.to_sym] + (field == "service_id" ? Service.find(new_field).name : new_field.to_s)
-          @line_item.notes.create(kind: 'log', comment: comment, user: current_user)
+          @line_item.notes.create(kind: 'log', comment: comment, identity: current_identity)
         end
       end
     end

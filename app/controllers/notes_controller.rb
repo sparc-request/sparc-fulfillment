@@ -16,7 +16,7 @@ class NotesController < ApplicationController
   end
 
   def create
-    @note = Note.create(note_params.merge!({ user: current_user })) if note_params[:comment].present? # don't create empty notes
+    @note = Note.create(note_params.merge!({ identity: current_identity })) if note_params[:comment].present? # don't create empty notes
   end
 
   private
