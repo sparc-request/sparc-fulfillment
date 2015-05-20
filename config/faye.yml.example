@@ -1,0 +1,16 @@
+--- 
+pid: tmp/pids/fulfillment_faye_thin.pid
+timeout: 30
+wait: 30
+log: log/fulfillment_faye_thin.log
+max_conns: 1024
+port: 9292
+environment: production
+max_persistent_conns: 512
+servers: 1
+threaded: true
+no-epoll: true
+daemonize: true
+chdir: /var/www/rails/fulfillment/current
+tag: fulfillment_faye_thin
+rackup: faye.ru
