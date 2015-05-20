@@ -43,5 +43,8 @@ module ClinicalWorkFulfillment
 
     # ActiveJob
     config.active_job.queue_adapter = :delayed_job
+  
+    # Force SSL
+    config.force_ssl if ENV.fetch('GLOBAL_SCHEME') == 'https'
   end
 end

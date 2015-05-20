@@ -53,7 +53,7 @@ class FayeJob < Struct.new(:object_id, :object_class)
   end
 
   def uri
-    URI.parse("http://#{ENV.fetch('CWF_FAYE_HOST')}/faye")
+    URI.parse("#{ENV.fetch('GLOBAL_SCHEME')}://#{ENV.fetch('CWF_FAYE_HOST')}/faye")
   end
 
   def formatted_object_id
