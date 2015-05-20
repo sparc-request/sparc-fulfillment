@@ -15,6 +15,10 @@ class Task < ActiveRecord::Base
   after_update   :update_assignee_counter
   before_destroy :decrement_assignee_counter, unless: :complete?
 
+  scope :incomplete, -> { where(complete: false) }
+  scope :complete, -> { where(complete: true) }
+  scope :mine, -> (identity) { incomplete.where(assignee: identity) }
+
   def due_at=(due_date)
     write_attribute(:due_at, Time.strptime(due_date, "%m-%d-%Y")) if due_date.present?
   end
@@ -34,21 +38,6 @@ class Task < ActiveRecord::Base
       decrement_assignee_counter
     elsif self.complete_changed?(from: true, to: false)
       increment_assignee_counter
-
-  def self.my_completed_tasks user, show_complete
-
-    if show_complete
-      return where("(assignee_id = ?) AND complete = ?", user.id, show_complete)
-    else
-      return where("(assignee_id = ?) AND complete = ?", user.id, false)
     end
-  end
-
-  def self.my_tasks user, show_tasks
-    if show_tasks
-      return where("complete = ?", false)
-    else
-      return where("(assignee_id = ?) AND complete = ?", user.id, false)
-    end
-  end
+  endq
 end
