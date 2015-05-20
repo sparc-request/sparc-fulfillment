@@ -31,12 +31,14 @@ class Service < ActiveRecord::Base
     end
   end
 
+  # TODO: Limit is temporary. Eventually these will be filtered by organization
   def self.per_participant_visits
-    Service.where(one_time_fee: 0)
+    Service.where(one_time_fee: 0).limit(50)
   end
 
+  # TODO: Limit is temporary. Eventually these will be filtered by organization
   def self.one_time_fees
-    Service.where(one_time_fee: 1)
+    Service.where(one_time_fee: 1).limit(50)
   end
 
   def sparc_core_id
