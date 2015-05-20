@@ -9,8 +9,8 @@ class Service < ActiveRecord::Base
   has_many :pricing_maps
 
   default_scope { order(name: :asc) }
-  scope :per_participant_visits,    -> { where(one_time_fee: 0) }
-  scope :one_time_fees,             -> { where(one_time_fee: 1) }
+  scope :per_participant_visits,    -> { where(one_time_fee: 0).limit(50) }
+  scope :one_time_fees,             -> { where(one_time_fee: 1).limit(50) }
 
   def self.all_cached
     Rails.cache.fetch("services_all", expires_in: 1.hour) do
