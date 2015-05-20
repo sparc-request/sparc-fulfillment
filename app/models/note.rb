@@ -6,7 +6,7 @@ class Note < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :notable, polymorphic: true
-  belongs_to :user
+  belongs_to :identity
 
   validates_inclusion_of :kind, in: KIND_TYPES
   validates_inclusion_of :reason, in: Proc.new { |note| note.notable_type.constantize::NOTABLE_REASONS },

@@ -31,6 +31,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
     it "should remove the line item" do
       within("#line_item_#{@line_item.id}") do
         find(".remove_line_item").click()
+        wait_for_ajax
       end
       expect(page).not_to have_css("#line_item_#{@line_item.id}")
     end
@@ -40,6 +41,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
       arm.line_items.each do |line_item|
         within("#line_item_#{line_item.id}") do
           find(".remove_line_item").click()
+          wait_for_ajax
         end
       end
       expect(page).not_to have_css("#arm_#{arm.id}_core_#{core_id}")

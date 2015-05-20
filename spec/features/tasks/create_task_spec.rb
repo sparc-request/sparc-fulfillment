@@ -2,24 +2,25 @@ require "rails_helper"
 
 feature "create Task", js: true do
 
-  scenario 'User creates a new Task for themselves' do
-    as_a_user_who_is_on_the_tasks_page
+  scenario 'Identity creates a new Task for themselves' do
+    as_a_identity_who_is_on_the_tasks_page
     when_i_create_a_task_assigned_to_myself
     then_i_should_see_the_task_is_assigned_to_me
   end
 
-  scenario 'User creates a new Task for another User' do
-    as_a_user_who_is_on_the_tasks_page
-    when_i_create_a_task_assigned_to_another_user
-    then_i_should_see_the_task_is_assigned_to_the_user
+  scenario 'Identity creates a new Task for another Identity' do
+    as_a_identity_who_is_on_the_tasks_page
+    when_i_create_a_task_assigned_to_another_identity
+    then_i_should_see_the_task_is_assigned_to_the_identity
   end
 
-  def as_a_user_who_is_on_the_tasks_page
+  def as_a_identity_who_is_on_the_tasks_page
+    visit tasks_path
     visit tasks_path
   end
 
   def when_i_create_a_task_assigned_to_myself
-    assignee = User.first
+    assignee = Identity.first
 
     click_link "Create New Task"
     select assignee.full_name, from: 'task_assignee_id'
@@ -29,8 +30,8 @@ feature "create Task", js: true do
     click_button 'Save'
   end
 
-  def when_i_create_a_task_assigned_to_another_user
-    @assignee = create(:user)
+  def when_i_create_a_task_assigned_to_another_identity
+    @assignee = create(:identity)
 
     click_link "Create New Task"
     select @assignee.full_name, from: 'task_assignee_id'
@@ -45,7 +46,7 @@ feature "create Task", js: true do
     expect(page).to have_css(".notification.task-notifications", text: 1)
   end
 
-  def then_i_should_see_the_task_is_assigned_to_the_user
+  def then_i_should_see_the_task_is_assigned_to_the_identity
     expect(page).to have_css("table.tasks tbody td.assignee_name", count: 1, text: @assignee.full_name)
   end
 end

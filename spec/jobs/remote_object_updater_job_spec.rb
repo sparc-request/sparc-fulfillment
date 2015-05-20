@@ -36,22 +36,5 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
         expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/)).to_not have_been_made
       end
     end
-
-    context 'Service update', sparc_api: :get_service_1 do
-
-      before do
-        @service                  = create( :service_created_by_sparc,
-                                            sparc_id: 1,
-                                            name: 'Service Name')
-        callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/services/1.json"
-        remote_object_updater_job = RemoteObjectUpdaterJob.new(@service.id, 'service', callback_url)
-
-        remote_object_updater_job.perform
-      end
-
-      it 'should update the existing service' do
-        expect(@service.reload.name).to eq("Biostatistical Education")
-      end
-    end
   end
 end

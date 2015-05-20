@@ -36,7 +36,7 @@ feature 'Fulfillments', js: true do
 
   def as_a_user_who_has_study_level_activities
     @protocol    = create(:protocol_imported_from_sparc)
-    service     = create(:service_of_otf_with_components)
+    service     = create(:service_with_one_time_fee_with_components)
     @line_item  = create(:line_item, protocol: @protocol, service: service)
     @components = @line_item.components
   end
@@ -70,7 +70,7 @@ feature 'Fulfillments', js: true do
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in 'Quantity', with: "45"
-    bootstrap_select '#fulfillment_performed_by', User.first.full_name
+    bootstrap_select '#fulfillment_performed_by', Identity.first.full_name
     bootstrap_select '#fulfillment_components', @components.first.component
     find('.modal-header').click
   end

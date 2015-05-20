@@ -8,9 +8,9 @@
     .modal-body
       %dl.dl-horizontal
         %dt
-          = t(:task)[:user_name]
+          = t(:task)[:identity_name]
         %dd
-          = task.user.full_name
+          = task.identity.full_name
         %dt
           = t(:task)[:assignee_name]
         %dd

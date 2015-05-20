@@ -1,25 +1,25 @@
 require "rails_helper"
 
-feature "User views Task", js: true do
+feature "Identity views Task", js: true do
 
-  scenario "User views a Task that have assigned to themselves" do
-    as_a_user_who_is_on_the_tasks_page
-    when_i_view_a_user_task_assigned_to_myself
-    then_i_should_see_the_user_task_details
+  scenario "Identity views a Task that have assigned to themselves" do
+    as_a_identity_who_is_on_the_tasks_page
+    when_i_view_a_identity_task_assigned_to_myself
+    then_i_should_see_the_identity_task_details
   end
 
-  scenario "User views a Procedure Task they assigned to themselves" do
-    as_a_user_who_has_been_assigned_a_procedure_task
+  scenario "Identity views a Procedure Task they assigned to themselves" do
+    as_a_identity_who_has_been_assigned_a_procedure_task
     when_i_view_the_procedure_task_assigned_to_myself
     then_i_should_see_the_procedure_task_details
   end
 
-  def as_a_user_who_is_on_the_tasks_page
+  def as_a_identity_who_is_on_the_tasks_page
     visit tasks_path
   end
 
-  def when_i_view_a_user_task_assigned_to_myself
-    assignee = User.first
+  def when_i_view_a_identity_task_assigned_to_myself
+    assignee = Identity.first
 
     click_link "Create New Task"
     select assignee.full_name, from: 'task_assignee_id'
@@ -30,22 +30,22 @@ feature "User views Task", js: true do
     find("table.tasks tbody tr:first-child").click
   end
 
-  def as_a_user_who_has_been_assigned_a_procedure_task
+  def as_a_identity_who_has_been_assigned_a_procedure_task
     create(:protocol_imported_from_sparc)
-    user        = User.first
+    identity        = Identity.first
     appointment = Appointment.first
     visit       = Visit.first
     procedure   = create(:procedure, appointment: appointment, visit: visit)
 
-    procedure.tasks.push build(:task, user: user, assignee: user)
+    procedure.tasks.push build(:task, identity: identity, assignee: identity)
   end
 
   def when_i_view_the_procedure_task_assigned_to_myself
-    as_a_user_who_is_on_the_tasks_page
+    as_a_identity_who_is_on_the_tasks_page
     find("table.tasks tbody tr:first-child").click
   end
 
-  def then_i_should_see_the_user_task_details
+  def then_i_should_see_the_identity_task_details
     expect(page).to have_css(".modal dt", text: "Created by")
     expect(page).to have_css(".modal dt", text: "Assigned to")
     expect(page).to have_css(".modal dt", text: "Type")
@@ -55,7 +55,7 @@ feature "User views Task", js: true do
   end
 
   def then_i_should_see_the_procedure_task_details
-    then_i_should_see_the_user_task_details
+    then_i_should_see_the_identity_task_details
     expect(page).to have_css(".modal dt", text: "Participant Name")
     expect(page).to have_css(".modal dt", text: "Protocol")
     expect(page).to have_css(".modal dt", text: "Visit")

@@ -16,7 +16,7 @@ class ProtocolImporter
     }
     @local_protocol = Protocol.create(normalized_attributes.merge!(attributes_to_merge))
 
-    import_user_roles
+    import_identity_roles
     import_arms_and_their_decendents
 
     PaperTrail.enabled = true
@@ -32,10 +32,10 @@ class ProtocolImporter
 
   private
 
-  def import_user_roles
-    if remote_user_roles.present?
-      remote_user_roles.each do |user_role|
-        UserRoleImporter.new(user_role['sparc_id'], user_role['callback_url']).create
+  def import_identity_roles
+    if remote_identity_roles.present?
+      remote_identity_roles.each do |identity_role|
+        ProjectRoleImporter.new(identity_role['sparc_id'], identity_role['callback_url']).create
       end
     end
   end
@@ -60,7 +60,7 @@ class ProtocolImporter
     @remote_service_request ||= RemoteObjectFetcher.new('service_request', service_request_id, { depth: 'full' }).build_and_fetch
   end
 
-  def remote_user_roles
+  def remote_identity_roles
     remote_protocol['protocol']['project_roles']
   end
 
