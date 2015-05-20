@@ -24,8 +24,7 @@ module SparcShard
     # CWF databases by explicitly prefixing the appropriate SPARC
     # database name to tables belonging to it.
     def self.table_name_prefix
-      renv = ENV['RAILS_ENV'] || ENV['RACK_ENV']
-      (renv.empty? ? "sparc-rails." : "sparc-rails_#{renv}.")
+      ENV.fetch('SPARC_DB_PREFIX') + Rails.env + "."
     end
   end
 end
