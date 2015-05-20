@@ -1,11 +1,3 @@
 = render partial: 'participant_info', locals: { protocol: @protocol, participant: @participant }
 = render partial: 'dashboard', locals: { protocol: @protocol, participant: @participant }
 .row.appointment-select= render partial: 'dropdown', locals: { participant: @participant }
-
-.row.appointments
-
-- content_for :nav_buttons do
-  %li.participant_back
-    = link_to :back, method: :get  do
-      %span.glyphicon.glyphicon-arrow-left{aria: {hidden: "true"}}
-      Back
