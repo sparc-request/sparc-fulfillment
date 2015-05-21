@@ -88,7 +88,7 @@ class TasksController < ApplicationController
         return Task.send(params[:scope])
       end
     else
-      return Task.all
+      return Task.mine(current_identity)
     end
   end
 end

@@ -39,5 +39,5 @@ class Task < ActiveRecord::Base
     elsif self.complete_changed?(from: true, to: false)
       increment_assignee_counter
     end
-  endq
+  end
 end

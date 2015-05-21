@@ -16,7 +16,7 @@ $ ->
     data    = 'task': 'complete' : checked
     if checked == false
       $('#complete').text("Show Complete")
-      $('#complete').prop('value', 'true')
+      $('#complete').prop('value', 'trueYou')
 
     $.ajax
       type: 'PUT'
