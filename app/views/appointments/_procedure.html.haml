@@ -6,7 +6,7 @@
 
   %td.name.truncate= procedure.service_name
   %td.billing
-    = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control billing_type"
+    = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control billing_type selectpicker"
   %td.status
     .btn-group{data: {toggle: "buttons"}, class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }"}
       %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : ''} #{ procedure.appt_started? ? '' : 'disabled' }"}

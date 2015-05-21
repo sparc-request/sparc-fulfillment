@@ -29,7 +29,7 @@
               .col-sm-7= p.text_field "external_id", {class: 'form-control'}
             .form-group
               = p.label "status", t(:participant)[:status], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "status", Participant::STATUS_OPTIONS, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "status", Participant::STATUS_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
             .form-group
               = p.label "date_of_birth", t(:participant)[:dob], class: "col-sm-4 control-label "
               .col-sm-7
@@ -39,13 +39,13 @@
                     %span.glyphicon.glyphicon-calendar
             .form-group
               = p.label "gender", t(:participant)[:gender], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "gender", Participant::GENDER_OPTIONS, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "gender", Participant::GENDER_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
             .form-group
               = p.label "ethnicity", t(:participant)[:ethnicity], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "ethnicity", Participant::ETHNICITY_OPTIONS, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "ethnicity", Participant::ETHNICITY_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
             .form-group
               = p.label "race", t(:participant)[:race], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "race", Participant::RACE_OPTIONS, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "race", Participant::RACE_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
             %hr
             .form-group
               = p.label "address", t(:participant)[:address], class: "col-sm-4 control-label"
@@ -55,7 +55,7 @@
               .col-sm-7= p.text_field "city", {class: 'form-control'}
             .form-group
               = p.label "state", t(:participant)[:state], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "state", options_for_select(us_states, participant.state), {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "state", options_for_select(us_states, participant.state), {include_blank: true}, :class => "form-control selectpicker"
             .form-group
               = p.label "zipcode", t(:participant)[:zip], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "zipcode", {class: 'form-control'}
@@ -65,7 +65,7 @@
               .col-sm-7= p.text_field "phone", {class: 'form-control'}
             .form-group
               = p.label "recruitment_source", t(:participant)[:recruitment_source], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "recruitment_source", Participant::RECRUITMENT_OPTIONS, {include_blank: true}, :class => "form-control"
+              .col-sm-7= p.select "recruitment_source", Participant::RECRUITMENT_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
