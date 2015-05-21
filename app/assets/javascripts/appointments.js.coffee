@@ -70,6 +70,17 @@ $ ->
       url: "/tasks/#{task_id}"
       data: data
 
+  $(document).on 'change', '.billing_type', ->
+    procedure_id = $(this).parents('.procedure').data('id')
+    billing_type = $(this).val()
+    data = procedure:
+           billing_type: billing_type
+    $.ajax
+      type: 'PUT'
+      url: "/procedures/#{procedure_id}"
+      data: data
+
+
   $(document).on 'click', 'label.status.complete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
