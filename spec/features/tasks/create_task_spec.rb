@@ -11,6 +11,7 @@ feature "create Task", js: true do
   scenario 'Identity creates a new Task for another Identity' do
     as_a_identity_who_is_on_the_tasks_page
     when_i_create_a_task_assigned_to_another_identity
+    then_i_click_on_the_all_tasks_button
     then_i_should_see_the_task_is_assigned_to_the_identity
   end
 
@@ -48,5 +49,9 @@ feature "create Task", js: true do
 
   def then_i_should_see_the_task_is_assigned_to_the_identity
     expect(page).to have_css("table.tasks tbody td.assignee_name", count: 1, text: @assignee.full_name)
+  end
+
+  def then_i_click_on_the_all_tasks_button
+    find('#all_tasks').click
   end
 end

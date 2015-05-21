@@ -1,8 +1,6 @@
-%select.selectpicker.pull-right#appointment_indications{multiple: "", title: "Please Select", 'data-width' => 'auto', 'data-selected-text-format' => 'count>2'}
+%label= t(:appointment)[:visit_indications]
+%select#appointment_indications.selectpicker{multiple: "", title: "Please Select", 'data-width' => 'auto', 'data-selected-text-format' => 'count>2'}
   - historical_statuses(@statuses).each do |status|
     %option{disabled: true}= status
   - Appointment::STATUSES.each do |status|
     %option= status
-%span.indications_title= t(:appointment)[:visit_indications]
-
-      
