@@ -40,6 +40,7 @@ en:
     completed_date: "Completed Date:"
     completed_time: "Completed Time:"
     add_service: "Add Service"
+    visit_type: "Type of Visit:"
     visit_indications: "Visit Indications:"
     name: "Visit Name"
     position: "Insert into Position"
@@ -145,7 +146,7 @@ en:
 
   notes:
     new_header: "Add Note"
-    user: "User"
+    identity: "User"
     date: "Date"
     action: "Action"
     reason: "Reason"
@@ -234,7 +235,7 @@ en:
 
   task:
     new_task: "Create New Task"
-    user_name: "Created by"
+    identity_name: "Created by"
     assignee_name: "Assigned to"
     assignable_type: "Type"
     due_at: "Due date"
@@ -242,6 +243,7 @@ en:
     reschedule: "Reschedule"
     show_complete: "Show Complete"
     create_task: "Create Task"
+    all_tasks: "Show All Tasks"
     object: "Task"
 
   visit:

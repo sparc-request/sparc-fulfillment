@@ -12,13 +12,9 @@
               %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: appointment.id, notable_type: "Appointment"}}
                 %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
             .row
-              .col-md-6
-                %label Visit Contents:
-                %select#appointment_content_indications.selectpicker{title: "Select if Applicable"}
-                  %option{value: ""} Select if Applicable
-                  %option{value: "Lab Only"} Lab Only
-                  %option{value: "Space Only"} Space Only
-              .col-md-6
+              .col-md-5
+                = render partial: 'visit_type_dropdown'
+              .col-md-5.col-md-offset-2.text-right
                 = render partial: 'visit_indications_dropdown'
       .row
         = render partial: 'start_complete_buttons', locals: {appointment: appointment}
@@ -46,7 +42,7 @@
                 = render partial: "core", locals: {core_id: core_id, procedures: procedures, appointment_started: appointment.start_date.present? }
       .row.services
         .col-xs-4
-          = select_tag "service_list", options_from_collection_for_select(Service.all_per_participant_visit_services, "id", "name"), class: 'form-control'
+          = select_tag "service_list", options_from_collection_for_select(Service.all_per_participant_visit_services, "id", "name"), class: 'form-control selectpicker'
         .col-xs-2
           = text_field_tag "service_quantity", 1, class: "form-control"
         .col-xs-2

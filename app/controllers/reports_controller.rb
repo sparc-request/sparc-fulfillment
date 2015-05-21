@@ -6,14 +6,14 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        @reports = Report.where(user: current_user)
+        @reports = Report.where(identity: current_identity)
         render
       end
     end
   end
 
   def create_billing_report
-    @report = current_user.reports.new(name: "Billing Report", status: "Pending")
+    @report = current_identity.reports.new(name: "Billing Report", status: "Pending")
     date_validation(params[:start_date], params[:end_date])
 
     unless @report.errors.any?

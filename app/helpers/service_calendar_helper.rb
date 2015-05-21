@@ -38,7 +38,7 @@ module ServiceCalendarHelper
   end
 
   def build_visits_select arm, page
-    select_tag "visits_select_for_#{arm.id}", visits_select_options(arm, page), class: 'visit_dropdown form-control', :'data-arm_id' => "#{arm.id}", page: page
+    select_tag "visits_select_for_#{arm.id}", visits_select_options(arm, page), class: 'visit_dropdown form-control selectpicker', :'data-arm_id' => "#{arm.id}", page: page
   end
 
   def on_current_page? current_page, visit_group

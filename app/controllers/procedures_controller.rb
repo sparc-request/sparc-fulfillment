@@ -45,19 +45,19 @@ class ProceduresController < ApplicationController
 
   def create_note_before_update
     if reset_status_detected?
-      @procedure.notes.create(user: current_user,
+      @procedure.notes.create(identity: current_identity,
                               comment: 'Status reset',
                               kind: 'log')
     elsif incomplete_status_detected?
-      @procedure.notes.create(user: current_user,
+      @procedure.notes.create(identity: current_identity,
                               comment: 'Status set to incomplete',
                               kind: 'log')
     elsif change_in_completed_date_detected?
-      @procedure.notes.create(user: current_user,
+      @procedure.notes.create(identity: current_identity,
                               comment: "Completed date updated to #{procedure_params[:completed_date]} ",
                               kind: 'log')
     elsif complete_status_detected?
-      @procedure.notes.create(user: current_user,
+      @procedure.notes.create(identity: current_identity,
                               comment: 'Status set to complete',
                               kind: 'log')
     end
@@ -86,9 +86,9 @@ class ProceduresController < ApplicationController
   def procedure_params
     @procedure_params = params.
                         require(:procedure).
-                        permit(:status, :follow_up_date, :completed_date,
-                                notes_attributes: [:comment, :kind, :user_id, :reason],
-                                tasks_attributes: [:assignee_id, :user_id, :body, :due_at])
+                        permit(:status, :follow_up_date, :completed_date, :billing_type,
+                                notes_attributes: [:comment, :kind, :identity_id, :reason],
+                                tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
   end
 
   def find_procedure

@@ -8,8 +8,8 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        show_complete = to_boolean(params[:complete])
-        @tasks = Task.mine(current_user, show_complete)
+
+        @tasks = scoped_tasks
 
         render
       end
@@ -29,7 +29,7 @@ class TasksController < ApplicationController
     if task_params[:notes]
       task_parameters[:body] = task_params[:notes][:comment]
     end
-    @task = Task.new(task_parameters.merge!({ user: current_user}))
+    @task = Task.new(task_parameters.merge!({ identity: current_identity}))
     if @task.valid?
       @task.save
       @procedure = Procedure.find(task_params[:assignable_id]) unless task_params[:assignable_type] != "Procedure"
@@ -56,7 +56,7 @@ class TasksController < ApplicationController
   def create_note(task_parameters)
     unless task_parameters[:body].empty?
       notes_params = task_params[:notes]
-      notes_params[:user] = current_user
+      notes_params[:identity] = current_identity
       Note.create(notes_params)
     end
   end
@@ -78,5 +78,17 @@ class TasksController < ApplicationController
     params.
       require(:task).
       permit(:complete, :body, :due_at, :assignee_id, :assignable_type, :assignable_id, notes: [:kind, :comment, :notable_type, :notable_id])
+  end
+
+  def scoped_tasks
+    if params[:scope].present?
+      if (params[:scope] == 'mine') || (params[:scope] == 'incomplete')
+        return Task.mine(current_identity)
+      else
+        return Task.send(params[:scope])
+      end
+    else
+      return Task.mine(current_identity)
+    end
   end
 end

@@ -2,9 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ReportsController, type: :controller do
 
-  before :each do
-    sign_in
-  end
+  login_user
 
   describe "GET #index" do
     context 'content-type: text/html' do

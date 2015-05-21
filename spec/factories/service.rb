@@ -1,27 +1,37 @@
 FactoryGirl.define do
 
   factory :service, aliases: [:service_created_by_sparc] do
-    sparc_id
+    organization factory: :organization_core
     sequence(:name) { Faker::Commerce.product_name }
-    sparc_core_id { rand(0..4) }
-    sparc_core_name { ['Nexus', 'RCM', 'Something', 'Or Other', 'Wooo'][sparc_core_id] }
-    sequence(:cost)
+    # sparc_organization_name { ['Nexus', 'RCM', 'Something', 'Or Other', 'Wooo'][sparc_organization_id] }
+    # sequence(:cost)
     description 'Description'
     abbreviation 'Abbreviation'
     one_time_fee false
 
+    after(:create) do |service|
+      pricing_map = build(:pricing_map_past)
+      service.pricing_maps << pricing_map
+    end
+
+    after(:create) do |service|
+      pricing_map = build(:pricing_map_past)
+      service.pricing_maps << pricing_map
+    end
+
     trait :with_components do
       after(:create) do |service, evaluator|
-        create_list(:component_of_service, 3, composable_id: service.id)
+        create_list(:service_level_component, 3, service: service)
       end
     end
 
-    trait :of_otf do
+    trait :with_one_time_fee do
       one_time_fee true
     end
 
     factory :service_with_components, traits: [:with_components]
-    factory :service_of_otf, traits: [:of_otf]
-    factory :service_of_otf_with_components, traits: [:of_otf, :with_components]
+    factory :service_with_one_time_fee, traits: [:with_one_time_fee]
+    factory :service_with_one_time_fee_with_components, traits: [:with_one_time_fee, :with_components]
+    factory :service_without_pricing_maps, traits: [:without_pricing_maps]
   end
 end

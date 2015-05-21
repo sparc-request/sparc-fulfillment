@@ -71,7 +71,7 @@ feature 'Followup note', js: true do
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
     service     = Service.per_participant_visits.first
-    @assignee   = User.first
+    @assignee   = Identity.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name

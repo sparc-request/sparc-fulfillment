@@ -6,7 +6,7 @@
   .col-xs-2.text-center.qty_type
     = fulfillment.line_item.quantity_type
   .col-xs-2.text-center.performed_by
-    = User.find(fulfillment.performed_by).full_name if fulfillment.performed_by
+    = Identity.find(fulfillment.performed_by).full_name if fulfillment.performed_by
   .col-xs-2.text-center.f_components
     %button.btn.btn-default.dropdown-toggle{type: "button", "aria-expanded" => "false", data: {toggle: "dropdown"}}
       = t(:fulfillment)[:components] \
