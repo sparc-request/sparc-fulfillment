@@ -2,6 +2,7 @@ FactoryGirl.define do
 
   factory :protocol, aliases: [:protocol_complete] do
     sparc_id
+    sparc_sub_service_request_id 1
     title { Faker::Company.catch_phrase }
     short_title { Faker::Company.catch_phrase }
     sponsor_name { Faker::Company.name }
