@@ -18,7 +18,7 @@ class Service < ActiveRecord::Base
 
   # TODO Determine exact cost calculation
   def cost
-    if pricing_map = pricing_maps.current(Time.current).first
+    if pricing_map = current_effective_pricing_map
       return pricing_map.full_rate
     else
       raise ArgumentError, "Service has no pricing maps"
@@ -47,5 +47,9 @@ class Service < ActiveRecord::Base
 
   def sparc_core_name
     organization.name
+  end
+
+  def current_effective_pricing_map date=Time.current
+    pricing_maps.current(date).first
   end
 end

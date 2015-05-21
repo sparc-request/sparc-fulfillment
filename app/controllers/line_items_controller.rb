@@ -8,7 +8,8 @@ class LineItemsController < ApplicationController
   end
 
   def create
-    @line_item = LineItem.new(line_item_params)
+    service = Service.find(line_item_params[:service_id])
+    @line_item = LineItem.new(line_item_params.merge!({ quantity_type: service.current_effective_pricing_map.quantity_type }))
     if @line_item.valid?
       @line_item.save
       flash[:success] = t(:flash_messages)[:line_item][:created]
@@ -48,7 +49,7 @@ class LineItemsController < ApplicationController
   private
 
   def line_item_params
-    params.require(:line_item).permit(:protocol_id, :quantity_requested, :quantity_type, :service_id, :started_at)
+    params.require(:line_item).permit(:protocol_id, :quantity_requested, :service_id, :started_at)
   end
 
   def find_line_item
