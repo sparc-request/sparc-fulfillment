@@ -32,6 +32,7 @@ feature 'Fulfillments', js: true do
     when_i_save_the_fulfillment_form
     then_i_should_see_the_new_fulfillment_in_the_table
     then_i_should_see_the_correct_components
+    and_should_see_the_changes_in_the_notes
   end
 
   def as_a_user_who_has_study_level_activities
@@ -87,12 +88,19 @@ feature 'Fulfillments', js: true do
   def then_i_should_see_the_correct_components
     click_button "Fulfillment Components"
     expect(first('.dropdown-menu > li').text).to eq @components.first.component
+    first('.dropdown-menu > li').click
+    wait_for_ajax
   end
 
   def then_i_should_see_form_errors
     expect(page).to have_content("Fulfilled at can't be blank")
     expect(page).to have_content("Quantity can't be blank")
     expect(page).to have_content("Quantity is not a number")
-    expect(page).to have_content("Performed by can't be blank")
+  end
+
+  def and_should_see_the_changes_in_the_notes
+    first('.notes.list[data-notable-type="Fulfillment"]').click
+    wait_for_ajax
+    expect(page).to have_content "Quantity changed to 45"
   end
 end

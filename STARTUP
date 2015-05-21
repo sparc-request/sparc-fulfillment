@@ -1,0 +1,11 @@
+How to start/stop extra processes on testing, staging, and production
+
+FAYE
+
+thin -C config/faye.yml start
+thin -C config/faye.yml stop
+
+Delayed Job
+
+RAILS_ENV=[ENV] bin/delayed_job start
+RAILS_ENV=[ENV] bin/delayed_job stop

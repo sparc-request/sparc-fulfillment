@@ -5,8 +5,8 @@
   -# starts.
 
   %td.name.truncate= procedure.service_name
-  %td.r-t
-    = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control"
+  %td.billing
+    = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control billing_type selectpicker"
   %td.status
     .btn-group{data: {toggle: "buttons"}, class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }"}
       %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : ''} #{ procedure.appt_started? ? '' : 'disabled' }"}
@@ -23,9 +23,7 @@
   %td.notes
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
-      %button.btn.btn-primary.note.new{type: "button", class: "#{ procedure.appt_started? ? '' : 'disabled' }", aria: {label: "New Note"}, data: {notable_id: procedure.id, notable_type: "Procedure"}}
-        %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
-    %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: procedure.id, notable_type: "Procedure"}}
+    %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: procedure.id, notable_type: "Procedure"}, class: procedure.appt_started? ? '' : 'disabled'}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
   %td.remove
     %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}

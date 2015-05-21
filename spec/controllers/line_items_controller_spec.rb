@@ -23,7 +23,7 @@ RSpec.describe LineItemsController do
     it "should create a new LineItem" do
       attributes = @line_item.attributes
       attributes.delete_if{ |key| ["created_at", "updated_at"].include?(key) }
-      attributes[:started_at] = "09-10-2015"
+      attributes[:quantity_requested] = "75"
       expect{
         post :create, {
           line_item: attributes,

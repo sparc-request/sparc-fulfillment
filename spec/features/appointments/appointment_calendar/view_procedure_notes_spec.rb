@@ -4,6 +4,7 @@ feature 'View Notes', js: true do
 
   scenario 'User views Notes list when no Notes are present' do
     given_i_am_viewing_a_procedure
+    after_appointment_starts
     when_i_view_the_notes_list
     then_i_should_be_notified_that_there_are_no_notes
   end

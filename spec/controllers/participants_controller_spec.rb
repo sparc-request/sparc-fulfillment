@@ -117,7 +117,7 @@ RSpec.describe ParticipantsController do
 
   describe "PATCH #set_recruitment_source" do
     it "should update the recruitment status" do
-      patch :set_recruitment_source, {
+      put :set_recruitment_source, {
         participant_id: @participant.id,
         source: "dummy source",
         format: :js
@@ -128,7 +128,7 @@ RSpec.describe ParticipantsController do
 
     it "should set the recruitment status to nil" do
       @participant.update_attributes(recruitment_source: "dummy source")
-      patch :set_recruitment_source, {
+      put :set_recruitment_source, {
         participant_id: @participant.id,
         source: "",
         format: :js

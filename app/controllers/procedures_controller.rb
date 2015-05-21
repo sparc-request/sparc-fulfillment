@@ -86,12 +86,12 @@ class ProceduresController < ApplicationController
   def procedure_params
     @procedure_params = params.
                         require(:procedure).
-                        permit(:status, :follow_up_date, :completed_date,
+                        permit(:status, :follow_up_date, :completed_date, :billing_type,
                                 notes_attributes: [:comment, :kind, :identity_id, :reason],
                                 tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
   end
 
   def find_procedure
-    @procedure = Procedure.where(id: params[:id]).first
+    @procedure = Procedure.find params[:id]
   end
 end

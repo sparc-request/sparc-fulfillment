@@ -1,5 +1,6 @@
 class VisitGroupsController < ApplicationController
   respond_to :json, :html
+  before_action :find_visit_group, only: [:destroy]
 
   def new
     @current_page = params[:page] # the current page of the service calendar
@@ -25,7 +26,6 @@ class VisitGroupsController < ApplicationController
 
   def destroy
     @current_page = params[:page]
-    @visit_group = VisitGroup.find(params[:id])
     @arm = @visit_group.arm
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     @calendar_tab = params[:calendar_tab]
@@ -43,5 +43,9 @@ class VisitGroupsController < ApplicationController
 
   def visit_group_params
     params.require(:visit_group).permit(:arm_id, :position, :name, :day, :window_before, :window_after)
+  end
+
+  def find_visit_group
+    @visit_group = VisitGroup.find(params[:id])
   end
 end

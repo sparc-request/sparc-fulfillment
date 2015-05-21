@@ -70,6 +70,17 @@ $ ->
       url: "/tasks/#{task_id}"
       data: data
 
+  $(document).on 'change', '.billing_type', ->
+    procedure_id = $(this).parents('.procedure').data('id')
+    billing_type = $(this).val()
+    data = procedure:
+           billing_type: billing_type
+    $.ajax
+      type: 'PUT'
+      url: "/procedures/#{procedure_id}"
+      data: data
+
+
   $(document).on 'click', 'label.status.complete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
@@ -135,32 +146,6 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/procedures/#{procedure_id}/edit.js"
-
-  $(document).on 'click', 'button.note.new',  ->
-    id = $(this).data('notable-id')
-    type = $(this).data('notable-type')
-
-    data          = note:
-                      notable_id: id,
-                      notable_type: type
-
-    $.ajax
-      type: 'GET'
-      url: '/notes/new.js'
-      data: data
-
-  $(document).on 'click', 'button.notes.list',  ->
-    id = $(this).data('notable-id')
-    type = $(this).data('notable-type')
-
-    data          = note:
-                      notable_id: id,
-                      notable_type: type
-
-    $.ajax
-      type: 'GET'
-      url: '/notes.js'
-      data: data
 
   $(document).on 'click', '.procedure button.delete', ->
     procedure_id = $(this).parents(".procedure").data("id")

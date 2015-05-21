@@ -9,6 +9,7 @@ gem 'bootstrap-sass'
 gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-rails.git'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
+gem 'daemons'
 gem 'delayed_job_active_record'
 gem 'devise'
 gem 'dotenv-rails'
@@ -32,10 +33,18 @@ gem 'rest-client'
 gem 'sass-rails'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sprockets-rails'
+gem 'therubyracer'
+gem 'thin'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
 gem 'will_paginate'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
+
+# Deploy with Capistrano
+gem 'capistrano3-delayed-job', '~> 1.0'
+gem 'capistrano-rails'
+gem 'rvm1-capistrano3', require: false
+gem 'capistrano-bundler', '~> 1.1.2'
 
 # #requirements for excel export
 # gem 'axlsx'

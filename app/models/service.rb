@@ -10,6 +10,10 @@ class Service < ActiveRecord::Base
 
   default_scope { order(name: :asc) }
 
+  # TODO: Limit is temporary. Eventually these will be filtered by organization
+  scope :per_participant_visits,    -> { where(one_time_fee: 0).limit(50) }
+  scope :one_time_fees,             -> { where(one_time_fee: 1).limit(50) }
+
   def self.all_cached
     Rails.cache.fetch("services_all", expires_in: 1.hour) do
       Service.all
@@ -29,16 +33,6 @@ class Service < ActiveRecord::Base
     Rails.cache.fetch("cache_all_services", expires_in: 1.hour) do
       Service.where(one_time_fee: 0)
     end
-  end
-
-  # TODO: Limit is temporary. Eventually these will be filtered by organization
-  def self.per_participant_visits
-    Service.where(one_time_fee: 0).limit(50)
-  end
-
-  # TODO: Limit is temporary. Eventually these will be filtered by organization
-  def self.one_time_fees
-    Service.where(one_time_fee: 1).limit(50)
   end
 
   def sparc_core_id

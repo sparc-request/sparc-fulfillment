@@ -36,4 +36,7 @@ scratch
 *.csv
 config/database.yml
 /coverage
-.env.production
+.env
+.env.*
+config/faye.yml
+config/setup_load_paths.rb
