@@ -1,4 +1,4 @@
-require 'rails_helper'
+innnrequire 'rails_helper'
 
 RSpec.describe VisitGroup, type: :model do
 

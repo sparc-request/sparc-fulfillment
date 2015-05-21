@@ -6,6 +6,14 @@ body.participants
       text-align: left
       width: auto
 
+    // Auto overflow div containing Complete Visit button
+    // so that when the button is disabled, an onclick
+    // listener attached to the div will fire when user
+    // attempts to click button. Without overflow, div
+    // has a height of 0px, and won't receive clicks.
+    .completed_date_btn
+      overflow: auto
+
     #completed-appointments-table
       thead
         background-color: #113967
