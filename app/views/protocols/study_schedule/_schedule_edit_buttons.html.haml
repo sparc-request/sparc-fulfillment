@@ -1,30 +1,23 @@
 #study_schedule_buttons
   .row
     .col-sm-4.col-md-4.text-center
-      / =t(:study_schedule_tab)[:buttons][:arm]
-      / .btn.btn-success.glyphicon.glyphicon-plus#add_arm_button
-      / .btn.btn-danger.glyphicon.glyphicon-remove#remove_arm_button
-      / .btn.btn-warning.glyphicon.glyphicon-edit#edit_arm
-      / %div
-      /   = select_tag 'arms', options_from_collection_for_select(protocol.arms, 'id' , 'name'), class: 'selectpicker', :'data-protocol_id' => protocol.id
-      #manage_arms
-        = link_to "Manage Arms", '#', {class: 'btn btn-default btn-primary', id: 'manage_arms', type: 'button', data: {protocol_id: protocol.id}, remote: true}
+      =t(:study_schedule_tab)[:buttons][:arm]
+      %div
+        = select_tag 'arms', options_from_collection_for_select(protocol.arms, 'id' , 'name'), class: 'selectpicker', :'data-protocol_id' => protocol.id
+        .btn.btn-success.btn-sm.glyphicon.glyphicon-plus#add_arm_button
+        .btn.btn-danger.btn-sm.glyphicon.glyphicon-remove#remove_arm_button
+        .btn.btn-warning.btn-sm.glyphicon.glyphicon-edit#edit_arm
+    .col-sm-4.col-md-4.text-center
+      =t(:study_schedule_tab)[:buttons][:visit]
+      %div
+        %select.selectpicker#visits
+        .btn.btn-success.btn-sm.glyphicon.glyphicon-plus#add_visit_button
+        .btn.btn-danger.btn-sm.glyphicon.glyphicon-remove#remove_visit_button
+        .btn.btn-warning.btn-sm.glyphicon.glyphicon-edit#edit_visit
 
     .col-sm-4.col-md-4.text-center
-      / =t(:study_schedule_tab)[:buttons][:visit]
-      / .btn.btn-success.glyphicon.glyphicon-plus#add_visit_button
-      / .btn.btn-danger.glyphicon.glyphicon-remove#remove_visit_button
-      / .btn.btn-warning.glyphicon.glyphicon-edit#edit_visit
-      / %div
-      /   %select.selectpicker#visits
-      %button.btn.btn-primary#manage_visits
-        = "Manage Visits"
-
-    .col-sm-4.col-md-4.text-center
-      / =t(:study_schedule_tab)[:buttons][:services]
-      / .btn.btn-success.glyphicon.glyphicon-plus#add_service_button
-      / .btn.btn-danger.glyphicon.glyphicon-remove#remove_service_button
-      / %div
-      /   = select_tag 'services', options_from_collection_for_select(services, 'id', 'name'), class: 'selectpicker'
-      %button.btn.btn-primary#manage_services
-        = "Manage Services"
+      =t(:study_schedule_tab)[:buttons][:services]
+      %div
+        = select_tag 'services', options_from_collection_for_select(services, 'id', 'name'), class: 'selectpicker'
+        .btn.btn-success.btn-sm.glyphicon.glyphicon-plus#add_service_button
+        .btn.btn-danger.btn-sm.glyphicon.glyphicon-remove#remove_service_button

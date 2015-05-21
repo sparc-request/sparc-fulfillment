@@ -92,9 +92,9 @@ en:
 
   study_schedule_tab:
     buttons:
-      arm: "Arm | "
-      visit: "Visit | "
-      services: "Services | "
+      arm: "Manage Arms"
+      visit: "Manage Visits"
+      services: "Manage Services"
 
   visit_groups:
     name: "Visit Name"
