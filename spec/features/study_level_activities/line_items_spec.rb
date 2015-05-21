@@ -17,6 +17,7 @@ feature 'Line Items', js: true do
     when_i_click_on_the_edit_line_item_button
     then_i_fill_in_the_edit_line_item_form
     i_should_see_the_changes_on_the_page
+    and_in_the_notes
   end
 
   def as_a_user_who_visits_study_level_activities_tab
@@ -34,10 +35,9 @@ feature 'Line Items', js: true do
     wait_for_ajax
     bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
     fill_in 'Quantity Requested', with: 50
-    fill_in 'Quantity Type', with: 'Each'
     page.execute_script %Q{ $('#date_started_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    click_button 'Save Line Item'
+    click_button 'Save Service'
   end
 
   def i_should_see_the_line_item_on_the_page
@@ -51,10 +51,17 @@ feature 'Line Items', js: true do
   def then_i_fill_in_the_edit_line_item_form
     wait_for_ajax
     bootstrap_select '#line_item_service_id', 'Captain Cinnebon'
-    click_button 'Save Line Item'
+    click_button 'Save Service'
+    wait_for_ajax
   end
 
   def i_should_see_the_changes_on_the_page
     expect(page).to have_content('Captain Cinnebon')
+  end
+
+  def and_in_the_notes
+    first('.notes.list[data-notable-type="LineItem"]').click
+    wait_for_ajax
+    expect(page).to have_content "Service changed to Captain Cinnebon"
   end
 end

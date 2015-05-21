@@ -4,7 +4,7 @@
       %button.close{type: 'button', data: {dismiss: 'modal'}}
         %span{aria: {hidden:'true'}} &times;
         %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= t(:notes)[notable_type][:index_header]
+      %h4.modal-title.text-center= t(:notes)[notable_sym][:index_header]
     .modal-body
       - if notes.any?
         .details-table
@@ -18,13 +18,9 @@
               .col-xs-2.created-at= format_datetime(note.created_at)
               .col-xs-7.comment= note.comment
       -else
-        .text-center= t(:notes)[notable_type][:none]
+        .text-center= t(:notes)[notable_sym][:none]
     .modal-footer
       .center-block
         %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-        - if (notable_type == :lineitem)
-          %button.btn.btn-primary.note.line_item.new{type: "button", aria: {label: "New Note"}, data: {notable_id: @notable_id}}
-            %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
-        - elsif (notable_type == :fulfillment)
-          %button.btn.btn-primary.note.fulfillment_note.new{type: "button", aria: {label: "New Note"}, data: {notable_id: @notable_id}}
-            %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
+        %button.btn.btn-primary.note.new{type: "button", aria: {label: "New Note"}, data: {notable_id: @notable_id, notable_type: notable_type}}
+          %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}

@@ -69,26 +69,7 @@ en:
     fulfillment:
       index_header: "Fulfillment Documents"
       none: "This fulfillment has no documents."
-
-  flash_messages:
-    participant:
-      created: "Participant Created"
-      updated: "Participant Updated"
-      removed: "Participant Removed"
-      arm_change: "Participant Successfully Changed Arms"
-      recruitment_source: "Recruitment Source has been updated"
-    task:
-      updated: "Task Updated"
-      created: "Task Created"
-      updated: "Task Has Been Updated"
-      incompleted: "The selected task(s) have been set to incomplete"
-    line_item:
-      updated: "Line Item Updated"
-      created: "Line Item Created"
-    fulfillment:
-      updated: "Fulfillment Updated"
-      created: "Fulfillment Created"
-    document:
+    flash_messages:
       created: "Document Created"
 
   fulfillment:
@@ -102,37 +83,16 @@ en:
     qty_type: "Quantity Type"
     performed_by: "Performed By"
     object: "Fulfillment"
-
-  reports_page:
-    request_report: "Request Report"
-    date: "Date Requested"
-    name: "Report Type/Name"
-    status: "Report Status"
-    file: "Attached File"
-    billing_report: "Billing Report"
-    protocol: "Protocol(s)"
-    start_date: "Start Date"
-    end_date: "End Date"
-
-  index_page:
-    updates: "Updates"
-    sparc_id: "SPARC ID"
-    status: "Status"
-    short_title: "Short Title"
-    principal_investigator: "Principal Investigator"
-    coordinators: "Coordinators"
-    irb_approval_date: "IRB Approval Date"
-    irb_expiration_date: "Current IRB Expiration Date"
-    udak_project_number: "IRB #"
-    start_date: "Study Start Date"
-    end_date: "Study End Date"
-    study_cost: "Total Study Costs"
-    subsidy_amount: "Percent Subsidy"
-    subsidy_committed: "Subsidy Amount"
-    subsidy_expended: "Subsidy Expended"
+    flash_messages:
+      updated: "Fulfillment Updated"
+      created: "Fulfillment Created"
+    log_notes:
+      fulfilled_at: "Fulfillment Date changed to "
+      quantity: "Quantity changed to "
+      performer_id: "Performed By changed to "
 
   line_item:
-    add_line_item: "Add Line Item"
+    add_line_item: "Add Service"
     change_service: "Change Service"
     service: "Service"
     qty_req: "Quantity Requested"
@@ -141,8 +101,15 @@ en:
     started: "Date Started"
     last_fulfillment: "Last Fulfillment"
     components: "Service Components"
-    save_li: "Save Line Item"
+    save_li: "Save Service"
     object: "Line Item"
+    flash_messages:
+      updated: "Line Item Updated"
+      created: "Line Item Created"
+    log_notes:
+      quantity_requested: "Quantity Requested changed to "
+      service_id: "Service changed to "
+      started_at: "Started At changed to "
 
   notes:
     new_header: "Add Note"
@@ -195,6 +162,12 @@ en:
     new_participant: "Create New Participant"
     save_participant: "Save Participant"
     object: "Participant"
+    flash_messages:
+      created: "Participant Created"
+      updated: "Participant Updated"
+      removed: "Participant Removed"
+      arm_change: "Participant Successfully Changed Arms"
+      recruitment_source: "Recruitment Source has been updated"
 
   procedure:
     followup: "Follow Up"
@@ -211,13 +184,42 @@ en:
 
   protocol:
     object: "Protocol"
+    updates: "Updates"
+    sparc_id: "SPARC ID"
+    status: "Status"
+    short_title: "Short Title"
+    principal_investigator: "Principal Investigator"
+    coordinators: "Coordinators"
+    irb_approval_date: "IRB Approval Date"
+    irb_expiration_date: "Current IRB Expiration Date"
+    udak_project_number: "IRB #"
+    start_date: "Study Start Date"
+    end_date: "Study End Date"
+    study_cost: "Total Study Costs"
+    subsidy_amount: "Percent Subsidy"
+    subsidy_committed: "Subsidy Amount"
+    subsidy_expended: "Subsidy Expended"
+    tabs:
+      study_schedule: "Study Schedule"
+      participant_list: "Participant List"
+      participant_tracker: "Participant Tracker"
+      study_level_activities: "Study Level Activities"
+      audit_reporting: "Audit Reporting"
+    study_schedule_buttons:
+      arm: "Arm | "
+      visit: "Visit | "
+      services: "Services | "
 
-  protocol_tabs:
-    study_schedule: "Study Schedule"
-    participant_list: "Participant List"
-    participant_tracker: "Participant Tracker"
-    study_level_activities: "Study Level Activities"
-    audit_reporting: "Audit Reporting"
+  reports:
+    request_report: "Request Report"
+    date: "Date Requested"
+    name: "Report Type/Name"
+    status: "Report Status"
+    file: "Attached File"
+    billing_report: "Billing Report"
+    protocol: "Protocol(s)"
+    start_date: "Start Date"
+    end_date: "End Date"
 
   services:
     name: "Selected Service"
@@ -226,12 +228,6 @@ en:
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     object: "Service"
-
-  study_schedule_tab:
-    buttons:
-      arm: "Arm | "
-      visit: "Visit | "
-      services: "Services | "
 
   task:
     new_task: "Create New Task"
@@ -245,6 +241,11 @@ en:
     create_task: "Create Task"
     all_tasks: "Show All Tasks"
     object: "Task"
+    flash_messages:
+      updated: "Task Updated"
+      created: "Task Created"
+      updated: "Task Has Been Updated"
+      incompleted: "The selected task(s) have been set to incomplete"
 
   visit:
     object: "Visit"
