@@ -40,3 +40,4 @@ config/database.yml
 .env.*
 config/faye.yml
 config/setup_load_paths.rb
+config/shards.yml
