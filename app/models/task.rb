@@ -15,17 +15,12 @@ class Task < ActiveRecord::Base
   after_update   :update_assignee_counter
   before_destroy :decrement_assignee_counter, unless: :complete?
 
+  scope :incomplete, -> { where(complete: false) }
+  scope :complete, -> { where(complete: true) }
+  scope :mine, -> (identity) { incomplete.where(assignee: identity) }
+
   def due_at=(due_date)
     write_attribute(:due_at, Time.strptime(due_date, "%m-%d-%Y")) if due_date.present?
-  end
-
-  def self.mine identity, show_complete
-
-    if show_complete
-      return where("(assignee_id = ? OR identity_id = ?) AND complete = ?", identity.id, identity.id, show_complete)
-    else
-      return where("(assignee_id = ? OR identity_id = ?) AND complete = ?", identity.id, identity.id, false)
-    end
   end
 
   private
