@@ -82,7 +82,7 @@ class TasksController < ApplicationController
 
   def scoped_tasks
     if params[:scope].present?
-      if params[:scope] == 'mine'
+      if (params[:scope] == 'mine') || (params[:scope] == 'incomplete')
         return Task.mine(current_identity)
       else
         return Task.send(params[:scope])
