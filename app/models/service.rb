@@ -25,7 +25,7 @@ class Service < ActiveRecord::Base
     if pricing_map = current_effective_pricing_map
       return pricing_map.full_rate
     else
-      raise ArgumentError, "Service has no pricing maps"
+      raise ArgumentError, "Service #{self.id} has no pricing maps"
     end
   end
 
