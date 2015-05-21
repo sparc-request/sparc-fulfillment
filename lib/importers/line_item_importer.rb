@@ -9,15 +9,21 @@ class LineItemImporter
     remote_arm_line_items_visits_ids = @remote_arm['line_items_visits'].map { |line_items_visit| line_items_visit.values_at('sparc_id') }.compact.flatten
 
     remote_line_items_visits(remote_arm_line_items_visits_ids)['line_items_visits'].each do |remote_line_item_visit|
-      visit_ids                     = remote_line_item_visit['visits'].map { |visit| visit.values_at('sparc_id') }.flatten
-      remote_line_item_callback_url = remote_line_item_visit['line_item']['callback_url']
-      remote_line_item              = RemoteObjectFetcher.fetch(remote_line_item_callback_url)
+      visit_ids                            = remote_line_item_visit['visits'].map { |visit| visit.values_at('sparc_id') }.flatten
+      remote_line_item_callback_url        = remote_line_item_visit['line_item']['callback_url']
+      remote_line_item                     = RemoteObjectFetcher.fetch(remote_line_item_callback_url)
+      remote_line_item_quantity_requested  = remote_line_item['line_item']['quantity'] * remote_line_item['line_item']['units_per_quantity']
 
-      remote_line_item_service_id   = remote_line_item['line_item']['service_id']
-      local_service                 = Service.find(remote_line_item_service_id)
-      local_line_item_attributes    = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service }
+      remote_line_item_service_id          = remote_line_item['line_item']['service_id']
+      local_service                        = Service.find(remote_line_item_service_id)
+      local_effective_pricing_map          = local_service.current_effective_pricing_map
 
-      local_line_item               = LineItem.create(local_line_item_attributes)
+      local_line_item_attributes           = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service
+                                               quantity_type: local_effective_pricing_map.quantity_type,
+                                               quantity_requested: remote_line_item_quantity_requested
+                                             }
+
+      local_line_item                      = LineItem.create(local_line_item_attributes)
 
       Visit.where(sparc_id: visit_ids).update_all line_item_id: local_line_item.id
     end

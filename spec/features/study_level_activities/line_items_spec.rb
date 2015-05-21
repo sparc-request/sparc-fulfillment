@@ -2,14 +2,16 @@ require 'rails_helper'
 
 feature 'Line Items', js: true do
 
-  let!(:service1) { create(:service, name: 'Admiral Tuskface', one_time_fee: true) }
-  let!(:service2) { create(:service, name: 'Captain Cinnebon', one_time_fee: true) }
+  let!(:service1)    { create(:service, name: 'Admiral Tuskface', one_time_fee: true) }
+  let!(:service2)    { create(:service, name: 'Captain Cinnebon', one_time_fee: true) }
+  let!(:pricing_map) { create(:pricing_map, service: service1, quantity_type: 'Case', effective_date: Time.current)}
 
   scenario 'User adds a new line item' do
     as_a_user_who_visits_study_level_activities_tab
     when_i_click_on_the_add_line_item_button
     then_i_fill_in_new_line_item_form
     i_should_see_the_line_item_on_the_page
+    and_the_line_item_should_pull_pricing_map_data
   end
 
   scenario 'User edits an existing line item' do
@@ -59,6 +61,10 @@ feature 'Line Items', js: true do
     expect(page).to have_content('Captain Cinnebon')
   end
 
+  def and_the_line_item_should_pull_pricing_map_data
+    expect(page).to have_content('Case')
+  end
+  
   def and_in_the_notes
     first('.notes.list[data-notable-type="LineItem"]').click
     wait_for_ajax
