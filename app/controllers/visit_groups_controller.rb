@@ -3,8 +3,8 @@ class VisitGroupsController < ApplicationController
 
   def new
     @current_page = params[:page] # the current page of the service calendar
-    @arm = Arm.find(params[:arm_id])
-    @visit_group = VisitGroup.new(arm_id: params[:arm_id])
+    @protocol = Protocol.find(params[:protocol_id])
+    @visit_group = VisitGroup.new()
     @calendar_tab = params[:calendar_tab]
   end
 
@@ -37,6 +37,10 @@ class VisitGroupsController < ApplicationController
       flash.now[:alert] = t(:visit_groups)[:deleted]
       @visit_group.destroy
     end
+  end
+
+  def position_update_options
+    @visit_groups = Arm.find(params[:arm_id]).visit_groups
   end
 
   private

@@ -98,6 +98,7 @@ en:
 
   visit_groups:
     name: "Visit Name"
+    arm: "Arm"
     position: "Insert into Position"
     window_before: "Window Before"
     window_after: "Window After"

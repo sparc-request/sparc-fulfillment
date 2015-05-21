@@ -3,9 +3,14 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :protocols
-  resources :visit_groups
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
+
+  resources :visit_groups do
+    collection do
+      get 'position_update_options', to: 'visit_groups#position_update_options'
+    end
+  end
 
   resources :arms, only: [:new, :create, :destroy] do
     member do
