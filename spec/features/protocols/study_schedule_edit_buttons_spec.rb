@@ -117,7 +117,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         find('#add_visit_button').click()
         fill_in 'Visit Name', with: "visit name"
         fill_in 'Visit Day', with: 3
-        select "insert before #{arm1.visit_groups.first.name}", from: 'visit_group_position'
+        bootstrap_select "#visit_group_position", "insert before #{arm1.visit_groups.first.name}" 
         click_button 'Add'
         expect(page).to have_css ".visit_group_0[value='visit name']"
       end
@@ -157,7 +157,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).not_to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")
         find('#add_service_button').click()
         expect(page).to have_content "Add a Service"
-        select service.name, from: "service_id"
+        bootstrap_select "#service_id", service.name
         find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
         find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
         click_button 'Add Service'
@@ -180,7 +180,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).to have_css("div#arm_#{arm2.id}_core_#{service.sparc_core_id}")
         find('#remove_service_button').click()
         expect(page).to have_content "Remove Services"
-        select service.name, from: "service_id"
+        bootstrap_select "#service_id", service.name
         find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
         find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
         click_button 'Remove'
@@ -192,12 +192,12 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       it 'dropdown should populate only with currently added services' do
         find('#remove_service_button').click()
         service_count = protocol.arms.map{|a| a.line_items.map{|li| li.service.name}}.flatten.uniq.size
-        assert_selector("#service_id > option", count: service_count)
+        assert_selector("#service_id > option", count: service_count, visible: false)
       end
 
       it 'arm checkbox should only display if service selected is on arm' do
         find('#remove_service_button').click()
-        select service.name, from: "service_id"
+        bootstrap_select "#service_id", service.name
         assert_selector(".arm-checkbox > label", count: 2)
       end
     end
