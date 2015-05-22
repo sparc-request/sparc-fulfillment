@@ -4,7 +4,7 @@
     %h1.page-header Log in
     = form_for(resource, as: resource_name, url: session_path(resource_name), :role => "form") do |f|
       .form-group
-        = f.label :ldap_uid, "LDAP UID"
+        = f.label :ldap_uid, t("devise.login")
         = f.text_field :ldap_uid, autofocus: true, :class => "form-control"
       .form-group
         = f.label :password
