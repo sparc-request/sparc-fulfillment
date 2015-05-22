@@ -68,7 +68,7 @@ feature 'Incomplete Procedure', js: true do
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
-    find("#service_list > option[value='#{service.id}']").select_option
+    bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
   end
@@ -87,7 +87,7 @@ feature 'Incomplete Procedure', js: true do
     find('label.status.incomplete').click
     wait_for_ajax
   end
-  
+
   def then_i_complete_the_procedure
     find('label.status.complete').click
     wait_for_ajax
@@ -117,7 +117,7 @@ feature 'Incomplete Procedure', js: true do
   def then_i_should_see_one_incomplete_note
     expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to incomplete', count: 1)
   end
-  
+
   def then_i_should_see_one_status_reset_note
     expect(page).to have_css('.modal-body .detail .comment', text: 'Status reset', count: 1)
   end
