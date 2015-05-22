@@ -114,7 +114,7 @@ RSpec.describe ServiceCalendarController do
     it "should change the service id of the line item" do
       line_item = LineItem.first
       service = create(:service)
-      patch :update_service, {
+      put :update_service, {
         line_item: {id: line_item.id, service_id: service.id},
         format: :js
       }

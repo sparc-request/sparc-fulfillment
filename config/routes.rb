@@ -9,12 +9,7 @@ Rails.application.routes.draw do
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents, only: [:index, :new, :create]
-
-  resources :line_items, only: [:new, :create, :edit, :update] do
-    member do
-      patch 'update_components', to: 'line_items#update_components'
-    end
-  end
+  resources :line_items, only: [:new, :create, :edit, :update]
 
   resources :arms, only: [:new, :create, :destroy] do
     member do
@@ -36,7 +31,7 @@ Rails.application.routes.draw do
     get 'change_arm(/:id)', to: 'participants#edit_arm'
     post 'change_arm(/:id)', to: 'participants#update_arm'
     get 'details', to: 'participants#details'
-    patch 'set_recruitment_source', to: 'participants#set_recruitment_source'
+    put 'set_recruitment_source', to: 'participants#set_recruitment_source'
   end
 
   resources :tasks do
@@ -70,7 +65,7 @@ Rails.application.routes.draw do
       put 'change_quantity'
       put 'change_visit_name'
       get 'edit_service'
-      patch 'update_service'
+      put 'update_service'
       put 'check_row'
       put 'check_column'
       put 'remove_line_item'

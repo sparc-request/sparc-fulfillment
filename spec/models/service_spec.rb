@@ -44,5 +44,16 @@ RSpec.describe Service, type: :model do
         end
       end
     end
+
+    describe 'current_effective_pricing_map' do
+
+      let!(:service)      { create(:service, name: 'Service') }
+      let!(:pricing_map1) { create(:pricing_map, service: service, effective_date: Time.current)}
+      let!(:pricing_map2) { create(:pricing_map, service: service, effective_date: Time.now + 1.month)}
+
+      it 'should return the correct pricing map' do
+        expect(service.current_effective_pricing_map).to eq(pricing_map1)
+      end
+    end
   end
 end

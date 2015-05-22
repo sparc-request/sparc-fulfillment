@@ -24,6 +24,7 @@ class LineItem < ActiveRecord::Base
 
   validates :protocol_id, :service_id, presence: true
   validate :one_time_fee_fields
+
   after_create :create_line_item_components
   after_create :increment_sparc_service_counter
   after_destroy :decrement_sparc_service_counter

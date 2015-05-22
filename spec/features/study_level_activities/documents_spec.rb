@@ -4,17 +4,17 @@ feature 'Documents', js: true do
 
   scenario 'User views line item documents' do
     as_a_user_who_visits_study_level_activities_tab
-    when_i_click_on_documents_icon('.otf_documents')
+    when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
     then_i_should_see_the_line_item_documents_list
   end
 
   scenario 'User uploads new line item document' do
     as_a_user_who_visits_study_level_activities_tab
     if_i_have_a_document_to_upload
-    when_i_click_on_documents_icon('.otf_documents')
+    when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
     then_click_on_the_add_document_button
     then_i_upload_a_document
-    when_i_click_on_documents_icon('.otf_documents')
+    when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
     i_should_see_the_document
   end
 
@@ -22,18 +22,18 @@ feature 'Documents', js: true do
   scenario 'User views fulfillment documents' do
     as_a_user_who_visits_study_level_activities_tab
     when_i_open_up_a_fulfillment
-    when_i_click_on_documents_icon('.fulfillment_documents')
+    when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
     then_i_should_see_the_fulfillment_documents_list
   end
 
   scenario 'User uploads new fulfillment document' do
     as_a_user_who_visits_study_level_activities_tab
     when_i_open_up_a_fulfillment
-    when_i_click_on_documents_icon('.fulfillment_documents')
+    when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
     if_i_have_a_document_to_upload
     then_click_on_the_add_document_button
     then_i_upload_a_document
-    when_i_click_on_documents_icon('.fulfillment_documents')
+    when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
     i_should_see_the_document
   end
 

@@ -6,6 +6,7 @@ RSpec.describe Protocol, type: :model do
   it { is_expected.to have_many(:line_items).dependent(:destroy) }
   it { is_expected.to have_many(:participants).dependent(:destroy) }
   it { is_expected.to have_many(:project_roles).dependent(:destroy) }
+  it { is_expected.to have_many(:service_requests) }
 
   context 'class methods' do
 

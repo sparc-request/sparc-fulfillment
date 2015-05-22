@@ -6,8 +6,9 @@ class DocumentsController < ApplicationController
 
   def index
     @documents = @documentable.documents
-    @documentable_type = document_params[:documentable_type].downcase.to_sym
     @documentable_id = document_params[:documentable_id]
+    @documentable_type = document_params[:documentable_type]
+    @documentable_sym = @documentable_type.downcase.to_sym
   end
 
   def new
@@ -19,7 +20,7 @@ class DocumentsController < ApplicationController
     @document.doc = params[:document][:document]
     if @document.valid?
       @document.save
-      flash[:success] = t(:flash_messages)[:document][:created]
+      flash[:success] = t(:documents)[:flash_messages][:created]
     else
       @errors = @document.errors
     end
