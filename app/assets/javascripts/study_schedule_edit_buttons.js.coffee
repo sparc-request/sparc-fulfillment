@@ -16,9 +16,11 @@ $ ->
           url: "/arms/#{arm_id}?protocol_id=#{protocol_id}"
 
     $(document).on 'click', '#add_visit_group_button', ->
+      current_page = $(".visit_dropdown").first().attr('page')
       protocol_id = $('#arms').data('protocol_id')
       calendar_tab = $('#current_tab').attr('value')
       data =
+        'current_page': current_page
         'calendar_tab': calendar_tab
         'protocol_id' : protocol_id
       $.ajax
@@ -100,12 +102,17 @@ $ ->
 
     $(document).on 'change', '#visit_group_arm_id', ->
       arm_id = $(this).find('option:selected').val()
+      update_visit_group_form_page(arm_id)
       data =
         'arm_id': arm_id
       $.ajax
         type: 'GET'
-        url: '/visit_groups/position_update_options'
+        url: '/visit_groups/update_positions_on_arm_change'
         data: data
+
+(exports ? this).update_visit_group_form_page = (arm_id) ->
+  page = $("#visits_select_for_#{arm_id}").val()
+  $("#current_page").val(page)
 
 (exports ? this).change_service = (service_id) ->
   protocol_id = $('#arms').data('protocol_id')

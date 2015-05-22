@@ -8,14 +8,11 @@ Rails.application.routes.draw do
 
   resources :visit_groups do
     collection do
-      get 'position_update_options', to: 'visit_groups#position_update_options'
+      get 'update_positions_on_arm_change', to: 'visit_groups#update_positions_on_arm_change'
     end
   end
 
   resources :arms, only: [:new, :create, :destroy] do
-    member do
-      get 'refresh_vg_dropdown'
-    end
   end
 
   resources :participants do

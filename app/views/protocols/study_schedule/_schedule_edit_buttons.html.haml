@@ -9,15 +9,8 @@
         .btn.btn-warning.btn-sm.glyphicon.glyphicon-edit#edit_arm_button
     .col-sm-4.col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:visit]
-      %div
-        %select.selectpicker#visits
-          -protocol.arms.each do |arm|
-            %option{disabled: true, style: 'font-weight:bold'}= arm.name
-            = options_from_collection_for_select(arm.visit_groups,'id','name')
-        .btn.btn-success.btn-sm.glyphicon.glyphicon-plus#add_visit_group_button
-        .btn.btn-danger.btn-sm.glyphicon.glyphicon-remove#remove_visit_group_button
-        .btn.btn-warning.btn-sm.glyphicon.glyphicon-edit#edit_visit_group_button
-
+      %div#visit_groups_buttons
+        = render partial: '/protocols/study_schedule/visit_groups_selectpicker', locals: {protocol: protocol}
     .col-sm-4.col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:services]
       %div

@@ -139,3 +139,13 @@ $ ->
           check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
         else
           check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
+
+(exports ? this).change_service = (service_id) ->
+  protocol_id = $('#arms').data('protocol_id')
+  data =
+    'protocol_id': protocol_id
+    'service_id': service_id
+  $.ajax
+    type: 'GET'
+    url: "/multiple_line_items/necessary_arms"
+    data: data

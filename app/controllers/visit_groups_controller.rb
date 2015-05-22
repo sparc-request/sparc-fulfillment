@@ -39,7 +39,7 @@ class VisitGroupsController < ApplicationController
     end
   end
 
-  def position_update_options
+  def update_positions_on_arm_change
     @visit_groups = Arm.find(params[:arm_id]).visit_groups
   end
 
