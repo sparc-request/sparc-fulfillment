@@ -9,7 +9,7 @@ namespace :data do
     FactoryGirl.define { sequence(:sparc_id) }
 
     # Backdoor User for DEVELOPMENT env
-    identity = FactoryGirl.create(:identity, email: 'email@musc.edu', password: 'password')
+    identity = FactoryGirl.create(:identity, email: 'email@musc.edu', ldap_uid: 'ldap@musc.edu', password: 'password')
 
     # Create 10 Protocols
     FactoryGirl.create_list(:protocol_imported_from_sparc, 10)
