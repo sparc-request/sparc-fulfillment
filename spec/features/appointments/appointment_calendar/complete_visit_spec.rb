@@ -134,7 +134,7 @@ feature 'Complete Visit', js: true do
     protocol     = create(:protocol_imported_from_sparc)
     participant  = protocol.participants.first
     @visit_group = participant.appointments.first.visit_group
-    @service     = Service.per_participant_visits.first
+    @service     = Service.all_per_participant_visit_services.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', @visit_group.name
@@ -154,7 +154,7 @@ feature 'Complete Visit', js: true do
 
   def i_should_be_able_to_complete_visit
     expect(page).not_to have_css("button.complete_visit.disabled")
-    find("button.complete_visit.disabled").click
+    find("button.complete_visit").click
     wait_for_ajax
     # completed date input should be visible after clicking Complete Visit
     expect(page).not_to have_css('div.completed_date_input.hidden')
@@ -172,7 +172,7 @@ feature 'Complete Visit', js: true do
   end
 
   def add_a_procedure
-    find("#service_list > option[value='#{@service.id}']").select_option
+    bootstrap_select '#service_list', @service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
     wait_for_ajax
@@ -192,7 +192,9 @@ feature 'Complete Visit', js: true do
   end
 
   def then_removes_procedure
-    find("tr[data-id='#{@procedure.id}'] button.delete").click
+    accept_confirm do
+      find("tr[data-id='#{@procedure.id}'] button.delete").click
+    end
     wait_for_ajax
   end
 

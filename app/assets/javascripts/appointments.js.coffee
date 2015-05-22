@@ -215,4 +215,4 @@ $ ->
     alert("Please click Start Visit and enter a start date to continue.")
 
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
-    alert("Please either complete, incomplete, or assign a follow up date for all procedures before completing visit.")
+    alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
