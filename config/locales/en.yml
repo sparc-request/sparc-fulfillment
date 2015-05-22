@@ -110,7 +110,9 @@ en:
     status: "Report Status"
     file: "Attached File"
     billing_report: "Billing Report"
+    auditing_report: "Auditing Report"
     protocol: "Protocol(s)"
+    organization: "Organization(s)"
     start_date: "Start Date"
     end_date: "End Date"
 

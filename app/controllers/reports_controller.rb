@@ -26,7 +26,7 @@ class ReportsController < ApplicationController
   end
 
   def create_auditing_report
-    @report = current_user.reports.new(name: "Auditing Report", status: "Pending")
+    @report = current_identity.reports.new(name: "Auditing Report", status: "Pending")
     date_validation(params[:start_date], params[:end_date])
 
     unless @report.errors.any?

@@ -7,3 +7,8 @@ $ ->
     $.ajax
       type: 'GET'
       url: '/reports/new_billing_report'
+
+  $(document).on 'click', '#auditing_report_button', ->
+    $.ajax
+      type: 'GET'
+      url: '/reports/new_auditing_report'
