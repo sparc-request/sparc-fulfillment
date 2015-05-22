@@ -13,6 +13,8 @@ class Protocol < ActiveRecord::Base
   has_many :appointments, through: :participants
   has_many :procedures, through: :appointments
 
+  belongs_to :sub_service_request, :foreign_key => 'sparc_sub_service_request_id'
+
   after_save :update_faye
   after_destroy :update_faye
 

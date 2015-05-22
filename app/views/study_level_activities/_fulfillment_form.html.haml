@@ -21,7 +21,7 @@
             .form-group
               = form.label "performer_id", t(:fulfillment)[:performed_by], class: "col-sm-4 control-label"
               .col-sm-7
-                = form.select "performer_id", options_from_collection_for_select(Identity.all, 'id', 'full_name', fulfillment.performer_id), {include_blank: true}, :class => 'form-control selectpicker'
+                = form.select "performer_id", options_from_collection_for_select(clinical_providers.map(&:identity), 'id', 'full_name', fulfillment.performer_id), {include_blank: true}, :class => 'form-control selectpicker'
             .form-group
               = form.label "components", t(:fulfillment)[:components], class: "col-sm-4 control-label"
               .col-sm-7
