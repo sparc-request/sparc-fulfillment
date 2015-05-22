@@ -50,7 +50,7 @@ feature 'View Notes', js: true do
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
-    find("#service_list > option[value='#{service.id}']").select_option
+    bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
   end
