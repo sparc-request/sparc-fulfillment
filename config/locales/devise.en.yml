@@ -2,7 +2,7 @@
 
 en:
   devise:
-    login: "LDAP UID"
+    login: "Login"
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
       send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes."
