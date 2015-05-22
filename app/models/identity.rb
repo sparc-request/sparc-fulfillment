@@ -7,8 +7,20 @@ class Identity < ActiveRecord::Base
   has_one :identity_counter, dependent: :destroy
   has_many :project_roles
   has_many :tasks, as: :assignable
+  has_many :clinical_providers
 
   delegate :tasks_count, to: :identity_counter
+
+  def protocols
+    if clinical_providers.any?
+      clinical_providers.
+        map { |clinical_provider| clinical_provider.organization.protocols }.
+        compact.
+        flatten
+    else
+      Array.new
+    end
+  end
 
   def readonly?
     false

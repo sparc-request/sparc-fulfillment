@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150515151110) do
+ActiveRecord::Schema.define(version: 20150519181014) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -250,8 +250,8 @@ ActiveRecord::Schema.define(version: 20150515151110) do
     t.datetime "irb_expiration_date"
     t.float    "stored_percent_subsidy",       limit: 24
     t.integer  "study_cost",                   limit: 4
-    t.integer  "sparc_sub_service_request_id", limit: 4
     t.string   "status",                       limit: 255
+    t.integer  "sparc_sub_service_request_id", limit: 4
   end
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
