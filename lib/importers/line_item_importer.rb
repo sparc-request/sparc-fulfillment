@@ -18,7 +18,7 @@ class LineItemImporter
       local_service                        = Service.find(remote_line_item_service_id)
       local_effective_pricing_map          = local_service.current_effective_pricing_map
 
-      local_line_item_attributes           = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service
+      local_line_item_attributes           = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service,
                                                quantity_type: local_effective_pricing_map.quantity_type,
                                                quantity_requested: remote_line_item_quantity_requested
                                              }
