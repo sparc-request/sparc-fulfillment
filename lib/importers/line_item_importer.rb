@@ -12,13 +12,16 @@ class LineItemImporter
       visit_ids                            = remote_line_item_visit['visits'].map { |visit| visit.values_at('sparc_id') }.flatten
       remote_line_item_callback_url        = remote_line_item_visit['line_item']['callback_url']
       remote_line_item                     = RemoteObjectFetcher.fetch(remote_line_item_callback_url)
-      remote_line_item_quantity_requested  = remote_line_item['line_item']['quantity'] * remote_line_item['line_item']['units_per_quantity']
+      
+      remote_line_item_quantity            = remote_line_item['line_item']['quantity'] || 0
+      remote_line_item_units_per_quantity  = remote_line_item['line_item']['units_per_quantity'] || 1
+      remote_line_item_quantity_requested  = remote_line_item_quantity * remote_line_item_units_per_quantity
 
       remote_line_item_service_id          = remote_line_item['line_item']['service_id']
       local_service                        = Service.find(remote_line_item_service_id)
       local_effective_pricing_map          = local_service.current_effective_pricing_map
 
-      local_line_item_attributes           = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service
+      local_line_item_attributes           = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service,
                                                quantity_type: local_effective_pricing_map.quantity_type,
                                                quantity_requested: remote_line_item_quantity_requested
                                              }
