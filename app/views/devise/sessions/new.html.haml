@@ -4,8 +4,8 @@
     %h1.page-header Log in
     = form_for(resource, as: resource_name, url: session_path(resource_name), :role => "form") do |f|
       .form-group
-        = f.label :email
-        = f.email_field :email, autofocus: true, :class => "form-control"
+        = f.label :ldap_uid, "LDAP UID"
+        = f.text_field :ldap_uid, autofocus: true, :class => "form-control"
       .form-group
         = f.label :password
         = f.password_field :password, autocomplete: "off", :class => "form-control"
