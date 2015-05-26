@@ -71,7 +71,9 @@ feature 'Followup note', js: true do
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
     service     = Service.per_participant_visits.first
-    @assignee   = Identity.first
+    clinical_provider = create(:clinical_provider, organization_id: protocol.sub_service_request.organization_id, identity: Identity.first)
+    clinical_providers = ClinicalProvider.where(organization_id: protocol.sub_service_request.organization_id)
+    @assignee   = clinical_providers.first.identity
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
@@ -93,7 +95,7 @@ feature 'Followup note', js: true do
   end
 
   def and_i_fill_out_and_submit_the_followup_form
-    select @assignee.full_name, from: 'task_assignee_id'
+    bootstrap_select '#task_assignee_id', @assignee.full_name
     page.execute_script %Q{ $("#follow_up_procedure_datepicker").children(".input-group-addon").trigger("click")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
     fill_in 'Comment', with: 'Test comment'

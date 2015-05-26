@@ -42,7 +42,7 @@ FactoryGirl.define do
 
     trait :with_sub_service_request do
       after(:create) do |protocol, evaluator|
-        sub_service_request = create(:sub_service_request)
+        sub_service_request = create(:sub_service_request_with_organization)
         protocol.update_attribute(:sparc_sub_service_request_id, sub_service_request.id)
       end
     end

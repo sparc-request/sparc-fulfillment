@@ -135,6 +135,8 @@ feature 'Complete Visit', js: true do
     participant  = protocol.participants.first
     @visit_group = participant.appointments.first.visit_group
     @service     = Service.all_per_participant_visit_services.first
+    clinical_provider = create(:clinical_provider, organization_id: protocol.sub_service_request.organization_id, identity: Identity.first)
+    @clinical_providers = ClinicalProvider.where(organization_id: protocol.sub_service_request.organization_id)
 
     visit participant_path participant
     bootstrap_select '#appointment_select', @visit_group.name
@@ -183,7 +185,10 @@ feature 'Complete Visit', js: true do
 
   def then_adds_a_follow_up_date
     find("tr[data-id='#{@procedure.id}'] button.followup.new").click
-    select Identity.first.full_name, from: 'task_assignee_id'
+    wait_for_ajax
+   
+    bootstrap_select '#task_assignee_id', @clinical_providers.first.identity.full_name
+    
     page.execute_script %Q{ $("#follow_up_procedure_datepicker").children(".input-group-addon").trigger("click")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
     fill_in 'Comment', with: 'Test comment'

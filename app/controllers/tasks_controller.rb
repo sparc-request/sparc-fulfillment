@@ -22,7 +22,7 @@ class TasksController < ApplicationController
 
   def new
     @task = Task.new
-    @clinical_providers = ClinicalProvider.where(organization_id: @current_identity.protocols.map{|p| p.sub_service_request.organization_id })
+    @clinical_providers = ClinicalProvider.where(organization_id: current_identity.protocols.map{|p| p.sub_service_request.organization_id })
   end
 
   def create

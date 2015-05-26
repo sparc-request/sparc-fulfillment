@@ -11,4 +11,3 @@ update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 <% end %>
 $(".followup_procedure_datepicker").datetimepicker(format: 'MM-DD-YYYY')
 <% end %>
-
