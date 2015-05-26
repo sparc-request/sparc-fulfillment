@@ -18,11 +18,18 @@ module ApplicationHelper
   end
 
   def hidden_class(val)
-    :hidden if val == true
+    :hidden if val
   end
 
   def disabled_class(val)
-    :disabled if val == true
+    :disabled if val
+  end
+
+  # Class a div containing a disabled button so that
+  # you can attach an onclick listener to the div
+  # to alert the user why button is disabled.
+  def contains_disabled_class(val)
+    :contains_disabled if val
   end
 
   def pretty_tag(tag)

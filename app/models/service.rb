@@ -30,9 +30,7 @@ class Service < ActiveRecord::Base
   end
 
   def self.all_per_participant_visit_services
-    Rails.cache.fetch("cache_all_services", expires_in: 1.hour) do
       Service.where(one_time_fee: 0)
-    end
   end
 
   def sparc_core_id

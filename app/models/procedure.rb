@@ -56,6 +56,12 @@ class Procedure < ActiveRecord::Base
     appointment.start_date.present?
   end
 
+  # Has this procedure been completed, incompleted, or
+  # assigned a follow up date?
+  def handled?
+    complete? or incomplete? or task.present?
+  end
+
   def reset?
     status == ''
   end

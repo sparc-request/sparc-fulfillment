@@ -27,6 +27,13 @@ class Appointment < ActiveRecord::Base
 
   accepts_nested_attributes_for :notes
 
+  # Can appointment be finished? It must have a start date, and
+  # all its procedures must either be complete, incomplete, or
+  # have a follow up date assigned to it.
+  def can_finish?
+    !start_date.blank? && (procedures.all? { |proc| proc.handled? })
+  end
+
   def has_completed_procedures?
     has_completed = false
     unless self.procedures.empty?

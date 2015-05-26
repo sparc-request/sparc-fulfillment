@@ -1,6 +1,9 @@
 <% if !(@procedure.errors.empty?) %>
 $("#procedure_modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @procedure.errors})) %>")
 <% else %>
+
+update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
+
 <% if @procedure.reset? %>
 $(".procedure[data-id='<%= @procedure.id %>']").
   find(".completed-date input").
