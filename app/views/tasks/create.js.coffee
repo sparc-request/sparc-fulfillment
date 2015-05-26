@@ -11,3 +11,4 @@ $("#follow_up_<%= @procedure.id %>").html("<%= escape_javascript(render(:partial
 $(".followup_procedure_datepicker").datetimepicker(format: 'MM-DD-YYYY')
 <% end %>
 
+update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)

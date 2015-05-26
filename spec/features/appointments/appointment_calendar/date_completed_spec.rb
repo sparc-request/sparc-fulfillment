@@ -63,8 +63,7 @@ feature 'Date completed', js: true do
 
   def when_i_add_a_procedure
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.all_per_participant_visit_services.first
-
+    service     = Service.per_participant_visits.first
     bootstrap_select('#appointment_select', visit_group.name)
     wait_for_ajax
     bootstrap_select '#service_list', service.name

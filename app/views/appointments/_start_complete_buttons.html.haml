@@ -12,5 +12,5 @@
       .form-group
         %label.col-xs-6.control-label{for: 'completed_date'}= t(:appointment)[:completed_date]
         .col-xs-6= text_field_tag 'completed_date', '', class: 'form-control'
-  .completed_date_btn{class: hidden_class(!appointment.completed_date.blank?) }
-    %button.btn.btn-danger.complete_visit{class: disabled_class(appointment.start_date.blank?) }= t(:appointment)[:complete_visit]
+  .completed_date_btn{class: [hidden_class(!appointment.completed_date.blank?), contains_disabled_class(!appointment.can_finish?)].join(' ')}
+    %button.btn.btn-danger.complete_visit{class: disabled_class(!appointment.can_finish?) }= t(:appointment)[:complete_visit]

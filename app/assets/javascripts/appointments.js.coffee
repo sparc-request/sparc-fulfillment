@@ -199,7 +199,20 @@ $ ->
         success: ->
           $('#start_date').data("DateTimePicker").maxDate(e.date)
 
+  # If enable_it true, enable Complete Visit button; otherwise, disable it.
+  # Also, add the contains_disabled class to the containing div whenever
+  # the button is disabled.
+  window.update_complete_visit_button = (enable_it) ->
+    if enable_it
+      $("button.complete_visit").removeClass('disabled')
+      $("div.completed_date_btn").removeClass('contains_disabled')
+    else
+      $("button.complete_visit").addClass('disabled')
+      $("div.completed_date_btn").addClass('contains_disabled')
+
   # Display a helpful message when user clicks on a disabled UI element
-  # that can't be edited before the appointment has started
   $(document).on 'click', '.pre_start_disabled', ->
-      alert("Please click Start Visit and enter a start date to continue.")
+    alert("Please click Start Visit and enter a start date to continue.")
+
+  $(document).on 'click', '.completed_date_btn.contains_disabled', ->
+    alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")

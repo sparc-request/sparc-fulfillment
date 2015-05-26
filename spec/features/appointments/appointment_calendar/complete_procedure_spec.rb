@@ -22,16 +22,6 @@ feature 'Complete Procedure', js: true do
       then_i_should_see_complete_notes 2
     end
 
-    scenario 'User marks a Procedure as complete, then incomplete, then complete again' do
-      as_a_user_who_has_added_a_procedure_to_an_appointment
-      then_begins_appointment
-      when_i_complete_the_procedure
-      then_i_incomplete_the_procedure
-      and_i_complete_the_procedure_again
-      and_i_view_the_notes_list
-      then_i_should_see_complete_notes 2
-    end
-
     scenario 'User marks a Procedure as complete and then changes their mind, clicking complete again' do
       as_a_user_who_has_added_a_procedure_to_an_appointment
       then_begins_appointment
