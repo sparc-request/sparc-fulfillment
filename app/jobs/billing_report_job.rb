@@ -3,7 +3,7 @@ class BillingReportJob < ActiveJob::Base
   require 'csv'
 
   def perform(report_id, start_date, end_date, protocol_ids)
-    CSV.open("tmp/admin_billing_only_report.csv", "wb") do |csv|
+    CSV.open("tmp/admin_billing_report.csv", "wb") do |csv|
       csv << ["From", start_date, "To", end_date]
       csv << [""]
       csv << [""]
@@ -27,7 +27,7 @@ class BillingReportJob < ActiveJob::Base
 
     report = Report.find(report_id)
 
-    if report.create_document(doc: File.open("tmp/admin_billing_only_report.csv"))
+    if report.create_document(doc: File.open("tmp/admin_billing_report.csv"))
       report.status = "Completed"
       report.save
     end

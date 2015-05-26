@@ -91,6 +91,36 @@ en:
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
 
+  reports_page:
+    request_report: "Request Report"
+    date: "Date Requested"
+    name: "Report Type/Name"
+    status: "Report Status"
+    file: "Attached File"
+    billing_report: "Billing Report"
+    auditing_report: "Auditing Report"
+    protocol: "Protocol(s)"
+    organization: "Organization(s)"
+    start_date: "Start Date"
+    end_date: "End Date"
+
+  index_page:
+    updates: "Updates"
+    sparc_id: "SPARC ID"
+    status: "Status"
+    short_title: "Short Title"
+    principal_investigator: "Principal Investigator"
+    coordinators: "Coordinators"
+    irb_approval_date: "IRB Approval Date"
+    irb_expiration_date: "Current IRB Expiration Date"
+    udak_project_number: "IRB #"
+    start_date: "Study Start Date"
+    end_date: "Study End Date"
+    study_cost: "Total Study Costs"
+    subsidy_amount: "Percent Subsidy"
+    subsidy_committed: "Subsidy Amount"
+    subsidy_expended: "Subsidy Expended"
+
   line_item:
     add_line_item: "Add Service"
     change_service: "Change Service"

@@ -7,6 +7,7 @@ class Identity < ActiveRecord::Base
   has_one :identity_counter, dependent: :destroy
   has_many :project_roles
   has_many :tasks, as: :assignable
+  has_many :reports
   has_many :clinical_providers
 
   delegate :tasks_count, to: :identity_counter

@@ -9,7 +9,7 @@ RSpec.describe MultipleLineItemsController do
 
   describe "GET #new" do
 
-    it "renders a template to add a service to mutliple arms" do
+    it "renders a template to add a service to multiple arms" do
       xhr :get, :new_line_items, {
         protocol_id: @protocol.id,
         service_id: @service.id,
@@ -22,7 +22,7 @@ RSpec.describe MultipleLineItemsController do
   end
 
   describe "GET #edit" do
-    it "renders a template to remove a service from mutliple arms" do
+    it "renders a template to remove a service from multiple arms" do
       xhr :get, :new_line_items, {
         protocol_id: @protocol.id,
         service_id: @service.id,

@@ -10,10 +10,6 @@ Rails.application.routes.draw do
   resources :notes, only: [:index, :new, :create]
   resources :documents, only: [:index, :new, :create]
   resources :line_items, only: [:new, :create, :edit, :update]
-  resources :reports
-
-  post 'billing_report', to: 'reports#billing_report'
-  get 'new_billing_report', to: 'reports#new_billing_report'
 
   resources :arms, only: [:new, :create, :destroy] do
     member do
@@ -22,7 +18,13 @@ Rails.application.routes.draw do
   end
 
   resources :reports do
-    # get 'billing', to: 'reports#billing_report'
+    collection do
+      post 'create_billing_report', to: 'reports#create_billing_report'
+      get 'new_billing_report', to: 'reports#new_billing_report'
+
+      post 'create_auditing_report', to: 'reports#create_auditing_report'
+      get 'new_auditing_report', to: 'reports#new_auditing_report'
+    end
   end
 
   resources :participants do
