@@ -20,10 +20,6 @@
               = label_tag "protocol", t(:reports_page)[:protocol], class: "col-sm-3 control-label"
               .col-sm-9
                 = select_tag "protocol_ids", options_from_collection_for_select(Protocol.all, "id", "short_title_with_sparc_id"), multiple: true, class: "selectpicker form-control"
-            .form-group
-              = label_tag "organization", t(:reports_page)[:organization], class: "col-sm-3 control-label"
-              .col-sm-9
-                = select_tag "organization_ids", options_from_collection_for_select(Organization.all, "id", "name"), multiple: true, class: "selectpicker form-control"
 
       .modal-footer
         .center-block{style: "width: 205px;"}

@@ -34,7 +34,7 @@ class ReportsController < ApplicationController
       start_date = Time.strptime(params[:start_date], "%m-%d-%Y").to_date.to_s
       end_date = Time.strptime(params[:end_date], "%m-%d-%Y").to_date.to_s
 
-      AuditingReportJob.perform_later(@report.id, start_date, end_date, params[:protocol_ids], params[:organization_ids])
+      AuditingReportJob.perform_later(@report.id, start_date, end_date, params[:protocol_ids])
     end
   end
 

@@ -8,4 +8,4 @@ octopus:
     sparc:
       adapter: mysql2
       username: root
-      database: sparc_request
+      database: sparc-request
