@@ -6,7 +6,7 @@ class MultipleLineItemsController < ApplicationController
   def new_line_items
     #called to render modal to mass create line items
     @selected_service = params[:service_id]
-    @services = Service.per_participant_visits
+    @services = Service.per_patient
     @protocol = Protocol.find(params[:protocol_id])
     @page_hash = params[:page_hash]
     @calendar_tab = params[:calendar_tab]

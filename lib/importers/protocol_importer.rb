@@ -13,7 +13,7 @@ class ProtocolImporter
       study_cost: remote_sub_service_request['sub_service_request']['grand_total'],
       stored_percent_subsidy: remote_sub_service_request['sub_service_request']['stored_percent_subsidy'],
       status: remote_sub_service_request['sub_service_request']['status'],
-      sparc_sub_service_request_id: remote_sub_service_request['sub_service_request']['sparc_id']
+      sub_service_request_id: remote_sub_service_request['sub_service_request']['sparc_id']
     }
     @local_protocol = Protocol.create(normalized_attributes.merge!(attributes_to_merge))
 

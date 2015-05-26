@@ -5,12 +5,15 @@ class Protocol < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
 
+  belongs_to :sub_service_request
+
+  has_one :organization, through: :sub_service_request
+
   has_many :arms, dependent: :destroy
   has_many :line_items, dependent: :destroy
   has_many :participants, dependent: :destroy
   has_many :project_roles, dependent: :destroy
   has_many :service_requests
-
   has_many :appointments, through: :participants
   has_many :procedures, through: :appointments
 

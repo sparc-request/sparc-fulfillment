@@ -10,15 +10,8 @@ class Service < ActiveRecord::Base
 
   default_scope { order(name: :asc) }
 
-  # TODO: Limit is temporary. Eventually these will be filtered by organization
-  scope :per_participant_visits,    -> { where(one_time_fee: 0).limit(50) }
-  scope :one_time_fees,             -> { where(one_time_fee: 1).limit(50) }
-
-  def self.all_cached
-    Rails.cache.fetch("services_all", expires_in: 1.hour) do
-      Service.all
-    end
-  end
+  scope :per_patient,  -> { where(one_time_fee: false) }
+  scope :one_time_fee, -> { where(one_time_fee: true) }
 
   # TODO Determine exact cost calculation
   def cost
@@ -27,10 +20,6 @@ class Service < ActiveRecord::Base
     else
       raise ArgumentError, "Service #{self.id} has no pricing maps"
     end
-  end
-
-  def self.all_per_participant_visit_services
-    Service.where(one_time_fee: 0)
   end
 
   def sparc_core_id
