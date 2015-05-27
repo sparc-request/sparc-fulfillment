@@ -70,7 +70,8 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def given_i_am_viewing_an_appointment
-    @protocol    = create(:protocol_imported_from_sparc)
+    create_and_assign_protocol_to_me
+    @protocol    = Protocol.first
     @participant = @protocol.participants.first
     @appointment = @participant.appointments.first
     @visit_group = @appointment.visit_group

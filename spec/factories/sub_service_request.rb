@@ -4,9 +4,7 @@ FactoryGirl.define do
     organization nil
 
     trait :with_organization do
-      after(:create) do |sub_service_request, evaluator|
-        sub_service_request.update_attribute(:organization, Organization.first)
-      end
+      organization factory: :organization_with_services
     end
 
     factory :sub_service_request_with_organization, traits: [:with_organization]
