@@ -10,16 +10,10 @@ feature "Identity views Protocols by status", js: true do
   end
 
   def given_i_am_a_fulfillment_provider_for_a_protocol
-    identity          = Identity.first
-    clinical_provider = create(:clinical_provider_with_organization, identity: identity)
-    organization      = clinical_provider.organization
-    service_request_1 = create(:service_request_with_protocol)
-    service_request_2 = create(:service_request_with_protocol)
-    create(:sub_service_request, organization: organization, service_request: service_request_1)
-    create(:sub_service_request, organization: organization, service_request: service_request_2)
+    2.times { create_and_assign_protocol_to_me }
 
-    service_request_1.protocol.update_attributes(status: "Complete", short_title: "Slappy")
-    service_request_2.protocol.update_attributes(status: "Draft", short_title: "Swanson")
+    Protocol.first.update_attributes(status: "Complete", short_title: "Slappy")
+    Protocol.last.update_attributes(status: "Draft", short_title: "Swanson")
   end
 
   def when_i_visit_the_protocols_page

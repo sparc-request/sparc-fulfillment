@@ -29,7 +29,7 @@ feature 'Identity views protocols', js: true do
   end
 
   scenario 'and sees a the Protocol even when :irb_expiration_date is NULL' do
-    given_i_am_a_fulfillment_provider_for_a_protocol_whiose_irb_expiration_date_is_null
+    given_i_am_a_fulfillment_provider_for_a_protocol_whose_irb_expiration_date_is_null
     when_i_visit_the_protocols_page
     then_i_should_see_protocols_for_which_i_am_a_filfillment_provider
   end
@@ -41,11 +41,7 @@ feature 'Identity views protocols', js: true do
   end
 
   def given_i_am_a_fulfillment_provider_for_a_protocol
-    identity          = Identity.first
-    clinical_provider = create(:clinical_provider_with_organization, identity: identity)
-    organization      = clinical_provider.organization
-    service_request   = create(:service_request_with_protocol)
-    create(:sub_service_request, organization: organization, service_request: service_request)
+    create_and_assign_protocol_to_me
   end
 
   def given_i_am_not_a_fulfillment_provider_for_a_protocol
@@ -56,24 +52,16 @@ feature 'Identity views protocols', js: true do
     create(:sub_service_request, organization: organization, service_request: service_request)
   end
 
-  def given_i_am_a_fulfillment_provider_for_a_protocol_whiose_irb_expiration_date_is_null
-    identity          = Identity.first
-    clinical_provider = create(:clinical_provider_with_organization, identity: identity)
-    organization      = clinical_provider.organization
-    service_request   = create(:service_request_with_protocol)
-    create(:sub_service_request, organization: organization, service_request: service_request)
-    protocol          = Protocol.first
+  def given_i_am_a_fulfillment_provider_for_a_protocol_whose_irb_expiration_date_is_null
+    create_and_assign_protocol_to_me
+    protocol = Protocol.first
 
     protocol.update_attribute :irb_expiration_date, nil
   end
 
   def given_i_am_a_fulfillment_provider_for_a_protocol_whiose_irb_approval_date_is_null
-    identity          = Identity.first
-    clinical_provider = create(:clinical_provider_with_organization, identity: identity)
-    organization      = clinical_provider.organization
-    service_request   = create(:service_request_with_protocol)
-    create(:sub_service_request, organization: organization, service_request: service_request)
-    protocol          = Protocol.first
+    create_and_assign_protocol_to_me
+    protocol = Protocol.first
 
     protocol.update_attribute :irb_approval_date, nil
   end

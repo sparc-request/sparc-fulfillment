@@ -64,7 +64,7 @@ feature 'Complete Procedure', js: true do
     protocol    = create(:protocol_imported_from_sparc)
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = Service.all_per_participant_visit_services.first
+    service     = Service.per_participant.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
