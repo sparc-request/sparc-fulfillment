@@ -2,7 +2,8 @@ $("#visit_group_modal_errors").html("<%= escape_javascript(render(:partial =>'sh
 <% if @errors == nil %>
 $("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
 $("#modal_place").modal 'hide'
-$("#visits_select_for_<%= @arm.id %>").replaceWith( " <%= escape_javascript(build_visits_select(@arm, @current_page)) %>")
+$("#visits_select_for_<%= @arm.id %>").parent('div').html( " <%= escape_javascript(build_visits_select(@arm, @current_page)) %>")
+$("#visits_select_for_<%= @arm.id %>").selectpicker()
 refresh_vg_dropdown() # calling this method refreshes the dropdown to reflect the addition of a new visit
 <% if on_current_page?(@current_page, @visit_group) %>
 # Overwrite the visit_groups
