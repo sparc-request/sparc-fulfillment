@@ -53,7 +53,7 @@ class RemoteRequestBuilder
   end
 
   def scheme
-    ENV.fetch('SPARC_API_SCHEME')
+    ENV.fetch('GLOBAL_SCHEME')
   end
 
   def host

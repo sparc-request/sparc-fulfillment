@@ -1,6 +1,6 @@
 .modal-dialog
   .modal-content
-    = form_for line_item, {remote: true, url: "/service_calendar/update_service", html: {class: "form-horizontal", role: "form"}} do |p|
+    = form_for line_item, {remote: true, url: "/service_calendar/update_service", method: "PUT", html: {class: "form-horizontal", role: "form"}} do |p|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
@@ -12,7 +12,8 @@
             .form-group
               = p.hidden_field :id
               = p.label "service", t(:line_item)[:service], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "service_id", options_from_collection_for_select(Service.all_services, "id", "name", line_item.service_id), {}, :class => "form-control"
+              .col-sm-7
+                = p.select "service_id", options_from_collection_for_select(line_item.protocol.organization.inclusive_descendant_services(:one_time_fee), "id", "name", line_item.service_id), {}, class: "form-control selectpicker"
       .modal-footer
         .center-block{style: "width: 205px;"}
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

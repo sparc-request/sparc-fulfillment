@@ -6,10 +6,10 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
+        @protocols = current_identity.protocols
+
         if params[:status].present? && params[:status] != 'All'
-          @protocols = Protocol.where(status: params[:status])
-        else
-          @protocols = Protocol.all
+          @protocols = @protocols.select { |protocol| protocol.status == params[:status] }
         end
 
         render
@@ -19,7 +19,7 @@ class ProtocolsController < ApplicationController
 
   def show
     @protocol = Protocol.find_by_sparc_id(params[:id])
-    @services = Service.all
+    @services = Service.per_participant
     @page = 1
 
     gon.push({ protocol_id: @protocol.id })

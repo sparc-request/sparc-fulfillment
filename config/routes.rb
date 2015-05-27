@@ -1,11 +1,15 @@
 Rails.application.routes.draw do
 
-  devise_for :users
+  devise_for :identities
 
   resources :protocols
   resources :visit_groups
+  resources :components, only: [:update]
+  resources :fulfillments, only: [:new, :create, :edit, :update]
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
+  resources :documents, only: [:index, :new, :create]
+  resources :line_items, only: [:new, :create, :edit, :update]
 
   resources :arms, only: [:new, :create, :destroy] do
     member do
@@ -13,11 +17,21 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :reports do
+    collection do
+      post 'create_billing_report', to: 'reports#create_billing_report'
+      get 'new_billing_report', to: 'reports#new_billing_report'
+
+      post 'create_auditing_report', to: 'reports#create_auditing_report'
+      get 'new_auditing_report', to: 'reports#new_auditing_report'
+    end
+  end
+
   resources :participants do
     get 'change_arm(/:id)', to: 'participants#edit_arm'
     post 'change_arm(/:id)', to: 'participants#update_arm'
     get 'details', to: 'participants#details'
-    patch 'set_recruitment_source', to: 'participants#set_recruitment_source'
+    put 'set_recruitment_source', to: 'participants#set_recruitment_source'
   end
 
   resources :tasks do
@@ -51,7 +65,7 @@ Rails.application.routes.draw do
       put 'change_quantity'
       put 'change_visit_name'
       get 'edit_service'
-      patch 'update_service'
+      put 'update_service'
       put 'check_row'
       put 'check_column'
       put 'remove_line_item'
@@ -62,6 +76,3 @@ Rails.application.routes.draw do
 
   root 'protocols#index'
 end
-
-
-

@@ -15,7 +15,8 @@ feature 'Create Procedure', js: true do
   end
 
   def given_i_am_viewing_a_participant
-    protocol      = create(:protocol_imported_from_sparc)
+    create_and_assign_protocol_to_me
+    protocol      = Protocol.first
     @participant  = protocol.participants.first
 
     visit participant_path(@participant)
@@ -23,10 +24,10 @@ feature 'Create Procedure', js: true do
 
   def and_i_add_a_procedure
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant.first
 
     bootstrap_select('#appointment_select', visit_group.name)
-    find("#service_list > option[value='#{service.id}']").select_option
+    bootstrap_select('#service_list', service.name)
     fill_in 'service_quantity', with: '1'
     page.find('button.add_service').click
   end
@@ -37,10 +38,10 @@ feature 'Create Procedure', js: true do
 
   def and_i_add_two_procedures
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant.first
 
     bootstrap_select('#appointment_select', visit_group.name)
-    find("#service_list > option[value='#{service.id}']").select_option
+    bootstrap_select('#service_list', service.name)
     fill_in 'service_quantity', with: '2'
     page.find('button.add_service').click
   end

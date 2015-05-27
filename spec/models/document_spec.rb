@@ -6,10 +6,10 @@ RSpec.describe Document, type: :model do
   describe 'attachment' do
     it 'should attach a document and then return it' do
       @document = Document.new
-      @document.doc = File.new("spec/support/paperclip_test_document.txt")
+      @document.doc = File.new(Rails.root.join('spec', 'support', 'text_document.txt'))
       @document.save
 
-      expect(@document.doc_file_name).to eq("paperclip_test_document.txt")
+      expect(@document.doc_file_name).to eq('text_document.txt')
     end
   end
 end

@@ -1,7 +1,8 @@
 $ ->
   unless <%= Rails.env.test? %>
     host = "<%= ENV.fetch('CWF_FAYE_HOST') %>"
-    faye = new Faye.Client("http://#{host}/faye")
+    scheme = "<%= ENV.fetch('GLOBAL_SCHEME') %>"
+    faye = new Faye.Client("#{scheme}://#{host}/faye")
 
     faye.disable('websocket')
 
@@ -15,3 +16,7 @@ $ ->
       faye.subscribe "/protocol_#{gon.protocol_id}", (data) ->
         $('table.protocol').bootstrapTable('refresh', {silent: "true"})
         $('table.participants').bootstrapTable('refresh', {silent: "true"})
+
+    if $('body.reports-index').length > 0
+      faye.subscribe "/reports", (data) ->
+        $('table#reports-list').bootstrapTable('refresh', {silent: "true"})

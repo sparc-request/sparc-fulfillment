@@ -1,6 +1,7 @@
 class ArmsController < ApplicationController
 
   respond_to :json, :html
+  before_action :find_arm, only: [:destroy, :refresh_vg_dropdown]
 
   def new
     @protocol = Protocol.find(params[:protocol_id])
@@ -29,18 +30,16 @@ class ArmsController < ApplicationController
   end
 
   def destroy
-    @arm = Arm.find(params[:id])
-    if Arm.where("protocol_id = ?",params[:protocol_id]).count == 1
+    if Arm.where("protocol_id = ?", params[:protocol_id]).count == 1
       flash.now[:alert] = t(:arm)[:not_deleted]
     else
-      @delete = true #this varaible is used in the coffescript logic to prevent the arm name from being removed from the dropdown
+      @delete = true #this variable is used in the coffescript logic to prevent the arm name from being removed from the dropdown
       @arm.delay.destroy
       flash.now[:alert] = t(:arm)[:deleted]
     end
   end
 
   def refresh_vg_dropdown
-    @arm = Arm.find(params[:id])
     @visit_groups = @arm.visit_groups
     respond_with @visit_groups
   end
@@ -49,5 +48,9 @@ class ArmsController < ApplicationController
 
   def arm_params
     params.require(:arm).permit(:protocol_id, :name, :visit_count, :subject_count)
+  end
+
+  def find_arm
+    @arm = Arm.find(params[:id])
   end
 end

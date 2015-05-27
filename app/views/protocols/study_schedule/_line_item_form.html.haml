@@ -14,9 +14,9 @@
             = hidden_field_tag :calendar_tab, calendar_tab
             .form-group
               = label_tag "service_id", t(:services)[:name], class: "col-sm-4 control-label"
-              .col-sm-7= select_tag "service_id", options_from_collection_for_select(services, 'id' , 'name', "#{selected_service}"), class: "form-control"
+              .col-sm-7= select_tag "service_id", options_from_collection_for_select(services, 'id' , 'name', "#{selected_service}"), class: "form-control selectpicker"
             .form-group
-              = label_tag "arm_ids", t(:services)[:arm], class: "col-sm-4 control-label"
+              = label_tag "arm_ids", t(:arm)[:object], class: "col-sm-4 control-label"
               .col-sm-7
                 - protocol.arms.each do |arm|
                   .checkbox.arm-checkbox{id: "arm_#{arm.id}_checkbox"}

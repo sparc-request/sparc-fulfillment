@@ -10,10 +10,11 @@ class Procedure < ActiveRecord::Base
   has_one :arm,         through: :appointment
   has_one :participant, through: :appointment
   has_one :visit_group, through: :appointment
-  has_one :task,        as: :assignable
+  has_one :task,        as: :assignable, dependent: :destroy
 
   belongs_to :appointment
   belongs_to :visit
+  belongs_to :service
 
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
@@ -55,6 +56,12 @@ class Procedure < ActiveRecord::Base
     appointment.start_date.present?
   end
 
+  # Has this procedure been completed, incompleted, or
+  # assigned a follow up date?
+  def handled?
+    complete? or incomplete? or task.present?
+  end
+
   def reset?
     status == ''
   end
@@ -68,7 +75,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def destroy
-    if status.blank?
+    if status.blank? and not task.present?
       super
     else
       raise ActiveRecord::ActiveRecordError

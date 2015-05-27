@@ -4,6 +4,7 @@ feature 'View Notes', js: true do
 
   scenario 'User views Notes list when no Notes are present' do
     given_i_am_viewing_a_procedure
+    after_appointment_starts
     when_i_view_the_notes_list
     then_i_should_be_notified_that_there_are_no_notes
   end
@@ -45,11 +46,11 @@ feature 'View Notes', js: true do
     protocol    = create(:protocol_imported_from_sparc)
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
-    find("#service_list > option[value='#{service.id}']").select_option
+    bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
   end
@@ -59,11 +60,11 @@ feature 'View Notes', js: true do
   end
 
   def then_i_should_see_a_complete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to complete')
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to complete')
   end
 
   def then_i_should_see_an_incomplete_note
-    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to incomplete')
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to incomplete')
   end
 
   def then_i_should_be_notified_that_there_are_no_notes

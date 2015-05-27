@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe AppointmentsController do
   before :each do
-    @user = create(:user)
-    sign_in @user
+    @identity = create(:identity)
+    sign_in @identity
     @protocol = create(:protocol_imported_from_sparc)
     @service = create(:service)
     @arm = @protocol.arms.first

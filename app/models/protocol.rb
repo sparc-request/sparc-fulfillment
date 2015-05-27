@@ -1,14 +1,21 @@
 class Protocol < ActiveRecord::Base
 
-  STATUSES = ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold'].freeze
+  STATUSES = ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold', 'In Admin Review', 'Active', 'Administrative Review', 'In Committee Review', 'Invoiced', 'In Fulfillment Queue', 'Approved', 'Declined', 'Withdrawn'].freeze
 
   has_paper_trail
   acts_as_paranoid
 
-  has_many :arms, dependent: :destroy
-  has_many :line_items, dependent: :destroy
-  has_many :participants, dependent: :destroy
-  has_many :user_roles
+  belongs_to :sub_service_request
+
+  has_one :organization, through: :sub_service_request
+
+  has_many :service_requests
+  has_many :arms,           dependent: :destroy
+  has_many :line_items,     dependent: :destroy
+  has_many :participants,   dependent: :destroy
+  has_many :project_roles,  dependent: :destroy
+  has_many :appointments,   through: :participants
+  has_many :procedures,     through: :appointments
 
   after_save :update_faye
   after_destroy :update_faye
@@ -27,11 +34,20 @@ class Protocol < ActiveRecord::Base
   end
 
   def pi
-    user_roles.where(role: "primary-pi").first.user
+    project_roles.where(role: "primary-pi").first.identity
   end
 
   def coordinators
-    user_roles.where(role: "research-assistant-coordinator").map(&:user)
+    project_roles.where(role: "research-assistant-coordinator").map(&:identity)
+  end
+
+  def short_title_with_sparc_id
+    list_display = "(#{self.sparc_id}) #{self.short_title}"
+    return list_display
+  end
+
+  def one_time_fee_line_items
+    line_items.includes(:service).where(:services => {:one_time_fee => true})
   end
 
   private

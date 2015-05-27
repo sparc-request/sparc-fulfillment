@@ -13,7 +13,7 @@ feature 'Create Note', js: true do
     @participant = protocol.participants.first
     @appointment = @participant.appointments.first
     @visit_group = @appointment.visit_group
-    service     = Service.first
+    service     = Service.per_participant.first
 
     visit participant_path @participant
     bootstrap_select '#appointment_select', @visit_group.name

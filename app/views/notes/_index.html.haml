@@ -4,21 +4,23 @@
       %button.close{type: 'button', data: {dismiss: 'modal'}}
         %span{aria: {hidden:'true'}} &times;
         %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= t(:notes)[notable_type][:index_header]
+      %h4.modal-title.text-center= t(:notes)[notable_sym][:index_header]
     .modal-body
       - if notes.any?
-        .notes-index
-          .notes-header.text-center
-            .col-xs-3= t(:notes)[:user]
+        .details-table
+          .details-header.text-center
+            .col-xs-3= t(:notes)[:identity]
             .col-xs-2= t(:notes)[:date]
             .col-xs-7= t(:notes)[:comment]
           - notes.each do |note|
-            .note
-              .col-xs-3.name= note.user.full_name
+            .detail
+              .col-xs-3.name= note.identity.full_name
               .col-xs-2.created-at= format_datetime(note.created_at)
               .col-xs-7.comment= note.comment
       -else
-        .text-center= t(:notes)[notable_type][:none]
+        .text-center= t(:notes)[notable_sym][:none]
     .modal-footer
       .center-block
         %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+        %button.btn.btn-primary.note.new{type: "button", aria: {label: "New Note"}, data: {notable_id: @notable_id, notable_type: notable_type}}
+          %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}

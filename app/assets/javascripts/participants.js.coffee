@@ -46,7 +46,7 @@ $ ->
     id = $(this).data('id')
     option = $(this).val()
     $.ajax
-      type: 'PATCH'
+      type: 'PUT'
       url: "/participants/#{id}/set_recruitment_source?source=#{option}"
 
   capitalize = (string) ->

@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Appointment, type: :model do
 
   it { is_expected.to have_one(:protocol) }
-  it { is_expected.to belong_to(:arm) }
 
+  it { is_expected.to belong_to(:arm) }
   it { is_expected.to belong_to(:participant) }
   it { is_expected.to belong_to(:visit_group) }
 
@@ -56,8 +56,8 @@ RSpec.describe Appointment, type: :model do
         protocol = create(:protocol)
         arm = create(:arm, protocol: protocol)
         participant = create(:participant, protocol: protocol, arm: arm)
-        line_item1 = create(:line_item, arm: arm, service: service1)
-        line_item2 = create(:line_item, arm: arm, service: service2)
+        line_item1 = create(:line_item, arm: arm, service: service1, protocol: protocol)
+        line_item2 = create(:line_item, arm: arm, service: service2, protocol: protocol)
         visit_group = create(:visit_group, arm: arm)
         @visit_li1 = create(:visit, visit_group: visit_group, line_item: line_item1)
         @visit_li2 = create(:visit, visit_group: visit_group, line_item: line_item2)
@@ -85,7 +85,7 @@ RSpec.describe Appointment, type: :model do
         services_of_procedures = @appt.procedures.map{ |proc| proc.service_name }
         expect(services_of_procedures).to eq(['A','B'])
       end
-      
+
       it 'should not create procedures for each line_item on a custom appointment' do
         @appt.update_attribute(:type, 'CustomAppointment')
         @appt.initialize_procedures

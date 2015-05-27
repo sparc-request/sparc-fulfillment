@@ -79,7 +79,7 @@ http_interactions:
       - thin 1.5.1 codename Straight Razor
     body:
       encoding: UTF-8
-      string: '{"identity":{"sparc_id":7,"callback_url":"http://localhost:5000/v1/identities/7.json","email":"zimmerj@musc.edu","first_name":"Jennifer","last_name":"Zimmerman","ldap_uid":"zimmerj@musc.edu"}}'
+      string: '{"identity":{"sparc_id":7,"callback_url":"http://localhost:5000/v1/identities/7.json","email":"email@musc.edu","first_name":"Jennifer","last_name":"Zimmerman","ldap_uid":"zimmerj@musc.edu"}}'
     http_version:
   recorded_at: Mon, 23 Feb 2015 19:40:47 GMT
 recorded_with: VCR 2.9.3

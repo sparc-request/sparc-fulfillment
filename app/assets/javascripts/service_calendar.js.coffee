@@ -12,10 +12,7 @@ $ ->
       url:  '/service_calendar/change_page'
       data: data
 
-  $(document).on 'click', '.glyphicon-arrow-right', ->
-    change_page $(this)
-
-  $(document).on 'click', '.glyphicon-arrow-left', ->
+  $(document).on 'click', '.page_change_arrow', ->
     change_page $(this)
 
   $(document).on 'change', '.visit_dropdown', ->
@@ -44,7 +41,7 @@ $ ->
     $('#current_tab').val(tab)
     arms_and_pages = {}
 
-    $('.visit_dropdown').each ->
+    $('.visit_dropdown.selectpicker').each ->
       page = $(this).val()
 
       arm_id = $(this).data('arm_id')

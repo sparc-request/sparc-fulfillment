@@ -1,0 +1,27 @@
+.modal-dialog
+  .modal-content
+    = form_tag(create_auditing_report_reports_path, remote: true, class: "form-horizontal", role: "form") do |f|
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4.modal-title.text-center= t(:reports_page)[:auditing_report]
+      .modal-body
+        #modal_errors
+        .row
+          .col-md-12
+            .form-group
+              = label_tag "start_date", t(:reports_page)[:start_date], class: "col-sm-3 control-label"
+              .col-sm-9= text_field_tag "start_date", nil, class: "datepicker"
+            .form-group
+              = label_tag "end_date", t(:reports_page)[:end_date], class: "col-sm-3 control-label"
+              .col-sm-9= text_field_tag "end_date", nil, class: "datepicker"
+            .form-group
+              = label_tag "protocol", t(:reports_page)[:protocol], class: "col-sm-3 control-label"
+              .col-sm-9
+                = select_tag "protocol_ids", options_from_collection_for_select(Protocol.all, "id", "short_title_with_sparc_id"), multiple: true, class: "selectpicker form-control"
+
+      .modal-footer
+        .center-block{style: "width: 205px;"}
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:reports_page)[:request_report]}

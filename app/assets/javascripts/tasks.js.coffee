@@ -14,9 +14,6 @@ $ ->
     task_id = $(this).attr('task_id')
     checked = $(this).is(':checked')
     data    = 'task': 'complete' : checked
-    if checked == false
-      $('#complete').text("Show Complete")
-      $('#complete').prop('value', 'true')
 
     $.ajax
       type: 'PUT'
@@ -37,13 +34,25 @@ $ ->
 
 
     $(document).on "click", "#complete", ->
-      show_complete = $(this).prop('value')
+      scope = $(this).prop('value')
     
-      if show_complete == 'true'
+      if scope == 'complete'
         $(this).text("Show Incomplete")
-        $(this).prop('value', 'false')
+        $(this).prop('value', 'incomplete')
       else
         $(this).text("Show Complete")
-        $(this).prop('value', 'true')
-      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?complete=" + show_complete, silent: "true"})
+        $(this).prop('value', 'complete')
+      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope, silent: "true"})
+
+    $(document).on 'click', "#all_tasks", ->
+      scope = $(this).prop('value')
+
+      if scope == 'all'
+        $(this).text('Show My Tasks')
+        $(this).prop('value', 'mine')
+      else
+        $(this).text('Show All Tasks')
+        $(this).prop('value', 'all')
+      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope, silent: "true"})
+
 

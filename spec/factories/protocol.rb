@@ -2,7 +2,7 @@ FactoryGirl.define do
 
   factory :protocol, aliases: [:protocol_complete] do
     sparc_id
-    sparc_sub_service_request_id 1
+    sub_service_request nil
     title { Faker::Company.catch_phrase }
     short_title { Faker::Company.catch_phrase }
     sponsor_name { Faker::Company.name }
@@ -17,7 +17,11 @@ FactoryGirl.define do
     study_cost { Faker::Number.number(8) }
     status { Protocol::STATUSES.sample }
 
-    trait :imported_from_sparc do
+    trait :with_sub_service_request do
+      sub_service_request factory: :sub_service_request_with_organization
+    end
+
+    trait :with_arms do
       after(:create) do |protocol, evaluator|
         create_list(:arm_imported_from_sparc, 3, protocol: protocol)
       end
@@ -25,23 +29,23 @@ FactoryGirl.define do
 
     trait :with_pi do
       after(:create) do |protocol, evaluator|
-        create(:user_role_pi, protocol: protocol)
+        create(:project_role_pi, protocol: protocol)
       end
     end
 
     trait :with_coordinator do
       after(:create) do |protocol, evaluator|
-        create(:user_role_coordinator, protocol: protocol)
+        create(:project_role_coordinator, protocol: protocol)
       end
     end
 
     trait :with_coordinators do
       after(:create) do |protocol, evaluator|
-        create_list(:user_role_coordinator, 3, protocol: protocol)
+        create_list(:project_role_coordinator, 3, protocol: protocol)
       end
     end
 
-    factory :protocol_imported_from_sparc, traits: [:imported_from_sparc, :with_pi, :with_coordinators]
+    factory :protocol_imported_from_sparc, traits: [:with_arms, :with_pi, :with_coordinators, :with_sub_service_request]
     factory :protocol_with_pi, traits: [:with_pi]
   end
 end

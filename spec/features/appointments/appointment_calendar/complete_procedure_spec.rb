@@ -22,16 +22,6 @@ feature 'Complete Procedure', js: true do
       then_i_should_see_complete_notes 2
     end
 
-    scenario 'User marks a Procedure as complete, then incomplete, then complete again' do
-      as_a_user_who_has_added_a_procedure_to_an_appointment
-      then_begins_appointment
-      when_i_complete_the_procedure
-      then_i_incomplete_the_procedure
-      and_i_complete_the_procedure_again
-      and_i_view_the_notes_list
-      then_i_should_see_complete_notes 2
-    end
-
     scenario 'User marks a Procedure as complete and then changes their mind, clicking complete again' do
       as_a_user_who_has_added_a_procedure_to_an_appointment
       then_begins_appointment
@@ -74,11 +64,11 @@ feature 'Complete Procedure', js: true do
     protocol    = create(:protocol_imported_from_sparc)
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = Service.first
+    service     = Service.per_participant.first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
-    find("#service_list > option[value='#{service.id}']").select_option
+    bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
     wait_for_ajax
@@ -111,11 +101,11 @@ feature 'Complete Procedure', js: true do
   end
 
   def then_i_should_see_complete_notes count=1
-    expect(page).to have_css('.modal-body .note .comment', text: 'Status set to complete', count: count)
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to complete', count: count)
   end
 
   def then_i_should_see_reset_notes
-    expect(page).to have_css('.modal-body .note .comment', text: 'Status reset', count: 1)
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status reset', count: 1)
   end
 
   def then_i_incomplete_the_procedure

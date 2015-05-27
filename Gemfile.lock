@@ -47,6 +47,9 @@ GEM
     acts_as_list (0.6.0)
       activerecord (>= 3.0)
     addressable (2.3.8)
+    ar-octopus (0.8.5)
+      activerecord (>= 3.2.0)
+      activesupport (>= 3.2.0)
     arel (6.0.0)
     autoprefixer-rails (5.1.8)
       execjs
@@ -62,13 +65,25 @@ GEM
     bootstrap3-datetimepicker-rails (4.0.0)
       momentjs-rails (>= 2.8.1)
     builder (3.2.2)
+    capistrano (3.4.0)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (~> 1.3)
+    capistrano-bundler (1.1.4)
+      capistrano (~> 3.1)
+      sshkit (~> 1.2)
+    capistrano-rails (1.1.3)
+      capistrano (~> 3.1)
+      capistrano-bundler (~> 1.1)
+    capistrano3-delayed-job (1.4.0)
+      capistrano (>= 3.0.0)
     capybara (2.4.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-webkit (1.5.0)
+    capybara-webkit (1.5.1)
       capybara (>= 2.3.0, < 2.5.0)
       json
     climate_control (0.0.3)
@@ -84,9 +99,11 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1)
+    colorize (0.7.7)
     cookiejar (0.3.2)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
+    daemons (1.2.2)
     database_cleaner (1.4.1)
     delayed_job (4.0.6)
       activesupport (>= 3.0, < 5.0)
@@ -190,6 +207,7 @@ GEM
     json (1.8.2)
     launchy (2.4.3)
       addressable (~> 2.3)
+    libv8 (3.16.14.7)
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -202,6 +220,9 @@ GEM
     multi_json (1.11.0)
     multi_xml (0.5.5)
     mysql2 (0.3.18)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.9.2)
     netrc (0.10.3)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
@@ -257,6 +278,8 @@ GEM
     rake (10.4.2)
     rdoc (4.2.0)
       json (~> 1.4)
+    ref (1.0.5)
+    remotipart (1.2.1)
     request_store (1.1.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
@@ -288,6 +311,9 @@ GEM
     rspec-support (3.2.2)
     ruby_parser (3.6.5)
       sexp_processor (~> 4.1)
+    rvm1-capistrano3 (1.3.2.2)
+      capistrano (~> 3.0)
+      sshkit (>= 1.2)
     safe_yaml (1.0.4)
     sass (3.4.13)
     sass-rails (5.0.3)
@@ -321,6 +347,17 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    sshkit (1.7.1)
+      colorize (>= 0.7.0)
+      net-scp (>= 1.1.2)
+      net-ssh (>= 2.8.0)
+    therubyracer (0.12.2)
+      libv8 (~> 3.16.14.0)
+      ref
+    thin (1.6.3)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0)
+      rack (~> 1.0)
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
@@ -361,12 +398,17 @@ DEPENDENCIES
   activerecord-import
   acts_as_list
   addressable
+  ar-octopus (~> 0.8.5)
   autoprefixer-rails
   bootstrap-sass
   bootstrap-select-rails!
   bootstrap3-datetimepicker-rails (~> 4.0.0)
-  capybara-webkit (~> 1.5.0)
+  capistrano-bundler (~> 1.1.2)
+  capistrano-rails
+  capistrano3-delayed-job (~> 1.0)
+  capybara-webkit (~> 1.5.1)
   coffee-rails (~> 4.0.0)
+  daemons
   database_cleaner
   delayed_job_active_record
   devise
@@ -391,18 +433,22 @@ DEPENDENCIES
   puma
   rack-mini-profiler
   rails (= 4.2.1)
+  remotipart
   rest-client
   rspec-activejob (~> 0.4.0)
   rspec-collection_matchers
   rspec-rails
+  rvm1-capistrano3
   sass-rails
   sdoc (~> 0.4.0)
   shoulda-callback-matchers
   shoulda-matchers (~> 2.8.0)
   simplecov
   spring
-  spring-commands-rspec (~> 1.0.2)
+  spring-commands-rspec
   sprockets-rails
+  therubyracer
+  thin
   timecop
   turbolinks
   uglifier (>= 1.3.0)

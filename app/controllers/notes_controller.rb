@@ -6,7 +6,9 @@ class NotesController < ApplicationController
 
   def index
     @notes = @notable.notes
-    @notable_type = params[:note][:notable_type].downcase.to_sym
+    @notable_id = params[:note][:notable_id]
+    @notable_type = params[:note][:notable_type]
+    @notable_sym = @notable_type.downcase.to_sym
   end
 
   def new
@@ -14,7 +16,7 @@ class NotesController < ApplicationController
   end
 
   def create
-    @note = Note.create(note_params.merge!({ user: current_user })) if note_params[:comment].present? # don't create empty notes
+    @note = Note.create(note_params.merge!({ identity: current_identity })) if note_params[:comment].present? # don't create empty notes
   end
 
   private

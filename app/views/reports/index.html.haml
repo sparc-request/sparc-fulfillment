@@ -1,0 +1,20 @@
+#reports_index
+  .row
+    .col-md-12
+      %h3 Existing Reports
+  .row
+    .col-md-12
+      = render 'reports'
+
+  .row{style: "margin-top: 50px;"}
+    .col-md-12
+      %h3 Request New Reports
+  .row
+    .col-md-3
+      %button.btn.btn-primary#billing_report_button{style: "width:100%"} Billing Report
+    .col-md-3
+      %button.btn.btn-primary#auditing_report_button{style: "width:100%"} Auditing Report
+    / .col-md-3
+    /   %button.btn.btn-primary{style: "width:100%"} Participant Report
+    / .col-md-3
+    /   %button.btn.btn-primary{style: "width:100%"} Example 4th Report

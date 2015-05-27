@@ -1,0 +1,17 @@
+octopus:
+  environments:
+    - test
+    - development
+    - testing
+    - staging
+    - production
+  development:
+    sparc:
+      adapter: mysql2
+      username: root
+      database: sparc-request_development
+  test:
+    sparc:
+      adapter: mysql2
+      username: root
+      database: sparc-request_test

@@ -1,7 +1,7 @@
 json.(task)
 
 json.id task.id
-json.user_name task.user.full_name
+json.user_name task.identity.full_name
 json.assignee_name task.assignee.full_name
 json.complete format_checkbox(task)
 json.body task.body

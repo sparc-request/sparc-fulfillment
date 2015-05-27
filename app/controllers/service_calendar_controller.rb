@@ -47,7 +47,7 @@ class ServiceCalendarController < ApplicationController
   def update_service
     @line_item = LineItem.find(params[:line_item][:id])
     @line_item.update_attributes(service_id: params[:line_item][:service_id])
-    # TODO: Need to change any procedures that haven't been completed to the new service
+    update_line_item_procedures_service(@line_item)
   end
 
   def check_row
@@ -76,7 +76,20 @@ class ServiceCalendarController < ApplicationController
     @line_item_id = params[:line_item_id]
     @core_id = line_item.sparc_core_id
     line_item.destroy
-    @remove_core = LineItem.joins(:service).where("arm_id = #{@arm_id} and services.sparc_core_id = #{@core_id}").count > 0 ? false : true
+    @remove_core = LineItem.joins(:service).where("arm_id = #{@arm_id} and services.organization_id = #{@core_id}").count == 0
   end
 
+  private
+
+  def update_line_item_procedures_service line_item
+    # Need to change any procedures that haven't been completed to the new service
+    service = line_item.service
+    service_name = service.name
+    service_cost = service.cost
+    line_item.visits.each do |v|
+      v.procedures.select{ |p| not(p.appt_started? or p.complete?) }.each do |p|
+        p.update_attributes(service_id: service.id, service_name: service_name, service_cost: service_cost)
+      end
+    end
+  end
 end

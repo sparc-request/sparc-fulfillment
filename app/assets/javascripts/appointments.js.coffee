@@ -60,6 +60,27 @@ $ ->
       url: "/procedures/#{procedure_id}"
       data: data
 
+  $(document).on 'dp.hide', ".followup_procedure_datepicker", ->
+    task_id = $(this).children("input").data("taskId")
+    due_at = $(this).children("input").val()
+    data = task:
+            due_at: due_at
+    $.ajax
+      type: 'PUT'
+      url: "/tasks/#{task_id}"
+      data: data
+
+  $(document).on 'change', '.billing_type', ->
+    procedure_id = $(this).parents('.procedure').data('id')
+    billing_type = $(this).val()
+    data = procedure:
+           billing_type: billing_type
+    $.ajax
+      type: 'PUT'
+      url: "/procedures/#{procedure_id}"
+      data: data
+
+
   $(document).on 'click', 'label.status.complete', ->
     active = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
@@ -126,32 +147,6 @@ $ ->
       type: 'GET'
       url: "/procedures/#{procedure_id}/edit.js"
 
-  $(document).on 'click', 'button.note.new',  ->
-    id = $(this).data('notable-id')
-    type = $(this).data('notable-type')
-
-    data          = note:
-                      notable_id: id,
-                      notable_type: type
-
-    $.ajax
-      type: 'GET'
-      url: '/notes/new.js'
-      data: data
-
-  $(document).on 'click', 'button.notes.list',  ->
-    id = $(this).data('notable-id')
-    type = $(this).data('notable-type')
-
-    data          = note:
-                      notable_id: id,
-                      notable_type: type
-
-    $.ajax
-      type: 'GET'
-      url: '/notes.js'
-      data: data
-
   $(document).on 'click', '.procedure button.delete', ->
     procedure_id = $(this).parents(".procedure").data("id")
 
@@ -160,7 +155,7 @@ $ ->
         type: 'DELETE'
         url:  "/procedures/#{procedure_id}.js"
         error: ->
-          alert('This procedure has already been marked as complete or incomplete and cannot be removed')
+          alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -204,7 +199,20 @@ $ ->
         success: ->
           $('#start_date').data("DateTimePicker").maxDate(e.date)
 
+  # If enable_it true, enable Complete Visit button; otherwise, disable it.
+  # Also, add the contains_disabled class to the containing div whenever
+  # the button is disabled.
+  window.update_complete_visit_button = (enable_it) ->
+    if enable_it
+      $("button.complete_visit").removeClass('disabled')
+      $("div.completed_date_btn").removeClass('contains_disabled')
+    else
+      $("button.complete_visit").addClass('disabled')
+      $("div.completed_date_btn").addClass('contains_disabled')
+
   # Display a helpful message when user clicks on a disabled UI element
-  # that can't be edited before the appointment has started
   $(document).on 'click', '.pre_start_disabled', ->
-      alert("Please click Start Visit and enter a start date to continue.")
+    alert("Please click Start Visit and enter a start date to continue.")
+
+  $(document).on 'click', '.completed_date_btn.contains_disabled', ->
+    alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")

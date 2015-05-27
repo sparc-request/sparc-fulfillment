@@ -4,28 +4,35 @@ class Appointment < ActiveRecord::Base
   NOTABLE_REASONS = ['Assessment not performed', 'SAE/Follow-up for SAE', 'Patient Visit Conflict', 'Study Visit Assessments Inconclusive'].freeze
 
   default_scope {order(:position)}
-  
+
   has_paper_trail
   acts_as_paranoid
   acts_as_list scope: [:arm_id, :participant_id]
 
   include CustomPositioning #custom methods around positioning, acts_as_list
-  
-  has_one :protocol,  through: :participant
-  has_many :appointment_statuses, dependent: :destroy
+
+  has_one :protocol, through: :arm
 
   belongs_to :participant
   belongs_to :visit_group
   belongs_to :arm
 
+  has_many :appointment_statuses, dependent: :destroy
   has_many :procedures
   has_many :notes, as: :notable
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
-  
+
   validates :participant_id, :name, :arm_id, presence: true
-  
+
   accepts_nested_attributes_for :notes
+
+  # Can appointment be finished? It must have a start date, and
+  # all its procedures must either be complete, incomplete, or
+  # have a follow up date assigned to it.
+  def can_finish?
+    !start_date.blank? && (procedures.all? { |proc| proc.handled? })
+  end
 
   def has_completed_procedures?
     has_completed = false

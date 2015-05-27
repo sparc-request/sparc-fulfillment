@@ -3,7 +3,9 @@ if "<%= @field %>" == "start_date"
   if start_input_div.hasClass('hidden')
     $('.start_date_btn').addClass('hidden')
     start_input_div.removeClass('hidden')
-    $('.complete_visit').removeClass('disabled')
+
+    update_complete_visit_button(<%= @appointment.can_finish? %>)
+
     start_date_init("<%= format_datetime(@appointment.start_date) %>")
 
 if "<%= @field %>" == "completed_date"

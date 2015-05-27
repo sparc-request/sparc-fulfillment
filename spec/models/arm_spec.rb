@@ -18,19 +18,18 @@ RSpec.describe Arm, type: :model do
     describe '.line_items_grouped_by_core' do
 
       it 'should return LineItems grouped by core' do
+        protocol  = create(:protocol)
         arm       = create(:arm)
-        service_1 = create(:service, sparc_core_id: 1)
-        service_2 = create(:service, sparc_core_id: 2)
-        service_3 = create(:service, sparc_core_id: 2)
-
-        create(:line_item, arm: arm, service: service_1, subject_count: 1)
-        create(:line_item, arm: arm, service: service_2, subject_count: 2)
-        create(:line_item, arm: arm, service: service_3, subject_count: 2)
+        service_1 = create(:service)
+        service_2 = create(:service)
+        create(:line_item, arm: arm, service: service_1, subject_count: 1, protocol: protocol)
+        create(:line_item, arm: arm, service: service_2, subject_count: 2, protocol: protocol)
+        create(:line_item, arm: arm, service: service_2, subject_count: 2, protocol: protocol)
 
         expect(arm.line_items_grouped_by_core.length).to eq(2)
-        expect(arm.line_items_grouped_by_core[1].length).to eq(1)
-        expect(arm.line_items_grouped_by_core[2].length).to eq(2)
-        expect(arm.line_items_grouped_by_core[2].map(&:subject_count).uniq.first).to eq(2)
+        expect(arm.line_items_grouped_by_core[service_1.organization.id].length).to eq(1)
+        expect(arm.line_items_grouped_by_core[service_2.organization.id].length).to eq(2)
+        expect(arm.line_items_grouped_by_core[service_2.organization.id].map(&:subject_count).uniq.first).to eq(2)
       end
     end
 
@@ -44,9 +43,5 @@ RSpec.describe Arm, type: :model do
         expect(arm.persisted?).to be
       end
     end
-  end
-
-  context 'instance methods' do
-
   end
 end
