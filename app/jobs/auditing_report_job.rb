@@ -1,4 +1,6 @@
 class AuditingReportJob < ActiveJob::Base
+  include ActionView::Helpers::NumberHelper
+  include ApplicationHelper
   queue_as :default
   require 'csv'
 
@@ -7,7 +9,7 @@ class AuditingReportJob < ActiveJob::Base
       csv << ["From", start_date, "To", end_date]
       csv << [""]
       csv << [""]
-      csv << ["Protocol ID", "Patient Name", "Patient ID", "Arm", "Visit", "Visit Date", "Nexus Core", "Service Due", "Research # Due", "Research # Completed?", "If expected not completed, reason?", "Total cost", "T # due", "T # completed"]
+      csv << ["Protocol ID", "Patient Name", "Patient ID", "Arm Name", "Visit Name", "Performed Date", "Nexus Core", "Service Due", "Billing Type", "If not completed, reason?", "Cost"]
 
       if protocol_ids
         protocols = Protocol.find(protocol_ids)
@@ -15,17 +17,12 @@ class AuditingReportJob < ActiveJob::Base
         protocols = Protocol.all
       end
 
-      # protocols.each do |protocol|
-      #   protocol.procedures.to_a.select{|procedure| procedure.appointment.completed_date && (start_date..end_date).cover?(procedure.appointment.completed_date)}.group_by(&:service).each do |group, procedures|
-      #     r_count = procedures.count{|p| p.billing_type == "research_billing_qty"}
-      #     t_count = procedures.count{|p| p.billing_type == "insurance_billing_qty"}
-
-      #     procedure = procedures.first
-      #     participant = procedure.participant
-      #     appointment = procedure.appointment
-      #     csv << [protocol.sparc_id, participant.full_name, participant.label, appointment.arm.name, appointment.name, appointment.completed_date, procedure.service.organization.name, procedure.service_name, "R Due", "R Completed", "Why Not?", "Total Cost", "T Due", "T Completed"]
-      #   end
-      # end
+      protocols.each do |protocol|
+        protocol.procedures.to_a.select{|procedure| procedure.appointment.completed_date && procedure.completed_date && (start_date..end_date).cover?(procedure.completed_date)}.each do |procedure|
+          participant = procedure.appointment.participant
+          csv << [protocol.sparc_id, participant.full_name, participant.label, procedure.appointment.arm.name, procedure.appointment.name, procedure.completed_date, procedure.service.organization.name, procedure.service_name, procedure.formatted_billing_type, procedure.reason, display_cost(procedure.service_cost)]
+        end
+      end
     end
 
     report = Report.find(report_id)

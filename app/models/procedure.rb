@@ -37,6 +37,17 @@ class Procedure < ActiveRecord::Base
      ["O", "other_billing_qty"]]
   end
 
+  def formatted_billing_type
+    case self.billing_type
+    when "research_billing_qty"
+      return "R"
+    when "insurance_billing_qty"
+      return "T"
+    when "other_billing_qty"
+      return "O"
+    end
+  end
+
   def update_attributes(attributes)
     if attributes[:status].present? &&
         attributes[:status] == "complete" &&

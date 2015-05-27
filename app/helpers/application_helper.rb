@@ -17,6 +17,11 @@ module ApplicationHelper
     end
   end
 
+  def display_cost(cost)
+    dollars = (cost / 100) rescue nil
+    number_to_currency(dollars, seperator: ",")
+  end
+
   def hidden_class(val)
     :hidden if val
   end
