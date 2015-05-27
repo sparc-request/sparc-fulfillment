@@ -39,11 +39,6 @@ class ArmsController < ApplicationController
     end
   end
 
-  def refresh_vg_dropdown
-    @visit_groups = @arm.visit_groups
-    respond_with @visit_groups
-  end
-
   private
 
   def arm_params

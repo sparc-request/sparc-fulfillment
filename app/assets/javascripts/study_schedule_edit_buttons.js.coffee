@@ -15,20 +15,34 @@ $ ->
           type: 'DELETE'
           url: "/arms/#{arm_id}?protocol_id=#{protocol_id}"
 
-    $(document).on 'click', '#add_visit_button', ->
+    $(document).on 'click', '#add_visit_group_button', ->
+      current_page = $(".visit_dropdown").first().attr('page')
+      protocol_id = $('#arms').data('protocol_id')
       calendar_tab = $('#current_tab').attr('value')
-      arm_id = $('#arms').val()
-      page = $("#visits_select_for_#{arm_id}").val()
       data =
-        'arm_id': arm_id
-        'page': page
+        'current_page': current_page
         'calendar_tab': calendar_tab
+        'protocol_id' : protocol_id
       $.ajax
         type: 'GET'
         url: "/visit_groups/new"
         data: data
 
-    $(document).on 'click', '#remove_visit_button', ->
+
+    # $(document).on 'click', '#edit_visit_group_button', ->
+    #   calendar_tab = $('#current_tab').attr('value')
+    #   arm_id = $('#arms').val()
+    #   page = $("#visits_select_for_#{arm_id}").val()
+    #   data =
+    #     'arm_id': arm_id
+    #     'page': page
+    #     'calendar_tab': calendar_tab
+    #   $.ajax
+    #     type: 'GET'
+    #     url: "/visit_groups/new"
+    #     data: data
+
+    $(document).on 'click', '#remove_visit_group_button', ->
       calendar_tab = $('#current_tab').attr('value')
       visit_group_id = $("#visits").val()
       arm_id = $('#arms').val()
@@ -85,6 +99,20 @@ $ ->
       if $('#header_text').val() == 'Remove Services'
         service_id = $(this).find('option:selected').val()
         change_service service_id
+
+    $(document).on 'change', '#visit_group_arm_id', ->
+      arm_id = $(this).find('option:selected').val()
+      update_visit_group_form_page(arm_id)
+      data =
+        'arm_id': arm_id
+      $.ajax
+        type: 'GET'
+        url: '/visit_groups/update_positions_on_arm_change'
+        data: data
+
+(exports ? this).update_visit_group_form_page = (arm_id) ->
+  page = $("#visits_select_for_#{arm_id}").val()
+  $("#current_page").val(page)
 
 (exports ? this).change_service = (service_id) ->
   protocol_id = $('#arms').data('protocol_id')

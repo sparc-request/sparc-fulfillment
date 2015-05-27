@@ -11,9 +11,9 @@ Rails.application.routes.draw do
   resources :documents, only: [:index, :new, :create]
   resources :line_items, only: [:new, :create, :edit, :update]
 
-  resources :arms, only: [:new, :create, :destroy] do
-    member do
-      get 'refresh_vg_dropdown'
+  resources :visit_groups do
+    collection do
+      get 'update_positions_on_arm_change', to: 'visit_groups#update_positions_on_arm_change'
     end
   end
 
@@ -25,6 +25,8 @@ Rails.application.routes.draw do
       post 'create_auditing_report', to: 'reports#create_auditing_report'
       get 'new_auditing_report', to: 'reports#new_auditing_report'
     end
+
+  resources :arms, only: [:new, :create, :destroy] do
   end
 
   resources :participants do
