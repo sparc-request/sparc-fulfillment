@@ -52,7 +52,6 @@ feature 'Custom appointment', js: true do
   end
 
   def then_add_a_procedure
-    screenshot
     bootstrap_select '#service_list', 'Test Service'
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
@@ -67,7 +66,6 @@ feature 'Custom appointment', js: true do
   end
 
   def then_it_should_appear_on_the_dashboard
-    screenshot
     expect(page).to have_content('Test Visit')
   end
 end
