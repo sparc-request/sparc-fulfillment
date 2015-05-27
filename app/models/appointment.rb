@@ -11,13 +11,13 @@ class Appointment < ActiveRecord::Base
 
   include CustomPositioning #custom methods around positioning, acts_as_list
 
-  has_one :protocol,  through: :participant
-  has_many :appointment_statuses, dependent: :destroy
+  has_one :protocol, through: :arm
 
   belongs_to :participant
   belongs_to :visit_group
   belongs_to :arm
 
+  has_many :appointment_statuses, dependent: :destroy
   has_many :procedures
   has_many :notes, as: :notable
 

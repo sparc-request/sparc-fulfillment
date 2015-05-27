@@ -4,6 +4,7 @@ class Fulfillment < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :line_item
+  belongs_to :service
   belongs_to :creator, class_name: "Identity"
   belongs_to :performer, class_name: "Identity"
 

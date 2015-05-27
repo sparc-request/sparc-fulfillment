@@ -62,4 +62,12 @@ module ApplicationHelper
         type.to_s
     end
   end
+
+  def truncated_formatter data
+    [
+      "<span data-toggle='tooltip' data-placement='left' data-animation='false' title='#{data}'>",
+      "#{data}",
+      "</span>"
+    ].join ""
+  end
 end

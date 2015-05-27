@@ -41,7 +41,7 @@ $ ->
     $('#current_tab').val(tab)
     arms_and_pages = {}
 
-    $('.visit_dropdown').each ->
+    $('.visit_dropdown.selectpicker').each ->
       page = $(this).val()
 
       arm_id = $(this).data('arm_id')

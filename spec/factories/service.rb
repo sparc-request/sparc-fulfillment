@@ -3,8 +3,6 @@ FactoryGirl.define do
   factory :service, aliases: [:service_created_by_sparc] do
     organization factory: :organization_core
     sequence(:name) { Faker::Commerce.product_name }
-    # sparc_organization_name { ['Nexus', 'RCM', 'Something', 'Or Other', 'Wooo'][sparc_organization_id] }
-    # sequence(:cost)
     description 'Description'
     abbreviation 'Abbreviation'
     one_time_fee false

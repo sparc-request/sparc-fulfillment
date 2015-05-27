@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Appointment, type: :model do
 
   it { is_expected.to have_one(:protocol) }
-  it { is_expected.to belong_to(:arm) }
 
+  it { is_expected.to belong_to(:arm) }
   it { is_expected.to belong_to(:participant) }
   it { is_expected.to belong_to(:visit_group) }
 
@@ -85,7 +85,7 @@ RSpec.describe Appointment, type: :model do
         services_of_procedures = @appt.procedures.map{ |proc| proc.service_name }
         expect(services_of_procedures).to eq(['A','B'])
       end
-      
+
       it 'should not create procedures for each line_item on a custom appointment' do
         @appt.update_attribute(:type, 'CustomAppointment')
         @appt.initialize_procedures

@@ -40,6 +40,8 @@ feature 'Fulfillments', js: true do
     service     = create(:service_with_one_time_fee_with_components)
     @line_item  = create(:line_item, protocol: @protocol, service: service)
     @components = @line_item.components
+    clinical_provider = create(:clinical_provider, organization_id: @protocol.sub_service_request.organization_id, identity: Identity.first)
+    @clinical_providers = ClinicalProvider.where(organization_id: @protocol.sub_service_request.organization_id)
   end
 
   def as_a_user_who_has_a_fulfillment
@@ -71,7 +73,7 @@ feature 'Fulfillments', js: true do
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in 'Quantity', with: "45"
-    bootstrap_select '#fulfillment_performed_by', Identity.first.full_name
+    bootstrap_select '#fulfillment_performer_id', @clinical_providers.first.identity.full_name
     bootstrap_select '#fulfillment_components', @components.first.component
     find('.modal-header').click
   end
