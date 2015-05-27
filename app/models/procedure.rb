@@ -75,7 +75,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def destroy
-    if status.blank?
+    if status.blank? and not task.present?
       super
     else
       raise ActiveRecord::ActiveRecordError
