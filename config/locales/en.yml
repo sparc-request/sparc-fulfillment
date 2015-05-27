@@ -123,6 +123,8 @@ en:
 
   line_item:
     add_line_item: "Add Study Level Activity"
+    create: "Create New Study Level Activity"
+    edit: "Edit Study Level Activity"
     change_service: "Change Service"
     service: "Service"
     qty_req: "Quantity Requested"
