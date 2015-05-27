@@ -1,6 +1,13 @@
 require "rails_helper"
 
 feature "create Task", js: true do
+  before :each do
+    identity = Identity.first
+    create(:protocol_imported_from_sparc)
+    ClinicalProvider.create(organization: Organization.first, identity: identity)
+    clinical_providers = ClinicalProvider.where(organization_id: identity.protocols.map{|p| p.sub_service_request.organization_id })
+    @assignee = clinical_providers.first.identity
+  end
 
   scenario 'Identity creates a new Task for themselves' do
     as_a_identity_who_is_on_the_tasks_page
@@ -21,10 +28,8 @@ feature "create Task", js: true do
   end
 
   def when_i_create_a_task_assigned_to_myself
-    assignee = Identity.first
-
     click_link "Create New Task"
-    select assignee.full_name, from: 'task_assignee_id'
+    bootstrap_select '#task_assignee_id', @assignee.full_name
     page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
@@ -32,10 +37,8 @@ feature "create Task", js: true do
   end
 
   def when_i_create_a_task_assigned_to_another_identity
-    @assignee = create(:identity)
-
     click_link "Create New Task"
-    select @assignee.full_name, from: 'task_assignee_id'
+    bootstrap_select '#task_assignee_id', @assignee.full_name
     page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"

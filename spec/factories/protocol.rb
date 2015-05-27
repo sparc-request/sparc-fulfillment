@@ -2,7 +2,6 @@ FactoryGirl.define do
 
   factory :protocol, aliases: [:protocol_complete] do
     sparc_id
-    sparc_sub_service_request_id 1
     title { Faker::Company.catch_phrase }
     short_title { Faker::Company.catch_phrase }
     sponsor_name { Faker::Company.name }
@@ -41,7 +40,14 @@ FactoryGirl.define do
       end
     end
 
-    factory :protocol_imported_from_sparc, traits: [:imported_from_sparc, :with_pi, :with_coordinators]
+    trait :with_sub_service_request do
+      after(:create) do |protocol, evaluator|
+        sub_service_request = create(:sub_service_request_with_organization)
+        protocol.update_attribute(:sparc_sub_service_request_id, sub_service_request.id)
+      end
+    end
+
+    factory :protocol_imported_from_sparc, traits: [:imported_from_sparc, :with_pi, :with_coordinators, :with_sub_service_request]
     factory :protocol_with_pi, traits: [:with_pi]
   end
 end

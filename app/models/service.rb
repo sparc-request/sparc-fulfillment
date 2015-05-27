@@ -30,7 +30,7 @@ class Service < ActiveRecord::Base
   end
 
   def self.all_per_participant_visit_services
-      Service.where(one_time_fee: 0)
+    Service.where(one_time_fee: 0)
   end
 
   def sparc_core_id

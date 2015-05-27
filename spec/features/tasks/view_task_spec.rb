@@ -1,6 +1,13 @@
 require "rails_helper"
 
 feature "Identity views Task", js: true do
+  before :each do
+    identity = Identity.first
+    create(:protocol_imported_from_sparc)
+    ClinicalProvider.create(organization: Organization.first, identity: identity)
+    clinical_providers = ClinicalProvider.where(organization_id: identity.protocols.map{|p| p.sub_service_request.organization_id })
+    @assignee = clinical_providers.first.identity
+  end
 
   scenario "Identity views a Task that have assigned to themselves" do
     as_a_identity_who_is_on_the_tasks_page
@@ -22,7 +29,7 @@ feature "Identity views Task", js: true do
     assignee = Identity.first
 
     click_link "Create New Task"
-    select assignee.full_name, from: 'task_assignee_id'
+    bootstrap_select '#task_assignee_id', @assignee.full_name
     page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
