@@ -107,11 +107,15 @@ ActiveRecord::Schema.define(version: 20150526141416) do
     t.datetime "deleted_at"
     t.integer  "creator_id",   limit: 4
     t.integer  "performer_id", limit: 4
+    t.integer  "service_id",   limit: 4
+    t.string   "service_name", limit: 255
+    t.integer  "service_cost", limit: 4
   end
 
   add_index "fulfillments", ["creator_id"], name: "index_fulfillments_on_creator_id", using: :btree
   add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
   add_index "fulfillments", ["performer_id"], name: "index_fulfillments_on_performer_id", using: :btree
+  add_index "fulfillments", ["service_id"], name: "index_fulfillments_on_service_id", using: :btree
 
   create_table "identity_counters", force: :cascade do |t|
     t.integer  "identity_id", limit: 4
