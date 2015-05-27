@@ -1,6 +1,6 @@
 class Protocol < ActiveRecord::Base
 
-  STATUSES = ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold'].freeze
+  STATUSES = ['All', 'Draft', 'Submitted', 'Get a Quote', 'In Process', 'Complete', 'Awaiting Requester Response', 'On Hold', 'In Admin Review', 'Active', 'Administrative Review', 'In Committee Review', 'Invoiced', 'In Fulfillment Queue', 'Approved', 'Declined', 'Withdrawn'].freeze
 
   has_paper_trail
   acts_as_paranoid
