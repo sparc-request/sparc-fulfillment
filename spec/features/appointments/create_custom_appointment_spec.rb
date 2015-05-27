@@ -18,8 +18,9 @@ feature 'Custom appointment', js: true do
   end
 
   def when_i_visit_a_participants_calendar
-    protocol    = create(:protocol_imported_from_sparc)
-    participant = protocol.participants.first
+    create_and_assign_protocol_to_me
+    @protocol   = Protocol.first
+    participant = @protocol.participants.first
 
     visit participant_path participant
   end
@@ -27,7 +28,7 @@ feature 'Custom appointment', js: true do
   def as_a_user_who_clicks_create_custom_appointment
     find('button.appointment.new').click
   end
-  
+
   def when_i_click_save_appointment
     click_button 'Save'
   end
@@ -45,7 +46,7 @@ feature 'Custom appointment', js: true do
   end
 
   def when_i_select_the_appointment
-    @service = Service.per_participant_visits.first
+    @service = @protocol.organization.inclusive_descendant_services(:per_participant).first
     @service.update_attributes(name: 'Test Service')
     bootstrap_select '#appointment_select', "Test Visit"
     wait_for_ajax
