@@ -10,7 +10,7 @@ class Service < ActiveRecord::Base
 
   default_scope { order(name: :asc) }
 
-  scope :per_patient,  -> { where(one_time_fee: false) }
+  scope :per_participant,  -> { where(one_time_fee: false) }
   scope :one_time_fee, -> { where(one_time_fee: true) }
 
   # TODO Determine exact cost calculation

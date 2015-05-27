@@ -14,13 +14,13 @@ RSpec.describe Organization, type: :model do
 
       after { Service.destroy_all }
 
-      describe "scope of :per_patient" do
+      describe "scope of :per_participant" do
 
-        it "should only return per_patient Services" do
+        it "should only return per_participant Services" do
           Service.update_all one_time_fee: true
           Service.all.limit(10).each { |service| service.update_attribute :one_time_fee, false }
 
-          expect(@organization.inclusive_descendant_services(:per_patient).length).to eq(10)
+          expect(@organization.inclusive_descendant_services(:per_participant).length).to eq(10)
         end
       end
 
@@ -35,7 +35,7 @@ RSpec.describe Organization, type: :model do
       end
 
       it "should return an array of its Services and its descendant's Services" do
-        expect(@organization.inclusive_descendant_services(:per_patient).length).to eq(39)
+        expect(@organization.inclusive_descendant_services(:per_participant).length).to eq(39)
       end
     end
 
@@ -46,7 +46,7 @@ RSpec.describe Organization, type: :model do
 
         Service.destroy_all
 
-        expect(organization.inclusive_descendant_services(:per_patient)).to eq([])
+        expect(organization.inclusive_descendant_services(:per_participant)).to eq([])
       end
     end
   end

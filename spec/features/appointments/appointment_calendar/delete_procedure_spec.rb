@@ -18,7 +18,7 @@ feature 'Delete Procedure', js: true do
     protocol      = create(:protocol_imported_from_sparc)
     participant   = protocol.participants.first
     visit_group   = participant.appointments.first.visit_group
-    service       = Service.per_patient.first
+    service       = Service.per_participant.first
 
     visit participant_path participant
 
@@ -32,7 +32,7 @@ feature 'Delete Procedure', js: true do
     protocol      = create(:protocol_imported_from_sparc)
     participant   = protocol.participants.first
     visit_group   = participant.appointments.first.visit_group
-    service       = Service.per_patient.first
+    service       = Service.per_participant.first
 
     visit participant_path participant
 

@@ -19,7 +19,7 @@ class ProtocolsController < ApplicationController
 
   def show
     @protocol = Protocol.find_by_sparc_id(params[:id])
-    @services = Service.per_patient
+    @services = Service.per_participant
     @page = 1
 
     gon.push({ protocol_id: @protocol.id })
