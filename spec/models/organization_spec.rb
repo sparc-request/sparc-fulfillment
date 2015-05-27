@@ -11,7 +11,7 @@ RSpec.describe Organization, type: :model do
 
       it "should return an array of Protocols" do
         organization    = create(:organization)
-        service_request = create(:service_request_with_protocol)
+        service_request = create(:service_request)
         sub_service_request = create(:sub_service_request, organization: organization, service_request: service_request)
         create(:protocol, sparc_sub_service_request_id: sub_service_request.id)
 

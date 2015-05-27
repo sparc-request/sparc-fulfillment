@@ -23,9 +23,12 @@ feature "un-completing a Task", js: true do
     find("#complete").click
     wait_for_ajax
     first('input.complete').click
+    wait_for_ajax
   end
 
   def then_i_should_see_that_the_task_is_incomplete
+    find("#complete").click
+    wait_for_ajax
     expect(page).to have_css("table.tasks tbody tr", count: 2)
   end
 end

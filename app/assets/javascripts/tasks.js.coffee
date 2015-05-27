@@ -14,9 +14,6 @@ $ ->
     task_id = $(this).attr('task_id')
     checked = $(this).is(':checked')
     data    = 'task': 'complete' : checked
-    if checked == false
-      $('#complete').text("Show Complete")
-      $('#complete').prop('value', 'true')
 
     $.ajax
       type: 'PUT'
