@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150527134648) do
+ActiveRecord::Schema.define(version: 20150526141416) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -238,11 +238,11 @@ ActiveRecord::Schema.define(version: 20150527134648) do
   add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
 
   create_table "protocols", force: :cascade do |t|
-    t.integer  "sparc_id",                     limit: 4
-    t.text     "title",                        limit: 65535
-    t.string   "short_title",                  limit: 255
-    t.string   "sponsor_name",                 limit: 255
-    t.string   "udak_project_number",          limit: 255
+    t.integer  "sparc_id",               limit: 4
+    t.text     "title",                  limit: 65535
+    t.string   "short_title",            limit: 255
+    t.string   "sponsor_name",           limit: 255
+    t.string   "udak_project_number",    limit: 255
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "recruitment_start_date"
@@ -252,14 +252,15 @@ ActiveRecord::Schema.define(version: 20150527134648) do
     t.datetime "deleted_at"
     t.datetime "irb_approval_date"
     t.datetime "irb_expiration_date"
-    t.float    "stored_percent_subsidy",       limit: 24
-    t.integer  "study_cost",                   limit: 4
-    t.integer  "sparc_sub_service_request_id", limit: 4
-    t.string   "status",                       limit: 255
+    t.float    "stored_percent_subsidy", limit: 24
+    t.integer  "study_cost",             limit: 4
+    t.string   "status",                 limit: 255
+    t.integer  "sub_service_request_id", limit: 4
   end
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
+  add_index "protocols", ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id", using: :btree
 
   create_table "reports", force: :cascade do |t|
     t.string   "name",        limit: 255

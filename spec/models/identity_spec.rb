@@ -11,10 +11,11 @@ RSpec.describe Identity, type: :model do
     context "Protocols present" do
 
       it "should return an array of Protocols" do
-        identity        = create(:identity)
-        organization    = create(:organization)
-        service_request = create(:service_request_with_protocol)
-        create(:sub_service_request, organization: organization, service_request: service_request)
+        identity            = create(:identity)
+        organization        = create(:organization)
+        sub_service_request = create(:sub_service_request, organization: organization)
+        protocol            = create(:protocol, sub_service_request: sub_service_request)
+
         create(:clinical_provider, identity: identity, organization: organization)
 
         expect(identity.protocols.length).to eq(1)

@@ -155,7 +155,7 @@ $ ->
         type: 'DELETE'
         url:  "/procedures/#{procedure_id}.js"
         error: ->
-          alert('This procedure has already been marked as complete or incomplete and cannot be removed')
+          alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')

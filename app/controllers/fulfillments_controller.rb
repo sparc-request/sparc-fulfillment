@@ -4,6 +4,7 @@ class FulfillmentsController < ApplicationController
 
   def new
     @line_item = LineItem.find(params[:line_item_id])
+    @clinical_providers = ClinicalProvider.where(organization_id: @line_item.protocol.sub_service_request.organization_id)
     @fulfillment = Fulfillment.new(line_item: @line_item, performer: current_identity)
   end
 
@@ -22,6 +23,7 @@ class FulfillmentsController < ApplicationController
 
   def edit
     @line_item = @fulfillment.line_item
+    @clinical_providers = ClinicalProvider.where(organization_id: @line_item.protocol.sub_service_request.organization_id)
   end
 
   def update

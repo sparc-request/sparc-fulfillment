@@ -1,5 +1,6 @@
 octopus:
   environments:
+    - test
     - development
     - testing
     - staging
@@ -8,4 +9,9 @@ octopus:
     sparc:
       adapter: mysql2
       username: root
-      database: sparc-request
+      database: sparc-request_development
+  test:
+    sparc:
+      adapter: mysql2
+      username: root
+      database: sparc-request_test

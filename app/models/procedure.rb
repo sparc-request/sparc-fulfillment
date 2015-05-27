@@ -10,7 +10,7 @@ class Procedure < ActiveRecord::Base
   has_one :arm,         through: :appointment
   has_one :participant, through: :appointment
   has_one :visit_group, through: :appointment
-  has_one :task,        as: :assignable
+  has_one :task,        as: :assignable, dependent: :destroy
 
   belongs_to :appointment
   belongs_to :visit
@@ -75,7 +75,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def destroy
-    if status.blank?
+    if status.blank? and not task.present?
       super
     else
       raise ActiveRecord::ActiveRecordError
