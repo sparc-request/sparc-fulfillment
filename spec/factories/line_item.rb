@@ -10,7 +10,8 @@ FactoryGirl.define do
 
     trait :with_fulfillments do
       after(:create) do |line_item, evaluator|
-        create(:fulfillment, line_item: line_item)
+        service = line_item.service
+        create(:fulfillment, line_item: line_item, service_id: service.id, service_name: service.name, service_cost: service.cost)
       end
     end
 
