@@ -2,7 +2,8 @@ require 'rails_helper'
 
 feature 'Create Appointment Note', js: true do
   before :each do
-    protocol    = create(:protocol_imported_from_sparc)
+    create_and_assign_protocol_to_me
+    protocol    = Protocol.first
     @participant = protocol.participants.first
     @visit_group = @participant.appointments.first.visit_group
     @user = create(:identity)

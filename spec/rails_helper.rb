@@ -57,4 +57,5 @@ RSpec.configure do |config|
   config.include ApiAuthenticationHelper
   config.include SparcHelper
   config.include DelayedJobHelpers
+  config.include DataHelpers
 end

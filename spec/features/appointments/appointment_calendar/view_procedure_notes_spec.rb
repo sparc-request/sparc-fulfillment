@@ -43,10 +43,11 @@ feature 'View Notes', js: true do
   end
 
   def given_i_am_viewing_a_procedure
-    protocol    = create(:protocol_imported_from_sparc)
+    create_and_assign_protocol_to_me
+    protocol    = Protocol.first
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = Service.per_participant.first
+    service     = protocol.organization.inclusive_descendant_services(:per_participant).first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name

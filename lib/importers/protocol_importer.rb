@@ -42,7 +42,7 @@ class ProtocolImporter
   end
 
   def import_arms_and_their_decendents
-    ArmImporter.new(@local_protocol, remote_protocol, remote_service_request).create
+    ArmImporter.new(@local_protocol, remote_protocol, remote_sub_service_request).create
   end
 
   def remote_protocol

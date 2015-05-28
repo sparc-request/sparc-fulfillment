@@ -1,7 +1,7 @@
 .row
   .col-md-12
     = hidden_field_tag :participant_id, participant.id
-    .fixed-table-container
+    .fixed-table-container.bootstrap-table-dropdown-overflow
       %table.participant.details.custom_striped{id: "participant-info", data: {toggle: 'table', url: "/participants/#{participant.id}.json?protocol_id=#{protocol.id}"}}
         %thead
           %tr

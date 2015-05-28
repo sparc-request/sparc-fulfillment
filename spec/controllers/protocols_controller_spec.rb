@@ -42,15 +42,26 @@ RSpec.describe ProtocolsController, type: :controller do
 
   describe "GET #show" do
 
+    before :each do
+      create_and_assign_protocol_to_me
+      @protocol = Protocol.first
+    end
+
+    it "returns http success" do
+      get :show, id: @protocol.sparc_id
+
+      expect(response).to be_success
+    end
+
     it "assigns the requested protocol to @protocol" do
-      protocol = create(:protocol, sparc_id: 1)
-      get :show, id: protocol.sparc_id
-      expect(assigns(:protocol)).to eq(protocol)
+      get :show, id: @protocol.sparc_id
+
+      expect(assigns(:protocol)).to eq(@protocol)
     end
 
     it "renders the #show view" do
-      protocol = create(:protocol, sparc_id: 1)
-      get :show, id: protocol.sparc_id
+      get :show, id: @protocol.sparc_id
+
       expect(response).to render_template :show
     end
   end

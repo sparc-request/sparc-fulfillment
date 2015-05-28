@@ -9,7 +9,8 @@ feature 'Removing a Status', js: true do
   end
 
   def as_a_user_who_selects_an_appointment
-    protocol    = create(:protocol_imported_from_sparc)
+    create_and_assign_protocol_to_me
+    protocol    = Protocol.first
     participant = protocol.participants.first
     @appointment = participant.appointments.first
     visit_group = @appointment.visit_group

@@ -125,7 +125,9 @@ en:
     subsidy_expended: "Subsidy Expended"
 
   line_item:
-    add_line_item: "Add Service"
+    add_line_item: "Add Study Level Activity"
+    create: "Create New Study Level Activity"
+    edit: "Edit Study Level Activity"
     change_service: "Change Service"
     service: "Service"
     qty_req: "Quantity Requested"
@@ -134,11 +136,11 @@ en:
     started: "Date Started"
     last_fulfillment: "Last Fulfillment"
     components: "Service Components"
-    save_li: "Save Service"
+    save_li: "Save Study Level Activity"
     object: "Line Item"
     flash_messages:
-      updated: "Line Item Updated"
-      created: "Line Item Created"
+      updated: "Study Level Activity Updated"
+      created: "Study Level Activity Created"
     log_notes:
       quantity_requested: "Quantity Requested changed to "
       service_id: "Service changed to "
@@ -296,6 +298,8 @@ en:
       arm: "Arm | "
       visit: "Visit | "
       services: "Services | "
+    flash_messages:
+      unauthorized: "Authorization Failure"
 
   reports:
     request_report: "Request Report"
