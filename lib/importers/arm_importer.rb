@@ -1,9 +1,9 @@
 class ArmImporter
 
-  def initialize(local_protocol, remote_protocol, remote_service_request)
+  def initialize(local_protocol, remote_protocol, remote_sub_service_request)
     @local_protocol         = local_protocol
     @remote_protocol        = remote_protocol
-    @remote_service_request = remote_service_request
+    @remote_sub_service_request = remote_sub_service_request
   end
 
   def create
@@ -16,8 +16,8 @@ class ArmImporter
 
       local_arm.update_attributes attributes
 
-      VisitGroupImporter.new(local_arm, remote_arm).create
-      LineItemImporter.new(local_arm, remote_arm).create
+      VisitGroupImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create
+      LineItemImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create
     end
   end
 
