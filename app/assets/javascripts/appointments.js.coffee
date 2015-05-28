@@ -180,7 +180,7 @@ $ ->
     procedure_id = $(this).parents(".procedure").data("id")
     selected = $(this).find("option:selected").val()
     data = procedure:
-              performed_by: selected
+              performer_id: selected
     $.ajax
       type: 'PUT'
       data: data

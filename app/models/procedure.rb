@@ -15,6 +15,7 @@ class Procedure < ActiveRecord::Base
   belongs_to :appointment
   belongs_to :visit
   belongs_to :service
+  belongs_to :performer, class_name: "Identity"
 
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
@@ -61,8 +62,6 @@ class Procedure < ActiveRecord::Base
   def handled?
     complete? or incomplete? or task.present?
   end
-
-  alias :enable_performed_by_dropdown? :appt_started?
 
   def reset?
     status == ''

@@ -1,2 +1,2 @@
 %select.performed-by-dropdown.selectpicker{ 'data-width' => '125px', showIcon: false, id: "performed-by-#{procedure.id}" }
-  = options_from_collection_for_select(Identity.joins(:clinical_providers).where(clinical_providers: { organization: procedure.protocol.organization }), 'id', 'full_name', selected: procedure.performed_by)
+  = options_from_collection_for_select(Identity.joins(:clinical_providers).where(clinical_providers: { organization: procedure.protocol.organization }), 'id', 'full_name', selected: procedure.performer_id)
