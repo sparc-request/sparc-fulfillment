@@ -15,6 +15,6 @@ class Arm < ActiveRecord::Base
   validates_numericality_of :visit_count, greater_than_or_equal_to: 1
 
   def line_items_grouped_by_core
-    line_items.includes(:service).group_by(&:sparc_core_id)
+    line_items.includes(:service).where(:services => {:one_time_fee => false}).group_by(&:sparc_core_id)
   end
 end
