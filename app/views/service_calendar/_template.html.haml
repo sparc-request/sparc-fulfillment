@@ -21,7 +21,9 @@
     %div.visit_groups{class: "visit_groups visit_groups_for_#{arm.id}"}
       = render partial: '/service_calendar/visit_groups', locals: {arm: arm, visit_groups: visit_groups}
   .row.arm-name
-    .col-xs-4= "Arm: #{arm.name}"
+    .col-xs-4
+      Arm:
+      %span{id: "arm-name-display-#{arm.id}"}= arm.name
     %div{class: "check_columns_for_arm_#{arm.id}"}
       = render partial: '/service_calendar/check_visit_columns', locals: {visit_groups: visit_groups}
     .col-xs-1
