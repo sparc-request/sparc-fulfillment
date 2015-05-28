@@ -46,7 +46,7 @@ feature 'View Notes', js: true do
     protocol    = create_and_assign_protocol_to_me
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_descendant_services(:per_participant).first
+    service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name

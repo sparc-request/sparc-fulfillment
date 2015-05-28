@@ -6,11 +6,11 @@ RSpec.describe Organization, type: :model do
   it { is_expected.to have_many(:services) }
   it { is_expected.to have_many(:sub_service_requests) }
 
-  describe ".inclusive_descendant_services" do
+  describe ".inclusive_child_services" do
 
     describe "Services present" do
 
-      before { @organization = create(:organization_with_descendant_organizations) }
+      before { @organization = create(:organization_with_child_organizations) }
 
       after { Service.destroy_all }
 
@@ -20,7 +20,7 @@ RSpec.describe Organization, type: :model do
           Service.update_all one_time_fee: true
           Service.all.limit(10).each { |service| service.update_attribute :one_time_fee, false }
 
-          expect(@organization.inclusive_descendant_services(:per_participant).length).to eq(10)
+          expect(@organization.inclusive_child_services(:per_participant).length).to eq(10)
         end
       end
 
@@ -30,44 +30,44 @@ RSpec.describe Organization, type: :model do
           Service.update_all one_time_fee: false
           Service.all.limit(10).each { |service| service.update_attribute :one_time_fee, true }
 
-          expect(@organization.inclusive_descendant_services(:one_time_fee).length).to eq(10)
+          expect(@organization.inclusive_child_services(:one_time_fee).length).to eq(10)
         end
       end
 
-      it "should return an array of its Services and its descendant's Services" do
-        expect(@organization.inclusive_descendant_services(:per_participant).length).to eq(39)
+      it "should return an array of its Services and its child's Services" do
+        expect(@organization.inclusive_child_services(:per_participant).length).to eq(39)
       end
     end
 
     context "Services not present" do
 
       it "should return an empty array" do
-        organization = create(:organization_with_descendant_organizations)
+        organization = create(:organization_with_child_organizations)
 
         Service.destroy_all
 
-        expect(organization.inclusive_descendant_services(:per_participant)).to eq([])
+        expect(organization.inclusive_child_services(:per_participant)).to eq([])
       end
     end
   end
 
-  describe ".descendant_organizations" do
+  describe ".all_child_organizations" do
 
-    context "descendant Organizations present" do
+    context "child Organizations present" do
 
       it "should return an array of child Organizations" do
-        organization = create(:organization_with_descendant_organizations)
+        organization = create(:organization_with_child_organizations)
 
-        expect(organization.descendant_organizations.length).to eq(12)
+        expect(organization.all_child_organizations.length).to eq(12)
       end
     end
 
-    context "descendant Organizations not present" do
+    context "child Organizations not present" do
 
       it "should return an empty array" do
         organization = create(:organization)
 
-        expect(organization.descendant_organizations).to eq([])
+        expect(organization.all_child_organizations).to eq([])
       end
     end
   end

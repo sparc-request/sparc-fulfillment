@@ -45,7 +45,7 @@ feature 'Custom appointment', js: true do
   end
 
   def when_i_select_the_appointment
-    @service = @protocol.organization.inclusive_descendant_services(:per_participant).first
+    @service = @protocol.organization.inclusive_child_services(:per_participant).first
     @service.update_attributes(name: 'Test Service')
     bootstrap_select '#appointment_select', "Test Visit"
     wait_for_ajax
