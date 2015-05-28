@@ -42,7 +42,10 @@ RSpec.describe ProtocolsController, type: :controller do
 
   describe "GET #show" do
 
-    before { @protocol = create(:protocol_with_sub_service_request) }
+    before :each do
+      create_and_assign_protocol_to_me
+      @protocol = Protocol.first
+    end
 
     it "returns http success" do
       get :show, id: @protocol.sparc_id
