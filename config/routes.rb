@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       post 'create_auditing_report', to: 'reports#create_auditing_report'
       get 'new_auditing_report', to: 'reports#new_auditing_report'
     end
+  end
 
   resources :arms, only: [:new, :create, :destroy] do
   end

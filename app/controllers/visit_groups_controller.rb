@@ -24,6 +24,23 @@ class VisitGroupsController < ApplicationController
     end
   end
 
+  def edit
+    @protocol = Protocol.find(params[:protocol_id])
+    @visit_group = VisitGroup.find(params[:visit_group_id])
+  end
+
+  def update
+    @visit_group = VisitGroup.find(params[:id])
+    if @visit_group.update_attributes(visit_group_params)
+      flash[:success] = t(:visit_groups)[:flash_messages][:updated]
+      respond_to do |format|
+        format.js {render inline: "location.reload();" }
+      end
+    else
+      @errors = @line_item.errors
+    end
+  end
+
   def destroy
     @current_page = params[:page]
     @arm = @visit_group.arm

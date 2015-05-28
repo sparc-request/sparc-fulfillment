@@ -13,7 +13,7 @@
         = render partial: '/protocols/study_schedule/visit_groups_selectpicker', locals: {protocol: protocol}
     .col-sm-4.col-md-4.text-center
       =t(:study_schedule_tab)[:buttons][:services]
-      %div
-        = select_tag 'services', options_from_collection_for_select(services, 'id', 'name'), class: 'selectpicker'
+      %div#service_dropdown
+        = select_tag 'services', options_from_collection_for_select(protocol.organization.inclusive_descendant_services(:per_participant), 'id', 'name'), class: 'selectpicker'
         .btn.btn-success.btn-sm.glyphicon.glyphicon-plus#add_service_button
         .btn.btn-danger.btn-sm.glyphicon.glyphicon-remove#remove_service_button

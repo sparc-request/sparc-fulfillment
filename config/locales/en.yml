@@ -193,6 +193,7 @@ en:
     created: "Visit Created"
     deleted: "Visit Destroyed"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
+    
 
   notes:
     new_header: "Add Note"
@@ -343,3 +344,5 @@ en:
     deleted: "Visit Destroyed"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
     object: "Visit Group"
+    flash_messages:
+      updated: "Visit Updated"

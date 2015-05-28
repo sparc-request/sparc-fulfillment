@@ -29,18 +29,16 @@ $ ->
         data: data
 
 
-    # $(document).on 'click', '#edit_visit_group_button', ->
-    #   calendar_tab = $('#current_tab').attr('value')
-    #   arm_id = $('#arms').val()
-    #   page = $("#visits_select_for_#{arm_id}").val()
-    #   data =
-    #     'arm_id': arm_id
-    #     'page': page
-    #     'calendar_tab': calendar_tab
-    #   $.ajax
-    #     type: 'GET'
-    #     url: "/visit_groups/new"
-    #     data: data
+    $(document).on 'click', '#edit_visit_group_button', ->
+      visit_group_id = $('#visits').val()
+      protocol_id = $('#arms').data('protocol_id')
+      data = 
+        'protocol_id'    : protocol_id
+        'visit_group_id' : visit_group_id
+      $.ajax
+        type: 'GET'
+        url: "/visit_groups/#{visit_group_id}/edit"
+        data: data
 
     $(document).on 'click', '#remove_visit_group_button', ->
       calendar_tab = $('#current_tab').attr('value')
