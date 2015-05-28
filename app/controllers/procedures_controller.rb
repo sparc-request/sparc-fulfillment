@@ -8,11 +8,13 @@ class ProceduresController < ApplicationController
     @appointment_id = params[:appointment_id]
     qty = params[:qty].to_i
     service = Service.find params[:service_id]
+    performer_id = params[:performer_id] || current_identity.id
     @procedures = []
     qty.times do
       @procedures << Procedure.create(appointment_id: @appointment_id,
                                       service_id: service.id,
                                       service_name: service.name,
+                                      performer_id: performer_id,
                                       billing_type: 'research_billing_qty',
                                       sparc_core_id: service.sparc_core_id,
                                       sparc_core_name: service.sparc_core_name)
@@ -87,7 +89,7 @@ class ProceduresController < ApplicationController
   def procedure_params
     @procedure_params = params.
                         require(:procedure).
-                        permit(:status, :follow_up_date, :completed_date, :billing_type,
+                        permit(:status, :follow_up_date, :completed_date, :billing_type, :performer_id,
                                 notes_attributes: [:comment, :kind, :identity_id, :reason],
                                 tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
   end
