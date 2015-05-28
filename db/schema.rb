@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150527134648) do
+ActiveRecord::Schema.define(version: 20150528132727) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -250,8 +250,6 @@ ActiveRecord::Schema.define(version: 20150527134648) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.datetime "irb_approval_date"
-    t.datetime "irb_expiration_date"
     t.float    "stored_percent_subsidy", limit: 24
     t.integer  "study_cost",             limit: 4
     t.integer  "sub_service_request_id", limit: 4
