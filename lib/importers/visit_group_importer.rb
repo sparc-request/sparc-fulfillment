@@ -1,8 +1,9 @@
 class VisitGroupImporter
 
-  def initialize(local_arm, remote_arm)
-    @local_arm  = local_arm
-    @remote_arm = remote_arm
+  def initialize(local_arm, remote_arm, remote_sub_service_request)
+    @local_arm              = local_arm
+    @remote_arm             = remote_arm
+    @remote_sub_service_request = remote_sub_service_request
   end
 
   def create
@@ -15,7 +16,7 @@ class VisitGroupImporter
 
       local_visit_group.update_attributes attributes
 
-      VisitImporter.new(local_visit_group, remote_visit_group).create
+      VisitImporter.new(local_visit_group, remote_visit_group, @remote_sub_service_request).create
     end
   end
 
