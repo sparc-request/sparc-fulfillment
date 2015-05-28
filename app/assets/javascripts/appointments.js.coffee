@@ -176,6 +176,16 @@ $ ->
       data: data
       url: "/appointments/#{appointment_id}/"
 
+  $(document).on 'change', 'td.performed-by .selectpicker', ->
+    procedure_id = $(this).parents(".procedure").data("id")
+    selected = $(this).find("option:selected").val()
+    data = procedure:
+              performed_by: selected
+    $.ajax
+      type: 'PUT'
+      data: data
+      url: "/procedures/#{procedure_id}.js"
+
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)
     $('#start_date').on 'dp.hide', (e) ->

@@ -210,6 +210,7 @@ en:
     remove: "Remove"
     follow_up_date: "Follow up date"
     completed_date: "Completed Date"
+    performed_by: "Performed By"
     r_t: "R/T"
     status: "Status"
     object: "Procedure"

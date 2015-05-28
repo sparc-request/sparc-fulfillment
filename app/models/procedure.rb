@@ -62,6 +62,8 @@ class Procedure < ActiveRecord::Base
     complete? or incomplete? or task.present?
   end
 
+  alias :enable_performed_by_dropdown? :appt_started?
+
   def reset?
     status == ''
   end
