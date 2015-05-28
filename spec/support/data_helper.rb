@@ -6,5 +6,7 @@ module DataHelpers
     organization  = protocol.organization
 
     create(:clinical_provider, identity: identity, organization: organization)
+
+    protocol
   end
 end

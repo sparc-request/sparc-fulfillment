@@ -15,8 +15,7 @@ feature 'Create Procedure', js: true do
   end
 
   def given_i_am_viewing_a_participant
-    create_and_assign_protocol_to_me
-    @protocol     = Protocol.first
+    @protocol     = create_and_assign_protocol_to_me
     @participant  = @protocol.participants.first
 
     visit participant_path(@participant)
