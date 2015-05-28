@@ -5,4 +5,8 @@ class HumanSubjectsInfo < ActiveRecord::Base
   include SparcShard
 
   belongs_to :protocol, primary_key: :sparc_id
+
+  def irb_number
+    pro_number || hr_number
+  end
 end
