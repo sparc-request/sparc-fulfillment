@@ -19,7 +19,7 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    @services = @protocol.organization.inclusive_descendant_services(:per_participant)
+    @services = @protocol.organization.inclusive_child_services(:per_participant)
     @page     = 1
 
     gon.push({ protocol_id: @protocol.id })
