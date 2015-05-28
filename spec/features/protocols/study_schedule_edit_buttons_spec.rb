@@ -118,7 +118,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         find('#add_visit_button').click()
         fill_in 'Visit Name', with: "visit name"
         fill_in 'Visit Day', with: 3
-        bootstrap_select "#visit_group_position", "insert before #{arm1.visit_groups.first.name}"
+        bootstrap_select "#visit_group_position", "insert before #{@arm1.visit_groups.first.name}"
         click_button 'Add'
         expect(page).to have_css ".visit_group_0[value='visit name']"
       end
@@ -159,8 +159,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         find('#add_service_button').click()
         expect(page).to have_content "Add a Service"
         bootstrap_select "#service_id", @service.name
-        find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
-        find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
+        find(:css,"#arm_ids_[value='#{@arm1.id} 1']").set(true)
+        find(:css,"#arm_ids_[value='#{@arm2.id} 1']").set(true)
         click_button 'Add Service'
         expect(page).to have_content "Service(s) have been added to the chosen arms"
         expect(page).to have_css("div#arm_#{@arm1.id}_core_#{@service.sparc_core_id}")
@@ -182,8 +182,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         find('#remove_service_button').click()
         expect(page).to have_content "Remove Services"
         bootstrap_select "#service_id", service.name
-        find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
-        find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
+        find(:css,"#arm_ids_[value='#{@arm1.id} 1']").set(true)
+        find(:css,"#arm_ids_[value='#{@arm2.id} 1']").set(true)
         click_button 'Remove'
         expect(page).to have_content "Service(s) have been removed from the chosen arms"
         expect(page).not_to have_css("div#arm_#{@arm1.id}_core_#{@service.sparc_core_id}")

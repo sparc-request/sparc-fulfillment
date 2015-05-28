@@ -9,7 +9,7 @@ module ProtocolHelper
       span = raw content_tag(:span, '', class: 'caret')
       button = raw content_tag(:button, raw('Coordinators ' + span), type: 'button', class: 'btn btn-default btn-xs dropdown-toggle', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
       coordinators.each do |coordinator|
-        li.push raw(content_tag(:li, raw(content_tag(:a, coordinator, href: '#'))))
+        li.push raw(content_tag(:li, raw(content_tag(:a, coordinator, href: 'javascript:;'))))
       end
       ul = raw content_tag(:ul, raw(li.join), class: 'dropdown-menu', role: 'menu')
 
