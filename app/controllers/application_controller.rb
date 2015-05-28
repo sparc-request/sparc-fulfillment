@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
 
   def authorize_identity protocol_id
     unless current_identity.protocols.map(&:id).include? protocol_id.to_i
+      flash[:alert] = t(:protocol)[:flash_messages][:unauthorized]
       redirect_to root_path
     end
   end
