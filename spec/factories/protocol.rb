@@ -45,7 +45,8 @@ FactoryGirl.define do
       end
     end
 
-    factory :protocol_imported_from_sparc, traits: [:with_arms, :with_pi, :with_coordinators, :with_sub_service_request]
+    factory :protocol_with_sub_service_request, traits: [:with_sub_service_request]
     factory :protocol_with_pi, traits: [:with_pi]
+    factory :protocol_imported_from_sparc, traits: [:with_arms, :with_pi, :with_coordinators, :with_sub_service_request]
   end
 end

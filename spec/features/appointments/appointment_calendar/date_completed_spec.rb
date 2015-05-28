@@ -27,8 +27,9 @@ feature 'Date completed', js: true do
   end
 
   def given_i_am_viewing_an_appointment
-    protocol      = create(:protocol_imported_from_sparc)
-    @participant  = protocol.participants.first
+    create_and_assign_protocol_to_me
+    @protocol     = Protocol.first
+    @participant  = @protocol.participants.first
 
     visit participant_path(@participant)
   end
@@ -63,7 +64,8 @@ feature 'Date completed', js: true do
 
   def when_i_add_a_procedure
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.per_participant.first
+    service     = @protocol.organization.inclusive_descendant_services(:per_participant).first
+
     bootstrap_select('#appointment_select', visit_group.name)
     wait_for_ajax
     bootstrap_select '#service_list', service.name

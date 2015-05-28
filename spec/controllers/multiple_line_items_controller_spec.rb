@@ -1,36 +1,39 @@
 require 'rails_helper'
 
-RSpec.describe MultipleLineItemsController do
-  before :each do
-    sign_in
-    @protocol = create(:protocol)
-    @service = create(:service)
+RSpec.describe MultipleLineItemsController, type: :controller do
+
+  login_user
+
+  before do
+    @protocol = create(:protocol_with_sub_service_request)
+    @service  = @protocol.organization.services.first
   end
 
   describe "GET #new" do
 
     it "renders a template to add a service to multiple arms" do
       xhr :get, :new_line_items, {
-        protocol_id: @protocol.id,
+        protocol_id: @protocol.sparc_id,
         service_id: @service.id,
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:selected_service)).to eq(@service.id)
-      expect(assigns(:services)).to eq(Service.per_participant)
+      expect(assigns(:services).map(&:id).sort).to eq(@protocol.organization.services.pluck(:id).sort)
     end
   end
 
   describe "GET #edit" do
+
     it "renders a template to remove a service from multiple arms" do
       xhr :get, :new_line_items, {
-        protocol_id: @protocol.id,
+        protocol_id: @protocol.sparc_id,
         service_id: @service.id,
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:selected_service)).to eq(@service.id)
-      expect(assigns(:services)).to eq(Service.per_participant)
+      expect(assigns(:services).map(&:id).sort).to eq(@protocol.organization.services.pluck(:id).sort)
     end
   end
 
