@@ -40,6 +40,15 @@ $ ->
         url: "/visit_groups/#{visit_group_id}/edit"
         data: data
 
+    $(document).on 'click', '#edit_arm_button', ->
+      arm_id = $('#arms').val()
+      data = 
+        'arm_id' : arm_id
+      $.ajax
+        type: 'GET'
+        url: "/arms/#{arm_id}/edit"
+        data: data
+
     $(document).on 'click', '#remove_visit_group_button', ->
       calendar_tab = $('#current_tab').attr('value')
       visit_group_id = $("#visits").val()

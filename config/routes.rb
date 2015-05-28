@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :arms, only: [:new, :create, :destroy] do
+  resources :arms do
   end
 
   resources :participants do

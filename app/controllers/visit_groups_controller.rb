@@ -37,7 +37,7 @@ class VisitGroupsController < ApplicationController
         format.js {render inline: "location.reload();" }
       end
     else
-      @errors = @line_item.errors
+      @errors = @visit_group.errors
     end
   end
 
