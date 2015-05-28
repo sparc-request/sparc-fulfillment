@@ -8,6 +8,7 @@ class Protocol < ActiveRecord::Base
   belongs_to :sub_service_request
 
   has_one :organization, through: :sub_service_request
+  has_one :human_subjects_info, primary_key: :sparc_id
 
   has_many :service_requests
   has_many :arms,           dependent: :destroy
@@ -19,6 +20,10 @@ class Protocol < ActiveRecord::Base
 
   after_save :update_faye
   after_destroy :update_faye
+
+  delegate  :irb_approval_date,
+            :irb_expiration_date,
+            to: :human_subjects_info
 
   #For displaying the subsidy committed on the index page
   def subsidy_committed

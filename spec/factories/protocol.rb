@@ -11,11 +11,13 @@ FactoryGirl.define do
     end_date Time.current
     recruitment_start_date { Faker::Date.between(10.years.ago, 3.days.ago) }
     recruitment_end_date Time.current
-    irb_approval_date { Faker::Date.between(10.years.ago, 3.days.ago) }
-    irb_expiration_date Time.current
     stored_percent_subsidy 0.0
     study_cost { Faker::Number.number(8) }
     status { Protocol::STATUSES.sample }
+
+    after(:create) do |protocol, evaluator|
+      create(:human_subjects_info, protocol_id: protocol.sparc_id)
+    end
 
     trait :with_sub_service_request do
       sub_service_request factory: :sub_service_request_with_organization
@@ -47,6 +49,9 @@ FactoryGirl.define do
 
     factory :protocol_with_sub_service_request, traits: [:with_sub_service_request]
     factory :protocol_with_pi, traits: [:with_pi]
-    factory :protocol_imported_from_sparc, traits: [:with_arms, :with_pi, :with_coordinators, :with_sub_service_request]
+    factory :protocol_imported_from_sparc, traits: [:with_arms,
+                                                    :with_pi,
+                                                    :with_coordinators,
+                                                    :with_sub_service_request]
   end
 end
