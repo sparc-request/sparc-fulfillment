@@ -31,11 +31,9 @@ class VisitGroupsController < ApplicationController
 
   def update
     @visit_group = VisitGroup.find(params[:id])
+    @arm = @visit_group.arm
     if @visit_group.update_attributes(visit_group_params)
       flash[:success] = t(:visit_groups)[:flash_messages][:updated]
-      respond_to do |format|
-        format.js {render inline: "location.reload();" }
-      end
     else
       @errors = @visit_group.errors
     end

@@ -34,9 +34,6 @@ class ArmsController < ApplicationController
     @arm = Arm.find(params[:id])
     if @arm.update_attributes(arm_params)
       flash[:success] = t(:arm)[:flash_messages][:updated]
-      respond_to do |format|
-        format.js {render inline: "location.reload();" }
-      end
     else
       @errors = @arm.errors
     end

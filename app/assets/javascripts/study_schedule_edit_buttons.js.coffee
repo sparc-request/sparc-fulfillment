@@ -136,6 +136,18 @@ $ ->
   $select.append('<option value=' + id + '>' + name + '</option>')
   $select.selectpicker('refresh')
 
+(exports ? this).edit_arm = (name, id) ->
+  $select = $('#arms')
+  $select.find('option').remove()
+  $select.prepend('<option value=' + id + '>' + name + '</option>')
+  $select.selectpicker('refresh')
+
+(exports ? this).edit_visit_group = (name, id) ->
+  $select = $('#visits')
+  $select.find('option').remove()
+  $select.prepend('<option value=' + id + '>' + name + '</option>')
+  $select.selectpicker('refresh')
+
 (exports ? this).remove_arm = (arm_id) ->
   $select = $('#arms')
   $select.find("[value=#{arm_id}]").remove()
