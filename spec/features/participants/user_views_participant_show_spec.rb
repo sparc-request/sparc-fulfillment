@@ -2,8 +2,15 @@ require 'rails_helper'
 
 feature 'User views Participant show', js: true do
 
+  scenario 'and does not have access' do
+    protocol    = create_and_assign_protocol_to_me
+    participant = protocol.participants.first
+    visit participant_path(participant.id)
+    expect(current_path).to eq root_path # gets redirected back to index
+  end
+
   scenario 'and sees the Participants attributes in the header' do
-    protocol = create(:protocol_imported_from_sparc)
+    protocol = create_and_assign_protocol_to_me
     participant = protocol.participants.first
     visit participant_path(participant.id)
 

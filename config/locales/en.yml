@@ -241,6 +241,8 @@ en:
       arm: "Arm | "
       visit: "Visit | "
       services: "Services | "
+    flash_messages:
+      unauthorized: "Authorization Failure"
 
   reports:
     request_report: "Request Report"

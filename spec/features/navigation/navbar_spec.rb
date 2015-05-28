@@ -31,7 +31,7 @@ feature 'Navigation', js: true do
   end
 
   def given_there_are_two_protocols
-    create_list(:protocol_imported_from_sparc, 2)
+    2.times { create_and_assign_protocol_to_me }
   end
 
   def and_i_view_the_first_protocol_participant_tracker
@@ -56,7 +56,7 @@ feature 'Navigation', js: true do
   end
 
   def given_i_am_viewing_a_protocol
-    protocol = create(:protocol_imported_from_sparc)
+    protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.sparc_id)
   end

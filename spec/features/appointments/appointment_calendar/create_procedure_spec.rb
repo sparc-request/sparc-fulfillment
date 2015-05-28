@@ -15,16 +15,15 @@ feature 'Create Procedure', js: true do
   end
 
   def given_i_am_viewing_a_participant
-    create_and_assign_protocol_to_me
-    protocol      = Protocol.first
-    @participant  = protocol.participants.first
+    @protocol     = create_and_assign_protocol_to_me
+    @participant  = @protocol.participants.first
 
     visit participant_path(@participant)
   end
 
   def and_i_add_a_procedure
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.per_participant.first
+    service     = @protocol.organization.inclusive_descendant_services(:per_participant).first
 
     bootstrap_select('#appointment_select', visit_group.name)
     bootstrap_select('#service_list', service.name)
@@ -38,7 +37,7 @@ feature 'Create Procedure', js: true do
 
   def and_i_add_two_procedures
     visit_group = @participant.appointments.first.visit_group
-    service     = Service.per_participant.first
+    service     = @protocol.organization.inclusive_descendant_services(:per_participant).first
 
     bootstrap_select('#appointment_select', visit_group.name)
     bootstrap_select('#service_list', service.name)

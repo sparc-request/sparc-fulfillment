@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'Followup note', js: true do
 
   context 'appointment started' do
+
     scenario 'User views followup button' do
       as_a_user_who_has_created_a_procedure
       and_begins_appointment
@@ -67,11 +68,11 @@ feature 'Followup note', js: true do
   end
 
   def as_a_user_who_has_created_a_procedure
-    protocol    = create(:protocol_imported_from_sparc)
+    protocol    = create_and_assign_protocol_to_me
+    @assignee   = Identity.first
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
-    service     = Service.per_participant.first
-    @assignee   = Identity.first
+    service     = protocol.organization.inclusive_descendant_services(:per_participant).first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name

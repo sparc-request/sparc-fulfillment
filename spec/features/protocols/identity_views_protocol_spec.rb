@@ -9,16 +9,11 @@ feature 'Identity views protocol', js: true do
   end
 
   def given_i_am_a_fulfillment_provider_for_a_protocol
-    identity          = Identity.first
-    clinical_provider = create(:clinical_provider_with_organization, identity: identity)
-    organization      = clinical_provider.organization
-    service_request   = create(:service_request_with_protocol)
-    create(:sub_service_request, organization: organization, service_request: service_request)
-    @protocol         = Protocol.first
+    @protocol = create_and_assign_protocol_to_me
   end
 
   def when_i_visit_the_protocol_page
-    visit protocol_path(@protocol)
+    visit protocol_path(@protocol.sparc_id)
   end
 
   def then_i_should_see_a_correctly_formatted_irb_expiration_date

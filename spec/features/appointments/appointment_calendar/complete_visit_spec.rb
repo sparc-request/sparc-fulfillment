@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 feature 'Complete Visit', js: true do
+
   before(:each) do
     go_to_visit
   end
@@ -131,10 +132,11 @@ feature 'Complete Visit', js: true do
   end
 
   def go_to_visit
-    protocol     = create(:protocol_imported_from_sparc)
+    protocol     = create_and_assign_protocol_to_me
+    @identity    = Identity.first
     participant  = protocol.participants.first
     @visit_group = participant.appointments.first.visit_group
-    @service     = Service.per_participant.first
+    @service     = protocol.organization.inclusive_descendant_services(:per_participant).first
 
     visit participant_path participant
     bootstrap_select '#appointment_select', @visit_group.name
@@ -185,7 +187,7 @@ feature 'Complete Visit', js: true do
     find("tr[data-id='#{@procedure.id}'] button.followup.new").click
     wait_for_ajax
 
-    bootstrap_select '#task_assignee_id', @clinical_providers.first.identity.full_name
+    bootstrap_select '#task_assignee_id', @identity.full_name
 
     page.execute_script %Q{ $("#follow_up_procedure_datepicker").children(".input-group-addon").trigger("click")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }

@@ -15,10 +15,10 @@ feature 'Delete Procedure', js: true do
   end
 
   def as_a_user_who_is_viewing_a_core_wtih_two_procedures
-    protocol      = create(:protocol_imported_from_sparc)
+    protocol      = create_and_assign_protocol_to_me
     participant   = protocol.participants.first
     visit_group   = participant.appointments.first.visit_group
-    service       = Service.per_participant.first
+    service       = protocol.organization.inclusive_descendant_services(:per_participant).first
 
     visit participant_path participant
 
@@ -29,10 +29,10 @@ feature 'Delete Procedure', js: true do
   end
 
   def as_a_user_who_is_viewing_a_core_wtih_one_procedure
-    protocol      = create(:protocol_imported_from_sparc)
+    protocol      = create_and_assign_protocol_to_me
     participant   = protocol.participants.first
     visit_group   = participant.appointments.first.visit_group
-    service       = Service.per_participant.first
+    service       = protocol.organization.inclusive_descendant_services(:per_participant).first
 
     visit participant_path participant
 

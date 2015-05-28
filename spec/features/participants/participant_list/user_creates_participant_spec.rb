@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'User creates Participant', js: true do
 
   scenario 'and sees the new Participants in the list' do
-    protocol = create(:protocol_imported_from_sparc)
+    protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.sparc_id)
     click_link 'Participant List'
@@ -21,14 +21,14 @@ feature 'User creates Participant', js: true do
     fill_in 'First Name', with: participant.first_name
     fill_in 'Last Name', with: participant.last_name
     fill_in 'MRN', with: participant.mrn
-    select participant.status, from: 'Status'
+    bootstrap_select '#participant_status', participant.status
     page.execute_script %Q{ $("#participant_date_of_birth").siblings(".input-group-addon").trigger("click") }
     page.execute_script %Q{ $("td.year:contains('0')").trigger("click") }
     page.execute_script %Q{ $("td.month:contains('Mar')").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    select participant.gender, from: 'Gender'
-    select participant.ethnicity, from: 'Ethnicity'
-    select participant.race, from: 'Race'
+    bootstrap_select '#participant_gender', participant.gender
+    bootstrap_select '#participant_ethnicity', participant.ethnicity
+    bootstrap_select '#participant_race', participant.race
     fill_in 'Address', with: participant.address
     fill_in 'Phone', with: participant.phone
   end

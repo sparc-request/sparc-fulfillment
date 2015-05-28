@@ -9,10 +9,10 @@ feature "Indicating a Status", js: true do
   end
 
   def as_a_user_who_selects_an_appointment
-    protocol    = create(:protocol_imported_from_sparc)
-    participant = protocol.participants.first
-    @appointment = participant.appointments.first
-    visit_group = @appointment.visit_group
+    protocol      = create_and_assign_protocol_to_me
+    participant   = protocol.participants.first
+    @appointment  = participant.appointments.first
+    visit_group   = @appointment.visit_group
 
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
