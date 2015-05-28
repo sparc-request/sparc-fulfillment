@@ -254,8 +254,8 @@ ActiveRecord::Schema.define(version: 20150527134648) do
     t.datetime "irb_expiration_date"
     t.float    "stored_percent_subsidy", limit: 24
     t.integer  "study_cost",             limit: 4
-    t.string   "status",                 limit: 255
     t.integer  "sub_service_request_id", limit: 4
+    t.string   "status",                 limit: 255
   end
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
