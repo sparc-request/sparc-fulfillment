@@ -17,6 +17,7 @@ class ParticipantsController < ApplicationController
   def show
     @protocol = @participant.protocol
     @participant.build_appointments
+    @appointment_id = params[:appointment_id]
   end
 
   def create
