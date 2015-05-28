@@ -28,7 +28,6 @@ class ArmsController < ApplicationController
   def edit
     @arm = Arm.find(params[:arm_id])
     @protocol = @arm.protocol
-    @services = Service.find(services_for_protocol)
   end
 
   def update
