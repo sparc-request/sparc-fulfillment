@@ -7,7 +7,6 @@
 - if @appointment_id
 	:javascript
 		window.onload = function() {
-			$("#appointment_select.selectpicker").selectpicker();
 			$("#appointment_select.selectpicker").selectpicker('val', "#{ @appointment_id }");
 			$("#appointment_select.selectpicker").trigger("change");
 		};
