@@ -35,7 +35,7 @@ feature 'Notes', js: true do
   end
 
   def as_a_user_who_visits_study_level_activities_tab
-    protocol = create(:protocol_imported_from_sparc)
+    protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.sparc_id)
     click_link "Study Level Activities"

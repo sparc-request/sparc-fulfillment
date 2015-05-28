@@ -2,11 +2,10 @@ require 'rails_helper'
 
 feature 'View appointment notes', js: true do
   before :each do
-    create_and_assign_protocol_to_me
-    protocol      = Protocol.first
-    @participant = protocol.participants.first
-    @visit_group = @participant.appointments.first.visit_group
-    @identity = create(:identity)
+    protocol      = create_and_assign_protocol_to_me
+    @participant  = protocol.participants.first
+    @visit_group  = @participant.appointments.first.visit_group
+    @identity     = create(:identity)
   end
 
   scenario 'User views Notes list when no Notes are present' do

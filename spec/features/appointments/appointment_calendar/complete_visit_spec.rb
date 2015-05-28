@@ -132,9 +132,8 @@ feature 'Complete Visit', js: true do
   end
 
   def go_to_visit
-    create_and_assign_protocol_to_me
+    protocol     = create_and_assign_protocol_to_me
     @identity    = Identity.first
-    protocol     = Protocol.first
     participant  = protocol.participants.first
     @visit_group = participant.appointments.first.visit_group
     @service     = protocol.organization.inclusive_descendant_services(:per_participant).first

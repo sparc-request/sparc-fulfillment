@@ -2,9 +2,14 @@ require 'rails_helper'
 
 feature 'Line Items', js: true do
 
-  let!(:service1)    { create(:service, name: 'Admiral Tuskface', one_time_fee: true) }
-  let!(:service2)    { create(:service, name: 'Captain Cinnebon', one_time_fee: true) }
-  let!(:pricing_map) { create(:pricing_map, service: service1, quantity_type: 'Case', effective_date: Time.current)}
+  before :each do
+    @protocol      = create_and_assign_protocol_to_me
+    @service1      = @protocol.organization.inclusive_descendant_services(:per_participant).first
+    @service1.update_attributes(name: 'Admiral Tuskface', one_time_fee: true)
+    @service2      = @protocol.organization.inclusive_descendant_services(:per_participant).second
+    @service2.update_attributes(name: 'Captain Cinnebon', one_time_fee: true)
+    @pricing_map   = create(:pricing_map, service: @service1, quantity_type: 'Case', effective_date: Time.current)
+  end
 
   scenario 'User adds a new line item' do
     as_a_user_who_visits_study_level_activities_tab
@@ -23,9 +28,7 @@ feature 'Line Items', js: true do
   end
 
   def as_a_user_who_visits_study_level_activities_tab
-    protocol = create(:protocol_imported_from_sparc)
-
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(@protocol.sparc_id)
     click_link 'Study Level Activities'
   end
 
@@ -39,7 +42,7 @@ feature 'Line Items', js: true do
     fill_in 'Quantity Requested', with: 50
     page.execute_script %Q{ $('#date_started_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    click_button 'Save Service'
+    click_button 'Save Study Level Activity'
   end
 
   def i_should_see_the_line_item_on_the_page
@@ -53,7 +56,7 @@ feature 'Line Items', js: true do
   def then_i_fill_in_the_edit_line_item_form
     wait_for_ajax
     bootstrap_select '#line_item_service_id', 'Captain Cinnebon'
-    click_button 'Save Service'
+    click_button 'Save Study Level Activity'
     wait_for_ajax
   end
 

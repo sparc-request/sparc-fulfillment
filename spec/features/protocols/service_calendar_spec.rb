@@ -2,18 +2,18 @@ require 'rails_helper'
 
 RSpec.describe 'Service Calendar', type: :feature, js: true do
 
-  let!(:protocol)    { create(:protocol_with_pi) }
-  let!(:arm)         { create(:arm_imported_from_sparc, protocol_id: protocol.id, visit_count: 10)}
-
   before :each do
-    @line_item = arm.line_items.first
-    @visit_group = arm.visit_groups.first
-    @visit = @line_item.visits.first
-    visit protocol_path(protocol.sparc_id)
+    @protocol       = create_and_assign_protocol_to_me
+    project_role    = create(:project_role_pi, protocol: @protocol)
+    @arm            = create(:arm_imported_from_sparc, protocol: @protocol, visit_count: 10)
+    @line_item      = @arm.line_items.first
+    @visit_group    = @arm.visit_groups.first
+    @visit          = @line_item.visits.first
+    visit protocol_path(@protocol.sparc_id)
   end
 
   it 'should display the calendar with visit names, line items, and visits' do
-    expect(page).to have_css(".calendar.service.arm_#{arm.id}")
+    expect(page).to have_css(".calendar.service.arm_#{@arm.id}")
     expect(page).to have_css("#visit_group_#{@visit_group.id}")
     expect(page).to have_css("#line_item_#{@line_item.id}")
     expect(page).to have_css("#visit_check_#{@visit.id}")
@@ -38,38 +38,38 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
 
     it "should remove the core when all line items for that core have been removed" do
       core_id = @line_item.sparc_core_id
-      arm.line_items.each do |line_item|
+      @arm.line_items.each do |line_item|
         within("#line_item_#{line_item.id}") do
           find(".remove_line_item").click()
           wait_for_ajax
         end
       end
-      expect(page).not_to have_css("#arm_#{arm.id}_core_#{core_id}")
+      expect(page).not_to have_css("#arm_#{@arm.id}_core_#{core_id}")
     end
 
   end
 
   describe "changing pages" do
     it "should disable the previous button on the first page" do
-      expect(page).to have_css("#arrow-left-#{arm.id}[disabled]")
+      expect(page).to have_css("#arrow-left-#{@arm.id}[disabled]")
     end
 
     it "should disable the next button on the last page" do
-      find("#arrow-right-#{arm.id}").click()
+      find("#arrow-right-#{@arm.id}").click()
       wait_for_ajax
-      expect(page).to have_css("#arrow-right-#{arm.id}[disabled]")
+      expect(page).to have_css("#arrow-right-#{@arm.id}[disabled]")
     end
 
     it "should change to the next page when the next button is clicked" do
-      find("#arrow-right-#{arm.id}").click()
+      find("#arrow-right-#{@arm.id}").click()
       wait_for_ajax
       expect(page).to have_css("#visit_check_#{@line_item.visits.last.id}")
     end
 
     it "should change to the previous page when the previous button is clicked" do
-      find("#arrow-right-#{arm.id}").click()
+      find("#arrow-right-#{@arm.id}").click()
       wait_for_ajax
-      find("#arrow-left-#{arm.id}").click()
+      find("#arrow-left-#{@arm.id}").click()
       wait_for_ajax
       expect(page).to have_css("#visit_check_#{@visit.id}")
     end

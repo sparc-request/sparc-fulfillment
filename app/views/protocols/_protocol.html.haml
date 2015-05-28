@@ -1,5 +1,5 @@
 .fixed-table-container.bootstrap-table-dropdown-overflow
-  %table.protocol.details.custom_striped{id: dom_id(protocol), "data-toggle" => 'table', "data-url" => "/protocols/#{protocol.sparc_id}.json"}
+  %table.protocol.details.custom_striped{id: dom_id(protocol), "data-toggle" => 'table', "data-url" => protocol_path(protocol.sparc_id, format: :json)}
     %thead
       %tr
         %th{data: {class: "sparc_id", align: "left", field: "sparc_id"}}

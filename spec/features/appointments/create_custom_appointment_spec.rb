@@ -18,8 +18,7 @@ feature 'Custom appointment', js: true do
   end
 
   def when_i_visit_a_participants_calendar
-    create_and_assign_protocol_to_me
-    @protocol   = Protocol.first
+    @protocol   = create_and_assign_protocol_to_me
     participant = @protocol.participants.first
 
     visit participant_path participant

@@ -3,8 +3,7 @@ require 'rails_helper'
 feature 'User deletes Participant', js: true do
 
   scenario 'and sees the Participant is remove from the list' do
-    create_and_assign_protocol_to_me
-    protocol      = Protocol.first
+    protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.sparc_id)
     click_link 'Participant List'

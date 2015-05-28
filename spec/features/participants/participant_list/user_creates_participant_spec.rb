@@ -3,8 +3,7 @@ require 'rails_helper'
 feature 'User creates Participant', js: true do
 
   scenario 'and sees the new Participants in the list' do
-    create_and_assign_protocol_to_me
-    protocol      = Protocol.first
+    protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.sparc_id)
     click_link 'Participant List'

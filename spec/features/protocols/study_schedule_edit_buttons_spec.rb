@@ -3,14 +3,12 @@ require 'rails_helper'
 RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
   before :each do
-    create_and_assign_protocol_to_me
-
-    @protocol = Protocol.first
+    @protocol = create_and_assign_protocol_to_me
     @arm1     = @protocol.arms.first
     @arm2     = @protocol.arms.last
-    @service  = Service.first
+    @service  = @protocol.organization.inclusive_descendant_services(:per_participant).first
 
-    visit protocol_path(@protocol)
+    visit protocol_path(@protocol.sparc_id)
   end
 
   describe "arm buttons" do
@@ -155,12 +153,12 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
   describe "services" do
 
     describe 'add modal' do
-      it "should add a @service to one or multiple arms" do
+      it "should add @service to one or multiple arms" do
         expect(page).not_to have_css("div#arm_#{@arm1.id}_core_#{@service.sparc_core_id}")
         expect(page).not_to have_css("div#arm_#{@arm2.id}_core_#{@service.sparc_core_id}")
         find('#add_service_button').click()
         expect(page).to have_content "Add a Service"
-        bootstrap_select "#service_id", service.name
+        bootstrap_select "#service_id", @service.name
         find(:css,"#arm_ids_[value='#{arm1.id} 1']").set(true)
         find(:css,"#arm_ids_[value='#{arm2.id} 1']").set(true)
         click_button 'Add Service'
@@ -194,13 +192,13 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
       it 'dropdown should populate only with currently added services' do
         find('#remove_service_button').click()
-        service_count = protocol.arms.map{|a| a.line_items.map{|li| li.service.name}}.flatten.uniq.size
+        service_count = @protocol.arms.map{|a| a.line_items.map{|li| li.service.name}}.flatten.uniq.size
         assert_selector("#service_id > option", count: service_count, visible: false)
       end
 
       it 'arm checkbox should only display if @service selected is on arm' do
         find('#remove_service_button').click()
-        bootstrap_select "#service_id", service.name
+        bootstrap_select "#service_id", @service.name
         assert_selector(".arm-checkbox > label", count: 2)
       end
     end

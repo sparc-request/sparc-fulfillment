@@ -43,8 +43,7 @@ RSpec.describe ProtocolsController, type: :controller do
   describe "GET #show" do
 
     before :each do
-      create_and_assign_protocol_to_me
-      @protocol = Protocol.first
+      @protocol = create_and_assign_protocol_to_me
     end
 
     it "returns http success" do

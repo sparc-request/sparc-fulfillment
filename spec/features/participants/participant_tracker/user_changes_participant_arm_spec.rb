@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'User changes Participant Arm', js: true do
 
   scenario 'and sees the updated Participant' do
-    protocol    = create(:protocol_imported_from_sparc)
+    protocol    = create_and_assign_protocol_to_me
     second_arm  = protocol.arms.second
 
     visit protocol_path(protocol.sparc_id)

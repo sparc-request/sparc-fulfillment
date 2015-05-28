@@ -5,6 +5,7 @@ RSpec.describe Protocol, type: :model do
   it { is_expected.to belong_to(:sub_service_request) }
 
   it { is_expected.to have_one(:organization) }
+  it { is_expected.to have_one(:human_subjects_info) }
 
   it { is_expected.to have_many(:arms).dependent(:destroy) }
   it { is_expected.to have_many(:line_items).dependent(:destroy) }
@@ -13,6 +14,17 @@ RSpec.describe Protocol, type: :model do
   it { is_expected.to have_many(:service_requests) }
 
   context 'class methods' do
+
+    describe ".human_subjects_info" do
+
+      it "should find associated HumanSubjectsInfo by :sparc_id" do
+        protocol                      = create(:protocol)
+        expected_human_subjects_info  = create(:human_subjects_info, protocol: protocol)
+        other_human_subjects_info     = create(:human_subjects_info)
+
+        expect(protocol.human_subjects_info).to eq(expected_human_subjects_info)
+      end
+    end
 
     describe '#delete' do
 
@@ -28,13 +40,13 @@ RSpec.describe Protocol, type: :model do
     describe 'callbacks' do
 
       it 'should callback :update_via_faye after save' do
-        protocol = create(:protocol_imported_from_sparc)
+        protocol = create_and_assign_protocol_to_me
 
         expect(protocol).to callback(:update_faye).after(:save)
       end
 
       it 'should callback :update_via_faye after destroy' do
-        protocol = create(:protocol_imported_from_sparc)
+        protocol = create_and_assign_protocol_to_me
 
         expect(protocol).to callback(:update_faye).after(:destroy)
       end
@@ -46,7 +58,7 @@ RSpec.describe Protocol, type: :model do
     describe 'subsidy_committed' do
 
       it 'should return the correct amount in cents' do
-        protocol = create(:protocol_imported_from_sparc)
+        protocol = create_and_assign_protocol_to_me
 
         protocol.update_attributes(study_cost: 5000, stored_percent_subsidy: 10.00)
 
@@ -57,7 +69,7 @@ RSpec.describe Protocol, type: :model do
     describe 'pi' do
 
       it 'should return the primary investigator of the protocol' do
-        protocol = create(:protocol_imported_from_sparc)
+        protocol = create_and_assign_protocol_to_me
 
         expect(protocol.pi).to eq protocol.project_roles.where(role: "primary-pi").first.identity
       end
@@ -66,7 +78,7 @@ RSpec.describe Protocol, type: :model do
     describe 'coordinators' do
 
       it 'should return the coordinators of the protocol' do
-        protocol = create(:protocol_imported_from_sparc)
+        protocol = create_and_assign_protocol_to_me
 
         expect(protocol.coordinators).to eq protocol.project_roles.where(role: "research-assistant-coordinator").map(&:identity)
       end
@@ -75,7 +87,7 @@ RSpec.describe Protocol, type: :model do
     describe 'one_time_fee_line_items' do
 
       it 'should return the line items of type one time fee of the protocol' do
-        protocol = create(:protocol_imported_from_sparc)
+        protocol = create_and_assign_protocol_to_me
 
         expect(protocol.one_time_fee_line_items).to eq protocol.line_items.includes(:service).where(:services => {:one_time_fee => true})
       end

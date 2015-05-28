@@ -46,23 +46,19 @@ feature 'Identity views protocols', js: true do
   end
 
   def given_i_am_not_a_fulfillment_provider_for_a_protocol
-    other_identity    = create(:identity)
-    clinical_provider = create(:clinical_provider_with_organization, identity: other_identity)
-    organization      = clinical_provider.organization
-    service_request   = create(:service_request_with_protocol)
-    create(:sub_service_request, organization: organization, service_request: service_request)
+    organization            = create(:organization)
+    sub_service_request     = create(:sub_service_request, organization: organization)
+    @unauthorized_protocol  = create(:protocol, sub_service_request: sub_service_request)
   end
 
   def given_i_am_a_fulfillment_provider_for_a_protocol_whose_irb_expiration_date_is_null
-    create_and_assign_protocol_to_me
-    protocol = Protocol.first
+    protocol = create_and_assign_protocol_to_me
 
     protocol.update_attribute :irb_expiration_date, nil
   end
 
   def given_i_am_a_fulfillment_provider_for_a_protocol_whiose_irb_approval_date_is_null
-    create_and_assign_protocol_to_me
-    protocol = Protocol.first
+    protocol = create_and_assign_protocol_to_me
 
     protocol.update_attribute :irb_approval_date, nil
   end
@@ -89,7 +85,7 @@ feature 'Identity views protocols', js: true do
   end
 
   def and_i_should_not_be_able_to_access_protocols_for_which_i_am_not_a_filfillment_provider
-    visit protocol_path(1) # tries to visit protocol without access
+    visit protocol_path(@unauthorized_protocol.sparc_id) # tries to visit protocol without access
     expect(current_path).to eq root_path # gets redirected back to index
   end
 

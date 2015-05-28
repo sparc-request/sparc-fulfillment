@@ -68,8 +68,7 @@ feature 'Followup note', js: true do
   end
 
   def as_a_user_who_has_created_a_procedure
-    create_and_assign_protocol_to_me
-    protocol    = Protocol.first
+    protocol    = create_and_assign_protocol_to_me
     @assignee   = Identity.first
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
