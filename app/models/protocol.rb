@@ -23,6 +23,7 @@ class Protocol < ActiveRecord::Base
 
   delegate  :irb_approval_date,
             :irb_expiration_date,
+            :irb_number,
             to: :human_subjects_info
 
   #For displaying the subsidy committed on the index page
