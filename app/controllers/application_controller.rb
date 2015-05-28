@@ -11,6 +11,12 @@ class ApplicationController < ActionController::Base
     Time.use_zone(time_zone, &block)
   end
 
+  def authorize_identity protocol_id
+    unless current_identity.protocols.map(&:id).include? protocol_id.to_i
+      redirect_to root_path
+    end
+  end
+
   private
 
   def last_page

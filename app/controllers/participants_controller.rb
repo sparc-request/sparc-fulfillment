@@ -1,7 +1,7 @@
 class ParticipantsController < ApplicationController
-
   respond_to :json, :html
   before_action :find_participant, only: [:show, :edit, :update, :destroy]
+  before_action -> { authorize_identity @participant.protocol_id }, only: [:show]
 
   def index
     @protocol = Protocol.find(params[:protocol_id])

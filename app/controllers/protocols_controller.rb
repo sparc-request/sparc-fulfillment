@@ -1,5 +1,6 @@
 class ProtocolsController < ApplicationController
-
+  before_action :find_protocol, only: [:show]
+  before_action -> { authorize_identity @protocol.id }, only: [:show]
   respond_to :json, :html
 
   def index
@@ -18,10 +19,15 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    @protocol = Protocol.find_by_sparc_id(params[:id])
     @services = Service.per_participant
     @page = 1
 
     gon.push({ protocol_id: @protocol.id })
+  end
+
+  private
+
+  def find_protocol
+    @protocol = Protocol.find_by_sparc_id(params[:id])
   end
 end

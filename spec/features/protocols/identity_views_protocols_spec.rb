@@ -12,6 +12,7 @@ feature 'Identity views protocols', js: true do
     given_i_am_not_a_fulfillment_provider_for_a_protocol
     when_i_visit_the_protocols_page
     then_i_should_not_see_protocols_for_which_i_am_not_a_filfillment_provider
+    and_i_should_not_be_able_to_access_protocols_for_which_i_am_not_a_filfillment_provider
   end
 
   scenario 'and sees Coordinators' do
@@ -85,6 +86,11 @@ feature 'Identity views protocols', js: true do
 
   def then_i_should_not_see_protocols_for_which_i_am_not_a_filfillment_provider
     expect(page).to have_css("table.protocols tbody tr", text: "No matching records found")
+  end
+
+  def and_i_should_not_be_able_to_access_protocols_for_which_i_am_not_a_filfillment_provider
+    visit protocol_path(1) # tries to visit protocol without access
+    expect(current_path).to eq root_path # gets redirected back to index
   end
 
   def then_i_should_see_a_list_of_coordinators
