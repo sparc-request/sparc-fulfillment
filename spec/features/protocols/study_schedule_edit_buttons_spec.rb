@@ -39,13 +39,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
-<<<<<<< HEAD
         new_arm = Arm.find_by_name('arm name')
         expect(new_arm.line_items.count).to eq(0)
-=======
-        new_arm = all(".calendar.service").last()
-        expect(new_arm).not_to have_css ".row.line_item"
->>>>>>> master
       end
 
       it "should add an arm with services" do
@@ -56,13 +51,8 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
-<<<<<<< HEAD
         new_arm = Arm.find_by_name('arm name')
         expect(new_arm.line_items.count).to eq(1)
-=======
-        new_arm = all(".calendar.service").last()
-        expect(new_arm).to have_css ".row.line_item"
->>>>>>> master
       end
 
       it "should create visits with an arm" do
