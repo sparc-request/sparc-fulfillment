@@ -20,7 +20,7 @@ $ ->
       e = $(this)
 
     $('table.protocols').on 'click', 'td:not(td.coordinators)', ->
-      id = $(this).parent().find("td.sparc_id").text()
+      id = $(this).parent().find("td.id").text()
       if id.length > 0
         window.location = "/protocols/#{id}"
 

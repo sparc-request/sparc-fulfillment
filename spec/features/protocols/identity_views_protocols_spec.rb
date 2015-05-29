@@ -85,7 +85,7 @@ feature 'Identity views protocols', js: true do
   end
 
   def and_i_should_not_be_able_to_access_protocols_for_which_i_am_not_a_filfillment_provider
-    visit protocol_path(@unauthorized_protocol.sparc_id) # tries to visit protocol without access
+    visit protocol_path(@unauthorized_protocol.id) # tries to visit protocol without access
     expect(current_path).to eq root_path # gets redirected back to index
   end
 

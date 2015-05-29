@@ -9,7 +9,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
     @line_item      = @arm.line_items.first
     @visit_group    = @arm.visit_groups.first
     @visit          = @line_item.visits.first
-    visit protocol_path(@protocol.sparc_id)
+    visit protocol_path(@protocol.id)
   end
 
   it 'should display the calendar with visit names, line items, and visits' do

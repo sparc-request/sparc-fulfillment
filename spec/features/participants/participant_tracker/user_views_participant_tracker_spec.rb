@@ -5,7 +5,7 @@ feature 'User views Participant Tracker', js: true do
   before :each do
     protocol    = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
     click_link 'Participant Tracker'
   end
 

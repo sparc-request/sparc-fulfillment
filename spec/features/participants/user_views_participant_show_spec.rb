@@ -5,7 +5,9 @@ feature 'User views Participant show', js: true do
   scenario 'and does not have access' do
     protocol    = create_and_assign_protocol_to_me
     participant = protocol.participants.first
+
     visit participant_path(participant.id)
+
     expect(current_path).to eq root_path # gets redirected back to index
   end
 

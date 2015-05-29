@@ -1,5 +1,6 @@
 json.(protocol)
 
+json.id protocol.id
 json.sparc_id protocol.sparc_id
 json.status protocol.status
 json.short_title protocol.short_title
