@@ -1,6 +1,6 @@
 class ProtocolsController < ApplicationController
   before_action :find_protocol, only: [:show]
-  before_action -> { authorize_identity @protocol_id }, only: [:show]
+  before_action -> { authorize_identity @protocol.id }, only: [:show]
   respond_to :json, :html
 
   def index
@@ -29,6 +29,5 @@ class ProtocolsController < ApplicationController
 
   def find_protocol
     @protocol = Protocol.find_by_sparc_id(params[:id])
-    @protocol_id = @protocol ? @protocol.id : nil
   end
 end
