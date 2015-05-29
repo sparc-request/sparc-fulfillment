@@ -24,6 +24,7 @@
 //= require participants
 //= require study_schedule_edit_buttons
 //= require appointments
+//= require autoload_appointment
 //= require tasks
 //= require reports
 //= require study_level_activities
