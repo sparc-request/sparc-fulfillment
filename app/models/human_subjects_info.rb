@@ -7,6 +7,6 @@ class HumanSubjectsInfo < ActiveRecord::Base
   belongs_to :protocol, primary_key: :sparc_id
 
   def irb_number
-    pro_number || hr_number
+    pro_number.blank? ? hr_number : pro_number
   end
 end
