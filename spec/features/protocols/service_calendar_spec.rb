@@ -62,7 +62,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
       it "should check all visits for the line item when check is clicked" do
         within("#line_item_#{@line_item.id}") do
           find(".check_row").click()
-          wait_for_ajaxq
+          wait_for_ajax
           expect(all('input[type=checkbox]:checked').count).to eq(Visit.per_page)
         end
       end

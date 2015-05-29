@@ -86,6 +86,26 @@ $ ->
       success: =>
         $(this).attr('previous_qty', quantity)
 
+  $(document).on 'change', '.visit_name', ->
+    visit_group_id = $(this).data('visit_group_id')
+    name = $(this).val()
+    data =
+      'visit_group_id': visit_group_id,
+      'name':           name
+    $.ajax
+      type: 'PUT'
+      url:  '/service_calendar/change_visit_name'
+      data: data
+      success: ->
+        # Need to find out if this is actually necessary
+        # or if we can use faye
+
+        $(".visit_dropdown option[value=#{visit_group_id}]").text("- #{name}")
+        $(".visit_dropdown").selectpicker('refresh')
+
+        $("#visits option[value=#{visit_group_id}]").text("#{name}")
+        $("#visits").selectpicker('refresh')
+
   $(document).on 'click', '.change_line_item_service', ->
     data =
       'line_item_id': $(this).attr('line_item_id')

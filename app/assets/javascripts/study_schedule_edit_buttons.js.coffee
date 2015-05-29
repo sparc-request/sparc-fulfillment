@@ -147,6 +147,9 @@ $ ->
   $select.find('option').remove()
   $select.prepend('<option value=' + id + '>' + name + '</option>')
   $select.selectpicker('refresh')
+  $(".visit_dropdown option[value=#{id}]").text("- #{name}")
+  $(".visit_dropdown").selectpicker('refresh')
+
 
 (exports ? this).remove_arm = (arm_id) ->
   $select = $('#arms')
