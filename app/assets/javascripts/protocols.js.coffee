@@ -21,8 +21,8 @@ $ ->
 
     $('table.protocols').on 'click', 'td:not(td.coordinators)', ->
       id = $(this).parent().find("td.sparc_id").text()
-
-      window.location = "/protocols/#{id}"
+      if id.length > 0
+        window.location = "/protocols/#{id}"
 
     # if $("body.particpanttracker-particpant_tracker").length >= 0
       #insert edit excel spreadsheet and delete buttons here

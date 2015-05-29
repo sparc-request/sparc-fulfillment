@@ -6,7 +6,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     @protocol = create_and_assign_protocol_to_me
     @arm1     = @protocol.arms.first
     @arm2     = @protocol.arms.last
-    @service  = @protocol.organization.inclusive_descendant_services(:per_participant).first
+    @service  = @protocol.organization.inclusive_child_services(:per_participant).first
 
     visit protocol_path(@protocol.sparc_id)
   end

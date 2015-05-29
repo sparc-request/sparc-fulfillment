@@ -257,6 +257,7 @@ en:
       removed: "Participant Removed"
       arm_change: "Participant Successfully Changed Arms"
       recruitment_source: "Recruitment Source has been updated"
+      not_found: "Participant Not Found"
 
   procedure:
     followup: "Follow Up"
@@ -267,6 +268,7 @@ en:
     remove: "Remove"
     follow_up_date: "Follow up date"
     completed_date: "Completed Date"
+    performed_by: "Performed By"
     r_t: "R/T"
     status: "Status"
     object: "Procedure"
@@ -281,7 +283,8 @@ en:
     coordinators: "Coordinators"
     irb_approval_date: "IRB Approval Date"
     irb_expiration_date: "Current IRB Expiration Date"
-    udak_project_number: "IRB #"
+    irb_number: "IRB #"
+    udak_project_number: "UDAK Project #"
     start_date: "Study Start Date"
     end_date: "Study End Date"
     study_cost: "Total Study Costs"
@@ -300,6 +303,7 @@ en:
       services: "Services | "
     flash_messages:
       unauthorized: "Authorization Failure"
+      not_found: "Protocol Not Found"
 
   reports:
     request_report: "Request Report"

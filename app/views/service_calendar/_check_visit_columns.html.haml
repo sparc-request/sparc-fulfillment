@@ -1,5 +1,8 @@
 - visit_groups.each_with_index do |visit_group, index|
   .col-xs-1.text-center
     .glyphicon.check_column.btn.btn-primary{visit_group_id: visit_group.id, check: "#{set_check(visit_group)}", class: "#{glyph_class(visit_group)}"}
+    .r-t-labels
+      %span.even_shorter_text.r-label
+      %span.even_shorter_text.t-label
 - (visit_groups.size...Visit.per_page).each do |index|
   .col-xs-1{class: "column_#{index}"} &nbsp

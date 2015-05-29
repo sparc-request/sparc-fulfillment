@@ -18,6 +18,7 @@
 //= require bootstrap-datetimepicker
 //= require moment/en-gb
 //= require jquery.remotipart
+//= require nprogress
 
 //= require protocols
 //= require service_calendar
@@ -27,5 +28,6 @@
 //= require tasks
 //= require reports
 //= require study_level_activities
-//= require faye
 //= require global
+//= require faye
+//= require ajax_progress_bar

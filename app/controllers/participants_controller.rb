@@ -1,7 +1,7 @@
 class ParticipantsController < ApplicationController
   respond_to :json, :html
   before_action :find_participant, only: [:show, :edit, :update, :destroy]
-  before_action -> { authorize_identity @participant.protocol_id }, only: [:show]
+  before_action :authorize_protocol, only: [:show]
 
   def index
     @protocol = Protocol.find(params[:protocol_id])
@@ -15,7 +15,6 @@ class ParticipantsController < ApplicationController
   end
 
   def show
-    @protocol = @participant.protocol
     @participant.build_appointments
   end
 
@@ -72,6 +71,12 @@ class ParticipantsController < ApplicationController
   end
 
   def find_participant
-    @participant = Participant.find(params[:id])
+    @participant = Participant.where(id: params[:id]).first
+    if @participant.present?
+      @protocol = @participant.protocol
+    else
+      flash[:alert] = t(:participant)[:flash_messages][:not_found]
+      redirect_to root_path
+    end
   end
 end
