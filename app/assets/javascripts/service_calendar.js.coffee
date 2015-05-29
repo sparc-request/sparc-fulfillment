@@ -55,6 +55,8 @@ $ ->
       url:  '/service_calendar/change_tab'
       data: data
 
+    update_r_t_labels()
+
   $(document).on 'change', '.visit', ->
     data =
       'visit_id': $(this).val()
@@ -159,3 +161,20 @@ $ ->
         type: 'PUT'
         url:  '/service_calendar/remove_line_item'
         data: data
+
+  # if the current tab is not Template, then place R T labels
+  # above check visit columns
+  window.update_r_t_labels = () ->
+    # find active sstudy schedule tab, and pull name
+    # from data-tab attribute
+    tab = $("#service_calendar_tabs li.active a").
+      data('tab')
+
+    if tab != "template"
+      $(".r-label").text("R")
+      $(".t-label").text("T")
+    else
+      $(".r-label").text("")
+      $(".t-label").text("")
+
+  update_r_t_labels()
