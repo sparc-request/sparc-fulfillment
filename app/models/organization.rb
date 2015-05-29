@@ -13,7 +13,8 @@ class Organization < ActiveRecord::Base
     services.
       send(scope).
       push(all_child_services(scope)).
-      flatten
+      flatten.
+      sort_by(&:name)
   end
 
   def protocols
