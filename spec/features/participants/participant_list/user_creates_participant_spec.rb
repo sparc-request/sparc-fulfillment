@@ -5,7 +5,7 @@ feature 'User creates Participant', js: true do
   scenario 'and sees the new Participants in the list' do
     protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
     click_link 'Participant List'
     click_link 'Create New Participant'
     user_fills_in_new_participant_form

@@ -6,7 +6,7 @@ feature 'User changes Participant Arm', js: true do
     protocol    = create_and_assign_protocol_to_me
     second_arm  = protocol.arms.second
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
     click_link 'Participant Tracker'
     page.find('table.participants tbody tr:first-child td.change_arm a').click
     select second_arm.name, from: 'Current Arm'

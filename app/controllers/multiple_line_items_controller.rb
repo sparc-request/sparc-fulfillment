@@ -6,7 +6,7 @@ class MultipleLineItemsController < ApplicationController
   def new_line_items
     #called to render modal to mass create line items
     @selected_service = params[:service_id]
-    @protocol = Protocol.find_by(sparc_id: params[:protocol_id])
+    @protocol = Protocol.find params[:protocol_id]
     @services = @protocol.organization.inclusive_child_services(:per_participant)
     @page_hash = params[:page_hash]
     @calendar_tab = params[:calendar_tab]
@@ -15,7 +15,7 @@ class MultipleLineItemsController < ApplicationController
   def edit_line_items
     #called to render modal to mass remove line items
     @selected_service = params[:service_id]
-    @protocol = Protocol.find_by(sparc_id: params[:protocol_id])
+    @protocol = Protocol.find params[:protocol_id]
     @services = @protocol.arms.map{ |arm| arm.line_items.map{ |li| li.service } }.flatten.uniq
     @page_hash = params[:page_hash]
     @calendar_tab = params[:calendar_tab]

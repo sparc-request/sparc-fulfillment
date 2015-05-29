@@ -48,7 +48,7 @@ feature 'Fulfillments', js: true do
   end
 
   def as_a_user_who_visits_study_level_activities_tab
-    visit protocol_path(@protocol.sparc_id)
+    visit protocol_path(@protocol.id)
     click_link "Study Level Activities"
   end
 
