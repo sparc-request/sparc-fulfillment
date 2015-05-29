@@ -26,6 +26,10 @@ class Protocol < ActiveRecord::Base
             :irb_number,
             to: :human_subjects_info
 
+  def srid # this is a combination of sparc_id and sub_service_request.ssr_id
+    "#{sparc_id} - #{sub_service_request.ssr_id}"
+  end
+
   #For displaying the subsidy committed on the index page
   def subsidy_committed
     study_cost  = self.study_cost / 100.00

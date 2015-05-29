@@ -30,6 +30,7 @@ en:
     options: "Options"
 
   appointment:
+    srid: "SRID"
     protocol_id: "Protocol ID"
     appointment_dropdown: "Please select a visit:"
     completed: "Completed Visits"
@@ -107,6 +108,7 @@ en:
   index_page:
     updates: "Updates"
     sparc_id: "SPARC ID"
+    srid: "SRID"
     status: "Status"
     short_title: "Short Title"
     principal_investigator: "Principal Investigator"
@@ -220,6 +222,7 @@ en:
     object: "Protocol"
     updates: "Updates"
     sparc_id: "SPARC ID"
+    srid: "SRID"
     status: "Status"
     short_title: "Short Title"
     principal_investigator: "Principal Investigator"

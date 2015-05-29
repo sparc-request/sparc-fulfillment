@@ -1,6 +1,7 @@
 json.(participant)
 json.id participant.id
 json.protocol_id participant.protocol_id
+json.srid participant.srid
 json.arm_id participant.arm_id
 json.arm_name truncated_formatter(participant.arm.name) if participant.arm
 json.first_middle truncated_formatter(participant.first_middle)
