@@ -58,6 +58,9 @@ en:
     deleted: "Arm Destroyed"
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
     object: "Arm"
+    selected_line_items: "Selected Services"
+    flash_messages:
+      updated: "Arm Updated"
 
   documents:
     new_header: "Add Document"
@@ -142,6 +145,60 @@ en:
       quantity_requested: "Quantity Requested changed to "
       service_id: "Service changed to "
       started_at: "Started At changed to "
+
+  task_index:
+    user_name: "Created by"
+    completed: "Completed"
+    show_complete: "Show Complete"
+    assignable_type: "Type"
+    protocol_id: "Protocol"
+    visit_name: "Visit"
+    arm_name: "Arm"
+    body: "Task"
+    assignee_name: "Assigned to"
+    due_at: "Due date"
+    reschedule: "Reschedule"
+    create_task: "Create Task"
+    task_type: "Task type"
+    completed_tasks_header: "Completed Tasks"
+    no_completed_tasks: "There are currently no completed tasks"
+    incompletion: "Set to Incomplete"
+    show_title: "Task"
+    participant:
+      full_name: "Participant name"
+    protocol:
+      short_title: "Protocol"
+    visit:
+      id: "Visit"
+    arm:
+      name: "Arm"
+    procedure:
+      name: "Procedure"
+
+  protocol_tabs:
+    study_schedule: "Study Schedule"
+    participant_list: "Participant List"
+    participant_tracker: "Participant Tracker"
+    study_level_charges: "Study Level Charges"
+    audit_reporting: "Audit Reporting"
+
+  study_schedule_tab:
+    buttons:
+      arm: "Manage Arms"
+      visit: "Manage Visits"
+      services: "Manage Services"
+
+  visit_groups:
+    name: "Visit Name"
+    arm: "Arm"
+    position: "Insert into Position"
+    window_before: "Window Before"
+    window_after: "Window After"
+    day: "Visit Day"
+    created: "Visit Created"
+    deleted: "Visit Destroyed"
+    not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
+    
 
   notes:
     new_header: "Add Note"
@@ -298,3 +355,5 @@ en:
     deleted: "Visit Destroyed"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
     object: "Visit Group"
+    flash_messages:
+      updated: "Visit Updated"

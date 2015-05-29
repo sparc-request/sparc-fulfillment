@@ -5,11 +5,7 @@ class ArmsController < ApplicationController
 
   def new
     @protocol = Protocol.find(params[:protocol_id])
-    services_on_protocol = []
-    @protocol.arms.each {|arm| services_on_protocol << arm.line_items.pluck(:service_id) }
-    #the only services avaliable for select in the modal are the ones which are already on other arms of this protocol
-    services = services_on_protocol.flatten.uniq
-    @services = Service.find(services)
+    @services = Service.find(services_for_protocol)
     @arm = Arm.new(protocol: @protocol)
   end
 
@@ -29,6 +25,20 @@ class ArmsController < ApplicationController
     end
   end
 
+  def edit
+    @arm = Arm.find(params[:arm_id])
+    @protocol = @arm.protocol
+  end
+
+  def update
+    @arm = Arm.find(params[:id])
+    if @arm.update_attributes(arm_params)
+      flash[:success] = t(:arm)[:flash_messages][:updated]
+    else
+      @errors = @arm.errors
+    end
+  end
+
   def destroy
     if Arm.where("protocol_id = ?", params[:protocol_id]).count == 1
       flash.now[:alert] = t(:arm)[:not_deleted]
@@ -39,12 +49,14 @@ class ArmsController < ApplicationController
     end
   end
 
-  def refresh_vg_dropdown
-    @visit_groups = @arm.visit_groups
-    respond_with @visit_groups
-  end
-
   private
+
+  def services_for_protocol
+    services_on_protocol = []
+    @protocol.arms.each {|arm| services_on_protocol << arm.line_items.pluck(:service_id) }
+    #the only services avaliable for select in the modal are the ones which are already on other arms of this protocol
+    services_on_protocol.flatten.uniq
+  end
 
   def arm_params
     params.require(:arm).permit(:protocol_id, :name, :visit_count, :subject_count)

@@ -8,17 +8,6 @@ RSpec.describe ArmsController do
     @arm = create(:arm, protocol_id: @protocol.id)
   end
 
-  describe "GET #refresh_vg_dropdown" do
-    it "should respond with visit_groups" do
-      xhr :get, :refresh_vg_dropdown, {
-        protocol_id: @protocol.id,
-        id: @arm.id,
-        format: :json
-      }
-      expect(assigns(:visit_groups)).to eq(@arm.visit_groups)
-    end
-  end
-
   describe "GET #new" do
     it "should instantiate a new arm" do
       xhr :get, :new, {

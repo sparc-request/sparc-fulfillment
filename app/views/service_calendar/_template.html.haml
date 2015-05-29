@@ -3,26 +3,27 @@
 .calendar.service{class: "arm_#{arm.id}"}
   -# Headers (Services, Number of Participants, Visit Navigation, Empty for deleting line items)
   .row.header
-    .col-xs-3.text-center Services
-    .col-xs-1.text-center N
-    .col-xs-1 &nbsp;
-    .col-xs-6.text-center
-      .row
+    .col-xs-4.text-center Services
+    .col-xs-8.text-center
+      %div
+        .col-xs-2
         -# The previous page arrow
         .col-xs-2
           .page_change_arrow.btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
         -# The visit jump to drop down
-        .col-xs-8{id: "select_for_arm_#{arm.id}"}
+        .col-xs-4{id: "select_for_arm_#{arm.id}"}
           = build_visits_select(arm, page)
         -# The next page arrow
         .col-xs-2
-          .page_change_arrow.btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page}
-      .row{class: "visit_groups visit_groups_for_#{arm.id}"}
-        = render partial: '/service_calendar/visit_groups', locals: {arm: arm, visit_groups: visit_groups}
-    .col-xs-1 &nbsp;
-  -# Display Arm Name
+          .page_change_arrow.btn.btn-info.btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page}
+  .row.visit_groups
+    .col-xs-4
+    %div.visit_groups{class: "visit_groups visit_groups_for_#{arm.id}"}
+      = render partial: '/service_calendar/visit_groups', locals: {arm: arm, visit_groups: visit_groups}
   .row.arm-name
-    .col-xs-5= "Arm: #{arm.name}"
+    .col-xs-4
+      Arm:
+      %span{id: "arm-name-display-#{arm.id}"}= arm.name
     %div{class: "check_columns_for_arm_#{arm.id}"}
       = render partial: '/service_calendar/check_visit_columns', locals: {visit_groups: visit_groups}
     .col-xs-1
@@ -30,7 +31,7 @@
     .scrolling-div.col-xs-12
       - arm.line_items_grouped_by_core.each do |core_id, line_items|
         .row.core{id: "arm_#{arm.id}_core_#{core_id}"}
-          .col-xs-12= "Core: #{line_items[0].sparc_core_name}"
+          .col-xs-12= "#{line_items[0].sparc_core_name}"
         - line_items.each do |li|
           = render partial: 'service_calendar/line_item', locals: {line_item: li, page: page}
         %div{id: "arm_#{arm.id}_end_of_core_#{core_id}"}

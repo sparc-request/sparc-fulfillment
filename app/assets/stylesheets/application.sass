@@ -125,15 +125,22 @@ table.custom_striped.details
       padding-bottom: 8px
 
   .row.visit_groups
+    background: #113967
+    color: white
+    .visit_groups > div
+
+
+  .row.visit_group_day_windows
     border-top: 1px solid white
   .visit_groups > div
     border-right: 1px solid white
     &:last-child
       border: 0px
 
-  .day_window
-    padding-left: 0px
-    padding-right: 0px
+  .visit_name_display span input
+    width: 85%
+    display: inline
+    padding: 6px 4px
 
   .header
     background: #113967
@@ -144,8 +151,6 @@ table.custom_striped.details
     select
       color: black
 
-  // .row.line_item:nth-child(even)
-  //   background-color: #ababab
   .row.line_item
     border-top: 1px solid #ababab
     padding: 4px 0px
