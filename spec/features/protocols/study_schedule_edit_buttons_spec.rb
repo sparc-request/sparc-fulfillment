@@ -8,7 +8,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
     @arm2     = @protocol.arms.last
     @service  = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    visit protocol_path(@protocol.sparc_id)
+    visit protocol_path(@protocol.id)
   end
 
   describe "arm buttons" do
@@ -39,8 +39,13 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
+<<<<<<< HEAD
         new_arm = Arm.find_by_name('arm name')
         expect(new_arm.line_items.count).to eq(0)
+=======
+        new_arm = all(".calendar.service").last()
+        expect(new_arm).not_to have_css ".row.line_item"
+>>>>>>> master
       end
 
       it "should add an arm with services" do
@@ -51,8 +56,13 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
         expect(page).to have_content 'Arm Created'
+<<<<<<< HEAD
         new_arm = Arm.find_by_name('arm name')
         expect(new_arm.line_items.count).to eq(1)
+=======
+        new_arm = all(".calendar.service").last()
+        expect(new_arm).to have_css ".row.line_item"
+>>>>>>> master
       end
 
       it "should create visits with an arm" do
@@ -134,10 +144,11 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         bootstrap_select "#arms", "#{@arm2.name}"
         find('#remove_visit_group_button').click()
         page.driver.browser.accept_js_confirms
+        wait_for_ajax
         expect(page).to have_content "Arms must have at least one visit. Add another visit before deleting this one"
       end
 
-      it "should remove the visit group from the @service calendar" do
+      it "should remove the visit group from the service calendar" do
         vg = @arm1.visit_groups.first
         bootstrap_select "#visits", "#{vg.name}"
         wait_for_ajax
@@ -175,7 +186,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         visit current_path
       end
 
-      it "should remove @service from one or more arms" do
+      it "should remove service from one or more arms" do
         expect(page).to have_css("div#arm_#{@arm1.id}_core_#{@service.sparc_core_id}")
         expect(page).to have_css("div#arm_#{@arm2.id}_core_#{@service.sparc_core_id}")
         find('#remove_service_button').click()

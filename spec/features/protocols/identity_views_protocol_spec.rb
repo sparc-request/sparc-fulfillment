@@ -13,7 +13,7 @@ feature 'Identity views protocol', js: true do
   end
 
   def when_i_visit_the_protocol_page
-    visit protocol_path(@protocol.sparc_id)
+    visit protocol_path(@protocol.id)
   end
 
   def then_i_should_see_a_correctly_formatted_irb_expiration_date

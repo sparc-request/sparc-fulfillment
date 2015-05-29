@@ -5,7 +5,7 @@ feature 'User deletes Participant', js: true do
   scenario 'and sees the Participant is remove from the list' do
     protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
     click_link 'Participant List'
     accept_confirm do
       page.find('table.participants tbody tr:first-child td.delete a').click

@@ -1,8 +1,9 @@
 #custom-toolbar
   = select_tag 'index_selectpicker', options_for_select(Protocol::STATUSES, 'All'), class: 'selectpicker'
-%table.protocols.custom_striped{id: "protocol-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: "/protocols.json", "sort-name" => "sparc_id", "sort-order" => 'asc', striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel']}}
+%table.protocols.custom_striped{id: "protocol-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: protocols_path(format: :json), "sort-name" => "sparc_id", "sort-order" => 'asc', striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel']}}
   %thead
     %tr
+      %th{data: {class: 'id', field: 'id', visible: 'false'}}
       %th{data: {class: 'updates', align: 'left', field: 'updates'}}
         = t(:protocol)[:updates]
       %th{data: {class: 'sparc_id', align: 'left', sortable: "true", field: 'sparc_id'}}

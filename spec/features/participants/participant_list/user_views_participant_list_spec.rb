@@ -5,7 +5,7 @@ feature 'User views Participant list', js: true do
   before do
     protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
     click_link 'Participant List'
   end
 
