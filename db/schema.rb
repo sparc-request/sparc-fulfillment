@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528171130) do
+ActiveRecord::Schema.define(version: 20150529151011) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -258,7 +258,7 @@ ActiveRecord::Schema.define(version: 20150528171130) do
   end
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
-  add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
+  add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", using: :btree
   add_index "protocols", ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id", using: :btree
 
   create_table "reports", force: :cascade do |t|
