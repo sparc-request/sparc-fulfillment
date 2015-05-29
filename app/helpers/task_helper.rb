@@ -16,10 +16,9 @@ module TaskHelper
   end
 
   def format_task_type(task)
-    if task.assignable_type == "Procedure"
-      return task.assignable_type + " (#{task.assignable.service_name})"
-    else
-      return task.assignable_type
-    end
+    task_type = task.assignable_type
+    task_type += " (#{task.assignable.service_name})" if task_type == "Procedure"
+
+    task_type
   end
 end
