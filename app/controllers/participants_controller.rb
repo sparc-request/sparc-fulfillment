@@ -16,6 +16,8 @@ class ParticipantsController < ApplicationController
 
   def show
     @participant.build_appointments
+
+    gon.push({appointment_id: params[:appointment_id]})
   end
 
   def create
