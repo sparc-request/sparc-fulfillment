@@ -4,7 +4,7 @@
     - if tab == 'template'
       = check_box_tag "visit_check_#{visit.id}", visit.id, visit.has_billing?, class: 'visit'
     - else
-      = text_field_tag "visits_#{visit.id}_research_billing_qty", visit.research_billing_qty, class: 'even_shorter_text quantity research pull-left', visit_id: visit.id, qty_type: 'research_billing_qty', previous_qty: visit.research_billing_qty
-      = text_field_tag "visits_#{visit.id}_insurance_billing_qty", visit.insurance_billing_qty, class: 'even_shorter_text quantity insurance pull-left', visit_id: visit.id, qty_type: 'insurance_billing_qty', previous_qty: visit.insurance_billing_qty
+      = text_field_tag "visits_#{visit.id}_research_billing_qty", visit.research_billing_qty, class: 'even_shorter_text quantity research', visit_id: visit.id, qty_type: 'research_billing_qty', previous_qty: visit.research_billing_qty
+      = text_field_tag "visits_#{visit.id}_insurance_billing_qty", visit.insurance_billing_qty, class: 'even_shorter_text quantity insurance', visit_id: visit.id, qty_type: 'insurance_billing_qty', previous_qty: visit.insurance_billing_qty
 - (visits.size...Visit.per_page).each do |index|
   .col-xs-1{class: "line_item_#{line_item.id}_visit_#{index}"} &nbsp
