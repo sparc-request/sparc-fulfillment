@@ -17,5 +17,6 @@
       = render 'protocols/study_schedule/consolidated_request'
     .service_calendar_container
       - protocol.arms.each do |arm|
-        = render partial: 'service_calendar/template', locals: {arm: arm, page: page}
-        %br
+        .arms_container{id: "arms_container_#{arm.id}"}
+          = render partial: 'service_calendar/template', locals: {arm: arm, page: page}
+          %br
