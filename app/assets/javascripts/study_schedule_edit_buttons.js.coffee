@@ -154,3 +154,9 @@ $ ->
   $select.selectpicker('refresh')
   $(".calendar.service.arm_#{arm_id}").remove()
 
+(exports ? this).remove_visit_group = (visit_group_id) ->
+  $select = $('#visits')
+  $select.find("[value=#{visit_group_id}]").remove()
+  $select.selectpicker('refresh')
+  $(".calendar.service.visit_group_#{visit_group_id}").remove()
+

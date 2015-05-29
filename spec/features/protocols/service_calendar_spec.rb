@@ -14,7 +14,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
 
   it 'should display the calendar with visit names, line items, and visits' do
     expect(page).to have_css(".calendar.service.arm_#{@arm.id}")
-    expect(page).to have_css("#visit_group_#{@visit_group.id}")
+    expect(page).to have_css("#visit-name-display-#{@visit_group.id}")
     expect(page).to have_css("#line_item_#{@line_item.id}")
     expect(page).to have_css("#visit_check_#{@visit.id}")
   end
@@ -24,29 +24,6 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
     wait_for_ajax
     expect(page).to have_css("#visits_#{@visit.id}_research_billing_qty")
     expect(page).to have_css("#visits_#{@visit.id}_insurance_billing_qty")
-  end
-
-  describe "removing a line_item" do
-
-    it "should remove the line item" do
-      within("#line_item_#{@line_item.id}") do
-        find(".remove_line_item").click()
-        wait_for_ajax
-      end
-      expect(page).not_to have_css("#line_item_#{@line_item.id}")
-    end
-
-    it "should remove the core when all line items for that core have been removed" do
-      core_id = @line_item.sparc_core_id
-      @arm.line_items.each do |line_item|
-        within("#line_item_#{line_item.id}") do
-          find(".remove_line_item").click()
-          wait_for_ajax
-        end
-      end
-      expect(page).not_to have_css("#arm_#{@arm.id}_core_#{core_id}")
-    end
-
   end
 
   describe "changing pages" do
@@ -85,7 +62,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
       it "should check all visits for the line item when check is clicked" do
         within("#line_item_#{@line_item.id}") do
           find(".check_row").click()
-          wait_for_ajax
+          wait_for_ajaxq
           expect(all('input[type=checkbox]:checked').count).to eq(Visit.per_page)
         end
       end
