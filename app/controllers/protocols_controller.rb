@@ -1,6 +1,6 @@
 class ProtocolsController < ApplicationController
   before_action :find_protocol, only: [:show]
-  before_action -> { authorize_identity @protocol.id }, only: [:show]
+  before_action :authorize_protocol, only: [:show]
   respond_to :json, :html
 
   def index
@@ -28,6 +28,10 @@ class ProtocolsController < ApplicationController
   private
 
   def find_protocol
-    @protocol = Protocol.find_by_sparc_id(params[:id])
+    @protocol = Protocol.where(sparc_id: params[:id]).first
+    unless @protocol.present?
+      flash[:alert] = t(:protocol)[:flash_messages][:not_found]
+      redirect_to root_path
+    end
   end
 end

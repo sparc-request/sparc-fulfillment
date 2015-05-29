@@ -200,6 +200,7 @@ en:
       removed: "Participant Removed"
       arm_change: "Participant Successfully Changed Arms"
       recruitment_source: "Recruitment Source has been updated"
+      not_found: "Participant Not Found"
 
   procedure:
     followup: "Follow Up"
@@ -245,6 +246,7 @@ en:
       services: "Services | "
     flash_messages:
       unauthorized: "Authorization Failure"
+      not_found: "Protocol Not Found"
 
   reports:
     request_report: "Request Report"
