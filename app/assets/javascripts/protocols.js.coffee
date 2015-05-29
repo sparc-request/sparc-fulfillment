@@ -16,24 +16,12 @@ $ ->
     $(".bootstrap-table .fixed-table-toolbar").
       prepend('<div class="columns btn-group pull-right financial--view" data-toggle="buttons"><label class="btn btn-default financial" title="Financial View"><input type="radio" autocomplete="off" value="financial"><i class="glyphicon glyphicon-usd"></i></label><label class="btn btn-default management" title="Management View"><input type="radio" autocomplete="off" value="management"><i class="glyphicon glyphicon-book"></i></label></div>')
 
-    $(".financial-management-view label").on "click", ->
-      e = $(this)
-
     $('table.protocols').on 'click', 'td:not(td.coordinators)', ->
-      id = $(this).parent().find("td.id").text()
-      if id.length > 0
-        window.location = "/protocols/#{id}"
+      if $(this).find("div.card-view").length == 0
+        row_index   = $(this).parents("tr").data("index")
+        protocol_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
 
-    # if $("body.particpanttracker-particpant_tracker").length >= 0
-      #insert edit excel spreadsheet and delete buttons here
-
-
-    # $('#protocol-list').on 'search.bs.table', (e, text) ->
-    #   if text == ''
-    #     status = $('.selectpicker').val()
-    #     $('#protocol-list').bootstrapTable('refresh', {url: "/protocols/protocols_by_status.json?status=" + status})
-    #   else
-    #     $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json"})
+        window.location = "/protocols/#{protocol_id}"
 
     #Index table events
     $(document).on 'change', '#index_selectpicker', ->
