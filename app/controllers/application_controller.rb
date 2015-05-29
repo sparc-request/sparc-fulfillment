@@ -11,8 +11,8 @@ class ApplicationController < ActionController::Base
     Time.use_zone(time_zone, &block)
   end
 
-  def authorize_identity protocol_id
-    unless current_identity.protocols.map(&:id).include? protocol_id.to_i
+  def authorize_protocol
+    unless current_identity.protocols.include? @protocol
       flash[:alert] = t(:protocol)[:flash_messages][:unauthorized]
       redirect_to root_path
     end
