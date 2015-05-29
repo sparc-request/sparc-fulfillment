@@ -179,7 +179,6 @@ $ ->
 
   # switch to previously selected tab (before page load)
   current_tab = $.cookie("active-protocol-tab")
-  console.log("current tab: " + current_tab)
 
   if current_tab && current_tab.length > 0
     $(".nav-tabs a[href='##{current_tab}']").click()
