@@ -47,9 +47,6 @@ RSpec.describe ProtocolImporterJob, type: :job do
       expect(protocol.stored_percent_subsidy).to eq(9.9)
       expect(protocol.status).to eq('Complete')
 
-      # UserRoles
-      expect(protocol.project_roles.any?).to be
-
       # Arms
       expect(Arm.where('sparc_id IS NULL').any?).to_not be
       expect(Arm.where('protocol_id IS NULL').any?).to_not be
