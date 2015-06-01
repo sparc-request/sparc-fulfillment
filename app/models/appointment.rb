@@ -31,7 +31,7 @@ class Appointment < ActiveRecord::Base
   # all its procedures must either be complete, incomplete, or
   # have a follow up date assigned to it.
   def can_finish?
-    !start_date.blank? && (procedures.all? { |proc| proc.handled? })
+    !start_date.blank? && (procedures.all? { |proc| !proc.unstarted? })
   end
 
   def has_completed_procedures?

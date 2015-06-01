@@ -90,6 +90,8 @@ class ProceduresController < ApplicationController
                         permit(:status, :follow_up_date, :completed_date, :billing_type,
                                 notes_attributes: [:comment, :kind, :identity_id, :reason],
                                 tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
+    @procedure_params[:status] = "unstarted" if @procedure_params[:status].blank?
+    @procedure_params
   end
 
   def find_procedure

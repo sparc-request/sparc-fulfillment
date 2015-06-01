@@ -9,7 +9,7 @@ class AuditingReportJob < ActiveJob::Base
       csv << ["From", start_date, "To", end_date]
       csv << [""]
       csv << [""]
-      csv << ["Protocol ID", "Patient Name", "Patient ID", "Arm Name", "Visit Name", "Performed Date", "Nexus Core", "Service Due", "Billing Type", "If not completed, reason?", "Cost"]
+      csv << ["Protocol ID", "Patient Name", "Patient ID", "Arm Name", "Visit Name", "Service Completion Date", "Marked as Incomplete Date", "Marked with Follow-Up Date", "Added?", "Nexus Core", "Service Name", "Completed?", "Billing Type (R/T/O)", "If not completed, reason or F/U", "Cost"]
 
       if protocol_ids
         protocols = Protocol.find(protocol_ids)
@@ -18,9 +18,9 @@ class AuditingReportJob < ActiveJob::Base
       end
 
       protocols.each do |protocol|
-        protocol.procedures.to_a.select{|procedure| procedure.appointment.completed_date && procedure.completed_date && (start_date..end_date).cover?(procedure.completed_date)}.each do |procedure|
+        protocol.procedures.to_a.select{|procedure| procedure.appointment.completed_date && !procedure.unstarted? && (start_date..end_date).cover?(procedure.handled_date)}.each do |procedure|
           participant = procedure.appointment.participant
-          csv << [protocol.sparc_id, participant.full_name, participant.label, procedure.appointment.arm.name, procedure.appointment.name, procedure.completed_date, procedure.service.organization.name, procedure.service_name, procedure.formatted_billing_type, procedure.reason, display_cost(procedure.service_cost)]
+          csv << [protocol.sparc_id, participant.full_name, participant.label, procedure.appointment.arm.name, procedure.appointment.name, procedure.completed_date, procedure.incompleted_date, procedure.handled_date, added(procedure), procedure.service.organization.name, procedure.service_name, procedure.complete? ? "Yes" : "No", procedure.formatted_billing_type, reason_follow_up(procedure), display_cost(procedure.service_cost)]
         end
       end
     end
@@ -33,4 +33,25 @@ class AuditingReportJob < ActiveJob::Base
     end
     FayeJob.enqueue(report)
   end
+
+  private
+
+  def added(procedure)
+    procedure.visit? ? "" : "**Added**"
+  end
+
+  def reason_follow_up(procedure)
+    text = ""
+    if procedure.incomplete && procedure.reason
+      text = "#{procedure.reason} "
+    end
+    if procedure.task
+      text = text + "Follow-Up Due Date: #{procecure.task.due_at}"
+    end
+
+    return text
+  end
+
 end
+
+

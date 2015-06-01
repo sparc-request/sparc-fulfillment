@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528132727) do
+ActiveRecord::Schema.define(version: 20150529181119) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -201,21 +201,21 @@ ActiveRecord::Schema.define(version: 20150528132727) do
   add_index "participants", ["protocol_id"], name: "index_participants_on_protocol_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
-    t.integer  "appointment_id",  limit: 4
-    t.string   "service_name",    limit: 255
-    t.integer  "service_cost",    limit: 4
-    t.integer  "service_id",      limit: 4
-    t.string   "status",          limit: 255
+    t.integer  "appointment_id",   limit: 4
+    t.string   "service_name",     limit: 255
+    t.integer  "service_cost",     limit: 4
+    t.integer  "service_id",       limit: 4
+    t.string   "status",           limit: 255, default: "unstarted"
     t.datetime "start_date"
     t.datetime "completed_date"
-    t.string   "billing_type",    limit: 255
-    t.string   "reason",          limit: 255
-    t.integer  "sparc_core_id",   limit: 4
-    t.string   "sparc_core_name", limit: 255
+    t.string   "billing_type",     limit: 255
+    t.integer  "sparc_core_id",    limit: 4
+    t.string   "sparc_core_name",  limit: 255
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "visit_id",        limit: 4
+    t.integer  "visit_id",         limit: 4
+    t.datetime "incompleted_date"
   end
 
   add_index "procedures", ["appointment_id"], name: "index_procedures_on_appointment_id", using: :btree

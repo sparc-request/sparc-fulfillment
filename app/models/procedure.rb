@@ -1,6 +1,6 @@
 class Procedure < ActiveRecord::Base
 
-  STATUS_TYPES = %w(complete incomplete).freeze
+  STATUS_TYPES = %w(complete incomplete follow_up unstarted).freeze
   NOTABLE_REASONS  = ['Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained', 'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment', 'Assessment performed by other personnel/study staff', 'Participant refused assessment', 'Assessment not performed due to equipment failure'].freeze
 
   has_paper_trail
@@ -19,14 +19,16 @@ class Procedure < ActiveRecord::Base
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
 
+  before_save :set_status_dependancies
+
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
 
   accepts_nested_attributes_for :notes
 
-  scope :untouched,   -> { where('status IS NULL')              }
-  scope :incomplete,  -> { where('completed_date IS NULL')      }
-  scope :complete,    -> { where('completed_date IS NOT NULL')  }
+  scope :untouched,   -> { where(status: 'unstarted') }
+  scope :incomplete,  -> { where(status: 'incomplete') }
+  scope :complete,    -> { where(status: 'complete') }
 
   # select Procedures that belong to an Appointment without a start date
   scope :belonging_to_unbegun_appt, -> { joins(:appointment).where('appointments.start_date IS NULL') }
@@ -48,33 +50,29 @@ class Procedure < ActiveRecord::Base
     end
   end
 
-  def update_attributes(attributes)
-    if attributes[:status].present? &&
-        attributes[:status] == "complete" &&
-        (incomplete? || status.nil? || reset?)
-      attributes.merge!(completed_date: Time.current)
-    elsif attributes[:status].blank? &&
-        attributes[:status] == ''
-      attributes.merge!(completed_date: nil)
-    elsif attributes[:completed_date].present?
-      attributes[:completed_date] = Time.strptime(attributes[:completed_date], "%m-%d-%Y")
-    end
-    super attributes
-  end
-
   # Has this procedure's appointment started?
   def appt_started?
     appointment.start_date.present?
   end
 
-  # Has this procedure been completed, incompleted, or
-  # assigned a follow up date?
-  def handled?
-    complete? or incomplete? or task.present?
+  def handled_date
+    if complete?
+      return completed_date
+    elsif incomplete?
+      return incompleted_date
+    elsif follow_up
+      return task.created_at
+    else
+      return nil
+    end
   end
 
-  def reset?
-    status == ''
+  def follow_up_date
+    if task.present?
+      return task.due_at
+    else
+      return nil
+    end
   end
 
   def complete?
@@ -85,11 +83,51 @@ class Procedure < ActiveRecord::Base
     status == 'incomplete'
   end
 
+  def follow_up?
+    status == 'follow_up'
+  end
+
+  def unstarted?
+    status == 'unstarted'
+  end
+
+  def reason_note
+    if incomplete?
+      notes.select{|note| note.reason?}.first
+    end
+  end
+
   def destroy
-    if status.blank? and not task.present?
+    if unstarted?
       super
     else
       raise ActiveRecord::ActiveRecordError
+    end
+  end
+
+  def completed_date=(completed_date)
+    if completed_date.present?
+      write_attribute(:completed_date, Time.strptime(completed_date, "%m-%d-%Y"))
+    else
+      write_attribute(:completed_date, nil)
+    end
+  end
+
+  private
+
+  def set_status_dependancies
+    if status_changed?(to: "complete")
+      write_attribute(:incompleted_date, nil)
+      write_attribute(:completed_date, Date.today)
+    elsif status_changed?(to: "incomplete")
+      write_attribute(:completed_date, nil)
+      write_attribute(:incompleted_date, Date.today)
+    elsif status_changed?(to: "unstarted") or status_changed?(to: "follow_up")
+      write_attribute(:completed_date, nil)
+      write_attribute(:incompleted_date, nil)
+      if task.present?
+        write_attribute(:status, "follow_up")
+      end
     end
   end
 end
