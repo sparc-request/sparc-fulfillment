@@ -16,8 +16,8 @@ class ArmImporter
 
       local_arm.update_attributes attributes
 
-      VisitGroupImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create
       LineItemImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create
+      VisitGroupImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create
     end
   end
 

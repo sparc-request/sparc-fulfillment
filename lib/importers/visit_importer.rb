@@ -15,12 +15,13 @@ class VisitImporter
       remote_line_items_visit = remote_line_items_visits(remote_line_items_visit_sparc_id)['line_items_visit']
       remote_line_item_callback_url    = remote_line_items_visit['line_item']['callback_url']
       remote_line_item = RemoteObjectFetcher.fetch(remote_line_item_callback_url)['line_item']
+      local_line_item = LineItem.find_by_sparc_id remote_line_item['sparc_id']
 
       next unless remote_line_item['sub_service_request_id'] == @remote_sub_service_request['sparc_id']
 
       normalized_attributes   = RemoteObjectNormalizer.new('Visit', remote_visit).normalize!
       local_visit             = Visit.create(sparc_id: remote_visit['sparc_id'])
-      visit_attributes        = normalized_attributes.merge!({ visit_group: @local_visit_group })
+      visit_attributes        = normalized_attributes.merge!({ visit_group: @local_visit_group, line_item: local_line_item })
 
       local_visit.update_attributes visit_attributes
     end

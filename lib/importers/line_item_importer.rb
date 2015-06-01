@@ -7,16 +7,9 @@ class LineItemImporter
   end
 
   def create
-    remote_arm_line_items_visits_ids = @remote_arm['line_items_visits'].map { |line_items_visit| line_items_visit.values_at('sparc_id') }.compact.flatten
+    remote_line_item_ids = @remote_sub_service_request['line_items'].map { |line_item| line_item.values_at('sparc_id') }.compact.flatten
 
-    remote_line_items_visits(remote_arm_line_items_visits_ids)['line_items_visits'].each do |remote_line_item_visit|
-      visit_ids                            = remote_line_item_visit['visits'].map { |visit| visit.values_at('sparc_id') }.flatten
-
-      remote_line_item_callback_url        = remote_line_item_visit['line_item']['callback_url']
-      remote_line_item                     = RemoteObjectFetcher.fetch(remote_line_item_callback_url)['line_item']
-
-      next unless remote_line_item['sub_service_request_id'] == @remote_sub_service_request['sparc_id']
-      
+    remote_line_items(remote_line_item_ids)['line_items'].each do |remote_line_item|
       remote_line_item_quantity            = remote_line_item['quantity'] || 0
       remote_line_item_units_per_quantity  = remote_line_item['units_per_quantity'] || 1
       remote_line_item_quantity_requested  = remote_line_item_quantity * remote_line_item_units_per_quantity
@@ -27,12 +20,11 @@ class LineItemImporter
 
       local_line_item_attributes           = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service,
                                                quantity_type: local_effective_pricing_map.quantity_type,
-                                               quantity_requested: remote_line_item_quantity_requested
+                                               quantity_requested: remote_line_item_quantity_requested,
+                                               sparc_id: remote_line_item['sparc_id']
                                              }
 
       local_line_item                      = LineItem.create(local_line_item_attributes)
-
-      Visit.where(sparc_id: visit_ids).update_all line_item_id: local_line_item.id
     end
   end
 
@@ -44,7 +36,7 @@ class LineItemImporter
 
   private
 
-  def remote_line_items_visits(line_items_visit_ids)
-    RemoteObjectFetcher.new('line_items_visit', line_items_visit_ids, { depth: 'full_with_shallow_reflections' }).build_and_fetch
+  def remote_line_items(line_item_ids)
+    RemoteObjectFetcher.new('line_items', line_item_ids, { depth: 'full_with_shallow_reflections' }).build_and_fetch
   end
 end

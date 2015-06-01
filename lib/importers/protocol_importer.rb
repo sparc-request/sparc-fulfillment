@@ -43,7 +43,8 @@ class ProtocolImporter
   end
 
   def remote_sub_service_request
-    @remote_sub_service_request ||= RemoteObjectFetcher.fetch(@callback_url)
+    remote_sub_service_request  ||= RemoteObjectFetcher.fetch(@callback_url)
+    @remote_sub_service_request ||= RemoteObjectFetcher.new('sub_service_request', remote_sub_service_request['sub_service_request']['sparc_id'], { depth: 'full_with_shallow_reflections' }).build_and_fetch
   end
 
   def remote_service_request
