@@ -32,8 +32,6 @@ feature 'Performed by dropdown', js: true do
   end
 
   def and_i_select_another_name_in_the_performed_by_dropdown
-    puts "#performed-by-#{@procedure.id}"
-    screenshot
     bootstrap_select "#performed-by-#{@procedure.id}", @performer.full_name
   end
 
