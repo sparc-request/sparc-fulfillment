@@ -5,7 +5,7 @@ feature 'User edits Participant', js: true do
   scenario 'and sees the updated Participant' do
     protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
     click_link 'Participant List'
     page.find('table.participants tbody tr:first-child td.edit a').click
     fill_in 'First Name', with: 'Starlord'

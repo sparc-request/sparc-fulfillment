@@ -4,20 +4,9 @@ RSpec.describe VisitGroupsController,type: :controller do
   before :each do
     sign_in
     @protocol = create(:protocol)
-    @arm = create(:arm)
+    @arm = create(:arm, protocol: @protocol)
     @line_item = create(:line_item, protocol: @protocol, service: create(:service))
     @visit_group = create(:visit_group, arm_id: @arm.id)
-  end
-
-  describe "GET #new" do
-    it "should set the variables for the add form" do
-      xhr :get, :new, {
-        protocol_id: @protocol.id,
-        arm_id: @arm.id,
-      }
-      expect(assigns(:arm)).to eq(@arm)
-      #how to test for @visit_group
-    end
   end
 
   describe "POST #create" do

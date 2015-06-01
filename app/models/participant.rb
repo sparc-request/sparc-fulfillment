@@ -14,6 +14,9 @@ class Participant < ActiveRecord::Base
 
   has_many :appointments
 
+  delegate :srid,
+           to: :protocol
+
   after_save :update_faye
   after_destroy :update_faye
 

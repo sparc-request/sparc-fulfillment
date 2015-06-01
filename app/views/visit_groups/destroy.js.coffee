@@ -1,7 +1,7 @@
 $("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
 <% if @delete %>
-refresh_vg_dropdown()
 $("#visits_select_for_<%= @arm.id %>").replaceWith( "<%= escape_javascript(build_visits_select(@arm, @current_page)) %>")
+remove_visit_group("<%= @visit_group.id %>")
 <% if  on_current_page?(@current_page, @visit_group) %>
   # Overwrite the visit_groups
 $(".visit_groups_for_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/service_calendar/visit_groups', locals: {arm: @arm, visit_groups: @visit_groups}) %>")

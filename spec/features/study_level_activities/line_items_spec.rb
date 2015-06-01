@@ -4,9 +4,9 @@ feature 'Line Items', js: true do
 
   before :each do
     @protocol      = create_and_assign_protocol_to_me
-    @service1      = @protocol.organization.inclusive_descendant_services(:per_participant).first
+    @service1      = @protocol.organization.inclusive_child_services(:per_participant).first
     @service1.update_attributes(name: 'Admiral Tuskface', one_time_fee: true)
-    @service2      = @protocol.organization.inclusive_descendant_services(:per_participant).second
+    @service2      = @protocol.organization.inclusive_child_services(:per_participant).second
     @service2.update_attributes(name: 'Captain Cinnebon', one_time_fee: true)
     @pricing_map   = create(:pricing_map, service: @service1, quantity_type: 'Case', effective_date: Time.current)
   end
@@ -28,7 +28,7 @@ feature 'Line Items', js: true do
   end
 
   def as_a_user_who_visits_study_level_activities_tab
-    visit protocol_path(@protocol.sparc_id)
+    visit protocol_path(@protocol.id)
     click_link 'Study Level Activities'
   end
 
@@ -67,7 +67,7 @@ feature 'Line Items', js: true do
   def and_the_line_item_should_pull_pricing_map_data
     expect(page).to have_content('Case')
   end
-  
+
   def and_in_the_notes
     first('.notes.list[data-notable-type="LineItem"]').click
     wait_for_ajax

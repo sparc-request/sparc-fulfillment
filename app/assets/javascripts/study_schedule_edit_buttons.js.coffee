@@ -1,12 +1,5 @@
 $ ->
 
-  if $("body.protocols-show").length > 0
-    # initialize visit group select list
-    refresh_vg_dropdown()
-
-    $(document).on 'change', '#arms', ->
-      refresh_vg_dropdown()
-
     $(document).on 'click', '#add_arm_button', ->
       protocol_id = $('#arms').data('protocol_id')
       $.ajax
@@ -22,20 +15,41 @@ $ ->
           type: 'DELETE'
           url: "/arms/#{arm_id}?protocol_id=#{protocol_id}"
 
-    $(document).on 'click', '#add_visit_button', ->
+    $(document).on 'click', '#add_visit_group_button', ->
+      current_page = $(".visit_dropdown").first().attr('page')
+      protocol_id = $('#arms').data('protocol_id')
       calendar_tab = $('#current_tab').attr('value')
-      arm_id = $('#arms').val()
-      page = $("#visits_select_for_#{arm_id}").val()
       data =
-        'arm_id': arm_id
-        'page': page
+        'current_page': current_page
         'calendar_tab': calendar_tab
+        'protocol_id' : protocol_id
       $.ajax
         type: 'GET'
         url: "/visit_groups/new"
         data: data
 
-    $(document).on 'click', '#remove_visit_button', ->
+
+    $(document).on 'click', '#edit_visit_group_button', ->
+      visit_group_id = $('#visits').val()
+      protocol_id = $('#arms').data('protocol_id')
+      data = 
+        'protocol_id'    : protocol_id
+        'visit_group_id' : visit_group_id
+      $.ajax
+        type: 'GET'
+        url: "/visit_groups/#{visit_group_id}/edit"
+        data: data
+
+    $(document).on 'click', '#edit_arm_button', ->
+      arm_id = $('#arms').val()
+      data = 
+        'arm_id' : arm_id
+      $.ajax
+        type: 'GET'
+        url: "/arms/#{arm_id}/edit"
+        data: data
+
+    $(document).on 'click', '#remove_visit_group_button', ->
       calendar_tab = $('#current_tab').attr('value')
       visit_group_id = $("#visits").val()
       arm_id = $('#arms').val()
@@ -93,6 +107,20 @@ $ ->
         service_id = $(this).find('option:selected').val()
         change_service service_id
 
+    $(document).on 'change', '#visit_group_arm_id', ->
+      arm_id = $(this).find('option:selected').val()
+      update_visit_group_form_page(arm_id)
+      data =
+        'arm_id': arm_id
+      $.ajax
+        type: 'GET'
+        url: '/visit_groups/update_positions_on_arm_change'
+        data: data
+
+(exports ? this).update_visit_group_form_page = (arm_id) ->
+  page = $("#visits_select_for_#{arm_id}").val()
+  $("#current_page").val(page)
+
 (exports ? this).change_service = (service_id) ->
   protocol_id = $('#arms').data('protocol_id')
   data =
@@ -108,23 +136,30 @@ $ ->
   $select.append('<option value=' + id + '>' + name + '</option>')
   $select.selectpicker('refresh')
 
-(exports ? this).refresh_vg_dropdown = ->
+(exports ? this).edit_arm = (name, id) ->
+  $select = $('#arms')
+  $select.find('option').remove()
+  $select.prepend('<option value=' + id + '>' + name + '</option>')
+  $select.selectpicker('refresh')
+
+(exports ? this).edit_visit_group = (name, id) ->
   $select = $('#visits')
-  protocol_id = $('#arms').data('protocol_id')
-  arm_id = $('#arms').val()
+  $select.find('option').remove()
+  $select.prepend('<option value=' + id + '>' + name + '</option>')
+  $select.selectpicker('refresh')
+  $(".visit_dropdown option[value=#{id}]").text("- #{name}")
+  $(".visit_dropdown").selectpicker('refresh')
 
-  $.get "/arms/#{arm_id}/refresh_vg_dropdown", (data) ->
-    visit_groups = data
-    $select.find('option').remove()
-
-    $.each visit_groups, (key, visit_group) ->
-      $select.append('<option value=' + visit_group.id + '>' + visit_group.name + '</option>')
-
-    $select.selectpicker('refresh')
 
 (exports ? this).remove_arm = (arm_id) ->
   $select = $('#arms')
   $select.find("[value=#{arm_id}]").remove()
   $select.selectpicker('refresh')
   $(".calendar.service.arm_#{arm_id}").remove()
+
+(exports ? this).remove_visit_group = (visit_group_id) ->
+  $select = $('#visits')
+  $select.find("[value=#{visit_group_id}]").remove()
+  $select.selectpicker('refresh')
+  $(".calendar.service.visit_group_#{visit_group_id}").remove()
 

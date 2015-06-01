@@ -40,7 +40,7 @@ feature 'Documents', js: true do
   def as_a_user_who_visits_study_level_activities_tab
     protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
     click_link "Study Level Activities"
   end
 
@@ -49,11 +49,11 @@ feature 'Documents', js: true do
     wait_for_ajax
   end
 
-  def then_i_should_see_the_line_item_documents_list 
+  def then_i_should_see_the_line_item_documents_list
     expect(page).to have_content('Line Item Documents')
   end
 
-  def then_i_should_see_the_fulfillment_documents_list 
+  def then_i_should_see_the_fulfillment_documents_list
     expect(page).to have_content('Fulfillment Documents')
   end
 

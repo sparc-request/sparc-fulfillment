@@ -1,11 +1,14 @@
 json.(protocol)
 
+json.id protocol.id
 json.sparc_id protocol.sparc_id
+json.srid protocol.srid
 json.status protocol.status
 json.short_title protocol.short_title
 json.irb_approval_date format_date(protocol.irb_approval_date)
 json.irb_expiration_date format_date(protocol.irb_expiration_date)
 json.udak_project_number protocol.udak_project_number
+json.irb_number protocol.irb_number
 json.start_date format_date(protocol.start_date)
 json.end_date format_date(protocol.end_date)
 json.study_cost display_cost(protocol.study_cost)

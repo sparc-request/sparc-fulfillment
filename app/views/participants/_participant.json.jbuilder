@@ -1,6 +1,7 @@
 json.(participant)
 json.id participant.id
 json.protocol_id participant.protocol_id
+json.srid participant.srid
 json.arm_id participant.arm_id
 json.arm_name truncated_formatter(participant.arm.name) if participant.arm
 json.first_middle truncated_formatter(participant.first_middle)
@@ -23,5 +24,5 @@ json.delete deleteFormatter(participant)
 json.calendar calendarFormatter(participant)
 json.report statsFormatter(participant)
 json.chg_arm changeArmFormatter(participant)
-json.recruitment_source recruitment_formatter(participant)
+json.recruitment_source truncated_formatter(participant.recruitment_source)
 json.coordinators formatted_coordinators(participant.protocol.coordinators.map(&:full_name))

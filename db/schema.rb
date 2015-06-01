@@ -216,6 +216,7 @@ ActiveRecord::Schema.define(version: 20150529181119) do
     t.datetime "updated_at"
     t.integer  "visit_id",         limit: 4
     t.datetime "incompleted_date"
+    t.integer  "performer_id",     limit: 4
   end
 
   add_index "procedures", ["appointment_id"], name: "index_procedures_on_appointment_id", using: :btree
@@ -257,7 +258,7 @@ ActiveRecord::Schema.define(version: 20150529181119) do
   end
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
-  add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", unique: true, using: :btree
+  add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", using: :btree
   add_index "protocols", ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id", using: :btree
 
   create_table "reports", force: :cascade do |t|

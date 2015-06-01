@@ -6,24 +6,15 @@ class Organization < ActiveRecord::Base
 
   has_many :services
   has_many :sub_service_requests
+  has_many :children, class_name: "Organization",
+                      foreign_key: :parent_id
 
-  def inclusive_descendant_services(scope)
+  def inclusive_child_services(scope)
     services.
       send(scope).
-      push(descendant_organizations.map { |organization| organization.services.send(scope) }).
-      flatten
-  end
-
-  def descendant_organizations
-    descendants = direct_descendants(id)
-
-    descendants.push descendants.map { |descendant| descendant.direct_descendants(descendant.id) }
-
-    descendants.flatten
-  end
-
-  def direct_descendants(id=self.id)
-    Organization.where(parent_id: id)
+      push(all_child_services(scope)).
+      flatten.
+      sort_by(&:name)
   end
 
   def protocols
@@ -35,6 +26,14 @@ class Organization < ActiveRecord::Base
     else
       Array.new
     end
+  end
+
+  def all_child_organizations
+    [children, children.map(&:all_child_organizations)].flatten
+  end
+
+  def all_child_services(scope)
+    all_child_organizations.map { |child| child.services.send(scope) }
   end
 end
 

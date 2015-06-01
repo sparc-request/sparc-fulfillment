@@ -55,6 +55,8 @@ $ ->
       url:  '/service_calendar/change_tab'
       data: data
 
+    update_r_t_labels()
+
   $(document).on 'change', '.visit', ->
     data =
       'visit_id': $(this).val()
@@ -97,7 +99,12 @@ $ ->
       success: ->
         # Need to find out if this is actually necessary
         # or if we can use faye
+
         $(".visit_dropdown option[value=#{visit_group_id}]").text("- #{name}")
+        $(".visit_dropdown").selectpicker('refresh')
+
+        $("#visits option[value=#{visit_group_id}]").text("#{name}")
+        $("#visits").selectpicker('refresh')
 
   $(document).on 'click', '.change_line_item_service', ->
     data =
@@ -152,10 +159,33 @@ $ ->
         else
           check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
 
-  $(document).on 'click', '.remove_line_item', ->
-    if confirm("Are you sure you want to remove this line item?")
-      data = 'line_item_id': $(this).data('line_item_id')
-      $.ajax
-        type: 'PUT'
-        url:  '/service_calendar/remove_line_item'
-        data: data
+  (exports ? this).change_service = (service_id) ->
+    protocol_id = $('#arms').data('protocol_id')
+    data =
+      'protocol_id': protocol_id
+      'service_id': service_id
+    $.ajax
+      type: 'GET'
+      url: "/multiple_line_items/necessary_arms"
+      data: data
+
+  # if the current tab is not Template, then place R T labels
+  # above check visit columns
+  window.update_r_t_labels = () ->
+    # find active study schedule tab, and pull name
+    # from data-tab attribute
+    tab = $("#service_calendar_tabs li.active a").
+      data('tab')
+
+    if tab != "template"
+      $(".r-label").text("R")
+      $(".t-label").text("T")
+    else
+      $(".r-label").text("")
+      $(".t-label").text("")
+
+  # switch to previously selected tab (before page load)
+  current_tab = $.cookie("active-protocol-tab")
+
+  if current_tab && current_tab.length > 0
+    $(".nav-tabs a[href='##{current_tab}']").click()

@@ -37,7 +37,7 @@ feature 'Navigation', js: true do
   def and_i_view_the_first_protocol_participant_tracker
     protocol = Protocol.first
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
     click_link 'Participant Tracker'
   end
 
@@ -48,7 +48,7 @@ feature 'Navigation', js: true do
   def and_i_view_the_second_protocol
     protocol = Protocol.second
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
   end
 
   def then_the_study_schedule_tab_should_be_active
@@ -58,7 +58,7 @@ feature 'Navigation', js: true do
   def given_i_am_viewing_a_protocol
     protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.sparc_id)
+    visit protocol_path(protocol.id)
   end
 
   def and_i_click_the_home_button
