@@ -21,22 +21,6 @@ RSpec.describe NotificationDispatcher, type: :request do
           end
         end
       end
-
-      context 'ProjectRole' do
-
-        context 'create action' do
-
-          before do
-            params = { notification: attributes_for(:notification_project_role_create) }
-
-            sparc_sends_notification_post(params)
-          end
-
-          it 'should create a ProjectRoleImporterJob delayed job' do
-            expect(Delayed::Job.where("handler LIKE '%struct:ProjectRoleImporterJob%'").one?).to be
-          end
-        end
-      end
     end
   end
 end
