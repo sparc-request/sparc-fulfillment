@@ -1,8 +1,8 @@
 class LineItemImporter
 
-  def initialize(local_arm, remote_arm, remote_sub_service_request)
+  def initialize(local_arm=nil, local_protocol, remote_sub_service_request)
     @local_arm  = local_arm
-    @remote_arm = remote_arm
+    @local_protocol = local_protocol
     @remote_sub_service_request = remote_sub_service_request
   end
 
@@ -16,9 +16,13 @@ class LineItemImporter
 
       remote_line_item_service_id          = remote_line_item['service_id']
       local_service                        = Service.find(remote_line_item_service_id)
+
+      next if @local_arm and local_service.one_time_fee? # skip one_time_fee service
+      next if !@local_arm and !local_service.one_time_fee? # skip per patient service
+
       local_effective_pricing_map          = local_service.current_effective_pricing_map
 
-      local_line_item_attributes           = { protocol: @local_arm.protocol, arm: @local_arm, service: local_service,
+      local_line_item_attributes           = { protocol: @local_protocol, arm: @local_arm, service: local_service,
                                                quantity_type: local_effective_pricing_map.quantity_type,
                                                quantity_requested: remote_line_item_quantity_requested,
                                                sparc_id: remote_line_item['sparc_id']
