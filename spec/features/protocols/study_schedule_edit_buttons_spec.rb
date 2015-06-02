@@ -91,6 +91,19 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).not_to have_content "Arm: #{@arm1.name}"
       end
     end
+
+    describe "the edit arm button" do
+
+      it "should update the arm" do
+        bootstrap_select "#arms", "#{@arm1.name}"
+        find('#edit_arm_button').click()
+        wait_for_ajax
+        fill_in 'Arm Name', with: 'New Name'
+        click_button 'Submit'
+        wait_for_ajax
+        expect(page).to have_content "New Name"
+      end
+    end
   end
 
   describe "visit group buttons" do
@@ -144,6 +157,19 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         page.driver.browser.accept_js_confirms
         wait_for_ajax
         expect(page).to have_content "Visit Destroyed"
+      end
+    end
+
+    describe "the edit visit group button" do
+
+      it "should update the visit group" do
+        bootstrap_select "#visits", "#{@arm1.visit_groups.first.name}"
+        find('#edit_visit_group_button').click()
+        wait_for_ajax
+        fill_in 'Visit Name', with: 'New Name'
+        click_button 'Submit'
+        wait_for_ajax
+        expect(page).to have_content "New Name"
       end
     end
   end
