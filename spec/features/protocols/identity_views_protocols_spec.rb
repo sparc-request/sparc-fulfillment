@@ -53,7 +53,7 @@ feature 'Identity views protocols', js: true do
   end
 
   def then_i_should_see_protocols_for_which_i_am_a_filfillment_provider
-    expect(page).to have_css("table.protocols tbody tr td.sparc_id", count: 1)
+    expect(page).to have_css("table.protocols tbody tr td.short_title", count: 1)
   end
 
   def then_i_should_not_see_protocols_for_which_i_am_not_a_filfillment_provider
