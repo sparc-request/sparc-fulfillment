@@ -45,7 +45,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def pi
-    project_roles.where(role: "primary-pi").first.identity
+    project_roles.where(role: "primary-pi").first.identity unless project_roles.empty?
   end
 
   def coordinators

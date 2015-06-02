@@ -19,11 +19,14 @@ Rails.application.routes.draw do
 
   resources :reports do
     collection do
-      post 'create_billing_report', to: 'reports#create_billing_report'
       get 'new_billing_report', to: 'reports#new_billing_report'
+      post 'create_billing_report', to: 'reports#create_billing_report'
 
-      post 'create_auditing_report', to: 'reports#create_auditing_report'
       get 'new_auditing_report', to: 'reports#new_auditing_report'
+      post 'create_auditing_report', to: 'reports#create_auditing_report'
+
+      get 'new_participant_report', to: 'reports#new_participant_report'
+      post 'create_participant_report', to: 'reports#create_participant_report'
     end
   end
 

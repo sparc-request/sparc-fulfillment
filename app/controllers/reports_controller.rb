@@ -12,6 +12,15 @@ class ReportsController < ApplicationController
     end
   end
 
+  def new_billing_report
+  end
+
+  def new_auditing_report
+  end
+
+  def new_participant_report
+  end
+
   def create_billing_report
     @report = current_identity.reports.new(name: "Billing Report", status: "Pending")
     date_validation(params[:start_date], params[:end_date])
@@ -23,6 +32,7 @@ class ReportsController < ApplicationController
 
       BillingReportJob.perform_later(@report.id, start_date, end_date, params[:protocol_ids])
     end
+    render :create_report
   end
 
   def create_auditing_report
@@ -36,12 +46,17 @@ class ReportsController < ApplicationController
 
       AuditingReportJob.perform_later(@report.id, start_date, end_date, params[:protocol_ids])
     end
+    render :create_report
   end
 
-  def new_billing_report
-  end
+  def create_participant_report
+    @report = current_identity.reports.new(name: "Participant Report", status: "Pending")
 
-  def new_auditing_report
+    unless @report.errors.any?
+      @report.save
+      ParticipantReportJob.perform_later(@report.id, params[:participant_id])
+    end
+    render :create_report
   end
 
 

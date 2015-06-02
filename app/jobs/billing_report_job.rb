@@ -21,7 +21,7 @@ class BillingReportJob < ActiveJob::Base
 
       protocols.each do |protocol|
         protocol.fulfillments.fulfilled_in_date_range(start_date, end_date).each do |fulfillment|
-          csv << [protocol.sparc_id, protocol.try(:pi).full_name, fulfillment.service_name, fulfillment.quantity, display_cost(fulfillment.service_cost), display_cost(fulfillment.total_cost)]
+          csv << [protocol.sparc_id, protocol.pi ? protocol.pi.full_name : nil, fulfillment.service_name, fulfillment.quantity, display_cost(fulfillment.service_cost), display_cost(fulfillment.total_cost)]
         end
       end
 
@@ -39,7 +39,7 @@ class BillingReportJob < ActiveJob::Base
           procedure = procedures.first
           participant = procedure.participant
           appointment = procedure.appointment
-          csv << [protocol.sparc_id, protocol.try(:pi).full_name, participant.full_name, participant.label, appointment.name, format_date(appointment.start_date), procedure.service_name, procedures.size, (procedure.service_cost.to_f / 100), (procedures.size * procedure.service_cost.to_f) / 100]
+          csv << [protocol.sparc_id, protocol.pi ? protocol.pi.full_name : nil, participant.full_name, participant.label, appointment.name, format_date(appointment.start_date), procedure.service_name, procedures.size, (procedure.service_cost.to_f / 100), (procedures.size * procedure.service_cost.to_f) / 100]
         end
       end
     end

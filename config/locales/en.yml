@@ -82,7 +82,7 @@ en:
     add_fulfillment: "Add Fulfillment"
     save_fulfillment: "Save Fulfillment"
     fulfillments: "Fulfillments"
-    fulfillment_date: "Fullfillment Date"
+    fulfillment_date: "Fulfillment Date"
     quantity: "Quantity"
     qty_type: "Quantity Type"
     performed_by: "Performed By"
@@ -103,8 +103,10 @@ en:
     file: "Attached File"
     billing_report: "Billing Report"
     auditing_report: "Auditing Report"
+    participant_report: "Participant Report"
     protocol: "Protocol(s)"
     organization: "Organization(s)"
+    participant: "Participant"
     start_date: "Start Date"
     end_date: "End Date"
 
@@ -200,7 +202,7 @@ en:
     created: "Visit Created"
     deleted: "Visit Destroyed"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
-    
+
 
   notes:
     new_header: "Add Note"
