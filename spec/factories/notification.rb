@@ -21,11 +21,6 @@ FactoryGirl.define do
       callback_url 'http://localhost:5000/v1/sub_service_requests/1.json'
     end
 
-    trait :project_role do
-      kind 'ProjectRole'
-      callback_url 'http://localhost:5000/v1/project_roles/1.json'
-    end
-
     trait :create do
       action 'create'
     end
@@ -39,6 +34,5 @@ FactoryGirl.define do
     factory :notification_protocol_update,            traits: [:protocol, :update]
     factory :notification_sub_service_request_create, traits: [:sub_service_request, :create]
     factory :notification_sub_service_request_update, traits: [:sub_service_request, :update]
-    factory :notification_project_role_create,        traits: [:project_role, :create]
   end
 end

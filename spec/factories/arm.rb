@@ -25,6 +25,13 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_one_visit_group do
+      after(:create) do |arm, evaluator|
+        create(:visit_group, arm: arm)
+        arm.update_attributes(visit_count: 1)
+      end
+    end
+
     trait :with_visits do
       after(:create) do |arm, evaluator|
         arm.visit_groups.each do |visit_group|
@@ -44,5 +51,6 @@ FactoryGirl.define do
     factory :arm_with_line_items, traits: [:with_line_items]
     factory :arm_with_visit_groups, traits: [:with_visit_groups]
     factory :arm_imported_from_sparc, traits: [:with_line_items, :with_visit_groups, :with_visits, :with_participant]
+    factory :arm_with_one_visit_group, traits: [:with_one_visit_group]
   end
 end

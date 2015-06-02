@@ -31,19 +31,19 @@ FactoryGirl.define do
 
     trait :with_pi do
       after(:create) do |protocol, evaluator|
-        create(:project_role_pi, protocol: protocol)
+        create(:project_role_pi, protocol_id: protocol.sparc_id)
       end
     end
 
     trait :with_coordinator do
       after(:create) do |protocol, evaluator|
-        create(:project_role_coordinator, protocol: protocol)
+        create(:project_role_coordinator, protocol_id: protocol.sparc_id)
       end
     end
 
     trait :with_coordinators do
       after(:create) do |protocol, evaluator|
-        create_list(:project_role_coordinator, 3, protocol: protocol)
+        create_list(:project_role_coordinator, 3, protocol_id: protocol.sparc_id)
       end
     end
 

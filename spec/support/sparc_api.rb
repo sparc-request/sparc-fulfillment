@@ -61,10 +61,6 @@ RSpec.configure do |config|
     VCR.insert_cassette('reusable/sparc_api/get_service_level_component_1')
   end
 
-  config.before(:each, sparc_api: :get_project_role_1) do
-    VCR.insert_cassette('reusable/sparc_api/get_project_role_1')
-  end
-
   config.before(:each, sparc_api: :unavailable) do
     stub_request(:get, /localhost:5000/).to_return(status: 500)
   end

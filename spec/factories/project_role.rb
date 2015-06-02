@@ -3,7 +3,7 @@ FactoryGirl.define do
   factory :project_role do
     identity nil
     protocol nil
-    rights "to party"
+    project_rights "to party"
 
     trait :pi do
       role "primary-pi"

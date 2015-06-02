@@ -1,31 +1,28 @@
 class ArmImporter
 
   def initialize(local_protocol, remote_protocol, remote_sub_service_request)
-    @local_protocol         = local_protocol
-    @remote_protocol        = remote_protocol
+    @local_protocol             = local_protocol
+    @remote_protocol            = remote_protocol
     @remote_sub_service_request = remote_sub_service_request
   end
 
   def create
-    remote_protocol_arms_sparc_ids  = @remote_protocol['protocol']['arms'].map { |arm| arm.values_at('sparc_id') }.compact.flatten
+    remote_protocol_arms_sparc_ids = @remote_protocol['protocol']['arms'].map { |arm| arm.values_at('sparc_id') }.compact.flatten
 
-    remote_arms(remote_protocol_arms_sparc_ids)['arms'].each do |remote_arm|
-      normalized_attributes         = RemoteObjectNormalizer.new('Arm', remote_arm).normalize!
-      local_arm                     = Arm.create(sparc_id: remote_arm['sparc_id'])
-      attributes                    = normalized_attributes.merge!({ protocol: @local_protocol })
+    if remote_protocol_arms_sparc_ids.any?
 
-      local_arm.update_attributes attributes
+      remote_arms(remote_protocol_arms_sparc_ids)['arms'].each do |remote_arm|
+        normalized_attributes         = RemoteObjectNormalizer.new('Arm', remote_arm).normalize!
+        local_arm                     = Arm.create(sparc_id: remote_arm['sparc_id'])
+        attributes                    = normalized_attributes.merge!({ protocol: @local_protocol })
 
-      VisitGroupImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create
-      LineItemImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create
+        local_arm.update_attributes attributes
+
+        LineItemImporter.new(local_arm, local_arm.protocol, @remote_sub_service_request['sub_service_request']).create
+        VisitGroupImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create
+      end
     end
   end
-
-  # def update
-  # end
-
-  # def destroy
-  # end
 
   private
 
