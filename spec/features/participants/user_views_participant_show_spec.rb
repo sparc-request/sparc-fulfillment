@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'User views Participant show', js: true do
 
   scenario 'and does not have access' do
-    protocol    = create_and_assign_protocol_to_me
+    protocol    = create(:protocol_imported_from_sparc)
     participant = protocol.participants.first
 
     visit participant_path(participant.id)
