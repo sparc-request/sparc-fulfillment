@@ -18,14 +18,9 @@ class Organization < ActiveRecord::Base
   end
 
   def protocols
-    if sub_service_requests.any?
-      sub_service_requests.
-        map(&:protocol).
-        compact.
-        flatten
-    else
-      Array.new
-    end
+    Protocol.
+      joins(:sub_service_request).
+      where(sub_service_requests: { organization_id: id })
   end
 
   def all_child_organizations

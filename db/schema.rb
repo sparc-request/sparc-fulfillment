@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601160926) do
+ActiveRecord::Schema.define(version: 20150602173019) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 20150601160926) do
 
   add_index "arms", ["deleted_at"], name: "index_arms_on_deleted_at", using: :btree
   add_index "arms", ["protocol_id"], name: "index_arms_on_protocol_id", using: :btree
-  add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", unique: true, using: :btree
+  add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", using: :btree
 
   create_table "components", force: :cascade do |t|
     t.string   "component",       limit: 255
@@ -302,7 +302,7 @@ ActiveRecord::Schema.define(version: 20150601160926) do
   add_index "visit_groups", ["arm_id"], name: "index_visit_groups_on_arm_id", using: :btree
   add_index "visit_groups", ["deleted_at"], name: "index_visit_groups_on_deleted_at", using: :btree
   add_index "visit_groups", ["position"], name: "index_visit_groups_on_position", using: :btree
-  add_index "visit_groups", ["sparc_id"], name: "index_visit_groups_on_sparc_id", unique: true, using: :btree
+  add_index "visit_groups", ["sparc_id"], name: "index_visit_groups_on_sparc_id", using: :btree
 
   create_table "visits", force: :cascade do |t|
     t.integer  "sparc_id",              limit: 4
@@ -318,7 +318,7 @@ ActiveRecord::Schema.define(version: 20150601160926) do
 
   add_index "visits", ["deleted_at"], name: "index_visits_on_deleted_at", using: :btree
   add_index "visits", ["line_item_id"], name: "index_visits_on_line_item_id", using: :btree
-  add_index "visits", ["sparc_id"], name: "index_visits_on_sparc_id", unique: true, using: :btree
+  add_index "visits", ["sparc_id"], name: "index_visits_on_sparc_id", using: :btree
   add_index "visits", ["visit_group_id"], name: "index_visits_on_visit_group_id", using: :btree
 
 end
