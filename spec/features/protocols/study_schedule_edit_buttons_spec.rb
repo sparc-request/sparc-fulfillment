@@ -3,10 +3,11 @@ require 'rails_helper'
 RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
   before :each do
-    @protocol = create_and_assign_protocol_to_me
-    @arm1     = @protocol.arms.first
-    @arm2     = @protocol.arms.last
-    @service  = @protocol.organization.inclusive_child_services(:per_participant).first
+    @protocol   = create_and_assign_protocol_to_me
+    @arm1       = @protocol.arms.first
+    @arm2       = @protocol.arms.last
+    @arm3       = create(:arm_with_one_visit_group, protocol: @protocol)
+    @service    = @protocol.organization.inclusive_child_services(:per_participant).first
 
     visit protocol_path(@protocol.id)
   end
@@ -124,14 +125,9 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
 
     describe "the remove visit group button" do
 
-      it "should remove a visit group" do
-        find('#remove_visit_group_button').click()
-        page.driver.browser.accept_js_confirms
-        expect(page).to have_content "Visit Destroyed"
-      end
-
       it "should remove all but the last visit group" do
-        bootstrap_select "#arms", "#{@arm2.name}"
+        visit_group = @arm3.visit_groups.first
+        bootstrap_select "#visits", "#{visit_group.name}"
         find('#remove_visit_group_button').click()
         page.driver.browser.accept_js_confirms
         wait_for_ajax
@@ -139,7 +135,9 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
       end
 
       it "should remove the visit group from the service calendar" do
-        vg = @arm1.visit_groups.first
+        create(:visit_group, arm: @arm3)
+        @arm3.update_attributes(visit_count: 2)
+        vg = @arm3.visit_groups.first
         bootstrap_select "#visits", "#{vg.name}"
         wait_for_ajax
         find('#remove_visit_group_button').click()
