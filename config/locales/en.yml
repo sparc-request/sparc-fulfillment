@@ -104,6 +104,7 @@ en:
     billing_report: "Billing Report"
     auditing_report: "Auditing Report"
     participant_report: "Participant Report"
+    project_summary_report: "Project Summary Report"
     protocol: "Protocol(s)"
     organization: "Organization(s)"
     participant: "Participant"

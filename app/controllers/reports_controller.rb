@@ -21,6 +21,9 @@ class ReportsController < ApplicationController
   def new_participant_report
   end
 
+  def new_project_summary_report
+  end
+
   def create_billing_report
     @report = current_identity.reports.new(name: "Billing Report", status: "Pending")
     date_validation(params[:start_date], params[:end_date])
@@ -59,6 +62,18 @@ class ReportsController < ApplicationController
     render :create_report
   end
 
+  def create_project_summary_report
+    @report = current_identity.reports.new(name: "Project Summary Report", status: "Pending")
+
+    unless @report.errors.any?
+      @report.save
+      start_date = Time.strptime(params[:start_date], "%m-%d-%Y").to_date.to_s
+      end_date = Time.strptime(params[:end_date], "%m-%d-%Y").to_date.to_s
+
+      ProjectSummaryReportJob.perform_later(@report.id, params[:protocol_id])
+    end
+    render :create_report
+  end
 
   private
 
