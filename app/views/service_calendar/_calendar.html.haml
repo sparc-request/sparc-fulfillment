@@ -1,5 +1,5 @@
 = hidden_field_tag :current_tab, 'template'
-= render :partial => 'service_calendar/study_schedule/schedule_edit_buttons', locals: {protocol: @protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
+= render :partial => 'service_calendar/calendar_management/schedule_edit_buttons', locals: {protocol: @protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
 %br
 %br
 %div{role: 'tabpanel'}

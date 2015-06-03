@@ -9,7 +9,7 @@ $("#visits_select_for_<%= @arm.id %>").html("<%= escape_javascript(visits_select
 $("#select_for_arm_<%= @arm.id %> > .visit_dropdown").selectpicker('refresh')
 
 # re-render Manage Visits dropdown
-$("#manage_visit_groups").html("<%= escape_javascript(render partial: '/service_calendar/study_schedule/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
+$("#manage_visit_groups").html("<%= escape_javascript(render partial: '/service_calendar/calendar_management/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
 # and create associated selectpicker
 $(".selectpicker").selectpicker()
 

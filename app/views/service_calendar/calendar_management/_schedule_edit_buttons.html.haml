@@ -10,7 +10,7 @@
     .col-sm-4.col-md-4.text-center
       =t(:protocol)[:study_schedule_buttons][:visit]
       #manage_visit_groups
-        = render partial: '/service_calendar/study_schedule/visit_groups_selectpicker', locals: {protocol: protocol}
+        = render partial: '/service_calendar/calendar_management/visit_groups_selectpicker', locals: {protocol: protocol}
     .col-sm-4.col-md-4.text-center
       =t(:protocol)[:study_schedule_buttons][:services]
       #manage_services
