@@ -62,16 +62,6 @@ class LineItemsController < ApplicationController
     end
   end
 
-  private
-
-  def line_item_params
-    params.require(:line_item).permit(:protocol_id, :quantity_requested, :service_id, :started_at)
-  end
-
-  def find_line_item
-    @line_item = LineItem.find params[:id]
-  end
-
   def update_line_item_procedures_service
     # Need to change any procedures that haven't been completed to the new service
     service = @line_item.service
@@ -83,4 +73,13 @@ class LineItemsController < ApplicationController
       end
     end
   end
+
+  def line_item_params
+    params.require(:line_item).permit(:protocol_id, :quantity_requested, :service_id, :started_at)
+  end
+
+  def find_line_item
+    @line_item = LineItem.find params[:id]
+  end
+
 end
