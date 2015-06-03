@@ -90,14 +90,7 @@ $ ->
       url:  "/visit_groups/#{visit_group_id}"
       data: data
       success: ->
-        # Need to find out if this is actually necessary
-        # or if we can use faye
-
-        $(".visit_dropdown option[value=#{visit_group_id}]").text("- #{name}")
-        $(".visit_dropdown").selectpicker('refresh')
-
-        $("#visits option[value=#{visit_group_id}]").text("#{name}")
-        $("#visits").selectpicker('refresh')
+        edit_visit_group_name(name, visit_group_id)
 
   $(document).on 'click', '.change_line_item_service', ->
     line_item_id = $(this).attr('line_item_id')
