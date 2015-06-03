@@ -81,10 +81,4 @@ RSpec.describe ServiceCalendarController do
       expect(visit_count).to eq(@arm.line_items.count)
     end
   end
-
-  describe "PUT #remove_line_item" do
-    it "should remove the line_item from the arm" do
-      #Todo this needs to be updated when merged with Charlie's branch
-    end
-  end
 end

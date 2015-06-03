@@ -67,7 +67,6 @@ Rails.application.routes.draw do
       get 'change_tab'
       put 'check_row'
       put 'check_column'
-      put 'remove_line_item'
     end
   end
 

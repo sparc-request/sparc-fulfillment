@@ -36,14 +36,4 @@ class ServiceCalendarController < ApplicationController
       visit.update_procedures 0, "insurance_billing_qty"
     end
   end
-
-  def remove_line_item
-    line_item = LineItem.find params[:line_item_id]
-    @arm_id = line_item.arm_id
-    @line_item_id = params[:line_item_id]
-    @core_id = line_item.sparc_core_id
-    line_item.destroy
-    @remove_core = LineItem.joins(:service).where("arm_id = #{@arm_id} and services.organization_id = #{@core_id}").count == 0
-  end
-
 end
