@@ -63,9 +63,9 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
     {
       notification: {
         sparc_id: 1,
-        kind: 'Service',
+        kind: 'SubServiceRequest',
         action: 'create',
-        callback_url: 'http://localhost:5000/services/1.json'
+        callback_url: 'http://localhost:5000/sub_service_requests/1.json'
       }
     }
   end

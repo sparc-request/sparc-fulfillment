@@ -7,13 +7,21 @@ $ ->
         url: "/arms/new?protocol_id=#{protocol_id}"
 
     $(document).on 'click', '#remove_arm_button', ->
-      protocol_id = $('#arms').data('protocol_id')
-      arm_id = $("#arms").val()
-      del = confirm "Are you sure you want to delete the selected arm from this protocol"
-      if del
-        $.ajax
-          type: 'DELETE'
-          url: "/arms/#{arm_id}?protocol_id=#{protocol_id}"
+      # Ensure there are at least two arms in dropdown
+      # so that protocol always has at least one arm.
+      # Arms are deleted through a delayed job, so
+      # we need the count from the dropdown and not
+      # the server.
+      if $("#arms > option").size() > 1
+        protocol_id = $('#arms').data('protocol_id')
+        arm_id = $("#arms").val()
+        del = confirm "Are you sure you want to delete the selected arm from this protocol"
+        if del
+          $.ajax
+            type: 'DELETE'
+            url: "/arms/#{arm_id}?protocol_id=#{protocol_id}"
+      else
+        alert("Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm.")
 
     $(document).on 'click', '#add_visit_group_button', ->
       current_page = $(".visit_dropdown").first().attr('page')
@@ -32,7 +40,7 @@ $ ->
     $(document).on 'click', '#edit_visit_group_button', ->
       visit_group_id = $('#visits').val()
       protocol_id = $('#arms').data('protocol_id')
-      data = 
+      data =
         'protocol_id'    : protocol_id
         'visit_group_id' : visit_group_id
       $.ajax
@@ -42,7 +50,7 @@ $ ->
 
     $(document).on 'click', '#edit_arm_button', ->
       arm_id = $('#arms').val()
-      data = 
+      data =
         'arm_id' : arm_id
       $.ajax
         type: 'GET'
