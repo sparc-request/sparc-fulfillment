@@ -228,10 +228,11 @@ en:
       participant_tracker: "Participant Tracker"
       study_level_activities: "Study Level Activities"
       audit_reporting: "Audit Reporting"
-    study_schedule_buttons:
-      arm: "Manage Arms"
-      visit: "Manage Visits"
-      services: "Manage Services"
+    study_schedule:
+      manage_arms: "Manage Arms"
+      manage_visits: "Manage Visits"
+      manage_services: "Manage Services"
+      services_for_arm: "Services for Arm: "
     flash_messages:
       unauthorized: "Authorization Failure"
       not_found: "Protocol Not Found"
