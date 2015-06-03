@@ -7,7 +7,7 @@
           %span.sr-only= t(:actions)[:close]
         %h4#CreateNewParticipant.modal-title.text-center= "Add Visit"
       .modal-body
-        #visit_group_modal_errors
+        #modal_errors
         .row
           = hidden_field_tag :calendar_tab, calendar_tab
           = hidden_field_tag :current_page, current_page
