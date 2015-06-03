@@ -20,12 +20,18 @@ class LineItemsController < ApplicationController
 
   def edit
     @protocol = @line_item.protocol
+    @otf = @line_item.one_time_fee
   end
 
   def update
-    persist_original_attributes_to_track_changes
+    @otf = @line_item.one_time_fee
+    persist_original_attributes_to_track_changes if @otf
     if @line_item.update_attributes(line_item_params)
-      detect_changes_and_create_notes
+      if @otf
+        detect_changes_and_create_notes # study level charges needs notes for changes
+      else
+        update_line_item_procedures_service # study schedule line item service change
+      end
       flash[:success] = t(:line_item)[:flash_messages][:updated]
     else
       @errors = @line_item.errors
@@ -56,11 +62,25 @@ class LineItemsController < ApplicationController
     end
   end
 
+  private
+
   def line_item_params
     params.require(:line_item).permit(:protocol_id, :quantity_requested, :service_id, :started_at)
   end
 
   def find_line_item
     @line_item = LineItem.find params[:id]
+  end
+
+  def update_line_item_procedures_service
+    # Need to change any procedures that haven't been completed to the new service
+    service = @line_item.service
+    service_name = service.name
+    service_cost = service.cost
+    @line_item.visits.each do |v|
+      v.procedures.select{ |p| not(p.appt_started? or p.complete?) }.each do |p|
+        p.update_attributes(service_id: service.id, service_name: service_name, service_cost: service_cost)
+      end
+    end
   end
 end

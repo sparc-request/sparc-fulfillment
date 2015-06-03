@@ -100,12 +100,10 @@ $ ->
         $("#visits").selectpicker('refresh')
 
   $(document).on 'click', '.change_line_item_service', ->
-    data =
-      'line_item_id': $(this).attr('line_item_id')
+    line_item_id = $(this).attr('line_item_id')
     $.ajax
       type: 'GET'
-      url: '/service_calendar/edit_service'
-      data: data
+      url: "/line_items/#{line_item_id}/edit"
 
   check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
     obj.removeClass(remove_class).addClass(add_class)

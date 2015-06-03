@@ -65,8 +65,6 @@ Rails.application.routes.draw do
     collection do
       get 'change_page'
       get 'change_tab'
-      get 'edit_service'
-      put 'update_service'
       put 'check_row'
       put 'check_column'
       put 'remove_line_item'
