@@ -64,13 +64,14 @@ class ReportsController < ApplicationController
 
   def create_project_summary_report
     @report = current_identity.reports.new(name: "Project Summary Report", status: "Pending")
+    date_validation(params[:start_date], params[:end_date])
 
     unless @report.errors.any?
       @report.save
       start_date = Time.strptime(params[:start_date], "%m-%d-%Y").to_date.to_s
       end_date = Time.strptime(params[:end_date], "%m-%d-%Y").to_date.to_s
 
-      ProjectSummaryReportJob.perform_later(@report.id, params[:protocol_id])
+      ProjectSummaryReportJob.perform_later(@report.id, start_date, end_date, params[:protocol_id])
     end
     render :create_report
   end

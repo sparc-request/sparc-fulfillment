@@ -27,6 +27,9 @@ Rails.application.routes.draw do
 
       get 'new_participant_report', to: 'reports#new_participant_report'
       post 'create_participant_report', to: 'reports#create_participant_report'
+
+      get 'new_project_summary_report', to: 'reports#new_project_summary_report'
+      post 'create_project_summary_report', to: 'reports#create_project_summary_report'
     end
   end
 

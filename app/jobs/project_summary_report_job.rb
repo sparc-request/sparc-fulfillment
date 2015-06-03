@@ -19,13 +19,14 @@ class ProjectSummaryReportJob < ActiveJob::Base
         participants = arm.participants
 
         csv << [""]
-        csv << ["arm.name"]
+        csv << [arm.name]
         csv << (["PID", "Status"] + visit_groups.pluck(:name))
 
         participants.each do |participant|
-          # participant_costs =
-
-          csv << (["Subject #{participant.label}", participant.status] + participant_costs)
+          appointments = visit_groups.map do |vg|
+            (appointment = vg.appointments.where(participant: participant).first) ? appointment.total_completed_cost : "N/A"
+          end
+          csv << (["Subject #{participant.label}", participant.status] + appointments)
         end
       end
     end
