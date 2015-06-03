@@ -108,24 +108,6 @@ en:
     start_date: "Start Date"
     end_date: "End Date"
 
-  index_page:
-    updates: "Updates"
-    sparc_id: "SPARC ID"
-    srid: "SRID"
-    status: "Status"
-    short_title: "Short Title"
-    principal_investigator: "Principal Investigator"
-    coordinators: "Coordinators"
-    irb_approval_date: "IRB Approval Date"
-    irb_expiration_date: "Current IRB Expiration Date"
-    udak_project_number: "IRB #"
-    start_date: "Study Start Date"
-    end_date: "Study End Date"
-    study_cost: "Total Study Costs"
-    subsidy_amount: "Percent Subsidy"
-    subsidy_committed: "Subsidy Amount"
-    subsidy_expended: "Subsidy Expended"
-
   line_item:
     add_line_item: "Add Study Level Activity"
     create: "Create New Study Level Activity"
@@ -147,60 +129,6 @@ en:
       quantity_requested: "Quantity Requested changed to "
       service_id: "Service changed to "
       started_at: "Started At changed to "
-
-  task_index:
-    user_name: "Created by"
-    completed: "Completed"
-    show_complete: "Show Complete"
-    assignable_type: "Type"
-    protocol_id: "Protocol"
-    visit_name: "Visit"
-    arm_name: "Arm"
-    body: "Task"
-    assignee_name: "Assigned to"
-    due_at: "Due date"
-    reschedule: "Reschedule"
-    create_task: "Create Task"
-    task_type: "Task type"
-    completed_tasks_header: "Completed Tasks"
-    no_completed_tasks: "There are currently no completed tasks"
-    incompletion: "Set to Incomplete"
-    show_title: "Task"
-    participant:
-      full_name: "Participant name"
-    protocol:
-      short_title: "Protocol"
-    visit:
-      id: "Visit"
-    arm:
-      name: "Arm"
-    procedure:
-      name: "Procedure"
-
-  protocol_tabs:
-    study_schedule: "Study Schedule"
-    participant_list: "Participant List"
-    participant_tracker: "Participant Tracker"
-    study_level_charges: "Study Level Charges"
-    audit_reporting: "Audit Reporting"
-
-  study_schedule_tab:
-    buttons:
-      arm: "Manage Arms"
-      visit: "Manage Visits"
-      services: "Manage Services"
-
-  visit_groups:
-    name: "Visit Name"
-    arm: "Arm"
-    position: "Insert into Position"
-    window_before: "Window Before"
-    window_after: "Window After"
-    day: "Visit Day"
-    created: "Visit Created"
-    deleted: "Visit Destroyed"
-    not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
-    
 
   notes:
     new_header: "Add Note"
@@ -300,10 +228,11 @@ en:
       participant_tracker: "Participant Tracker"
       study_level_activities: "Study Level Activities"
       audit_reporting: "Audit Reporting"
-    study_schedule_buttons:
-      arm: "Arm | "
-      visit: "Visit | "
-      services: "Services | "
+    study_schedule:
+      manage_arms: "Manage Arms"
+      manage_visits: "Manage Visits"
+      manage_services: "Manage Services"
+      services_for_arm: "Arm: "
     flash_messages:
       unauthorized: "Authorization Failure"
       not_found: "Protocol Not Found"

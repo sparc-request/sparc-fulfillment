@@ -1,5 +1,5 @@
 - visit_groups.each_with_index do |visit_group, index|
-  .col-xs-1
+  .col-xs-1.visit_group_box
     .row.visit_group_day_windows.text-center
       .col-xs-4.text-center.day_window
         %span{id: "visit-before-display-#{visit_group.id}"}= visit_group.window_before || 0
