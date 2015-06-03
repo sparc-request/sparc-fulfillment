@@ -47,7 +47,17 @@ FactoryGirl.define do
       end
     end
 
+    trait :without_serives do
+      after(:create) do |protocol, evaluator|
+        Service.delete_all
+      end
+    end
+
     factory :protocol_with_sub_service_request, traits: [:with_sub_service_request]
+    factory :protocol_without_services, traits: [:with_pi,
+                                                  :with_coordinators,
+                                                  :with_sub_service_request,
+                                                  :without_serives]
     factory :protocol_with_pi, traits: [:with_pi]
     factory :protocol_imported_from_sparc, traits: [:with_arms,
                                                     :with_pi,

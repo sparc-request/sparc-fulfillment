@@ -22,7 +22,7 @@ class ProtocolsController < ApplicationController
 
   def show
     @services = @protocol.organization.inclusive_child_services(:per_participant)
-    @per_participant = @services.present?
+    @services_present = @services.present?
 
     @page = 1
 
