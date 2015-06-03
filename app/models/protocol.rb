@@ -61,10 +61,6 @@ class Protocol < ActiveRecord::Base
     line_items.includes(:service).where(:services => {:one_time_fee => true})
   end
 
-  def one_time_fees(start_date, end_date)
-    fulfillments.fulfilled_in_date_range(start_date, end_date).sum(:service_cost)
-  end
-
   private
 
   def update_faye
