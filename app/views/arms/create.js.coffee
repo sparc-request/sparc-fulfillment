@@ -7,6 +7,5 @@ $(".service_calendar_container").append("<%= escape_javascript(render(:partial =
 $("#visits_select_for_<%= @arm.id %>").parent('div').html( " <%= escape_javascript(build_visits_select(@arm, @current_page)) %>")
 $("#visit_groups_buttons").empty()
 $("#visit_groups_buttons").html("<%= escape_javascript(render partial: '/protocols/study_schedule/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
-$("#visits").selectpicker()
-$("#visits_select_for_<%= @arm.id %>").selectpicker()
+$(".selectpicker").selectpicker()
 <% end %>

@@ -1,4 +1,5 @@
 = hidden_field_tag :current_tab, 'template'
+= render :partial => 'service_calendar/study_schedule/schedule_edit_buttons', locals: {protocol: @protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
 %br
 %br
 %div{role: 'tabpanel'}
@@ -7,14 +8,7 @@
     %ul.nav.nav-tabs{id: 'service_calendar_tabs', role: 'navigation'}
       %li.active.custom-tab{role: 'presentation'}= link_to "Template", "#template", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/template', :'data-tab' => 'template'
       %li.custom-tab{role: 'presentation'}= link_to "Quantity/Billing Tab", "#quantity_billing", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing', :'data-tab' => 'quantity'
-      %li.custom-tab{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated_request", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
-  .tab-content
-    .tab-pane.active#template{role: 'tabpanel'}
-
-    .tab-pane#quantity_billing{role: 'tabpanel'}
-
-    .tab-pane#consolidated_request{role: 'tabpanel'}
-      = render 'protocols/study_schedule/consolidated_request'
+      %li.custom-tab{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated_request", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request', :'data-tab' => 'consolidated'
     .service_calendar_container
       - protocol.arms.each do |arm|
         .arms_container{id: "arms_container_#{arm.id}"}

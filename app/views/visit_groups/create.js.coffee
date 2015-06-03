@@ -11,7 +11,7 @@ $("#select_for_arm_<%= @arm.id %> > .visit_dropdown").selectpicker('refresh')
 # re-render Manage Visits dropdown
 $("#visit_groups_buttons").html("<%= escape_javascript(render partial: '/protocols/study_schedule/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
 # and create associated selectpicker
-$("#visits").selectpicker()
+$(".selectpicker").selectpicker()
 
 <% if on_current_page?(@current_page, @visit_group) %>
 # Overwrite the visit_groups
