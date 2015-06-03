@@ -22,7 +22,9 @@ class ProtocolsController < ApplicationController
 
   def show
     @services = @protocol.organization.inclusive_child_services(:per_participant)
-    @page     = 1
+    @services_present = @services.present?
+
+    @page = 1
 
     gon.push({ protocol_id: @protocol.id })
   end
