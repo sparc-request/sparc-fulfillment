@@ -58,12 +58,15 @@ $ ->
     update_r_t_labels()
 
   $(document).on 'change', '.visit', ->
-    data =
-      'visit_id': $(this).val()
-      'checked':  $(this).prop('checked')
+    visit_id = $(this).val()
+    research = + $(this).prop('checked') # unary operator '+' evaluates true/false to num
+    data = 'visit':
+      'research_billing_qty':  research,
+      'insurance_billing_qty': 0,
+      'effort_billing_qty': 0
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/check_visit'
+      url:  "/visits/#{visit_id}"
       data: data
 
   $(document).on 'change', '.quantity', ->
@@ -71,30 +74,20 @@ $ ->
     quantity = $(this).val()
     qty_type = $(this).attr('qty_type')
 
-    if quantity == ''
-      $(this).val($(this).attr('previous_qty'))
-      return
-
-    data =
-      'visit_id': visit_id,
-      'quantity': quantity,
-      'qty_type': qty_type
+    data = 'visit':
+      "#{qty_type}": quantity
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/change_quantity'
+      url:  "/visits/#{visit_id}"
       data: data
-      success: =>
-        $(this).attr('previous_qty', quantity)
 
   $(document).on 'change', '.visit_name', ->
     visit_group_id = $(this).data('visit_group_id')
     name = $(this).val()
-    data =
-      'visit_group_id': visit_group_id,
-      'name':           name
+    data = 'visit_group' : 'name' : name
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/change_visit_name'
+      url:  "/visit_groups/#{visit_group_id}"
       data: data
       success: ->
         # Need to find out if this is actually necessary

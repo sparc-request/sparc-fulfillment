@@ -17,29 +17,6 @@ class ServiceCalendarController < ApplicationController
     @tab = params[:tab]
   end
 
-  def check_visit
-    @visit = Visit.find(params[:visit_id])
-    qty = params[:checked] == 'true' ? 1 : 0
-    @visit.update_attributes(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
-    @visit.update_procedures qty.to_i
-    @visit.update_procedures 0, "insurance_billing_qty"
-  end
-
-  def change_visit_name
-    @visit_group = VisitGroup.find(params[:visit_group_id])
-    name = params[:name]
-    @visit_group.update_attributes(name: name)
-    @visit_group.appointments.update_all(name: name)
-  end
-
-  def change_quantity
-    quantity = params[:quantity]
-    qty_type = params[:qty_type]
-    @visit = Visit.find params[:visit_id]
-    @visit.update_attributes(qty_type => quantity)
-    @visit.update_procedures quantity.to_i, qty_type
-  end
-
   def edit_service
     @line_item = LineItem.find(params[:line_item_id])
   end
