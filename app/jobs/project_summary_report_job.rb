@@ -1,4 +1,5 @@
 class ProjectSummaryReportJob < ActiveJob::Base
+  include ActionView::Helpers::NumberHelper
   include ApplicationHelper
   queue_as :default
   require 'csv'
@@ -36,7 +37,7 @@ class ProjectSummaryReportJob < ActiveJob::Base
           participant_totals << participant_total
           visit_group_subtotals = visit_group_subtotals.
                                     zip(participant_costs).
-                                    map(:+)
+                                    map { |a, b| a + b }
 
           csv << ["Subject #{participant.label}", participant.status, display_cost_array(participant_costs + [participant_total])].flatten
         end
@@ -46,7 +47,7 @@ class ProjectSummaryReportJob < ActiveJob::Base
         amount_due += arm_total
       end
 
-      one_time_fees = protocol.one_time_fees
+      one_time_fees = protocol.one_time_fees(start_date, end_date)
       csv << ["One Time Fees", display_cost(one_time_fees)]
       csv << ["Study Totals", display_cost(amount_due += one_time_fees)]
       csv << ["Amount Due", display_cost(amount_due)]
@@ -62,6 +63,6 @@ class ProjectSummaryReportJob < ActiveJob::Base
   end
 
   def display_cost_array(cost_array)
-    cost_array.map(:display_cost)
+    cost_array.map{|cost| display_cost(cost)}
   end
 end
