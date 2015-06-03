@@ -20,7 +20,7 @@
       .tab-pane#participant_tracker{role: 'tabpanel'}
         = render partial: 'participant_tracker', locals: {protocol: @protocol}
 
-    .tab-pane#study_level_activities{role: 'tabpanel'}
+    .tab-pane#study_level_activities{role: 'tabpanel', class: @services_present ? 'inactive' : 'active'}
       = render partial: 'study_level_activities', locals: {protocol: @protocol}
 
     .tab-pane#audit_reporting{role: 'tabpanel'}
