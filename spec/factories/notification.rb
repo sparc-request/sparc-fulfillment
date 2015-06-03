@@ -11,6 +11,11 @@ FactoryGirl.define do
       callback_url 'http://localhost:5000/v1/protocols/1.json'
     end
 
+    trait :study do
+      kind 'Study'
+      callback_url 'http://localhost:5000/v1/study/1.json'
+    end
+
     trait :service do
       kind 'Service'
       callback_url 'http://localhost:5000/v1/services/1.json'
@@ -32,6 +37,7 @@ FactoryGirl.define do
     factory :notification_service_create,             traits: [:service, :create]
     factory :notification_service_update,             traits: [:service, :update]
     factory :notification_protocol_update,            traits: [:protocol, :update]
+    factory :notification_study_update,               traits: [:study, :update]
     factory :notification_sub_service_request_create, traits: [:sub_service_request, :create]
     factory :notification_sub_service_request_update, traits: [:sub_service_request, :update]
   end
