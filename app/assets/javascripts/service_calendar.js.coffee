@@ -74,7 +74,7 @@ $ ->
     $elt.tooltip({container: 'body'})
     $elt.tooltip('show')
     delay = (ms, func) -> setTimeout func, ms
-    delay 2500, -> $elt.tooltip('destroy')
+    delay 3000, -> $elt.tooltip('destroy')
 
   $(document).on 'change', '.quantity', ->
     visit_id = $(this).attr('visit_id')
