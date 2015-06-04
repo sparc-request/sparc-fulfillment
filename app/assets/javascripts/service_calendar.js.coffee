@@ -66,6 +66,16 @@ $ ->
       url:  '/service_calendar/check_visit'
       data: data
 
+  # Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
+  # containing content, which disappears when user focuses to it.
+  window.error_tooltip_on = (elt, content) ->
+    $elt = $(elt)
+    $elt.attr('data-toggle', 'tooltip').attr('title', content)
+    $elt.tooltip({container: 'body'})
+    $elt.tooltip('show')
+    delay = (ms, func) -> setTimeout func, ms
+    delay 2500, -> $elt.tooltip('destroy')
+
   $(document).on 'change', '.quantity', ->
     visit_id = $(this).attr('visit_id')
     quantity = $(this).val()
