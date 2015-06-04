@@ -96,7 +96,7 @@ class Procedure < ActiveRecord::Base
 
   def reason_note
     if incomplete?
-      notes.select{|note| note.reason?}.first
+      notes.select{|note| note.reason?}.last
     end
   end
 
