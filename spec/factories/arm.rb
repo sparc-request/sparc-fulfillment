@@ -17,6 +17,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_only_per_patient_line_items do
+      after(:create) do |arm, evaluator|
+        5.times do
+          create(:line_item, protocol: arm.protocol, arm: arm, service: create(:service)) # pppv
+        end
+      end
+    end
+
     trait :with_visit_groups do
       after(:create) do |arm, evaluator|
         arm.visit_count.times do
@@ -51,6 +59,7 @@ FactoryGirl.define do
     factory :arm_with_line_items, traits: [:with_line_items]
     factory :arm_with_visit_groups, traits: [:with_visit_groups]
     factory :arm_imported_from_sparc, traits: [:with_line_items, :with_visit_groups, :with_visits, :with_participant]
+    factory :arm_with_only_per_patient_line_items, traits: [:with_only_per_patient_line_items, :with_visit_groups, :with_visits]
     factory :arm_with_one_visit_group, traits: [:with_one_visit_group]
   end
 end

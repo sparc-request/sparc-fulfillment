@@ -5,11 +5,11 @@ RSpec.describe 'User updates Protocol in SPARC', type: :request, delay: false do
   describe 'full lifecycle' do
 
     it 'should update the Protocol', sparc_api: :get_protocol_1 do
-      protocol = create(:protocol, sparc_id: 1)
+      protocol = create(:protocol, sparc_id: 1, short_title: "Original short title")
 
       user_updates_protocol_in_sparc
 
-      expect(protocol.reload.title).to eq('A Phase 2b, Dose-Ranging, Randomized, Double-Blind,')
+      expect(protocol.reload.short_title).to eq("GS-US-321-0106")
     end
   end
 

@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe 'Service Calendar', type: :feature, js: true do
 
   before :each do
-    @protocol       = create_and_assign_protocol_to_me
+    @protocol       = create_blank_protocol
     project_role    = create(:project_role_pi, protocol: @protocol)
-    @arm            = create(:arm_imported_from_sparc, protocol: @protocol, visit_count: 10)
+    @arm            = create(:arm_with_only_per_patient_line_items, protocol: @protocol, visit_count: 10)
     @line_item      = @arm.line_items.first
     @visit_group    = @arm.visit_groups.first
     @visit          = @line_item.visits.first
@@ -84,7 +84,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
       it "should check all visits for the visit group when check is clicked" do
         first(".check_column").click()
         wait_for_ajax
-        expect(all('input[type=checkbox]:checked').count).to eq(@visit_group.visits.count)
+        expect(all('input[type=checkbox]:checked').count).to eq(@arm.line_items.count)
       end
 
       it "should uncheck all visits for the visit group when uncheck is clicked" do

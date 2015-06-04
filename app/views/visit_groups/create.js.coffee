@@ -2,11 +2,16 @@ $("#visit_group_modal_errors").html("<%= escape_javascript(render(:partial =>'sh
 <% if @errors == nil %>
 $("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
 $("#modal_place").modal 'hide'
-$("#visits_select_for_<%= @arm.id %>").parent('div').html( " <%= escape_javascript(build_visits_select(@arm, @current_page)) %>")
-$("#visit_groups_buttons").empty()
-$("#visit_groups_buttons").html("<%= escape_javascript(render partial: '/protocols/study_schedule/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
-$("#visits").selectpicker()
-$("#visits_select_for_<%= @arm.id %>").selectpicker()
+
+# update dropdown of visit groups
+$("#visits_select_for_<%= @arm.id %>").html("<%= escape_javascript(visits_select_options(@arm, @current_page)) %>")
+# and update associated selectpicker
+$("#select_for_arm_<%= @arm.id %> > .visit_dropdown").selectpicker('refresh')
+
+# re-render Manage Visits dropdown
+$("#manage_visit_groups").html("<%= escape_javascript(render partial: '/service_calendar/calendar_management/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
+# and create associated selectpicker
+$(".selectpicker").selectpicker()
 
 <% if on_current_page?(@current_page, @visit_group) %>
 # Overwrite the visit_groups

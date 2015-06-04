@@ -84,6 +84,14 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).to have_content "Arm Destroyed"
       end
 
+      it "should should not remove all arms" do
+        @protocol.arms.count.times do
+          find('#remove_arm_button').click()
+          page.driver.browser.accept_js_confirms
+        end
+        expect(page).to_not have_content "Nothing selected"
+      end
+
       it "should remove the arm from the @service calendar" do
         find('#remove_arm_button').click()
         page.driver.browser.accept_js_confirms

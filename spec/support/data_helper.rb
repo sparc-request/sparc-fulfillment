@@ -9,4 +9,14 @@ module DataHelpers
 
     protocol
   end
+
+  def create_blank_protocol
+    identity      = Identity.first
+    protocol      = create(:protocol_with_sub_service_request)
+    organization  = protocol.organization
+
+    create(:clinical_provider, identity: identity, organization: organization)
+
+    protocol
+  end
 end
