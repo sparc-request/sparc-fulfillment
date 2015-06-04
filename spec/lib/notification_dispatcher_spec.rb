@@ -35,5 +35,21 @@ RSpec.describe NotificationDispatcher, type: :request do
         end
       end
     end
+
+    context "Study" do
+
+      context "update" do
+
+        before do
+          params = { notification: attributes_for(:notification_study_update) }
+
+          sparc_sends_notification_post(params)
+        end
+
+        it "should create a RemoteObjectUpdaterJob delayed job" do
+          expect(Delayed::Job.where("handler LIKE '%struct:RemoteObjectUpdaterJob%'").one?).to be
+        end
+      end
+    end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603154556) do
+ActiveRecord::Schema.define(version: 20150603223427) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -143,7 +143,7 @@ ActiveRecord::Schema.define(version: 20150603154556) do
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree
   add_index "line_items", ["deleted_at"], name: "index_line_items_on_deleted_at", using: :btree
   add_index "line_items", ["service_id"], name: "index_line_items_on_service_id", using: :btree
-  add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree
+  add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", using: :btree
 
   create_table "notes", force: :cascade do |t|
     t.integer  "identity_id",  limit: 4
