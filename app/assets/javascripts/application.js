@@ -20,6 +20,7 @@
 //= require jquery.remotipart
 //= require nprogress
 
+//= require global
 //= require protocols
 //= require service_calendar
 //= require participants
@@ -29,6 +30,5 @@
 //= require tasks
 //= require reports
 //= require study_level_activities
-//= require global
 //= require faye
 //= require ajax_progress_bar
