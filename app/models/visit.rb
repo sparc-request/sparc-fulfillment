@@ -11,6 +11,7 @@ class Visit < ActiveRecord::Base
   has_many :procedures
 
   delegate :position, to: :visit_group
+  validates_numericality_of :research_billing_qty, :insurance_billing_qty, :effort_billing_qty, greater_than_or_equal_to: 0
 
   def destroy
     procedures.untouched.belonging_to_unbegun_appt.map(&:destroy)
