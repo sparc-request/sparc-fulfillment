@@ -1,6 +1,4 @@
-# Overwrite the visits
 <% @arms_and_pages.each do |arm_id, value| %>
-  <% value[:arm].line_items.each do |line_item| %>
-  $(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(render partial: '/service_calendar/visits', locals: {line_item: line_item, page: value[:page], tab: @tab}) %>")
-  <% end %>
+  $("#arms_container_<%= arm_id %>").html("<%= escape_javascript(render partial: '/service_calendar/arm', locals: {arm: value[:arm], page: value[:page].to_i, tab: @tab}) %>")
+  $("#visits_select_for_<%= arm_id %>").selectpicker()
 <% end %>

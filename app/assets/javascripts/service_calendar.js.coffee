@@ -55,8 +55,6 @@ $ ->
       url:  '/service_calendar/change_tab'
       data: data
 
-    update_r_t_labels()
-
   $(document).on 'change', '.visit', ->
     data =
       'visit_id': $(this).val()
@@ -169,23 +167,3 @@ $ ->
       url: "/multiple_line_items/necessary_arms"
       data: data
 
-  # if the current tab is not Template, then place R T labels
-  # above check visit columns
-  window.update_r_t_labels = () ->
-    # find active study schedule tab, and pull name
-    # from data-tab attribute
-    tab = $("#service_calendar_tabs li.active a").
-      data('tab')
-
-    if tab != "template"
-      $(".r-label").text("R")
-      $(".t-label").text("T")
-    else
-      $(".r-label").text("")
-      $(".t-label").text("")
-
-  # switch to previously selected tab (before page load)
-  current_tab = $.cookie("active-protocol-tab")
-
-  if current_tab && current_tab.length > 0
-    $(".nav-tabs a[href='##{current_tab}']").click()

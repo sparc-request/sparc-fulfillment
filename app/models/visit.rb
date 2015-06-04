@@ -24,6 +24,10 @@ class Visit < ActiveRecord::Base
         effort_billing_qty > 0
   end
 
+  def total_quantity
+    research_billing_qty + insurance_billing_qty + effort_billing_qty
+  end
+
   def update_procedures updated_qty, selected_qty_type = "research_billing_qty"
     service = self.line_item.service
     new_procedure_values  = []

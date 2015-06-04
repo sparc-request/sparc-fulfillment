@@ -1,4 +1,4 @@
-= hidden_field_tag :current_tab, 'template'
+= hidden_field_tag :current_tab, tab
 = render :partial => 'service_calendar/calendar_management/schedule_edit_buttons', locals: {protocol: @protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
 %br
 %br
@@ -12,5 +12,5 @@
     .service_calendar_container
       - protocol.arms.each do |arm|
         .arms_container{id: "arms_container_#{arm.id}"}
-          = render partial: 'service_calendar/arm', locals: {arm: arm, page: page}
+          = render partial: 'service_calendar/arm', locals: {arm: arm, page: page, tab: tab}
           %br
