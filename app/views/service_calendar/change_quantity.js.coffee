@@ -13,3 +13,4 @@ reset_quantity("#visits_<%= @visit.id %>_insurance_billing_qty")
 <% else %>
 save_quantity("#visits_<%= @visit.id %>_<%= @qty_type %>")
 <% end %>
+

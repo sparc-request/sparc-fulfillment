@@ -99,8 +99,6 @@ $ ->
       type: 'PUT'
       url:  "/visit_groups/#{visit_group_id}"
       data: data
-      success: ->
-        edit_visit_group_name(name, visit_group_id)
 
   $(document).on 'click', '.change_line_item_service', ->
     line_item_id = $(this).attr('line_item_id')
