@@ -34,10 +34,10 @@ class ServiceCalendarController < ApplicationController
 
   def change_quantity
     quantity = params[:quantity]
-    qty_type = params[:qty_type]
+    @qty_type = params[:qty_type]
     @visit = Visit.find params[:visit_id]
-    @visit.update_attributes(qty_type => quantity)
-    @visit.update_procedures quantity.to_i, qty_type
+    @visit.update_attributes(@qty_type => quantity)
+    @visit.update_procedures quantity.to_i, @qty_type
   end
 
   def edit_service

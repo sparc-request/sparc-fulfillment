@@ -93,8 +93,6 @@ $ ->
       type: 'PUT'
       url:  '/service_calendar/change_quantity'
       data: data
-      success: =>
-        $(this).attr('previous_qty', quantity)
 
   $(document).on 'change', '.visit_name', ->
     visit_group_id = $(this).data('visit_group_id')
