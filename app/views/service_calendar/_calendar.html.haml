@@ -9,7 +9,6 @@
       %li.active.custom-tab.schedule-tab{role: 'presentation'}= link_to "Template", "#template", data: {toggle: 'tab', tab: 'template', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/template'
       %li.custom-tab.schedule-tab{role: 'presentation'}= link_to "Quantity/Billing Tab", "#quantity", data: {toggle: 'tab', tab: 'quantity', protocol: protocol.id}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing'
       %li.custom-tab.schedule-tab{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
-      .glyphicon.glyphicon-refresh{style: "display: none;"}
     .service_calendar_container
       - protocol.arms.each do |arm|
         .arms_container{id: "arms_container_#{arm.id}"}

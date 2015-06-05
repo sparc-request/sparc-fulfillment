@@ -8,4 +8,3 @@ $(".study_level_activities_display").show()
 <% else %>
 $(".study_level_activities_display").hide()
 <% end %>
-$(".glyphicon-refresh").hide()

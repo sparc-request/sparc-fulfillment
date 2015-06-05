@@ -37,7 +37,6 @@ $ ->
       data: data
 
   $(document).on 'click', '#service_calendar_tabs a', ->
-    $(".glyphicon-refresh").show()
     protocol_id = $(this).data('protocol')
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
