@@ -54,6 +54,7 @@ class ProtocolImporter
                 # per_participant line_item creation if it doesn't already exist
                 attr = normalized_attributes('LineItem', sparc_line_item).merge!({sparc_id: sparc_line_item.id,
                                                                                   protocol_id: fulfillment_protocol.id,
+                                                                                  subject_count: sparc_visit.line_items_visit.subject_count,
                                                                                   arm_id: fulfillment_arm.id})
                 fulfillment_line_item = LineItem.create(attr)
                 # end per participant line_item creation
@@ -84,11 +85,14 @@ class ProtocolImporter
         fulfillment_line_item = LineItem.create(attr)
       end
       # end one_time_fee line_item creation
+      
+      # update views via Faye
+      FayeJob.enqueue(fulfillment_protocol)
+      # end Faye
 
     end # end Active Record Transaction
 
     PaperTrail.enabled = true
-    #FayeJob.enqueue(object)
   end
 
   private
