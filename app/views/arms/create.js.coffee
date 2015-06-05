@@ -1,5 +1,5 @@
-$("#arm_modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>");
-<% if @errors.nil? %>
+$("#modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>")
+<% unless @errors %>
 $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
 $("#modal_place").modal 'hide'
 create_arm("<%= @arm.name %>", "<%= @arm.id %>");
