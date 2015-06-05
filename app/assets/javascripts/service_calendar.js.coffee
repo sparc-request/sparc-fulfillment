@@ -37,6 +37,7 @@ $ ->
       data: data
 
   $(document).on 'click', '#service_calendar_tabs a', ->
+    $(".glyphicon-refresh").show()
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
     arms_and_pages = {}
