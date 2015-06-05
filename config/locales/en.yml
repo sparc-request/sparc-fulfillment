@@ -232,7 +232,6 @@ en:
       manage_arms: "Manage Arms"
       manage_visits: "Manage Visits"
       manage_services: "Manage Services"
-      services_for_arm: "Arm: "
       study_level_activities: "Study Level Activities"
       quantity_requested: "Quantity Requested"
     flash_messages:
