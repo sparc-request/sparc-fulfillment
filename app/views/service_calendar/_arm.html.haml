@@ -3,7 +3,7 @@
 .calendar.service{class: "arm_#{arm.id}"}
   -# Headers (Services, Number of Participants, Visit Navigation, Empty for deleting line items)
   .row.header
-    .col-xs-4.text-center.arm_name
+    .col-xs-4.text-center.study_schedule_table_name
       = t(:protocol)[:study_schedule][:services_for_arm]
       %span{id: "arm-name-display-#{arm.id}"}= arm.name
     .col-xs-8.text-center.visit_group_select

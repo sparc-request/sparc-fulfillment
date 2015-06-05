@@ -38,6 +38,7 @@ $ ->
 
   $(document).on 'click', '#service_calendar_tabs a', ->
     $(".glyphicon-refresh").show()
+    protocol_id = $(this).data('protocol')
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
     arms_and_pages = {}
@@ -51,6 +52,7 @@ $ ->
     data =
       'arms_and_pages': arms_and_pages,
       'tab'   : tab
+      'protocol_id' : protocol_id
     $.ajax
       type: 'GET'
       url:  '/service_calendar/change_tab'

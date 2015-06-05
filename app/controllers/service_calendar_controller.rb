@@ -8,6 +8,7 @@ class ServiceCalendarController < ApplicationController
   end
 
   def change_tab
+    @protocol = Protocol.find(params[:protocol_id])
     @arms_and_pages = {}
     hash = params[:arms_and_pages]
     hash.each do |arm_id, page|

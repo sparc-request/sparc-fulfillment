@@ -1,0 +1,12 @@
+.calendar.service
+  .row.header.study_schedule_table_name
+    .col-xs-4.text-center
+      = t(:protocol)[:study_schedule][:study_level_activities]
+    .col-xs-6
+    .col-xs-2.text-center
+      = t(:protocol)[:study_schedule][:quantity_requested]
+  .row.check_visit_columns
+  .row
+    .scrolling-div.col-xs-12
+      - protocol.one_time_fee_line_items.each do |li|
+        = render partial: 'service_calendar/sla_line_item', locals: {line_item: li}
