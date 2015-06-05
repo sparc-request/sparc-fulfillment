@@ -3,6 +3,8 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
 
+
+
   $(document).on 'click', '.page_change_arrow', ->
     data =
       'arm_id': $(this).data('arm_id'),
@@ -152,3 +154,12 @@ $ ->
       url: "/multiple_line_items/necessary_arms"
       data: data
 
+
+  # Use cookie to remember study schedule tab
+  current_tab = $.cookie("active-schedule-tab")
+  if current_tab && current_tab.length > 0
+    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
+
+  $('.schedule-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
+    tab = String(e.target).split("#")[1]
+    $.cookie("active-schedule-tab", tab, expires: 1, path: '/') # save tab to cookie
