@@ -292,8 +292,8 @@ ActiveRecord::Schema.define(version: 20150603223427) do
     t.integer  "position",      limit: 4
     t.string   "name",          limit: 255
     t.integer  "day",           limit: 4
-    t.integer  "window_before", limit: 4
-    t.integer  "window_after",  limit: 4
+    t.integer  "window_before", limit: 4,   default: 0
+    t.integer  "window_after",  limit: 4,   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"

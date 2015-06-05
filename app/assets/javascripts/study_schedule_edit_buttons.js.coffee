@@ -144,20 +144,17 @@ $ ->
   $select.append('<option value=' + id + '>' + name + '</option>')
   $select.selectpicker('refresh')
 
-(exports ? this).edit_arm = (name, id) ->
-  $select = $('#arms')
-  $select.find('option').remove()
-  $select.prepend('<option value=' + id + '>' + name + '</option>')
-  $select.selectpicker('refresh')
+(exports ? this).edit_arm_name = (name, id) ->
+  $("#arms option[value=#{id}]").text("#{name}")
+  $("#arms").selectpicker('refresh')
+  $("#arm-name-display-#{id}").html("#{name}");
 
-(exports ? this).edit_visit_group = (name, id) ->
-  $select = $('#visits')
-  $select.find('option').remove()
-  $select.prepend('<option value=' + id + '>' + name + '</option>')
-  $select.selectpicker('refresh')
-  $(".visit_dropdown option[value=#{id}]").text("- #{name}")
+(exports ? this).edit_visit_group_name = (name, id) ->
+  $(".visit_dropdown option[value=#{id}]").text("- #{name}") #update page dropdown
   $(".visit_dropdown").selectpicker('refresh')
-
+  $("#visits option[value=#{id}]").text("#{name}") #update manage visits dropdown
+  $("#visits").selectpicker('refresh')
+  $("#visit_group_#{id}").val("#{name}")
 
 (exports ? this).remove_arm = (arm_id) ->
   $select = $('#arms')

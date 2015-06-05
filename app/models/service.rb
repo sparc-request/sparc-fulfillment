@@ -13,6 +13,10 @@ class Service < ActiveRecord::Base
   scope :per_participant,  -> { where(one_time_fee: false) }
   scope :one_time_fee, -> { where(one_time_fee: true) }
 
+  def readonly?
+    false
+  end
+
   # TODO Determine exact cost calculation
   def cost
     if pricing_map = current_effective_pricing_map
