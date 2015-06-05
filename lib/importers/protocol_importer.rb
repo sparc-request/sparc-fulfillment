@@ -80,7 +80,7 @@ class ProtocolImporter
         attr = normalized_attributes('LineItem', sparc_line_item).merge!({sparc_id: sparc_line_item.id,
                                                                           protocol_id: fulfillment_protocol.id,
                                                                           quantity_requested: sparc_line_item_quantity_requested,
-                                                                          quantity_type: sparcc_line_item.service.current_effective_pricing_map.quantity_type})
+                                                                          quantity_type: sparc_line_item.service.current_effective_pricing_map.quantity_type})
         fulfillment_line_item = LineItem.create(attr)
       end
       # end one_time_fee line_item creation
