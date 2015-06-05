@@ -1,36 +1,38 @@
-- visit_groups = arm.visit_groups.paginate(page: page)
--# Container for calendar
-.calendar.service{class: "arm_#{arm.id}"}
-  -# Headers (Services, Number of Participants, Visit Navigation, Empty for deleting line items)
-  .row.header
-    .col-xs-4.text-center.study_schedule_table_name
-      = t(:protocol)[:study_schedule][:services_for_arm]
-      %span{id: "arm-name-display-#{arm.id}"}= arm.name
-    .col-xs-8.text-center.visit_group_select
-      .col-xs-2
-        .page_change_arrow.btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
-      -# The visit jump to drop down
-      .col-xs-8{id: "select_for_arm_#{arm.id}"}
-        = build_visits_select(arm, page)
-      -# The next page arrow
-      .col-xs-2
-        .page_change_arrow.btn.btn-info.btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page}
-  .row.visit_groups
-    .col-xs-4
-    .visit_groups{class: "visit_groups_for_#{arm.id}"}
-      = render partial: '/service_calendar/visit_groups', locals: {arm: arm, visit_groups: visit_groups, tab: tab}
-  .row.check_visit_columns
-    .col-xs-4
-    - unless tab == 'consolidated'
-      %div{class: "check_columns_for_arm_#{arm.id}"}
-        = render partial: '/service_calendar/check_visit_columns', locals: {visit_groups: visit_groups, tab: tab}
-    .col-xs-1
-  .row
-    .scrolling-div.col-xs-12
-      - arm.line_items_grouped_by_core.each do |core_id, line_items|
-        .row.core{id: "arm_#{arm.id}_core_#{core_id}"}
-          .col-xs-12= "#{line_items[0].sparc_core_name}"
-        - line_items.each do |li|
-          = render partial: 'service_calendar/line_item', locals: {line_item: li, page: page, tab: tab}
-        %div{id: "arm_#{arm.id}_end_of_core_#{core_id}"}
-      %div{id: "end_of_arm_#{arm.id}"}
+.arms_container{id: "arms_container_#{arm.id}"}
+  - visit_groups = arm.visit_groups.paginate(page: page)
+  -# Container for calendar
+  .calendar.service{class: "arm_#{arm.id}"}
+    -# Headers (Services, Number of Participants, Visit Navigation, Empty for deleting line items)
+    .row.header
+      .col-xs-4.text-center.study_schedule_table_name
+        = t(:protocol)[:study_schedule][:services_for_arm]
+        %span{id: "arm-name-display-#{arm.id}"}= arm.name
+      .col-xs-8.text-center.visit_group_select
+        .col-xs-2
+          .page_change_arrow.btn.btn-info.glyphicon.glyphicon-arrow-left{id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button'}
+        -# The visit jump to drop down
+        .col-xs-8{id: "select_for_arm_#{arm.id}"}
+          = build_visits_select(arm, page)
+        -# The next page arrow
+        .col-xs-2
+          .page_change_arrow.btn.btn-info.btn.btn-info.glyphicon.glyphicon-arrow-right{id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page}
+    .row.visit_groups
+      .col-xs-4
+      .visit_groups{class: "visit_groups_for_#{arm.id}"}
+        = render partial: '/service_calendar/visit_groups', locals: {arm: arm, visit_groups: visit_groups, tab: tab}
+    .row.check_visit_columns
+      .col-xs-4
+      - unless tab == 'consolidated'
+        %div{class: "check_columns_for_arm_#{arm.id}"}
+          = render partial: '/service_calendar/check_visit_columns', locals: {visit_groups: visit_groups, tab: tab}
+      .col-xs-1
+    .row
+      .scrolling-div.col-xs-12
+        - arm.line_items_grouped_by_core.each do |core_id, line_items|
+          .row.core{id: "arm_#{arm.id}_core_#{core_id}"}
+            .col-xs-12= "#{line_items[0].sparc_core_name}"
+          - line_items.each do |li|
+            = render partial: 'service_calendar/line_item', locals: {line_item: li, page: page, tab: tab}
+          %div{id: "arm_#{arm.id}_end_of_core_#{core_id}"}
+        %div{id: "end_of_arm_#{arm.id}"}
+%br

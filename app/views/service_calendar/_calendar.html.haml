@@ -11,8 +11,6 @@
       %li.custom-tab.schedule-tab{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
     .service_calendar_container
       - protocol.arms.each do |arm|
-        .arms_container{id: "arms_container_#{arm.id}"}
-          = render partial: 'service_calendar/arm', locals: {arm: arm, page: page, tab: tab}
-          %br
+        = render partial: 'service_calendar/arm', locals: {arm: arm, page: page, tab: tab}
     .study_level_activities_display{hidden: tab == 'consolidated' ? false : true}
       = render partial: 'service_calendar/study_level_activities', locals: {protocol: protocol}
