@@ -21,6 +21,10 @@ RSpec.describe Participant, type: :model do
     it { is_expected.to validate_presence_of(:ethnicity) }
     it { is_expected.to validate_presence_of(:race) }
     it { is_expected.to validate_presence_of(:gender) }
+    it { is_expected.to validate_presence_of(:address) }
+    it { is_expected.to validate_presence_of(:city) }
+    it { is_expected.to validate_presence_of(:state) }
+    it { is_expected.to validate_presence_of(:zipcode) }
 
     context 'custom validations' do
 

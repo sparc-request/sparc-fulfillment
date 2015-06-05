@@ -30,11 +30,11 @@ class LineItem < ActiveRecord::Base
   after_destroy :decrement_sparc_service_counter
 
   def increment_sparc_service_counter
-    RemoteServiceUpdaterJob.perform_later(self.service, 1)
+    service.increment(:line_items_count)
   end
 
   def decrement_sparc_service_counter
-    RemoteServiceUpdaterJob.perform_later(self.service, -1)
+    service.decrement(:line_items_count)
   end
 
   def started_at=(date)
