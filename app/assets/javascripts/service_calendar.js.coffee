@@ -3,8 +3,6 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
 
-
-
   $(document).on 'click', '.page_change_arrow', ->
     data =
       'arm_id': $(this).data('arm_id'),
@@ -152,7 +150,6 @@ $ ->
       type: 'GET'
       url: "/multiple_line_items/necessary_arms"
       data: data
-
 
   # Use cookie to remember study schedule tab
   current_tab = $.cookie("active-schedule-tab")
