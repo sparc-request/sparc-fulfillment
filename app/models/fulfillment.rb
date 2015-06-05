@@ -18,7 +18,7 @@ class Fulfillment < ActiveRecord::Base
   validates_numericality_of :quantity
 
   scope :fulfilled_in_date_range, ->(start_date, end_date) {
-        where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
+        where("fulfilled_at is not NULL AND DATE(fulfilled_at) between ? AND ?", start_date, end_date)}
 
   def fulfilled_at=(date)
     write_attribute(:fulfilled_at, Time.strptime(date, "%m-%d-%Y")) if date.present?

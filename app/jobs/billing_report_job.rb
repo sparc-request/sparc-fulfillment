@@ -16,12 +16,12 @@ class BillingReportJob < ActiveJob::Base
       end
 
       csv << ["Study Level Charges:"]
-      csv << ["Protocol ID", "Primary PI", "Service(s) Completed", "Quantity Completed", "Research Rate", "Total Cost"]
+      csv << ["Protocol ID", "Primary PI", "Fulfillment Date", "Service(s) Completed", "Quantity Completed", "Research Rate", "Total Cost"]
       csv << [""]
 
       protocols.each do |protocol|
         protocol.fulfillments.fulfilled_in_date_range(start_date, end_date).each do |fulfillment|
-          csv << [protocol.sparc_id, protocol.pi ? protocol.pi.full_name : nil, fulfillment.service_name, fulfillment.quantity, display_cost(fulfillment.service_cost), display_cost(fulfillment.total_cost)]
+          csv << [protocol.sparc_id, protocol.pi ? protocol.pi.full_name : nil, format_date(fulfillment.fulfilled_at), fulfillment.service_name, fulfillment.quantity, display_cost(fulfillment.service_cost), display_cost(fulfillment.total_cost)]
         end
       end
 
