@@ -59,12 +59,15 @@ $ ->
       data: data
 
   $(document).on 'change', '.visit', ->
-    data =
-      'visit_id': $(this).val()
-      'checked':  $(this).prop('checked')
+    visit_id = $(this).val()
+    research = + $(this).prop('checked') # unary operator '+' evaluates true/false to num
+    data = 'visit':
+      'research_billing_qty':  research,
+      'insurance_billing_qty': 0,
+      'effort_billing_qty': 0
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/check_visit'
+      url:  "/visits/#{visit_id}"
       data: data
 
   $(document).on 'change', '.quantity', ->
@@ -72,48 +75,29 @@ $ ->
     quantity = $(this).val()
     qty_type = $(this).attr('qty_type')
 
-    if quantity == ''
-      $(this).val($(this).attr('previous_qty'))
-      return
-
-    data =
-      'visit_id': visit_id,
-      'quantity': quantity,
-      'qty_type': qty_type
+    data = 'visit':
+      "#{qty_type}": quantity
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/change_quantity'
+      url:  "/visits/#{visit_id}"
       data: data
-      success: =>
-        $(this).attr('previous_qty', quantity)
 
   $(document).on 'change', '.visit_name', ->
     visit_group_id = $(this).data('visit_group_id')
     name = $(this).val()
-    data =
-      'visit_group_id': visit_group_id,
-      'name':           name
+    data = 'visit_group' : 'name' : name
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/change_visit_name'
+      url:  "/visit_groups/#{visit_group_id}"
       data: data
       success: ->
-        # Need to find out if this is actually necessary
-        # or if we can use faye
-
-        $(".visit_dropdown option[value=#{visit_group_id}]").text("- #{name}")
-        $(".visit_dropdown").selectpicker('refresh')
-
-        $("#visits option[value=#{visit_group_id}]").text("#{name}")
-        $("#visits").selectpicker('refresh')
+        edit_visit_group_name(name, visit_group_id)
 
   $(document).on 'click', '.change_line_item_service', ->
-    data =
-      'line_item_id': $(this).attr('line_item_id')
+    line_item_id = $(this).attr('line_item_id')
     $.ajax
       type: 'GET'
-      url: '/service_calendar/edit_service'
-      data: data
+      url: "/line_items/#{line_item_id}/edit"
 
   check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
     obj.removeClass(remove_class).addClass(add_class)
