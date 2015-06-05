@@ -2,18 +2,16 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
-  change_page = (obj) ->
+
+  $(document).on 'click', '.page_change_arrow', ->
     data =
-      'arm_id': obj.data('arm_id'),
-      'page'  : obj.attr('page'),
+      'arm_id': $(this).data('arm_id'),
+      'page'  : $(this).attr('page'),
       'tab'   : $('#current_tab').val()
     $.ajax
       type: 'GET'
       url:  '/service_calendar/change_page'
       data: data
-
-  $(document).on 'click', '.page_change_arrow', ->
-    change_page $(this)
 
   $(document).on 'change', '.visit_dropdown', ->
     page = $(this).find('option:selected').attr('parent_page')
@@ -99,13 +97,6 @@ $ ->
       type: 'GET'
       url: "/line_items/#{line_item_id}/edit"
 
-  check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
-    obj.removeClass(remove_class).addClass(add_class)
-    obj.attr('check', attr_check)
-    $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
-    $("#{identifier} input[type=text].research").val(research_val)
-    $("#{identifier} input[type=text].insurance").val(insurance_val)
-
   $(document).on 'click', '.check_row', ->
     check = $(this).attr('check')
     line_item_id = $(this).data('line_item_id')
@@ -143,6 +134,13 @@ $ ->
           check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
         else
           check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
+
+  check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
+    obj.removeClass(remove_class).addClass(add_class)
+    obj.attr('check', attr_check)
+    $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
+    $("#{identifier} input[type=text].research").val(research_val)
+    $("#{identifier} input[type=text].insurance").val(insurance_val)
 
   (exports ? this).change_service = (service_id) ->
     protocol_id = $('#arms').data('protocol_id')
