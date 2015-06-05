@@ -2,6 +2,7 @@ FactoryGirl.define do
 
   factory :organization do
     sequence(:name) { |n| "Organization #{n}" }
+    process_ssrs false
 
     trait :core do
       type "Core"
