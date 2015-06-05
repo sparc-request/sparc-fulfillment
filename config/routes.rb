@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :notes, only: [:index, :new, :create]
   resources :documents, only: [:index, :new, :create]
   resources :line_items, only: [:new, :create, :edit, :update]
+  resources :visits, only: [:update]
 
   resources :visit_groups do
     collection do
@@ -64,14 +65,8 @@ Rails.application.routes.draw do
     collection do
       get 'change_page'
       get 'change_tab'
-      put 'check_visit'
-      put 'change_quantity'
-      put 'change_visit_name'
-      get 'edit_service'
-      put 'update_service'
       put 'check_row'
       put 'check_column'
-      put 'remove_line_item'
     end
   end
 
