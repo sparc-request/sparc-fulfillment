@@ -21,9 +21,9 @@
             %a= c.component
   .col-xs-1
   .col-xs-2.text-center.options
-    %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: fulfillment.id, notable_type: "Fulfillment"}}
+    %button.btn.btn-primary.notes.list{title: "Notes", type: "button", aria: {label: "Notes List"}, data: {notable_id: fulfillment.id, notable_type: "Fulfillment", toggle: "tooltip", animation: false}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
-    %button.btn.btn-primary.documents.list{type: "button", aria: {label: "Documents List"}, data: {documentable_id: fulfillment.id, documentable_type: "Fulfillment"}}
+    %button.btn.btn-primary.documents.list{title: "Documents", type: "button", aria: {label: "Documents List"}, data: {documentable_id: fulfillment.id, documentable_type: "Fulfillment", toggle: "tooltip", animation: false}}
       %span.glyphicon.glyphicon-open-file{aria: {hidden: "true"}}
-    %button.btn.btn-warning.otf_fulfillment_edit{type: "button", aria: {label: "Edit Fulfillment"}}
+    %button.btn.btn-warning.otf_fulfillment_edit{title: "Edit Fulfillment", type: "button", aria: {label: "Edit Fulfillment"}, data: {toggle: "tooltip", animation: false}}
       %span.glyphicon.glyphicon-edit{aria: {hidden: "true"}}
