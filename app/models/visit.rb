@@ -26,7 +26,7 @@ class Visit < ActiveRecord::Base
   end
 
   def total_quantity
-    research_billing_qty + insurance_billing_qty + effort_billing_qty
+    research_billing_qty + insurance_billing_qty
   end
 
   def update_procedures updated_qty, selected_qty_type = "research_billing_qty"

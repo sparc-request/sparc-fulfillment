@@ -68,7 +68,6 @@ $ ->
 
     $('.protocol-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
       tab = String(e.target).split("#")[1]
-      alert tab
       $.cookie("active-protocol-tab", tab, expires: 1, path: '/') # save tab to cookie
 
 (exports ? this).number_to_percent = (value) ->

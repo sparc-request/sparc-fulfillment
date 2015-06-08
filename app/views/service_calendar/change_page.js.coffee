@@ -24,6 +24,6 @@ $(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(rende
 <% end %>
 
 # Set the dropdown to the selected page
-$("#visits_select_for_#{arm_id}").val(page)
+$("#visits_select_for_#{arm_id}").selectpicker('val', page)
 # Set the current page for early out in javascript
 $("#visits_select_for_#{arm_id}").attr('page', page)
