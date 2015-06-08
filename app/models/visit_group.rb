@@ -22,6 +22,7 @@ class VisitGroup < ActiveRecord::Base
             :name,
             presence: true
   validates :day, presence: true, numericality: true
+  validates :name, presence: true
 
   private
 

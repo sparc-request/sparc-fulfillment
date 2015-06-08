@@ -26,6 +26,18 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
     expect(page).to have_css("#visits_#{@visit.id}_insurance_billing_qty")
   end
 
+  describe "visit group name fields" do
+
+    it "should set the name back to the previous name if there is a validation error" do
+      fill_in "visit_group_#{@visit_group.id}", with: 'vanilla ice cream'
+      first('.calendar.service').click()
+      wait_for_ajax
+      fill_in "visit_group_#{@visit_group.id}", with: ''
+      first('.calendar.service').click()
+      expect(find_field("visit_group_#{@visit_group.id}").value).to eq('vanilla ice cream')
+    end
+  end
+
   describe "changing pages" do
     it "should disable the previous button on the first page" do
       expect(page).to have_css("#arrow-left-#{@arm.id}[disabled]")
@@ -110,6 +122,15 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
         first('.calendar.service').click()
         wait_for_ajax
         fill_in "visits_#{@visit.id}_research_billing_qty", with: ''
+        first('.calendar.service').click()
+        expect(find_field("visits_#{@visit.id}_research_billing_qty").value).to eq('6')
+      end
+
+      it "should set the quantity back to the previous quantity if there is a validation error" do
+        fill_in "visits_#{@visit.id}_research_billing_qty", :with => '6'
+        first('.calendar.service').click()
+        wait_for_ajax
+        fill_in "visits_#{@visit.id}_research_billing_qty", with: '-1'
         first('.calendar.service').click()
         expect(find_field("visits_#{@visit.id}_research_billing_qty").value).to eq('6')
       end
