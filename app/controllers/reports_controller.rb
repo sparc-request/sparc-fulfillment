@@ -13,15 +13,20 @@ class ReportsController < ApplicationController
   end
 
   def new_billing_report
+     @protocols = current_identity.protocols
   end
 
   def new_auditing_report
+     @protocols = current_identity.protocols
   end
 
   def new_participant_report
+    protocol_ids = current_identity.protocols.map{&:id}
+    @participants.where(protocol_id: protocol_ids)
   end
 
   def new_project_summary_report
+     @protocols = current_identity.protocols
   end
 
   def create_billing_report

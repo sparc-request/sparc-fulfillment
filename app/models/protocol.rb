@@ -53,8 +53,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def short_title_with_sparc_id
-    list_display = "(#{self.sparc_id}) #{self.short_title}"
-    return list_display
+    "(#{self.srid}) #{self.short_title}"
   end
 
   def one_time_fee_line_items
