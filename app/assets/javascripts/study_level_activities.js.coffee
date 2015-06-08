@@ -47,6 +47,7 @@ $ ->
     table = $("#fulfillments_list_#{id}")
     span = $(this).children('.glyphicon')
     if table.hasClass('slide-active')
+      update_tooltip($(this), "View Fulfillments")
       table.removeClass('slide-active')
       table.addClass('slide-inactive')
       span.removeClass("glyphicon-chevron-down")
@@ -61,6 +62,8 @@ $ ->
         activeSpan.removeClass("glyphicon-chevron-down")
         activeSpan.addClass("glyphicon-chevron-right")
         activeSlide.slideToggle()
+
+      update_tooltip($(this), "Hide Fulfillments")
       table.removeClass('slide-inactive')
       table.addClass('slide-active')
       span.removeClass("glyphicon-chevron-right")

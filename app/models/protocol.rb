@@ -25,7 +25,9 @@ class Protocol < ActiveRecord::Base
   delegate  :irb_approval_date,
             :irb_expiration_date,
             :irb_number,
-            to: :human_subjects_info
+            to: :human_subjects_info,
+            allow_nil: true
+
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id
     "#{sparc_id} - #{sub_service_request.ssr_id}"

@@ -1,6 +1,11 @@
 $ ->
   $('[data-toggle="tooltip"]').tooltip()
 
+  window.update_tooltip = (object, string) ->
+    $(object).tooltip('hide')
+    $(object).attr('data-original-title', string)
+    $(object).tooltip('fixTitle')
+
   $(document).on 'click', 'button.notes.list',  ->
     id = $(this).data('notable-id')
     type = $(this).data('notable-type')
