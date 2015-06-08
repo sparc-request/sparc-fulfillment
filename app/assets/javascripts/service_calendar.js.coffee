@@ -25,7 +25,6 @@ $ ->
   $(document).on 'change', '.visit_dropdown', ->
     page = $(this).find('option:selected').attr('parent_page')
     cur_page = $(this).attr('page')
-    alert "#{page} - #{cur_page}"
     tab = $('#current_tab').val()
     if page == undefined || page == false
       page = $(this).val()
