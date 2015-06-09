@@ -2,6 +2,7 @@ class Sparc::Service < ActiveRecord::Base
 
   include SparcShard
 
+  belongs_to :organization
   has_many :line_items
   has_many :pricing_maps
 
