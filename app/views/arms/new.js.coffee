@@ -1,2 +1,2 @@
-$("#modal_area").html("<%= escape_javascript(render(:partial =>'service_calendar/calendar_management/add_arm_form', locals: {protocol: @protocol, arm: @arm, current_page: @current_page, services: @services})) %>");
+$("#modal_area").html("<%= escape_javascript(render(:partial =>'service_calendar/calendar_management/add_arm_form', locals: {protocol: @protocol, arm: @arm, current_page: @current_page, services: @services, calendar_tab: @calendar_tab})) %>");
 $("#modal_place").modal 'show'

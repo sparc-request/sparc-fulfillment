@@ -28,6 +28,7 @@ RSpec.describe ServiceCalendarController do
       xhr :get, :change_tab, {
         arms_and_pages: {"#{@arm.id}" => page},
         tab: 'quantity',
+        protocol_id: @protocol.id,
         format: :js
       }
       expect(assigns(:tab)).to eq('quantity')

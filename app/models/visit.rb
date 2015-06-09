@@ -11,6 +11,7 @@ class Visit < ActiveRecord::Base
   has_many :procedures
 
   delegate :position, to: :visit_group
+  validates_numericality_of :research_billing_qty, :insurance_billing_qty, :effort_billing_qty, greater_than_or_equal_to: 0
 
   def destroy
     procedures.untouched.belonging_to_unbegun_appt.map(&:destroy)
@@ -22,6 +23,10 @@ class Visit < ActiveRecord::Base
     research_billing_qty > 0 ||
       insurance_billing_qty > 0 ||
         effort_billing_qty > 0
+  end
+
+  def total_quantity
+    research_billing_qty + insurance_billing_qty
   end
 
   def update_procedures updated_qty, selected_qty_type = "research_billing_qty"

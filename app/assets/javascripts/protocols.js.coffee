@@ -3,6 +3,8 @@ $ ->
 
     # Delete Protocol tab-remembering cookie
     $.removeCookie("active-protocol-tab")
+    # Delete Study Schedule tab-remembering cookie
+    $.removeCookie("active-schedule-tab")
 
     #Setting the default state of the index page on initial load
     $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
@@ -59,14 +61,14 @@ $ ->
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
 
   if $("body.protocols-show").length > 0
+
     current_tab = $.cookie("active-protocol-tab")
-
     if current_tab && current_tab.length > 0
-      $(".nav-tabs a[href='##{current_tab}']").tab('show')
+      $(".protocol-tab > a[href='##{current_tab}']").tab('show') # show tab on load
 
-    $('a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
+    $('.protocol-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
       tab = String(e.target).split("#")[1]
-      $.cookie("active-protocol-tab", tab, expires: 1, path: '/')
+      $.cookie("active-protocol-tab", tab, expires: 1, path: '/') # save tab to cookie
 
 (exports ? this).number_to_percent = (value) ->
   value + '%'

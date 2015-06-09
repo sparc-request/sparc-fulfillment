@@ -1,10 +1,13 @@
 $ ->
 
     $(document).on 'click', '#add_arm_button', ->
-      protocol_id = $('#arms').data('protocol_id')
+      data =
+        "protocol_id" : $('#arms').data('protocol_id')
+        "calendar_tab" : $('#current_tab').attr('value')
       $.ajax
         type: 'GET'
-        url: "/arms/new?protocol_id=#{protocol_id}"
+        url: "/arms/new"
+        data: data
 
     $(document).on 'click', '#remove_arm_button', ->
       # Ensure there are at least two arms in dropdown

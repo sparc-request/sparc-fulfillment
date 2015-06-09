@@ -2,18 +2,25 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
-  change_page = (obj) ->
+
+  # Use cookie to remember study schedule tab
+  current_tab = $.cookie("active-schedule-tab")
+  if current_tab && current_tab.length > 0
+    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
+
+  $('.schedule-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
+    tab = String(e.target).split("#")[1]
+    $.cookie("active-schedule-tab", tab, expires: 1, path: '/') # save tab to cookie
+
+  $(document).on 'click', '.page_change_arrow', ->
     data =
-      'arm_id': obj.data('arm_id'),
-      'page'  : obj.attr('page'),
+      'arm_id': $(this).data('arm_id'),
+      'page'  : $(this).attr('page'),
       'tab'   : $('#current_tab').val()
     $.ajax
       type: 'GET'
       url:  '/service_calendar/change_page'
       data: data
-
-  $(document).on 'click', '.page_change_arrow', ->
-    change_page $(this)
 
   $(document).on 'change', '.visit_dropdown', ->
     page = $(this).find('option:selected').attr('parent_page')
@@ -24,7 +31,7 @@ $ ->
 
     # Early out when selecting a visit that is already shown
     if page == cur_page
-      $(this).val(page)
+      $(this).selectpicker('val', page)
       return
 
     data =
@@ -37,6 +44,7 @@ $ ->
       data: data
 
   $(document).on 'click', '#service_calendar_tabs a', ->
+    protocol_id = $(this).data('protocol')
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
     arms_and_pages = {}
@@ -50,12 +58,11 @@ $ ->
     data =
       'arms_and_pages': arms_and_pages,
       'tab'   : tab
+      'protocol_id' : protocol_id
     $.ajax
       type: 'GET'
       url:  '/service_calendar/change_tab'
       data: data
-
-    update_r_t_labels()
 
   $(document).on 'change', '.visit', ->
     visit_id = $(this).val()
@@ -89,21 +96,12 @@ $ ->
       type: 'PUT'
       url:  "/visit_groups/#{visit_group_id}"
       data: data
-      success: ->
-        edit_visit_group_name(name, visit_group_id)
 
   $(document).on 'click', '.change_line_item_service', ->
     line_item_id = $(this).attr('line_item_id')
     $.ajax
       type: 'GET'
       url: "/line_items/#{line_item_id}/edit"
-
-  check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
-    obj.removeClass(remove_class).addClass(add_class)
-    obj.attr('check', attr_check)
-    $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
-    $("#{identifier} input[type=text].research").val(research_val)
-    $("#{identifier} input[type=text].insurance").val(insurance_val)
 
   $(document).on 'click', '.check_row', ->
     check = $(this).attr('check')
@@ -143,6 +141,23 @@ $ ->
         else
           check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
 
+  check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
+    obj.removeClass(remove_class).addClass(add_class)
+    obj.attr('check', attr_check)
+    $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
+    $("#{identifier} input[type=text].research").val(research_val)
+    $("#{identifier} input[type=text].insurance").val(insurance_val)
+
+  # Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
+  # containing content, which disappears when user focuses to it.
+  (exports ? this).error_tooltip_on = (elt, content) ->
+    $elt = $(elt)
+    $elt.attr('data-toggle', 'tooltip').attr('title', content)
+    $elt.tooltip({container: 'body'})
+    $elt.tooltip('show')
+    delay = (ms, func) -> setTimeout func, ms
+    delay 3000, -> $elt.tooltip('destroy')
+
   (exports ? this).change_service = (service_id) ->
     protocol_id = $('#arms').data('protocol_id')
     data =
@@ -152,24 +167,3 @@ $ ->
       type: 'GET'
       url: "/multiple_line_items/necessary_arms"
       data: data
-
-  # if the current tab is not Template, then place R T labels
-  # above check visit columns
-  window.update_r_t_labels = () ->
-    # find active study schedule tab, and pull name
-    # from data-tab attribute
-    tab = $("#service_calendar_tabs li.active a").
-      data('tab')
-
-    if tab != "template"
-      $(".r-label").text("R")
-      $(".t-label").text("T")
-    else
-      $(".r-label").text("")
-      $(".t-label").text("")
-
-  # switch to previously selected tab (before page load)
-  current_tab = $.cookie("active-protocol-tab")
-
-  if current_tab && current_tab.length > 0
-    $(".nav-tabs a[href='##{current_tab}']").click()

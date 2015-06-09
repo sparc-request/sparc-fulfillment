@@ -1,9 +1,11 @@
 .row.line_item{id: "line_item_#{line_item.id}"}
-  .col-xs-2.line_item_service_name
-    = line_item.name
-  .col-xs-1
-    .btn.glyphicon.glyphicon-edit.change_line_item_service{line_item_id: line_item.id}
-  .col-xs-1.text-center
-    .glyphicon.check_row.btn.btn-primary{:'data-line_item_id' => line_item.id, check: "#{set_check(line_item)}", class: "#{glyph_class(line_item)}"}
+  .col-xs-2.line_item_service_name= line_item.name
+  - unless tab == 'consolidated'
+    .col-xs-1
+      .btn.glyphicon.glyphicon-edit.change_line_item_service{line_item_id: line_item.id}
+    .col-xs-1.text-center
+      .glyphicon.check_row.btn.btn-primary{:'data-line_item_id' => line_item.id, check: "#{set_check(line_item)}", class: "#{glyph_class(line_item)}"}
+  - else
+    .col-xs-2
   %div{class: "visits_for_line_item_#{line_item.id}"}
-    = render partial: '/service_calendar/visits', locals: {line_item: line_item, page: page, tab: 'template'}
+    = render partial: '/service_calendar/visits', locals: {line_item: line_item, page: page, tab: tab}
