@@ -13,11 +13,14 @@ namespace :data do
     identity = FactoryGirl.create(:identity, email: 'email@musc.edu', ldap_uid: 'ldap@musc.edu', password: 'password')
 
     # Create 10 Protocols
-    10.times do
-      sub_service_request = FactoryGirl.create(:sub_service_request_with_organization)
-      protocol            = FactoryGirl.create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-      organization        = sub_service_request.organization
-      FactoryGirl.create(:clinical_provider, identity: identity, organization: organization)
+    2.times do
+      service_request     = FactoryGirl.create(:service_request)
+      5.times do
+        sub_service_request = FactoryGirl.create(:sub_service_request_with_organization, service_request: service_request)
+        protocol            = FactoryGirl.create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+        organization        = sub_service_request.organization
+        FactoryGirl.create(:clinical_provider, identity: identity, organization: organization)
+      end
     end
 
     # Create 10 tasks

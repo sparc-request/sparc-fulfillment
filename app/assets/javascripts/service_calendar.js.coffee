@@ -1,6 +1,3 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
 
   # Use cookie to remember study schedule tab
@@ -23,20 +20,18 @@ $ ->
       data: data
 
   $(document).on 'change', '.visit_dropdown', ->
-    page = $(this).find('option:selected').attr('parent_page')
-    cur_page = $(this).attr('page')
+    page_selected = $(this).find('option:selected').attr('page')
+    current_page = $(this).attr('page')
     tab = $('#current_tab').val()
-    if page == undefined || page == false
-      page = $(this).val()
 
     # Early out when selecting a visit that is already shown
-    if page == cur_page
-      $(this).selectpicker('val', page)
+    if page_selected == current_page
+      $(this).selectpicker('val', page_selected)
       return
 
     data =
       'arm_id': $(this).data('arm_id')
-      'page'  : page
+      'page'  : page_selected
       'tab'   : tab
     $.ajax
       type: 'GET'
