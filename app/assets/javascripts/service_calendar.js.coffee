@@ -1,10 +1,6 @@
 $ ->
 
   # Use cookie to remember study schedule tab
-  current_tab = $.cookie("active-schedule-tab")
-  if current_tab && current_tab.length > 0
-    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
-
   $('.schedule-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
     tab = String(e.target).split("#")[1]
     $.cookie("active-schedule-tab", tab, expires: 1, path: '/') # save tab to cookie
@@ -162,3 +158,8 @@ $ ->
       type: 'GET'
       url: "/multiple_line_items/necessary_arms"
       data: data
+
+  # go to cookie-saved tab on page load
+  current_tab = $.cookie("active-schedule-tab")
+  if current_tab && current_tab.length > 0
+    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
