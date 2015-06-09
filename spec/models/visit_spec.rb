@@ -7,6 +7,11 @@ RSpec.describe Visit, type: :model do
 
   it { is_expected.to have_many(:procedures) }
 
+
+  it { should validate_numericality_of(:research_billing_qty).is_greater_than_or_equal_to(0) }
+  it { should validate_numericality_of(:insurance_billing_qty).is_greater_than_or_equal_to(0) }
+  it { should validate_numericality_of(:effort_billing_qty).is_greater_than_or_equal_to(0) }
+
   context 'class methods' do
 
     describe '#destroy' do
