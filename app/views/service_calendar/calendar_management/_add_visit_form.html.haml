@@ -14,7 +14,7 @@
           .col-md-12
             .form-group
               = a.label "arm_id", t(:visit_groups)[:arm], class: "col-sm-4 control-label"
-              .col-sm-7= a.select "arm_id", options_from_collection_for_select(protocol.arms,'id','name'), {include_blank: false},class: "form-control"
+              .col-sm-7= a.select "arm_id", options_from_collection_for_select(protocol.arms,'id','name'), {include_blank: false}, class: "form-control selectpicker"
             .form-group
               = a.label "name", t(:visit_groups)[:name], class: "col-sm-4 control-label"
               .col-sm-7= a.text_field "name", {class: 'form-control'}

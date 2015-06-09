@@ -1,16 +1,16 @@
-= hidden_field_tag :current_tab, 'template'
-= render :partial => 'service_calendar/calendar_management/schedule_edit_buttons', locals: {protocol: @protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
+= hidden_field_tag :protocol_id, protocol.id
+= hidden_field_tag :current_tab, tab
+= render :partial => 'service_calendar/calendar_management/schedule_edit_buttons', locals: {protocol: protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
 %br
 %br
 %div{role: 'tabpanel'}
-  %ul.nav.nav-tabs{role: 'tablist'}
   %div{role: 'tablist'}
     %ul.nav.nav-tabs{id: 'service_calendar_tabs', role: 'navigation'}
-      %li.active.custom-tab{role: 'presentation'}= link_to "Template", "#template", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/template', :'data-tab' => 'template'
-      %li.custom-tab{role: 'presentation'}= link_to "Quantity/Billing Tab", "#quantity_billing", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing', :'data-tab' => 'quantity'
-      %li.custom-tab{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated_request", :data => {:toggle => 'tab'}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request', :'data-tab' => 'consolidated'
+      %li.active.custom-tab.schedule-tab{role: 'presentation'}= link_to "Template", "#template", data: {toggle: 'tab', tab: 'template', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/template'
+      %li.custom-tab.schedule-tab{role: 'presentation'}= link_to "Quantity/Billing Tab", "#quantity", data: {toggle: 'tab', tab: 'quantity', protocol: protocol.id}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing'
+      %li.custom-tab.schedule-tab{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
     .service_calendar_container
       - protocol.arms.each do |arm|
-        .arms_container{id: "arms_container_#{arm.id}"}
-          = render partial: 'service_calendar/arm', locals: {arm: arm, page: page}
-          %br
+        = render partial: 'service_calendar/arm', locals: {arm: arm, page: page, tab: tab}
+    .study_level_activities_display{hidden: tab == 'consolidated' ? false : true}
+      = render partial: 'service_calendar/study_level_activities', locals: {protocol: protocol}

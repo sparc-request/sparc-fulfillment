@@ -73,7 +73,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         fill_in 'Subject Count', with: 1
         fill_in 'Visit Count', with: 3
         click_button 'Add Arm'
-        expect(page).to have_content "Arm: arm name"
+        expect(page).to have_content "arm name"
       end
     end
 

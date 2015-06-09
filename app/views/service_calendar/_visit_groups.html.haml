@@ -9,7 +9,8 @@
         %span{id: "visit-after-display-#{visit_group.id}"}= visit_group.window_after || 0
     .row.visit_group_names.text-center
       .visit_name_display.text-center{:data_visit_group_id => visit_group.id}
-        %span{id: "visit-name-display-#{visit_group.id}"}= text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "form-control visit_group_#{index} visit_name", :'data-visit_group_id' => visit_group.id
+        %span{id: "visit-name-display-#{visit_group.id}"}
+          = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "form-control visit_group_#{index} visit_name", :'data-visit_group_id' => visit_group.id, disabled: (tab == 'consolidated' ? true : false)
 - (visit_groups.size...Visit.per_page).each do |index|
   .col-md-1.text-center{class: "visit_group_#{index}"}
     &nbsp
