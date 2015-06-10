@@ -34,6 +34,13 @@ feature 'Complete Procedure', js: true do
       then_i_should_see_reset_notes
     end
 
+    scenario 'User completes all appointments' do
+      as_a_user_who_has_added_a_procedure_to_an_appointment 2
+      then_begins_appointment
+      when_i_complete_all_the_procedures
+      all_the_procedure_complete_buttons_should_be_active 2
+    end
+
     scenario 'User marks an incomplete Procedure as complete' do
       as_a_user_who_has_added_a_procedure_to_an_appointment
       then_begins_appointment
@@ -60,7 +67,7 @@ feature 'Complete Procedure', js: true do
     and_it_updates_the_completed_date
   end
 
-  def as_a_user_who_has_added_a_procedure_to_an_appointment
+  def as_a_user_who_has_added_a_procedure_to_an_appointment qty=1
     protocol    = create_and_assign_protocol_to_me
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
@@ -69,7 +76,7 @@ feature 'Complete Procedure', js: true do
     visit participant_path participant
     bootstrap_select '#appointment_select', visit_group.name
     bootstrap_select '#service_list', service.name
-    fill_in 'service_quantity', with: 1
+    fill_in 'service_quantity', with: qty
     find('button.add_service').click
     wait_for_ajax
 
@@ -94,6 +101,15 @@ feature 'Complete Procedure', js: true do
   def when_i_complete_the_procedure
     find('label.status.complete').click
     wait_for_ajax
+  end
+
+  def when_i_complete_all_the_procedures
+    find('.complete_all_button').click
+    wait_for_ajax
+  end
+
+  def all_the_procedure_complete_buttons_should_be_active qty=1
+    all("label.status.complete").count.should eq qty
   end
 
   def and_i_view_the_notes_list
