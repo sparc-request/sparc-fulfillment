@@ -20,7 +20,7 @@ class Procedure < ActiveRecord::Base
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
 
-  before_save :set_status_dependancies
+  before_save :set_status_dependencies
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
@@ -118,7 +118,7 @@ class Procedure < ActiveRecord::Base
 
   private
 
-  def set_status_dependancies
+  def set_status_dependencies
     if status_changed?(to: "complete")
       write_attribute(:incompleted_date, nil)
       write_attribute(:completed_date, Date.today)

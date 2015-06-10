@@ -13,7 +13,7 @@ RSpec.describe ProceduresController, type: :controller do
 
     context 'with Notable change' do
 
-      context 'Procedure status is not set' do
+      context 'Procedure status is unstarted' do
 
         context 'User marks Procedure as complete' do
 
@@ -71,7 +71,6 @@ RSpec.describe ProceduresController, type: :controller do
           end
 
           it "should update the completed date" do
-            puts "*** #{assigns(:procedure).reload.inspect}"
             expect(assigns(:procedure).reload.completed_date.strftime("%m-%d-%Y")).to eq Time.current.tomorrow.strftime("%m-%d-%Y")
           end
 
@@ -83,7 +82,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks the procedure as complete' do #if the procedure is already complete, a user setting it to complete again will render the status void
           before do
             procedure = create(:procedure_complete)
-            params = {id: procedure.id, procedure: { status: '' }, format: :js}
+            params = { id: procedure.id, procedure: { status: 'unstarted' }, format: :js }
 
             put :update, params
           end
@@ -163,6 +162,10 @@ RSpec.describe ProceduresController, type: :controller do
 
           it 'should create a Note' do
             expect(assigns(:procedure).reload.notes).to be_one
+          end
+
+          it 'should set the incomplete date to today' do
+            expect(assigns(:procedure).incompleted_date.to_date).to eq(Date.today)
           end
         end
       end
