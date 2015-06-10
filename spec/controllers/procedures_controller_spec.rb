@@ -83,7 +83,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks the procedure as complete' do #if the procedure is already complete, a user setting it to complete again will render the status void
           before do
             procedure = create(:procedure_complete)
-            params = {id: procedure.id, procedure: {status: '', "notes_attributes" => { "0" => { "identity_id" => "1", "kind" => "reason", "reason" => "Assessment missed", "comment" => "sdf"}}}, format: :js}
+            params = {id: procedure.id, procedure: { status: '' }, format: :js}
 
             put :update, params
           end

@@ -80,7 +80,7 @@ class ProceduresController < ApplicationController
   end
 
   def reset_status_detected?
-    procedure_params[:status] == ""
+    procedure_params[:status] == "unstarted"
   end
 
   def incomplete_status_detected?
