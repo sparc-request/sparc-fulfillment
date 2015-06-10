@@ -33,7 +33,7 @@ class ProceduresController < ApplicationController
   end
 
   def update
-    @procedure.update_attributes(@procedure_params)
+    @procedure.update_attributes(procedure_params)
   end
 
   def destroy
@@ -72,8 +72,8 @@ class ProceduresController < ApplicationController
   end
 
   def change_in_completed_date_detected?
-    if @procedure_params[:completed_date]
-      Time.strptime(@procedure_params[:completed_date], "%m-%d-%Y") != @procedure.completed_date
+    if procedure_params[:completed_date]
+      Time.strptime(procedure_params[:completed_date], "%m-%d-%Y") != @procedure.completed_date
     else
       return false
     end
@@ -96,13 +96,11 @@ class ProceduresController < ApplicationController
   end
 
   def procedure_params
-    @procedure_params = params.
+    @procedure_params ||= params.
                         require(:procedure).
                         permit(:status, :follow_up_date, :completed_date, :billing_type, :performer_id,
                                 notes_attributes: [:comment, :kind, :identity_id, :reason],
                                 tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
-    @procedure_params[:status] = "unstarted" if @procedure_params[:status] == ""
-    @procedure_params
   end
 
   def find_procedure
