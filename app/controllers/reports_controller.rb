@@ -22,7 +22,7 @@ class ReportsController < ApplicationController
 
   def new_participant_report
     protocol_ids = current_identity.protocols.map(&:id)
-    @participants.where(protocol_id: protocol_ids)
+    @participants = Participant.where(protocol_id: protocol_ids)
   end
 
   def new_project_summary_report

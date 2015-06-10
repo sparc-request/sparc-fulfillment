@@ -7,10 +7,11 @@ class ProjectSummaryReportJob < ActiveJob::Base
   def perform(report_id, start_date, end_date, protocol_id)
     CSV.open("tmp/project_summary_report.csv", "wb") do |csv|
       protocol = Protocol.find(protocol_id)
-      csv << ["SPARC ID:", "#{protocol.sparc_id}", "", "Appointment Start Date Filter:", "#{format_date(start_date.to_date)}"]
-      csv << ["PI Name:", "#{protocol.pi ? protocol.pi.full_name : nil}", "", "Appointment End Date Filter:", "#{format_date(end_date.to_date)}"]
-      csv << ["?"]
-      csv << ["Routing:", ""]
+      csv << ["SPARC ID:", "#{protocol.sparc_id}"]
+      csv << ["PI Name:", "#{protocol.pi ? protocol.pi.full_name : nil}"]
+      csv << ["Appointment Start Date Filter:", "#{format_date(start_date.to_date)}"]
+      csv << ["Appointment End Date Filter:", "#{format_date(end_date.to_date)}"]
+      csv << ["Routing:", "What is this number?"]
       csv << [""]
 
       # amount due for whole study
@@ -19,7 +20,8 @@ class ProjectSummaryReportJob < ActiveJob::Base
       protocol.arms.each do |arm|
         visit_groups          = arm.visit_groups
         visit_group_subtotals = [0] * visit_groups.count # total costs for each visit group
-        participants          = arm.participants
+        participants = Participant.find(arm.appointments.group_by(&:participant_id).keys)
+        # participants          = arm.participants
         participant_totals    = []  # totals per participant
 
         csv << [""]
