@@ -27,6 +27,6 @@
       .col-xs-1
     .row
       .scrolling-div.col-xs-12
-        = render partial: '/service_calendar/core_line_items', locals: {arm: arm, page: page, tab: tab}
+        = render partial: '/service_calendar/line_items_by_core', locals: {arm: arm, page: page, tab: tab}
         %div{id: "end_of_arm_#{arm.id}"}
 %br

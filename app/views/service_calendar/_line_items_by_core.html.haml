@@ -1,5 +1,5 @@
 - if tab == "consolidated"
-  - arm = Sparc::Arm.find(arm.sparc_id)
+  - arm = Sparc::Arm.where(id: arm.sparc_id).first if Sparc::Arm.where(id: arm.sparc_id).any?
   - arm.line_items_grouped_by_core.each do |core, line_items|
     .row.core{id: "arm_#{arm.id}_core_#{core.id}"}
       .col-xs-12= "#{core.name}"

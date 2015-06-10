@@ -7,7 +7,7 @@ class Sparc::LineItem < ActiveRecord::Base
   belongs_to :sub_service_request
 
   has_many :line_items_visits
-  has_many :arms, :through => :line_items_visits
+  has_many :arms, through: :line_items_visits
   has_many :visits, through: :line_items_visits
 
   delegate  :name, to: :service
