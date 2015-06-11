@@ -24,4 +24,16 @@ module ProtocolHelper
 
     number_to_currency(dollars, seperator: ",")
   end
+
+  def arm_per_patient_line_items_by_core(arm, consolidated=false)
+    if consolidated
+      sparc_arm = Sparc::Arm.where(id: arm.sparc_id).first
+      line_items = sparc_arm.line_items_visits.select{ |liv| liv.line_item.sub_service_request_id != arm.protocol.sub_service_request_id}
+      line_items += arm.line_items
+    else
+      line_items = arm.line_items.includes(:service).where(:services => {:one_time_fee => false})
+    end
+
+    line_items.group_by{|li| li.service.organization}
+  end
 end

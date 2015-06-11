@@ -1,5 +1,4 @@
-- arm = Sparc::Arm.where(id: arm.sparc_id).first if tab == "consolidated" && Sparc::Arm.where(id: arm.sparc_id).any?
-- arm.line_items_grouped_by_core.each do |core, line_items|
+- arm_per_patient_line_items_by_core(arm, tab == "consolidated").each do |core, line_items|
   .row.core{id: "arm_#{arm.id}_core_#{core.id}"}
     .col-xs-12= "#{core.name}"
   - line_items.each do |li|

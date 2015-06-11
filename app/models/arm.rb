@@ -13,8 +13,4 @@ class Arm < ActiveRecord::Base
   validates :name, presence: true
   validates_numericality_of :subject_count, greater_than_or_equal_to: 1
   validates_numericality_of :visit_count, greater_than_or_equal_to: 1
-
-  def line_items_grouped_by_core
-    line_items.includes(:service).where(:services => {:one_time_fee => false}).group_by{|li| li.service.organization}
-  end
 end
