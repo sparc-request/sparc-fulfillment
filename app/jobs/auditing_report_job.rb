@@ -56,5 +56,3 @@ class AuditingReportJob < ActiveJob::Base
     end
   end
 end
-
-
