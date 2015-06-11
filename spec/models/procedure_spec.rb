@@ -28,7 +28,7 @@ RSpec.describe Procedure, type: :model do
         expect(procedure.reload.persisted?).to be
       end
 
-      it 'should destroy the record if the status is nil' do
+      it 'should destroy the record if the status is unstarted' do
         procedure = create(:procedure)
 
         procedure.destroy
@@ -36,10 +36,109 @@ RSpec.describe Procedure, type: :model do
         expect(Procedure.count).to eq(0)
       end
 
-      it 'should not destroy the record if the status is not nil' do
-        procedure = create(:procedure, status: 'complete')
+      it 'should not destroy the record if the status is not unstarted' do
+        (Procedure::STATUS_TYPES - ['unstarted']).each do |status|
+          procedure = create(:procedure, status.to_sym)
 
-        expect{procedure.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
+          expect { procedure.destroy }.to raise_error(ActiveRecord::ActiveRecordError)
+        end
+      end
+    end
+
+    describe '.set_status_dependencies' do
+
+      context 'status changed to complete' do
+
+        before do
+          to_status = 'complete'
+          @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
+            procedure = create(:procedure, from_status.to_sym)
+            procedure.update_attributes(status: to_status)
+            procedure # may not be necessary
+          end
+        end
+
+        it 'should remove the incompleted date' do
+          expect(@procedures.map(&:incompleted_date)).to_not be_any
+        end
+
+        it 'should set the completed date to today' do
+          expect(@procedures.map(&:completed_date)).to be_all { |date| date == Date.today }
+        end
+
+        it 'should leave status set to complete' do
+          expect(@procedures.map(&:status)).to be_all { |status| status == 'complete' }
+        end
+      end
+
+      context 'status changed to incomplete' do
+
+        before do
+          to_status = 'incomplete'
+          @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
+            procedure = create(:procedure, from_status.to_sym)
+            procedure.update_attributes(status: to_status)
+            procedure # may not be necessary
+          end
+        end
+
+        it 'should set the incompleted date to today' do
+          expect(@procedures.map(&:incompleted_date)).to be_all { |date| date == Date.today }
+        end
+
+        it 'should remove the completed date' do
+          expect(@procedures.map(&:completed_date)).to_not be_any
+        end
+
+        it 'should leave status set to incomplete' do
+          expect(@procedures.map(&:status)).to be_all { |status| status == 'incomplete' }
+        end
+      end
+
+      context 'status without task changed to unstarted or follow_up' do
+
+        before do
+          to_statuses = ['unstarted', 'follow_up']
+          from_statuses = Procedure::STATUS_TYPES - to_statuses
+          @procedures = from_statuses.product(to_statuses).map do |from_status, to_status|
+            procedure = create(:procedure, from_status.to_sym)
+            procedure.update_attributes(status: to_status)
+            procedure
+          end
+        end
+
+        it 'should remove completed dates' do
+          expect(@procedures.map(&:completed_date)).to_not be_any
+        end
+
+        it 'should remove incompleted date' do
+          expect(@procedures.map(&:incompleted_date)).to_not be_any
+        end
+      end
+
+      context 'procedure has a task assigned to it' do
+
+        before do
+          to_statuses = ['unstarted', 'follow_up']
+          from_statuses = Procedure::STATUS_TYPES - to_statuses
+          @procedures = from_statuses.product(to_statuses).map do |from_status, to_status|
+            procedure = create(:procedure, from_status.to_sym, :with_task)
+            procedure.update_attributes(status: to_status)
+            procedure
+          end
+        end
+
+        it 'should remove completed date' do
+          expect(@procedures.map(&:completed_date)).to_not be_any
+        end
+
+        it 'should remove incompleted date' do
+          expect(@procedures.map(&:completed_date)).to_not be_any
+        end
+
+        it 'should set status to follow_up' do
+          expect(@procedures.map(&:status)).to be_all { |status| status == 'follow_up' }
+        end
       end
     end
   end

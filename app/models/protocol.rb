@@ -14,6 +14,7 @@ class Protocol < ActiveRecord::Base
 
   has_many :arms,           dependent: :destroy
   has_many :line_items,     dependent: :destroy
+  has_many :fulfillments,   through: :line_items
   has_many :participants,   dependent: :destroy
   has_many :appointments,   through: :participants
   has_many :procedures,     through: :appointments
@@ -54,8 +55,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def short_title_with_sparc_id
-    list_display = "(#{self.sparc_id}) #{self.short_title}"
-    return list_display
+    "(#{self.srid}) #{self.short_title}"
   end
 
   def one_time_fee_line_items

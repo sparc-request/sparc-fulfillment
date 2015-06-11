@@ -6,12 +6,24 @@ FactoryGirl.define do
 
     trait :complete do
       status 'complete'
-      completed_date Time.current
+      completed_date Date.today.strftime('%m-%d-%Y')
     end
 
     trait :incomplete do
       status 'incomplete'
       completed_date nil
+      incompleted_date Date.today.strftime('%m-%d-%Y')
+    end
+
+    trait :follow_up do
+      status 'follow_up'
+      completed_date nil
+      after(:create) do |procedure, evaluator|
+        create(:task, assignable: procedure)
+      end
+    end
+
+    trait :unstarted do
     end
 
     trait :with_notes do
@@ -20,8 +32,15 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_task do
+      after(:create) do |procedure, evaluator|
+        create(:task, assignable: procedure)
+      end
+    end
+
     factory :procedure_complete, traits: [:complete]
     factory :procedure_incomplete, traits: [:incomplete]
     factory :procedure_with_notes, traits: [:with_notes]
+    factory :procedure_follow_up, traits: [:follow_up]
   end
 end

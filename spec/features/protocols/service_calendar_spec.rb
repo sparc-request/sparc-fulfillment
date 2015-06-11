@@ -114,6 +114,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
   describe "quantity tab" do
     before :each do
       click_link 'Quantity/Billing Tab'
+      wait_for_ajax
     end
 
     describe "changing quantities" do
@@ -150,9 +151,10 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
 
       it "should set research fields to 0 and insurance fields to 0 for the line item  when uncheck is clicked" do
         within("#line_item_#{@line_item.id}") do
-          find(".check_row").click()
           wait_for_ajax
           find(".check_row").click()
+          wait_for_ajax
+          find(".check_row").click
           wait_for_ajax
           all('.research').each do |quantity|
             expect(quantity.value).to eq('0')
@@ -172,6 +174,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
       end
 
       it "should set research fields to 0 and insurance fields to 0 for the visit group when uncheck is clicked" do
+        wait_for_ajax
         first(".check_column").click()
         wait_for_ajax
         first(".check_column").click()

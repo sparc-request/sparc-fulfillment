@@ -19,12 +19,6 @@ module ProtocolHelper
     html
   end
 
-  def display_cost(cost)
-    dollars = (cost / 100) rescue nil
-
-    number_to_currency(dollars, seperator: ",")
-  end
-
   def arm_per_participant_line_items_by_core(arm, consolidated=false)
     line_items = arm.line_items
     if consolidated && Sparc::Arm.where(id: arm.sparc_id).any?
