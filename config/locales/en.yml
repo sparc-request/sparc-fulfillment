@@ -95,22 +95,6 @@ en:
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
 
-  reports_page:
-    request_report: "Request Report"
-    date: "Date Requested"
-    name: "Report Type/Name"
-    status: "Report Status"
-    file: "Attached File"
-    billing_report: "Billing Report"
-    auditing_report: "Auditing Report"
-    participant_report: "Participant Report"
-    project_summary_report: "Project Summary Report"
-    protocol: "Protocol(s)"
-    organization: "Organization(s)"
-    participant: "Participant"
-    start_date: "Start Date"
-    end_date: "End Date"
-
   line_item:
     add_line_item: "Add Study Level Activity"
     create: "Create New Study Level Activity"
@@ -248,9 +232,16 @@ en:
     status: "Report Status"
     file: "Attached File"
     billing_report: "Billing Report"
-    protocol: "Protocol(s)"
+    auditing_report: "Auditing Report"
+    participant_report: "Participant Report"
+    project_summary_report: "Project Summary Report"
+    protocols: "Protocol(s)"
+    protocol: "Protocol"
+    organization: "Organization(s)"
+    participant: "Participant"
     start_date: "Start Date"
     end_date: "End Date"
+    protocol_instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
 
   services:
     name: "Selected Service"

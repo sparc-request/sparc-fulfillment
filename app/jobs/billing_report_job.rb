@@ -53,5 +53,3 @@ class BillingReportJob < ActiveJob::Base
     FayeJob.enqueue(report)
   end
 end
-
-#protocol.procedures.to_a.select{|procedure| procedure.completed_date && (start_date..end_date).cover?(procedure.completed_date)}.delete_if{|procedure| procedure.billing_type != "research_billing_qty"}
