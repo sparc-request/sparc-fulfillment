@@ -87,6 +87,7 @@ $ ->
     status = null
     # undo complete status
     if active
+      status = "unstarted"
       $(this).removeClass('selected_before')
       $(".procedure[data-id='#{procedure_id}']").find(".completed_date_field input").val(null)
     else
@@ -107,7 +108,7 @@ $ ->
     # undo incomplete status
     if active
       data          = procedure:
-                        status: null
+                        status: "unstarted"
 
       $.ajax
         type: 'PUT'

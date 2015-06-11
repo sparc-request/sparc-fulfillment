@@ -1,11 +1,11 @@
 .modal-dialog
   .modal-content
-    = form_tag(create_billing_report_reports_path, remote: true, class: "form-horizontal", role: "form") do |f|
+    = form_tag(create_project_summary_report_reports_path, remote: true, class: "form-horizontal", role: "form") do |f|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only= t(:actions)[:close]
-        %h4.modal-title.text-center= t(:reports)[:billing_report]
+        %h4.modal-title.text-center= t(:reports)[:project_summary_report]
       .modal-body
         #modal_errors
         .row
@@ -17,11 +17,9 @@
               = label_tag "end_date", t(:reports)[:end_date], class: "col-sm-3 control-label"
               .col-sm-9= text_field_tag "end_date", nil, class: "datepicker"
             .form-group
-              = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
+              = label_tag "protocol", t(:reports)[:protocol], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag "protocol_ids", options_from_collection_for_select(@protocols, "id", "short_title_with_sparc_id"), multiple: true, class: "selectpicker form-control"
-              .col-sm-9.col-sm-offset-3
-                %p= t(:reports)[:protocol_instructions]
+                = select_tag "protocol_id", options_from_collection_for_select(@protocols, "id", "short_title_with_sparc_id"), class: "selectpicker form-control"
 
       .modal-footer
         .center-block{style: "width: 205px;"}

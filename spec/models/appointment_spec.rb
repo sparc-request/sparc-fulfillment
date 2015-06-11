@@ -39,7 +39,7 @@ RSpec.describe Appointment, type: :model do
       end
 
       it 'should return true when appt has completed procedures' do
-        @proc1.completed_date = Time.now
+        @proc1.completed_date = Date.today.strftime('%m-%d-%Y')
         @proc1.save
         expect(@appt.has_completed_procedures?).to be true
       end

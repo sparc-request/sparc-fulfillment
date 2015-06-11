@@ -13,6 +13,7 @@ class Participant < ActiveRecord::Base
   belongs_to :arm
 
   has_many :appointments
+  has_many :procedures, through: :appointments
 
   delegate :srid,
            to: :protocol
@@ -55,11 +56,11 @@ class Participant < ActiveRecord::Base
     label = nil
 
     if not external_id.blank?
-      label = "Participant ID:#{external_id}"
+      label = "ID:#{external_id}"
     end
 
     if not mrn.blank?
-      label = "Participant MRN:#{mrn}"
+      label = "MRN:#{mrn}"
     end
 
     label
@@ -84,6 +85,10 @@ class Participant < ActiveRecord::Base
 
   def full_name
     [first_name, middle_initial, last_name].join(' ')
+  end
+
+  def full_name_with_label
+    "(#{label}) #{full_name}"
   end
 
   def first_middle

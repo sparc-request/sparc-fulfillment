@@ -18,10 +18,4 @@ module ProtocolHelper
 
     html
   end
-
-  def display_cost(cost)
-    dollars = (cost / 100) rescue nil
-
-    number_to_currency(dollars, seperator: ",")
-  end
 end
