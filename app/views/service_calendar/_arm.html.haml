@@ -27,6 +27,11 @@
       .col-xs-1
     .row
       .scrolling-div.col-xs-12
-        = render partial: '/service_calendar/line_items_by_core', locals: {arm: arm, page: page, tab: tab}
+        - arm_per_patient_line_items_by_core(arm, tab == "consolidated").each do |core, line_items|
+          .row.core{id: "arm_#{arm.id}_core_#{core.id}"}
+            .col-xs-12= "#{core.name}"
+          - line_items.each do |li|
+            = render partial: 'service_calendar/line_item', locals: {line_item: li, page: page, tab: tab}
+          %div{id: "arm_#{arm.id}_end_of_core_#{core.id}"}
         %div{id: "end_of_arm_#{arm.id}"}
 %br
