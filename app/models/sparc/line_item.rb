@@ -8,7 +8,6 @@ class Sparc::LineItem < ActiveRecord::Base
 
   has_many :line_items_visits
   has_many :arms, through: :line_items_visits
-  has_many :visits, through: :line_items_visits
 
   delegate  :name, to: :service
 

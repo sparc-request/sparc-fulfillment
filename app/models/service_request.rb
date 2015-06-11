@@ -5,5 +5,4 @@ class ServiceRequest < ActiveRecord::Base
   belongs_to :protocol
 
   has_many :sub_service_requests
-
 end
