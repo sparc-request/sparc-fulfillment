@@ -29,7 +29,7 @@ module ServiceCalendarHelper
       ending_visit = (page * per_page + per_page)
       ending_visit = ending_visit > visit_count ? visit_count : ending_visit
 
-      option = ["Visits #{beginning_visit} - #{ending_visit} of #{visit_count}", page + 1, class: "title"]
+      option = ["Visits #{beginning_visit} - #{ending_visit} of #{visit_count}", page + 1, class: "title", :page => page + 1]
       arr << option
 
       (beginning_visit..ending_visit).each do |y|
