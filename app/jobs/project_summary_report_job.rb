@@ -11,7 +11,6 @@ class ProjectSummaryReportJob < ActiveJob::Base
       csv << ["PI Name:", "#{protocol.pi ? protocol.pi.full_name : nil}"]
       csv << ["Appointment Start Date Filter:", "#{format_date(start_date.to_date)}"]
       csv << ["Appointment End Date Filter:", "#{format_date(end_date.to_date)}"]
-      csv << ["Routing:", "What is this number?"]
       csv << [""]
 
       # amount due for whole study
