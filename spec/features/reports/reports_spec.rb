@@ -4,6 +4,7 @@ feature 'Reports', js: true do
 
   before(:each) do
     @protocol = create_and_assign_protocol_to_me
+    create(:participant, protocol: @protocol)
     go_to_reports
   end
 
@@ -67,6 +68,10 @@ feature 'Reports', js: true do
   end
 
   def and_fill_in_the_new_participant_report_modal
+    bootstrap_select '#participant_id', Participant.first.full_name_with_label
+    first('.modal-header').click
+    wait_for_ajax
+    find("input[value='Request Report']").click
   end
 
   def i_should_see_the_new_report_listed(kind)
