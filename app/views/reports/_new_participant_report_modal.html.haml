@@ -13,7 +13,7 @@
             .form-group
               = label_tag "participant", t(:reports)[:participant], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag "participant_id", options_from_collection_for_select(@participants, "id", "full_name_with_label"), class: "selectpicker form-control"
+                = select_tag "participant_id", options_from_collection_for_select(@participants, "id", "full_name_with_label"), 'data-live-search' => true, class: "selectpicker form-control"
 
       .modal-footer
         .center-block{style: "width: 205px;"}
