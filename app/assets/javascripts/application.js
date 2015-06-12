@@ -28,7 +28,7 @@
 //= require appointments
 //= require autoload_appointment
 //= require tasks
-//= require reports
+//= require documents_index
 //= require study_level_activities
 //= require faye
 //= require ajax_progress_bar

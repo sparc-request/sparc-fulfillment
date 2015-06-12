@@ -1,4 +1,4 @@
-$("#modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>");
+$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>");
 if $("#modal_errors > .alert.alert-danger > p").length == 0
   <% if @otf %>
   $(".line_item[data-id=<%= @line_item.id %>]").replaceWith("<%= escape_javascript(render(:partial =>'study_level_activities/one_time_fee', locals: {line_item: @line_item})) %>")

@@ -1,3 +1,5 @@
-$("#doc_modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>")
-if $("#doc_modal_errors > .alert.alert-danger > p").length == 0
-	$("#modal_place").modal 'hide'
+<% if @error.present? %>
+$('#doc_modal_errors').empty().append("<div class='alert alert-danger'><%= @error %></div>")
+<% else %>
+$('.modal').modal('hide')
+<% end %>

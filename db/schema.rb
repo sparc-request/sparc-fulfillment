@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150615180618) do
+ActiveRecord::Schema.define(version: 20150616182732) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -90,10 +90,11 @@ ActiveRecord::Schema.define(version: 20150615180618) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "doc_file_name",     limit: 255
-    t.string   "doc_content_type",  limit: 255
-    t.integer  "doc_file_size",     limit: 4
-    t.datetime "doc_updated_at"
+    t.string   "title",             limit: 255
+    t.string   "state",             limit: 255, default: "Pending"
+    t.datetime "last_accessed_at"
+    t.string   "original_filename", limit: 255
+    t.string   "content_type",      limit: 255
   end
 
   add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
@@ -118,10 +119,11 @@ ActiveRecord::Schema.define(version: 20150615180618) do
   add_index "fulfillments", ["service_id"], name: "index_fulfillments_on_service_id", using: :btree
 
   create_table "identity_counters", force: :cascade do |t|
-    t.integer  "identity_id", limit: 4
-    t.integer  "tasks_count", limit: 4, default: 0
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.integer  "identity_id",                limit: 4
+    t.integer  "tasks_count",                limit: 4, default: 0
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.integer  "unaccessed_documents_count", limit: 4, default: 0
   end
 
   add_index "identity_counters", ["identity_id"], name: "index_identity_counters_on_identity_id", using: :btree
@@ -215,8 +217,8 @@ ActiveRecord::Schema.define(version: 20150615180618) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "visit_id",         limit: 4
-    t.integer  "performer_id",     limit: 4
     t.datetime "incompleted_date"
+    t.integer  "performer_id",     limit: 4
   end
 
   add_index "procedures", ["appointment_id"], name: "index_procedures_on_appointment_id", using: :btree

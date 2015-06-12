@@ -1,5 +1,5 @@
 <% if @errors.present? %>
-$("#modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>")
+$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
 <% else %>
 $(".notification.task-notifications").empty().append("<%= current_identity.reload.tasks_count %>")
 $("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
