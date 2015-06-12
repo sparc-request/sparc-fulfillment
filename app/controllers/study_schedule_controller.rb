@@ -1,4 +1,4 @@
-class ServiceCalendarController < ApplicationController
+class StudyScheduleController < ApplicationController
   def change_page
     @page = params[:page]
     @arm = Arm.find params[:arm_id]

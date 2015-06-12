@@ -3,10 +3,10 @@ class VisitGroupsController < ApplicationController
   before_action :find_visit_group, only: [:destroy]
 
   def new
-    @current_page = params[:page] # the current page of the service calendar
+    @current_page = params[:page] # the current page of the study schedule
     @protocol = Protocol.find(params[:protocol_id])
     @visit_group = VisitGroup.new()
-    @calendar_tab = params[:calendar_tab]
+    @schedule_tab = params[:schedule_tab]
   end
 
   def create
@@ -14,7 +14,7 @@ class VisitGroupsController < ApplicationController
     @visit_group_visits_importer  = VisitGroupVisitsImporter.new(@visit_group)
     @arm =  Arm.find(visit_group_params[:arm_id])
     @current_page = params[:current_page]
-    @calendar_tab = params[:calendar_tab]
+    @schedule_tab = params[:schedule_tab]
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     if @visit_group_visits_importer.save_and_create_dependents
       @arm.update_attributes(visit_count: @arm.visit_count + 1)
@@ -43,7 +43,7 @@ class VisitGroupsController < ApplicationController
     @current_page = params[:page]
     @arm = @visit_group.arm
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
-    @calendar_tab = params[:calendar_tab]
+    @schedule_tab = params[:schedule_tab]
     if @arm.visit_count == 1
       flash.now[:alert] = t(:visit_groups)[:not_deleted]
     else

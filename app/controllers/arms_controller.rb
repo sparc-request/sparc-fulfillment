@@ -7,7 +7,7 @@ class ArmsController < ApplicationController
     @protocol = Protocol.find(params[:protocol_id])
     @services = Service.find(services_for_protocol)
     @arm = Arm.new(protocol: @protocol)
-    @calendar_tab = params[:calendar_tab]
+    @schedule_tab = params[:schedule_tab]
   end
 
   def create
@@ -21,7 +21,7 @@ class ArmsController < ApplicationController
         importer.save_and_create_dependents
       end
       flash.now[:success] = t(:arm)[:created]
-      @calendar_tab = params[:calendar_tab]
+      @schedule_tab = params[:schedule_tab]
     else
       @errors = @arm_visit_group_creator.arm.errors
     end

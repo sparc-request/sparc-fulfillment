@@ -1,13 +1,6 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
 
   # Use cookie to remember study schedule tab
-  current_tab = $.cookie("active-schedule-tab")
-  if current_tab && current_tab.length > 0
-    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
-
   $('.schedule-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
     tab = String(e.target).split("#")[1]
     $.cookie("active-schedule-tab", tab, expires: 1, path: '/') # save tab to cookie
@@ -19,31 +12,29 @@ $ ->
       'tab'   : $('#current_tab').val()
     $.ajax
       type: 'GET'
-      url:  '/service_calendar/change_page'
+      url:  '/study_schedule/change_page'
       data: data
 
   $(document).on 'change', '.visit_dropdown', ->
-    page = $(this).find('option:selected').attr('parent_page')
-    cur_page = $(this).attr('page')
+    page_selected = $(this).find('option:selected').attr('page')
+    current_page = $(this).attr('page')
     tab = $('#current_tab').val()
-    if page == undefined || page == false
-      page = $(this).val()
 
     # Early out when selecting a visit that is already shown
-    if page == cur_page
-      $(this).selectpicker('val', page)
+    if page_selected == current_page
+      $(this).selectpicker('val', page_selected)
       return
 
     data =
       'arm_id': $(this).data('arm_id')
-      'page'  : page
+      'page'  : page_selected
       'tab'   : tab
     $.ajax
       type: 'GET'
-      url:  '/service_calendar/change_page'
+      url:  '/study_schedule/change_page'
       data: data
 
-  $(document).on 'click', '#service_calendar_tabs a', ->
+  $(document).on 'click', '#study_schedule_tabs a', ->
     protocol_id = $(this).data('protocol')
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
@@ -61,7 +52,7 @@ $ ->
       'protocol_id' : protocol_id
     $.ajax
       type: 'GET'
-      url:  '/service_calendar/change_tab'
+      url:  '/study_schedule/change_tab'
       data: data
 
   $(document).on 'change', '.visit', ->
@@ -111,7 +102,7 @@ $ ->
       'check':        check
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/check_row'
+      url:  '/study_schedule/check_row'
       data: data
       success: =>
         # Check off visits
@@ -130,7 +121,7 @@ $ ->
       'check':        check
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/check_column'
+      url:  '/study_schedule/check_column'
       data: data
       success: =>
         # Check off visits
@@ -167,3 +158,8 @@ $ ->
       type: 'GET'
       url: "/multiple_line_items/necessary_arms"
       data: data
+
+  # go to cookie-saved tab on page load
+  current_tab = $.cookie("active-schedule-tab")
+  if current_tab && current_tab.length > 0
+    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
