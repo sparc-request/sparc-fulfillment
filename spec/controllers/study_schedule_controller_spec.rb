@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ServiceCalendarController do
+RSpec.describe StudyScheduleController do
   before :each do
     sign_in
     @protocol = create(:protocol)

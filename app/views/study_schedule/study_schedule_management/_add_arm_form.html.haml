@@ -11,7 +11,7 @@
         .row
           .col-md-12
             = a.hidden_field :protocol_id
-            = hidden_field_tag :calendar_tab, calendar_tab
+            = hidden_field_tag :schedule_tab, schedule_tab
             .form-group
               = a.label "name", t(:arm)[:name], class: "col-sm-4 control-label"
               .col-sm-7= a.text_field "name", {class: 'form-control'}

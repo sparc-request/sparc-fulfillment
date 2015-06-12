@@ -67,7 +67,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :service_calendar, only: [] do
+  resources :study_schedule, only: [] do
     collection do
       get 'change_page'
       get 'change_tab'

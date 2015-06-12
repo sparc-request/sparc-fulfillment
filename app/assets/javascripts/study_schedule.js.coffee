@@ -12,7 +12,7 @@ $ ->
       'tab'   : $('#current_tab').val()
     $.ajax
       type: 'GET'
-      url:  '/service_calendar/change_page'
+      url:  '/study_schedule/change_page'
       data: data
 
   $(document).on 'change', '.visit_dropdown', ->
@@ -31,10 +31,10 @@ $ ->
       'tab'   : tab
     $.ajax
       type: 'GET'
-      url:  '/service_calendar/change_page'
+      url:  '/study_schedule/change_page'
       data: data
 
-  $(document).on 'click', '#service_calendar_tabs a', ->
+  $(document).on 'click', '#study_schedule_tabs a', ->
     protocol_id = $(this).data('protocol')
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
@@ -52,7 +52,7 @@ $ ->
       'protocol_id' : protocol_id
     $.ajax
       type: 'GET'
-      url:  '/service_calendar/change_tab'
+      url:  '/study_schedule/change_tab'
       data: data
 
   $(document).on 'change', '.visit', ->
@@ -102,7 +102,7 @@ $ ->
       'check':        check
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/check_row'
+      url:  '/study_schedule/check_row'
       data: data
       success: =>
         # Check off visits
@@ -121,7 +121,7 @@ $ ->
       'check':        check
     $.ajax
       type: 'PUT'
-      url:  '/service_calendar/check_column'
+      url:  '/study_schedule/check_column'
       data: data
       success: =>
         # Check off visits

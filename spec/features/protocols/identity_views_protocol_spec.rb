@@ -39,6 +39,6 @@ feature "Identity views protocol", js: true do
     expect(page).to_not have_css("div[role='tabpanel'] a", text: "Participant List")
     expect(page).to_not have_css("div[role='tabpanel'] a", text: "Participant Tracker")
     expect(page).to_not have_css("#study_schedule_buttons")
-    expect(page).to_not have_css("#service_calendar_tabs")
+    expect(page).to_not have_css("#study_schedule_tabs")
   end
 end

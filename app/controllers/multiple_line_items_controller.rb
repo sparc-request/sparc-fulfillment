@@ -1,7 +1,7 @@
 class MultipleLineItemsController < ApplicationController
   respond_to :json, :html
   #this controller exsists in order to seperate the mass creation of line items
-  #from single line item creation and deletion which will happen on the service calendar
+  #from single line item creation and deletion which will happen on the study schedule
 
   def new_line_items
     #called to render modal to mass create line items
@@ -9,7 +9,7 @@ class MultipleLineItemsController < ApplicationController
     @protocol = Protocol.find params[:protocol_id]
     @services = @protocol.organization.inclusive_child_services(:per_participant)
     @page_hash = params[:page_hash]
-    @calendar_tab = params[:calendar_tab]
+    @schedule_tab = params[:schedule_tab]
   end
 
   def edit_line_items
@@ -18,7 +18,7 @@ class MultipleLineItemsController < ApplicationController
     @protocol = Protocol.find params[:protocol_id]
     @services = @protocol.arms.map{ |arm| arm.line_items.map{ |li| li.service } }.flatten.uniq
     @page_hash = params[:page_hash]
-    @calendar_tab = params[:calendar_tab]
+    @schedule_tab = params[:schedule_tab]
   end
 
   def update_line_items
@@ -27,7 +27,7 @@ class MultipleLineItemsController < ApplicationController
       @service_id = params[:service_id]
       service = Service.find(@service_id)
       @core_id = service.sparc_core_id
-      @calendar_tab = params[:calendar_tab]
+      @schedule_tab = params[:schedule_tab]
       @core_name = service.sparc_core_name
 
       if params[:header_text].include? ("Add")

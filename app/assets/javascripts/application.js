@@ -22,9 +22,9 @@
 
 //= require global
 //= require protocols
-//= require service_calendar
+//= require study_schedule
+//= require study_schedule_management
 //= require participants
-//= require study_schedule_edit_buttons
 //= require appointments
 //= require autoload_appointment
 //= require tasks

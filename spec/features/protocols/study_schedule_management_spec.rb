@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
+RSpec.describe 'Study Schedule Management spec', type: :feature, js: true do
 
   before :each do
     @protocol   = create_and_assign_protocol_to_me
@@ -67,7 +67,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(new_arm.visit_groups.count).to eq(3)
       end
 
-      it "should add the arm to the @service calendar" do
+      it "should add the arm to the study schedule" do
         find('#add_arm_button').click()
         fill_in 'Arm Name', with: 'arm name'
         fill_in 'Subject Count', with: 1
@@ -92,7 +92,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).to_not have_content "Nothing selected"
       end
 
-      it "should remove the arm from the @service calendar" do
+      it "should remove the arm from the study schedule" do
         find('#remove_arm_button').click()
         page.driver.browser.accept_js_confirms
         expect(page).to have_content "Arm Destroyed"
@@ -132,7 +132,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).to have_content "Visit Created"
       end
 
-      it "should add a visit group to the @service calendar" do
+      it "should add a visit group to the study schedule" do
         visit_count = @arm1.visit_groups.count
         find('#add_visit_group_button').click()
         fill_in 'Visit Name', with: "visit name"
@@ -155,7 +155,7 @@ RSpec.describe 'Study Schedule Edit Buttons spec', type: :feature, js: true do
         expect(page).to have_content "Arms must have at least one visit. Add another visit before deleting this one"
       end
 
-      it "should remove the visit group from the service calendar" do
+      it "should remove the visit group from the study schedule" do
         create(:visit_group, arm: @arm3)
         @arm3.update_attributes(visit_count: 2)
         vg = @arm3.visit_groups.first
