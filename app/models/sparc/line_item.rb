@@ -13,4 +13,8 @@ class Sparc::LineItem < ActiveRecord::Base
 
   scope :per_participant,  -> { includes(:service).where(:services => {one_time_fee: false}) }
   scope :one_time_fee,     -> { includes(:service).where(:services => {one_time_fee: true}) }
+
+  def quantity_requested
+    self.quantity
+  end
 end

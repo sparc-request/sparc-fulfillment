@@ -34,7 +34,7 @@ module ProtocolHelper
     if Sparc::Protocol.where(id: protocol.sparc_id).any?
       sparc_protocol = Sparc::Protocol.where(id: protocol.sparc_id).first
       sparc_protocol.service_requests.each do |sr|
-        line_items += sr.line_items.one_time_fee.select{ |li| li.sub_service_request_id != arm.protocol.sub_service_request_id } # add otf line items that aren't already in cwf
+        line_items += sr.line_items.one_time_fee.select{ |li| li.sub_service_request_id != protocol.sub_service_request_id } # add otf line items that aren't already in cwf
       end
     end
 
