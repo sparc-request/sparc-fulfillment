@@ -18,19 +18,22 @@ module ServiceCalendarHelper
   end
 
   def visits_select_options arm, cur_page=1
-    num_pages = (arm.visit_count / Visit.per_page.to_f).ceil
+    per_page = Visit.per_page
+    visit_count = arm.visit_count
+    visit_group_names = arm.visit_groups.map(&:name)
+    num_pages = (visit_count / per_page.to_f).ceil
     arr = []
 
     num_pages.times do |page|
-      beginning_visit = (page * Visit.per_page) + 1
-      ending_visit = (page * Visit.per_page + Visit.per_page)
-      ending_visit = ending_visit > arm.visit_count ? arm.visit_count : ending_visit
+      beginning_visit = (page * per_page) + 1
+      ending_visit = (page * per_page + per_page)
+      ending_visit = ending_visit > visit_count ? visit_count : ending_visit
 
-      option = ["Visits #{beginning_visit} - #{ending_visit} of #{arm.visit_count}", page + 1, :style => "font-weight:bold;"]
+      option = ["Visits #{beginning_visit} - #{ending_visit} of #{visit_count}", page + 1, class: "title", :page => page + 1]
       arr << option
 
       (beginning_visit..ending_visit).each do |y|
-        arr << ["- #{arm.visit_groups[y - 1].name}".html_safe, "#{arm.visit_groups[y - 1].id}", :parent_page => page + 1]
+        arr << ["&nbsp;&nbsp; - #{visit_group_names[y - 1]}".html_safe, "#{visit_group_names[y - 1]}", :page => page + 1]
       end
     end
 
