@@ -1,4 +1,4 @@
-module ServiceCalendarHelper
+module StudyScheduleHelper
   def glyph_class obj
     count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
     if count == 0

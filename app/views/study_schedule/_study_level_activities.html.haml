@@ -1,4 +1,4 @@
-.calendar.service
+.study_schedule.service
   .row.header.study_schedule_table_name
     .col-xs-4.text-center
       = t(:protocol)[:study_schedule][:study_level_activities]
@@ -9,4 +9,4 @@
   .row
     .scrolling-div.col-xs-12
       - protocol.one_time_fee_line_items.each do |li|
-        = render partial: 'service_calendar/sla_line_item', locals: {line_item: li}
+        = render partial: 'study_schedule/sla_line_item', locals: {line_item: li}

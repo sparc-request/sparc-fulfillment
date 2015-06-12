@@ -3,7 +3,7 @@ $ ->
     $(document).on 'click', '#add_arm_button', ->
       data =
         "protocol_id" : $('#arms').data('protocol_id')
-        "calendar_tab" : $('#current_tab').attr('value')
+        "schedule_tab" : $('#current_tab').attr('value')
       $.ajax
         type: 'GET'
         url: "/arms/new"
@@ -29,10 +29,10 @@ $ ->
     $(document).on 'click', '#add_visit_group_button', ->
       current_page = $(".visit_dropdown").first().attr('page')
       protocol_id = $('#arms').data('protocol_id')
-      calendar_tab = $('#current_tab').attr('value')
+      schedule_tab = $('#current_tab').attr('value')
       data =
         'current_page': current_page
-        'calendar_tab': calendar_tab
+        'schedule_tab': schedule_tab
         'protocol_id' : protocol_id
       $.ajax
         type: 'GET'
@@ -61,14 +61,14 @@ $ ->
         data: data
 
     $(document).on 'click', '#remove_visit_group_button', ->
-      calendar_tab = $('#current_tab').attr('value')
+      schedule_tab = $('#current_tab').attr('value')
       visit_group_id = $("#visits").val()
       arm_id = $('#arms').val()
       page = $("#visits_select_for_#{arm_id}").val()
       del = confirm "Are you sure you want to delete the selected visit from all particpants?"
       data =
         'page': page
-        'calendar_tab': calendar_tab
+        'schedule_tab': schedule_tab
       if del
         $.ajax
           type: 'DELETE'
@@ -76,7 +76,7 @@ $ ->
           data: data
 
     $(document).on 'click', '#add_service_button', ->
-      calendar_tab = $('#current_tab').attr('value')
+      schedule_tab = $('#current_tab').attr('value')
       page_hash = {}
       $(".visit_dropdown.form-control").each (index) ->
         key = $(this).data('arm_id')
@@ -86,7 +86,7 @@ $ ->
       service_id = $('#services').val()
       data =
         'page_hash': page_hash
-        'calendar_tab': calendar_tab
+        'schedule_tab': schedule_tab
         'protocol_id': protocol_id
         'service_id': service_id
       $.ajax
@@ -95,7 +95,7 @@ $ ->
         data: data
 
     $(document).on 'click', '#remove_service_button', ->
-      calendar_tab = $('#current_tab').attr('value')
+      schedule_tab = $('#current_tab').attr('value')
       page_hash = {}
       $(".visit_dropdown.form-control").each (index) ->
         key = $(this).data('arm_id')
@@ -105,7 +105,7 @@ $ ->
       service_id = $('#services').val()
       data =
         'page_hash': page_hash
-        'calendar_tab': calendar_tab
+        'schedule_tab': schedule_tab
         'protocol_id': protocol_id
         'service_id': service_id
       $.ajax
@@ -163,11 +163,11 @@ $ ->
   $select = $('#arms')
   $select.find("[value=#{arm_id}]").remove()
   $select.selectpicker('refresh')
-  $(".calendar.service.arm_#{arm_id}").remove()
+  $(".study_schedule.service.arm_#{arm_id}").remove()
 
 (exports ? this).remove_visit_group = (visit_group_id) ->
   $select = $('#visits')
   $select.find("[value=#{visit_group_id}]").remove()
   $select.selectpicker('refresh')
-  $(".calendar.service.visit_group_#{visit_group_id}").remove()
+  $(".study_schedule.service.visit_group_#{visit_group_id}").remove()
 
