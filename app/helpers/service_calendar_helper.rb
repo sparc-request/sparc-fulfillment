@@ -21,7 +21,7 @@ module ServiceCalendarHelper
     per_page = Visit.per_page
     visit_count = arm.visit_count
     visit_group_names = arm.visit_groups.map(&:name)
-    num_pages = (visit_count / Visit.per_page.to_f).ceil
+    num_pages = (visit_count / per_page.to_f).ceil
     arr = []
 
     num_pages.times do |page|
