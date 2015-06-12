@@ -1,5 +1,7 @@
 class AuditingReport < Report
 
+  require 'csv'
+
   def initialize(params)
     super
 

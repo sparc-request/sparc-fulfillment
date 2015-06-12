@@ -1,20 +1,32 @@
 class ReportJob < ActiveJob::Base
 
-  require 'csv'
-
   queue_as :reports
+
+  before_enqueue do
+    find_or_create_document_root_path
+  end
+
+  before_perform do |job|
+    job.
+      arguments.
+      first.
+      update_attributes state: 'Processing'
+  end
 
   def perform(document, params)
     document_name = params[:title]
-    @report       = params[:title].classify.constantize.new(params)
+    report        = params[:title].classify.constantize.new(params)
 
-    find_or_create_document_root_path
+    report.generate(document)
 
-    @report.generate(document)
+    FayeJob.perform_later document
+  end
 
-    document.update_attributes state: 'Completed'
-
-    FayeJob.enqueue document
+  after_perform do |job|
+    job.
+      arguments.
+      first.
+      update_attributes state: 'Completed'
   end
 
   private

@@ -2,24 +2,81 @@ class StudyScheduleReport < Report
 
   include ActionView::Helpers::NumberHelper
 
-  VISIT_GROUP_OFFSET  = 4
-  TOTALS_OFFSET       = 2
+  VISIT_GROUP_OFFSET  = 2
 
-  def initialize(protocol)
-    @protocol = protocol
+  def initialize(params)
+    super
+
+    @protocol = Protocol.find(@params[:protocol_id])
+  end
+
+  def generate(document)
+    document.update_attributes(content_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                               original_filename: "#{@params[:title]}.xlsx")
+
+    p                     = Axlsx::Package.new
+    wb                    = p.workbook
+    default               = wb.styles.add_style alignment: { horizontal: :left }
+    centered              = wb.styles.add_style alignment: { horizontal: :center }
+    bordered              = wb.styles.add_style border: { style: :thin, color: "00000000" }
+    centered_bordered     = wb.styles.add_style border: { style: :thin, color: "00000000" }, alignment: { horizontal: :center }
+    row_header_style      = wb.styles.add_style b: true
+    primary_header_style  = wb.styles.add_style sz: 12, b: true, bg_color: '0099FF', fg_color: 'FFFFFF', alignment: { horizontal: :left }
+    header_centered_style = wb.styles.add_style sz: 12, b: true, bg_color: '0099FF', fg_color: 'FFFFFF', alignment: { horizontal: :center }
+    sub_header_style      = wb.styles.add_style sz: 12, b: true, bg_color: 'E8E8E8', alignment: { horizontal: :left }
+    arm_header_style      = wb.styles.add_style sz: 12, b: true, bg_color: 'ADADAD', alignment: { horizontal: :left }
+
+    wb.add_worksheet(name: @params[:title].humanize) do |sheet|
+
+      # Study Information header row
+      sheet.add_row study_information_header_row, style: primary_header_style
+
+      # Study Information metadata rows
+      sheet.add_row study_information_id_row, style: default
+      sheet.add_row study_information_title_row, style: default
+
+      # Spacer row
+      sheet.add_row
+
+      # Arms
+      arms.each do |arm|
+
+        # Spacer row
+        sheet.add_row
+
+        # Arm header row
+        sheet.add_row arm_header_row(arm), style: primary_header_style
+
+        # Arm name row
+        sheet.add_row arm_name_row(arm), style: arm_header_style
+
+        # Arm R & T row
+        sheet.add_row arm_r_t_row(arm), style: centered
+
+        # Arm Service rows
+        service_rows(arm).each do |service_row|
+          sheet.add_row service_row
+        end
+      end
+    end
+
+    p.serialize(document.path)
   end
 
   def service_rows(arm)
     rows = Array.new
+    visit_groups = arm.visit_groups
+    r_quantities = visit_groups.map { |vg| vg.r_quantities_grouped_by_service }
+    t_quantities  = visit_groups.map { |vg| vg.t_quantities_grouped_by_service }
 
     arm.line_items.each do |line_item|
       row             = Array.new
-      sparc_line_item = Sparc::LineItem.find(line_item.sparc_id)
 
       row.push [
         line_item.service.name,
-        number_to_currency(sparc_line_item.direct_costs_for_one_time_fee),
-        number_to_currency(sparc_line_item.applicable_rate)
+        line_item.subject_count,
+        (r_quantities.map { |vg| vg[line_item.service.id] }).
+          zip(t_quantities.map { |vg| vg[line_item.service.id] })
       ].flatten
 
       rows.push row.flatten
@@ -46,16 +103,12 @@ class StudyScheduleReport < Report
   def arm_header_row(arm)
     cells = [
       "Selected Services",
-      "Current Cost",
-      "Your Cost",
       "# of Subjects",
       arm.visit_groups.map { |visit_group| [visit_group.name, ""] }
     ].flatten
 
     cells.push [
-      spacer_array(max_width - cells.length - TOTALS_OFFSET),
-      "Total Per Patient",
-      "Total Per Study"
+      spacer_array(max_width - cells.length),
     ]
 
     cells.flatten
@@ -99,7 +152,7 @@ class StudyScheduleReport < Report
   end
 
   def max_width
-    VISIT_GROUP_OFFSET + (maximum_visit_count * 2) + TOTALS_OFFSET
+    VISIT_GROUP_OFFSET + (maximum_visit_count * 2)
   end
 
   def has_per_patient_per_visit_services?

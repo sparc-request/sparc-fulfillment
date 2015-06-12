@@ -1,63 +1,23 @@
-class FayeJob < Struct.new(:object_id, :object_class)
+class FayeJob < ActiveJob::Base
 
-  class FayeUnavailable < StandardError
-  end
+  queue_as :faye
 
-  def self.enqueue(object)
-    job = new(object.id, object.class.name)
-
-    Delayed::Job.enqueue job, queue: 'faye'
-  end
-
-  def perform
-    channels.each do |channel|
-      message = {
-        channel: channel,
-        data: params,
-        ext: { auth_token: ENV.fetch('FAYE_TOKEN') }
-      }.to_json
-
-      Net::HTTP.post_form uri, message: message
-    end
-  end
-
-  def error(job, exception)
-    @exception = exception
-  end
-
-  def max_attempts
-    5
+  def perform(object)
+    FayeClient.new(data, channels(object)).publish
   end
 
   private
 
-  def object
-    @object ||= object_class.constantize.find(object_id)
+  def data
+    'data'
   end
 
-  def params
-    { formatted_object_id => object_id }
-  end
+  def channels(object)
+    object_class = object.class.to_s.downcase
 
-  def channels
-    if object_class.downcase == "protocol"
-      singular_channel  = ['/', [object_class.downcase, object_id].join('_')].join
-      plural_channel    = ['/', object_class.pluralize.downcase].join
-
-      [singular_channel, plural_channel]
-
-    # elsif object_class.downcase == "report"
-    else
-      plural_channel = ['/', object_class.pluralize.downcase].join
-      [plural_channel]
-    end
-  end
-
-  def uri
-    URI.parse("#{ENV.fetch('GLOBAL_SCHEME')}://#{ENV.fetch('CWF_FAYE_HOST')}/faye")
-  end
-
-  def formatted_object_id
-    [object_class.downcase, 'id'].join('_')
+    [
+      ['/', [object_class, object.id].join('_')].join,
+      ['/', object_class.pluralize].join
+    ].flatten
   end
 end

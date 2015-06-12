@@ -1,5 +1,7 @@
 class ParticipantReport < Report
 
+  require 'csv'
+
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
     participant = Participant.find(@params[:participant_id])
