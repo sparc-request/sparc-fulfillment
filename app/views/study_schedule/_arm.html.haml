@@ -30,6 +30,6 @@
             .col-xs-12= "#{core.name}"
           - line_items.each do |li|
             = render partial: 'study_schedule/line_item', locals: {line_item: li, page: page, tab: tab}
-          %div{id: "arm_#{arm.id}_end_of_core_#{core_id}"}
+          %div{id: "arm_#{arm.id}_end_of_core_#{core.id}"}
         %div{id: "end_of_arm_#{arm.id}"}
 %br
