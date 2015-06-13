@@ -49,23 +49,26 @@ class ProtocolImporter
 
             sparc_visit_group.visits.each do |sparc_visit|
               sparc_line_item = sparc_visit.line_items_visit.line_item
+              
+              if sparc_line_item.sub_service_request.id == sparc_sub_service_request.id
 
-              unless fulfillment_line_item = LineItem.where(sparc_id: sparc_line_item.id, arm_id: fulfillment_arm.id).first
-                # per_participant line_item creation if it doesn't already exist
-                attr = normalized_attributes('LineItem', sparc_line_item).merge!({sparc_id: sparc_line_item.id,
-                                                                                  protocol_id: fulfillment_protocol.id,
-                                                                                  subject_count: sparc_visit.line_items_visit.subject_count,
-                                                                                  arm_id: fulfillment_arm.id})
-                fulfillment_line_item = LineItem.create(attr)
-                # end per participant line_item creation
-              end
+                unless fulfillment_line_item = LineItem.where(sparc_id: sparc_line_item.id, arm_id: fulfillment_arm.id).first
+                  # per_participant line_item creation if it doesn't already exist
+                  attr = normalized_attributes('LineItem', sparc_line_item).merge!({sparc_id: sparc_line_item.id,
+                                                                                    protocol_id: fulfillment_protocol.id,
+                                                                                    subject_count: sparc_visit.line_items_visit.subject_count,
+                                                                                    arm_id: fulfillment_arm.id})
+                  fulfillment_line_item = LineItem.create(attr)
+                  # end per participant line_item creation
+                end
             
-              # visit creation
-              attr = normalized_attributes('Visit', sparc_visit).merge!({sparc_id: sparc_visit_group.id,
-                                                                         visit_group_id: fulfillment_visit_group.id,
-                                                                         line_item_id: fulfillment_line_item.id})
-              fulfillment_visit = Visit.create(attr)
-              # end visit creation
+                # visit creation
+                attr = normalized_attributes('Visit', sparc_visit).merge!({sparc_id: sparc_visit_group.id,
+                                                                           visit_group_id: fulfillment_visit_group.id,
+                                                                           line_item_id: fulfillment_line_item.id})
+                fulfillment_visit = Visit.create(attr)
+                # end visit creation
+              end
              
             end # visits loop
           end # visit_groups loop
