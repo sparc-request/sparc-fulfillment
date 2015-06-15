@@ -17,6 +17,7 @@ FactoryGirl.define do
     trait :with_services do
       after(:create) do |organization, evaluator|
         create_list(:service, 3, organization: organization)
+        create_list(:service_with_one_time_fee_with_components, 3, organization: organization)
       end
     end
 
