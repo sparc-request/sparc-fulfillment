@@ -86,10 +86,10 @@ class SparcFulfillmentImporter
                                                                                   name:                  fulfillment_visit_group.name,
                                                                                   arm_id:                fulfillment_arm.id,
                                                                                   start_date:            (sparc_appointment.completed_at.strftime("%m-%d-%Y") rescue nil),
-                                                                                  end_date:              (sparc_appointment.completed_at.strftime("%m-%d-%Y") rescue nil))
+                                                                                  completed_date:        (sparc_appointment.completed_at.strftime("%m-%d-%Y") rescue nil))
 
                                                                                   
-
+            create_fulfillment_procedures(sparc_appointment)
           end
 
           
@@ -111,5 +111,27 @@ class SparcFulfillmentImporter
   
   def disable_paper_trail
     PaperTrail.enabled = false
+  end
+
+  def create_fulfillment_procedures(sparc_appointment)
+    sparc_appointment.procedures.each do |sparc_procedure|
+      if (sparc_appointment.r_quantity && sparc_appointment.r_quantity > 0)
+        generate_procedures(sparc_procedure, sparc_appointment, r_quantity, 'research_billing_qty')
+      elsif (sparc_appointment.t_quantity && sparc_appointment.t_quantity > 0)
+        generate_procedures(sparc_procedure, sparc_appointment, t_quantity, 'insurance_billing_qty')
+      end
+    end
+  end
+
+  def generate_procedures(sparc_procedure, sparc_appointment, quantity, billing_type)
+    quantity.times do
+      fulfillment_procedure = sparc_appointment.procedures.create(line_item_id:    sparc_procedure.line_item.id,
+                                                                  service_id:      sparc_procedure.line_item.service.id,
+                                                                  billing_type:    billing_type,
+                                                                  sparc_core_id:   sparc_procedure.line_item.sub_service_request.organization.id,
+                                                                  sparc_core_name: sparc_procedure.line_item.sub_service_request.organization.name,
+                                                                  visit_id:        sparc_procedure.visit.id,
+                                                                  start_date:      (sparc_appointment.completed_at.strftime("%m-%d-%Y") rescue nil),
+                                                                  completed_date:  (sparc_appointment.completed_at.strftime("%m-%d-%Y") rescue nil))
   end
 end
