@@ -132,6 +132,7 @@ class SparcFulfillmentImporter
   def generate_procedures(sparc_procedure, fulfillment_appointment, quantity, billing_type)
     sparc_line_item_id = sparc_procedure.line_item_id
     sparc_service_id = sparc_procedure.service_id
+    
 
     fulfillment_service = sparc_line_item_id.present?  ? LineItem.where(sparc_id: sparc_line_item_id, protocol_id: @fulfillment_protocol.id).first.service : Service.where(id: sparc_service_id).first
 
@@ -153,9 +154,14 @@ class SparcFulfillmentImporter
                                                                      sparc_core_name: sparc_organization.name,
                                                                      visit_id:        fulfillment_visit_id)
       if sparc_procedure.completed?
+        sparc_procedure_completed_audit = sparc_procedure.audits.where("audited_changes like '%completed: true%' OR audited_changes like '%completed:\n- false\n- true%'").first
+        sparc_procedure_completed_date = sparc_procedure_completed_audit.created_at
+        sparc_procedure_completed_by = sparc_procedure_completed_audit.user_id
+
         fulfillment_procedure.status = 'complete'
-        fulfillment_procedure.start_date = fulfillment_appointment.completed_date.strftime("%m-%d-%Y") rescue nil #TODO should this be fulfillment_procedured.updated_at attribute?
-        fulfillment_procedure.completed_date = fulfillment_appointment.completed_date.strftime("%m-%d-%Y") rescue nil
+        fulfillment_procedure.start_date = sparc_procedure_completed_date.strftime("%m-%d-%Y")
+        fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m-%d-%Y")
+        fulfillment_procedure.performer_id = sparc_procedure_completed_by
       end
 
       validate_and_save fulfillment_procedure
