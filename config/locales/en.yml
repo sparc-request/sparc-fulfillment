@@ -226,12 +226,28 @@ en:
       unauthorized: "Authorization Failure"
       not_found: "Protocol Not Found"
 
+  documents:
+    date: "Date Requested"
+    title: "Title"
+    state: "Report Status"
+    file: "Attached File"
+    downloaded_at: "Date Downloaded"
+    new_header: "Add Document"
+    date_uploaded: "Date Uploaded"
+    object: "Document"
+    upload_button: "Upload Document"
+    lineitem:
+      index_header: "Line Item Documents"
+      none: "This line item has no documents"
+    fulfillment:
+      index_header: "Fulfillment Documents"
+      none: "This fulfillment has no documents."
+    flash_messages:
+      created: "Document Created"
+      no_file_chosen: "You must choose a file"
+
   reports:
     request_report: "Request Report"
-    date: "Date Requested"
-    name: "Report Type/Name"
-    status: "Report Status"
-    file: "Attached File"
     billing_report: "Billing Report"
     auditing_report: "Auditing Report"
     participant_report: "Participant Report"

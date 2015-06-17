@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe Identity, type: :model do
 
   it { is_expected.to have_one(:identity_counter) }
+
+  it { is_expected.to have_many(:documents) }
   it { is_expected.to have_many(:project_roles) }
   it { is_expected.to have_many(:clinical_providers) }
 

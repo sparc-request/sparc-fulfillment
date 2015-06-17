@@ -1,0 +1,30 @@
+.row
+  .col-md-12
+    .page-header
+      %h1
+        %i.glyphicon.glyphicon-equalizer
+        Reports
+.row
+  .col-md-12
+    .page-header
+      %h3 Reports
+.row.report-buttons
+  .col-md-3
+    %button.btn-block.new_report.btn.btn-primary{ data: { title: "billing_report" } }
+      %i.glyphicon.glyphicon-list-alt
+      Billing Report
+  .col-md-3
+    %button.btn-block.new_report.btn.btn-primary{ data: { title: "auditing_report" } }
+      %i.glyphicon.glyphicon-list-alt
+      Auditing Report
+  .col-md-3
+    %button.btn-block.new_report.btn.btn-primary{ data: { title: "participant_report" } }
+      %i.glyphicon.glyphicon-list-alt
+      Participant Report
+  .col-md-3
+    %button.btn-block.new_report.btn.btn-primary{ data: { title: "project_summary_report" } }
+      %i.glyphicon.glyphicon-list-alt
+      Project Summary Report
+.row
+  .col-md-12
+    = render "documents"

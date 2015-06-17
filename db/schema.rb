@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603223427) do
+ActiveRecord::Schema.define(version: 20150616182732) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -90,10 +90,11 @@ ActiveRecord::Schema.define(version: 20150603223427) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "doc_file_name",     limit: 255
-    t.string   "doc_content_type",  limit: 255
-    t.integer  "doc_file_size",     limit: 4
-    t.datetime "doc_updated_at"
+    t.string   "title",             limit: 255
+    t.string   "state",             limit: 255, default: "Pending"
+    t.datetime "last_accessed_at"
+    t.string   "original_filename", limit: 255
+    t.string   "content_type",      limit: 255
   end
 
   add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
@@ -118,10 +119,11 @@ ActiveRecord::Schema.define(version: 20150603223427) do
   add_index "fulfillments", ["service_id"], name: "index_fulfillments_on_service_id", using: :btree
 
   create_table "identity_counters", force: :cascade do |t|
-    t.integer  "identity_id", limit: 4
-    t.integer  "tasks_count", limit: 4, default: 0
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.integer  "identity_id",                limit: 4
+    t.integer  "tasks_count",                limit: 4, default: 0
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.integer  "unaccessed_documents_count", limit: 4, default: 0
   end
 
   add_index "identity_counters", ["identity_id"], name: "index_identity_counters_on_identity_id", using: :btree
@@ -147,14 +149,14 @@ ActiveRecord::Schema.define(version: 20150603223427) do
 
   create_table "notes", force: :cascade do |t|
     t.integer  "identity_id",  limit: 4
-    t.string   "comment",      limit: 255
+    t.text     "comment",      limit: 65535
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "notable_id",   limit: 4
     t.string   "notable_type", limit: 255
     t.string   "reason",       limit: 255
-    t.string   "kind",         limit: 255, default: "note"
+    t.string   "kind",         limit: 255,   default: "note"
   end
 
   add_index "notes", ["identity_id"], name: "index_notes_on_identity_id", using: :btree
@@ -215,14 +217,28 @@ ActiveRecord::Schema.define(version: 20150603223427) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "visit_id",         limit: 4
-    t.integer  "performer_id",     limit: 4
     t.datetime "incompleted_date"
+    t.integer  "performer_id",     limit: 4
   end
 
   add_index "procedures", ["appointment_id"], name: "index_procedures_on_appointment_id", using: :btree
   add_index "procedures", ["completed_date"], name: "index_procedures_on_completed_date", using: :btree
   add_index "procedures", ["service_id"], name: "index_procedures_on_service_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
+
+  create_table "project_roles", force: :cascade do |t|
+    t.integer  "identity_id", limit: 4
+    t.integer  "protocol_id", limit: 4
+    t.string   "rights",      limit: 255
+    t.string   "role",        limit: 255
+    t.string   "role_other",  limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "project_roles", ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
+  add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
 
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",               limit: 4

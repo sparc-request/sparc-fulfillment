@@ -24,6 +24,8 @@ module ClinicalWorkFulfillment
     config.autoload_paths += Dir[Rails.root.join('app', 'jobs', '*')]
     config.paths.add File.join('lib'), glob: File.join('**', '*.rb')
     config.autoload_paths += Dir[Rails.root.join('lib')]
+    config.paths.add File.join('lib/reports'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('lib/reports')]
 
     # Importers
     config.autoload_paths += Dir[Rails.root.join('lib/importers')]
@@ -43,7 +45,7 @@ module ClinicalWorkFulfillment
 
     # ActiveJob
     config.active_job.queue_adapter = :delayed_job
-  
+
     # Force SSL
     config.force_ssl if ENV.fetch('GLOBAL_SCHEME') == 'https'
   end

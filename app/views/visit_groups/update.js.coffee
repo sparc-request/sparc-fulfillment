@@ -1,4 +1,4 @@
-$("#modal_errors").html("<%= escape_javascript(render(:partial =>'shared/modal_errors', locals: {errors: @errors})) %>");
+$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>");
 
 <% if @visit_group.errors[:name].any? %>
 # reset name field, if there was a validation error

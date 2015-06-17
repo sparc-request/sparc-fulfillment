@@ -12,6 +12,13 @@
             Tasks
             %span.notification.task-notifications
               = current_identity.tasks_count
+        %li
+          = link_to documents_path do
+            %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
+            Reports
+            %span.notification.document-notifications
+              = current_identity.unaccessed_documents_count
+
         = yield :nav_buttons
       %ul.nav.navbar-nav.navbar-right
         - if session[:last_page]
@@ -19,10 +26,6 @@
             = link_to session[:last_page] do
               %span.glyphicon.glyphicon-arrow-left{aria: {hidden: "true"}}
               Back
-        %li
-          = link_to reports_path do
-            %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
-            Reports
         %li
           = link_to(destroy_identity_session_path, id: "sign-out-link", method: :delete, data: { confirm: "Are you sure you want to sign out?" }) do
             %span.glyphicon.glyphicon-log-out{aria: {hidden: "true"}}

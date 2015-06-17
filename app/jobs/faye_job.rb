@@ -46,7 +46,8 @@ class FayeJob < Struct.new(:object_id, :object_class)
 
       [singular_channel, plural_channel]
 
-    elsif object_class.downcase == "report"
+    # elsif object_class.downcase == "report"
+    else
       plural_channel = ['/', object_class.pluralize.downcase].join
       [plural_channel]
     end

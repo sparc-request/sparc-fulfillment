@@ -38,7 +38,7 @@ feature "Task notifications", js: true do
   end
 
   def when_i_click_on_the_task_notification
-    find(".notification").click
+    find(".notification.task-notifications").click
   end
 
   def then_i_should_be_on_the_tasks_page
