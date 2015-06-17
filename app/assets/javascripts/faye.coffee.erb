@@ -17,6 +17,6 @@ $ ->
         $('table.protocol').bootstrapTable('refresh', {silent: "true"})
         $('table.participants').bootstrapTable('refresh', {silent: "true"})
 
-    if $('body.reports-index').length > 0
-      faye.subscribe "/reports", (data) ->
-        $('table#reports-list').bootstrapTable('refresh', {silent: "true"})
+    if $('body.documents-index').length > 0
+      faye.subscribe "/documents", (data) ->
+        $('table.documents').bootstrapTable('refresh', {silent: "true"})

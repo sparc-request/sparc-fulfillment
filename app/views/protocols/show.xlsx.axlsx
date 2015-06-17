@@ -1,0 +1,44 @@
+wb                    = xlsx_package.workbook
+default               = wb.styles.add_style alignment: { horizontal: :left }
+centered              = wb.styles.add_style alignment: { horizontal: :center }
+bordered              = wb.styles.add_style border: { style: :thin, color: "00000000" }
+centered_bordered     = wb.styles.add_style border: { style: :thin, color: "00000000" }, alignment: { horizontal: :center }
+row_header_style      = wb.styles.add_style b: true
+primary_header_style  = wb.styles.add_style sz: 12, b: true, bg_color: '0099FF', fg_color: 'FFFFFF', alignment: { horizontal: :left }
+header_centered_style = wb.styles.add_style sz: 12, b: true, bg_color: '0099FF', fg_color: 'FFFFFF', alignment: { horizontal: :center }
+sub_header_style      = wb.styles.add_style sz: 12, b: true, bg_color: 'E8E8E8', alignment: { horizontal: :left }
+arm_header_style      = wb.styles.add_style sz: 12, b: true, bg_color: 'ADADAD', alignment: { horizontal: :left }
+
+wb.add_worksheet(name: @export.worksheet_name) do |sheet|
+
+  # Study Information header row
+  sheet.add_row @export.study_information_header_row, style: primary_header_style
+
+  # Study Information metadata rows
+  sheet.add_row @export.study_information_id_row, style: default
+  sheet.add_row @export.study_information_title_row, style: default
+
+  # Spacer row
+  sheet.add_row
+
+  # Arms
+  @export.arms.each do |arm|
+
+    # Spacer row
+    sheet.add_row
+
+    # Arm header row
+    sheet.add_row @export.arm_header_row(arm), style: primary_header_style
+
+    # Arm name row
+    sheet.add_row @export.arm_name_row(arm), style: arm_header_style
+
+    # Arm R & T row
+    sheet.add_row @export.arm_r_t_row(arm), style: centered
+
+    # Arm Service rows
+    @export.service_rows(arm).each do |service_row|
+      sheet.add_row service_row
+    end
+  end
+end

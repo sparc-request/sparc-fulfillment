@@ -86,10 +86,6 @@ GEM
     capybara-webkit (1.5.1)
       capybara (>= 2.3.0, < 2.5.0)
       json
-    climate_control (0.0.3)
-      activesupport (>= 3.0)
-    cocaine (0.5.7)
-      climate_control (>= 0.0.3, < 1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     coffee-rails (4.0.1)
@@ -233,11 +229,6 @@ GEM
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1.0)
-    paperclip (4.2.1)
-      activemodel (>= 3.0.0)
-      activesupport (>= 3.0.0)
-      cocaine (~> 0.5.3)
-      mime-types
     paranoia (2.1.2)
       activerecord (~> 4.0)
     puma (2.11.3)
@@ -425,7 +416,6 @@ DEPENDENCIES
   mysql2
   omniauth
   paper_trail (~> 4.0.0.beta)
-  paperclip
   paranoia (~> 2.0)
   puma
   rack-mini-profiler

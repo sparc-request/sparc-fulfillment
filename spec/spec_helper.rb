@@ -18,7 +18,6 @@
 require 'shoulda-matchers'
 require 'simplecov'
 require 'rspec/active_job'
-require 'paperclip/matchers'
 
 SimpleCov.start do
   add_group "Models", "app/models"
@@ -34,7 +33,6 @@ FactoryGirl::SyntaxRunner.class_eval do
 end
 
 RSpec.configure do |config|
-  config.include Paperclip::Shoulda::Matchers
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
