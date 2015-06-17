@@ -4,4 +4,6 @@ class Sparc::Appointment < ActiveRecord::Base
   belongs_to :calendar
   belongs_to :visit_group
   belongs_to :organization
+
+  has_many :procedures
 end

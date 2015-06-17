@@ -64,7 +64,7 @@ class ProtocolImporter
                 end
             
                 # visit creation
-                attr = normalized_attributes('Visit', sparc_visit).merge!({sparc_id: sparc_visit_group.id,
+                attr = normalized_attributes('Visit', sparc_visit).merge!({sparc_id: sparc_visit.id,
                                                                            visit_group_id: fulfillment_visit_group.id,
                                                                            line_item_id: fulfillment_line_item.id})
                 fulfillment_visit = Visit.create(attr)
