@@ -16,6 +16,7 @@ class ProtocolImporter
 
     sparc_sub_service_request = Sparc::SubServiceRequest.find api_sub_service_request["sparc_id"]
     sparc_protocol = sparc_sub_service_request.protocol
+    fulfillment_protocol = nil # need this to return at the end
 
     ActiveRecord::Base.transaction do
 
@@ -96,6 +97,9 @@ class ProtocolImporter
     end # end Active Record Transaction
 
     PaperTrail.enabled = true
+
+    # return the new created protocol
+    return fulfillment_protocol
   end
 
   private

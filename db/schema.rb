@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603223427) do
+ActiveRecord::Schema.define(version: 20150616140401) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -147,14 +147,14 @@ ActiveRecord::Schema.define(version: 20150603223427) do
 
   create_table "notes", force: :cascade do |t|
     t.integer  "identity_id",  limit: 4
-    t.string   "comment",      limit: 255
+    t.text     "comment",      limit: 65535
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "notable_id",   limit: 4
     t.string   "notable_type", limit: 255
     t.string   "reason",       limit: 255
-    t.string   "kind",         limit: 255, default: "note"
+    t.string   "kind",         limit: 255,   default: "note"
   end
 
   add_index "notes", ["identity_id"], name: "index_notes_on_identity_id", using: :btree
@@ -172,6 +172,7 @@ ActiveRecord::Schema.define(version: 20150603223427) do
   add_index "notifications", ["sparc_id"], name: "index_notifications_on_sparc_id", using: :btree
 
   create_table "participants", force: :cascade do |t|
+    t.integer  "sparc_id",           limit: 4
     t.integer  "protocol_id",        limit: 4
     t.integer  "arm_id",             limit: 4
     t.string   "first_name",         limit: 255
@@ -199,6 +200,7 @@ ActiveRecord::Schema.define(version: 20150603223427) do
   add_index "participants", ["arm_id"], name: "index_participants_on_arm_id", using: :btree
   add_index "participants", ["deleted_at"], name: "index_participants_on_deleted_at", using: :btree
   add_index "participants", ["protocol_id"], name: "index_participants_on_protocol_id", using: :btree
+  add_index "participants", ["sparc_id"], name: "index_participants_on_sparc_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.integer  "appointment_id",   limit: 4
@@ -223,6 +225,20 @@ ActiveRecord::Schema.define(version: 20150603223427) do
   add_index "procedures", ["completed_date"], name: "index_procedures_on_completed_date", using: :btree
   add_index "procedures", ["service_id"], name: "index_procedures_on_service_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
+
+  create_table "project_roles", force: :cascade do |t|
+    t.integer  "identity_id", limit: 4
+    t.integer  "protocol_id", limit: 4
+    t.string   "rights",      limit: 255
+    t.string   "role",        limit: 255
+    t.string   "role_other",  limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "project_roles", ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
+  add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
 
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",               limit: 4
