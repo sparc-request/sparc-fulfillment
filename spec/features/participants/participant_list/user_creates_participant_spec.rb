@@ -21,6 +21,9 @@ feature 'User creates Participant', js: true do
     fill_in 'First Name', with: participant.first_name
     fill_in 'Last Name', with: participant.last_name
     fill_in 'MRN', with: participant.mrn
+    fill_in 'City', with: participant.city
+    bootstrap_select '#participant_state', participant.state
+    fill_in 'Zip Code', with: participant.zipcode
     bootstrap_select '#participant_status', participant.status
     page.execute_script %Q{ $("#participant_date_of_birth").siblings(".input-group-addon").trigger("click") }
     page.execute_script %Q{ $("td.year:contains('0')").trigger("click") }

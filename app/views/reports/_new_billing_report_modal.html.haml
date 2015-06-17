@@ -17,9 +17,11 @@
               = label_tag "end_date", t(:reports)[:end_date], class: "col-sm-3 control-label"
               .col-sm-9= text_field_tag "end_date", nil, class: "datepicker"
             .form-group
-              = label_tag "protocol", t(:reports)[:protocol], class: "col-sm-3 control-label"
+              = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag "protocol_ids", options_from_collection_for_select(Protocol.all, "id", "short_title_with_sparc_id"), multiple: true, class: "selectpicker form-control"
+                = select_tag "protocol_ids", options_from_collection_for_select(@protocols, "id", "short_title_with_sparc_id"), multiple: true, 'data-live-search' => true, class: "selectpicker form-control"
+              .col-sm-9.col-sm-offset-3
+                %p= t(:reports)[:protocol_instructions]
 
       .modal-footer
         .center-block{style: "width: 205px;"}

@@ -9,18 +9,18 @@ $("#visits_select_for_<%= @arm.id %>").html("<%= escape_javascript(visits_select
 $("#select_for_arm_<%= @arm.id %> > .visit_dropdown").selectpicker('refresh')
 
 # re-render Manage Visits dropdown
-$("#manage_visit_groups").html("<%= escape_javascript(render partial: '/service_calendar/calendar_management/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
+$("#manage_visit_groups").html("<%= escape_javascript(render partial: '/study_schedule/study_schedule_management/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
 # and create associated selectpicker
 $(".selectpicker").selectpicker()
 
 <% if on_current_page?(@current_page, @visit_group) %>
 # Overwrite the visit_groups
-$(".visit_groups_for_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/service_calendar/visit_groups', locals: {arm: @arm, visit_groups: @visit_groups}) %>")
+$(".visit_groups_for_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_groups', locals: { arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab }) %>")
 # Overwrite the check columns
-$(".check_columns_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/service_calendar/check_visit_columns', locals: {visit_groups: @visit_groups}) %>")
+$(".check_columns_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/check_visit_columns', locals: { visit_groups: @visit_groups, tab: @schedule_tab }) %>")
 # Overwrite the visits
 <% @arm.line_items.each do |line_item| %>
-$(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(render partial: '/service_calendar/visits', locals: {line_item: line_item, page: @current_page, tab: @calendar_tab}) %>")
+$(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visits', locals: {line_item: line_item, page: @current_page, tab: @schedule_tab}) %>")
 <% end %>
 <% end %>
 <% end %>

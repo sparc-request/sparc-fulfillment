@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Service Calendar', type: :feature, js: true do
+RSpec.describe 'Study Schedule', type: :feature, js: true do
 
   before :each do
     @protocol       = create_blank_protocol
@@ -12,8 +12,8 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
     visit protocol_path(@protocol.id)
   end
 
-  it 'should display the calendar with visit names, line items, and visits' do
-    expect(page).to have_css(".calendar.service.arm_#{@arm.id}")
+  it 'should display the study schedule with visit names, line items, and visits' do
+    expect(page).to have_css(".study_schedule.service.arm_#{@arm.id}")
     expect(page).to have_css("#visit-name-display-#{@visit_group.id}")
     expect(page).to have_css("#line_item_#{@line_item.id}")
     expect(page).to have_css("#visit_check_#{@visit.id}")
@@ -30,10 +30,10 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
 
     it "should set the name back to the previous name if there is a validation error" do
       fill_in "visit_group_#{@visit_group.id}", with: 'vanilla ice cream'
-      first('.calendar.service').click()
+      first('.study_schedule.service').click()
       wait_for_ajax
       fill_in "visit_group_#{@visit_group.id}", with: ''
-      first('.calendar.service').click()
+      first('.study_schedule.service').click()
       expect(find_field("visit_group_#{@visit_group.id}").value).to eq('vanilla ice cream')
     end
   end
@@ -114,24 +114,25 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
   describe "quantity tab" do
     before :each do
       click_link 'Quantity/Billing Tab'
+      wait_for_ajax
     end
 
     describe "changing quantities" do
       it "should set the quantity back to the previous quantity if nothing is entered" do
         fill_in "visits_#{@visit.id}_research_billing_qty", :with => '6'
-        first('.calendar.service').click()
+        first('.study_schedule.service').click()
         wait_for_ajax
         fill_in "visits_#{@visit.id}_research_billing_qty", with: ''
-        first('.calendar.service').click()
+        first('.study_schedule.service').click()
         expect(find_field("visits_#{@visit.id}_research_billing_qty").value).to eq('6')
       end
 
       it "should set the quantity back to the previous quantity if there is a validation error" do
         fill_in "visits_#{@visit.id}_research_billing_qty", :with => '6'
-        first('.calendar.service').click()
+        first('.study_schedule.service').click()
         wait_for_ajax
         fill_in "visits_#{@visit.id}_research_billing_qty", with: '-1'
-        first('.calendar.service').click()
+        first('.study_schedule.service').click()
         expect(find_field("visits_#{@visit.id}_research_billing_qty").value).to eq('6')
       end
     end
@@ -150,9 +151,10 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
 
       it "should set research fields to 0 and insurance fields to 0 for the line item  when uncheck is clicked" do
         within("#line_item_#{@line_item.id}") do
-          find(".check_row").click()
           wait_for_ajax
           find(".check_row").click()
+          wait_for_ajax
+          find(".check_row").click
           wait_for_ajax
           all('.research').each do |quantity|
             expect(quantity.value).to eq('0')
@@ -172,6 +174,7 @@ RSpec.describe 'Service Calendar', type: :feature, js: true do
       end
 
       it "should set research fields to 0 and insurance fields to 0 for the visit group when uncheck is clicked" do
+        wait_for_ajax
         first(".check_column").click()
         wait_for_ajax
         first(".check_column").click()

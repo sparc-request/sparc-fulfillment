@@ -19,9 +19,25 @@ module ProtocolHelper
     html
   end
 
-  def display_cost(cost)
-    dollars = (cost / 100) rescue nil
+  def arm_per_participant_line_items_by_core(arm, consolidated=false)
+    line_items = arm.line_items
+    if consolidated && Sparc::Arm.where(id: arm.sparc_id).any?
+      sparc_arm = Sparc::Arm.where(id: arm.sparc_id).first
+      line_items += sparc_arm.line_items_visits.select{ |liv| liv.line_item.sub_service_request_id != arm.protocol.sub_service_request_id} # add pppv line items that aren't already in cwf
+    end
 
-    number_to_currency(dollars, seperator: ",")
+    line_items.group_by{|li| li.service.organization}
+  end
+
+  def consolidated_one_time_fee_line_items(protocol)
+    line_items = protocol.one_time_fee_line_items
+    if Sparc::Protocol.where(id: protocol.sparc_id).any?
+      sparc_protocol = Sparc::Protocol.where(id: protocol.sparc_id).first
+      sparc_protocol.service_requests.each do |sr|
+        line_items += sr.line_items.one_time_fee.select{ |li| li.sub_service_request_id != protocol.sub_service_request_id } # add otf line items that aren't already in cwf
+      end
+    end
+
+    line_items
   end
 end

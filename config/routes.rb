@@ -20,11 +20,17 @@ Rails.application.routes.draw do
 
   resources :reports do
     collection do
-      post 'create_billing_report', to: 'reports#create_billing_report'
-      get 'new_billing_report', to: 'reports#new_billing_report'
+      get 'new_billing_report'
+      post 'create_billing_report'
 
-      post 'create_auditing_report', to: 'reports#create_auditing_report'
-      get 'new_auditing_report', to: 'reports#new_auditing_report'
+      get 'new_auditing_report'
+      post 'create_auditing_report'
+
+      get 'new_participant_report'
+      post 'create_participant_report'
+
+      get 'new_project_summary_report'
+      post 'create_project_summary_report'
     end
   end
 
@@ -61,7 +67,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :service_calendar, only: [] do
+  resources :study_schedule, only: [] do
     collection do
       get 'change_page'
       get 'change_tab'

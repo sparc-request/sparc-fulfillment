@@ -33,7 +33,10 @@ class TasksController < ApplicationController
     @task = Task.new(task_parameters.merge!({ identity: current_identity}))
     if @task.valid?
       @task.save
-      @procedure = Procedure.find(task_params[:assignable_id]) unless task_params[:assignable_type] != "Procedure"
+      if task_params[:assignable_type] == "Procedure"
+        @procedure = Procedure.find(task_params[:assignable_id])
+        @procedure.update_attributes(status: "follow_up") if @procedure.unstarted?
+      end
       if task_params[:notes]
         create_note(task_parameters)
       end

@@ -13,7 +13,7 @@ RSpec.describe ProceduresController, type: :controller do
 
     context 'with Notable change' do
 
-      context 'Procedure status is not set' do
+      context 'Procedure status is unstarted' do
 
         context 'User marks Procedure as complete' do
 
@@ -64,14 +64,14 @@ RSpec.describe ProceduresController, type: :controller do
 
         context 'User edits completed_date' do
            before do
-            procedure = create(:procedure_complete)
-            params    = { id: procedure.id, procedure: { completed_date: Time.current.tomorrow.strftime("%m-%d-%Y")}, format: :js }
+            @procedure = create(:procedure_complete)
+            params    = { id: @procedure.id, procedure: { completed_date: Date.current.tomorrow.strftime("%m-%d-%Y")}, format: :js }
 
             put :update, params
           end
 
           it "should update the completed date" do
-            expect(assigns(:procedure).completed_date.strftime("%m-%d-%Y")).to eq Time.current.tomorrow.strftime("%m-%d-%Y")
+            expect(assigns(:procedure).reload.completed_date.strftime("%m-%d-%Y")).to eq Time.current.tomorrow.strftime("%m-%d-%Y")
           end
 
           it "should create a note" do
@@ -82,7 +82,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks the procedure as complete' do #if the procedure is already complete, a user setting it to complete again will render the status void
           before do
             procedure = create(:procedure_complete)
-            params = {id: procedure.id, procedure: {status: ''}, format: :js}
+            params = { id: procedure.id, procedure: { status: 'unstarted' }, format: :js }
 
             put :update, params
           end
@@ -91,8 +91,8 @@ RSpec.describe ProceduresController, type: :controller do
             expect(assigns(:procedure).completed_date).to_not be
           end
 
-          it "should update the status to be nil" do
-            expect(assigns(:procedure).status).to eq ''
+          it "should update the status to be unstarted" do
+            expect(assigns(:procedure).status).to eq 'unstarted'
           end
 
           it "should create a note" do
@@ -151,17 +151,21 @@ RSpec.describe ProceduresController, type: :controller do
 
           before do
             procedure = create(:procedure)
-            params    = { id: procedure.id, procedure: { status: ''}, format: :js }
+            params    = { id: procedure.id, procedure: { status: 'incomplete'}, format: :js }
 
             put :update, params
           end
 
           it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('')
+            expect(assigns(:procedure).status).to eq('incomplete')
           end
 
           it 'should create a Note' do
             expect(assigns(:procedure).reload.notes).to be_one
+          end
+
+          it 'should set the incomplete date to today' do
+            expect(assigns(:procedure).incompleted_date.to_date).to eq(Date.today)
           end
         end
       end
@@ -224,4 +228,3 @@ RSpec.describe ProceduresController, type: :controller do
     end
   end
 end
-
