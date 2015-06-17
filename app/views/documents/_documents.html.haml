@@ -1,0 +1,16 @@
+.page-header
+  %h3 Documents
+.bootstrap-table-dropdown-overflow
+  %table.documents.custom_striped{data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: documents_path(format: :json), "sort-name" => "created_at", "sort-order" => 'asc', striped: "true"}}
+    %thead
+      %tr
+        %th{data: {class: 'title', align: 'center', field: 'title'}}
+          = t(:documents)[:title]
+        %th{data: {class: 'created_at', align: 'center', field: 'created_at'}}
+          = t(:documents)[:date_uploaded]
+        %th{data: {class: 'downloaded_at', align: 'center', field: 'downloaded_at'}}
+          = t(:documents)[:downloaded_at]
+        %th{data: {class: 'state', align: 'center', field: 'state'}}
+          = t(:documents)[:state]
+        %th{data: {class: 'file', align: 'center', field: 'file'}}
+          = t(:documents)[:file]

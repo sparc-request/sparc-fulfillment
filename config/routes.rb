@@ -8,33 +8,17 @@ Rails.application.routes.draw do
   resources :fulfillments, only: [:new, :create, :edit, :update]
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
-  resources :documents, only: [:index, :new, :create]
+  resources :documents, only: [:index, :new, :create, :show]
   resources :line_items, only: [:new, :create, :edit, :update]
   resources :visits, only: [:update]
+  resources :reports, only: [:new, :create]
+  resources :arms
+  resources :custom_appointments, controller: :appointments
 
   resources :visit_groups do
     collection do
       get 'update_positions_on_arm_change', to: 'visit_groups#update_positions_on_arm_change'
     end
-  end
-
-  resources :reports do
-    collection do
-      get 'new_billing_report'
-      post 'create_billing_report'
-
-      get 'new_auditing_report'
-      post 'create_auditing_report'
-
-      get 'new_participant_report'
-      post 'create_participant_report'
-
-      get 'new_project_summary_report'
-      post 'create_project_summary_report'
-    end
-  end
-
-  resources :arms do
   end
 
   resources :participants do
@@ -56,7 +40,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :custom_appointments, :controller => :appointments
 
   resources :multiple_line_items, only: [] do
     collection do

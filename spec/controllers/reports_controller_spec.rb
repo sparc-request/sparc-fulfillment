@@ -4,35 +4,28 @@ RSpec.describe ReportsController, type: :controller do
 
   login_user
 
-  describe "GET #index" do
-    context 'content-type: text/html' do
+  describe "POST #create" do
 
-      it 'renders the :index action' do
-        get :index, format: :html
+    context 'format: :js' do
 
-        expect(response).to be_success
-        expect(response).to render_template :index
-      end
-
-      it 'does not assign @reports' do
-        get :index, format: :html
-
-        expect(assigns(:reports)).to_not be
-      end
-    end
-
-    context 'content-type: application/json' do
-
-      it 'renders the :index action' do
-        get :index, format: :json
-
+      it 'should respond with: :success' do
+        do_post
         expect(response).to be_success
       end
 
-      it 'assigns @reports' do
-        get :index, format: :json
+      it 'should create a document', delay: true do
+        do_post
+        expect(Document.count).to eq(1)
+      end
 
-        expect(assigns(:reports)).to be
+      it 'should create a ReportJob ActiveJob' do
+        expect { do_post }.to enqueue_a(ReportJob)
+      end
+
+      def do_post
+        document_params = { title: "Test title" }
+
+        xhr :post, :create, document_params, format: :js
       end
     end
   end
