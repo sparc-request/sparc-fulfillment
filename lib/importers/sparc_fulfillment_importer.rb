@@ -80,7 +80,7 @@ class SparcFulfillmentImporter
   private
 
   def enable_paper_trail
-    PaperTrail.enabled = false
+    PaperTrail.enabled = true
   end
   
   def disable_paper_trail
