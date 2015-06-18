@@ -1,6 +1,7 @@
 class ComponentsController < ApplicationController
 
   def update
+    # currently only used by study level activities line item component dropdown
     line_item = LineItem.find(params[:line_item_id])
     new_component_ids = params[:components] == "" ? [] : params[:components].reject(&:empty?).map(&:to_i)
     old_component_ids = line_item.components.where(selected: true).map(&:id)
