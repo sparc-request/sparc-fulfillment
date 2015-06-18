@@ -6,4 +6,5 @@ class Sparc::Appointment < ActiveRecord::Base
   belongs_to :organization
 
   has_many :procedures
+  has_many :notes
 end

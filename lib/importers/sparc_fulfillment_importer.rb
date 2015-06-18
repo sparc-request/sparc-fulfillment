@@ -18,7 +18,7 @@ class SparcFulfillmentImporter
                   'caucasian' => 'White', 
                   'middle_eastern' => 'Middle Eastern',
                   'other' => 'Unknown/Other/Unreported'}.freeze
-
+  
   STATUS_OPTIONS = {'Active' => 'Enrolled - Receiving Treatment',
                     'Completed' => 'Completed',
                     'Early Term' => 'Completed',
@@ -66,7 +66,8 @@ class SparcFulfillmentImporter
               unless fulfillment_appointment = Appointment.where(participant_id: fulfillment_participant.id, visit_group_id: fulfillment_visit_group.id, arm_id: fulfillment_arm.id).first
                 fulfillment_appointment = create_fulfillment_appointment(fulfillment_participant, fulfillment_visit_group, fulfillment_arm, sparc_appointment)                                                                             
               end
-
+              
+              create_fulfillment_notes(sparc_appointment, fulfillment_appointment)
               create_fulfillment_procedures(sparc_appointment, fulfillment_appointment)
             end
           end # end adding participant, appointments, and procedures
@@ -110,31 +111,40 @@ class SparcFulfillmentImporter
   end
 
   def create_fulfillment_appointment(fulfillment_participant, fulfillment_visit_group, fulfillment_arm, sparc_appointment)
-    fulfillment_appointment = fulfillment_participant.appointments.new(visit_group_id:        fulfillment_visit_group.id,
+    fulfillment_appointment = fulfillment_participant.appointments.new(sparc_id:              sparc_appointment.id,
+                                                                       visit_group_id:        fulfillment_visit_group.id,
                                                                        visit_group_position:  fulfillment_visit_group.position,
                                                                        position:              fulfillment_visit_group.position,
                                                                        name:                  fulfillment_visit_group.name,
                                                                        arm_id:                fulfillment_arm.id,
-                                                                       start_date:            (sparc_appointment.completed_at.strftime("%m-%d-%Y") rescue nil),
-                                                                       completed_date:        (sparc_appointment.completed_at.strftime("%m-%d-%Y") rescue nil))
+                                                                       start_date:            sparc_appointment.completed_at,
+                                                                       completed_date:        sparc_appointment.completed_at)
     
     validate_and_save fulfillment_appointment
   end
 
+  def create_fulfillment_notes(sparc_appointment, fulfillment_appointment)
+    sparc_appointment.notes.each do |sparc_note|
+      fulfillment_note = fulfillment_appointment.notes.new(identity_id: sparc_note.identity_id,
+                                                           comment: sparc_note.body)
+
+      validate_and_save fulfillment_note
+    end
+  end
+
   def create_fulfillment_procedures(sparc_appointment, fulfillment_appointment)
     sparc_appointment.procedures.each do |sparc_procedure|
-      r_quantity = sparc_procedure.r_quantity
-      t_quantity = sparc_procedure.t_quantity
-
-      if (r_quantity && r_quantity > 0)
-        generate_procedures(sparc_procedure, fulfillment_appointment, r_quantity, 'research_billing_qty')
-      elsif (t_quantity && t_quantity > 0)
-        generate_procedures(sparc_procedure, fulfillment_appointment, t_quantity, 'insurance_billing_qty')
-      end
+      r_quantity = sparc_procedure.r_quantity || 1
+      t_quantity = sparc_procedure.t_quantity || 0
+      
+      generate_procedures(sparc_procedure, fulfillment_appointment, r_quantity, 'research_billing_qty')
+      generate_procedures(sparc_procedure, fulfillment_appointment, t_quantity, 'insurance_billing_qty')
     end
   end
 
   def generate_procedures(sparc_procedure, fulfillment_appointment, quantity, billing_type)
+    return if quantity == 0
+
     sparc_line_item_id = sparc_procedure.line_item_id
     sparc_service_id = sparc_procedure.service_id
     
@@ -158,13 +168,12 @@ class SparcFulfillmentImporter
                                                                      sparc_core_id:   sparc_organization.id,
                                                                      sparc_core_name: sparc_organization.name,
                                                                      visit_id:        fulfillment_visit_id)
-      if sparc_procedure.completed?
+      if sparc_procedure.completed? and sparc_procedure.appointment.completed_at.present?
         sparc_procedure_completed_audit = sparc_procedure.audits.where("audited_changes like '%completed: true%' OR audited_changes like '%completed:\n- false\n- true%'").first
-        sparc_procedure_completed_date = sparc_procedure_completed_audit.created_at
+        sparc_procedure_completed_date = sparc_procedure.appointment.completed_at
         sparc_procedure_completed_by = sparc_procedure_completed_audit.user_id
 
         fulfillment_procedure.status = 'complete'
-        fulfillment_procedure.start_date = sparc_procedure_completed_date.strftime("%m-%d-%Y")
         fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m-%d-%Y")
         fulfillment_procedure.performer_id = sparc_procedure_completed_by
       end
