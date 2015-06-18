@@ -109,7 +109,7 @@ feature 'Complete Procedure', js: true do
   end
 
   def all_the_procedure_complete_buttons_should_be_active qty=1
-    all("label.status.complete").count.should eq qty
+    expect(all("label.status.complete").count).to eq qty
   end
 
   def and_i_view_the_notes_list

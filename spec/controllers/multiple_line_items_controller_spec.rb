@@ -19,7 +19,7 @@ RSpec.describe MultipleLineItemsController, type: :controller do
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:selected_service)).to eq(@service.id)
-      expect(assigns(:services).map(&:id).sort).to eq(@protocol.organization.services.pluck(:id).sort)
+      expect(assigns(:services).map(&:id).sort).to eq(@protocol.organization.inclusive_child_services(:per_participant).map(&:id).sort)
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe MultipleLineItemsController, type: :controller do
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:selected_service)).to eq(@service.id)
-      expect(assigns(:services).map(&:id).sort).to eq(@protocol.organization.services.pluck(:id).sort)
+      expect(assigns(:services).map(&:id).sort).to eq(@protocol.organization.inclusive_child_services(:per_participant).map(&:id).sort)
     end
   end
 
