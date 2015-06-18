@@ -19,6 +19,11 @@ class SparcFulfillmentImporter
                   'middle_eastern' => 'Middle Eastern',
                   'other' => 'Unknown/Other/Unreported'}.freeze
 
+  STATUS_OPTIONS = {'Active' => 'Enrolled - Receiving Treatment',
+                    'Completed' => 'Completed',
+                    'Early Term' => 'Completed',
+                    'Screen Fail' => 'Completed'}.freeze
+
 
   #TODO need to map statuses as well, just waiting on Lane to send a mapping
 
@@ -94,7 +99,7 @@ class SparcFulfillmentImporter
                                                                      phone:          '555-555-5555',
                                                                      mrn:            sparc_subject.mrn,
                                                                      external_id:    sparc_subject.external_subject_id,
-                                                                     status:         sparc_subject.status,
+                                                                     status:         STATUS_OPTIONS[sparc_subject.status],
                                                                      date_of_birth:  sparc_subject.dob.strftime("%m-%d-%Y"),
                                                                      gender:         sparc_subject.gender.capitalize,
                                                                      ethnicity:      'Unknown/Other/Unreported', 
