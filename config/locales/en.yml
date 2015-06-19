@@ -210,6 +210,7 @@ en:
     subsidy_amount: "Percent Subsidy"
     subsidy_committed: "Subsidy Amount"
     subsidy_expended: "Subsidy Expended"
+    study_schedule_report: "Export"
     tabs:
       study_schedule: "Study Schedule"
       participant_list: "Participant List"

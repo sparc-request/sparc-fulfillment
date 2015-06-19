@@ -23,9 +23,16 @@ class DocumentsController < ApplicationController
   end
 
   def show
-    send_data File.read(@document.path),
-      type: @document.content_type,
-      disposition: "attachment; filename=#{@document.original_filename}"
+    respond_to do |format|
+      format.html {
+        send_data File.read(@document.path),
+          type: @document.content_type,
+          disposition: "attachment; filename=#{@document.original_filename}"
+      }
+      format.json {
+        render json: { document: { state: @document.state } }
+      }
+    end
   end
 
   def new

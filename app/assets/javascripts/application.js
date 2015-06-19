@@ -22,6 +22,7 @@
 
 //= require global
 //= require protocols
+//= require protocols_show
 //= require study_schedule
 //= require study_schedule_management
 //= require participants

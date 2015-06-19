@@ -9,11 +9,11 @@ class ReportsController < ApplicationController
   def create
     respond_to do |format|
       format.js do
-        document = Document.new(title: reports_params[:title].humanize)
+        @document = Document.new(title: reports_params[:title].humanize)
 
-        current_identity.documents.push document
+        current_identity.documents.push @document
 
-        ReportJob.perform_later(document, reports_params)
+        ReportJob.perform_later(@document, reports_params)
       end
     end
   end
@@ -22,6 +22,13 @@ class ReportsController < ApplicationController
 
   def reports_params
     params.
-      permit(:format, :utf8, :title, :start_date, :end_date, :protocol_ids, :protocol_id, :participant_id)
+      permit(:format,
+              :utf8,
+              :title,
+              :start_date,
+              :end_date,
+              :protocol_ids,
+              :protocol_id,
+              :participant_id)
   end
 end

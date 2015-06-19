@@ -29,6 +29,14 @@ class VisitGroup < ActiveRecord::Base
     (appointment = appointments.where(participant: participant).first) ? appointment.total_completed_cost : nil
   end
 
+  def r_quantities_grouped_by_service
+    visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)
+  end
+
+  def t_quantities_grouped_by_service
+    visits.joins(:line_item).group(:service_id).sum(:insurance_billing_qty)
+  end
+
   private
 
   def reorder_visit_groups_up

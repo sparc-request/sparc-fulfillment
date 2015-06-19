@@ -30,6 +30,6 @@ class ImporterJob < Struct.new(:sparc_id, :callback_url, :action)
   end
 
   def update_faye(object)
-    FayeJob.enqueue(object)
+    FayeJob.perform_later object
   end
 end

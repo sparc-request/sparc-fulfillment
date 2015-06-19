@@ -17,3 +17,4 @@ json.subsidy_committed display_cost(protocol.subsidy_committed)
 json.subsidy_expended protocol.subsidy_expended
 json.pi protocol.pi.full_name
 json.coordinators formatted_coordinators(protocol.coordinators.map(&:full_name))
+json.study_schedule_report formatted_study_schedule_report(protocol)

@@ -57,6 +57,7 @@ feature 'Identity requests report', js: true do
     first('.modal-header').click
     wait_for_ajax
     find("button.submit").click
+    wait_for_ajax
   end
 
   def and_fill_in_the_new_project_summary_report_modal
