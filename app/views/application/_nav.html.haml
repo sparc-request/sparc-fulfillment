@@ -7,15 +7,15 @@
             %span.glyphicon.glyphicon-home{aria: {hidden: "true"}}
             Home
         %li
-          = link_to tasks_path do
+          = link_to tasks_path, class: 'tasks' do
             %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
-            Tasks
+            = t(:navbar)[:tasks_link]
             %span.notification.task-notifications
               = current_identity.tasks_count
         %li
-          = link_to documents_path do
+          = link_to documents_path, class: 'documents' do
             %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
-            Reports
+            = t(:navbar)[:reports_link]
             %span.notification.document-notifications
               = current_identity.unaccessed_documents_count
 

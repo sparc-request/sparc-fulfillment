@@ -304,3 +304,7 @@ en:
     object: "Visit Group"
     flash_messages:
       updated: "Visit Updated"
+
+  navbar:
+    tasks_link: 'All Tasks'
+    reports_link: 'All Reports'
