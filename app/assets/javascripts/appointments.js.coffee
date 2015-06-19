@@ -190,7 +190,6 @@ $ ->
 
   $(document).on 'click', ".complete_all_button", ->
     core_id = $(this).data("core-id")
-    console.log core_id
 
     incompleted = $("label.status.complete.inactive[data-core-id=#{core_id}]")
     for obj in incompleted
