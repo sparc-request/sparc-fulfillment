@@ -20,7 +20,7 @@
         = t(:line_item)[:last_fulfillment]
       .col-xs-2.table_row.study_level_activities_header.text-center.options
         = t(:actions)[:options]
-    -protocol.one_time_fee_line_items.each do |li|
+    - protocol.one_time_fee_line_items.each do |li|
       = render partial: "/study_level_activities/study_level_activity", locals: {line_item: li}
 
     = render partial: "/study_level_activities/add_one_time_fee_button", locals: {protocol: protocol}

@@ -9,6 +9,7 @@ class Sparc::SubServiceRequest < ActiveRecord::Base
   has_many :line_items
   has_many :one_time_fee_line_items, -> { one_time_fee }, :class_name => 'LineItem'
   has_many :per_participant_line_items, -> { per_participant }, :class_name => 'LineItem'
+  has_many :reports
 
   has_one :protocol, :through => :service_request
 

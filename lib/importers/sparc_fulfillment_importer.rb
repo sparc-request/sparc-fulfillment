@@ -39,7 +39,23 @@ class SparcFulfillmentImporter
       @fulfillment_protocol = ProtocolImporter.new(@callback_url).create
 
       sparc_protocol = Sparc::Protocol.find @fulfillment_protocol.sparc_id
-      
+
+      # create SLA fulfillments
+      @fulfillment_protocol.one_time_fee_line_items.each do |fulfillment_line_item|
+        sparc_line_item = Sparc::LineItem.find(fulfillment_line_item.sparc_id)
+
+        sparc_line_item.fulfillments.each do |sparc_line_item_fulfillment|
+          create_line_item_fulfillment(sparc_line_item_fulfillment, fulfillment_line_item)
+        end
+      end
+
+      # create documents
+      sparc_sub_service_request = Sparc::SubServiceRequest.find(@fulfillment_protocol.sub_service_request_id)
+
+      sparc_sub_service_request.reports.each do |report|
+        create_fulfillment_document(report)
+      end
+
       # loop over arms to create participants and procedures
       sparc_protocol.arms.each do |sparc_arm|
         fulfillment_arm = Arm.where(sparc_id: sparc_arm.id, protocol_id: @fulfillment_protocol.id).first
@@ -88,6 +104,38 @@ class SparcFulfillmentImporter
     PaperTrail.enabled = false
   end
 
+  def create_line_item_fulfillment(sparc_line_item_fulfillment, fulfillment_line_item)
+    sparc_line_item_fulfillment_audit = sparc_line_item_fulfillment.audits.where(action: 'create').first 
+    sparc_unit_quantity = sparc_line_item_fulfillment.unit_quantity || 1
+    sparc_quantity = sparc_line_item_fulfillment.quantity || 0
+    quantity = sparc_quantity * sparc_unit_quantity
+
+    fulfillment_line_item_fulfillment = fulfillment_line_item.fulfillments.new(sparc_id: sparc_line_item_fulfillment.id,
+                                                                               fulfilled_at: sparc_line_item_fulfillment.date.strftime("%m-%d-%Y"),
+                                                                               quantity:     quantity,
+                                                                               performer_id: sparc_line_item_fulfillment_audit.user_id,
+                                                                               service_id:   fulfillment_line_item.service_id,
+                                                                               service_name: fulfillment_line_item.service.name)
+
+    if sparc_line_item_fulfillment.notes
+      fulfillment_line_item_fulfillment.notes.new(comment: sparc_line_item_fulfillment.notes,
+                                                  identity_id: sparc_line_item_fulfillment_audit.user_id)
+    end
+
+    validate_and_save fulfillment_line_item_fulfillment
+  end
+
+  def create_fulfillment_document(sparc_report)
+    document = @fulfillment_protocol.documents.create(original_filename: sparc_report.xlsx_file_name,
+                                                      content_type:      sparc_report.xlsx_content_type)
+
+    File.open(document.path, 'wb') do |file|
+      file.write(sparc_report.fetch)
+    end
+
+    validate_and_save document
+  end
+
   def create_fulfillment_participant(name_parts, sparc_subject, fulfillment_arm)
     fulfillment_participant = @fulfillment_protocol.participants.new(sparc_id:       sparc_subject.id,
                                                                      first_name:     name_parts[:first_name],
@@ -126,7 +174,8 @@ class SparcFulfillmentImporter
   def create_fulfillment_notes(sparc_appointment, fulfillment_appointment)
     sparc_appointment.notes.each do |sparc_note|
       fulfillment_note = fulfillment_appointment.notes.new(identity_id: sparc_note.identity_id,
-                                                           comment: sparc_note.body)
+                                                           comment:     sparc_note.body,
+                                                           created_at:  sparc_note.created_at)
 
       validate_and_save fulfillment_note
     end
