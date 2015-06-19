@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617183303) do
+ActiveRecord::Schema.define(version: 20150619122853) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20150617183303) do
   end
 
   create_table "appointments", force: :cascade do |t|
+    t.integer  "sparc_id",             limit: 4
     t.integer  "participant_id",       limit: 4
     t.integer  "visit_group_id",       limit: 4
     t.integer  "visit_group_position", limit: 4
@@ -38,6 +39,7 @@ ActiveRecord::Schema.define(version: 20150617183303) do
   end
 
   add_index "appointments", ["arm_id"], name: "index_appointments_on_arm_id", using: :btree
+  add_index "appointments", ["sparc_id"], name: "index_appointments_on_sparc_id", using: :btree
   add_index "appointments", ["type"], name: "index_appointments_on_type", using: :btree
 
   create_table "arms", force: :cascade do |t|
@@ -100,6 +102,7 @@ ActiveRecord::Schema.define(version: 20150617183303) do
   add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
 
   create_table "fulfillments", force: :cascade do |t|
+    t.integer  "sparc_id",     limit: 4
     t.integer  "line_item_id", limit: 4
     t.datetime "fulfilled_at"
     t.integer  "quantity",     limit: 4
@@ -117,6 +120,7 @@ ActiveRecord::Schema.define(version: 20150617183303) do
   add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
   add_index "fulfillments", ["performer_id"], name: "index_fulfillments_on_performer_id", using: :btree
   add_index "fulfillments", ["service_id"], name: "index_fulfillments_on_service_id", using: :btree
+  add_index "fulfillments", ["sparc_id"], name: "index_fulfillments_on_sparc_id", using: :btree
 
   create_table "identity_counters", force: :cascade do |t|
     t.integer  "identity_id",                limit: 4
@@ -174,6 +178,7 @@ ActiveRecord::Schema.define(version: 20150617183303) do
   add_index "notifications", ["sparc_id"], name: "index_notifications_on_sparc_id", using: :btree
 
   create_table "participants", force: :cascade do |t|
+    t.integer  "sparc_id",           limit: 4
     t.integer  "protocol_id",        limit: 4
     t.integer  "arm_id",             limit: 4
     t.string   "first_name",         limit: 255
@@ -201,6 +206,7 @@ ActiveRecord::Schema.define(version: 20150617183303) do
   add_index "participants", ["arm_id"], name: "index_participants_on_arm_id", using: :btree
   add_index "participants", ["deleted_at"], name: "index_participants_on_deleted_at", using: :btree
   add_index "participants", ["protocol_id"], name: "index_participants_on_protocol_id", using: :btree
+  add_index "participants", ["sparc_id"], name: "index_participants_on_sparc_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.integer  "appointment_id",   limit: 4
@@ -225,6 +231,20 @@ ActiveRecord::Schema.define(version: 20150617183303) do
   add_index "procedures", ["completed_date"], name: "index_procedures_on_completed_date", using: :btree
   add_index "procedures", ["service_id"], name: "index_procedures_on_service_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
+
+  create_table "project_roles", force: :cascade do |t|
+    t.integer  "identity_id", limit: 4
+    t.integer  "protocol_id", limit: 4
+    t.string   "rights",      limit: 255
+    t.string   "role",        limit: 255
+    t.string   "role_other",  limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "project_roles", ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
+  add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
 
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",               limit: 4
