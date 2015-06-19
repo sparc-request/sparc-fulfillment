@@ -226,20 +226,6 @@ ActiveRecord::Schema.define(version: 20150617183303) do
   add_index "procedures", ["service_id"], name: "index_procedures_on_service_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
 
-  create_table "project_roles", force: :cascade do |t|
-    t.integer  "identity_id", limit: 4
-    t.integer  "protocol_id", limit: 4
-    t.string   "rights",      limit: 255
-    t.string   "role",        limit: 255
-    t.string   "role_other",  limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "project_roles", ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
-  add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
-
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",               limit: 4
     t.text     "title",                  limit: 65535

@@ -1,8 +1,6 @@
 class StudyScheduleReport < Report
 
-  include ActionView::Helpers::NumberHelper
-
-  VISIT_GROUP_OFFSET  = 2
+  VISIT_GROUP_OFFSET = 2
 
   def initialize(params)
     super
@@ -143,20 +141,10 @@ class StudyScheduleReport < Report
     ["protocol", @protocol.id].join("_")
   end
 
-  alias :worksheet_name :file_name
-
   private
-
-  def justify(cells)
-
-  end
 
   def max_width
     VISIT_GROUP_OFFSET + (maximum_visit_count * 2)
-  end
-
-  def has_per_patient_per_visit_services?
-    @protocol.line_items_with_services(one_time_fee: false).any?
   end
 
   def maximum_visit_count
