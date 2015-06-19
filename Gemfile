@@ -5,6 +5,10 @@ gem 'acts_as_list'
 gem 'addressable'
 gem 'ar-octopus', '~> 0.8.5'
 gem 'autoprefixer-rails'
+
+#requirements for excel export
+gem 'axlsx_rails'
+
 gem 'bootstrap-sass'
 gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-rails.git'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.0.0'
@@ -26,7 +30,7 @@ gem 'omniauth'
 gem 'paper_trail', '~> 4.0.0.beta'
 gem 'paranoia', '~> 2.0'
 gem 'puma'
-gem 'rails', '4.2.1'
+gem 'rails', '4.2.2'
 gem 'remotipart'
 gem 'rest-client'
 gem 'sass-rails'
@@ -46,9 +50,6 @@ group :deploy do
   gem 'capistrano-bundler', '~> 1.1.2'
 end
 
-# #requirements for excel export
-# gem 'axlsx'
-# gem 'axlsx_rails'
 
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'

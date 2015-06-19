@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 20150619122853) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.integer  "subject_count",      limit: 4
+    t.integer  "subject_count",      limit: 4,   default: 0
     t.integer  "quantity_requested", limit: 4,   default: 0
     t.string   "quantity_type",      limit: 255
     t.datetime "started_at"

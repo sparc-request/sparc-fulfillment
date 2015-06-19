@@ -41,7 +41,7 @@ class ProtocolImporter
           # end arm creation
 
           sparc_arm.visit_groups.each do |sparc_visit_group|
-            
+
             # visit_group creation
             attr = normalized_attributes('VisitGroup', sparc_visit_group).merge!({sparc_id: sparc_visit_group.id,
                                                                                   arm_id: fulfillment_arm.id})
@@ -50,7 +50,7 @@ class ProtocolImporter
 
             sparc_visit_group.visits.each do |sparc_visit|
               sparc_line_item = sparc_visit.line_items_visit.line_item
-              
+
               if sparc_line_item.sub_service_request.id == sparc_sub_service_request.id
 
                 unless fulfillment_line_item = LineItem.where(sparc_id: sparc_line_item.id, arm_id: fulfillment_arm.id).first
@@ -62,7 +62,7 @@ class ProtocolImporter
                   fulfillment_line_item = LineItem.create(attr)
                   # end per participant line_item creation
                 end
-            
+
                 # visit creation
                 attr = normalized_attributes('Visit', sparc_visit).merge!({sparc_id: sparc_visit.id,
                                                                            visit_group_id: fulfillment_visit_group.id,
@@ -70,7 +70,7 @@ class ProtocolImporter
                 fulfillment_visit = Visit.create(attr)
                 # end visit creation
               end
-             
+
             end # visits loop
           end # visit_groups loop
         end # arms loop
@@ -80,8 +80,8 @@ class ProtocolImporter
       sparc_sub_service_request.one_time_fee_line_items.each do |sparc_line_item|
         sparc_line_item_quantity            = sparc_line_item.quantity || 0
         sparc_line_item_units_per_quantity  = sparc_line_item.units_per_quantity || 1
-        sparc_line_item_quantity_requested  = sparc_line_item_quantity * sparc_line_item_units_per_quantity 
-        
+        sparc_line_item_quantity_requested  = sparc_line_item_quantity * sparc_line_item_units_per_quantity
+
         attr = normalized_attributes('LineItem', sparc_line_item).merge!({sparc_id: sparc_line_item.id,
                                                                           protocol_id: fulfillment_protocol.id,
                                                                           quantity_requested: sparc_line_item_quantity_requested,
@@ -89,9 +89,9 @@ class ProtocolImporter
         fulfillment_line_item = LineItem.create(attr)
       end
       # end one_time_fee line_item creation
-      
+
       # update views via Faye
-      FayeJob.enqueue(fulfillment_protocol)
+      FayeJob.perform_later fulfillment_protocol
       # end Faye
 
     end # end Active Record Transaction

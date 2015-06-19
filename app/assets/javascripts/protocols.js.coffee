@@ -1,4 +1,5 @@
 $ ->
+
   if $("body.protocols-index").length > 0
 
     # Delete Protocol tab-remembering cookie
@@ -59,16 +60,6 @@ $ ->
       $('#protocol-list').bootstrapTable('hideColumn', 'stored_percent_subsidy')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
-
-  if $("body.protocols-show").length > 0
-
-    current_tab = $.cookie("active-protocol-tab")
-    if current_tab && current_tab.length > 0
-      $(".protocol-tab > a[href='##{current_tab}']").tab('show') # show tab on load
-
-    $('.protocol-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
-      tab = String(e.target).split("#")[1]
-      $.cookie("active-protocol-tab", tab, expires: 1, path: '/') # save tab to cookie
 
 (exports ? this).number_to_percent = (value) ->
   value + '%'
