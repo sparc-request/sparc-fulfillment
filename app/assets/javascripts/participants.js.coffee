@@ -37,11 +37,6 @@ $ ->
     participant_id = $(this).attr('participant_id')
     window.location = "/participants/#{participant_id}"
 
-  $(document).on 'click', '.stats', ->
-    protocol_id = $(this).attr('protocol_id')
-    participant_id = $(this).attr('participant_id')
-    alert "Stats -> Protocol: #{protocol_id}, Participant: #{participant_id}"
-
   $(document).on 'change', '.recruitment_source_dropdown', ->
     id = $(this).data('id')
     option = $(this).val()

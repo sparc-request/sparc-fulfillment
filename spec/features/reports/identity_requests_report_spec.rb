@@ -21,12 +21,6 @@ feature 'Identity requests report', js: true do
     i_should_see_the_new_report_listed('Auditing')
   end
 
-  scenario 'Identity clicks on Participant Report button' do
-    when_i_click_the_new_report_button('participant_report')
-    and_fill_in_the_new_participant_report_modal
-    i_should_see_the_new_report_listed('Participant')
-  end
-
   scenario 'Identity clicks on Project Summary Report button' do
     when_i_click_the_new_report_button('project_summary_report')
     and_fill_in_the_new_project_summary_report_modal

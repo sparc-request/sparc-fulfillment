@@ -1,20 +1,20 @@
 require 'rails_helper'
 
-feature 'Navigation', js: true do
+feature 'Identity views nav bar', js: true do
 
-  scenario 'User clicks on Home button' do
+  scenario 'and clicks on Home button' do
     given_i_am_viewing_a_protocol
     and_i_click_the_home_button
     then_i_should_be_on_the_home_page
   end
 
-  scenario 'User returns to protocol page from Participant Tracker page' do
+  scenario 'after returning to the Protocol page from the Participant Tracker page' do
     given_i_am_on_the_participant_page
     and_i_click_the_browser_back_button
     then_i_should_see_the_participant_tracker_tab_is_active
   end
 
-  scenario 'User switches between Protocols and views active tabs' do
+  scenario 'after switching between Protocols and views active tabs' do
     given_there_are_two_protocols
     and_i_view_the_first_protocol_participant_tracker
     and_i_visit_the_home_page
@@ -22,12 +22,16 @@ feature 'Navigation', js: true do
     then_the_study_schedule_tab_should_be_active
   end
 
-  scenario 'User clicks on the sign out click' do
-    visit root_path
-    accept_confirm do
-      click_link 'sign-out-link'
-    end
-    page.has_css?('body.devise-sessions-new')
+  scenario 'and clicks on the sign out click' do
+    given_i_am_on_the_home_page
+    when_i_sign_out
+    then_i_should_be_signed_out
+  end
+
+  scenario 'and clicks the All Reports button' do
+    given_i_am_on_the_home_page
+    when_i_click_the_all_reports_link
+    then_i_should_be_on_the_reports_page
   end
 
   def given_there_are_two_protocols
@@ -45,10 +49,20 @@ feature 'Navigation', js: true do
     visit root_path
   end
 
+  def when_i_sign_out
+    accept_confirm do
+      click_link 'sign-out-link'
+    end
+  end
+
   def and_i_view_the_second_protocol
     protocol = Protocol.second
 
     visit protocol_path(protocol.id)
+  end
+
+  def when_i_click_the_all_reports_link
+    click_link 'All Reports'
   end
 
   def then_the_study_schedule_tab_should_be_active
@@ -82,4 +96,14 @@ feature 'Navigation', js: true do
   def then_i_should_see_the_participant_tracker_tab_is_active
     expect(page.body).to have_css('.tab-pane.active#participant_tracker')
   end
+
+  def then_i_should_be_signed_out
+    page.has_css?('body.devise-sessions-new')
+  end
+
+  def then_i_should_be_on_the_reports_page
+    page.has_css?('body.reports-index')
+  end
+
+  alias :given_i_am_on_the_home_page :and_i_visit_the_home_page
 end

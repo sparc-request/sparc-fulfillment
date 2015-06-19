@@ -1,7 +1,6 @@
-.page-header
-  %h3 Documents
+%h3 Reports
 .bootstrap-table-dropdown-overflow
-  %table.documents.custom_striped{data: {pagination: 'true', 'page-size' => 20, toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: documents_path(format: :json), "sort-name" => "created_at", "sort-order" => 'desc', striped: "true"}}
+  %table.protocol_reports.custom_striped{data: {toggle: 'table', url: documents_path(document: { documentable_type: 'Protocol', documentable_id: @protocol.id }, format: :json), "sort-order" => 'desc', striped: "true", pagination: 'true', 'page-size' => 20, "sort-name" => "created_at"}}
     %thead
       %tr
         %th{data: {class: 'title', align: 'center', field: 'title'}}
