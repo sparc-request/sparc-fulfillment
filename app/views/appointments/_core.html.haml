@@ -4,5 +4,6 @@
       %thead
         %th.title{colspan: 8}
           = "#{procedures.first.sparc_core_name}"
+          %button.btn.btn-xs.btn-primary.complete_all_button{class:  "#{ procedures.first.appt_started? ? '' : 'pre_start_disabled' }", data:{core_id: "#{core_id}"}, :style =>"margin-left: 5px;"}=t(:procedure)[:complete]
       %tbody
         = render partial: 'appointments/procedure', collection: procedures, as: :procedure

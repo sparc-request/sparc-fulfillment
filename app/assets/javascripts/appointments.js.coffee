@@ -93,6 +93,7 @@ $ ->
     else
       status = "complete"
       $(this).addClass('selected_before')
+      $(this).removeClass('inactive')
 
     data          = procedure:
                       status: status
@@ -186,6 +187,15 @@ $ ->
       type: 'PUT'
       data: data
       url: "/procedures/#{procedure_id}.js"
+
+  $(document).on 'click', ".complete_all_button", ->
+    core_id = $(this).data("core-id")
+
+    incompleted = $("label.status.complete.inactive[data-core-id=#{core_id}]")
+    for obj in incompleted
+      obj.click()
+
+
 
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)

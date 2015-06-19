@@ -189,6 +189,7 @@ en:
     r_t: "R/T"
     status: "Status"
     object: "Procedure"
+    complete: "Complete All"
 
   protocol:
     object: "Protocol"
