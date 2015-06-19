@@ -5,5 +5,5 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require bootstrap-select
-//= require bootstrap-table.min
+//= require bootstrap-table
 //= require jquery.cookie
