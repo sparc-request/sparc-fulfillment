@@ -27,3 +27,5 @@ $(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(rende
 $("#visits_select_for_#{arm_id}").selectpicker('val', page)
 # Set the current page for early out in javascript
 $("#visits_select_for_#{arm_id}").attr('page', page)
+
+$("div#arms_container_#{arm_id} [data-toggle='tooltip']").tooltip()
