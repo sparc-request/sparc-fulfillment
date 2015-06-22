@@ -223,8 +223,8 @@ ActiveRecord::Schema.define(version: 20150619122853) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "visit_id",         limit: 4
-    t.datetime "incompleted_date"
     t.integer  "performer_id",     limit: 4
+    t.datetime "incompleted_date"
   end
 
   add_index "procedures", ["appointment_id"], name: "index_procedures_on_appointment_id", using: :btree

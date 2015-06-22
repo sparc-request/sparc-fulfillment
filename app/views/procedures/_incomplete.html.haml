@@ -1,5 +1,6 @@
 .modal-dialog
   .modal-content{data:{id: "#{procedure.id}"}}
+    #modal_errors
     = form_for procedure, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
       .modal-header
         %button.close.close_modal{type: 'button', data: {dismiss: 'modal'}}
@@ -17,7 +18,7 @@
           .form-group
             = note_form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
             .col-sm-8
-              = note_form.select :reason, Procedure::NOTABLE_REASONS, {}, class: "form-control"
+              = note_form.select :reason, Procedure::NOTABLE_REASONS, { prompt: "Select a reason" }, class: "form-control reason-select"
           .form-group
             = note_form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
             .col-sm-8
