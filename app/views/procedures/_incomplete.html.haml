@@ -1,15 +1,15 @@
 .modal-dialog
   .modal-content{data:{id: "#{procedure.id}"}}
-    #modal_errors
+    .modal-header
+      %button.close.close_modal{type: 'button', data: {dismiss: 'modal'}}
+        %span{aria: {hidden:'true'}} &times;
+        %span.sr-only
+          = t(:actions)[:close]
+      %h4.modal-title.text-center
+        = t(:notes)[:new_header]
     = form_for procedure, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
-      .modal-header
-        %button.close.close_modal{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only
-            = t(:actions)[:close]
-        %h4.modal-title.text-center
-          = t(:notes)[:new_header]
       .modal-body
+        #modal_errors
         = form.hidden_field :status, value: "incomplete"
         = form.hidden_field :completed_date, value: ""
         = form.fields_for :notes, note do |note_form|
