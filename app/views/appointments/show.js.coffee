@@ -20,3 +20,5 @@ $('#appointment_indications').selectpicker('val', statuses)
 
 $(".followup_procedure_datepicker").datetimepicker(format: 'MM-DD-YYYY')
 $(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
+
+$('.row.appointment [data-toggle="tooltip"]').tooltip()
