@@ -1,5 +1,5 @@
 <% if !(@procedure.errors.empty?) %>
-$("#procedure_modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
+$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
 <% else %>
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
@@ -30,4 +30,3 @@ $(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
 
 $("#modal_place").modal 'hide'
 <% end %>
-

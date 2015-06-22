@@ -7,6 +7,15 @@ RSpec.describe Note, type: :model do
 
   it { is_expected.to validate_inclusion_of(:kind).in_array(Note::KIND_TYPES) }
 
+  describe 'reason validations' do
+
+    it 'should require a reason if notable type is Procedure and kind is reason' do
+      procedure = create(:procedure)
+      note      = build(:note_reason, notable: procedure, reason: '')
+      note.should_not be_valid
+    end
+  end
+
   describe '.comment' do
     context 'validation' do
 
