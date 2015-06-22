@@ -17,7 +17,7 @@ class DocumentsController < ApplicationController
         @documentable_sym = @documentable_type.downcase.to_sym
       }
       format.json {
-        @documents = current_identity.documents
+        @documents = find_documentable.documents
       }
     end
   end
@@ -75,7 +75,15 @@ class DocumentsController < ApplicationController
   end
 
   def find_documentable
-    @documentable = params[:document][:documentable_type].constantize.find params[:document][:documentable_id]
+    if params[:document].present? && (params[:document][:documentable_id].present? && params[:document][:documentable_type].present?)
+      id    = params[:document][:documentable_id]
+      type  = params[:document][:documentable_type]
+    else
+      id    = current_identity.id
+      type  = 'Identity'
+    end
+
+    @documentable ||= type.constantize.find id
   end
 
   def find_document
