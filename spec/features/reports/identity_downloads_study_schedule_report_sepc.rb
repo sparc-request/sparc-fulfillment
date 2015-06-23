@@ -31,6 +31,7 @@ feature 'Identity downloads Study Schedule Report', js: true do
 
   def when_i_download_the_study_schedule_report
     find('a.study_schedule_report').click
+    wait_for_ajax
   end
 
   def then_it_should_see_the_study_schedule_report_in_the_list_of_reports

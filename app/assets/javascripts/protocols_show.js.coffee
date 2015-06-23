@@ -14,52 +14,5 @@ $ ->
 
     # Study Schedule Report button
 
-    $(document).on 'click', 'a.study_schedule_report', (event) ->
-      $self = $(this)
-      data  = title: $self.data('title'), protocol_id: gon.protocol_id
-
-      event.preventDefault()
-
-      $.ajax
-        type: 'POST'
-        url: '/reports.js'
-        data: data
-        success: ->
-          $self.
-            addClass('btn-danger').
-            removeClass('btn-default').
-            find('span.glyphicon').
-            addClass('glyphicon-refresh spin').
-            removeClass('glyphicon-equalizer')
-        complete: ->
-          document_state = ''
-
-          get_document_state = ->
-            $.ajax
-              type: 'GET'
-              url: "/documents/#{window.document_id}.json"
-              success: (data) ->
-                document_state = data.document.state
-
-                if document_state != 'Completed'
-                  setTimeout get_document_state, 1500
-                else
-                  $self.
-                    addClass('btn-success').
-                    removeClass('btn-danger').
-                    attr('href', "/documents/#{window.document_id}.html").
-                    find('span.glyphicon').
-                    addClass('glyphicon-equalizer').
-                    removeClass('glyphicon-refresh spin')
-                  $(document).off 'click', 'a.study_schedule_report'
-                  $(document).on 'click', 'a.study_schedule_report', ->
-                    $notification           = $('.notification.document-notifications')
-                    documents_notifications = parseInt $notification.text()
-
-                    if documents_notifications > 0
-                      $notification.
-                        empty().
-                        text(documents_notifications - 1)
-
-          get_document_state()
-
+    $(document).on 'load-success.bs.table', 'table.protocol', ->
+      remote_document_generator 'a.study_schedule_report'

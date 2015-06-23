@@ -3,7 +3,6 @@ class DocumentsController < ApplicationController
   before_action :find_document, only: [:show]
   before_action :authorize_document_access, only: [:show]
   before_action :validate_presence_of_upload, only: [:create]
-  after_action  :mark_document_as_accessed, only: [:show]
 
   def index
     respond_to do |format|
@@ -28,6 +27,7 @@ class DocumentsController < ApplicationController
         send_data File.read(@document.path),
           type: @document.content_type,
           disposition: "attachment; filename=#{@document.original_filename}"
+        mark_document_as_accessed
       }
       format.json {
         render json: { document: { state: @document.state } }

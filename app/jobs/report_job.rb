@@ -27,6 +27,12 @@ class ReportJob < ActiveJob::Base
       arguments.
       first.
       update_attributes state: 'Completed'
+
+    job.
+      arguments.
+      first.
+      documentable.
+      update_counter(:unaccessed_documents, 1)
   end
 
   private
