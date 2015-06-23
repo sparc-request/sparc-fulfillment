@@ -18,6 +18,27 @@ RSpec.describe Procedure, type: :model do
 
   context 'class methods' do
 
+    describe 'service_name' do
+
+      before(:each) do
+        @service = create(:service)
+        @procedure = create(:procedure, service: @service)
+      end
+
+      it "should be equal to the service's name when the procedure is unstarted" do
+        name = @service.name + '_'
+        @service.update_attributes(name: @service.name + '_')
+        expect(@procedure.service_name).to eq(name)
+      end
+
+      it "should be equal to the service's name at the time the procedure status changes from unstarted" do
+        name = @service.name
+        @procedure.update_attributes(status: 'complete')
+        @service.update_attributes(name: @service.name + '_')
+        expect(@procedure.service_name).to eq(name)
+      end
+    end
+
     describe '#delete' do
 
       it 'should not permanently delete the record' do
