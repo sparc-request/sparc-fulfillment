@@ -8,7 +8,7 @@ set :repo_url, 'git@github.com:HSSC/clinical_work_fulfillment.git'
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/rails/fulfillment2'
+set :deploy_to, '/var/www/rails/fulfillment'
 
 # Default value for :scm is :git
 set :scm, :git

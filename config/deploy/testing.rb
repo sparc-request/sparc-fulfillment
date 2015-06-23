@@ -31,7 +31,7 @@ server 'cwf-d.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
 
-#set :branch, 'testing'
+set :branch, 'testing'
 set :rails_env, 'testing'
 set :rvm_ruby_version, '2.1.5@fulfillment-testing --create'
 set :passenger_restart_with_touch, true
