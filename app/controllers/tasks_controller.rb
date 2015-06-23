@@ -27,10 +27,8 @@ class TasksController < ApplicationController
 
   def create
     task_parameters = task_params.to_h.except("notes")
-    if task_params[:notes]
-      task_parameters[:body] = task_params[:notes][:comment]
-    end
     @task = Task.new(task_parameters.merge!({ identity: current_identity}))
+
     if @task.valid?
       @task.save
       if task_params[:assignable_type] == "Procedure"
@@ -38,7 +36,7 @@ class TasksController < ApplicationController
         @procedure.update_attributes(status: "follow_up") if @procedure.unstarted?
       end
       if task_params[:notes]
-        create_note(task_parameters)
+        create_note
       end
       flash[:success] = t(:task)[:flash_messages][:created]
     else
@@ -57,12 +55,10 @@ class TasksController < ApplicationController
 
   private
 
-  def create_note(task_parameters)
-    unless task_parameters[:body].empty?
-      notes_params = task_params[:notes]
-      notes_params[:identity] = current_identity
-      Note.create(notes_params)
-    end
+  def create_note
+    notes_params = task_params[:notes]
+    notes_params[:identity] = current_identity
+    Note.create(notes_params)
   end
 
 
