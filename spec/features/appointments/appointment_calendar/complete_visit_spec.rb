@@ -169,6 +169,8 @@ feature 'Complete Visit', js: true do
 
   def then_incompletes_procedure
     find("tr[data-id='#{@procedure.id}'] label.status.incomplete").click
+    wait_for_ajax
+    page.select 'Assessment missed', from: 'Reason'
     click_button "Save"
     wait_for_ajax
   end

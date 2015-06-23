@@ -65,6 +65,6 @@ class Protocol < ActiveRecord::Base
   private
 
   def update_faye
-    FayeJob.enqueue self
+    FayeJob.perform_later self
   end
 end
