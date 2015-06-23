@@ -6,6 +6,8 @@ class NotificationDispatcher
 
   def dispatch
     case notification_object_class
+    when "Service"
+      ServiceImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
     when "SubServiceRequest"
       ProtocolImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
     else

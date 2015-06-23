@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Service, type: :model do
 
   it { is_expected.to have_many(:line_items) }
-  it { is_expected.to have_many(:service_level_components) }
   it { is_expected.to have_many(:pricing_maps) }
 
   context 'class methods' do
