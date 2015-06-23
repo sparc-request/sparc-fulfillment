@@ -38,6 +38,11 @@ namespace :deploy do
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
+      # restart Faye server
+      within current_path do
+        execute :bundle, "exec thin -C config/faye.yml stop"
+        execute :bundle, "exec thin -C config/faye.yml start"
+      end
       # Here we can do anything such as:
       # within release_path do
       #   execute :rake, 'cache:clear'
