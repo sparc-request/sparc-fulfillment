@@ -77,7 +77,7 @@ class LineItem < ActiveRecord::Base
   def create_line_item_components
     if one_time_fee
       position = 0
-      service.components_array.each do |component|
+      service.components.split(',').each do |component|
         Component.create(composable_type: 'LineItem', composable_id: id, component: component, position: position)
         position += 1
       end

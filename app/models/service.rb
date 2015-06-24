@@ -12,14 +12,6 @@ class Service < ActiveRecord::Base
   scope :per_participant,  -> { where(one_time_fee: false) }
   scope :one_time_fee, -> { where(one_time_fee: true) }
 
-  def components_array
-    if components
-      components.split(',')
-    else
-      []
-    end
-  end
-
   def readonly?
     false
   end
