@@ -4,3 +4,5 @@ if $("#modal_errors > .alert.alert-danger > p").length == 0
   $(".row.add_one_time_fee_line_item").last().before("<%= escape_javascript(render(:partial =>'study_level_activities/study_level_activity', locals: {line_item: @line_item})) %>")
   $(".selectpicker").selectpicker()
   $("#modal_place").modal 'hide'
+
+  $(".line_item[data-id=<%= @line_item.id %>] [data-toggle='tooltip']").tooltip()

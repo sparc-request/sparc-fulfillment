@@ -195,8 +195,6 @@ $ ->
     for obj in incompleted
       obj.click()
 
-
-
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)
     $('#start_date').on 'dp.hide', (e) ->
@@ -237,3 +235,6 @@ $ ->
 
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
+
+  $(document).on 'click', '.complete-all-container.contains_disabled', ->
+    alert("Please click Start Visit and enter a start date to continue.")

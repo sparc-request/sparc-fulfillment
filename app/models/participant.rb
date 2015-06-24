@@ -74,6 +74,7 @@ class Participant < ActiveRecord::Base
         elsif has_new_visit_groups?
           appointments_for_visit_groups(new_visit_groups)
         end
+
       end
     end
   end
@@ -102,7 +103,7 @@ class Participant < ActiveRecord::Base
   end
 
   def has_new_visit_groups?
-    self.arm.visit_groups.count > self.appointments.count
+    self.arm.visit_groups.count > self.appointments.where(arm_id: self.arm_id).count
   end
 
   def new_visit_groups

@@ -127,6 +127,7 @@ en:
     comment: "Comment"
     incomplete_header: "Reason for Incompletion"
     object: "Note"
+    add_button: "Add Note"
     procedure:
       index_header: "Procedure Notes"
       none: "This procedure has no notes."
