@@ -116,9 +116,21 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  def service_name
+    if unstarted?
+      service.name
+    else
+      read_attribute(:service_name)
+    end
+  end
+
   private
 
   def set_status_dependencies
+    if status_changed?(from: "unstarted")
+      write_attribute(:service_name, service.name)
+    end
+
     if status_changed?(to: "complete")
       write_attribute(:incompleted_date, nil)
       write_attribute(:completed_date, Date.today)
