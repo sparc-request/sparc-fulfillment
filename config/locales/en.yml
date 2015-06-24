@@ -77,6 +77,8 @@ en:
       created: "Document Created"
 
   fulfillment:
+    edit: "Edit Fulfillment"
+    view: "View Fulfillments"
     components: "Fulfillment Components"
     no_components: "Fulfillment Has No Components"
     add_fulfillment: "Add Fulfillment"
@@ -136,6 +138,7 @@ en:
       none: "This appointment has no notes."
     lineitem:
       index_header: "Line Item Notes"
+      edit: "Edit Line Item"
       none: "This line item has no notes"
     fulfillment:
       index_header: "Fulfillment Notes"
@@ -220,15 +223,25 @@ en:
       audit_reporting: "Audit Reporting"
     study_schedule:
       manage_arms: "Manage Arms"
+      add_arm: "Add Arm"
+      remove_arm: "Remove Arm"
+      edit_arm: "Edit Arm"
       manage_visits: "Manage Visits"
+      add_service: "Add Service"
+      remove_service: "Remove Service"
       manage_services: "Manage Services"
+      add_visit_group: "Add Visit Group"
+      remove_visit_group: "Remove Visit Group"
+      edit_visit_group: "Edit Visit Group"
       study_level_activities: "Study Level Activities"
       quantity_requested: "Quantity Requested"
+      change_service: "Change Service"
     flash_messages:
       unauthorized: "Authorization Failure"
       not_found: "Protocol Not Found"
 
   documents:
+    documents: "Documents"
     date: "Date Requested"
     title: "Title"
     state: "Report Status"
@@ -290,6 +303,8 @@ en:
 
   visit:
     object: "Visit"
+    custom: "Custom Visit"
+    check_all: "Check All"
     flash_messages:
       updated: "Visit Updated"
 
@@ -303,5 +318,7 @@ en:
     deleted: "Visit Destroyed"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
     object: "Visit Group"
+    view_page_previous: "View Previous"
+    view_page_next: "View More"
     flash_messages:
       updated: "Visit Updated"
