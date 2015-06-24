@@ -118,7 +118,7 @@ class Procedure < ActiveRecord::Base
 
   def service_name
     if unstarted?
-      service.name
+      service.present? ? service.name : ''
     else
       read_attribute(:service_name)
     end
@@ -127,7 +127,7 @@ class Procedure < ActiveRecord::Base
   private
 
   def set_status_dependencies
-    if status_changed?(from: "unstarted")
+    if status_changed?(from: "unstarted") && service.present?
       write_attribute(:service_name, service.name)
     end
 
