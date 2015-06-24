@@ -77,7 +77,9 @@ feature 'Date completed', js: true do
   end
 
   def then_i_should_see_an_enabled_datepicker_with_the_current_date
-    expect(page).to_not have_css(".completed_date_field input[disabled]")
-    expect(page).to have_css("input[value='#{Time.current.strftime('%m/%d/%Y')}']")
+    wait_for_ajax
+
+    expected_date = page.evaluate_script %Q{ $(".completed_date_field").first().data("DateTimePicker").date(); }
+    expect(expected_date["_i"]).to eq(Time.current.strftime('%m/%d/%Y'))
   end
 end
