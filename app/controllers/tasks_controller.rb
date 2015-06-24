@@ -27,8 +27,10 @@ class TasksController < ApplicationController
 
   def create
     task_parameters = task_params.to_h.except("notes")
+    if task_params[:notes]
+      task_parameters[:body] = task_params[:notes][:comment]
+    end
     @task = Task.new(task_parameters.merge!({ identity: current_identity}))
-
     if @task.valid?
       @task.save
       if task_params[:assignable_type] == "Procedure"
