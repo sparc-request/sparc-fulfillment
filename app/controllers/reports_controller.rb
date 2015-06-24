@@ -1,5 +1,7 @@
 class ReportsController < ApplicationController
 
+  before_action :find_documentable, only: [:create]
+
   def new
     @title = reports_params[:title]
 
@@ -11,14 +13,22 @@ class ReportsController < ApplicationController
       format.js do
         @document = Document.new(title: reports_params[:title].humanize)
 
-        current_identity.documents.push @document
+        @documentable.documents.push @document
 
-        ReportJob.perform_later(@document, reports_params)
+        ReportJob.perform_later(@document, reports_params.merge(identity_id: current_identity.id))
       end
     end
   end
 
   private
+
+  def find_documentable
+    if params[:documentable_id].present? && params[:documentable_type].present?
+      @documentable = params[:documentable_type].constantize.find params[:documentable_id]
+    else
+      @documentable = current_identity
+    end
+  end
 
   def reports_params
     params.
@@ -29,6 +39,8 @@ class ReportsController < ApplicationController
               :end_date,
               :protocol_ids,
               :protocol_id,
-              :participant_id)
+              :participant_id,
+              :documentable_id,
+              :documentable_type)
   end
 end

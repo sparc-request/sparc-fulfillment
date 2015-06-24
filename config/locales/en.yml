@@ -164,7 +164,7 @@ en:
     calendar: "Calendar"
     stats: "Stats"
     arm: "Current Arm"
-    report: "Report"
+    participant_report: "Report"
     details: "Participant Details"
     new_participant: "Create New Participant"
     save_participant: "Save Participant"
@@ -217,7 +217,7 @@ en:
       participant_list: "Participant List"
       participant_tracker: "Participant Tracker"
       study_level_activities: "Study Level Activities"
-      audit_reporting: "Audit Reporting"
+      reports: "Reports"
     study_schedule:
       manage_arms: "Manage Arms"
       manage_visits: "Manage Visits"
@@ -249,6 +249,7 @@ en:
       no_file_chosen: "You must choose a file"
 
   reports:
+    page_title: "All Reports"
     request_report: "Request Report"
     billing_report: "Billing Report"
     auditing_report: "Auditing Report"
@@ -305,3 +306,7 @@ en:
     object: "Visit Group"
     flash_messages:
       updated: "Visit Updated"
+
+  navbar:
+    tasks_link: 'All Tasks'
+    reports_link: 'All Reports'

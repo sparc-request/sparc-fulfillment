@@ -1,16 +1,20 @@
 class ParticipantsController < ApplicationController
-  respond_to :json, :html
+
+  before_action :find_protocol, only: [:index, :new]
   before_action :find_participant, only: [:show, :edit, :update, :destroy]
   before_action :authorize_protocol, only: [:show]
 
   def index
-    @protocol = Protocol.find(params[:protocol_id])
-    @participants = @protocol.participants
-    respond_with @participants
+    respond_to do |format|
+      format.json {
+        @participants = @protocol.participants
+
+        render
+      }
+    end
   end
 
   def new
-    @protocol = Protocol.find(params[:protocol_id])
     @participant = Participant.new(protocol_id: params[:protocol_id])
   end
 
@@ -67,6 +71,10 @@ class ParticipantsController < ApplicationController
   end
 
   private
+
+  def find_protocol
+    @protocol = Protocol.find(params[:protocol_id])
+  end
 
   def participant_params
     params.require(:participant).permit(:protocol_id, :last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
