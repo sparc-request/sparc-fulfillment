@@ -182,12 +182,18 @@ RSpec.describe 'Study Schedule', type: :feature, js: true do
         expect(find("#visits_#{@visit.id}_research_billing_qty").value).to eq('0')
         expect(find("#visits_#{@visit.id}_insurance_billing_qty").value).to eq('0')
       end
-
     end
 
-  end
+    describe "editing a line item" do
 
-  describe "consolidated tab" do
+      before :each do
+        first(".change_line_item_service").click
+        wait_for_ajax
+      end
 
+      it "should bring up the line item edit modal" do
+        expect(page).to have_content("Change Service")
+      end
+    end
   end
 end
