@@ -14,7 +14,7 @@ class FulfillmentsController < ApplicationController
     @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: service.cost }))
     if @fulfillment.valid?
       @fulfillment.save
-      update_components
+      update_components_and_create_notes('create')
       flash[:success] = t(:fulfillment)[:flash_messages][:created]
     else
       @errors = @fulfillment.errors
@@ -30,7 +30,7 @@ class FulfillmentsController < ApplicationController
     persist_original_attributes_to_track_changes
     @line_item = @fulfillment.line_item
     if @fulfillment.update_attributes(fulfillment_params)
-      update_components
+      update_components_and_create_notes('update')
       detect_changes_and_create_notes
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
     else
@@ -62,13 +62,35 @@ class FulfillmentsController < ApplicationController
     end
   end
 
-  def update_components
+  def update_components_and_create_notes(action='update')
     if params[:fulfillment][:components]
-      @fulfillment.components.destroy_all
       new_components = params[:fulfillment][:components].reject(&:empty?)
-      new_components.each do |to_create|
-        Component.create(component: to_create, composable_id: @fulfillment.id, composable_type: "Fulfillment")
+      old_components = @fulfillment.components.map(&:component)
+
+      to_add = new_components - old_components
+      to_add.each do |component|
+        add = Component.new(component: component, composable_id: @fulfillment.id, composable_type: "Fulfillment")
+        if add.valid?
+          add.save
+          if action == 'update'
+            comment = "Component: #{component} added"
+            @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
+          end
+        end
       end
+
+      to_remove = old_components - new_components
+      to_remove.each do |component|
+        remove = @fulfillment.components.where(component: component).first
+        if remove
+          remove.destroy
+          if action == 'update'
+            comment = "Component: #{component} removed"
+            @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
+          end
+        end
+      end
+
       @fulfillment.reload
     end
   end

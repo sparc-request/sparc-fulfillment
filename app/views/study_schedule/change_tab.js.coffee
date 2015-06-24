@@ -8,3 +8,5 @@ $(".study_level_activities_display").show()
 <% else %>
 $(".study_level_activities_display").hide()
 <% end %>
+
+$('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
