@@ -13,6 +13,7 @@ class Protocol < ActiveRecord::Base
   has_many :service_requests, primary_key: :sparc_id
 
   has_many :arms,           dependent: :destroy
+  has_many :documents, as: :documentable
   has_many :line_items,     dependent: :destroy
   has_many :fulfillments,   through: :line_items
   has_many :participants,   dependent: :destroy

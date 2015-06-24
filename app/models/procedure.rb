@@ -20,7 +20,7 @@ class Procedure < ActiveRecord::Base
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
 
-  before_save :set_status_dependencies
+  before_update :set_status_dependencies
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
