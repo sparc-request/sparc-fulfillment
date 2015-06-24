@@ -14,7 +14,7 @@
     = format_date(line_item.started_at)
   .col-xs-2.text-left.components
     %select.selectpicker{multiple: "", title: "Please Select", 'data-width' => '150px', 'data-selected-text-format' => 'count>2', showIcon: false}
-      = components_for_select(line_item.all_components)
+      = components_for_select(line_item.components.with_deleted)
   .col-xs-1.text-right.last_fulfillment
     = format_date(line_item.last_fulfillment)
   .col-xs-2.text-right.options

@@ -49,10 +49,6 @@ class LineItem < ActiveRecord::Base
     end
   end
 
-  def all_components
-    components.with_deleted
-  end
-
   def quantity_remaining
     if one_time_fee and !fulfillments.empty?
       remaining = quantity_requested
