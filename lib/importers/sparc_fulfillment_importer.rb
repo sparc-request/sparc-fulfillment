@@ -1,16 +1,4 @@
 class SparcFulfillmentImporter
-  # Tables to import
-  # protocol
-  # subjects
-  # appointments
-  # calendars
-  # charges?
-  # admin_rates?
-  # fulfillments
-  # notes
-  # procedures
-  # reports
-  
   RACE_OPTIONS = {'native_american/alaskan' => 'American Indian/Alaska Native', 
                   'asian' => 'Asian', 
                   'pacific_islander' => 'Native Hawaiian or other Pacific Islander', 
@@ -34,62 +22,64 @@ class SparcFulfillmentImporter
 
   def create
     ActiveRecord::Base.transaction do
-      disable_paper_trail
-    
-      @fulfillment_protocol = ProtocolImporter.new(@callback_url).create
+      Time.use_zone 'Eastern Time (US & Canada)' do   
+        disable_paper_trail
+      
+        @fulfillment_protocol = ProtocolImporter.new(@callback_url).create
 
-      sparc_protocol = Sparc::Protocol.find @fulfillment_protocol.sparc_id
+        sparc_protocol = Sparc::Protocol.find @fulfillment_protocol.sparc_id
 
-      # create SLA fulfillments
-      @fulfillment_protocol.one_time_fee_line_items.each do |fulfillment_line_item|
-        sparc_line_item = Sparc::LineItem.find(fulfillment_line_item.sparc_id)
+        # create SLA fulfillments
+        @fulfillment_protocol.one_time_fee_line_items.each do |fulfillment_line_item|
+          sparc_line_item = Sparc::LineItem.find(fulfillment_line_item.sparc_id)
 
-        sparc_line_item.fulfillments.each do |sparc_line_item_fulfillment|
-          create_line_item_fulfillment(sparc_line_item_fulfillment, fulfillment_line_item)
-        end
-      end
-
-      # create documents
-      sparc_sub_service_request = Sparc::SubServiceRequest.find(@fulfillment_protocol.sub_service_request_id)
-
-      sparc_sub_service_request.reports.each do |report|
-        create_fulfillment_document(report)
-      end
-
-      # loop over arms to create participants and procedures
-      sparc_protocol.arms.each do |sparc_arm|
-        fulfillment_arm = Arm.where(sparc_id: sparc_arm.id, protocol_id: @fulfillment_protocol.id).first
-
-        sparc_arm.subjects.each do |sparc_subject|
-
-          if sparc_subject.gender == 'other'
-            puts "SPARC subject gender invalid: #{sparc_subject.inspect}"
-            raise ActiveRecord::Rollback 
+          sparc_line_item.fulfillments.each do |sparc_line_item_fulfillment|
+            create_line_item_fulfillment(sparc_line_item_fulfillment, fulfillment_line_item)
           end
+        end
 
-          fulfillment_participant = nil
+        # create documents
+        sparc_sub_service_request = Sparc::SubServiceRequest.find(@fulfillment_protocol.sub_service_request_id)
 
-          if name_parts = NameParser.new(sparc_subject.name).parse # add this subject if we have name attributes
-            fulfillment_participant = create_fulfillment_participant(name_parts, sparc_subject, fulfillment_arm)
-            
-            # grab the subjects calendar and start looping over appointments
-            sparc_calendar = sparc_subject.calendar
+        sparc_sub_service_request.reports.each do |report|
+          create_fulfillment_document(report)
+        end
 
-            sparc_calendar.appointments.each do |sparc_appointment|
-              fulfillment_visit_group = VisitGroup.where(sparc_id: sparc_appointment.visit_group_id, arm_id: fulfillment_arm.id).first
+        # loop over arms to create participants and procedures
+        sparc_protocol.arms.each do |sparc_arm|
+          fulfillment_arm = Arm.where(sparc_id: sparc_arm.id, protocol_id: @fulfillment_protocol.id).first
 
-              fulfillment_appointment = nil
-              unless fulfillment_appointment = Appointment.where(participant_id: fulfillment_participant.id, visit_group_id: fulfillment_visit_group.id, arm_id: fulfillment_arm.id).first
-                fulfillment_appointment = create_fulfillment_appointment(fulfillment_participant, fulfillment_visit_group, fulfillment_arm, sparc_appointment)                                                                             
-              end
-              
-              create_fulfillment_notes(sparc_appointment, fulfillment_appointment)
-              create_fulfillment_procedures(sparc_appointment, fulfillment_appointment)
+          sparc_arm.subjects.each do |sparc_subject|
+
+            if sparc_subject.gender == 'other'
+              puts "SPARC subject gender invalid: #{sparc_subject.inspect}"
+              raise ActiveRecord::Rollback 
             end
-          end # end adding participant, appointments, and procedures
-        end # end looping over subjects
-      end # end looping over arms
-    end # end transaction block
+
+            fulfillment_participant = nil
+
+            if name_parts = NameParser.new(sparc_subject.name).parse # add this subject if we have name attributes
+              fulfillment_participant = create_fulfillment_participant(name_parts, sparc_subject, fulfillment_arm)
+              
+              # grab the subjects calendar and start looping over appointments
+              sparc_calendar = sparc_subject.calendar
+
+              sparc_calendar.appointments.each do |sparc_appointment|
+                fulfillment_visit_group = VisitGroup.where(sparc_id: sparc_appointment.visit_group_id, arm_id: fulfillment_arm.id).first
+
+                fulfillment_appointment = nil
+                unless fulfillment_appointment = Appointment.where(participant_id: fulfillment_participant.id, visit_group_id: fulfillment_visit_group.id, arm_id: fulfillment_arm.id).first
+                  fulfillment_appointment = create_fulfillment_appointment(fulfillment_participant, fulfillment_visit_group, fulfillment_arm, sparc_appointment)                                                                             
+                end
+                
+                create_fulfillment_notes(sparc_appointment, fulfillment_appointment)
+                create_fulfillment_procedures(sparc_appointment, fulfillment_appointment)
+              end
+            end # end adding participant, appointments, and procedures
+          end # end looping over subjects
+        end # end looping over arms
+      end # end transaction block
+    end # end Time.use_zone block
 
     enable_paper_trail
   end
