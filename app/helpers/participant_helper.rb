@@ -52,11 +52,15 @@ module ParticipantHelper
   end
 
   def calendarFormatter participant
-    [
-      "<a class='participant-calendar' href='#' title='Calendar' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-calendar'></i>",
-      "</a>"
-    ].join ""
+    if participant.appointments.empty?
+      "<i class='glyphicon glyphicon-calendar' style='cursor:default'></i>"
+    else
+      [
+        "<a class='participant-calendar' href='#' title='Calendar' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+        "<i class='glyphicon glyphicon-calendar'></i>",
+        "</a>"
+      ].join ""
+    end
   end
 
   def participant_report_formatter(participant)
