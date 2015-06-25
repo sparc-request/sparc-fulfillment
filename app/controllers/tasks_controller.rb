@@ -53,6 +53,7 @@ class TasksController < ApplicationController
   end
 
   def task_reschedule
+    # this pops up the modal to change the date for a task
   end
 
   private
