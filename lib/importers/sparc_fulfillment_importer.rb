@@ -80,7 +80,7 @@ class SparcFulfillmentImporter
         end # end looping over arms
       end # end Time.use_zone block
 
-      enable_paper_trail
+      #enable_paper_trail
     end # end transaction block
 
   end
@@ -227,9 +227,7 @@ class SparcFulfillmentImporter
       object.save
     else
       puts "#"*50
-      puts "#"*50
       puts "Invalid object #{object.errors.inspect}"
-      puts "#"*50
       puts "#"*50
       raise ActiveRecord::Rollback 
     end
