@@ -66,10 +66,9 @@ class LineItemsController < ApplicationController
     # Need to change any procedures that haven't been completed to the new service
     service = @line_item.service
     service_name = service.name
-    service_cost = service.cost
     @line_item.visits.each do |v|
       v.procedures.select{ |p| not(p.appt_started? or p.complete?) }.each do |p|
-        p.update_attributes(service_id: service.id, service_name: service_name, service_cost: service_cost)
+        p.update_attributes(service_id: service.id, service_name: service_name)
       end
     end
   end
