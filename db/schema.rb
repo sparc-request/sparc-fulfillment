@@ -256,6 +256,17 @@ ActiveRecord::Schema.define(version: 20150624134812) do
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", using: :btree
   add_index "protocols", ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id", using: :btree
 
+  create_table "reports", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.string   "status",      limit: 255
+    t.integer  "identity_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "reports", ["identity_id"], name: "index_reports_on_identity_id", using: :btree
+
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"
     t.boolean  "complete",        limit: 1,     default: false

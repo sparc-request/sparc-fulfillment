@@ -4,27 +4,27 @@ $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', l
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 
+date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").
+  find(".completed_date_field").
+  datetimepicker(format: 'MM-DD-YYYY').
+  data("DateTimePicker")
+
 <% if @procedure.unstarted? or @procedure.follow_up? %>
-$(".procedure[data-id='<%= @procedure.id %>']").
-  find(".completed-date input").
-  attr("disabled", true).
-  attr("value", "")
+  date_time_picker.
+  date(null).
+  disable()
 $(".procedure[data-id='<%= @procedure.id %>']").
   find(".status label.active").removeClass("active")
 
 <% elsif @procedure.incomplete? %>
-$(".procedure[data-id='<%= @procedure.id %>']").
-  find(".completed-date input").
-  attr("disabled", true).
-  attr("value", "")
+  date_time_picker.
+  date(null).
+  disable()
 
 <% elsif @procedure.complete? %>
-$(".procedure[data-id='<%= @procedure.id %>']").
-  find(".completed-date input").
-  attr("disabled", false).
-  attr("value", "<%= format_date(@procedure.completed_date) %>")
-$(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
-
+  date_time_picker.
+  date("<%= format_date(@procedure.completed_date) %>").
+  enable()
 <% end %>
 
 
