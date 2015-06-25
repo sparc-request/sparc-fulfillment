@@ -139,7 +139,7 @@ class SparcFulfillmentImporter
                                                                      mrn:            sparc_subject.mrn,
                                                                      external_id:    sparc_subject.external_subject_id,
                                                                      status:         STATUS_OPTIONS[sparc_subject.status],
-                                                                     date_of_birth:  sparc_subject.dob.strftime("%m-%d-%Y"),
+                                                                     date_of_birth:  (sparc_subject.dob.present? ? sparc_subject.dob.strftime("%m-%d-%Y") : nil),
                                                                      gender:         sparc_subject.gender.capitalize,
                                                                      ethnicity:      'Unknown/Other/Unreported', 
                                                                      race:           RACE_OPTIONS[sparc_subject.ethnicity],
