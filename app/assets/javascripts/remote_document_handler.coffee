@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-window.remote_document_generator = (element) ->
-=======
 window.remote_document_generator = (element, tables_to_refresh) ->
->>>>>>> master
 
   $(element).one 'click', (event) ->
     $self = $(this)
