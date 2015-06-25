@@ -78,10 +78,11 @@ class SparcFulfillmentImporter
             end # end adding participant, appointments, and procedures
           end # end looping over subjects
         end # end looping over arms
-      end # end transaction block
-    end # end Time.use_zone block
+      end # end Time.use_zone block
 
-    enable_paper_trail
+      enable_paper_trail
+    end # end transaction block
+
   end
 
   private
