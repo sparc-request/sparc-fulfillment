@@ -14,8 +14,7 @@ class LineItem < ActiveRecord::Base
   has_many :documents, as: :documentable
   has_many :components, as: :composable
 
-  delegate  :name,
-            :cost,
+  delegate  :cost,
             :sparc_core_id,
             :sparc_core_name,
             :one_time_fee,
@@ -28,6 +27,22 @@ class LineItem < ActiveRecord::Base
   after_create :create_line_item_components
   after_create :increment_sparc_service_counter
   after_destroy :decrement_sparc_service_counter
+
+  def set_name
+    update_attributes(name: service.name)
+  end
+
+  def name
+    if one_time_fee && has_fulfillments?
+      read_attribute(:name)
+    else
+      service.name
+    end
+  end
+
+  def name=(n)
+    write_attribute(:name, n)
+  end
 
   def increment_sparc_service_counter
     service.increment(:line_items_count)
@@ -60,6 +75,10 @@ class LineItem < ActiveRecord::Base
     else
       quantity_requested
     end
+  end
+
+  def has_fulfillments?
+    !fulfillments.empty?
   end
 
   def last_fulfillment

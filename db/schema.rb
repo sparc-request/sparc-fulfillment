@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150619122853) do
+ActiveRecord::Schema.define(version: 20150624134812) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(version: 20150619122853) do
     t.string   "quantity_type",      limit: 255
     t.datetime "started_at"
     t.integer  "protocol_id",        limit: 4
+    t.string   "name",               limit: 255
   end
 
   add_index "line_items", ["arm_id"], name: "index_line_items_on_arm_id", using: :btree

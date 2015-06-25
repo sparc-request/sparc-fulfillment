@@ -4,6 +4,7 @@ FactoryGirl.define do
     arm nil
     service nil
     protocol nil
+    name nil
     sparc_id
     quantity_requested { Faker::Number.number(3) }
     quantity_type "Each"
