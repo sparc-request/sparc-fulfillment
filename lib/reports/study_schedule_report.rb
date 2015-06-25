@@ -5,7 +5,7 @@ class StudyScheduleReport < Report
   def initialize(params)
     super
 
-    @protocol = Protocol.find(@params[:protocol_id])
+    @protocol = Protocol.find(@params[:documentable_id])
   end
 
   def generate(document)

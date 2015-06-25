@@ -1,7 +1,7 @@
 class Participant < ActiveRecord::Base
 
-  ETHNICITY_OPTIONS   = ['Hispanic or Latino', 'Not Hispanic or Latino'].freeze
-  RACE_OPTIONS        = ['American Indian/Alaska Native', 'Asian', 'Native Hawaiian or other Pacific Islander', 'Black or African American', 'White', 'Unknown/Other/Unreported'].freeze
+  ETHNICITY_OPTIONS   = ['Hispanic or Latino', 'Not Hispanic or Latino', 'Unknown/Other/Unreported'].freeze
+  RACE_OPTIONS        = ['American Indian/Alaska Native', 'Asian', 'Middle Eastern', 'Native Hawaiian or other Pacific Islander', 'Black or African American', 'White', 'Unknown/Other/Unreported'].freeze
   STATUS_OPTIONS      = ['Consented','Screening', 'Enrolled - receiving treatment', 'Follow-up', 'Completed'].freeze
   GENDER_OPTIONS      = ['Male', 'Female'].freeze
   RECRUITMENT_OPTIONS = ['', 'Participating Site Referral', 'Primary Physician / or Healthcare Provider Referred', 'Other Physician / or Healthcare Provider Referred', 'Local Advertising (Flyer, Brochure, Newspaper, etc.)', 'Friends or Family Referred', 'SC Research.org', 'MUSC Heroes.org', 'Clinical Trials.gov', 'Billboard Ad Campaign', 'TV Ad Campaign', 'Other'].freeze
@@ -74,6 +74,7 @@ class Participant < ActiveRecord::Base
         elsif has_new_visit_groups?
           appointments_for_visit_groups(new_visit_groups)
         end
+
       end
     end
   end
@@ -102,7 +103,7 @@ class Participant < ActiveRecord::Base
   end
 
   def has_new_visit_groups?
-    self.arm.visit_groups.count > self.appointments.count
+    self.arm.visit_groups.count > self.appointments.where(arm_id: self.arm_id).count
   end
 
   def new_visit_groups

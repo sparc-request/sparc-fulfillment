@@ -26,10 +26,12 @@
 //= require study_schedule
 //= require study_schedule_management
 //= require participants
+//= require participant_tracker
 //= require appointments
 //= require autoload_appointment
 //= require tasks
 //= require documents_index
 //= require study_level_activities
+//= require remote_document_handler
 //= require faye
 //= require ajax_progress_bar

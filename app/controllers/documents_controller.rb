@@ -3,7 +3,6 @@ class DocumentsController < ApplicationController
   before_action :find_document, only: [:show]
   before_action :authorize_document_access, only: [:show]
   before_action :validate_presence_of_upload, only: [:create]
-  after_action  :mark_document_as_accessed, only: [:show]
 
   def index
     respond_to do |format|
@@ -17,7 +16,7 @@ class DocumentsController < ApplicationController
         @documentable_sym = @documentable_type.downcase.to_sym
       }
       format.json {
-        @documents = current_identity.documents
+        @documents = find_documentable.documents
       }
     end
   end
@@ -28,6 +27,7 @@ class DocumentsController < ApplicationController
         send_data File.read(@document.path),
           type: @document.content_type,
           disposition: "attachment; filename=#{@document.original_filename}"
+        mark_document_as_accessed
       }
       format.json {
         render json: { document: { state: @document.state } }
@@ -75,7 +75,15 @@ class DocumentsController < ApplicationController
   end
 
   def find_documentable
-    @documentable = params[:document][:documentable_type].constantize.find params[:document][:documentable_id]
+    if params[:document].present? && (params[:document][:documentable_id].present? && params[:document][:documentable_type].present?)
+      id    = params[:document][:documentable_id]
+      type  = params[:document][:documentable_type]
+    else
+      id    = current_identity.id
+      type  = 'Identity'
+    end
+
+    @documentable ||= type.constantize.find id
   end
 
   def find_document
