@@ -20,7 +20,7 @@ class Procedure < ActiveRecord::Base
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
 
-  before_save :set_status_dependencies
+  before_update :set_status_dependencies
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
@@ -116,9 +116,21 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  def service_name
+    if unstarted?
+      service.present? ? service.name : ''
+    else
+      read_attribute(:service_name)
+    end
+  end
+
   private
 
   def set_status_dependencies
+    if status_changed?(from: "unstarted") && service.present?
+      write_attribute(:service_name, service.name)
+    end
+
     if status_changed?(to: "complete")
       write_attribute(:incompleted_date, nil)
       write_attribute(:completed_date, Date.today)

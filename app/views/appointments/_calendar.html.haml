@@ -7,7 +7,7 @@
             %h3.appointment_header
               = "Visit: #{appointment.name}"
               \-
-              %button.btn.btn-primary.notes.list{type: "button", aria: {label: "Notes List"}, data: {notable_id: appointment.id, notable_type: "Appointment"}}
+              %button.btn.btn-primary.notes.list{title: t(:procedure)[:notes], type: "button", aria: {label: "Notes List"}, data: {notable_id: appointment.id, notable_type: "Appointment", toggle: "tooltip", animation: 'false'}}
                 %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
             .row
               .col-md-5

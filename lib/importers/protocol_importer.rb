@@ -16,6 +16,7 @@ class ProtocolImporter
 
     sparc_sub_service_request = Sparc::SubServiceRequest.find api_sub_service_request["sparc_id"]
     sparc_protocol = sparc_sub_service_request.protocol
+    fulfillment_protocol = nil # need this to return at the end
 
     ActiveRecord::Base.transaction do
 
@@ -63,7 +64,7 @@ class ProtocolImporter
                 end
 
                 # visit creation
-                attr = normalized_attributes('Visit', sparc_visit).merge!({sparc_id: sparc_visit_group.id,
+                attr = normalized_attributes('Visit', sparc_visit).merge!({sparc_id: sparc_visit.id,
                                                                            visit_group_id: fulfillment_visit_group.id,
                                                                            line_item_id: fulfillment_line_item.id})
                 fulfillment_visit = Visit.create(attr)
@@ -96,6 +97,9 @@ class ProtocolImporter
     end # end Active Record Transaction
 
     PaperTrail.enabled = true
+
+    # return the new created protocol
+    return fulfillment_protocol
   end
 
   private

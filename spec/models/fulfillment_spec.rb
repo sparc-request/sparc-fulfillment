@@ -33,4 +33,43 @@ RSpec.describe Fulfillment, type: :model do
     end
   end
 
-end 
+  describe 'after create' do
+
+    context 'associated Line Item has one time fee' do
+
+      it 'should set the Line Item name when Line Item previously had no Fulfillments' do
+        service   = create(:service_with_one_time_fee)
+        line_item = create(:line_item, service: service, protocol: create(:protocol))
+        create(:fulfillment, line_item: line_item)
+        expect(line_item.read_attribute(:name)).to eq(service.name)
+      end
+
+      it 'should not set the Line Item name again when another Fulfillment is added' do
+        service   = create(:service_with_one_time_fee)
+        name      = service.name
+        line_item = create(:line_item, service: service, protocol: create(:protocol))
+        create(:fulfillment, line_item: line_item)
+        service.update_attributes(name: service.name + '_')
+        create(:fulfillment, line_item: line_item)
+        expect(line_item.read_attribute(:name)).to eq(name)
+      end
+    end
+
+    context 'associated Line Item has no one time fee' do
+
+      it 'should not set the Line Item name when Line Item previously had no Fulfillments' do
+        service   = create(:service)
+        line_item = create(:line_item, service: service, protocol: create(:protocol))
+        create(:fulfillment, line_item: line_item)
+        expect(line_item.read_attribute(:name)).to_not be
+      end
+
+      it 'should not set the Line Item name when multiple Fulfillments are added' do
+        service   = create(:service)
+        line_item = create(:line_item, service: service, protocol: create(:protocol))
+        2.times { create(:fulfillment, line_item: line_item) }
+        expect(line_item.read_attribute(:name)).to_not be
+      end
+    end
+  end
+end

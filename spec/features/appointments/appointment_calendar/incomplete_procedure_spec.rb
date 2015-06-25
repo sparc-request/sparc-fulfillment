@@ -32,7 +32,7 @@ feature 'Incomplete Procedure', js: true do
     scenario 'User marks a complete Procedure as incomplete and then cancels' do
       as_a_user_who_has_added_a_procedure_to_an_appointment
       and_begins_appointment
-      when_i_click_the_incommplete_button
+      when_i_click_the_incomplete_button
       and_i_cancel_the_incomplete
       then_i_should_see_that_the_procedure_status_has_not_changed
     end
@@ -44,11 +44,18 @@ feature 'Incomplete Procedure', js: true do
       and_i_view_the_notes_list
       then_i_should_see_one_incomplete_note
       then_i_close_the_notes_list
-      when_i_click_the_incommplete_button_again
+      when_i_click_the_incomplete_button_again
       and_i_view_the_notes_list
       then_i_should_see_one_status_reset_note
       then_i_close_the_notes_list
       then_i_should_see_that_the_procedure_status_has_been_reset
+    end
+
+    scenario 'User attempts to mark a Procedure as incomplete without selecting a reason' do
+      as_a_user_who_has_added_a_procedure_to_an_appointment
+      and_begins_appointment
+      when_i_incomplete_the_procedure_without_selecting_a_reason
+      then_i_should_see_errors
     end
   end
 
@@ -83,7 +90,7 @@ feature 'Incomplete Procedure', js: true do
     find('button.start_visit').click
   end
 
-  def when_i_click_the_incommplete_button
+  def when_i_click_the_incomplete_button
     find('label.status.incomplete').click
     wait_for_ajax
   end
@@ -100,7 +107,7 @@ feature 'Incomplete Procedure', js: true do
   def when_i_incomplete_the_procedure
     reason = Procedure::NOTABLE_REASONS.first
 
-    when_i_click_the_incommplete_button
+    when_i_click_the_incomplete_button
     select reason, from: 'procedure_notes_attributes_0_reason'
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
@@ -142,8 +149,17 @@ feature 'Incomplete Procedure', js: true do
     end
   end
 
+  def when_i_incomplete_the_procedure_without_selecting_a_reason
+    when_i_click_the_incomplete_button
+    click_button 'Save'
+  end
+
+  def then_i_should_see_errors
+    expect(page).to_not have_css('.modal-dialog .alert')
+  end
+
   alias :and_i_incomplete_the_procedure_again :when_i_incomplete_the_procedure
-  alias :when_i_click_the_incommplete_button_again :when_i_click_the_incommplete_button
+  alias :when_i_click_the_incomplete_button_again :when_i_click_the_incomplete_button
   alias :then_i_should_see_that_the_procedure_status_has_been_reset :then_i_should_see_that_the_procedure_status_has_not_changed
   alias :then_i_close_the_notes_list :and_i_cancel_the_incomplete
 end

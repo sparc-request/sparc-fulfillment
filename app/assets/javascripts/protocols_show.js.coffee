@@ -5,6 +5,7 @@ $ ->
     # Bootstrap Tab persistence
 
     current_tab = $.cookie('active-protocol-tab')
+
     if current_tab && current_tab.length > 0
       $(".protocol-tab > a[href='##{current_tab}']").tab('show') # show tab on load
 
@@ -15,4 +16,6 @@ $ ->
     # Study Schedule Report button
 
     $(document).on 'load-success.bs.table', 'table.protocol', ->
-      remote_document_generator 'a.study_schedule_report'
+      tables_to_refresh = ['table.protocol_reports']
+
+      remote_document_generator 'a.study_schedule_report', tables_to_refresh

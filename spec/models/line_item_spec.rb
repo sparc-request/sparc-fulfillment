@@ -39,11 +39,26 @@ RSpec.describe LineItem, type: :model do
 
     describe '.name' do
 
-      it 'should be delegated to Service' do
-        service   = create(:service, name: 'Test Service')
-        line_item = create(:line_item, service: service, protocol: create(:protocol))
+      it 'should be equal to Service name when Service does not have a one time fee' do
+        service   = create(:service)
+        line_item = create(:line_item_with_fulfillments, service: service, protocol: create(:protocol))
+        service.update_attributes(name: service.name + '_')
+        expect(line_item.name).to eq(service.name)
+      end
 
-        expect(line_item.name).to eq('Test Service')
+      it 'should be equal to Service name when Line Item has no Fulfillments' do
+        service   = create(:service_with_one_time_fee)
+        line_item = create(:line_item, service: service, protocol: create(:protocol))
+        service.update_attributes(name: service.name + '_')
+        expect(line_item.name).to eq(service.name)
+      end
+
+      it 'should be equal to Service name at the time Line Item gains a Fulfillment' do
+        service   = create(:service_with_one_time_fee)
+        line_item = create(:line_item_with_fulfillments, service: service, protocol: create(:protocol))
+        name      = service.name
+        service.update_attributes(name: service.name + '_')
+        expect(line_item.name).to eq(name)
       end
     end
 

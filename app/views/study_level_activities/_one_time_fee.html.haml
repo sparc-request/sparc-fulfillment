@@ -1,6 +1,6 @@
 .row.table_row.line_item{data: {id: line_item.id}}
   .col-xs-1.text-center.fulfillments
-    %button.btn.btn-primary.otf_fulfillments.list{title: "View Fulfillments", type: "button", aria: {label: "Fulfillments List"}, data: {toggle: "tooltip", animation: false}}
+    %button.btn.btn-primary.otf_fulfillments.list{title: t(:fulfillment)[:view], type: "button", aria: {label: "Fulfillments List"}, data: {toggle: "tooltip", animation: 'false'}}
       %span.glyphicon.glyphicon-chevron-right{aria: {hidden: "true"}}
   .col-xs-2.text-center.truncate.service
     = line_item.name
@@ -18,9 +18,9 @@
   .col-xs-1.text-right.last_fulfillment
     = format_date(line_item.last_fulfillment)
   .col-xs-2.text-right.options
-    %button.btn.btn-primary.notes.list{title: "Notes", type: "button", aria: {label: "Notes List"}, data: {notable_id: line_item.id, notable_type: "LineItem", toggle: "tooltip", animation: false}}
+    %button.btn.btn-primary.notes.list{title: t(:procedure)[:notes], type: "button", aria: {label: "Notes List"}, data: {notable_id: line_item.id, notable_type: "LineItem", toggle: "tooltip", animation: 'false'}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
-    %button.btn.btn-primary.documents.list{title: "Documents", type: "button", aria: {label: "Documents List"}, data: {documentable_id: line_item.id, documentable_type: "LineItem", toggle: "tooltip", animation: false}}
+    %button.btn.btn-primary.documents.list{title: t(:documents)[:documents], type: "button", aria: {label: "Documents List"}, data: {documentable_id: line_item.id, documentable_type: "LineItem", toggle: "tooltip", animation: 'false'}}
       %span.glyphicon.glyphicon-open-file{aria: {hidden: "true"}}
-    %button.btn.btn-warning.otf_edit{title: "Edit Line Item", type: "button", aria: {label: "Edit Line Item"}, data: {toggle: "tooltip", animation: false}}
+    %button.btn.btn-warning.otf_edit{title: t(:notes)[:lineitem][:edit], type: "button", aria: {label: "Edit Line Item"}, data: {toggle: "tooltip", animation: 'false'}}
       %span.glyphicon.glyphicon-edit{aria: {hidden: "true"}}

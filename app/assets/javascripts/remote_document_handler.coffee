@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 window.remote_document_generator = (element) ->
+=======
+window.remote_document_generator = (element, tables_to_refresh) ->
+>>>>>>> master
 
   $(element).one 'click', (event) ->
     $self = $(this)
@@ -41,6 +45,9 @@ window.remote_document_generator = (element) ->
                   find('span.glyphicon').
                   addClass('glyphicon-equalizer').
                   removeClass('glyphicon-refresh spin')
+
+                $.each tables_to_refresh, (index, value) ->
+                  $(value).bootstrapTable 'refresh', silent: true
 
                 $(element).one 'click', ->
                   documents_notifications = parseInt $notification.text()

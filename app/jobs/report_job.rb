@@ -27,15 +27,14 @@ class ReportJob < ActiveJob::Base
       arguments.
       first.
       update_attributes state: 'Completed'
-
-    job.
-      arguments.
-      first.
-      documentable.
-      update_counter(:unaccessed_documents, 1)
+    find_identity(job).update_counter(:unaccessed_documents, 1)
   end
 
   private
+
+  def find_identity(job)
+    @identity ||= Identity.find job.arguments.last[:identity_id]
+  end
 
   def find_or_create_document_root_path
     unless Dir.exists? ENV.fetch('DOCUMENT_ROOT')

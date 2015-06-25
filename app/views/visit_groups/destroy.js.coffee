@@ -1,9 +1,8 @@
 $("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
 <% if @delete %>
-# update dropdown of visit groups
-$("#visits_select_for_<%= @arm.id %>").html("<%= escape_javascript(visits_select_options(@arm, @current_page)) %>")
-# and update associated selectpicker
-$("#select_for_arm_<%= @arm.id %> > .visit_dropdown").selectpicker('refresh')
+# update dropdown to page visit groups
+$("#select_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_group_page_select', locals: {arm: @arm, page: @current_page.to_i}) %>")
+$(".selectpicker").selectpicker()
 
 remove_visit_group("<%= @visit_group.id %>")
 
