@@ -27,7 +27,6 @@ class ReportJob < ActiveJob::Base
       arguments.
       first.
       update_attributes state: 'Completed'
-
     find_identity(job).update_counter(:unaccessed_documents, 1)
   end
 
