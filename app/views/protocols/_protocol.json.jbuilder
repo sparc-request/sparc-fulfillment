@@ -3,7 +3,7 @@ json.(protocol)
 json.id protocol.id
 json.sparc_id protocol.sparc_id
 json.srid protocol.srid
-json.status protocol.status
+json.status formatted_status(protocol)
 json.short_title protocol.short_title
 json.irb_approval_date format_date(protocol.irb_approval_date)
 json.irb_expiration_date format_date(protocol.irb_expiration_date)
@@ -18,3 +18,5 @@ json.subsidy_expended protocol.subsidy_expended
 json.pi protocol.pi.full_name
 json.coordinators formatted_coordinators(protocol.coordinators.map(&:full_name))
 json.study_schedule_report formatted_study_schedule_report(protocol)
+json.owner formatted_owner(protocol)
+json.requester formatted_requester(protocol)

@@ -13,7 +13,6 @@ FactoryGirl.define do
     recruitment_end_date Time.current
     stored_percent_subsidy 0.0
     study_cost { Faker::Number.number(8) }
-    status { Protocol::STATUSES.sample }
 
     after(:create) do |protocol, evaluator|
       create(:human_subjects_info, protocol_id: protocol.sparc_id)

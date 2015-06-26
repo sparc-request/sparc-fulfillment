@@ -1,5 +1,29 @@
 module ProtocolHelper
 
+  def formatted_status(protocol)
+    if protocol.status.present?
+      t(:sub_service_request)[:statuses][protocol.status.to_sym]
+    else
+      '-'
+    end
+  end
+
+  def formatted_owner(protocol)
+    if protocol.owner.present?
+      protocol.owner.full_name
+    else
+      '-'
+    end
+  end
+
+  def formatted_requester(protocol)
+    if protocol.sub_service_request.present? && protocol.sub_service_request.service_request.present?
+      protocol.requester.full_name
+    else
+      '-'
+    end
+  end
+
   def formatted_study_schedule_report(protocol)
     content_tag(:a, href: '#', class: 'btn btn-default btn-xs study_schedule_report', 'data-title' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol') do
       content_tag(:span, '', class: "glyphicon glyphicon-equalizer")

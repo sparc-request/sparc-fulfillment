@@ -14,6 +14,8 @@ $ ->
     $('#protocol-list').bootstrapTable('hideColumn', 'stored_percent_subsidy')
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
+    $('#protocol-list').bootstrapTable('hideColumn', 'owner')
+    $('#protocol-list').bootstrapTable('hideColumn', 'requester')
 
 
     $(".bootstrap-table .fixed-table-toolbar").

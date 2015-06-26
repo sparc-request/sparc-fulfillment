@@ -215,6 +215,8 @@ en:
     subsidy_committed: "Subsidy Amount"
     subsidy_expended: "Subsidy Expended"
     study_schedule_report: "Export"
+    owner: "Owner"
+    requester: "Service Requester"
     tabs:
       study_schedule: "Study Schedule"
       participant_list: "Participant List"
@@ -327,3 +329,24 @@ en:
   navbar:
     tasks_link: 'All Tasks'
     reports_link: 'All Reports'
+
+  sub_service_request:
+    statuses:
+      all: 'All'
+      draft: 'Draft'
+      submitted: 'Submitted'
+      get_a_quote: 'Get a Quote'
+      in_process: 'In Process'
+      complete: 'Compete'
+      awaiting_pi_approval: 'Awaiting Requester Response'
+      on_hold: 'On Hold'
+      ctrc_review: 'In Admin Review'
+      ctrc_approved: 'Active'
+      administrative_review: 'Administrative Review'
+      committee_review: 'In Committee Review'
+      invoiced: 'Invoiced'
+      fulfillment_queue: 'In Fulfillment Queue'
+      approved: 'Approved'
+      declined: 'Declined'
+      withdrawn: 'Withdrawn'
+
