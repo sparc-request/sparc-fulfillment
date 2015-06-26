@@ -67,4 +67,23 @@ RSpec.describe LineItemsController do
     end
   end
 
+  describe "DELETE #destroy" do
+    it "should delete a line item with out fulfillments" do
+      delete :destroy, {
+        id: @line_item.id,
+        format: :js
+      }
+      expect(@line_item.deleted?)
+    end
+
+    it "should not delete a line item with fulfilmments" do
+      fulfillment = create(:fulfillment, line_item: @line_item)
+      delete :destroy, {
+        id: @line_item.id,
+        format: :js
+      }
+      expect(@line_item).to be
+    end
+  end
 end
+
