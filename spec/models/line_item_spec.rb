@@ -24,13 +24,11 @@ RSpec.describe LineItem, type: :model do
         service = create(:service_with_one_time_fee) #otf true
         line_item = LineItem.new(service: service, protocol: create(:protocol), quantity_requested: nil)
         expect(line_item).to have(2).errors_on(:quantity_requested)
-        # expect(line_item).to have(1).errors_on(:quantity_type)
       end
-      it 'should not validate presence of quantity_requested and quantity type if not one_time_fee' do
+      it 'should not validate presence of quantity_requested if not one_time_fee' do
         service = create(:service) #otf false
         line_item = LineItem.new(service: service, protocol: create(:protocol), quantity_requested: nil)
         expect(line_item).to have(0).errors_on(:quantity_requested)
-        expect(line_item).to have(0).errors_on(:quantity_type)
       end
     end
   end
