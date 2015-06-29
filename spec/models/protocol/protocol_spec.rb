@@ -93,5 +93,48 @@ RSpec.describe Protocol, type: :model do
         expect(protocol.one_time_fee_line_items).to eq protocol.line_items.includes(:service).where(:services => {:one_time_fee => true})
       end
     end
+
+    describe 'delegated methods' do
+
+      let!(:protocol)            { create(:protocol) }
+      let!(:service_request)     { create(:service_request, protocol: protocol) }
+      let!(:sub_service_request) { create(:sub_service_request, service_request: service_request, status: 'ctrc_approved') }
+      let!(:user)                { create(:identity)}
+
+      before :each do
+        protocol.update_attributes(sub_service_request: sub_service_request)
+      end
+
+      context 'status' do
+
+        it 'should get the sub service requests status' do
+          expect(protocol.status).to eq('Active')
+        end
+      end
+
+      context 'owner' do
+
+        it 'should rescue to empty string if the sub service requests owner_id is null' do
+          expect(protocol.owner).to eq("")
+        end
+
+        it 'should get the correct owner from the sub service request' do
+          sub_service_request.update_attributes(owner_id: user.id)
+          expect(protocol.owner).to eq(sub_service_request.owner)
+        end
+      end
+
+      context 'requester' do
+
+        it 'should rescue to empty string if the service requests requester_id is null' do
+          expect(protocol.requester).to eq("")
+        end
+
+        it 'should get the correct requester from the sub service request' do
+          sub_service_request.service_request.update_attributes(service_requester_id: user.id)
+          expect(protocol.requester.id).to eq(sub_service_request.service_request.service_requester_id)
+        end
+      end
+    end
   end
 end

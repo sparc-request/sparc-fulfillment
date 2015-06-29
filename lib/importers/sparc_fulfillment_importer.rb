@@ -23,9 +23,9 @@ class SparcFulfillmentImporter
   def create
     ActiveRecord::Base.transaction do
       Time.use_zone 'Eastern Time (US & Canada)' do   
-        disable_paper_trail
-      
         @fulfillment_protocol = ProtocolImporter.new(@callback_url).create
+
+        disable_paper_trail
 
         sparc_protocol = Sparc::Protocol.find @fulfillment_protocol.sparc_id
 
@@ -78,10 +78,11 @@ class SparcFulfillmentImporter
             end # end adding participant, appointments, and procedures
           end # end looping over subjects
         end # end looping over arms
-      end # end transaction block
-    end # end Time.use_zone block
+      end # end Time.use_zone block
 
-    enable_paper_trail
+      #enable_paper_trail
+    end # end transaction block
+
   end
 
   private
@@ -225,7 +226,9 @@ class SparcFulfillmentImporter
     if object.valid?
       object.save
     else
+      puts "#"*50
       puts "Invalid object #{object.errors.inspect}"
+      puts "#"*50
       raise ActiveRecord::Rollback 
     end
 

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Custom appointment', js: true do
 
-  scenario 'User creates custom appointmet' do
+  scenario 'User creates custom appointment' do
     when_i_visit_a_participants_calendar
     as_a_user_who_clicks_create_custom_appointment
     when_i_click_save_appointment

@@ -12,7 +12,6 @@ class ProtocolImporter
     ### logic driven fields, easier to go a head and use them from the api call
     grand_total            = api_sub_service_request['grand_total']
     stored_percent_subsidy = api_sub_service_request['stored_percent_subsidy']
-    status                 = api_sub_service_request['status']
 
     sparc_sub_service_request = Sparc::SubServiceRequest.find api_sub_service_request["sparc_id"]
     sparc_protocol = sparc_sub_service_request.protocol
@@ -24,7 +23,6 @@ class ProtocolImporter
       attr = normalized_attributes('Protocol', sparc_protocol).merge!({sparc_id: sparc_protocol.id,
                                                                        study_cost: grand_total,
                                                                        stored_percent_subsidy: stored_percent_subsidy,
-                                                                       status: status,
                                                                        sub_service_request_id: sparc_sub_service_request.id})
 
       fulfillment_protocol = Protocol.create(attr)
