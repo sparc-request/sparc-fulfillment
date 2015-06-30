@@ -19,6 +19,7 @@ feature 'Removing a Status', js: true do
   end
 
   def when_I_deselect_an_appointment_status
+    # For fun of course
     bootstrap_select '#appointment_indications', "Skipped Visit"
     find('body').click()
     bootstrap_select '#appointment_indications', "Skipped Visit"
