@@ -42,8 +42,11 @@ class ArmsController < ApplicationController
   end
 
   def destroy
+    @has_completed_data = @arm.appointments.map{|a| a.has_completed_procedures?}.include?(true)
     if Arm.where("protocol_id = ?", params[:protocol_id]).count == 1
-      flash.now[:alert] = t(:arm)[:not_deleted]
+      @delete = false
+    elsif  @has_completed_data
+      @delete = false
     else
       @delete = true #this variable is used in the coffescript logic to prevent the arm name from being removed from the dropdown
       @arm.delay.destroy

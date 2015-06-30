@@ -5,7 +5,6 @@ class Service < ActiveRecord::Base
   belongs_to :organization
 
   has_many :line_items
-  has_many :service_level_components
   has_many :pricing_maps
 
   default_scope { order(name: :asc) }

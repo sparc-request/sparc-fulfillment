@@ -98,6 +98,7 @@ en:
       performer_id: "Performed By changed to "
 
   line_item:
+    delete_line_item: "Delete line item"
     add_line_item: "Add Study Level Activity"
     create: "Create New Study Level Activity"
     edit: "Edit Study Level Activity"
@@ -114,6 +115,8 @@ en:
     flash_messages:
       updated: "Study Level Activity Updated"
       created: "Study Level Activity Created"
+      deleted: "Study Level Activity Deleted"
+      not_deleted: "This Study Level Activity has Fulfillments. It cannot be deleted"
     log_notes:
       quantity_requested: "Quantity Requested changed to "
       service_id: "Service changed to "
