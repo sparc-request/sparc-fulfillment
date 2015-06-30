@@ -143,7 +143,7 @@ RSpec.describe LineItem, type: :model do
     describe 'create_line_item_components' do
 
       it 'should create components for the line_item after creation' do
-        service = create(:service_with_one_time_fee_with_components)
+        service = create(:service_with_one_time_fee)
         expect{
           create(:line_item, service: service, protocol: create(:protocol))
         }.to change(Component, :count).by(3)
