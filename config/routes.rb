@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents, only: [:index, :new, :create, :show]
-  resources :line_items, only: [:new, :create, :edit, :update, :destroy]
+  resources :line_items
   resources :visits, only: [:update]
   resources :reports, only: [:new, :create]
   resources :arms
