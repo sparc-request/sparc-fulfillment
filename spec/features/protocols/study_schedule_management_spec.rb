@@ -96,7 +96,19 @@ RSpec.describe 'Study Schedule Management spec', type: :feature, js: true do
         find('#remove_arm_button').click()
         page.driver.browser.accept_js_confirms
         expect(page).to have_content "Arm Destroyed"
-        expect(page).not_to have_content "Arm: #{@arm1.name}"
+        expect(page).not_to have_content "#{@arm1.name}"
+      end
+
+      it "should not remove an arm with completed procedures" do
+        bootstrap_select "#arms", "#{@arm1.name}"
+        participant = create(:participant_with_appointments, protocol: @protocol, arm: @arm1)
+        procedure = create(:procedure_complete, appointment: participant.appointments.first, arm: @arm1)
+        @arm1.reload
+        find('#remove_arm_button').click()
+        page.driver.browser.accept_js_confirms
+        wait_for_ajax
+        expect(page).not_to have_content "Arm Destroyed"
+        expect(page).to have_content  "#{@arm1.name}"
       end
     end
 
