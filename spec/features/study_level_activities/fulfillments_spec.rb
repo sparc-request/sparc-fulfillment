@@ -37,7 +37,7 @@ feature 'Fulfillments', js: true do
 
   def as_a_user_who_has_study_level_activities
     @protocol = create_and_assign_protocol_to_me
-    service     = create(:service_with_one_time_fee_with_components)
+    service     = create(:service_with_one_time_fee)
     @line_item  = create(:line_item, protocol: @protocol, service: service)
     @components = @line_item.components
     @clinical_providers = Identity.first.clinical_providers
