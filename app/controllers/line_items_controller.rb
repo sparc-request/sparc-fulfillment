@@ -38,6 +38,16 @@ class LineItemsController < ApplicationController
     end
   end
 
+  def destroy
+    @line_item = LineItem.find(params[:id])
+    if @line_item.fulfillments.empty?
+      @line_item.destroy
+      flash[:success] = t(:line_item)[:flash_messages][:deleted]
+    else
+      flash[:alert] = t(:line_item)[:flash_messages][:not_deleted]
+    end
+  end
+
   private
 
   def persist_original_attributes_to_track_changes

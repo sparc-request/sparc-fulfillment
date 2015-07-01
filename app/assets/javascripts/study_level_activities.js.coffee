@@ -40,6 +40,11 @@ $ ->
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
 
+  $(document).on 'click', '.otf_delete', ->
+    line_item_id = $(this).parents(".row.line_item").data('id')
+    $.ajax
+      type: "DELETE"
+      url: "/line_items/#{line_item_id}"
   # Accordion Display Binding
 
   $(document).on 'click', '.otf_fulfillments', ->

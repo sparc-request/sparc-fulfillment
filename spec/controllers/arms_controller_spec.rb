@@ -61,5 +61,16 @@ RSpec.describe ArmsController do
         }
       }.not_to change(Arm, :count)
     end
+
+    it "should not delete the arm if last arm" do
+      create(:procedure_complete, arm: @arm)
+      expect{
+        delete :destroy, {
+          protocol_id: @protocol.id,
+          id: @arm.id,
+          format: :js
+        }
+      }.not_to change(Arm, :count)
+    end
   end
 end
