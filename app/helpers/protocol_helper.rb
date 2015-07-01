@@ -24,6 +24,16 @@ module ProtocolHelper
     end
   end
 
+  def formatted_provider(protocol)
+    parent_organization = Organization.find(protocol.sub_service_request.organization.parent_id)
+    
+    parent_organization.name
+  end
+
+  def formatted_project(protocol)
+    protocol.sub_service_request.organization.name
+  end
+
   def formatted_study_schedule_report(protocol)
     content_tag(:a, href: '#', class: 'btn btn-default btn-xs study_schedule_report', 'data-title' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol') do
       content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
