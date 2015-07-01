@@ -53,7 +53,7 @@ module ParticipantHelper
 
   def calendarFormatter participant
     if participant.appointments.empty?
-      "<i class='glyphicon glyphicon-calendar' style='cursor:default'></i>"
+      "<i class='glyphicon glyphicon-calendar' title='Assign arm to view participant calendar' style='cursor:default'></i>"
     else
       [
         "<a class='participant-calendar' href='#' title='Calendar' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
