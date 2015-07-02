@@ -2,7 +2,7 @@
   .col-xs-1.text-center.fulfillments
     %button.btn.btn-primary.otf_fulfillments.list{title: t(:fulfillment)[:view], type: "button", aria: {label: "Fulfillments List"}, data: {toggle: "tooltip", animation: 'false'}}
       %span.glyphicon.glyphicon-chevron-right{aria: {hidden: "true"}}
-  .col-xs-2.text-center.truncate.service
+  .col-xs-2.text-center.truncate.service{title: line_item.name, data: {toggle: "tooltip", animation: 'false'}}
     = line_item.name
   .col-xs-1.text-center.qty_req
     = line_item.quantity_requested
