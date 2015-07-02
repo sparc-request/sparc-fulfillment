@@ -8,9 +8,9 @@ class LineItemsController < ApplicationController
   end
 
   def create
-    service = Service.find(line_item_params[:service_id])
-    @line_item = LineItem.new(line_item_params.merge!({ quantity_type: service.current_effective_pricing_map.quantity_type }))
+    @line_item = LineItem.new(line_item_params)
     if @line_item.valid?
+      @line_item.quantity_type = @line_item.service.current_effective_pricing_map.quantity_type
       @line_item.save
       flash[:success] = t(:line_item)[:flash_messages][:created]
     else
@@ -27,6 +27,7 @@ class LineItemsController < ApplicationController
     @otf = @line_item.one_time_fee
     persist_original_attributes_to_track_changes if @otf
     if @line_item.update_attributes(line_item_params)
+      @line_item.update_columns(quantity_type: @line_item.service.current_effective_pricing_map.quantity_type)
       if @otf
         detect_changes_and_create_notes # study level charges needs notes for changes
       else

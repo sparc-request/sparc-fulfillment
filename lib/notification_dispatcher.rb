@@ -22,17 +22,6 @@ class NotificationDispatcher
   end
 
   def import_directly
-    object = normalized_object_class.constantize.find_or_create_by(sparc_id: @notification.sparc_id)
-
-    RemoteObjectUpdaterJob.enqueue(object.id, object.class.to_s, @notification.callback_url)
-  end
-
-  def normalized_object_class
-    case notification_object_class
-    when "Study"
-      "Protocol"
-    else
-      notification_object_class
-    end
+    RemoteObjectUpdaterJob.perform_later @notification
   end
 end

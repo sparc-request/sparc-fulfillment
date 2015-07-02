@@ -14,7 +14,8 @@ class LineItem < ActiveRecord::Base
   has_many :documents, as: :documentable
   has_many :components, as: :composable
 
-  delegate  :cost,
+  delegate  :name,
+            :cost,
             :sparc_core_id,
             :sparc_core_name,
             :one_time_fee,
@@ -22,7 +23,7 @@ class LineItem < ActiveRecord::Base
             allow_nil: true
 
   validates :protocol_id, :service_id, presence: true
-  validate :one_time_fee_fields
+  validates :quantity_requested, presence: true, numericality: true, :if => Proc.new { |li| li.one_time_fee }
 
   after_create :create_line_item_components
   after_create :increment_sparc_service_counter
@@ -54,14 +55,6 @@ class LineItem < ActiveRecord::Base
 
   def started_at=(date)
     write_attribute(:started_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
-  end
-
-  def one_time_fee_fields
-    if one_time_fee
-      errors.add(:quantity_requested, "can't be blank") if not quantity_requested.present?
-      errors.add(:quantity_requested, "is not a number") if not quantity_requested.is_a? Numeric
-      errors.add(:quantity_type, "can't be blank") if not quantity_type.present?
-    end
   end
 
   def quantity_remaining
