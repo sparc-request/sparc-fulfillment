@@ -4,7 +4,7 @@
     .col-xs-1
       .btn.glyphicon.glyphicon-edit.change_line_item_service{title: t(:protocol)[:study_schedule][:change_service], type: 'button', line_item_id: line_item.id, data: {toggle: "tooltip", animation: 'false'}}
     .col-xs-1.text-center
-      .glyphicon.check_row.btn.btn-primary{title: t(:visit)[:check_all], type: 'button', :'data-line_item_id' => line_item.id, check: "#{set_check(line_item)}", class: "#{glyph_class(line_item)}", data: {toggle: "tooltip", animation: 'false'}}
+      .glyphicon.check_row.btn.btn-primary{type: 'button', :'data-line_item_id' => line_item.id, check: @state = "#{set_check(line_item)}", title: @state == "true" ? t(:visit)[:check_row] : t(:visit)[:uncheck_row], class: "#{glyph_class(line_item)}", data: {toggle: "tooltip", animation: 'false'}}
   - else
     .col-xs-2
   %div{class: "visits_for_line_item_#{line_item.id}"}
