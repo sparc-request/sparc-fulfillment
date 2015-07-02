@@ -33,8 +33,22 @@ feature 'Identity requests report', js: true do
     i_should_see_the_unaccessed_documents_counter_increment
   end
 
+  scenario 'Sees protocols assigned to user' do
+    when_i_click_the_new_report_button('billing_report')
+    and_open_the_protocol_dropdown
+    i_should_see_protocols_assigned_to_me
+  end
+
+  scenario 'Does not see protocols not assigned to user' do
+    ClinicalProvider.destroy_all
+    when_i_click_the_new_report_button('billing_report')
+    and_open_the_protocol_dropdown
+    i_should_not_see_any_protocols
+  end
+
   def when_i_click_the_new_report_button(kind)
     find("[data-title='#{kind}']").click
+    wait_for_ajax
   end
 
   def and_fill_in_the_new_billing_report_modal
@@ -72,12 +86,25 @@ feature 'Identity requests report', js: true do
     find("button.submit").click
   end
 
+  def and_open_the_protocol_dropdown
+    first('.dropdown-toggle.selectpicker').click
+    wait_for_ajax
+  end
+
   def i_should_see_the_new_report_listed(kind)
     expect(page).to have_css('table.documents tbody tr', text: "#{kind} report")
   end
 
   def i_should_see_the_unaccessed_documents_counter_increment
     expect(page).to have_css(".notification.document-notifications", text: 1)
+  end
+
+  def i_should_see_protocols_assigned_to_me
+    expect(page).to have_css("ul.dropdown-menu.inner.selectpicker li")
+  end
+
+  def i_should_not_see_any_protocols
+    expect(page).to_not have_css("ul.dropdown-menu.inner.selectpicker li")
   end
 
   alias :and_fill_in_the_new_auditing_report_modal :and_fill_in_the_new_billing_report_modal
