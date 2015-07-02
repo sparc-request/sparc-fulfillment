@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150624134812) do
+ActiveRecord::Schema.define(version: 20150701143531) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -105,7 +105,7 @@ ActiveRecord::Schema.define(version: 20150624134812) do
     t.integer  "sparc_id",     limit: 4
     t.integer  "line_item_id", limit: 4
     t.datetime "fulfilled_at"
-    t.integer  "quantity",     limit: 4
+    t.decimal  "quantity",                 precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
@@ -139,8 +139,8 @@ ActiveRecord::Schema.define(version: 20150624134812) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.integer  "subject_count",      limit: 4,   default: 0
-    t.integer  "quantity_requested", limit: 4,   default: 0
+    t.integer  "subject_count",      limit: 4,                            default: 0
+    t.decimal  "quantity_requested",             precision: 10, scale: 2, default: 0.0
     t.string   "quantity_type",      limit: 255
     t.datetime "started_at"
     t.integer  "protocol_id",        limit: 4
