@@ -13,9 +13,9 @@ class LineItem < ActiveRecord::Base
   has_many :notes, as: :notable
   has_many :documents, as: :documentable
   has_many :components, as: :composable
+  has_many :admin_rates, primary_key: :sparc_id
 
-  delegate  :cost,
-            :sparc_core_id,
+  delegate  :sparc_core_id,
             :sparc_core_name,
             :one_time_fee,
             to: :service,
@@ -37,6 +37,14 @@ class LineItem < ActiveRecord::Base
       read_attribute(:name)
     else
       service.name
+    end
+  end
+
+  def cost
+    if admin_rates.any?
+      admin_rates.last.admin_cost
+    else
+      service.cost
     end
   end
 
