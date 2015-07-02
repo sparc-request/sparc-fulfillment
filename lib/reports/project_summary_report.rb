@@ -51,7 +51,6 @@ class ProjectSummaryReport < Report
         end
 
         arm_subtotal = sum_up(visit_group_subtotals)
-
         csv << [""]
         csv << ["", "Visit Subtotals - #{arm.name}", "", display_cost_array(visit_group_subtotals + [arm_subtotal])].flatten
         arms_total += arm_subtotal
