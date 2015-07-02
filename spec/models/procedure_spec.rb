@@ -72,8 +72,10 @@ RSpec.describe Procedure, type: :model do
 
         before do
           to_status = 'complete'
+          @service = create(:service)
           @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
             procedure = create(:procedure, from_status.to_sym)
+            procedure.update_attributes(service_id: @service.id)
             procedure.update_attributes(status: to_status)
             procedure # may not be necessary
           end
@@ -96,8 +98,10 @@ RSpec.describe Procedure, type: :model do
 
         before do
           to_status = 'incomplete'
+          @service = create(:service)
           @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
             procedure = create(:procedure, from_status.to_sym)
+            procedure.update_attributes(service_id: @service.id)
             procedure.update_attributes(status: to_status)
             procedure # may not be necessary
           end
@@ -120,9 +124,12 @@ RSpec.describe Procedure, type: :model do
 
         before do
           to_statuses = ['unstarted', 'follow_up']
+          @service = create(:service)
           from_statuses = Procedure::STATUS_TYPES - to_statuses
+
           @procedures = from_statuses.product(to_statuses).map do |from_status, to_status|
             procedure = create(:procedure, from_status.to_sym)
+            procedure.update_attributes(service_id: @service.id)
             procedure.update_attributes(status: to_status)
             procedure
           end
@@ -141,9 +148,12 @@ RSpec.describe Procedure, type: :model do
 
         before do
           to_statuses = ['unstarted', 'follow_up']
+          @service = create(:service)
           from_statuses = Procedure::STATUS_TYPES - to_statuses
+
           @procedures = from_statuses.product(to_statuses).map do |from_status, to_status|
             procedure = create(:procedure, from_status.to_sym, :with_task)
+            procedure.update_attributes(service_id: @service.id)
             procedure.update_attributes(status: to_status)
             procedure
           end
