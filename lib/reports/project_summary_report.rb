@@ -9,10 +9,11 @@ class ProjectSummaryReport < Report
     @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
   end
 
-  def generate(document)
+  def generate(document, params)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     protocol = Protocol.find(@params[:protocol_id])
+    user = Identity.find(params[:identity_id])
 
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]
@@ -28,7 +29,6 @@ class ProjectSummaryReport < Report
         visit_groups          = arm.visit_groups
         visit_group_subtotals = [0] * visit_groups.count # total costs for each visit group
         participants = Participant.find(arm.appointments.group_by(&:participant_id).keys)
-        # participants          = arm.participants
         participant_totals    = []  # totals per participant
 
         csv << [""]
@@ -52,6 +52,7 @@ class ProjectSummaryReport < Report
         end
 
         arm_subtotal = sum_up(visit_group_subtotals)
+
         csv << [""]
         csv << ["", "Visit Subtotals - #{arm.name}", "", display_cost_array(visit_group_subtotals + [arm_subtotal])].flatten
         arms_total += arm_subtotal

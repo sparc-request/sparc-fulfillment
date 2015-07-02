@@ -2,7 +2,7 @@ class ParticipantReport < Report
 
   require 'csv'
 
-  def generate(document)
+  def generate(document, params)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
     participant = Participant.find(@params[:participant_id])
     protocol    = participant.protocol
@@ -18,7 +18,7 @@ class ParticipantReport < Report
       header_row = ["Visit Schedule", ""]
       label_row = ["Procedure Name", "Service Cost"]
 
-      appointments = participant.appointments
+      appointments = participant.appointments.order(:position)
 
       appointments.each do |appointment|
         header_row << (appointment.completed_date ? appointment.completed_date.strftime("%D") : "")
@@ -61,7 +61,7 @@ class ParticipantReport < Report
 
   def procedure_row_generator(procedures, appointments, csv)
     procedures.to_a.group_by(&:service).each do |service, procedures_by_service|
-      procedures_by_service.group_by(&:service_cost).each do |service_cost, procedures_by_cost|
+      procedures_by_service.group_by{|proc| proc.service_cost.nil? ? proc.service.cost.to_i : proc.service_cost}.each do |service_cost, procedures_by_cost|
         total_for_row = 0
         procedure_row = [service.name]
         procedure_row << display_cost(service_cost)

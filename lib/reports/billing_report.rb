@@ -10,7 +10,7 @@ class BillingReport < Report
   end
 
 
-  def generate(document)
+  def generate(document, params)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
@@ -22,6 +22,8 @@ class BillingReport < Report
       else
         protocols = Protocol.all
       end
+
+      user = Identity.find(params[:identity_id])
 
       csv << ["Study Level Charges:"]
       csv << [
@@ -37,6 +39,7 @@ class BillingReport < Report
 
       protocols.each do |protocol|
         protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |fulfillment|
+          next unless user.has_access_to_service(fulfillment.service)
           csv << [
             protocol.sparc_id,
             protocol.pi ? protocol.pi.full_name : nil,
@@ -70,7 +73,8 @@ class BillingReport < Report
       csv << [""]
 
       protocols.each do |protocol|
-        protocol.procedures.completed_r_in_date_range(@start_date, @end_date).to_a.group_by(&:service).each do |group, procedures|
+        protocol.procedures.completed_r_in_date_range(@start_date, @end_date).to_a.group_by(&:service).each do |service, procedures|
+          next unless user.has_access_to_service(service)
           procedure = procedures.first
           participant = procedure.participant
           appointment = procedure.appointment

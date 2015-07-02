@@ -17,7 +17,7 @@ class ReportJob < ActiveJob::Base
     document_name = params[:title]
     report        = params[:title].classify.constantize.new(params)
 
-    report.generate(document)
+    report.generate(document, params)
 
     FayeJob.perform_later document
   end

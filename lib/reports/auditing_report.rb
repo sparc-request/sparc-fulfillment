@@ -9,7 +9,7 @@ class AuditingReport < Report
     @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
   end
 
-  def generate(document)
+  def generate(document, params)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
@@ -42,8 +42,11 @@ class AuditingReport < Report
         protocols = Protocol.all
       end
 
+      user = Identity.find(params[:identity_id])
+
       protocols.each do |protocol|
         protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
+          next unless user.has_access_to_service(procedure.service)
           participant = procedure.appointment.participant
 
           csv << [
