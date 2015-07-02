@@ -25,13 +25,11 @@ module ProtocolHelper
   end
 
   def formatted_provider(protocol)
-    parent_organization = Organization.find(protocol.sub_service_request.organization.parent_id)
-    
-    parent_organization.name
+    protocol.organization.parent.name
   end
 
   def formatted_project(protocol)
-    protocol.sub_service_request.organization.name
+    protocol.organization.name
   end
 
   def formatted_study_schedule_report(protocol)
