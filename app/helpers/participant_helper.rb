@@ -12,7 +12,7 @@ module ParticipantHelper
   end
 
   def arms_for_appointments appts
-    appts.map{|x| x.arm}.uniq
+    appts.map{|x| x.arm}.compact.uniq
   end
 
   def us_states

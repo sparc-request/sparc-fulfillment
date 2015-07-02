@@ -124,6 +124,19 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  def cost
+    if service_cost
+      amount = service_cost
+    else
+      if visit
+        amount = visit.line_item.cost
+      else
+        amount = service.cost
+      end
+    end
+    amount.to_i
+  end
+
   private
 
   def set_status_dependencies
@@ -134,7 +147,7 @@ class Procedure < ActiveRecord::Base
     if status_changed?(to: "complete")
       write_attribute(:incompleted_date, nil)
       write_attribute(:completed_date, Date.today)
-      write_attribute(:service_cost, service.cost)
+      write_attribute(:service_cost, cost)
     elsif status_changed?(to: "incomplete")
       write_attribute(:completed_date, nil)
       write_attribute(:incompleted_date, Date.today)
@@ -144,6 +157,10 @@ class Procedure < ActiveRecord::Base
       if task.present?
         write_attribute(:status, "follow_up")
       end
+    end
+
+    if status_changed?(from: "complete")
+      write_attribute(:service_cost, nil)
     end
   end
 end
