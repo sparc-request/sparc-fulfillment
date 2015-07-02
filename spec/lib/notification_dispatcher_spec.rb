@@ -20,34 +20,22 @@ RSpec.describe NotificationDispatcher, type: :request do
       end
     end
 
-    context "Protocol" do
+    context 'Protocol' do
 
-      context "update" do
+      context 'update' do
 
-        before do
-          params = { notification: attributes_for(:notification_protocol_update) }
-
-          sparc_sends_notification_post(params)
-        end
-
-        it "should create a RemoteObjectUpdaterJob delayed job" do
-          expect(Delayed::Job.where("handler LIKE '%struct:RemoteObjectUpdaterJob%'").one?).to be
+        it 'should enqueue an ActiveJob' do
+          expect { create(:notification_protocol_update) }.to enqueue_a(RemoteObjectUpdaterJob)
         end
       end
     end
 
-    context "Study" do
+    context 'Study' do
 
-      context "update" do
+      context 'update' do
 
-        before do
-          params = { notification: attributes_for(:notification_study_update) }
-
-          sparc_sends_notification_post(params)
-        end
-
-        it "should create a RemoteObjectUpdaterJob delayed job" do
-          expect(Delayed::Job.where("handler LIKE '%struct:RemoteObjectUpdaterJob%'").one?).to be
+        it 'should enqueue an ActiveJob' do
+          expect { create(:notification_protocol_update) }.to enqueue_a(RemoteObjectUpdaterJob)
         end
       end
     end

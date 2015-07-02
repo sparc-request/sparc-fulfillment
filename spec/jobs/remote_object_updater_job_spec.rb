@@ -2,34 +2,38 @@ require 'rails_helper'
 
 RSpec.describe RemoteObjectUpdaterJob, type: :job do
 
-  describe '#enqueue', delay: true do
+  describe '#perform_later' do
 
-    it 'should create a Delayed::Job' do
-      callback_url = "http://#{ENV.fetch('SPARC_API_USERNAME')}:#{ENV.fetch('SPARC_API_PASSWORD')}@#{ENV.fetch('SPARC_API_HOST')}/v1/sub_service_requests/6213.json"
-
-      RemoteObjectUpdaterJob.enqueue(6213, 'protocol', callback_url)
-
-      expect(Delayed::Job.where(queue: 'sparc_api_requests').count).to eq(1)
+    it 'should enqueue an ActiveJob' do
+      expect { create(:notification_protocol_update) }.to enqueue_a(RemoteObjectUpdaterJob)
     end
-  end
-
-  describe '#perform' do
 
     context 'Protocol update', sparc_api: :get_protocol_1 do
 
       before do
         Protocol.skip_callback :save, :after, :update_faye
+        Notification.skip_callback :create, :after, :create_or_update_object
+
         @protocol                 = create( :protocol,
                                             sparc_id: 1,
-                                            short_title: 'Short Title')
-        callback_url              = "http://#{ENV.fetch('SPARC_API_HOST')}/v1/protocols/1.json"
-        remote_object_updater_job = RemoteObjectUpdaterJob.new(@protocol.id, 'protocol', callback_url)
+                                            short_title: 'Short Title',
+                                            sub_service_request_id: 1)
+        @sibling_protocol         = create( :protocol,
+                                            sparc_id: 2,
+                                            short_title: 'Short Title',
+                                            sub_service_request_id: 1)
+        notification              = create( :notification_protocol_update,
+                                            callback_url: "http://#{ENV.fetch('SPARC_API_HOST')}/v1/protocols/1.json")
 
-        remote_object_updater_job.perform
+        RemoteObjectUpdaterJob.perform_now(notification)
       end
 
       it 'should update the existing protocol' do
         expect(@protocol.reload.short_title).to eq('GS-US-321-0106')
+      end
+
+      it 'should update Protocol siblings' do
+        expect(@sibling_protocol.reload.short_title).to eq('GS-US-321-0106')
       end
 
       it 'should not POST to the Faye server' do

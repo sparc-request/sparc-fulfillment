@@ -1,36 +1,45 @@
-class RemoteObjectUpdaterJob < Struct.new(:object_id, :object_class, :callback_url)
+class RemoteObjectUpdaterJob < ActiveJob::Base
 
-  class SparcApiError < StandardError
-  end
+  queue_as :sparc_api_requests
 
-  def self.enqueue(object_id, object_class, callback_url)
-    job = new(object_id, object_class.downcase, callback_url)
-
-    Delayed::Job.enqueue job, queue: 'sparc_api_requests'
-  end
-
-  def perform
+  before_perform do
     skip_faye_callbacks
-    update_local_object_from_remote_object
+  end
+
+  after_perform do
     set_faye_callbacks
+  end
+
+  def perform(notification)
+    object_class          = normalized_object_class(notification)
+    local_object          = object_class.constantize.find_or_create_by(sparc_id: notification.sparc_id)
+    remote_object         = RemoteObjectFetcher.fetch(notification.callback_url)
+    normalized_attributes = RemoteObjectNormalizer.new(object_class, remote_object[object_class.downcase]).normalize!
+
+    local_object_siblings(local_object).each { |object| object.update_attributes normalized_attributes }
   end
 
   private
 
-  def update_local_object_from_remote_object
-    local_object.update_attributes normalized_attributes
+  def local_object_siblings(local_object)
+    siblings = [local_object]
+
+    if local_object.is_a? Protocol
+      Protocol.where(sub_service_request_id: local_object.sub_service_request_id).each do |protocol|
+        siblings.push protocol
+      end
+    end
+
+    siblings
   end
 
-  def local_object
-    object_class.classify.constantize.find object_id
-  end
-
-  def remote_object
-    RemoteObjectFetcher.fetch(callback_url)
-  end
-
-  def normalized_attributes
-    RemoteObjectNormalizer.new(object_class, remote_object[object_class]).normalize!
+  def normalized_object_class(notification)
+    case notification.kind.classify
+    when 'Study'
+      'Protocol'
+    else
+      notification.kind.classify
+    end
   end
 
   def skip_faye_callbacks
