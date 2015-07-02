@@ -13,7 +13,6 @@ class ProjectSummaryReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     protocol = Protocol.find(@params[:protocol_id])
-    user = Identity.find(params[:identity_id])
 
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]

@@ -126,14 +126,15 @@ class Procedure < ActiveRecord::Base
 
   def cost
     if service_cost
-      service_cost
+      amount = service_cost
     else
       if visit
-        visit.line_item.cost
+        amount = visit.line_item.cost
       else
-        service.cost
+        amount = service.cost
       end
     end
+    amount.to_i
   end
 
   private

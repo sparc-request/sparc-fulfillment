@@ -37,10 +37,10 @@ class ReportsController < ApplicationController
               :title,
               :start_date,
               :end_date,
-              :protocol_ids,
               :protocol_id,
               :participant_id,
               :documentable_id,
-              :documentable_type)
+              :documentable_type,
+              :protocol_ids => [])
   end
 end

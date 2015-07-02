@@ -42,11 +42,8 @@ class AuditingReport < Report
         protocols = Protocol.all
       end
 
-      user = Identity.find(params[:identity_id])
-
       protocols.each do |protocol|
         protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
-          next unless user.has_access_to_service?(procedure.service)
           participant = procedure.appointment.participant
 
           csv << [

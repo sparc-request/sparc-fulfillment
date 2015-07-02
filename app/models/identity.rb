@@ -68,8 +68,4 @@ class Identity < ActiveRecord::Base
   def fulfillment_access_organizations
     clinical_provider_organizations + super_user_organizations.uniq
   end
-
-  def has_access_to_service?(service)
-    fulfillment_access_organizations.include?(service.organization)
-  end
 end

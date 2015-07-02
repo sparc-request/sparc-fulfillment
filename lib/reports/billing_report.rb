@@ -23,8 +23,6 @@ class BillingReport < Report
         protocols = Protocol.all
       end
 
-      user = Identity.find(params[:identity_id])
-
       csv << ["Study Level Charges:"]
       csv << [
         "Protocol ID",
@@ -39,7 +37,6 @@ class BillingReport < Report
 
       protocols.each do |protocol|
         protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |fulfillment|
-          next unless user.has_access_to_service?(fulfillment.service)
           csv << [
             protocol.sparc_id,
             protocol.pi ? protocol.pi.full_name : nil,
@@ -74,7 +71,6 @@ class BillingReport < Report
 
       protocols.each do |protocol|
         protocol.procedures.completed_r_in_date_range(@start_date, @end_date).to_a.group_by(&:service).each do |service, procedures|
-          next unless user.has_access_to_service?(service)
           procedure = procedures.first
           participant = procedure.participant
           appointment = procedure.appointment

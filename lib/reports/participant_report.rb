@@ -61,7 +61,7 @@ class ParticipantReport < Report
 
   def procedure_row_generator(procedures, appointments, csv)
     procedures.to_a.group_by(&:service).each do |service, procedures_by_service|
-      procedures_by_service.group_by{|proc| proc.service_cost.nil? ? proc.service.cost.to_i : proc.service_cost}.each do |service_cost, procedures_by_cost|
+      procedures_by_service.group_by(&:cost).each do |service_cost, procedures_by_cost|
         total_for_row = 0
         procedure_row = [service.name]
         procedure_row << display_cost(service_cost)
