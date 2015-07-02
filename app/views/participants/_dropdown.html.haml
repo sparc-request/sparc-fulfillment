@@ -7,5 +7,5 @@
         %option{:disabled => true, :style => 'font-weight:bold;'}= arm.name.humanize + ':'
         = options_from_collection_for_select(appointments_for_select(arm, participant), 'id', 'name')
         %option{'data-divider' => true, :disabled => true}
-    %button.btn.btn-primary.appointment.new{title: t(:visit)[:custom], type: "button", aria: {label: "Custom Visit"}, data: {participant_id: participant.id, arm_id: participant.arm_id, toggle: "tooltip", animation: 'false'}}
+    %button.btn.btn-primary.appointment.new{title: t(:visit)[:custom], type: "button", aria: {label: "Custom Visit"}, disabled: participant.arm_id.nil? ? true : false, data: {participant_id: participant.id, arm_id: participant.arm_id, toggle: "tooltip", animation: 'false'}}
       %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
