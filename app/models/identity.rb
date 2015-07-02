@@ -11,6 +11,7 @@ class Identity < ActiveRecord::Base
   has_many :tasks, as: :assignable
   has_many :reports
   has_many :clinical_providers
+  has_many :super_users
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
@@ -40,5 +41,31 @@ class Identity < ActiveRecord::Base
 
   def full_name
     [first_name, last_name].join(' ')
+  end
+
+  def clinical_provider_organizations
+    orgs = []
+
+    self.clinical_providers.map(&:organization).each do |org|
+      orgs << org
+      orgs << org.all_child_organizations
+    end
+
+    orgs.flatten.uniq
+  end
+
+  def super_user_organizations
+    orgs = []
+
+    self.super_users.map(&:organization).each do |org|
+      orgs << org
+      orgs << org.all_child_organizations
+    end
+
+    orgs.flatten.uniq
+  end
+
+  def fulfillment_access_organizations
+    clinical_provider_organizations + super_user_organizations.uniq
   end
 end
