@@ -25,7 +25,7 @@ class ProtocolImporter
                                                                        stored_percent_subsidy: stored_percent_subsidy,
                                                                        sub_service_request_id: sparc_sub_service_request.id})
 
-      fulfillment_protocol = Protocol.create(attr)
+      fulfillment_protocol = validate_and_save(Protocol.new(attr))
       # end protocol creation
 
       if fulfillment_protocol.organization.inclusive_child_services(:per_participant).present?
@@ -35,7 +35,7 @@ class ProtocolImporter
           attr = normalized_attributes('Arm', sparc_arm).merge!({sparc_id: sparc_arm.id,
                                                                  protocol_id: fulfillment_protocol.id})
 
-          fulfillment_arm = Arm.create(attr)
+          fulfillment_arm = validate_and_save(Arm.new(attr))
           # end arm creation
 
           sparc_arm.visit_groups.each do |sparc_visit_group|
@@ -43,7 +43,7 @@ class ProtocolImporter
             # visit_group creation
             attr = normalized_attributes('VisitGroup', sparc_visit_group).merge!({sparc_id: sparc_visit_group.id,
                                                                                   arm_id: fulfillment_arm.id})
-            fulfillment_visit_group = VisitGroup.create(attr)
+            fulfillment_visit_group = validate_and_save(VisitGroup.new(attr))
             # end visit_group creation
 
             sparc_visit_group.visits.each do |sparc_visit|
@@ -57,7 +57,7 @@ class ProtocolImporter
                                                                                     protocol_id: fulfillment_protocol.id,
                                                                                     subject_count: sparc_visit.line_items_visit.subject_count,
                                                                                     arm_id: fulfillment_arm.id})
-                  fulfillment_line_item = LineItem.create(attr)
+                  fulfillment_line_item = validate_and_save(LineItem.new(attr))
                   # end per participant line_item creation
                 end
 
@@ -65,7 +65,7 @@ class ProtocolImporter
                 attr = normalized_attributes('Visit', sparc_visit).merge!({sparc_id: sparc_visit.id,
                                                                            visit_group_id: fulfillment_visit_group.id,
                                                                            line_item_id: fulfillment_line_item.id})
-                fulfillment_visit = Visit.create(attr)
+                fulfillment_visit = validate_and_save(Visit.new(attr))
                 # end visit creation
               end
 
@@ -84,7 +84,7 @@ class ProtocolImporter
                                                                           protocol_id: fulfillment_protocol.id,
                                                                           quantity_requested: sparc_line_item_quantity_requested,
                                                                           quantity_type: sparc_line_item.service.current_effective_pricing_map.quantity_type})
-        fulfillment_line_item = LineItem.create(attr)
+        fulfillment_line_item = validate_and_save(LineItem.new(attr))
       end
       # end one_time_fee line_item creation
 
@@ -104,5 +104,18 @@ class ProtocolImporter
 
   def normalized_attributes klass_name, object
     RemoteObjectNormalizer.new(klass_name, object.attributes).normalize!
+  end
+  
+  def validate_and_save object
+    if object.valid?
+      object.save
+    else
+      STDERR.puts "#"*50
+      STDERR.puts "Invalid object #{object.errors.inspect}"
+      STDERR.puts "#"*50
+      raise ActiveRecord::Rollback 
+    end
+
+    object
   end
 end

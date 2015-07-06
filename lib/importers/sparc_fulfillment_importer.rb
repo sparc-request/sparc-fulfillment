@@ -13,7 +13,30 @@ class SparcFulfillmentImporter
                     'Screen Fail' => 'Completed'}.freeze
 
 
-  #TODO need to map statuses as well, just waiting on Lane to send a mapping
+  def self.import_all(ignored=[])
+    silenct_stream(STDOUT) do
+      skipped = []
+      processed = []
+
+      Sparc::SubServiceRequest.where(in_work_fulfillment: true, status: 'ctrc_approved').each do |ssr|
+        next if ignored.include?(ssr.id)
+        begin
+          SparcFulfillmentImporter.new("https://sparc-d.obis.musc.edu/v1/sub_service_requests/#{ssr.id}.json").create
+          process << ssr.id
+        rescue
+          skipped << ssr.id
+        end
+      end
+
+      STDERR.puts "*"*100
+      STDERR.puts "*"*100
+      STDERR.puts "Ignored SSR ids = #{ignored.inspect}"
+      STDERR.puts "Skipped SSR ids = #{skipped.inspect}"
+      STDERR.puts "Processed SSR ids = #{processed.inspect}"
+      STDERR.puts "*"*100
+      STDERR.puts "*"*100
+    end
+  end
 
   def initialize(callback_url)
     @callback_url = callback_url
@@ -52,7 +75,11 @@ class SparcFulfillmentImporter
           sparc_arm.subjects.each do |sparc_subject|
 
             if sparc_subject.gender == 'other'
-              puts "SPARC subject gender invalid: #{sparc_subject.inspect}"
+              STDERR.puts "*"*50
+              STDERR.puts "*"*50
+              STDERR.puts "SPARC subject gender invalid: #{sparc_subject.inspect}"
+              STDERR.puts "*"*50
+              STDERR.puts "*"*50
               raise ActiveRecord::Rollback 
             end
 
@@ -68,6 +95,7 @@ class SparcFulfillmentImporter
                 fulfillment_visit_group = VisitGroup.where(sparc_id: sparc_appointment.visit_group_id, arm_id: fulfillment_arm.id).first
 
                 fulfillment_appointment = nil
+      		
                 unless fulfillment_appointment = Appointment.where(participant_id: fulfillment_participant.id, visit_group_id: fulfillment_visit_group.id, arm_id: fulfillment_arm.id).first
                   fulfillment_appointment = create_fulfillment_appointment(fulfillment_participant, fulfillment_visit_group, fulfillment_arm, sparc_appointment)                                                                             
                 end
@@ -261,9 +289,9 @@ class SparcFulfillmentImporter
     if object.valid?
       object.save
     else
-      puts "#"*50
-      puts "Invalid object #{object.errors.inspect}"
-      puts "#"*50
+      STDERR.puts "#"*50
+      STDERR.puts "Invalid object #{object.errors.inspect}"
+      STDERR.puts "#"*50
       raise ActiveRecord::Rollback 
     end
 
