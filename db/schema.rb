@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701143531) do
+ActiveRecord::Schema.define(version: 20150706115009) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(version: 20150701143531) do
   add_index "participants", ["sparc_id"], name: "index_participants_on_sparc_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
+    t.integer  "sparc_id",         limit: 4
     t.integer  "appointment_id",   limit: 4
     t.string   "service_name",     limit: 255
     t.integer  "service_cost",     limit: 4
@@ -224,13 +225,14 @@ ActiveRecord::Schema.define(version: 20150701143531) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "visit_id",         limit: 4
-    t.datetime "incompleted_date"
     t.integer  "performer_id",     limit: 4
+    t.datetime "incompleted_date"
   end
 
   add_index "procedures", ["appointment_id"], name: "index_procedures_on_appointment_id", using: :btree
   add_index "procedures", ["completed_date"], name: "index_procedures_on_completed_date", using: :btree
   add_index "procedures", ["service_id"], name: "index_procedures_on_service_id", using: :btree
+  add_index "procedures", ["sparc_id"], name: "index_procedures_on_sparc_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
 
   create_table "protocols", force: :cascade do |t|
@@ -254,17 +256,6 @@ ActiveRecord::Schema.define(version: 20150701143531) do
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", using: :btree
   add_index "protocols", ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id", using: :btree
-
-  create_table "reports", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "status",      limit: 255
-    t.integer  "identity_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.datetime "deleted_at"
-  end
-
-  add_index "reports", ["identity_id"], name: "index_reports_on_identity_id", using: :btree
 
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"

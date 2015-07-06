@@ -187,38 +187,46 @@ class SparcFulfillmentImporter
 
     sparc_line_item_id = sparc_procedure.line_item_id
     sparc_service_id = sparc_procedure.service_id
+    line_item = LineItem.where(sparc_id: sparc_line_item_id, protocol_id: @fulfillment_protocol.id).first
     
-
-    fulfillment_service = sparc_line_item_id.present?  ? LineItem.where(sparc_id: sparc_line_item_id, protocol_id: @fulfillment_protocol.id).first.service : Service.where(id: sparc_service_id).first
+    if sparc_line_item_id.present? && line_item.present? # this is a needed check for bad data
+      fulfillment_service = line_item.service
+    else
+      fulfillment_service = Service.where(id: sparc_service_id).first
+    end
 
     fulfillment_visit_id = nil
-
     if sparc_line_item_id.present?
       fulfillment_line_item = LineItem.where(sparc_id: sparc_line_item_id, protocol_id: @fulfillment_protocol.id).first
-      fulfillment_visit_id = Visit.where(sparc_id: sparc_procedure.visit_id, line_item_id: fulfillment_line_item.id).first.id
+      if fulfillment_line_item.present?
+        visit = Visit.where(sparc_id: sparc_procedure.visit_id, line_item_id: fulfillment_line_item.id).first
+      end
+      fulfillment_visit_id = visit.present? ? visit.id : nil # we forgot about the case where a sparc procedure doesn't have a visit id
     end
 
     sparc_organization = sparc_procedure.appointment.organization
-
     quantity.times do
-      fulfillment_procedure = fulfillment_appointment.procedures.new(service_id:      fulfillment_service.id, 
-                                                                     appointment_id:  fulfillment_appointment.id,
-                                                                     service_name:    fulfillment_service.name,
-                                                                     billing_type:    billing_type,
-                                                                     sparc_core_id:   sparc_organization.id,
-                                                                     sparc_core_name: sparc_organization.name,
-                                                                     visit_id:        fulfillment_visit_id)
-      if sparc_procedure.completed? and sparc_procedure.appointment.completed_at.present?
-        sparc_procedure_completed_audit = sparc_procedure.audits.where("audited_changes like '%completed: true%' OR audited_changes like '%completed:\n- false\n- true%'").first
-        sparc_procedure_completed_date = sparc_procedure.appointment.completed_at
-        sparc_procedure_completed_by = sparc_procedure_completed_audit.user_id
+      if fulfillment_service.present? # this is a needed check for bad data. 
+        fulfillment_procedure = fulfillment_appointment.procedures.new(service_id:      fulfillment_service.id, 
+                                                                      appointment_id:  fulfillment_appointment.id,
+                                                                      service_name:    fulfillment_service.name,
+                                                                      billing_type:    billing_type,
+                                                                      sparc_core_id:   sparc_organization.id,
+                                                                      sparc_core_name: sparc_organization.name,
+                                                                      visit_id:        fulfillment_visit_id)
 
-        fulfillment_procedure.status = 'complete'
-        fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m-%d-%Y")
-        fulfillment_procedure.performer_id = sparc_procedure_completed_by
+        if sparc_procedure.completed? and sparc_procedure.appointment.completed_at.present?
+          sparc_procedure_completed_audit = sparc_procedure.audits.where("audited_changes like '%completed: true%' OR audited_changes like '%completed:\n- false\n- true%'").first
+          sparc_procedure_completed_date = sparc_procedure.appointment.completed_at
+          sparc_procedure_completed_by = sparc_procedure_completed_audit.user_id
+
+          fulfillment_procedure.status = 'complete'
+          fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m-%d-%Y")
+          fulfillment_procedure.performer_id = sparc_procedure_completed_by
+        end
+
+        validate_and_save fulfillment_procedure
       end
-
-      validate_and_save fulfillment_procedure
     end
   end
 
