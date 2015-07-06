@@ -14,28 +14,26 @@ class SparcFulfillmentImporter
 
 
   def self.import_all(ignored=[])
-    silenct_stream(STDOUT) do
-      skipped = []
-      processed = []
+    skipped = []
+    processed = []
 
-      Sparc::SubServiceRequest.where(in_work_fulfillment: true, status: 'ctrc_approved').each do |ssr|
-        next if ignored.include?(ssr.id)
-        begin
-          SparcFulfillmentImporter.new("https://sparc-d.obis.musc.edu/v1/sub_service_requests/#{ssr.id}.json").create
-          process << ssr.id
-        rescue
-          skipped << ssr.id
-        end
+    Sparc::SubServiceRequest.where(in_work_fulfillment: true, status: 'ctrc_approved').each do |ssr|
+      next if ignored.include?(ssr.id)
+      begin
+        SparcFulfillmentImporter.new("https://sparc-d.obis.musc.edu/v1/sub_service_requests/#{ssr.id}.json").create
+        process << ssr.id
+      rescue
+        skipped << ssr.id
       end
-
-      STDERR.puts "*"*100
-      STDERR.puts "*"*100
-      STDERR.puts "Ignored SSR ids = #{ignored.inspect}"
-      STDERR.puts "Skipped SSR ids = #{skipped.inspect}"
-      STDERR.puts "Processed SSR ids = #{processed.inspect}"
-      STDERR.puts "*"*100
-      STDERR.puts "*"*100
     end
+
+    puts "*"*100
+    puts "*"*100
+    puts "Ignored SSR ids = #{ignored.inspect}"
+    puts "Skipped SSR ids = #{skipped.inspect}"
+    puts "Processed SSR ids = #{processed.inspect}"
+    puts "*"*100
+    puts "*"*100
   end
 
   def initialize(callback_url)
@@ -75,11 +73,11 @@ class SparcFulfillmentImporter
           sparc_arm.subjects.each do |sparc_subject|
 
             if sparc_subject.gender == 'other'
-              STDERR.puts "*"*50
-              STDERR.puts "*"*50
-              STDERR.puts "SPARC subject gender invalid: #{sparc_subject.inspect}"
-              STDERR.puts "*"*50
-              STDERR.puts "*"*50
+              puts "*"*50
+              puts "*"*50
+              puts "SPARC subject gender invalid: #{sparc_subject.inspect}"
+              puts "*"*50
+              puts "*"*50
               raise ActiveRecord::Rollback 
             end
 
@@ -289,9 +287,9 @@ class SparcFulfillmentImporter
     if object.valid?
       object.save
     else
-      STDERR.puts "#"*50
-      STDERR.puts "Invalid object #{object.errors.inspect}"
-      STDERR.puts "#"*50
+      puts "#"*50
+      puts "Invalid object #{object.errors.inspect}"
+      puts "#"*50
       raise ActiveRecord::Rollback 
     end
 

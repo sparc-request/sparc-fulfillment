@@ -110,9 +110,9 @@ class ProtocolImporter
     if object.valid?
       object.save
     else
-      STDERR.puts "#"*50
-      STDERR.puts "Invalid object #{object.errors.inspect}"
-      STDERR.puts "#"*50
+      puts "#"*50
+      puts "Invalid object #{object.errors.inspect}"
+      puts "#"*50
       raise ActiveRecord::Rollback 
     end
 
