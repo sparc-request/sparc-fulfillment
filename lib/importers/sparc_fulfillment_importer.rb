@@ -174,16 +174,44 @@ class SparcFulfillmentImporter
 
   def create_fulfillment_procedures(sparc_appointment, fulfillment_appointment)
     sparc_appointment.procedures.each do |sparc_procedure|
+
       r_quantity = sparc_procedure.r_quantity || 1
       t_quantity = sparc_procedure.t_quantity || 0
+
+      if 
       
       generate_procedures(sparc_procedure, fulfillment_appointment, r_quantity, 'research_billing_qty')
       generate_procedures(sparc_procedure, fulfillment_appointment, t_quantity, 'insurance_billing_qty')
     end
   end
 
+  def displayed_in_sparc sparc_procedure
+    if sparc_procedure.service
+      return true
+    elsif sparc_procedure.visit
+      if sparc_procedure.completed
+        return true
+      elsif sparc_procedure.line_item.service.one_time_fee
+        return false
+      elsif sparc_procedure.appointment.visit_group_id.nil?
+        return true if sparc_procedure.completed
+      else
+        if (sparc_procedure.visit.research_billing_qty && sparc_procedure.visit.research_billing_qty > 0) or (sparc_procedure.visit.insurance_billing_qty && sparc_procedure.visit.insurance_billing_qty > 0)
+          return true
+        else
+          return false
+        end
+      end
+    elsif sparc_procedure.appointment.visit_group_id.nil?
+      return true if sparc_procedure.completed
+    end
+
+    return false
+  end
+
   def generate_procedures(sparc_procedure, fulfillment_appointment, quantity, billing_type)
     return if quantity == 0
+    return unless displayed_in_sparc(sparc_procedure)
 
     sparc_line_item_id = sparc_procedure.line_item_id
     sparc_service_id = sparc_procedure.service_id
