@@ -30,6 +30,7 @@ feature "Change Participant Arm", js: :true do
 
   def and_the_visit_group_of_completed_procedure_should_still_appear
     bootstrap_select("#appointment_select", @procedure.visit_group.name)
+    wait_for_ajax
   end
 
   def then_i_switch_back_to_the_original_arm
@@ -39,6 +40,6 @@ feature "Change Participant Arm", js: :true do
   def and_all_the_visits_should_appear
     #only tests for one to save time since if last one appears the others should also be there
     bootstrap_select("#appointment_select", @original_arm.visit_groups.last.name)
+    wait_for_ajax
   end
 end
-
