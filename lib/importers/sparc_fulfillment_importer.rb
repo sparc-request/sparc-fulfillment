@@ -207,7 +207,8 @@ class SparcFulfillmentImporter
     sparc_organization = sparc_procedure.appointment.organization
     quantity.times do
       if fulfillment_service.present? # this is a needed check for bad data. 
-        fulfillment_procedure = fulfillment_appointment.procedures.new(service_id:      fulfillment_service.id, 
+        fulfillment_procedure = fulfillment_appointment.procedures.new(sparc_id:       sparc_procedure.id,
+                                                                      service_id:      fulfillment_service.id, 
                                                                       appointment_id:  fulfillment_appointment.id,
                                                                       service_name:    fulfillment_service.name,
                                                                       billing_type:    billing_type,
