@@ -221,7 +221,7 @@ en:
     owner: "Owner"
     requester: "Service Requester"
     provider: "Provider"
-    project: "Project"
+    program: "Program"
     tabs:
       study_schedule: "Study Schedule"
       participant_list: "Participant List"
