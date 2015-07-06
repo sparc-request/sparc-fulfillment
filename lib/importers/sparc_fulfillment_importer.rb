@@ -178,8 +178,6 @@ class SparcFulfillmentImporter
       r_quantity = sparc_procedure.r_quantity || 1
       t_quantity = sparc_procedure.t_quantity || 0
 
-      if 
-      
       generate_procedures(sparc_procedure, fulfillment_appointment, r_quantity, 'research_billing_qty')
       generate_procedures(sparc_procedure, fulfillment_appointment, t_quantity, 'insurance_billing_qty')
     end
