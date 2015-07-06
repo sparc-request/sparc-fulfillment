@@ -243,6 +243,12 @@ Devise.setup do |config|
   #   manager.intercept_401 = false
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   # end
+  
+  if ENV.fetch('INCLUDE_LDAP_AUTHENTICATION') == 'true'
+    config.warden do |manager|
+      manager.default_strategies(:scope => :identity).unshift :ldap_authenticatable
+    end
+  end
 
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine
