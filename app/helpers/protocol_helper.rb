@@ -28,7 +28,7 @@ module ProtocolHelper
     protocol.organization.parent.name
   end
 
-  def formatted_project(protocol)
+  def formatted_program(protocol)
     protocol.organization.name
   end
 
