@@ -175,8 +175,8 @@ class SparcFulfillmentImporter
   def create_fulfillment_procedures(sparc_appointment, fulfillment_appointment)
     sparc_appointment.procedures.each do |sparc_procedure|
 
-      r_quantity = sparc_procedure.r_quantity || 1
-      t_quantity = sparc_procedure.t_quantity || 0
+      r_quantity = sparc_procedure.r_quantity || sparc_procedure.visit.research_billing_qty || 1
+      t_quantity = sparc_procedure.t_quantity || sparc_procedure.visit.insurance_billing_qty || 0
 
       generate_procedures(sparc_procedure, fulfillment_appointment, r_quantity, 'research_billing_qty')
       generate_procedures(sparc_procedure, fulfillment_appointment, t_quantity, 'insurance_billing_qty')
