@@ -20,7 +20,8 @@ class SparcFulfillmentImporter
     Sparc::SubServiceRequest.where(in_work_fulfillment: true, status: 'ctrc_approved').each do |ssr|
       next if ignored.include?(ssr.id)
       begin
-        SparcFulfillmentImporter.new("https://sparc-d.obis.musc.edu/v1/sub_service_requests/#{ssr.id}.json").create
+        base_url = "#{ENV.fetch('GLOBAL_SCHEME')}://#{ENV.fetch('SPARC_API_HOST')}/#{ENV.fetch('SPARC_API_VERSION')}"
+        SparcFulfillmentImporter.new("#{base_url}/sub_service_requests/#{ssr.id}.json").create
         process << ssr.id
       rescue
         skipped << ssr.id
