@@ -342,7 +342,7 @@ en:
       submitted: 'Submitted'
       get_a_quote: 'Get a Quote'
       in_process: 'In Process'
-      complete: 'Compete'
+      complete: 'Complete'
       awaiting_pi_approval: 'Awaiting Requester Response'
       on_hold: 'On Hold'
       ctrc_review: 'In Admin Review'
@@ -354,4 +354,3 @@ en:
       approved: 'Approved'
       declined: 'Declined'
       withdrawn: 'Withdrawn'
-
