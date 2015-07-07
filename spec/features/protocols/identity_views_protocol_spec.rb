@@ -19,11 +19,7 @@ feature "Identity views protocol", js: true do
   end
 
   def given_i_am_a_fulfillment_provider_for_a_protocol_without_services
-    identity      = Identity.first
-    @protocol     = create(:protocol_without_services)
-    organization  = @protocol.organization
-
-    create(:clinical_provider, identity: identity, organization: organization)
+    @protocol = create_and_assign_protocol_without_services_to_me
   end
 
   def when_i_visit_the_protocol_page
