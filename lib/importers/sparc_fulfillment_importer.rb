@@ -91,7 +91,7 @@ class SparcFulfillmentImporter
 
               sparc_calendar.appointments.each do |sparc_appointment|
                 fulfillment_visit_group = VisitGroup.where(sparc_id: sparc_appointment.visit_group_id, arm_id: fulfillment_arm.id).first
-
+                next unless fulfillment_visit_group.present?
                 fulfillment_appointment = nil
       		
                 unless fulfillment_appointment = Appointment.where(participant_id: fulfillment_participant.id, visit_group_id: fulfillment_visit_group.id, arm_id: fulfillment_arm.id).first
