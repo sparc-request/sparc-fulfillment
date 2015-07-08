@@ -171,7 +171,7 @@ class SparcFulfillmentImporter
                                                                      date_of_birth:  (sparc_subject.dob.present? ? sparc_subject.dob.strftime("%m-%d-%Y") : nil),
                                                                      gender:         sparc_subject.gender.capitalize,
                                                                      ethnicity:      'Unknown/Other/Unreported', 
-                                                                     race:           RACE_OPTIONS[sparc_subject.ethnicity] ? RACE_OPTIONS[sparc_subject.ethnicity] : 'Unknown/Other/Unreported',
+                                                                     race:           RACE_OPTIONS[sparc_subject.ethnicity],
                                                                      arm:            fulfillment_arm)
 
     validate_and_save fulfillment_participant
