@@ -5,9 +5,9 @@ json.srid participant.srid
 json.arm_id participant.arm_id
 json.arm_name truncated_formatter(participant.arm.name) if participant.arm
 json.first_middle truncated_formatter(participant.first_middle)
-json.first_name truncated_formatter(participant.first_name.humanize)
+json.first_name truncated_formatter(participant.first_name)
 json.middle_initial participant.middle_initial
-json.last_name truncated_formatter(participant.last_name.humanize)
+json.last_name truncated_formatter(participant.last_name)
 json.name truncated_formatter(participant.full_name)
 json.mrn truncated_formatter(participant.mrn)
 json.external_id truncated_formatter(participant.external_id)
