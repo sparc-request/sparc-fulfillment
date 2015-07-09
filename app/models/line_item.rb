@@ -13,9 +13,9 @@ class LineItem < ActiveRecord::Base
   has_many :notes, as: :notable
   has_many :documents, as: :documentable
   has_many :components, as: :composable
+  has_many :admin_rates, primary_key: :sparc_id
 
   delegate  :name,
-            :cost,
             :sparc_core_id,
             :sparc_core_name,
             :one_time_fee,
@@ -38,6 +38,14 @@ class LineItem < ActiveRecord::Base
       read_attribute(:name)
     else
       service.name
+    end
+  end
+
+  def cost
+    if admin_rates.any?
+      admin_rates.last.admin_cost
+    else
+      service.cost
     end
   end
 
@@ -83,7 +91,7 @@ class LineItem < ActiveRecord::Base
   private
 
   def create_line_item_components
-    if one_time_fee
+    if one_time_fee && service.components.present?
       position = 0
       service.components.split(',').each do |component|
         Component.create(composable_type: 'LineItem', composable_id: id, component: component, position: position)

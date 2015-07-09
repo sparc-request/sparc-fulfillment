@@ -70,7 +70,7 @@ class BillingReport < Report
       csv << [""]
 
       protocols.each do |protocol|
-        protocol.procedures.completed_r_in_date_range(@start_date, @end_date).to_a.group_by(&:service).each do |group, procedures|
+        protocol.procedures.completed_r_in_date_range(@start_date, @end_date).to_a.group_by(&:service).each do |service, procedures|
           procedure = procedures.first
           participant = procedure.participant
           appointment = procedure.appointment
