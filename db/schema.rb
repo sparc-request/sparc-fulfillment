@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150706115009) do
+ActiveRecord::Schema.define(version: 20150707173551) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -216,7 +216,6 @@ ActiveRecord::Schema.define(version: 20150706115009) do
     t.integer  "service_cost",     limit: 4
     t.integer  "service_id",       limit: 4
     t.string   "status",           limit: 255, default: "unstarted"
-    t.datetime "start_date"
     t.datetime "completed_date"
     t.string   "billing_type",     limit: 255
     t.integer  "sparc_core_id",    limit: 4
