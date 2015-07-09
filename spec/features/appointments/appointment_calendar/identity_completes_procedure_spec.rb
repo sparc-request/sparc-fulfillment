@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Complete Procedure', js: true do
+feature 'Identity completes Procedure', js: true do
 
   context "appointment started" do
 
@@ -56,15 +56,6 @@ feature 'Complete Procedure', js: true do
       as_a_user_who_has_added_a_procedure_to_an_appointment
       when_i_try_to_complete_the_procedure_i_should_see_a_helpful_message
     end
-  end
-
-  scenario 'User edits a complete Procedure date' do
-    as_a_user_who_has_added_a_procedure_to_an_appointment
-    then_begins_appointment
-    when_i_complete_the_procedure
-    then_i_edit_the_completed_date
-    wait_for_ajax
-    and_it_updates_the_completed_date
   end
 
   def as_a_user_who_has_added_a_procedure_to_an_appointment qty=1
@@ -137,17 +128,6 @@ feature 'Complete Procedure', js: true do
       find('label.status.complete').trigger('click')
       wait_for_ajax
     end
-  end
-
-  def then_i_edit_the_completed_date
-    page.execute_script %Q{ $(".datetimepicker").siblings(".input-group-addon").trigger("click")}
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    wait_for_ajax
-  end
-
-  def and_it_updates_the_completed_date
-    @procedure.reload
-    expect(@procedure.completed_date).to eq Time.new(Time.now.year, Time.now.month,15)
   end
 
   alias :and_i_complete_the_procedure_again :when_i_complete_the_procedure

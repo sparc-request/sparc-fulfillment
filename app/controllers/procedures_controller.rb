@@ -6,10 +6,11 @@ class ProceduresController < ApplicationController
 
   def create
     @appointment_id = params[:appointment_id]
-    qty = params[:qty].to_i
-    service = Service.find params[:service_id]
-    performer_id = params[:performer_id] || current_identity.id
-    @procedures = []
+    qty             = params[:qty].to_i
+    service         = Service.find params[:service_id]
+    performer_id    = params[:performer_id]
+    @procedures     = []
+
     qty.times do
       @procedures << Procedure.create(appointment_id: @appointment_id,
                                       service_id: service.id,

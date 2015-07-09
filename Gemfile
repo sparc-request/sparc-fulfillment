@@ -5,10 +5,7 @@ gem 'acts_as_list'
 gem 'addressable'
 gem 'ar-octopus', '~> 0.8.5'
 gem 'autoprefixer-rails'
-
-#requirements for excel export
 gem 'axlsx_rails'
-
 gem 'bootstrap-sass'
 gem 'bootstrap-select-rails', :git => 'git@github.com:Slashek/bootstrap-select-rails.git'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.0.0'

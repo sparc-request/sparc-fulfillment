@@ -23,7 +23,7 @@
       %span.input-group-addon{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
         %span.glyphicon.glyphicon-calendar
   %td.performed-by
-    = render partial: "appointments/performed_by_dropdown", locals: { procedure: procedure }
+    = performed_by_dropdown(procedure)
   %td.notes
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
