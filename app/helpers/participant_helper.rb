@@ -1,7 +1,7 @@
 module ParticipantHelper
 
   def performed_by_dropdown(procedure)
-    identities  = Identity.joins(:clinical_providers).where(clinical_providers: { organization: procedure.protocol.organization })
+    identities = Identity.joins(:clinical_providers).where(clinical_providers: { organization: procedure.protocol.organization })
 
     if procedure.performer.present?
       options = options_for_select(identities.map { |identity| [identity.full_name, identity.id] })

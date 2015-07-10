@@ -1,6 +1,8 @@
-<% if !(@procedure.errors.empty?) %>
+<% if @procedure.errors.present? %>
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
 <% else %>
+
+$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 
@@ -9,7 +11,7 @@ date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").
   datetimepicker(format: 'MM-DD-YYYY').
   data("DateTimePicker")
 
-<% if @procedure.unstarted? or @procedure.follow_up? %>
+<% if @procedure.unstarted? || @procedure.follow_up? %>
   date_time_picker.
   date(null).
   disable()
