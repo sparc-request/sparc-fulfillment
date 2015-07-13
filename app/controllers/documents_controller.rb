@@ -51,8 +51,23 @@ class DocumentsController < ApplicationController
 
         create_document_file
 
-        flash[:success] = t(:documents)[:flash_messages][:created]
+        flash.now[:success] = t(:documents)[:flash_messages][:created]
       }
+    end
+  end
+
+  def edit
+    @document = Document.find(params[:id])
+  end
+
+  def update
+    @document = Document.find(params[:id])
+    @document.update_attributes(title: params[:document][:title])
+    if @document.valid?
+      @document.save
+      flash.now[:success] = t(:documents)[:flash_messages][:updated]
+    else
+      @errors = @document.errors
     end
   end
 

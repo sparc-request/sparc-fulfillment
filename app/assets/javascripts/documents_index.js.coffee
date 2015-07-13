@@ -34,3 +34,9 @@ $ ->
         $(".modal #modal_errors").empty().append("<div class='alert alert-danger'>#{error_message}</div>")
       else
         $('.modal form').submit()
+
+    $(document).on 'click', '.edit-document', ->
+      document_id = $(this).attr('document_id')
+      $.ajax
+        type: 'GET'
+        url: "documents/#{document_id}/edit"

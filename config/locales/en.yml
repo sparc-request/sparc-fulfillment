@@ -67,6 +67,8 @@ en:
     new_header: "Add Document"
     date: "Date Uploaded"
     object: "Document"
+    title: "Title"
+    edit_header: "Report Name"
     lineitem:
       index_header: "Line Item Documents"
       none: "This line item has no documents"
@@ -75,6 +77,7 @@ en:
       none: "This fulfillment has no documents."
     flash_messages:
       created: "Document Created"
+      updated: "Title updated"
 
   fulfillment:
     edit: "Edit Fulfillment"
