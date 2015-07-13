@@ -73,9 +73,10 @@ class ProceduresController < ApplicationController
                               comment: 'Status set to complete',
                               kind: 'log')
     elsif change_in_performer_detected?
-      new_performer = Identity.find(procedure_params[:performer_id]).full_name
+      new_performer = Identity.find(procedure_params[:performer_id])
+
       @procedure.notes.create(identity: current_identity,
-                              comment: "Performer changed to #{new_performer}",
+                              comment: "Performer changed to #{new_performer.full_name}",
                               kind: 'log')
     end
   end
@@ -101,7 +102,7 @@ class ProceduresController < ApplicationController
   end
 
   def change_in_performer_detected?
-    procedure_params[:performer_id].present? and procedure_params[:performer_id] != @procedure.performer_id
+    procedure_params[:performer_id].present? && procedure_params[:performer_id] != @procedure.performer_id
   end
 
   def procedure_params

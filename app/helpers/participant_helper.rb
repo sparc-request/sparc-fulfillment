@@ -6,7 +6,7 @@ module ParticipantHelper
     if procedure.performer.present?
       options = options_for_select(identities.map { |identity| [identity.full_name, identity.id] })
     else
-      options = options_for_select(identities.map { |identity| [identity.full_name, identity.id] }.insert(0, ['Please Select', nil]))
+      options = options_for_select(identities.map { |identity| [identity.full_name, identity.id] }.insert(0, [nil, nil]))
     end
 
     content_tag(:select, options, class: 'performed-by-dropdown selectpicker', data: { width: '125px' }, 'showIcon' => false, id: "performed-by-#{procedure.id}")
