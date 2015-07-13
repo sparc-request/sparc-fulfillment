@@ -4,14 +4,14 @@ class ReportsController < ApplicationController
 
   def new
     @title = reports_params[:title]
-
+    @document = Document.new(title: @title.humanize)
     render @title
   end
 
   def create
     respond_to do |format|
       format.js do
-        @document = Document.new(title: reports_params[:title].humanize)
+        @document = Document.new(title: params[:document][:title])
 
         @documentable.documents.push @document
 
