@@ -12,10 +12,10 @@ namespace :data do
         fix_appointments
       elsif answer == "no"
         #End program
-        puts "Well, fine then, I don't like you either."
+        puts "Operation aborted."
       else
         #Wrong input, retry
-        puts "WRONG ANSWER FOOL!!"
+        puts "Incorrect option."
         get_user_input
       end
     end
