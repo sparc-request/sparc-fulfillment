@@ -44,6 +44,10 @@ class ProtocolImporter
             attr = normalized_attributes('VisitGroup', sparc_visit_group).merge!({sparc_id: sparc_visit_group.id,
                                                                                   arm_id: fulfillment_arm.id})
             fulfillment_visit_group = validate_and_save(VisitGroup.new(attr))
+            
+            #comment out above and use below if you don't want to validate visit group attributes, useful for initial bulk import
+            #fulfillment_visit_group = VisitGroup.new(attr)
+            #fulfillment_visit_group.save(validate: false)
             # end visit_group creation
 
             sparc_visit_group.visits.each do |sparc_visit|

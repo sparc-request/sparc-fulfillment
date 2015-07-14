@@ -152,6 +152,7 @@ feature 'Complete Visit', js: true do
     accept_alert do
       find("button.complete_visit.disabled").trigger('click')
     end
+    wait_for_ajax
   end
 
   def i_should_be_able_to_complete_visit
