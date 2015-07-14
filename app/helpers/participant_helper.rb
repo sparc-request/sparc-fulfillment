@@ -1,6 +1,18 @@
 module ParticipantHelper
 
-  def appointments_for_select arm, participant
+  def performed_by_dropdown(procedure)
+    identities = Identity.joins(:clinical_providers).where(clinical_providers: { organization: procedure.protocol.organization })
+
+    if procedure.performer.present?
+      options = options_for_select(identities.map { |identity| [identity.full_name, identity.id] })
+    else
+      options = options_for_select(identities.map { |identity| [identity.full_name, identity.id] }.insert(0, [nil, nil]))
+    end
+
+    content_tag(:select, options, class: 'performed-by-dropdown selectpicker', data: { width: '125px' }, 'showIcon' => false, id: "performed-by-#{procedure.id}")
+  end
+
+  def appointments_for_select(arm, participant)
     appointments = []
     participant.appointments.each do |appt|
       if appt.arm.name == arm.name

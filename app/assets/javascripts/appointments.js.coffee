@@ -82,9 +82,10 @@ $ ->
 
 
   $(document).on 'click', 'label.status.complete', ->
-    active = $(this).hasClass('active')
+    active        = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
-    status = null
+    performer_id  = $(this).parents('.procedure').find('.performed-by .selectpicker').selectpicker('val')
+    status        = null
     # undo complete status
     if active
       status = "unstarted"
@@ -95,8 +96,9 @@ $ ->
       $(this).addClass('selected_before')
       $(this).removeClass('inactive')
 
-    data          = procedure:
-                      status: status
+    data = procedure:
+            status: status
+            performer_id: performer_id
 
     $.ajax
       type: 'PUT'
@@ -104,12 +106,11 @@ $ ->
       url: "/procedures/#{procedure_id}.js"
 
   $(document).on 'click', 'label.status.incomplete', ->
-    active = $(this).hasClass('active')
+    active        = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
     # undo incomplete status
     if active
-      data          = procedure:
-                        status: "unstarted"
+      data = procedure: status: "unstarted"
 
       $.ajax
         type: 'PUT'
@@ -117,8 +118,7 @@ $ ->
         url: "/procedures/#{procedure_id}.js"
 
     else
-      data          = partial: "incomplete", procedure:
-                        status: "incomplete"
+      data = partial: "incomplete", procedure: status: "incomplete"
 
       $.ajax
         type: 'GET'
