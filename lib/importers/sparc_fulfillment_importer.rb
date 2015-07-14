@@ -14,7 +14,7 @@ class SparcFulfillmentImporter
 
 
   def self.import_all(ignored=[])
-    skipped = []
+    skipped = {}
     processed = []
 
     Sparc::SubServiceRequest.where(in_work_fulfillment: true, status: 'ctrc_approved').each do |ssr|
@@ -22,9 +22,16 @@ class SparcFulfillmentImporter
       begin
         base_url = "#{ENV.fetch('GLOBAL_SCHEME')}://#{ENV.fetch('SPARC_API_HOST')}/#{ENV.fetch('SPARC_API_VERSION')}"
         SparcFulfillmentImporter.new("#{base_url}/sub_service_requests/#{ssr.id}.json").create
-        process << ssr.id
-      rescue
-        skipped << ssr.id
+        processed << ssr.id
+        puts "*"*50
+        puts "Imported #{ssr.id}"
+        puts "*"*50
+      rescue Exception => e
+        puts "*"*50
+        puts "Failed #{ssr.id}"
+        puts e.message
+        puts "*"*50
+        skipped[ssr.id] = e.message
       end
     end
 
@@ -72,15 +79,7 @@ class SparcFulfillmentImporter
           fulfillment_arm = Arm.where(sparc_id: sparc_arm.id, protocol_id: @fulfillment_protocol.id).first
 
           sparc_arm.subjects.each do |sparc_subject|
-
-            if sparc_subject.gender == 'other'
-              puts "*"*50
-              puts "*"*50
-              puts "SPARC subject gender invalid: #{sparc_subject.inspect}"
-              puts "*"*50
-              puts "*"*50
-              raise ActiveRecord::Rollback 
-            end
+            next if sparc_subject.name.present? && sparc_subject.name.match(/do not/i)
 
             fulfillment_participant = nil
 
@@ -92,7 +91,7 @@ class SparcFulfillmentImporter
 
               sparc_calendar.appointments.each do |sparc_appointment|
                 fulfillment_visit_group = VisitGroup.where(sparc_id: sparc_appointment.visit_group_id, arm_id: fulfillment_arm.id).first
-
+                next unless fulfillment_visit_group.present?
                 fulfillment_appointment = nil
       		
                 unless fulfillment_appointment = Appointment.where(participant_id: fulfillment_participant.id, visit_group_id: fulfillment_visit_group.id, arm_id: fulfillment_arm.id).first
@@ -145,7 +144,9 @@ class SparcFulfillmentImporter
 
   def create_fulfillment_document(sparc_report)
     document = @fulfillment_protocol.documents.create(original_filename: sparc_report.xlsx_file_name,
-                                                      content_type:      sparc_report.xlsx_content_type)
+                                                      content_type:      sparc_report.xlsx_content_type,
+                                                      title:             'Project Summary Report',
+                                                      state:             'Completed')
 
     File.open(document.path, 'wb') do |file|
       file.write(sparc_report.fetch)
@@ -202,8 +203,8 @@ class SparcFulfillmentImporter
   def create_fulfillment_procedures(sparc_appointment, fulfillment_appointment)
     sparc_appointment.procedures.each do |sparc_procedure|
 
-      r_quantity = sparc_procedure.r_quantity || sparc_procedure.visit.research_billing_qty || 1
-      t_quantity = sparc_procedure.t_quantity || sparc_procedure.visit.insurance_billing_qty || 0
+      r_quantity = sparc_procedure.r_quantity || (sparc_procedure.visit.present? ? sparc_procedure.visit.research_billing_qty : nil) || 1
+      t_quantity = sparc_procedure.t_quantity || (sparc_procedure.visit.present? ? sparc_procedure.visit.insurance_billing_qty : nil) || 0
 
       generate_procedures(sparc_procedure, fulfillment_appointment, r_quantity, 'research_billing_qty')
       generate_procedures(sparc_procedure, fulfillment_appointment, t_quantity, 'insurance_billing_qty')
@@ -276,6 +277,7 @@ class SparcFulfillmentImporter
 
           fulfillment_procedure.status = 'complete'
           fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m-%d-%Y")
+          fulfillment_procedure.service_cost = fulfillment_service.cost(sparc_procedure_completed_date)
           fulfillment_procedure.performer_id = sparc_procedure_completed_by
         end
 
@@ -285,7 +287,10 @@ class SparcFulfillmentImporter
   end
 
   def validate_and_save object
-    if object.valid?
+    #### don't validate subjects, unfortunately they didn't have validation in SPARC
+    if object.class.to_s == 'Participant'
+      object.save(validate: false)
+    elsif object.valid?
       object.save
     else
       puts "#"*50

@@ -10,6 +10,11 @@ module SparcShard
 
     allow_shard :sparc
 
+    def self.inherited(child)
+      child.octopus_establish_connection Octopus.config[Rails.env][:sparc]
+      super
+    end
+
     def readonly?
       Rails.env.production?
     end
