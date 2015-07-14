@@ -1,6 +1,7 @@
 - visit_groups.each_with_index do |visit_group, index|
   .col-xs-1.text-center
-    .glyphicon.check_column.btn.btn-primary{type: "button", visit_group_id: visit_group.id, check: @state = "#{set_check(visit_group)}", title: @state == "true" ? t(:visit)[:check_column] : t(:visit)[:uncheck_column], class: "#{glyph_class(visit_group)}", data: {toggle: "tooltip", animation: 'false'}}
+    -state = "#{set_check(visit_group)}"
+    .glyphicon.check_column.btn.btn-primary{type: "button", visit_group_id: visit_group.id, check: state, title: state == "true" ? t(:visit)[:check_column] : t(:visit)[:uncheck_column], class: "#{glyph_class(visit_group)}", data: {toggle: "tooltip", animation: 'false'}}
     - if tab == 'quantity'
       .r-t-labels
         %span.even_shorter_text.r-label= "R"
