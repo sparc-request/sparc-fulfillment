@@ -88,6 +88,7 @@ RSpec.describe 'Study Schedule Management spec', type: :feature, js: true do
         @protocol.arms.count.times do
           find('#remove_arm_button').click()
           page.driver.browser.accept_js_confirms
+          wait_for_ajax
         end
         expect(page).to_not have_content "Nothing selected"
       end
@@ -95,7 +96,9 @@ RSpec.describe 'Study Schedule Management spec', type: :feature, js: true do
       it "should remove the arm from the study schedule" do
         find('#remove_arm_button').click()
         page.driver.browser.accept_js_confirms
+        wait_for_ajax
         expect(page).to have_content "Arm Destroyed"
+        wait_for_ajax
         expect(page).not_to have_content "#{@arm1.name}"
       end
 
