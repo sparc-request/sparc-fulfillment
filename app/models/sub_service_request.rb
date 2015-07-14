@@ -8,5 +8,5 @@ class SubServiceRequest < ActiveRecord::Base
   belongs_to :organization
   belongs_to :service_request
 
-  delegate :requester, to: :service_request
+  delegate :service_requester, to: :service_request
 end
