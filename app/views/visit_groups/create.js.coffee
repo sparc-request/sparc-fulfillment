@@ -7,7 +7,7 @@ $("#modal_place").modal 'hide'
 $("#select_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_group_page_select', locals: {arm: @arm, page: @current_page.to_i}) %>")
 
 # re-render Manage Visits dropdown
-$("#manage_visit_groups").html("<%= escape_javascript(render partial: '/study_schedule/study_schedule_management/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
+$("#manage_visit_groups").html("<%= escape_javascript(render partial: '/study_schedule/study_schedule_management/visit_groups_selectpicker', locals: {arms: @arm.protocol.arms}) %>")
 # and create associated selectpicker
 $(".selectpicker").selectpicker()
 
