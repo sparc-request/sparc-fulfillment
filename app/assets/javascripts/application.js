@@ -33,5 +33,7 @@
 //= require documents_index
 //= require study_level_activities
 //= require remote_document_handler
+//= require notifications
+//= require reports
 //= require faye
 //= require ajax_progress_bar

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707173551) do
+ActiveRecord::Schema.define(version: 20150710162504) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -235,11 +235,11 @@ ActiveRecord::Schema.define(version: 20150707173551) do
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
 
   create_table "protocols", force: :cascade do |t|
-    t.integer  "sparc_id",               limit: 4
-    t.text     "title",                  limit: 65535
-    t.string   "short_title",            limit: 255
-    t.string   "sponsor_name",           limit: 255
-    t.string   "udak_project_number",    limit: 255
+    t.integer  "sparc_id",                   limit: 4
+    t.text     "title",                      limit: 65535
+    t.string   "short_title",                limit: 255
+    t.string   "sponsor_name",               limit: 255
+    t.string   "udak_project_number",        limit: 255
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "recruitment_start_date"
@@ -247,9 +247,10 @@ ActiveRecord::Schema.define(version: 20150707173551) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.float    "stored_percent_subsidy", limit: 24
-    t.integer  "study_cost",             limit: 4
-    t.integer  "sub_service_request_id", limit: 4
+    t.float    "stored_percent_subsidy",     limit: 24
+    t.integer  "study_cost",                 limit: 4
+    t.integer  "sub_service_request_id",     limit: 4
+    t.integer  "unaccessed_documents_count", limit: 4,     default: 0
   end
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree

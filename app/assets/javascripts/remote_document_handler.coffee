@@ -1,5 +1,4 @@
 window.remote_document_generator = (element, tables_to_refresh) ->
-
   $(element).one 'click', (event) ->
     $self = $(this)
     data = $self.data()
@@ -29,10 +28,7 @@ window.remote_document_generator = (element, tables_to_refresh) ->
               if document_state != 'Completed'
                 setTimeout get_document_state, 1500
               else
-                $notification           = $('.notification.document-notifications')
-                documents_notifications = parseInt $notification.text()
-
-                $notification.text(documents_notifications + 1)
+                increment_notification data.document.documentable_type
 
                 $self.
                   addClass('btn-success').
@@ -42,15 +38,20 @@ window.remote_document_generator = (element, tables_to_refresh) ->
                   addClass('glyphicon-equalizer').
                   removeClass('glyphicon-refresh spin')
 
+                refresh_button = $([
+                  "<button class='btn btn-xs refresh-report' title='Refresh Report' name='refresh' type='button' data-toggle='tooltip' data-animation='false'>",
+                    "<span class='glyphicon glyphicon-refresh'></span>"
+                ].join(""))
+
+                refresh_button.insertAfter($(element))
+
                 $.each tables_to_refresh, (index, value) ->
                   $(value).bootstrapTable 'refresh', silent: true
 
-                $(element).one 'click', ->
-                  documents_notifications = parseInt $notification.text()
+                refresh_button.one 'click', ->
+                  $('table.protocol').bootstrapTable 'refresh', silent: true
 
-                  if documents_notifications > 0
-                    $notification.
-                      text(documents_notifications - 1)
+                $(element).one 'click', ->
+                  decrement_notification data.document.documentable_type
 
         get_document_state()
-

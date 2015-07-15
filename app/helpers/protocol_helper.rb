@@ -33,7 +33,7 @@ module ProtocolHelper
   end
 
   def formatted_study_schedule_report(protocol)
-    content_tag(:a, href: '#', class: 'btn btn-default btn-xs study_schedule_report', 'data-title' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol') do
+    content_tag(:a, href: '#', target: :blank, class: 'btn btn-default btn-xs study_schedule_report', title: 'Study Schedule Report', 'data-title' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol') do
       content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
     end
   end

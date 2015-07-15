@@ -34,3 +34,7 @@ $ ->
         $(".modal #modal_errors").empty().append("<div class='alert alert-danger'>#{error_message}</div>")
       else
         $('.modal form').submit()
+
+    $(document).on 'click', 'a.attached_file', ->
+      update_view_on_download_new_report $(this), 'Identity'
+      

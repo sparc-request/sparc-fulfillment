@@ -27,7 +27,16 @@ class ReportJob < ActiveJob::Base
       arguments.
       first.
       update_attributes state: 'Completed'
-    find_identity(job).update_counter(:unaccessed_documents, 1)
+    
+    document = job.arguments.first
+
+    if document.belongs_to_protocol? 
+      protocol = Protocol.find(job.arguments.last[:documentable_id])
+      protocol.document_counter_updated = true
+      protocol.update_attributes(unaccessed_documents_count: (protocol.unaccessed_documents_count + 1))
+    elsif document.belongs_to_identity?
+      find_identity(job).update_counter(:unaccessed_documents, 1)
+    end
   end
 
   private

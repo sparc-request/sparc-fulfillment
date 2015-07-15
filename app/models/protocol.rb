@@ -1,5 +1,7 @@
 class Protocol < ActiveRecord::Base
 
+  attr_accessor :document_counter_updated  
+
   has_paper_trail
   acts_as_paranoid
 
@@ -68,6 +70,6 @@ class Protocol < ActiveRecord::Base
   private
 
   def update_faye
-    FayeJob.perform_later self
+    FayeJob.perform_later(self) unless self.document_counter_updated
   end
 end
