@@ -1,6 +1,19 @@
 require 'rails_helper'
 
 feature 'Custom appointment', js: true do
+  scenario 'User should be able to create custom appointment' do
+    when_i_visit_a_participants_calendar
+    given_a_participant_has_an_arm
+    as_a_user_who_clicks_create_custom_appointment
+    i_should_see_the_create_custom_visit_modal
+  end
+
+  scenario 'User should not be able to create custom appointment' do
+    when_i_visit_a_participants_calendar
+    given_a_participant_does_not_have_an_arm
+    as_a_user_who_clicks_create_custom_appointment
+    i_should_not_see_the_create_custom_visit_modal
+  end
 
   scenario 'User creates custom appointment' do
     when_i_visit_a_participants_calendar
@@ -19,9 +32,25 @@ feature 'Custom appointment', js: true do
 
   def when_i_visit_a_participants_calendar
     @protocol   = create_and_assign_protocol_to_me
-    participant = @protocol.participants.first
+    @participant = @protocol.participants.first
 
-    visit participant_path participant
+    visit participant_path @participant
+  end
+
+  def given_a_participant_has_an_arm
+    @participant.arm = Arm.first
+  end
+
+  def given_a_participant_does_not_have_an_arm
+    @participant.arm = nil
+  end
+
+  def i_should_see_the_create_custom_visit_modal
+    expect(page).to have_css("body.participants.modal-open")
+  end
+
+  def i_should_not_see_the_create_custom_visit_modal
+    expect(page).to_not have_css("body.participants.modal-open")
   end
 
   def as_a_user_who_clicks_create_custom_appointment

@@ -171,3 +171,12 @@ $ ->
   $select.selectpicker('refresh')
   $(".study_schedule.service.visit_group_#{visit_group_id}").remove()
 
+# Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
+# containing content, which disappears after about 3 seconds.
+(exports ? this).error_tooltip_on = (elt, content) ->
+  $elt = $(elt)
+  $elt.attr('data-toggle', 'tooltip').attr('title', content)
+  $elt.tooltip({container: 'body'})
+  $elt.tooltip('show')
+  delay = (ms, func) -> setTimeout func, ms
+  delay 3000, -> $elt.tooltip('destroy')
