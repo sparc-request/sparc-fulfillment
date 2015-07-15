@@ -38,6 +38,9 @@
     border: 1px solid transparent;
 }
 
+.fixed-table-container.protocol-management-and-financial-view {
+    overflow-x: auto;
+}
 .fixed-table-footer,
 .fixed-table-header {
     height: 37px; /*cellHeight*/
