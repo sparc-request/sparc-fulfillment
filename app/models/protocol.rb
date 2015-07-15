@@ -29,7 +29,7 @@ class Protocol < ActiveRecord::Base
 
   delegate  :status,
             :owner,
-            :requester,
+            :service_requester,
             to: :sub_service_request
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id

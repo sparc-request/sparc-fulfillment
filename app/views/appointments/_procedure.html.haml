@@ -4,9 +4,8 @@
   -# message if that UI element is clicked before appointment has started. Class to be removed once appointment
   -# starts.
 
-  %td.name.truncate
-    %span{'data-toggle' => 'tooltip', 'data-placement' => 'left', 'data-animation' => 'false', title: procedure.service_name}
-      = procedure.service_name
+  %td.name
+    %span= procedure.service_name
   %td.billing
     = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control billing_type selectpicker"
   %td.status
@@ -23,7 +22,7 @@
       %span.input-group-addon{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
         %span.glyphicon.glyphicon-calendar
   %td.performed-by
-    = render partial: "appointments/performed_by_dropdown", locals: { procedure: procedure }
+    = performed_by_dropdown(procedure)
   %td.notes
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
