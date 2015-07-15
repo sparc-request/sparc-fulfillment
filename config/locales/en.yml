@@ -197,6 +197,7 @@ en:
     status: "Status"
     object: "Procedure"
     complete: "Complete All"
+    incomplete: "Incomplete All"
 
   protocol:
     object: "Protocol"

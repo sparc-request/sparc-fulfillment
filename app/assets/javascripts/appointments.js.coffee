@@ -238,3 +238,6 @@ $ ->
 
   $(document).on 'click', '.complete-all-container.contains_disabled', ->
     alert("Please click Start Visit and enter a start date to continue.")
+
+  $(document).on 'click', '.incomplete-all-container.contains_disabled', ->
+    alert("Please click Start Visit and enter a start date to continue.")

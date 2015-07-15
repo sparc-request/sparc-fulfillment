@@ -50,6 +50,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :multiple_procedures, only: [] do
+    collection do
+      put 'update_procedures'
+    end
+  end
+
   resources :study_schedule, only: [] do
     collection do
       get 'change_page'
