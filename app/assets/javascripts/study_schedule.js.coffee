@@ -139,16 +139,6 @@ $ ->
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
 
-  # Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
-  # containing content, which disappears when user focuses to it.
-  (exports ? this).error_tooltip_on = (elt, content) ->
-    $elt = $(elt)
-    $elt.attr('data-toggle', 'tooltip').attr('title', content)
-    $elt.tooltip({container: 'body'})
-    $elt.tooltip('show')
-    delay = (ms, func) -> setTimeout func, ms
-    delay 3000, -> $elt.tooltip('destroy')
-
   (exports ? this).change_service = (service_id) ->
     protocol_id = $('#arms').data('protocol_id')
     data =
