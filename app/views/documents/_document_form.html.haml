@@ -4,10 +4,8 @@
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
-          %span.sr-only
-            = t(:actions)[:close]
-        %h4.modal-title.text-center
-          = t(:documents)[:edit_header]
+          %span.sr-only= t(:actions)[:close]
+        %h4.modal-title.text-center= t(:documents)[:edit_header]
       .modal-body
         #document_modal_errors
         .form-group
