@@ -125,7 +125,14 @@ $ ->
         data: data
         url: "/procedures/#{procedure_id}/edit.js"
 
-  $(document).on 'click', '.close_modal', ->
+  $(document).on 'click', 'button.incomplete_all_button', ->
+    data = status: "incomplete", core_id: $(this).data('core_id')
+    $.ajax
+      type: 'GET'
+      data: data
+      url: "/multiple_procedures/edit_procedures.js"
+
+  $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')
     $("#incomplete_button_#{id}").parent().removeClass('active')
     if $("#complete_button_#{id}").parent().hasClass('selected_before')

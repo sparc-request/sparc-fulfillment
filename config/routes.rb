@@ -52,7 +52,9 @@ Rails.application.routes.draw do
 
   resources :multiple_procedures, only: [] do
     collection do
-      put 'update_procedures'
+      get 'edit_procedures'
+      put 'incomplete_all'
+      put 'complete_all'
     end
   end
 
