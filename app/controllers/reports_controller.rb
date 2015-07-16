@@ -11,7 +11,7 @@ class ReportsController < ApplicationController
   def create
     respond_to do |format|
       format.js do
-        if params.nil?
+        if params[:document].nil?
           @document = Document.new(title: params[:title].humanize)
         else
           @document = Document.new(title: params[:document][:title])
