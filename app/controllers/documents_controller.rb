@@ -61,8 +61,9 @@ class DocumentsController < ApplicationController
   end
 
   def update
+    # only allow title to be updated
     @document = Document.find(params[:id])
-    @document.update_attributes(title: params[:document][:title])
+    @document.title = params[:document][:title])
     if @document.valid?
       @document.save
       flash.now[:success] = t(:documents)[:flash_messages][:updated]
