@@ -16,10 +16,7 @@ $ ->
         url: "/reports/new.js"
         data: title: title
         success: (data) ->
-          $notification           = $('.notification.document-notifications')
-          documents_notifications = parseInt $notification.text()
-
-          $notification.text(documents_notifications + 1)
+          increment_notification('Identity')
 
     $(document).on 'click', '.modal button.submit', (event) ->
       event.preventDefault()

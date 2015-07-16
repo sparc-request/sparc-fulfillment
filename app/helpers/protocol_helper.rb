@@ -33,9 +33,10 @@ module ProtocolHelper
   end
 
   def formatted_study_schedule_report(protocol)
-    content_tag(:a, href: '#', target: :blank, class: 'btn btn-default btn-xs study_schedule_report', title: 'Study Schedule Report', 'data-title' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol') do
+    content_tag(:a, href: '#', target: :blank, class: 'btn btn-default btn-xs study_schedule_report', id: 'study_schedule_report_'+protocol.id.to_s, title: 'Study Schedule Report', 'data-title' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol') do
       content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
-    end
+    end +
+    content_tag(:ul, '', class: 'dropdown-menu document-dropdown-menu menu-study-schedule', role: 'menu', id: 'document_menu_study_schedule_report_'+protocol.id.to_s)
   end
 
   def formatted_coordinators(coordinators=Array.new)

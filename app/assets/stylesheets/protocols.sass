@@ -2,9 +2,6 @@ body.protocols
 
   &.protocols-index
 
-    .fixed-table-container.protocol-management-and-financial-view
-      overflow-x: auto
-
     .fixed-table-toolbar .columns label
       padding: 6px 12px
       clear: right
@@ -14,9 +11,8 @@ body.protocols
 
   &.protocols-show
 
-    button.btn.btn-xs.refresh-report
-      margin-left: 4px
-
+    a.btn.btn-default.btn-xs.refresh-report
+      margin-left: 5px
 
     span.r-label, span.t-label
       display: inline-block
@@ -48,3 +44,7 @@ body.protocols
       thead
         background-color: #113967
         color: #fff
+
+        td.participant_report
+          width: 1px
+          white-space: nowrap
