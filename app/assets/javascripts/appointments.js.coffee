@@ -126,7 +126,7 @@ $ ->
         url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', 'button.incomplete_all_button', ->
-    data = status: "incomplete", core_id: $(this).data('core_id')
+    data = status: "incomplete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
     $.ajax
       type: 'GET'
       data: data

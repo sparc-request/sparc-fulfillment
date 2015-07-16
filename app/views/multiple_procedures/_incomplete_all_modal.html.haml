@@ -10,9 +10,8 @@
     = form_tag incomplete_all_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
       .modal-body
         #modal_errors
-        = hidden_field_tag :status, value: "incomplete"
-        = hidden_field_tag :core_id, value: core_id
-        = hidden_field_tag :kind, value: note.kind
+        = hidden_field_tag :core_id, core_id
+        = hidden_field_tag :appointment_id, appointment_id
         .form-group
           = label_tag "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
           .col-sm-8
