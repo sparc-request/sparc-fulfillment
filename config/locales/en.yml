@@ -64,9 +64,17 @@ en:
       updated: "Arm Updated"
 
   documents:
+    documents: "Documents"
+    date: "Date Requested"
+    title: "Title"
+    state: "Report Status"
+    file: "Attached File"
+    downloaded_at: "Date Downloaded"
     new_header: "Add Document"
-    date: "Date Uploaded"
+    date_uploaded: "Date Uploaded"
     object: "Document"
+    upload_button: "Upload Document"
+    edit_header: "Edit Report Title"
     lineitem:
       index_header: "Line Item Documents"
       none: "This line item has no documents"
@@ -75,6 +83,8 @@ en:
       none: "This fulfillment has no documents."
     flash_messages:
       created: "Document Created"
+      no_file_chosen: "You must choose a file"
+      updated: "Title updated"
 
   fulfillment:
     edit: "Edit Fulfillment"
@@ -247,26 +257,7 @@ en:
       unauthorized: "Authorization Failure"
       not_found: "Protocol Not Found"
 
-  documents:
-    documents: "Documents"
-    date: "Date Requested"
-    title: "Title"
-    state: "Report Status"
-    file: "Attached File"
-    downloaded_at: "Date Downloaded"
-    new_header: "Add Document"
-    date_uploaded: "Date Uploaded"
-    object: "Document"
-    upload_button: "Upload Document"
-    lineitem:
-      index_header: "Line Item Documents"
-      none: "This line item has no documents"
-    fulfillment:
-      index_header: "Fulfillment Documents"
-      none: "This fulfillment has no documents."
-    flash_messages:
-      created: "Document Created"
-      no_file_chosen: "You must choose a file"
+
 
   reports:
     page_title: "All Reports"
@@ -312,7 +303,12 @@ en:
   visit:
     object: "Visit"
     custom: "Custom Visit"
+    no_arm: "Assign arm to create custom visits" 
     check_all: "Check All"
+    check_column: "Check Column"
+    check_row: "Check Row"
+    uncheck_column: "Uncheck Column"
+    uncheck_row: "Uncheck Row"
     flash_messages:
       updated: "Visit Updated"
 

@@ -180,6 +180,19 @@ RSpec.describe 'Study Schedule Management spec', type: :feature, js: true do
         page.driver.browser.accept_js_confirms
         wait_for_ajax
         expect(page).to have_content "Visit Destroyed"
+      end 
+
+      it "should remove the visit group from the selector" do
+        create(:visit_group, arm: @arm3)
+        @arm3.update_attributes(visit_count: 2)
+        vg = @arm3.visit_groups.first
+        bootstrap_select "#visits", "#{vg.name}"
+        wait_for_ajax
+        find('#remove_visit_group_button').click()
+        page.driver.browser.accept_js_confirms
+        wait_for_ajax
+        expect(page).to have_content "Visit Destroyed"
+        expect(page).to_not have_css("#manage_visit_groups button.btn.selectpicker[title='#{vg.name}']")
       end
     end
 
@@ -242,6 +255,14 @@ RSpec.describe 'Study Schedule Management spec', type: :feature, js: true do
         wait_for_ajax
         find('#remove_service_button').click()
         assert_selector(".arm-checkbox > label", count: 2)
+      end
+
+      it 'should display no associated arms message if no arms have the service' do
+        @arm1.line_items.clear
+        @arm2.line_items.clear
+        find('#remove_service_button').click()
+        expect(page).to have_content "Remove Services"
+        expect(page).to have_css('.no_arms_message')
       end
     end
   end

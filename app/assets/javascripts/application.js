@@ -30,7 +30,7 @@
 //= require appointments
 //= require autoload_appointment
 //= require tasks
-//= require documents_index
+//= require documents
 //= require study_level_activities
 //= require remote_document_handler
 //= require notifications

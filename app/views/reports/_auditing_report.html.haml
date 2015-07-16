@@ -1,7 +1,6 @@
 .modal-dialog
   .modal-content
     = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
-      = hidden_field_tag :title, @title
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
@@ -11,6 +10,10 @@
         #modal_errors
         .row
           .col-md-12
+            .form-group
+              = form_for @document do |document|
+                = document.label "title", t(:documents)[:title], class: "col-sm-3 control-label"
+                .col-sm-9= document.text_field :title
             .form-group
               = label_tag "start_date", t(:reports)[:start_date], class: "col-sm-3 control-label"
               .col-sm-9= text_field_tag "start_date", nil, class: "datepicker"

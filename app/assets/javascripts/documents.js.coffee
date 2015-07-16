@@ -1,4 +1,10 @@
 $ ->
+    $(document).on 'click', '.edit-document', ->
+      document_id = $(this).attr('document_id')
+      $.ajax
+        type: 'GET'
+        url: "/documents/#{document_id}/edit"
+
 
   if $("body.documents-index").length > 0
 
