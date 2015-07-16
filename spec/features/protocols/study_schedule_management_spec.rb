@@ -243,6 +243,16 @@ RSpec.describe 'Study Schedule Management spec', type: :feature, js: true do
         find('#remove_service_button').click()
         assert_selector(".arm-checkbox > label", count: 2)
       end
+
+      it 'should display no associated arms message if no arms have the service' do
+        @arm1.line_items.clear
+        @arm2.line_items.clear
+        find('#remove_service_button').click()
+        expect(page).to have_content "Remove Services"
+        wait_for_ajax
+        screenshot
+        expect(page).to have_css('.no_arms_message')
+      end
     end
   end
 end
