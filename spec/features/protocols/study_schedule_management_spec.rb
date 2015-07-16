@@ -180,6 +180,19 @@ RSpec.describe 'Study Schedule Management spec', type: :feature, js: true do
         page.driver.browser.accept_js_confirms
         wait_for_ajax
         expect(page).to have_content "Visit Destroyed"
+      end 
+
+      it "should remove the visit group from the selector" do
+        create(:visit_group, arm: @arm3)
+        @arm3.update_attributes(visit_count: 2)
+        vg = @arm3.visit_groups.first
+        bootstrap_select "#visits", "#{vg.name}"
+        wait_for_ajax
+        find('#remove_visit_group_button').click()
+        page.driver.browser.accept_js_confirms
+        wait_for_ajax
+        expect(page).to have_content "Visit Destroyed"
+        expect(page).to_not have_css("#manage_visit_groups button.btn.selectpicker[title='#{vg.name}']")
       end
     end
 

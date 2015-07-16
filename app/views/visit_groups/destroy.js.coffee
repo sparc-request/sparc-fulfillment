@@ -8,9 +8,9 @@ remove_visit_group("<%= @visit_group.id %>")
 
 <% if  on_current_page?(@current_page, @visit_group) %>
   # Overwrite the visit_groups
-$(".visit_groups_for_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_groups', locals: {arm: @arm, visit_groups: @visit_groups}) %>")
+$(".visit_groups_for_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_groups', locals: {arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab}) %>")
 # Overwrite the check columns
-$(".check_columns_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/check_visit_columns', locals: {visit_groups: @visit_groups}) %>")
+$(".check_columns_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/check_visit_columns', locals: {visit_groups: @visit_groups, tab: @schedule_tab}) %>")
 # Overwrite the visits
 <% @arm.line_items.each do |line_item| %>
 $(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visits', locals: {line_item: line_item, page: @current_page, tab: @schedule_tab}) %>")
