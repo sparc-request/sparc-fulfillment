@@ -10,6 +10,7 @@ class MultipleLineItemsController < ApplicationController
     @services = @protocol.organization.inclusive_child_services(:per_participant)
     @page_hash = params[:page_hash]
     @schedule_tab = params[:schedule_tab]
+    @arm_ids = @protocol.arms.map(&:id)
   end
 
   def edit_line_items
@@ -19,6 +20,7 @@ class MultipleLineItemsController < ApplicationController
     @services = @protocol.arms.map{ |arm| arm.line_items.map{ |li| li.service } }.flatten.uniq
     @page_hash = params[:page_hash]
     @schedule_tab = params[:schedule_tab]
+    @arm_ids = @protocol.arms.map{ |arm| arm.id if arm.line_items.detect{|li| li.service_id.to_s == @selected_service} }
   end
 
   def update_line_items
