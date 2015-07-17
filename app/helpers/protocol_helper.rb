@@ -25,11 +25,15 @@ module ProtocolHelper
   end
 
   def formatted_provider(protocol)
-    protocol.organization.parent.name
+    protocol.organization.find_in_organization_tree("Provider")
   end
 
   def formatted_program(protocol)
-    protocol.organization.name
+    protocol.organization.find_in_organization_tree("Program")
+  end
+
+  def formatted_core(protocol)
+    protocol.organization.find_in_organization_tree("Core")
   end
 
   def formatted_study_schedule_report(protocol)

@@ -18,6 +18,7 @@ $ ->
     $('#protocol-list').bootstrapTable('hideColumn', 'requester')
     $('#protocol-list').bootstrapTable('hideColumn', 'provider')
     $('#protocol-list').bootstrapTable('hideColumn', 'program')
+    $('#protocol-list').bootstrapTable('hideColumn', 'core')
 
 
     $(".bootstrap-table .fixed-table-toolbar").
