@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :organization do
-    sequence(:name) { |n| "Organization #{n}" }
+    sequence(:name) { |n| "Fake Organization #{n}" }  # need this for fake data
     process_ssrs false
 
     trait :core do
