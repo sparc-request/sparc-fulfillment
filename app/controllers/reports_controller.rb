@@ -4,7 +4,7 @@ class ReportsController < ApplicationController
 
   def new
     @report_type = reports_params[:title]
-    @title = @report_type.humanize
+    @title = @report_type.titleize
   end
 
   def create
