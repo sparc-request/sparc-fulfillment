@@ -1,20 +1,16 @@
 class ReportsController < ApplicationController
 
   before_action :find_documentable, only: [:create]
+  before_action :find_report_type, only: [:new, :create]
 
   def new
-    @report_type = reports_params[:title]
     @title = @report_type.titleize
   end
 
   def create
-    @document = Document.new(title: params[:title].humanize)
+    @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
 
-    @document.errors.add(:title, "can't be blank") if params[:title].blank?
-    @document.errors.add(:start_date, "can't be blank") if params[:start_date].blank?
-    @document.errors.add(:end_date, "can't be blank") if params[:end_date].blank?
-    @document.errors.add(:protocols, "must be selected") if params[:protocol_id].blank?
-
+    validate_report_form
     if @document.errors.empty?
       @documentable.documents.push @document
 
@@ -26,6 +22,12 @@ class ReportsController < ApplicationController
 
   private
 
+  def validate_report_form
+    @report_type.classify.constantize::VALIDATES_PRESENCE_OF.each do |validates|
+      @document.errors.add(validates, "must be present") if reports_params[validates].blank?
+    end
+  end
+
   def find_documentable
     if params[:documentable_id].present? && params[:documentable_type].present?
       @documentable = params[:documentable_type].constantize.find params[:documentable_id]
@@ -34,10 +36,15 @@ class ReportsController < ApplicationController
     end
   end
 
+  def find_report_type
+    @report_type = reports_params[:report_type]
+  end
+
   def reports_params
     params.
       permit(:format,
               :utf8,
+              :report_type,
               :title,
               :start_date,
               :end_date,

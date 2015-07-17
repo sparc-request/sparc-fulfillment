@@ -9,12 +9,10 @@ $ ->
   if $("body.documents-index").length > 0
 
     $(document).on 'click', '.report-buttons button', ->
-      title = $(this).data("title")
-
+      report_type = $(this).data("type")
       $.ajax
         type: 'GET'
-        url: "/reports/new.js"
-        data: title: title
+        url: "/reports/new.js?report_type=#{report_type}"
         success: (data) ->
           $notification           = $('.notification.document-notifications')
           documents_notifications = parseInt $notification.text()

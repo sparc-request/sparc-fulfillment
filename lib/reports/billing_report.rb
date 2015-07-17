@@ -1,5 +1,7 @@
 class BillingReport < Report
 
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocol_ids].freeze
+
   require 'csv'
 
   def initialize(params)
@@ -8,7 +10,6 @@ class BillingReport < Report
     @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
     @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
   end
-
 
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")

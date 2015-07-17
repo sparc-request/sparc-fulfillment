@@ -1,5 +1,7 @@
 class AuditingReport < Report
 
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocol_ids].freeze
+
   require 'csv'
 
   def initialize(params)

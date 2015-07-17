@@ -1,5 +1,7 @@
 class ProjectSummaryReport < Report
 
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocol_id].freeze
+
   require 'csv'
 
   def initialize(params)
