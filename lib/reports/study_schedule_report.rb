@@ -1,5 +1,7 @@
 class StudyScheduleReport < Report
 
+  VALIDATES_PRESENCE_OF = [].freeze
+
   VISIT_GROUP_OFFSET = 2
 
   def initialize(params)
