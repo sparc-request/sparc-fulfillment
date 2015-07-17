@@ -25,27 +25,15 @@ module ProtocolHelper
   end
 
   def formatted_provider(protocol)
-    if protocol.organization.class.name == 'Program'
-      protocol.organization.parent.name
-    else
-      protocol.organization.parent.parent.name
-    end
+    protocol.organization.find_in_organization_tree("Provider")
   end
 
   def formatted_program(protocol)
-    if protocol.organization.class.name == 'Program'
-      protocol.organization.name
-    else
-      protocol.organization.parent.name
-    end
+    protocol.organization.find_in_organization_tree("Program")
   end
 
   def formatted_core(protocol)
-    if protocol.organization.class.name == 'Core'
-      protocol.organization.name
-    else
-      '-'
-    end
+    protocol.organization.find_in_organization_tree("Core")
   end
 
   def formatted_study_schedule_report(protocol)
