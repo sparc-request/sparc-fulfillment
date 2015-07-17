@@ -16,7 +16,7 @@ class ReportJob < ActiveJob::Base
   def perform(document, params)
     document_name = params[:title]
     report        = params[:title].classify.constantize.new(params)
-
+    puts report.inspect
     report.generate(document)
 
     FayeJob.perform_later document

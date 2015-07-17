@@ -3,28 +3,24 @@ class ReportsController < ApplicationController
   before_action :find_documentable, only: [:create]
 
   def new
-    @title = reports_params[:title]
-    @document = Document.new(title: @title.humanize)
-    render @title
+    @report_type = reports_params[:title]
+    @title = @report_type.humanize
   end
 
   def create
-    respond_to do |format|
-      format.js do
-        if params[:document].nil?
-          @document = Document.new(title: params[:title].humanize)
-        else
-          @document = Document.new(title: params[:document][:title])
-        end
+    @document = Document.new(title: params[:title].humanize)
 
-        if @document.valid?
-          @documentable.documents.push @document
+    @document.errors.add(:title, "can't be blank") if params[:title].blank?
+    @document.errors.add(:start_date, "can't be blank") if params[:start_date].blank?
+    @document.errors.add(:end_date, "can't be blank") if params[:end_date].blank?
+    @document.errors.add(:protocols, "must be selected") if params[:protocol_id].blank?
 
-          ReportJob.perform_later(@document, reports_params.merge(identity_id: current_identity.id))
-        else
-          @errors = @document.errors
-        end
-      end
+    if @document.errors.empty?
+      @documentable.documents.push @document
+
+      ReportJob.perform_later(@document, reports_params.merge(identity_id: current_identity.id))
+    else
+      @errors = @document.errors
     end
   end
 
