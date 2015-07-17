@@ -3,14 +3,14 @@ require 'rails_helper'
 feature 'Identity edits arms on protocol study schedule', js: true do
 
   scenario 'identity adds a new arm to the protocol' do
-    given_a_protocol
+    given_a_protocol_with_one_arm
     when_i_add_an_arm
     and_i_fill_in_the_arm_form
     then_i_should_see_the_new_arm
   end
 
   scenario 'identity edits an exsisting arm on the protocol' do
-    given_a_protocol
+    given_a_protocol_with_one_arm
     when_i_click_the_edit_arm_button
     and_then_i_change_the_arm_name
     then_i_should_see_the_updated_arm
@@ -31,14 +31,19 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   scenario 'identity is not allowed to delete the final arm on the protocol' do
-    given_a_protocol
+    given_a_protocol_with_one_arm
     when_i_click_delete
-    i_should_still_see_the_arm
+    then_i_should_still_see_the_arm
   end
 
 
-  def given_a_protocol
+  def given_a_protocol_with_one_arm
     @protocol = create_and_assign_protocol_to_me
+    @protocol.arms.each do |arm|
+      if @protocol.arms.count != 1
+        arm.delete
+      end
+    end
     visit protocol_path @protocol
   end
 

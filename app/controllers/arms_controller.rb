@@ -49,6 +49,8 @@ class ArmsController < ApplicationController
       @delete = false
     else
       @delete = true #this variable is used in the coffescript logic to prevent the arm name from being removed from the dropdown
+      @arms = @arm.protocol.arms.to_a
+      @arms.delete(@arm)
       @arm.delay.destroy
       flash.now[:alert] = t(:arm)[:deleted]
     end
