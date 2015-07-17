@@ -3,7 +3,7 @@ FactoryGirl.define do
   sequence(:ldap_uid) { |n| "ldap#{n}@musc.edu" }
 
   factory :identity do
-    email 'email@musc.edu'
+    email 'email@musc.edu' # need this for fake data
     ldap_uid
     sequence(:first_name) { |n| "Sally-#{n}"}
     last_name "Smith"

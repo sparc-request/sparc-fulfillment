@@ -232,6 +232,7 @@ en:
     requester: "Service Requester"
     provider: "Provider"
     program: "Program"
+    core: "Core"
     tabs:
       study_schedule: "Study Schedule"
       participant_list: "Participant List"
