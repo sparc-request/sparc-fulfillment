@@ -65,7 +65,7 @@ feature 'Identity requests report', js: true do
   end
 
   def when_i_click_the_new_report_button(kind)
-    find("[data-title='#{kind}']").click
+    find("[data-type='#{kind}']").click
     wait_for_ajax
   end
 
@@ -82,7 +82,7 @@ feature 'Identity requests report', js: true do
     # close protocol dropdown, so it's not covering 'Request Report' button
     first('.modal-header').click
     wait_for_ajax
-    find("button.submit").click
+    find("input[type='submit']").click
     wait_for_ajax
   end
 
@@ -100,7 +100,7 @@ feature 'Identity requests report', js: true do
     # close protocol dropdown, so it's not covering 'Request Report' button
     first('.modal-header').click
     wait_for_ajax
-    find("button.submit").click
+    find("input[type='submit']").click
     wait_for_ajax
   end
 
@@ -113,7 +113,7 @@ feature 'Identity requests report', js: true do
     bootstrap_select '#protocol_id', @protocol.short_title_with_sparc_id
     first('.modal-header').click
     wait_for_ajax
-    find("button.submit").click
+    find("input[type='submit']").click
   end
 
 
@@ -125,14 +125,14 @@ feature 'Identity requests report', js: true do
     bootstrap_select '#protocol_id', @protocol.short_title_with_sparc_id
     first('.modal-header').click
     wait_for_ajax
-    find("button.submit").click
+    find("input[type='submit']").click
   end
 
   def and_fill_in_the_new_participant_report_modal
     bootstrap_select '#participant_id', Participant.first.full_name_with_label
     first('.modal-header').click
     wait_for_ajax
-    find("button.submit").click
+    find("input[type='submit']").click
   end
 
   def and_open_the_protocol_dropdown
