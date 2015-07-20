@@ -39,8 +39,10 @@ class Organization < ActiveRecord::Base
   def find_in_organization_tree(klass_name)
     if self.class.name == klass_name
       self.name
+    elsif parent.present?
+      parent.find_in_organization_tree(klass_name)
     else
-      parent.find_in_organization_tree(klass_name) rescue "-"
+      '-'
     end
   end
 end
