@@ -35,7 +35,7 @@ generate_document = (element, tables_to_refresh, event = null) ->
               dropdown_id_indicator = "document_menu_#{$(element).attr('id')}"
               dropdown  = $(["<ul class='dropdown-menu document-dropdown-menu' role='menu' id=#{dropdown_id_indicator}>",
                                 "<li><a href='/documents/#{window.document_id}.html' target='blank' title='Download Report'>Download Report</a></li>"
-                                "<li><a href='#' title='Generate New Report'>Generate New Report</a></li>"
+                                "<li><a href='javascript:void(0)' title='Generate New Report'>Generate New Report</a></li>"
                               "</ul>"
                             ].join(""))
 
@@ -45,17 +45,20 @@ generate_document = (element, tables_to_refresh, event = null) ->
               $.each tables_to_refresh, (index, value) ->
                 $(value).bootstrapTable 'refresh', silent: true
 
-              $("li a[title='Download Report']").one 'click', ->
+              $("li a[title='Download Report']").off('click').on 'click', ->
+                $(this).parents().eq(1).toggle()
                 decrement_notification data.document.documentable_type
 
-              $("li a[title='Generate New Report']").one 'click', ->
-                set_glyphicon_loading element
-                $(this).attr('aria-expanded', 'false')
-                $(element).removeClass('btn-success')
+              $("li a[title='Generate New Report']").off('click').on 'click', ->
+                ul = $(this).parents().eq(1)
+                button = $(ul).siblings('a.dropdown-toggle')
+                $(ul).toggle()
+                $(button).removeClass('btn-success')
+                set_glyphicon_loading button
 
-                generate_document element, tables_to_refresh
+                generate_document button, tables_to_refresh
 
-              $(element).on 'click', ->
+              $(element).off('click').on 'click', ->
                 $(this).siblings('#'+dropdown_id_indicator).toggle()
 
       get_document_state()
