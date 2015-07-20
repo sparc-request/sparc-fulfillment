@@ -3,9 +3,7 @@ class Report
 
   # Required dependency for ActiveModel::Errors
   extend ActiveModel::Naming
-
-  VALIDATES_PRESENCE_OF = [].freeze
-  VALIDATES_NUMERICALITY_OF = [].freeze
+  extend ActiveModel::Translation
 
   attr_reader :errors
 
@@ -15,8 +13,8 @@ class Report
   end
 
   def valid?
-    VALIDATES_PRESENCE_OF.each{ |validates| errors.add(validates, "must not be blank") if params[validates].blank? }
-    VALIDATES_NUMERICALITY_OF.each{ |validates| errors.add(validates, "must be a number") if params[validates].is_a?(Numeric) }
+    self.class::VALIDATES_PRESENCE_OF.each{ |validates| errors.add(validates, "must not be blank") if @params[validates].blank? }
+    self.class::VALIDATES_NUMERICALITY_OF.each{ |validates| errors.add(validates, "must be a number") if @params[validates].is_a?(Numeric) }
 
     errors.empty?
   end

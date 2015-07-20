@@ -5,13 +5,9 @@ class StudyScheduleReport < Report
 
   VISIT_GROUP_OFFSET = 2
 
-  def initialize(params)
-    super
-
-    @protocol = Protocol.find(@params[:documentable_id])
-  end
-
   def generate(document)
+    @protocol = Protocol.find(@params[:documentable_id])
+
     document.update_attributes(content_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                                original_filename: "#{@params[:title]}.xlsx")
 
