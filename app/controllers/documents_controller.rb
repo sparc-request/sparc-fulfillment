@@ -16,7 +16,7 @@ class DocumentsController < ApplicationController
         @documentable_sym = @documentable_type.downcase.to_sym
       }
       format.json {
-        @documents = find_documentable.documents.sort_by(&:created_at).reverse
+        @documents = find_documentable.documents.reverse_order
       }
     end
   end
