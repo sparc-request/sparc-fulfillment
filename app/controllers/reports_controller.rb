@@ -9,24 +9,15 @@ class ReportsController < ApplicationController
 
   def create
     @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
+    @report = @report_type.classify.constantize.new(reports_params)
 
-    validate_report_form
-    if @document.errors.empty?
+    if @report.valid?
       @documentable.documents.push @document
-
-      ReportJob.perform_later(@document, reports_params.merge(identity_id: current_identity.id))
-    else
-      @errors = @document.errors
+      ReportJob.perform_later(@document, reports_params)
     end
   end
 
   private
-
-  def validate_report_form
-    @report_type.classify.constantize::VALIDATES_PRESENCE_OF.each do |validates|
-      @document.errors.add(validates, "must be present") if reports_params[validates].blank?
-    end
-  end
 
   def find_documentable
     if params[:documentable_id].present? && params[:documentable_type].present?
@@ -53,6 +44,6 @@ class ReportsController < ApplicationController
               :participant_id,
               :documentable_id,
               :documentable_type,
-              :protocol_ids => [])
+              :protocol_ids => []).merge(identity_id: current_identity.id)
   end
 end
