@@ -75,6 +75,11 @@ module ParticipantHelper
     end
   end
 
+  def statusFormatter participant
+    select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, participant.status), include_blank: true, class: "participant_status selectpicker form-control"
+  end
+
+
   def participant_report_formatter(participant)
     content_tag(:a, class: 'btn btn-default btn-xs participant_report', href: '#', title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'participant_report') do
       content_tag(:span, '', class: 'glyphicon glyphicon-equalizer')
