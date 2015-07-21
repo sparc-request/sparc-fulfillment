@@ -1,5 +1,5 @@
 %select.selectpicker#visits
-  -arms.each do |arm|
+  -protocol.arms.each do |arm|
     %option{disabled: true, style: 'font-weight:bold'}= arm.name
     = options_from_collection_for_select(arm.visit_groups,'id','name')
 .btn.btn-success.btn-sm.glyphicon.glyphicon-plus#add_visit_group_button{title: t(:protocol)[:study_schedule][:add_visit_group], type: "button", aria: {label: "Add Visit Group"}, data: {toggle: "tooltip", animation: 'false'}}
