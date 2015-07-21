@@ -77,10 +77,10 @@ module ParticipantHelper
 
   def participant_report_formatter(participant)
     content_tag(:div, '', class: 'btn-group') do
-      content_tag(:a, class: 'btn btn-default dropdown-toggle btn-xs participant_report', id: 'participant_report_'+participant.id.to_s, href: '#', target: :blank, title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'participant_report', 'aria-expanded' => 'false') do
+      content_tag(:a, class: 'btn btn-default dropdown-toggle btn-xs participant_report', id: "participant_report_#{participant.id.to_s}", href: '#', target: :blank, title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'participant_report', 'aria-expanded' => 'false') do
         content_tag(:span, '', class: 'glyphicon glyphicon-equalizer')
       end +
-      content_tag(:ul, '', class: 'dropdown-menu document-dropdown-menu menu-participant', role: 'menu', id: 'document_menu_participant_report_'+participant.id.to_s)
+      content_tag(:ul, '', class: 'dropdown-menu document-dropdown-menu menu-participant', role: 'menu', id: "document_menu_participant_report_#{participant.id.to_s}")
     end
   end
 end

@@ -39,5 +39,5 @@ $ ->
         $('.modal form').submit()
 
     $(document).on 'click', 'a.attached_file', ->
-      update_view_on_download_new_report $(this), 'Identity'
+      update_view_on_download_new_report $(this), 'table.documents', 'Identity'
       

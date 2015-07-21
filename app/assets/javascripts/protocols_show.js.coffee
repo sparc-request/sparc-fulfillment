@@ -22,4 +22,4 @@ $ ->
 
     if $('#reports.tab-pane.active').length > 0
       $(document).on 'click', 'a.attached_file', ->
-        update_view_on_download_new_report $(this), 'Protocol'
+        update_view_on_download_new_report $(this), 'table.protocol_reports', 'Protocol'
