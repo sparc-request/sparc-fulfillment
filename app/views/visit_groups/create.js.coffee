@@ -22,3 +22,5 @@ $(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(rende
 <% end %>
 <% end %>
 <% end %>
+
+$("div#manage_visit_groups [data-toggle='tooltip']").tooltip()

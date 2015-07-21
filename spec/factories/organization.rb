@@ -1,13 +1,21 @@
 FactoryGirl.define do
 
   factory :organization do
-    sequence(:name) { |n| "Organization #{n}" }
+    sequence(:name) { |n| "Fake Organization #{n}" }  # need this for fake data
     process_ssrs false
 
     trait :core do
       type "Core"
     end
 
+    trait :program do
+      type "Program"
+    end
+
+    trait :provider do
+      type "Provider"
+    end
+ 
     trait :with_protocols do
       after(:create) do |organization, evaluator|
         create(:sub_service_request, organization: organization)
@@ -32,6 +40,8 @@ FactoryGirl.define do
     end
 
     factory :organization_core, traits: [:core]
+    factory :organization_program, traits: [:program]
+    factory :organization_provider, traits: [:provider]
     factory :organization_with_protocols, traits: [:core, :with_protocols]
     factory :organization_with_services, traits: [:core, :with_services]
     factory :organization_with_child_organizations, traits: [:with_services, :core, :with_child_organizations]

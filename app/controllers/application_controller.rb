@@ -18,6 +18,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def user_for_paper_trail
+    identity_signed_in? ? current_identity.id : 'Unauthenticated User'
+  end
+
   private
 
   def last_page

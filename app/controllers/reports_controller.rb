@@ -4,18 +4,26 @@ class ReportsController < ApplicationController
 
   def new
     @title = reports_params[:title]
-
+    @document = Document.new(title: @title.humanize)
     render @title
   end
 
   def create
     respond_to do |format|
       format.js do
-        @document = Document.new(title: reports_params[:title].humanize)
+        if params[:document].nil?
+          @document = Document.new(title: params[:title].humanize)
+        else
+          @document = Document.new(title: params[:document][:title])
+        end
 
-        @documentable.documents.push @document
+        if @document.valid?
+          @documentable.documents.push @document
 
-        ReportJob.perform_later(@document, reports_params.merge(identity_id: current_identity.id))
+          ReportJob.perform_later(@document, reports_params.merge(identity_id: current_identity.id))
+        else
+          @errors = @document.errors
+        end
       end
     end
   end

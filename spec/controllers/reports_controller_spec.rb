@@ -18,15 +18,20 @@ RSpec.describe ReportsController, type: :controller do
         expect(Document.count).to eq(1)
       end
 
+      it "should not create a document without a title", delay: true do
+        document_params = {document:{title: ""}}
+        do_post document_params
+        expect(Document.count).to eq(0)
+      end
+
       it 'should create a ReportJob ActiveJob' do
         expect { do_post }.to enqueue_a(ReportJob)
       end
 
-      def do_post
-        document_params = { title: "Test title" }
-
+      def do_post document_params={ document:{title: "Test title" }}
         xhr :post, :create, document_params, format: :js
       end
+
     end
   end
 end

@@ -191,16 +191,6 @@ RSpec.describe ProceduresController, type: :controller do
           }
         }.to change(Procedure, :count).by(qty)
     end
-
-    it "should set performer_id to the current user, by default" do
-      post :create, {
-        appointment_id: @appointment.id,
-        qty: 1,
-        service_id: @service.id,
-        format: :js
-        }
-      expect(Procedure.first.performer_id).to eq(subject.current_identity.id)
-    end
   end
 
   describe "DELETE #delete" do
