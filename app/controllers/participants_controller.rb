@@ -54,7 +54,7 @@ class ParticipantsController < ApplicationController
 
   def update_arm
     @participant = Participant.find(params[:participant_id])
-    add_note_for_arm_change(params, @participant)
+    create_note_for_arm_change(params, @participant)
     @participant.update_attributes(arm_id: params[:participant][:arm_id])
     @participant.update_appointments_on_arm_change
     flash[:success] = t(:participant)[:flash_messages][:arm_change]
@@ -91,7 +91,7 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def add_note_for_arm_change(params, participant)
+  def create_note_for_arm_change(params, participant)
     current_arm_name = participant.arm.name
     new_arm_name = Arm.find(params[:participant][:arm_id]).name
     @note = Note.create(identity: current_identity, notable_type: 'Participant', notable_id: participant.id,
