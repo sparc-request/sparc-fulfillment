@@ -66,7 +66,6 @@ feature 'Arm form validations', js: true do
 
   def then_sees_an_error_on_submission message
     wait_for_ajax
-    screenshot
     expect(page).to have_content message
   end
 
