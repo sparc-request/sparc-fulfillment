@@ -25,6 +25,8 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
 
     find("a#study_schedule_report_#{@protocol.id.to_s}").click
     wait_for_ajax
+
+    expect(page).to have_css(".report-notifications", text: 2)
   end
 
   def when_i_visit_the_reports_tab
@@ -33,7 +35,7 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
 
   def when_i_download_the_report
     find('table.protocol_reports a.attached_file').click
-    
+
   end
 
   def then_i_should_see_the_reports_counter_decrement
