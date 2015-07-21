@@ -13,4 +13,3 @@ window.update_view_on_download_new_report = (element, table_to_update, documenta
       rowIndex: row_index
       fieldName: 'downloaded_at'
       fieldValue: utcdate
-      

@@ -1,5 +1,13 @@
 module DocumentsHelper
 
+  def format_date(date)
+    if date.present?
+      date.strftime('%m/%d/%Y | %I:%M:%S%p')
+    else
+      ''
+    end
+  end
+
   def attached_file_formatter(document)
     if document.completed?
       content_tag(:a, class: 'attached_file', href: document_path(document), target: :blank, title: 'Download File', 'data-id' => document.id) do
