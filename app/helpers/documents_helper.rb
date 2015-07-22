@@ -20,7 +20,7 @@ module DocumentsHelper
 
   def edit_formatter(document)
     [
-      "<a class='edit edit-document ml10' href='#' title='Edit' document_id='#{document.id}'>",
+      "<a class='edit edit-document ml10' href='javascript:void(0)' title='Edit' document_id='#{document.id}'>",
       "<i class='glyphicon glyphicon-edit'></i>",
       "</a>"
     ].join ""

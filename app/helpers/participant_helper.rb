@@ -33,7 +33,7 @@ module ParticipantHelper
 
   def detailsFormatter participant
     [
-      "<a class='details participant-details ml10' href='#' title='Details' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+      "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-sunglasses'></i>",
       "</a>"
     ].join ""
@@ -41,7 +41,7 @@ module ParticipantHelper
 
   def editFormatter participant
     [
-      "<a class='edit edit-participant ml10' href='#' title='Edit' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-edit'></i>",
       "</a>"
     ].join ""
@@ -49,7 +49,7 @@ module ParticipantHelper
 
   def deleteFormatter participant
     [
-      "<a class='remove remove-participant' href='#' title='Remove' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
+      "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
       "<i class='glyphicon glyphicon-remove'></i>",
       "</a>"
     ].join ""
@@ -57,7 +57,7 @@ module ParticipantHelper
 
   def changeArmFormatter participant
     [
-      "<a class='edit change-arm ml10' href='#' title='Change Arm' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' arm_id='#{participant.arm_id}'>",
+      "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' arm_id='#{participant.arm_id}'>",
       "<i class='glyphicon glyphicon-random'></i>",
       "</a>"
     ].join ""

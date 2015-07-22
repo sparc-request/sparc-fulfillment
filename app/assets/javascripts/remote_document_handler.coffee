@@ -48,7 +48,10 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
               $("li a[title='Download Report']").off('click').on 'click', ->
                 ul = $(this).parents().eq(1)
+                button = $(ul).siblings('a.dropdown-toggle')
                 ul.toggle()
+
+                document_id = button.attr("data-document_id")
                 update_view_on_download_new_report $("a.attached_file[data-id=#{document_id}]") ,'table.protocol_reports', 'Protocol'
 
 
