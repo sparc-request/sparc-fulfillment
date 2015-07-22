@@ -19,9 +19,10 @@ generate_document = (element, tables_to_refresh, event = null) ->
       document_state = ''
 
       get_document_state = ->
+        document_id = $(element).data("document_id")
         $.ajax
           type: 'GET'
-          url: "/documents/#{window.document_id}.json"
+          url: "/documents/#{document_id}.json"
           success: (data) ->
             document_state = data.document.state
 
@@ -34,7 +35,7 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
               dropdown_id_indicator = "document_menu_#{$(element).attr('id')}"
               dropdown  = $(["<ul class='dropdown-menu document-dropdown-menu' role='menu' id=#{dropdown_id_indicator}>",
-                                "<li><a href='/documents/#{window.document_id}.html' target='blank' title='Download Report'>Download Report</a></li>"
+                                "<li><a href='/documents/#{document_id}.html' target='blank' title='Download Report'>Download Report</a></li>"
                                 "<li><a href='javascript:void(0)' title='Generate New Report'>Generate New Report</a></li>"
                               "</ul>"
                             ].join(""))
@@ -46,8 +47,10 @@ generate_document = (element, tables_to_refresh, event = null) ->
                 $(value).bootstrapTable 'refresh', silent: true
 
               $("li a[title='Download Report']").off('click').on 'click', ->
-                $(this).parents().eq(1).toggle()
-                decrement_notification data.document.documentable_type
+                ul = $(this).parents().eq(1)
+                ul.toggle()
+                update_view_on_download_new_report $("a.attached_file[data-id=#{document_id}]") ,'table.protocol_reports', 'Protocol'
+
 
               $("li a[title='Generate New Report']").off('click').on 'click', ->
                 ul = $(this).parents().eq(1)

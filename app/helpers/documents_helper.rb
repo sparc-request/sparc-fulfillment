@@ -2,7 +2,7 @@ module DocumentsHelper
 
   def format_date(date)
     if date.present?
-      date.strftime('%m/%d/%Y | %I:%M:%S%p')
+      date.strftime('%m/%d/%Y %H:%M:%S')
     else
       ''
     end

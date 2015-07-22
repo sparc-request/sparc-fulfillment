@@ -31,7 +31,7 @@ class DocumentsController < ApplicationController
           disposition: "attachment; filename=#{@document.original_filename}"
       }
       format.json {
-        render json: { document: { state: @document.state, documentable_type: @document.documentable_type } }
+        render json: { document: { state: @document.state, document_id: @document.id, documentable_type: @document.documentable_type } }
       }
     end
   end
