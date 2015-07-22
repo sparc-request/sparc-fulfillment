@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150717170106) do
+ActiveRecord::Schema.define(version: 20150721181514) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -237,8 +237,6 @@ ActiveRecord::Schema.define(version: 20150717170106) do
 
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",               limit: 4
-    t.text     "title",                  limit: 65535
-    t.string   "short_title",            limit: 255
     t.string   "sponsor_name",           limit: 255
     t.string   "udak_project_number",    limit: 255
     t.datetime "start_date"
