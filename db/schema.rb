@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20150710162504) do
     t.datetime "last_accessed_at"
     t.string   "original_filename", limit: 255
     t.string   "content_type",      limit: 255
+    t.string   "report_type",       limit: 255
   end
 
   add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree

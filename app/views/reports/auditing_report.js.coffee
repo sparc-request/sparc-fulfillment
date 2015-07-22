@@ -1,5 +1,0 @@
-$("#modal_area").html("<%= escape_javascript(render(partial: 'auditing_report')) %>")
-$("#modal_place").modal('show')
-$('#start_date').datetimepicker(format: 'MM-DD-YYYY')
-$('#end_date').datetimepicker(format: 'MM-DD-YYYY')
-$("#protocol_ids").selectpicker()

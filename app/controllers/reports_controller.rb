@@ -1,31 +1,20 @@
 class ReportsController < ApplicationController
 
   before_action :find_documentable, only: [:create]
+  before_action :find_report_type, only: [:new, :create]
 
   def new
-    @title = reports_params[:title]
-    @document = Document.new(title: @title.humanize)
-    render @title
+    @title = @report_type.titleize
   end
 
   def create
-    respond_to do |format|
-      format.js do
-        if params[:document].nil?
-          @document = Document.new(title: params[:title].humanize)
-        else
-          @document = Document.new(title: params[:document][:title])
-        end
+    @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
+    @report = @report_type.classify.constantize.new(reports_params)
 
-        if @document.valid?
-          @reports_params = reports_params
-          @documentable.documents.push @document
-
-          ReportJob.perform_later(@document, reports_params.merge(identity_id: current_identity.id))
-        else
-          @errors = @document.errors
-        end
-      end
+    if @report.valid?
+      @reports_params = reports_params
+      @documentable.documents.push @document
+      ReportJob.perform_later(@document, reports_params)
     end
   end
 
@@ -39,10 +28,16 @@ class ReportsController < ApplicationController
     end
   end
 
+  def find_report_type
+    @report_type = reports_params[:report_type]
+  end
+
   def reports_params
-    params.
-      permit(:format,
+    params.require(:report_type) # raises error if report_type not present
+
+    params.permit(:format,
               :utf8,
+              :report_type,
               :title,
               :start_date,
               :end_date,
@@ -50,6 +45,6 @@ class ReportsController < ApplicationController
               :participant_id,
               :documentable_id,
               :documentable_type,
-              :protocol_ids => [])
+              :protocol_ids => []).merge(identity_id: current_identity.id)
   end
 end

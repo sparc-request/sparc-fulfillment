@@ -3,8 +3,6 @@ class Document < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :documentable, polymorphic: true
-  validates :title, presence: true
-
 
   def path
     [ENV.fetch('DOCUMENT_ROOT'), id].join('/')
