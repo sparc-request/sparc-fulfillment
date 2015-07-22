@@ -58,14 +58,15 @@ generate_document = (element, tables_to_refresh, event = null) ->
               $("li a[title='Generate New Report']").off('click').on 'click', ->
                 ul = $(this).parents().eq(1)
                 button = $(ul).siblings('a.dropdown-toggle')
-                $(ul).toggle()
-                $(button).removeClass('btn-success')
+                ul.toggle()
+                button.removeClass('btn-success')
+                
                 set_glyphicon_loading button
 
                 generate_document button, tables_to_refresh
 
               $(element).off('click').on 'click', ->
-                $(this).siblings('#'+dropdown_id_indicator).toggle()
+                $("ul.document-dropdown-menu[style='display: block;']").toggle()
 
       get_document_state()
 

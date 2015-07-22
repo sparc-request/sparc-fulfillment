@@ -66,6 +66,7 @@ en:
   documents:
     documents: "Documents"
     date: "Date Requested"
+    date_time_formatter: "%m/%d/%Y %H:%M:%S"
     title: "Title"
     state: "Report Status"
     file: "Attached File"

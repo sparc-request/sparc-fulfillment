@@ -2,7 +2,7 @@ module DocumentsHelper
 
   def format_date(date)
     if date.present?
-      date.strftime('%m/%d/%Y %H:%M:%S')
+      date.strftime(t(:documents)[:date_time_formatter])
     else
       ''
     end
@@ -10,7 +10,7 @@ module DocumentsHelper
 
   def attached_file_formatter(document)
     if document.completed?
-      content_tag(:a, class: 'attached_file', href: document_path(document), target: :blank, title: 'Download File', 'data-id' => document.id) do
+      content_tag(:a, class: 'attached_file', id: "file_#{document.id}", href: document_path(document), target: :blank, title: 'Download File', 'data-id' => document.id) do
         content_tag(:span, '', class: 'glyphicon glyphicon-file')
       end
     else
