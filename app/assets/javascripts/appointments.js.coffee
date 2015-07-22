@@ -130,7 +130,14 @@ $ ->
     $.ajax
       type: 'GET'
       data: data
-      url: "/multiple_procedures/edit_procedures.js"
+      url: "/multiple_procedures/incomplete_all.js"
+
+  $(document).on 'click', ".complete_all_button", ->
+    data = status: "complete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
+    $.ajax
+      type: 'PUT'
+      data: data
+      url: "/multiple_procedures/update_procedures.js"
 
   $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')
@@ -194,13 +201,6 @@ $ ->
       type: 'PUT'
       data: data
       url: "/procedures/#{procedure_id}.js"
-
-  $(document).on 'click', ".complete_all_button", ->
-    core_id = $(this).data("core-id")
-
-    incompleted = $("label.status.complete.inactive[data-core-id=#{core_id}]")
-    for obj in incompleted
-      obj.click()
 
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)

@@ -7,11 +7,12 @@
           = t(:actions)[:close]
       %h4.modal-title.text-center
         = t(:notes)[:new_header]
-    = form_tag incomplete_all_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
+    = form_tag update_procedures_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
       .modal-body
         #modal_errors
         = hidden_field_tag :core_id, core_id
         = hidden_field_tag :appointment_id, appointment_id
+        = hidden_field_tag :status, "incomplete"
         .form-group
           = label_tag "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
           .col-sm-8
