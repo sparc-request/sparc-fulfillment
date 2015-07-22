@@ -1,16 +1,14 @@
 class BillingReport < Report
 
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocol_ids].freeze
+  VALIDATES_NUMERICALITY_OF = [].freeze
+
   require 'csv'
 
-  def initialize(params)
-    super
-
+  def generate(document)
     @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
     @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
-  end
 
-
-  def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|

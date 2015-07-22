@@ -1,8 +1,10 @@
 %h3 Reports
 .bootstrap-table-dropdown-overflow
-  %table.protocol_reports.custom_striped{data: {toggle: 'table', url: documents_path(document: { documentable_type: 'Protocol', documentable_id: @protocol.id }, format: :json), "sort-order" => 'desc', striped: "true", pagination: 'true', 'page-size' => 20, "sort-name" => "created_at"}}
+  %table.protocol_reports.custom_striped#reports_table{data: {toggle: 'table', search: "true", url: documents_path(document: { documentable_type: 'Protocol', documentable_id: @protocol.id }, format: :json), "sort-order" => 'desc', striped: "true", pagination: 'true', 'page-size' => 20, "sort-name" => "created_at"}}
     %thead
       %tr
+        %th{data: {class: 'edit', align: "center", field: "edit"}}
+          = t(:actions)[:edit]
         %th{data: {class: 'title', align: 'center', field: 'title'}}
           = t(:documents)[:title]
         %th{data: {class: 'created_at', align: 'center', field: 'created_at'}}

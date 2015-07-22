@@ -76,7 +76,7 @@ module ParticipantHelper
   end
 
   def participant_report_formatter(participant)
-    content_tag(:a, class: 'btn btn-default btn-xs participant_report', href: '#', title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'participant_report') do
+    content_tag(:a, class: 'btn btn-default btn-xs participant_report', href: '#', title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report') do
       content_tag(:span, '', class: 'glyphicon glyphicon-equalizer')
     end
   end
