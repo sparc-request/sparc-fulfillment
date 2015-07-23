@@ -11,7 +11,8 @@ json.last_name truncated_formatter(participant.last_name)
 json.name truncated_formatter(participant.full_name)
 json.mrn truncated_formatter(participant.mrn)
 json.external_id truncated_formatter(participant.external_id)
-json.status statusFormatter(participant)
+json.statusText participant.status
+json.statusDropdown statusFormatter(participant)
 json.date_of_birth format_date(participant.date_of_birth)
 json.gender participant.gender
 json.ethnicity participant.ethnicity
