@@ -15,14 +15,6 @@ class Document < ActiveRecord::Base
   def downloaded?
     last_accessed_at
   end
-
-  def belongs_to_identity?
-    documentable_type == 'Identity'
-  end
-
-  def belongs_to_protocol?
-    documentable_type == 'Protocol'
-  end
   
   def accessible_by?(identity)
     !belongs_to_identity? || (belongs_to_identity? && documentable == identity)
