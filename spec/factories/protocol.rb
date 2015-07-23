@@ -3,8 +3,6 @@ FactoryGirl.define do
   factory :protocol, aliases: [:protocol_complete] do
     sparc_id
     sub_service_request nil
-    title { Faker::Company.catch_phrase }
-    short_title { Faker::Company.catch_phrase }
     sponsor_name { Faker::Company.name }
     udak_project_number { Faker::Company.duns_number }
     start_date { Faker::Date.between(10.years.ago, 3.days.ago) }
@@ -15,6 +13,8 @@ FactoryGirl.define do
     study_cost { Faker::Number.number(8) }
 
     after(:create) do |protocol, evaluator|
+      sp = create(:sparc_protocol)
+      protocol.update_attributes(sparc_id: sp.id)
       create(:human_subjects_info, protocol_id: protocol.sparc_id)
     end
 

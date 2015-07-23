@@ -4,6 +4,7 @@ class Protocol < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :sub_service_request
+  belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
@@ -31,6 +32,10 @@ class Protocol < ActiveRecord::Base
             :owner,
             :service_requester,
             to: :sub_service_request
+
+  delegate :short_title,
+           :title,
+           to: :sparc_protocol
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id
     "#{sparc_id} - #{sub_service_request.ssr_id}"
