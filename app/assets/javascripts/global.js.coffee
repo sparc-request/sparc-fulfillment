@@ -6,6 +6,17 @@ $ ->
     $(object).attr('data-original-title', string)
     $(object).tooltip('fixTitle')
 
+  $(document).on 'search.bs.table', "table", ->
+    if not $(".clear_search").length
+      $("input[placeholder='Search']").wrap("<div class='input-group'/>")
+      $("<span class='input-group-addon clear_search glyphicon glyphicon-remove'></span>").insertAfter($("input[placeholder='Search']"))
+
+  $(document).on 'click', '.clear_search', ->
+    $(this).siblings("input").val("").trigger("keyup")
+    $("table").bootstrapTable('refresh', {query: {MRN: "1955997"}})
+    $('.input-group').children(".clear_search").remove()
+
+
   $(document).on 'click', 'button.notes.list',  ->
     id = $(this).data('notable-id')
     type = $(this).data('notable-type')
