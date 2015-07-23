@@ -7,4 +7,7 @@ $(".study_schedule_container").append("<%= escape_javascript(render(partial: 'st
 $("#manage_visit_groups").empty()
 $("#manage_visit_groups").html("<%= escape_javascript(render partial: '/study_schedule/study_schedule_management/visit_groups_selectpicker', locals: {protocol: @arm.protocol}) %>")
 $(".selectpicker").selectpicker()
+
+$('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
+$('#manage_visit_groups [data-toggle="tooltip"]').tooltip()
 <% end %>
