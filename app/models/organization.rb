@@ -37,7 +37,7 @@ class Organization < ActiveRecord::Base
   end
 
   def find_in_organization_tree(klass_name)
-    if self.class.name == klass_name
+    if self.type == klass_name
       self.name
     elsif parent.present?
       parent.find_in_organization_tree(klass_name)
