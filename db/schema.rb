@@ -236,17 +236,9 @@ ActiveRecord::Schema.define(version: 20150721181514) do
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
 
   create_table "protocols", force: :cascade do |t|
-<<<<<<< HEAD
     t.integer  "sparc_id",                   limit: 4
-    t.text     "title",                      limit: 65535
-    t.string   "short_title",                limit: 255
     t.string   "sponsor_name",               limit: 255
     t.string   "udak_project_number",        limit: 255
-=======
-    t.integer  "sparc_id",               limit: 4
-    t.string   "sponsor_name",           limit: 255
-    t.string   "udak_project_number",    limit: 255
->>>>>>> master
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "recruitment_start_date"
@@ -257,7 +249,7 @@ ActiveRecord::Schema.define(version: 20150721181514) do
     t.float    "stored_percent_subsidy",     limit: 24
     t.integer  "study_cost",                 limit: 4
     t.integer  "sub_service_request_id",     limit: 4
-    t.integer  "unaccessed_documents_count", limit: 4,     default: 0
+    t.integer  "unaccessed_documents_count", limit: 4,   default: 0
   end
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
