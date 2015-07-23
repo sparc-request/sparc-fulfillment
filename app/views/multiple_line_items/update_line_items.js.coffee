@@ -5,7 +5,10 @@ if end_of_core.length == 0
   $("#end_of_arm_<%= arm_id %>").before("<div id='arm_<%= arm_id %>_core_<%= @core_id %>' class='row core'><div class='col-xs-12'>Core: <%= @core_name %></div></div><div id='arm_<%= arm_id %>_end_of_core_<%= @core_id %>'></div>")
 $("#arm_<%= arm_id %>_end_of_core_<%= @core_id %>").before("<%= escape_javascript(render(:partial =>'study_schedule/line_item', locals: {line_item: value[:line_item], page: value[:page], tab: @schedule_tab})) %>")
 <% end %>
+
+$('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
 <% end %>
+
 
 <% if @action == 'destroy' %>
 <% @line_item_ids.each do |arm_id, li_ids| %>
