@@ -17,6 +17,6 @@ class Document < ActiveRecord::Base
   end
   
   def accessible_by?(identity)
-    !belongs_to_identity? || (belongs_to_identity? && documentable == identity)
+    !documentable_type == 'Identity' || (documentable_type == 'Identity' && documentable == identity)
   end
 end
