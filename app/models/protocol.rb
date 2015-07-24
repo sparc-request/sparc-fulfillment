@@ -37,6 +37,7 @@ class Protocol < ActiveRecord::Base
 
   delegate :short_title,
            :title,
+           :funding_source,
            to: :sparc_protocol
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id

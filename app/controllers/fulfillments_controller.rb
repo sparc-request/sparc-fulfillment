@@ -11,7 +11,8 @@ class FulfillmentsController < ApplicationController
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
     service = @line_item.service
-    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: service.cost }))
+    funding_source = @line_item.protocol.funding_source
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: service.cost(funding_source) }))
     if @fulfillment.valid?
       @fulfillment.save
       update_components_and_create_notes('create')

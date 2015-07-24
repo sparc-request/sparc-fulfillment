@@ -48,6 +48,6 @@ $ ->
     string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
 
 (exports ? this).refreshParticipantTables = ->
-  $("#participants-list-table").bootstrapTable 'refresh'
-  $("#participants-tracker-table").bootstrapTable 'refresh'
-  $("#participant-info").bootstrapTable 'refresh'
+  $("#participants-list-table").bootstrapTable 'refresh', {silent: true}
+  $("#participants-tracker-table").bootstrapTable 'refresh', {silent: true}
+  $("#participant-info").bootstrapTable 'refresh', {silent: true}

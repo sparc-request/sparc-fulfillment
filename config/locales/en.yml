@@ -157,6 +157,9 @@ en:
     fulfillment:
       index_header: "Fulfillment Notes"
       none: "This fulfillment has no notes."
+    participant:
+      index_header: "Participant Notes"
+      none: "This participant has no notes."
 
   participant:
     full_name: "Participant Name"
@@ -168,6 +171,7 @@ en:
     middle_initial: "Middle Initial"
     mrn: "MRN"
     status: "Status"
+    notes: "Notes"
     dob: "Date of Birth"
     gender: "Gender"
     ethnicity: "Ethnicity"
