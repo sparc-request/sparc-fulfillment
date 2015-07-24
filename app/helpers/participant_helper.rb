@@ -79,9 +79,14 @@ module ParticipantHelper
     select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id}
   end
 
+  def notes_formatter(participant)
+    content_tag(:button, class: 'btn btn-primary btn-xs participant_notes list notes', 'data-notable-id' => participant.id, 'data-notable-type' => 'Participant') do
+      content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
+    end
+  end
 
   def participant_report_formatter(participant)
-    content_tag(:a, class: 'btn btn-default btn-xs participant_report', href: '#', title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'participant_report') do
+    content_tag(:a, class: 'btn btn-default btn-xs participant_report', href: '#', title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report') do
       content_tag(:span, '', class: 'glyphicon glyphicon-equalizer')
     end
   end
