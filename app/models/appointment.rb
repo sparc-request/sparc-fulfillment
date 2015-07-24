@@ -15,7 +15,7 @@ class Appointment < ActiveRecord::Base
 
   belongs_to :participant
   belongs_to :visit_group
-  belongs_to :arm
+  belongs_to :arm, -> { with_deleted }
 
   has_many :appointment_statuses, dependent: :destroy
   has_many :procedures
