@@ -250,9 +250,9 @@ ActiveRecord::Schema.define(version: 20150721181514) do
   add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
 
   create_table "protocols", force: :cascade do |t|
-    t.integer  "sparc_id",               limit: 4
-    t.string   "sponsor_name",           limit: 255
-    t.string   "udak_project_number",    limit: 255
+    t.integer  "sparc_id",                   limit: 4
+    t.string   "sponsor_name",               limit: 255
+    t.string   "udak_project_number",        limit: 255
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "recruitment_start_date"
@@ -260,9 +260,10 @@ ActiveRecord::Schema.define(version: 20150721181514) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.float    "stored_percent_subsidy", limit: 24
-    t.integer  "study_cost",             limit: 4
-    t.integer  "sub_service_request_id", limit: 4
+    t.float    "stored_percent_subsidy",     limit: 24
+    t.integer  "study_cost",                 limit: 4
+    t.integer  "sub_service_request_id",     limit: 4
+    t.integer  "unaccessed_documents_count", limit: 4,   default: 0
   end
 
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
