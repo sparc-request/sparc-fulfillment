@@ -1,6 +1,6 @@
 $ ->
   $('[data-toggle="tooltip"]').tooltip()
-  $("input[placeholder='Search']").wrap("<div class='input-group'/>")
+  $("input[placeholder='Search']").wrap("<div class='input-group search-bar'/>")
   $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))
 
   window.update_tooltip = (object, string) ->
@@ -8,12 +8,13 @@ $ ->
     $(object).attr('data-original-title', string)
     $(object).tooltip('fixTitle')
 
-  $(document).on 'search.bs.table', "table", ->
-    $(".clear_search").toggle()
+  $(document).on 'search.bs.table', "table", (event, input)->
+    unless input == ''
+      $(".clear_search").show()
 
   $(document).on 'click', '.clear_search', ->
     $(this).siblings("input").val("").trigger("keyup")
-    $(this).toogle()
+    $(this).hide()
 
   $(document).on 'click', 'button.notes.list',  ->
     id = $(this).data('notable-id')
