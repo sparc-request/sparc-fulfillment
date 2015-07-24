@@ -2,7 +2,7 @@ module DocumentsHelper
 
   def format_date(date)
     if date.present?
-      date.strftime(t(:documents)[:date_time_formatter])
+      date.strftime(t(:documents)[:date_time_formatter_ruby])
     else
       ''
     end
