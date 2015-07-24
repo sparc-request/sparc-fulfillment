@@ -1,9 +1,10 @@
 class Procedure < ActiveRecord::Base
 
   STATUS_TYPES = %w(complete incomplete follow_up unstarted).freeze
-  NOTABLE_REASONS  = ['Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained', 
-                      'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment', 
-                      'Assessment performed by other personnel/study staff', 'Participant refused assessment', 
+
+  NOTABLE_REASONS  = ['Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained',
+                      'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment',
+                      'Assessment performed by other personnel/study staff', 'Participant refused assessment',
                       'Assessment not performed due to equipment failure', 'Not collected/not done--unknown reason'].freeze
 
   has_paper_trail
@@ -134,7 +135,7 @@ class Procedure < ActiveRecord::Base
       if visit
         amount = visit.line_item.cost
       else
-        amount = service.cost
+        amount = service.cost(protocol.funding_source)
       end
     end
     amount.to_i

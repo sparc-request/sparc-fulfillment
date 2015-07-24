@@ -5,11 +5,13 @@ namespace :data do
   desc 'Create fake data in CWF'
   task generate_data: :environment do
 
+    # Destroy Old Fake Data
+    clean_old_fake_data
+
     # Globally unique :sparc_ids
     FactoryGirl.define { sequence(:sparc_id) }
 
     # Create Indentity
-    Identity.where( email: "email@musc.edu").destroy_all
     identity = FactoryGirl.create(:identity, email: 'email@musc.edu', ldap_uid: 'ldap@musc.edu', password: 'password')
 
     # Create 10 Protocols
@@ -28,4 +30,15 @@ namespace :data do
       identity.tasks.push FactoryGirl.create(:task, assignee: identity)
     end
   end
+end
+
+def clean_old_fake_data # from the sparc side
+  fake_identities = Identity.where( email: "email@musc.edu")                        # find fake identities
+  fake_identities.each{ |dent| dent.project_roles.destroy_all }                     # destroy fake project roles
+  fake_identities.each{ |dent| dent.clinical_providers.destroy_all }                # destroy fake clinical providers
+  fake_identities.destroy_all                                                       # destroy fake identities
+
+  fake_organizations = Organization.where('name LIKE ?', '%Fake Organization %')    # find fake organizations
+  fake_organizations.each{ |org| org.sub_service_requests.destroy_all }             # destroy fake sub_service_requests
+  fake_organizations.destroy_all                                                    # destroy fake organizations
 end

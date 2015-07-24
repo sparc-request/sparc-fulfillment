@@ -14,8 +14,8 @@ class ReportJob < ActiveJob::Base
   end
 
   def perform(document, params)
-    document_name = params[:title]
-    report        = params[:title].classify.constantize.new(params)
+    document_name = document.title
+    report        = document.report_type.classify.constantize.new(params)
 
     report.generate(document)
 

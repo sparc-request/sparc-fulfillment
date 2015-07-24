@@ -109,9 +109,9 @@ $ ->
         # Update text fields
         identifier = ".visits_for_line_item_#{line_item_id}"
         if check == 'true'
-          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
+          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_row"], true, 1, 0)
         else
-          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
+          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_row"], false, 0, 0)
 
   $(document).on 'click', '.check_column', ->
     check = $(this).attr('check')
@@ -128,26 +128,19 @@ $ ->
         # Update text fields
         identifier = ".visit_for_visit_group_#{visit_group_id}"
         if check == 'true'
-          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
+          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_column"], true, 1, 0)
         else
-          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
+          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_column"], false, 0, 0)
 
-  check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
+  check_row_column = (obj, identifier, remove_class, add_class, attr_check, attr_title, prop_check, research_val, insurance_val) ->
     obj.removeClass(remove_class).addClass(add_class)
     obj.attr('check', attr_check)
+    obj.attr('title', attr_title)
+    obj.tooltip('destroy')
+    obj.tooltip()
     $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
-
-  # Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
-  # containing content, which disappears when user focuses to it.
-  (exports ? this).error_tooltip_on = (elt, content) ->
-    $elt = $(elt)
-    $elt.attr('data-toggle', 'tooltip').attr('title', content)
-    $elt.tooltip({container: 'body'})
-    $elt.tooltip('show')
-    delay = (ms, func) -> setTimeout func, ms
-    delay 3000, -> $elt.tooltip('destroy')
 
   (exports ? this).change_service = (service_id) ->
     protocol_id = $('#arms').data('protocol_id')
