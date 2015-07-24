@@ -47,6 +47,6 @@ class Service < ActiveRecord::Base
   end
 
   def current_effective_pricing_setup date=Time.current
-    pricing_setups.current(date).first
+    organization.effective_pricing_setup_for_date(date)
   end
 end
