@@ -17,7 +17,6 @@ class Service < ActiveRecord::Base
     false
   end
 
-  # TODO Determine exact cost calculation
   def cost(funding_source = nil, date = Time.current)
     pricing_map = current_effective_pricing_map(date)
     raise ArgumentError, "Service #{self.id} has no pricing maps" if pricing_map.blank?
