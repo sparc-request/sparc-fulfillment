@@ -3,7 +3,6 @@ $ ->
   $("input[placeholder='Search']").wrap("<div class='input-group'/>")
   $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))
 
-
   window.update_tooltip = (object, string) ->
     $(object).tooltip('hide')
     $(object).attr('data-original-title', string)
@@ -11,7 +10,6 @@ $ ->
 
   $(document).on 'search.bs.table', "table", ->
     $(".clear_search").toggle()
-
 
   $(document).on 'click', '.clear_search', ->
     $(this).siblings("input").val("").trigger("keyup")
