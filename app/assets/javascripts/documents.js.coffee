@@ -27,14 +27,7 @@ window.update_view_on_download_new_report = (element, table_to_update, documenta
   if date_downloaded_element.text().length == 0
     decrement_notification(documentable_type)
     
-    dNow = new Date
-    MM   = if dNow.getMonth()+1  < 10 then '0'+(dNow.getMonth()+1) else dNow.getMonth()+1
-    dd   = if dNow.getDate()     < 10 then '0'+dNow.getDate()      else dNow.getDate()
-    yyyy =    dNow.getFullYear()
-    hh   = if dNow.getHours()    < 10 then '0'+(dNow.getHours())   else dNow.getHours()
-    mm   = if dNow.getMinutes()  < 10 then '0'+(dNow.getMinutes()) else dNow.getMinutes()
-    ss   = if dNow.getSeconds()  < 10 then '0'+(dNow.getSeconds()) else dNow.getSeconds()
-    utcdate = "#{MM}/#{dd}/#{yyyy} #{hh}:#{mm}:#{ss}"
+    utcdate = moment().format(I18n["documents"]["date_time_formatter_js"])
     
     $(table_to_update).bootstrapTable 'updateCell', 
       rowIndex: row_index

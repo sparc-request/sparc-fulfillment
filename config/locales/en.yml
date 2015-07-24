@@ -66,7 +66,8 @@ en:
   documents:
     documents: "Documents"
     date: "Date Requested"
-    date_time_formatter: "%m/%d/%Y %H:%M:%S"
+    date_time_formatter_ruby: "%m/%d/%Y"
+    date_time_formatter_js:   "MM/DD/YYYY"
     title: "Title"
     state: "Report Status"
     file: "Attached File"
