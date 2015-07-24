@@ -128,14 +128,14 @@ class Procedure < ActiveRecord::Base
     end
   end
 
-  def cost
+  def cost(funding_source = protocol.funding_source, date = Time.current)
     if service_cost
       amount = service_cost
     else
       if visit
-        amount = visit.line_item.cost
+        amount = visit.line_item.cost(funding_source, date)
       else
-        amount = service.cost(protocol.funding_source)
+        amount = service.cost(funding_source, date)
       end
     end
     amount.to_i
