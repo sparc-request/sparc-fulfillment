@@ -6,6 +6,7 @@ class Organization < ActiveRecord::Base
 
   has_many :services
   has_many :sub_service_requests
+  has_many :pricing_setups
   has_many :non_process_ssrs_children,
             -> { where(process_ssrs: false) },
             class_name: "Organization",

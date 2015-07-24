@@ -135,7 +135,7 @@ class Procedure < ActiveRecord::Base
       if visit
         amount = visit.line_item.cost
       else
-        amount = service.cost
+        amount = service.cost(protocol.funding_source)
       end
     end
     amount.to_i
