@@ -14,6 +14,7 @@ class Participant < ActiveRecord::Base
 
   has_many :appointments
   has_many :procedures, through: :appointments
+  has_many :notes, as: :notable
 
   delegate :srid,
            to: :protocol
