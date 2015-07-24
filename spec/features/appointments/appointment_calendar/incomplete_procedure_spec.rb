@@ -108,7 +108,7 @@ feature 'Incomplete Procedure', js: true do
     reason = Procedure::NOTABLE_REASONS.first
 
     when_i_click_the_incomplete_button
-    select reason, from: 'procedure_notes_attributes_0_reason'
+    bootstrap_select '.reason-select', reason
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
   end
