@@ -92,9 +92,11 @@ class ParticipantsController < ApplicationController
   end
 
   def create_note_for_arm_change(params, participant)
-    current_arm_name = participant.arm.name
-    new_arm_name = Arm.find(params[:participant][:arm_id]).name
-    @note = Note.create(identity: current_identity, notable_type: 'Participant', notable_id: participant.id,
-                        comment: "Arm changed from #{current_arm_name} to #{new_arm_name}")
+    if participant.arm.present? && participant.arm_id != params[:participant][:arm_id]
+      current_arm_name = participant.arm.name
+      new_arm_name = Arm.find(params[:participant][:arm_id]).name
+      @note = Note.create(identity: current_identity, notable_type: 'Participant', notable_id: participant.id,
+                          comment: "Arm changed from #{current_arm_name} to #{new_arm_name}")
+    end
   end
 end
