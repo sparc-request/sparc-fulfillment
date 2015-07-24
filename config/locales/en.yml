@@ -66,6 +66,8 @@ en:
   documents:
     documents: "Documents"
     date: "Date Requested"
+    date_time_formatter_ruby: "%m/%d/%Y"
+    date_time_formatter_js:   "MM/DD/YYYY"
     title: "Title"
     state: "Report Status"
     file: "Attached File"
@@ -156,6 +158,9 @@ en:
     fulfillment:
       index_header: "Fulfillment Notes"
       none: "This fulfillment has no notes."
+    participant:
+      index_header: "Participant Notes"
+      none: "This participant has no notes."
 
   participant:
     full_name: "Participant Name"
@@ -167,6 +172,7 @@ en:
     middle_initial: "Middle Initial"
     mrn: "MRN"
     status: "Status"
+    notes: "Notes"
     dob: "Date of Birth"
     gender: "Gender"
     ethnicity: "Ethnicity"

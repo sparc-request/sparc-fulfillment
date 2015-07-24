@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :identities
 
   resources :protocols
-  resources :visit_groups
+  resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
   resources :fulfillments, only: [:new, :create, :edit, :update]
   resources :procedures, only: [:create, :edit, :update, :destroy]

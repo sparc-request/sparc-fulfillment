@@ -1,4 +1,5 @@
 class DocumentsController < ApplicationController
+  layout nil
 
   before_action :find_document, only: [:show]
   before_action :authorize_document_access, only: [:show]
@@ -24,13 +25,13 @@ class DocumentsController < ApplicationController
   def show
     respond_to do |format|
       format.html {
+        mark_document_as_accessed
         send_data File.read(@document.path),
           type: @document.content_type,
           disposition: "attachment; filename=#{@document.original_filename}"
-        mark_document_as_accessed
       }
       format.json {
-        render json: { document: { state: @document.state } }
+        render json: { document: { state: @document.state, document_id: @document.id, documentable_type: @document.documentable_type } }
       }
     end
   end
@@ -111,13 +112,21 @@ class DocumentsController < ApplicationController
   end
 
   def mark_document_as_accessed
-    update_identity_unaccessed_documents_counter
+    update_unaccessed_documents_counter(@document.documentable_type)
+
     @document.update_attributes last_accessed_at: Time.current
   end
 
-  def update_identity_unaccessed_documents_counter
-    if !@document.downloaded? && @document.belongs_to_identity?
-      current_identity.update_counter :unaccessed_documents, -1
+  def update_unaccessed_documents_counter documentable_type
+    if !@document.downloaded?
+      case documentable_type
+        when 'Protocol'
+          protocol = Protocol.find(@document.documentable_id)
+          protocol.document_counter_updated = true
+          protocol.update_attributes(unaccessed_documents_count: (protocol.unaccessed_documents_count - 1))
+        when 'Identity'
+          current_identity.update_counter :unaccessed_documents, -1
+      end
     end
   end
 

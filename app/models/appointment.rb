@@ -15,7 +15,7 @@ class Appointment < ActiveRecord::Base
 
   belongs_to :participant
   belongs_to :visit_group
-  belongs_to :arm
+  belongs_to :arm, -> { with_deleted }
 
   has_many :appointment_statuses, dependent: :destroy
   has_many :procedures
@@ -75,7 +75,7 @@ class Appointment < ActiveRecord::Base
               appointment_id: self.id,
               visit_id: visit.id,
               service_name: li.service.name,
-              service_cost: li.service.cost,
+              service_cost: li.service.cost(li.protocol.funding_source),
               service_id: li.service.id,
               sparc_core_id: li.service.sparc_core_id,
               sparc_core_name: li.service.sparc_core_name

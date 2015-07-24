@@ -29,7 +29,7 @@ class Visit < ActiveRecord::Base
     research_billing_qty + insurance_billing_qty
   end
 
-  def update_procedures updated_qty, selected_qty_type = "research_billing_qty"
+  def update_procedures updated_qty, selected_qty_type
     service = self.line_item.service
     new_procedure_values  = []
     new_procedure_columns = [:visit_id, :service_id, :service_name, :billing_type, :sparc_core_id, :sparc_core_name, :appointment_id]
