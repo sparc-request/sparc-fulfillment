@@ -45,7 +45,7 @@ class LineItem < ActiveRecord::Base
     if admin_rates.any?
       admin_rates.last.admin_cost
     else
-      service.cost
+      service.cost(protocol.funding_source)
     end
   end
 

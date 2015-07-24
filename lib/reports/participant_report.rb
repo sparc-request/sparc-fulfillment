@@ -1,5 +1,8 @@
 class ParticipantReport < Report
 
+  VALIDATES_PRESENCE_OF = [:title, :participant_id].freeze
+  VALIDATES_NUMERICALITY_OF = [].freeze
+
   require 'csv'
 
   def generate(document)

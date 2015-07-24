@@ -16,7 +16,7 @@ class DocumentsController < ApplicationController
         @documentable_sym = @documentable_type.downcase.to_sym
       }
       format.json {
-        @documents = find_documentable.documents
+        @documents = find_documentable.documents.order("CREATED_AT DESC")
       }
     end
   end
