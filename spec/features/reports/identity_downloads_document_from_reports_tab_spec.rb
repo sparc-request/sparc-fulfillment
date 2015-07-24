@@ -57,7 +57,7 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
   end
 
   def then_i_should_see_the_downloaded_at_date_has_been_updated
-    #Get formatter from en.yml -> documents -> date_time_formatter
-    expect(page).to have_css("td.downloaded_at", text: Time.now.strftime('%m/%d/%Y %H:%M:%S'))
+    #Get formatter from en.yml -> documents -> date_time_formatter_ruby
+    expect(page).to have_css("td.downloaded_at", text: Time.now.strftime("%m/%d/%Y"))
   end
 end
