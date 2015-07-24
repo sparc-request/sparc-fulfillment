@@ -18,7 +18,7 @@
           .form-group
             = note_form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
             .col-sm-8
-              = note_form.select :reason, Procedure::NOTABLE_REASONS, { prompt: "Select a reason" }, class: "form-control reason-select"
+              = note_form.select :reason, Procedure::NOTABLE_REASONS, { prompt: "Select a reason" }, class: "selectpicker form-control reason-select"
           .form-group
             = note_form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
             .col-sm-8

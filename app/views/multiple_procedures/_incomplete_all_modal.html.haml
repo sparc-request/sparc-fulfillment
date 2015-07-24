@@ -16,7 +16,7 @@
         .form-group
           = label_tag "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
           .col-sm-8
-            = select_tag "reason", options_for_select(Procedure::NOTABLE_REASONS), prompt: "Select a reason", class: "form-control reason-select"
+            = select_tag "reason", options_for_select(Procedure::NOTABLE_REASONS), prompt: "Select a reason", class: "selectpicker form-control reason-select"
         .form-group
           = label_tag "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
           .col-sm-8
