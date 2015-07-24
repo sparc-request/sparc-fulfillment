@@ -12,6 +12,7 @@ class ReportsController < ApplicationController
     @report = @report_type.classify.constantize.new(reports_params)
 
     if @report.valid?
+      @reports_params = reports_params
       @documentable.documents.push @document
       ReportJob.perform_later(@document, reports_params)
     end

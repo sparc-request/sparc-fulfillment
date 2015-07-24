@@ -13,9 +13,9 @@ feature "Identity views Protocols by status", js: true do
     2.times { create_and_assign_protocol_to_me }
 
     Protocol.first.sub_service_request.update_attributes(status: "complete")
-    Protocol.first.update_attributes(short_title: "Slappy")
+    Protocol.first.sparc_protocol.update_attributes(short_title: "Slappy")
     Protocol.last.sub_service_request.update_attributes(status: "draft")
-    Protocol.last.update_attributes(short_title: "Swanson")
+    Protocol.last.sparc_protocol.update_attributes(short_title: "Swanson")
   end
 
   def when_i_visit_the_protocols_page

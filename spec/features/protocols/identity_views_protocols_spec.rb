@@ -48,7 +48,7 @@ feature 'Identity views protocols', js: true do
   end
 
   def and_a_change_is_made_to_the_protocol_by_another_identity
-    Protocol.first.update_attribute :short_title, 'Test 123'
+    Protocol.first.sparc_protocol.update_attribute :short_title, 'Test 123'
     refresh_bootstrap_table('table.protocols')
   end
 
