@@ -49,6 +49,7 @@ en:
     start_visit: "Start Visit"
     complete_visit: "Complete Visit"
     object: "Appointment"
+    warning: "Please click 'Start Visit' and enter a start date to continue."
 
   arm:
     name: "Arm Name"
@@ -311,7 +312,7 @@ en:
   visit:
     object: "Visit"
     custom: "Custom Visit"
-    no_arm: "Assign arm to create custom visits" 
+    no_arm: "Assign arm to create custom visits"
     check_all: "Check All"
     check_column: "Check Column"
     check_row: "Check Row"

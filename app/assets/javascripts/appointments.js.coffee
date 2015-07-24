@@ -237,14 +237,8 @@ $ ->
       $("div.completed_date_btn").addClass('contains_disabled')
 
   # Display a helpful message when user clicks on a disabled UI element
-  $(document).on 'click', '.pre_start_disabled', ->
-    alert("Please click Start Visit and enter a start date to continue.")
+  $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
+    alert(I18n["appointment"]["warning"])
 
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
-
-  $(document).on 'click', '.complete-all-container.contains_disabled', ->
-    alert("Please click Start Visit and enter a start date to continue.")
-
-  $(document).on 'click', '.incomplete-all-container.contains_disabled', ->
-    alert("Please click Start Visit and enter a start date to continue.")
