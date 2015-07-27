@@ -3,6 +3,7 @@
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @note.errors})) %>")
 <% else %>
 ##No errors, remove active classes and set performed by, no matter what the status is.
+update_complete_visit_button(<%= @appointment.can_finish? %>)
 $(".core[data-core-id='<%= @core_id %>'] td.status label.btn").removeClass('active')
 $(".core[data-core-id='<%= @core_id %>'] .selectpicker.performed-by-dropdown").selectpicker('val', "<%= current_identity.id %>")
 
