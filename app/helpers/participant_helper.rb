@@ -33,7 +33,7 @@ module ParticipantHelper
 
   def detailsFormatter participant
     [
-      "<a class='details participant-details ml10' href='#' title='Details' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+      "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-sunglasses'></i>",
       "</a>"
     ].join ""
@@ -41,7 +41,7 @@ module ParticipantHelper
 
   def editFormatter participant
     [
-      "<a class='edit edit-participant ml10' href='#' title='Edit' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-edit'></i>",
       "</a>"
     ].join ""
@@ -49,7 +49,7 @@ module ParticipantHelper
 
   def deleteFormatter participant
     [
-      "<a class='remove remove-participant' href='#' title='Remove' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
+      "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
       "<i class='glyphicon glyphicon-remove'></i>",
       "</a>"
     ].join ""
@@ -57,7 +57,7 @@ module ParticipantHelper
 
   def changeArmFormatter participant
     [
-      "<a class='edit change-arm ml10' href='#' title='Change Arm' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' arm_id='#{participant.arm_id}'>",
+      "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' arm_id='#{participant.arm_id}'>",
       "<i class='glyphicon glyphicon-random'></i>",
       "</a>"
     ].join ""
@@ -75,9 +75,22 @@ module ParticipantHelper
     end
   end
 
+  def statusFormatter participant
+    select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id}
+  end
+
+  def notes_formatter(participant)
+    content_tag(:button, class: 'btn btn-primary btn-xs participant_notes list notes', 'data-notable-id' => participant.id, 'data-notable-type' => 'Participant') do
+      content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
+    end
+  end
+
   def participant_report_formatter(participant)
-    content_tag(:a, class: 'btn btn-default btn-xs participant_report', href: '#', title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report') do
-      content_tag(:span, '', class: 'glyphicon glyphicon-equalizer')
+    content_tag(:div, '', class: 'btn-group') do
+      content_tag(:a, class: 'btn btn-default dropdown-toggle btn-xs participant_report', id: "participant_report_#{participant.id.to_s}", href: '#', target: :blank, title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report', 'aria-expanded' => 'false') do
+        content_tag(:span, '', class: 'glyphicon glyphicon-equalizer')
+      end +
+      content_tag(:ul, '', class: 'dropdown-menu document-dropdown-menu menu-participant', role: 'menu', id: "document_menu_participant_report_#{participant.id.to_s}")
     end
   end
 end

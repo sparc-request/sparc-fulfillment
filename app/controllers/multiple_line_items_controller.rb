@@ -1,6 +1,6 @@
 class MultipleLineItemsController < ApplicationController
   respond_to :json, :html
-  #this controller exsists in order to seperate the mass creation of line items
+  #this controller exists in order to separate the mass creation of line items
   #from single line item creation and deletion which will happen on the study schedule
 
   def new_line_items

@@ -49,6 +49,7 @@ en:
     start_visit: "Start Visit"
     complete_visit: "Complete Visit"
     object: "Appointment"
+    warning: "Please click 'Start Visit' and enter a start date to continue."
 
   arm:
     name: "Arm Name"
@@ -66,6 +67,8 @@ en:
   documents:
     documents: "Documents"
     date: "Date Requested"
+    date_time_formatter_ruby: "%m/%d/%Y"
+    date_time_formatter_js:   "MM/DD/YYYY"
     title: "Title"
     state: "Report Status"
     file: "Attached File"
@@ -156,6 +159,9 @@ en:
     fulfillment:
       index_header: "Fulfillment Notes"
       none: "This fulfillment has no notes."
+    participant:
+      index_header: "Participant Notes"
+      none: "This participant has no notes."
 
   participant:
     full_name: "Participant Name"
@@ -167,6 +173,7 @@ en:
     middle_initial: "Middle Initial"
     mrn: "MRN"
     status: "Status"
+    notes: "Notes"
     dob: "Date of Birth"
     gender: "Gender"
     ethnicity: "Ethnicity"
@@ -207,6 +214,7 @@ en:
     status: "Status"
     object: "Procedure"
     complete: "Complete All"
+    incomplete: "Incomplete All"
 
   protocol:
     object: "Protocol"
@@ -304,7 +312,7 @@ en:
   visit:
     object: "Visit"
     custom: "Custom Visit"
-    no_arm: "Assign arm to create custom visits" 
+    no_arm: "Assign arm to create custom visits"
     check_all: "Check All"
     check_column: "Check Column"
     check_row: "Check Row"
