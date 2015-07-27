@@ -125,7 +125,21 @@ $ ->
         data: data
         url: "/procedures/#{procedure_id}/edit.js"
 
-  $(document).on 'click', '.close_modal', ->
+  $(document).on 'click', 'button.incomplete_all_button', ->
+    data = status: "incomplete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
+    $.ajax
+      type: 'GET'
+      data: data
+      url: "/multiple_procedures/incomplete_all.js"
+
+  $(document).on 'click', ".complete_all_button", ->
+    data = status: "complete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
+    $.ajax
+      type: 'PUT'
+      data: data
+      url: "/multiple_procedures/update_procedures.js"
+
+  $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')
     $("#incomplete_button_#{id}").parent().removeClass('active')
     if $("#complete_button_#{id}").parent().hasClass('selected_before')
@@ -188,13 +202,6 @@ $ ->
       data: data
       url: "/procedures/#{procedure_id}.js"
 
-  $(document).on 'click', ".complete_all_button", ->
-    core_id = $(this).data("core-id")
-
-    incompleted = $("label.status.complete.inactive[data-core-id=#{core_id}]")
-    for obj in incompleted
-      obj.click()
-
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker(defaultDate: date)
     $('#start_date').on 'dp.hide', (e) ->
@@ -230,11 +237,8 @@ $ ->
       $("div.completed_date_btn").addClass('contains_disabled')
 
   # Display a helpful message when user clicks on a disabled UI element
-  $(document).on 'click', '.pre_start_disabled', ->
-    alert("Please click Start Visit and enter a start date to continue.")
+  $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
+    alert(I18n["appointment"]["warning"])
 
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
-
-  $(document).on 'click', '.complete-all-container.contains_disabled', ->
-    alert("Please click Start Visit and enter a start date to continue.")

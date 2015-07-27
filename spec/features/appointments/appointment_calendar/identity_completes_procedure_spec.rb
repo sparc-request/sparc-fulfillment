@@ -77,7 +77,7 @@ feature 'Identity completes Procedure', js: true do
   def and_i_incomplete_the_procedure
     find('label.status.incomplete').click
     wait_for_ajax
-    page.select 'Assessment missed', from: 'Reason'
+    bootstrap_select '.reason-select', "Assessment missed"
     click_button 'Save'
     wait_for_ajax
   end

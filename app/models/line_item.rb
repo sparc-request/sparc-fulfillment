@@ -41,11 +41,11 @@ class LineItem < ActiveRecord::Base
     end
   end
 
-  def cost
+  def cost(funding_source = protocol.funding_source, date = Time.current)
     if admin_rates.any?
       admin_rates.last.admin_cost
     else
-      service.cost
+      service.cost(funding_source, date)
     end
   end
 

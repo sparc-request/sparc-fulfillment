@@ -23,8 +23,8 @@ class StudyScheduleController < ApplicationController
     visits = Visit.where(line_item_id: params[:line_item_id])
     visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
     visits.each do |visit|
-      visit.update_procedures qty.to_i
-      visit.update_procedures 0, "insurance_billing_qty"
+      visit.update_procedures qty.to_i, 'research_billing_qty'
+      visit.update_procedures 0, 'insurance_billing_qty'
     end
   end
 
@@ -33,8 +33,8 @@ class StudyScheduleController < ApplicationController
     visits = Visit.where(visit_group_id: params[:visit_group_id])
     visits.update_all(research_billing_qty: qty, insurance_billing_qty: 0, effort_billing_qty: 0)
     visits.each do |visit|
-      visit.update_procedures qty.to_i
-      visit.update_procedures 0, "insurance_billing_qty"
+      visit.update_procedures qty.to_i, 'research_billing_qty'
+      visit.update_procedures 0, 'insurance_billing_qty'
     end
   end
 end

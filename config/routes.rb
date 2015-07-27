@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :identities
 
   resources :protocols
-  resources :visit_groups
+  resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
   resources :fulfillments, only: [:new, :create, :edit, :update]
   resources :procedures, only: [:create, :edit, :update, :destroy]
@@ -47,6 +47,13 @@ Rails.application.routes.draw do
       get 'edit_line_items'
       get 'necessary_arms'
       put 'update_line_items'
+    end
+  end
+
+  resources :multiple_procedures, only: [] do
+    collection do
+      get 'incomplete_all'
+      put 'update_procedures'
     end
   end
 

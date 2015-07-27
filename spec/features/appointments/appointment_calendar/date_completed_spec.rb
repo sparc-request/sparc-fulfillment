@@ -56,7 +56,7 @@ feature 'Date completed', js: true do
     reason = Procedure::NOTABLE_REASONS.first
 
     find('label.status.incomplete').click
-    select reason, from: 'procedure_notes_attributes_0_reason'
+    bootstrap_select '.reason-select', reason
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
   end

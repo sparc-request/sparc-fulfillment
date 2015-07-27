@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-feature 'Identity views Report tab', js: true do
+feature 'Identity views Report tab', js: true, enqueue: false do
 
   scenario 'and sees a list of Protocol reports' do
-    given_i_have_created_a_protocol_report
+    given_i_have_created_a_study_schedule_report
     when_i_view_the_reports_tab
     then_i_should_see_a_report_in_the_protocol_reports_table
   end
@@ -15,25 +15,30 @@ feature 'Identity views Report tab', js: true do
   end
 
  #  scenario 'then changes the name of a report' do
- #    given_i_have_created_a_protocol_report
+ #    given_i_have_created_a_study_schedule_report
  #    when_i_view_the_reports_tab
  #    then_i_change_the_title_of_the_report
  # end
 
-
-  def given_i_have_created_a_protocol_report
+  def given_i_have_created_a_study_schedule_report
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path protocol
-    find('a.study_schedule_report').click
+    
+    find("a#study_schedule_report_#{protocol.id.to_s}").click
+    wait_for_ajax
   end
 
   def given_i_have_created_a_participant_report
     protocol = create_and_assign_protocol_to_me
+    participant = protocol.participants.first
 
     visit protocol_path protocol
+
     click_link 'Participant Tracker'
-    first('table.participants tbody td.participant_report a').click
+    
+    find("a#participant_report_#{participant.id.to_s}").click
+    wait_for_ajax    
   end
 
   def when_i_view_the_reports_tab
