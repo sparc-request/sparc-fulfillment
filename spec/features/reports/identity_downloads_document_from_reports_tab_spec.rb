@@ -6,12 +6,6 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
     given_i_am_viewing_the_protocol_show_page
   end
 
-  after :each do
-    print "\nKnown issue in 'identity_downloads_document_from_reports_tab_spec'"
-    print "\nin 'when_i_download_the_report' on click trigger.  "
-    print "\n- Kyle and Jerry \n"
-  end
-
   scenario 'and sees the reports counter decrement' do
     given_i_have_created_a_protocol_based_report
     when_i_visit_the_reports_tab
