@@ -5,8 +5,11 @@ RSpec.describe ProceduresController, type: :controller do
   login_user
 
   before :each do
-    @appointment  = create(:appointment, :participant_id => 1, :name => "Visit 1", :arm_id => 1)
-    @service      = create(:service)
+    @service     = create(:service)
+    protocol     = create(:protocol_imported_from_sparc)
+    arm          = protocol.arms.first
+    participant  = arm.participants.first
+    @appointment = create(:appointment, name: "Visit Test", arm: arm, participant: participant)
   end
 
   describe 'PUT #update' do
@@ -18,9 +21,8 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as complete' do
 
           before do
-            service = create(:service)
-            procedure = create(:procedure, service: service)
-            params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+            procedure = create(:procedure, appointment: @appointment, service: @service)
+            params = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
 
             put :update, params
           end
@@ -41,8 +43,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as incomplete' do
 
           before do
-            service = create(:service)
-            procedure = create(:procedure, service: service)
+            procedure = create(:procedure, appointment: @appointment, service: @service)
             params    = { id: procedure.id, procedure: { status: 'incomplete' }, format: :js }
 
             put :update, params
@@ -66,9 +67,8 @@ RSpec.describe ProceduresController, type: :controller do
 
         context 'User edits completed_date' do
            before do
-            service = create(:service)
-            @procedure = create(:procedure_complete, service: service)
-            params    = { id: @procedure.id, procedure: { completed_date: Date.current.tomorrow.strftime("%m-%d-%Y")}, format: :js }
+            procedure = create(:procedure_complete, appointment: @appointment, service: @service)
+            params    = { id: procedure.id, procedure: { completed_date: Date.current.tomorrow.strftime("%m-%d-%Y")}, format: :js }
 
             put :update, params
           end
@@ -84,8 +84,7 @@ RSpec.describe ProceduresController, type: :controller do
 
         context 'User marks the procedure as complete' do #if the procedure is already complete, a user setting it to complete again will render the status void
           before do
-            service = create(:service)
-            procedure = create(:procedure_complete, service: service)
+            procedure = create(:procedure_complete, appointment: @appointment, service: @service)
             params = { id: procedure.id, procedure: { status: 'unstarted' }, format: :js }
 
             put :update, params
@@ -107,8 +106,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as incomplete' do
 
           before do
-            service = create(:service)
-            procedure = create(:procedure_complete, service: service)
+            procedure = create(:procedure_complete, appointment: @appointment, service: @service)
             params    = { id: procedure.id, procedure: { status: 'incomplete', completed_date: "" }, format: :js }
 
             put :update, params
@@ -133,8 +131,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as complete' do
 
           before do
-            service = create(:service)
-            procedure = create(:procedure, service: service)
+            procedure = create(:procedure, appointment: @appointment, service: @service)
             params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
 
             put :update, params
@@ -156,8 +153,7 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as incomplete' do
 
           before do
-            service = create(:service)
-            procedure = create(:procedure, service: service)
+            procedure = create(:procedure, appointment: @appointment, service: @service)
             params    = { id: procedure.id, procedure: { status: 'incomplete'}, format: :js }
 
             put :update, params
@@ -195,7 +191,7 @@ RSpec.describe ProceduresController, type: :controller do
 
   describe "DELETE #delete" do
     it "should remove the procedure if unmarked" do
-      @procedure = create(:procedure, appointment_id: @appointment.id)
+      @procedure = create(:procedure, appointment: @appointment, service: @service)
       expect{
         delete :destroy, {
           id: @procedure.id,
@@ -205,7 +201,7 @@ RSpec.describe ProceduresController, type: :controller do
     end
 
     it "should not remove the procedure if marked as completed" do
-      @procedure = create(:procedure, appointment_id: @appointment.id, status: 'complete')
+      @procedure = create(:procedure, appointment: @appointment, service: @service, status: 'complete')
       expect{
         delete :destroy, {
           id: @procedure.id,
@@ -215,7 +211,7 @@ RSpec.describe ProceduresController, type: :controller do
     end
 
     it "should not remove the procedure if marked as incomplete" do
-      @procedure = create(:procedure, appointment_id: @appointment.id, status: 'incomplete')
+      @procedure = create(:procedure, appointment: @appointment, service: @service, status: 'incomplete')
       expect{
         delete :destroy, {
           id: @procedure.id,
