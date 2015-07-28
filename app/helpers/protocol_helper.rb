@@ -24,16 +24,8 @@ module ProtocolHelper
     end
   end
 
-  def formatted_provider(protocol)
-    protocol.organization.find_in_organization_tree("Provider")
-  end
-
-  def formatted_program(protocol)
-    protocol.organization.find_in_organization_tree("Program")
-  end
-
-  def formatted_core(protocol)
-    protocol.organization.find_in_organization_tree("Core")
+  def formatted_organization_tree(protocol)
+    protocol.sub_service_request.org_tree_display
   end
 
   def formatted_study_schedule_report(protocol)
