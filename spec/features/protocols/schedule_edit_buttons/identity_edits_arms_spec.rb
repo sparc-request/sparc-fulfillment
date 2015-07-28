@@ -71,7 +71,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def then_i_should_see_the_new_arm
-    expect(page).to have_content "arm name"
+    expect(find(".study_schedule_container")).to have_content "arm name"
   end
 
   def when_i_click_the_edit_arm_button
@@ -84,7 +84,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def then_i_should_see_the_updated_arm
-    expect(page).to have_content 'this here arm'
+    expect(find(".study_schedule_container")).to have_content 'this here arm'
   end
 
   def when_i_click_delete
@@ -93,7 +93,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def i_should_no_longer_see_the_arm
-    expect(page).not_to have_content @protocol.arms.first.name
+    expect(find(".study_schedule_container")).not_to have_content @protocol.arms.first.name
   end
 
   def if_i_select_the_arm_with_completed_procedures
@@ -101,6 +101,6 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def then_i_should_still_see_the_arm name=@protocol.arms.last.name
-    expect(page).to have_content name
+    expect(find(".study_schedule_container")).to have_content name
   end
 end
