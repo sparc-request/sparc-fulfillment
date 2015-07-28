@@ -13,7 +13,6 @@ class Report
   end
 
   def valid?
-    self.class::VALIDATES_PRESENCE_OF.each{ |validates| errors.add(validates, "must be present") if @params[validates].blank? }
     self.class::VALIDATES_PRESENCE_OF.each{ |validates| errors.add(validates, "must not be blank") if @params[validates].blank? }
     self.class::VALIDATES_NUMERICALITY_OF.each{ |validates| errors.add(validates, "must be a number") unless @params[validates].is_a?(Numeric) }
 
