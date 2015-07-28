@@ -13,8 +13,8 @@ FactoryGirl.define do
     study_cost { Faker::Number.number(8) }
 
     after(:create) do |protocol, evaluator|
-      sp = create(:sparc_protocol)
-      protocol.update_attributes(sparc_id: sp.id)
+      sparc_protocol = create(:sparc_protocol)
+      protocol.update_attributes(sparc_id: sparc_protocol.id)
       create(:human_subjects_info, protocol_id: protocol.sparc_id)
     end
 
