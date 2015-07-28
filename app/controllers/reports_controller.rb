@@ -11,6 +11,8 @@ class ReportsController < ApplicationController
     @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
     @report = @report_type.classify.constantize.new(reports_params)
 
+    @errors = @report.errors
+    
     if @report.valid?
       @reports_params = reports_params
       @documentable.documents.push @document
