@@ -33,7 +33,7 @@ feature 'View Notes', js: true do
     given_i_am_viewing_a_procedure
     after_appointment_starts
     find('label.status.incomplete').click
-    select reason, from: 'procedure_notes_attributes_0_reason'
+    bootstrap_select '.reason-select', reason
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
   end
