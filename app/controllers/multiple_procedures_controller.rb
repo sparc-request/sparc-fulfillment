@@ -10,6 +10,7 @@ class MultipleProceduresController < ApplicationController
   def update_procedures
     @core_id = params[:core_id]
     @status = params[:status]
+    @appointment = Appointment.find(params[:appointment_id])
     procedures = Procedure.where(sparc_core_id: @core_id, appointment_id: params[:appointment_id])
 
     if @status == "incomplete"

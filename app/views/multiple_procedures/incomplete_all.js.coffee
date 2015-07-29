@@ -2,3 +2,6 @@ $("#modal_area").html("<%= escape_javascript(render(partial: 'incomplete_all_mod
 $("#modal_place").modal 'show'
 
 $(".selectpicker").selectpicker()
+
+$(document).on 'click', "#incomplete_all_modal button.save", ->
+  $(this).addClass("disabled")
