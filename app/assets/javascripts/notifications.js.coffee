@@ -6,8 +6,7 @@ window.increment_notification = (documentable_type) ->
 window.decrement_notification = (documentable_type) ->
   $notification = get_notification documentable_type
   number_of_notifications = get_number_of_notifications $notification
-  if number_of_notifications > 0
-    $notification.text(number_of_notifications - 1) if number_of_notifications > 0
+  $notification.text(number_of_notifications - 1) if number_of_notifications > 0
 
 get_notification = (documentable_type) ->
   switch documentable_type

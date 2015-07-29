@@ -13,6 +13,8 @@ class Identity < ActiveRecord::Base
   has_many :clinical_providers
   has_many :super_users
 
+  before_save :set_documents_count
+
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
   def protocols
@@ -67,5 +69,9 @@ class Identity < ActiveRecord::Base
 
   def fulfillment_access_organizations
     clinical_provider_organizations + super_user_organizations.uniq
+  end
+
+  def set_documents_count
+    update_attributes(unaccessed_documents_count: 0) if self.unaccessed_documents_count < 0
   end
 end
