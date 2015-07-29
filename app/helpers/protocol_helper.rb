@@ -24,10 +24,6 @@ module ProtocolHelper
     end
   end
 
-  def formatted_organization_tree(protocol)
-    protocol.sub_service_request.org_tree_display
-  end
-
   def formatted_study_schedule_report(protocol)
     content_tag(:div, '', class: 'btn-group') do
       content_tag(:a, href: '#', target: :blank, class: 'btn btn-default dropdown-toggle btn-xs study_schedule_report', id: "study_schedule_report_#{protocol.id.to_s}", title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'aria-expanded' => 'false') do

@@ -20,4 +20,4 @@ json.coordinators formatted_coordinators(protocol.coordinators.map(&:full_name))
 json.study_schedule_report formatted_study_schedule_report(protocol)
 json.owner formatted_owner(protocol)
 json.requester formatted_requester(protocol)
-json.organizations formatted_organization_tree(protocol)
+json.organizations protocol.sub_service_request.org_tree_display
