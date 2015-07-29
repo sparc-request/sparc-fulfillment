@@ -32,7 +32,7 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
     find("a#study_schedule_report_#{@protocol.id.to_s}").click
     wait_for_ajax
 
-    @study_schedule_report_document_id = find("a#study_schedule_report_#{@protocol.id.to_s}")["data-document_id"]
+    @study_schedule_report_document_id = find("a#study_schedule_report_#{@protocol.id.to_s}")["document_id"]
 
     expect(page).to have_css(".report-notifications", text: 1)
   end

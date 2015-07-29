@@ -59,7 +59,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     find("a#study_schedule_report_#{@protocol.id.to_s}").click
     wait_for_ajax
 
-    @study_schedule_report_document_id = find("a#study_schedule_report_#{@protocol.id.to_s}")["data-document_id"]
+    @study_schedule_report_document_id = find("a#study_schedule_report_#{@protocol.id.to_s}")["document_id"]
   end
 
   def when_i_visit_the_reports_tab
