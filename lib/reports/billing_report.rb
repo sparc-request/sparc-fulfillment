@@ -1,6 +1,6 @@
 class BillingReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocol_ids].freeze
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
