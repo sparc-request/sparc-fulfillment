@@ -28,8 +28,9 @@ class ArmsController < ApplicationController
   end
 
   def edit
-    @arm = Arm.find(params[:arm_id])
+    @arm = Arm.find(params[:id])
     @protocol = @arm.protocol
+    @intended_action = params[:intended_action]
   end
 
   def update
@@ -44,11 +45,10 @@ class ArmsController < ApplicationController
   def destroy
     @has_completed_data = @arm.appointments.map{|a| a.has_completed_procedures?}.include?(true)
     if Arm.where("protocol_id = ?", params[:protocol_id]).count == 1
-      @delete = false
+      @arm.errors.add(:protocol, "must have at least one Arm.")
     elsif  @has_completed_data
-      @delete = false
+      @arm.errors.add(:arm, " - #{@arm.name} has completed procedures and cannot be deleted")
     else
-      @delete = true #this variable is used in the coffescript logic to prevent the arm name from being removed from the dropdown
       @arm.delay.destroy
       flash.now[:alert] = t(:arm)[:deleted]
     end

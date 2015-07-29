@@ -1,8 +1,10 @@
 $ ->
 
+##              **BEGIN MANAGE ARMS**                     ##
+
     $(document).on 'click', '#add_arm_button', ->
       data =
-        "protocol_id" : $('#arms').data('protocol_id')
+        "protocol_id" : $('#manage_arms').data('protocol-id')
         "schedule_tab" : $('#current_tab').attr('value')
       $.ajax
         type: 'GET'
@@ -10,25 +12,51 @@ $ ->
         data: data
 
     $(document).on 'click', '#remove_arm_button', ->
+      arm_id = $('#manage_arms').data('first-arm')
+      $.ajax
+        type: 'GET'
+        url: "/arms/#{arm_id}/edit"
+        data: "intended_action" : "destroy"
+
+    $(document).on 'click', '#remove_arm_form_button', ->
       # Ensure there are at least two arms in dropdown
       # so that protocol always has at least one arm.
       # Arms are deleted through a delayed job, so
       # we need the count from the dropdown and not
       # the server.
-      if $("#arms > option").size() > 1
-        protocol_id = $('#arms').data('protocol_id')
-        arm_id = $("#arms").val()
-        del = confirm "Are you sure you want to delete the selected arm from this protocol"
-        if del
+      arm_select = $("#remove_arm_select")
+      if $("#remove_arm_select > option").size() > 1
+        protocol_id = $('#manage_arms').data('protocol-id')
+        arm_id = arm_select.val()
+        arm_name = $(".bootstrap-select > button[data-id='remove_arm_select']").attr('title')
+        if confirm "Are you sure you want to remove arm: #{arm_name} from this protocol?"
           $.ajax
             type: 'DELETE'
             url: "/arms/#{arm_id}?protocol_id=#{protocol_id}"
       else
         alert("Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm.")
 
+    $(document).on 'click', '#edit_arm_button', ->
+      arm_id = $('#manage_arms').data('first-arm')
+      $.ajax
+        type: 'GET'
+        url: "/arms/#{arm_id}/edit"
+        data: "intended_action" : "edit"
+
+    $(document).on 'change', "#edit_arm_select", ->
+      arm_id = $(this).val()
+      $.ajax
+        type: 'GET'
+        url: "/arms/#{arm_id}/edit"
+        data: "intended_action" : "edit"
+
+##              **END MANAGE ARMS**                     ##
+##          **BEGIN MANAGE VISIT GROUPS**               ##
+
+
     $(document).on 'click', '#add_visit_group_button', ->
       current_page = $(".visit_dropdown").first().attr('page')
-      protocol_id = $('#arms').data('protocol_id')
+      protocol_id = $('#manage_arms').data('protocol-id')
       schedule_tab = $('#current_tab').attr('value')
       data =
         'current_page': current_page
@@ -39,7 +67,6 @@ $ ->
         url: "/visit_groups/new"
         data: data
 
-
     $(document).on 'click', '#edit_visit_group_button', ->
       visit_group_id = $('#visits').val()
       protocol_id = $('#arms').data('protocol_id')
@@ -49,15 +76,6 @@ $ ->
       $.ajax
         type: 'GET'
         url: "/visit_groups/#{visit_group_id}/edit"
-        data: data
-
-    $(document).on 'click', '#edit_arm_button', ->
-      arm_id = $('#arms').val()
-      data =
-        'arm_id' : arm_id
-      $.ajax
-        type: 'GET'
-        url: "/arms/#{arm_id}/edit"
         data: data
 
     $(document).on 'click', '#remove_visit_group_button', ->
@@ -74,6 +92,10 @@ $ ->
           type: 'DELETE'
           url: "/visit_groups/#{visit_group_id}.js"
           data: data
+
+##          **END MANAGE VISIT GROUPS**               ##
+##          **BEGIN MANAGE LINE ITEMS**               ##
+
 
     $(document).on 'click', '#add_service_button', ->
       schedule_tab = $('#current_tab').attr('value')
@@ -113,6 +135,9 @@ $ ->
         url: "/multiple_line_items/edit_line_items"
         data: data
 
+
+
+
     $(document).on 'change', "#service_id", ->
       if $('#header_text').val() == 'Remove Services'
         service_id = $(this).find('option:selected').val()
@@ -128,6 +153,10 @@ $ ->
         url: '/visit_groups/update_positions_on_arm_change'
         data: data
 
+##          **END MANAGE LINE ITEMS**               ##
+
+
+
 (exports ? this).update_visit_group_form_page = (arm_id) ->
   page = $("#visits_select_for_#{arm_id}").val()
   $("#current_page").val(page)
@@ -142,28 +171,12 @@ $ ->
     url: "/multiple_line_items/necessary_arms"
     data: data
 
-(exports ? this).create_arm = (name, id) ->
-  $select = $('#arms')
-  $select.append('<option value=' + id + '>' + name + '</option>')
-  $select.selectpicker('refresh')
-
-(exports ? this).edit_arm_name = (name, id) ->
-  $("#arms option[value=#{id}]").text("#{name}")
-  $("#arms").selectpicker('refresh')
-  $("#arm-name-display-#{id}").html("#{name}");
-
 (exports ? this).edit_visit_group_name = (name, id) ->
   $(".visit_dropdown option[value=#{id}]").text("- #{name}") #update page dropdown
   $(".visit_dropdown").selectpicker('refresh')
   $("#visits option[value=#{id}]").text("#{name}") #update manage visits dropdown
   $("#visits").selectpicker('refresh')
   $("#visit_group_#{id}").val("#{name}")
-
-(exports ? this).remove_arm = (arm_id) ->
-  $select = $('#arms')
-  $select.find("[value=#{arm_id}]").remove()
-  $select.selectpicker('refresh')
-  $(".study_schedule.service.arm_#{arm_id}").remove()
 
 (exports ? this).remove_visit_group = (visit_group_id) ->
   $select = $('#visits')

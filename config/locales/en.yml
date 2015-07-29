@@ -61,6 +61,8 @@ en:
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
     object: "Arm"
     selected_line_items: "Selected Services"
+    edit_arm: Edit Arm
+    remove_arm: Remove Arm
     flash_messages:
       updated: "Arm Updated"
 
