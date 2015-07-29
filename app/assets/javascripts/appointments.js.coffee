@@ -19,6 +19,23 @@ $ ->
         url: "/appointments/#{id}.js"
     event.stopPropagation()
 
+  $(document).on 'click', "#start_appointment_date_remove", ->
+    if confirm("Removing the start date will delete all data which has been recorded for this appointment, Are you sure you want to do this?")
+      id   = $(this).data("appointment-id")
+      data = field : 'start_date', new_date : null
+      $.ajax
+        type: 'PUT'
+        url:  "/appointments/#{id}"
+        data: data
+
+   $(document).on 'click', "#complete_appointment_date_remove", ->
+    id   = $(this).data("appointment-id")
+    data = field : 'completed_date', new_date : null
+    $.ajax
+      type: 'PUT'
+      url:  "/appointments/#{id}"
+      data: data
+
   $(document).on 'click', '.add_service', ->
     data =
       'appointment_id': $(this).parents('.row.appointment').data('id'),
@@ -33,7 +50,7 @@ $ ->
   $(document).on 'click', '.start_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     $.ajax
-      type: 'PATCH'
+      type: 'PUT'
       url:  "/appointments/#{appointment_id}?field=start_date"
       success: ->
         # reload table of procedures, so that UI elements disabled
@@ -45,7 +62,7 @@ $ ->
   $(document).on 'click', '.complete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     $.ajax
-      type: 'PATCH'
+      type: 'PUT'
       url:  "/appointments/#{appointment_id}?field=completed_date"
 
   # Procedure buttons

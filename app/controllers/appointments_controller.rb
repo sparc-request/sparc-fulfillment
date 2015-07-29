@@ -1,15 +1,15 @@
 class AppointmentsController < ApplicationController
 
   respond_to :json, :html
-  
+
   #### BEGIN CUSTOM APPOINTMENTS ####
-  
-  def new 
+
+  def new
     @appointment = CustomAppointment.new(custom_appointment_params)
     @note = @appointment.notes.new(kind: 'reason')
   end
 
-  def create 
+  def create
     ##### TODO, figure out a way to not have to use base model
     @appointment = Appointment.new(custom_appointment_params)
 
@@ -18,7 +18,7 @@ class AppointmentsController < ApplicationController
       @appointment.update_attribute(:type, "CustomAppointment")
     end
   end
-  
+
   #### END CUSTOM APPOINTMENTS ####
 
   def show
@@ -43,32 +43,53 @@ class AppointmentsController < ApplicationController
     end
 
     if ['start_date', 'completed_date'].include? params[:field]
-      @field = params[:field]
-      if params[:new_date]
-        updated_date = Time.at(params[:new_date].to_i / 1000)
-      else
-        updated_date = Time.current
-      end
-      if @field == 'start_date'
-        @appointment.update_attributes(start_date: updated_date)
-      elsif @field == 'completed_date'
-        updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date #completed date cannot be before start date
-        @appointment.update_attributes(completed_date: updated_date)
-      end
-
-    elsif params[:statuses]
+      update_dates
+    elsif params.include?(:statuses)
       new_statuses = params[:statuses]
       @appointment.appointment_statuses.destroy_all
 
-      if params[:statuses].present?
+      if params.include?(:statuses)
         new_statuses.each do |status|
           @appointment.appointment_statuses.create(status: status)
         end
       end
     end
+    @statuses = @appointment.appointment_statuses.map{|x| x.status} #the status definition is needed in order to refresh the partial following this update
   end
 
   private
+
+  def update_dates
+    @field = params[:field]
+      if params.include?(:new_date)
+        if params[:new_date] == ""
+          reset_appointment
+        else
+          updated_date = Time.at(params[:new_date].to_i / 1000)
+        end
+      else
+        updated_date = Time.current
+      end
+
+      if @field == 'start_date'
+        @appointment.update_attributes(start_date: updated_date)
+      elsif @field == 'completed_date'
+        updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date unless updated_date.nil? #completed date cannot be before start date
+        @appointment.update_attributes(completed_date: updated_date)
+     end
+   end
+
+  def reset_appointment
+    if @field == 'start_date'
+      @appointment.update_attributes(start_date: nil, completed_date: nil)
+      @appointment.procedures.each do |procedure|
+        procedure.update_attributes(completed_date: nil, incompleted_date: nil, performer_id: nil, status: "unstarted")
+        procedure.task.destroy unless procedure.task.nil?
+      end
+    else
+      @appointment.update_attributes(completed_date: nil)
+    end
+  end
 
   def show_time in_time
     in_time.blank? ? Time.now : in_time
@@ -76,7 +97,7 @@ class AppointmentsController < ApplicationController
 
   def custom_appointment_params
     params.require(:custom_appointment)
-          .permit(:arm_id, :participant_id, :name, :position, 
+          .permit(:arm_id, :participant_id, :name, :position,
                  notes_attributes: [:comment, :kind, :identity_id, :reason])
   end
 end
