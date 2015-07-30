@@ -1,5 +1,0 @@
-%select.selectpicker#visits
-  -protocol.arms.each do |arm|
-    %option{disabled: true, style: 'font-weight:bold'}= arm.name
-    = options_from_collection_for_select(arm.visit_groups,'id','name')
-

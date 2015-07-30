@@ -197,11 +197,6 @@ $ ->
     url: "/multiple_line_items/necessary_arms"
     data: data
 
-(exports ? this).edit_visit_group_name = (name, id) ->
-  $(".visit_dropdown option[value=#{id}]").text("- #{name}") #update page dropdown
-  $(".visit_dropdown").selectpicker('refresh')
-  $("#visit_group_#{id}").val("#{name}")
-
 # Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
 # containing content, which disappears after about 3 seconds.
 (exports ? this).error_tooltip_on = (elt, content) ->

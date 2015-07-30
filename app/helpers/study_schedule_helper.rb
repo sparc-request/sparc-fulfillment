@@ -25,7 +25,7 @@ module StudyScheduleHelper
       arr << option
 
       (beginning_visit..ending_visit).each do |y|
-        arr << ["&nbsp;&nbsp; - #{visit_group_names[y - 1]}".html_safe, "#{visit_group_names[y - 1]}", :page => page + 1]
+        arr << ["&nbsp;&nbsp; - #{visit_group_names[y - 1]}".html_safe, "#{arm.visit_groups[y - 1].id}", :page => page + 1]
       end
     end
 
