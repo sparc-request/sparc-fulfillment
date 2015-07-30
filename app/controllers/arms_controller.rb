@@ -46,8 +46,10 @@ class ArmsController < ApplicationController
     @has_completed_data = @arm.appointments.map{|a| a.has_completed_procedures?}.include?(true)
     if Arm.where("protocol_id = ?", params[:protocol_id]).count == 1
       @arm.errors.add(:protocol, "must have at least one Arm.")
+      @errors = @arm.errors
     elsif  @has_completed_data
       @arm.errors.add(:arm, " - #{@arm.name} has completed procedures and cannot be deleted")
+      @errors = @arm.errors
     else
       @arm.delay.destroy
       flash.now[:alert] = t(:arm)[:deleted]
