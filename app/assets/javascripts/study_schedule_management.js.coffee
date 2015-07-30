@@ -53,7 +53,6 @@ $ ->
 ##              **END MANAGE ARMS**                     ##
 ##          **BEGIN MANAGE VISIT GROUPS**               ##
 
-
     $(document).on 'click', '#add_visit_group_button', ->
       data =
         'current_page': $(".visit_dropdown").first().attr('page')
@@ -119,9 +118,20 @@ $ ->
           url: "/visit_groups/#{visit_group_id}.js"
           data: data
 
+
+    $(document).on 'change', '#visit_group_arm_id', ->
+      arm_id = $(this).find('option:selected').val()
+      page = $("#visits_select_for_#{arm_id}").val()
+      $("#current_page").val(page)
+      data =
+        'arm_id': arm_id
+      $.ajax
+        type: 'GET'
+        url: '/visit_groups/update_positions_on_arm_change'
+        data: data
+
 ##          **END MANAGE VISIT GROUPS**               ##
 ##          **BEGIN MANAGE LINE ITEMS**               ##
-
 
     $(document).on 'click', '#add_service_button', ->
       schedule_tab = $('#current_tab').attr('value')
@@ -149,43 +159,22 @@ $ ->
         key = $(this).data('arm_id')
         value = $(this).attr('page')
         page_hash[key] = value
-      protocol_id = $('#arms').data('protocol_id')
-      service_id = $('#services').val()
+      protocol_id = $('#study_schedule_buttons').data('protocol-id')
       data =
         'page_hash': page_hash
         'schedule_tab': schedule_tab
         'protocol_id': protocol_id
-        'service_id': service_id
       $.ajax
         type: 'GET'
         url: "/multiple_line_items/edit_line_items"
         data: data
-
-
-
 
     $(document).on 'change', "#service_id", ->
       if $('#header_text').val() == 'Remove Services'
         service_id = $(this).find('option:selected').val()
         change_service service_id
 
-    $(document).on 'change', '#visit_group_arm_id', ->
-      arm_id = $(this).find('option:selected').val()
-      update_visit_group_form_page(arm_id)
-      data =
-        'arm_id': arm_id
-      $.ajax
-        type: 'GET'
-        url: '/visit_groups/update_positions_on_arm_change'
-        data: data
-
 ##          **END MANAGE LINE ITEMS**               ##
-
-
-
-(exports ? this).update_visit_group_form_page = (arm_id) ->
-  page = $("#visits_select_for_#{arm_id}").val()
-  $("#current_page").val(page)
 
 (exports ? this).change_service = (service_id) ->
   protocol_id = $('#arms').data('protocol_id')

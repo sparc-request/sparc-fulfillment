@@ -17,7 +17,7 @@
             .col-sm-7= select_tag "vg_form_select", options_from_collection_for_select(arm.visit_groups, 'id', 'name', visit_group.id), class: "selectpicker form-control"
       - if intended_action == "edit"
         %hr
-          .edit_visit_area= render partial: '/study_schedule/study_schedule_management/edit_visit_form', locals: {visit_group: visit_group}
+          .edit_visit_area= render partial: '/study_schedule/management/manage_visits/edit_visit_form', locals: {visit_group: visit_group}
       -else
         .modal-footer
           .center-block
