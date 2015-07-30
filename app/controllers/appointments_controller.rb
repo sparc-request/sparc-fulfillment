@@ -54,29 +54,29 @@ class AppointmentsController < ApplicationController
         end
       end
     end
-    @statuses = @appointment.appointment_statuses.map{|x| x.status} #the status definition is needed in order to refresh the partial following this update
+    @statuses = @appointment.appointment_statuses.map{|x| x.status} #the status definition is needed in order to refresh the partial following the update
   end
 
   private
 
   def update_dates
     @field = params[:field]
-      if params.include?(:new_date)
-        if params[:new_date] == ""
-          reset_appointment
-        else
-          updated_date = Time.at(params[:new_date].to_i / 1000)
-        end
+    if params.include?(:new_date)
+      if params[:new_date] == ""
+        reset_appointment
       else
-        updated_date = Time.current
+        updated_date = Time.at(params[:new_date].to_i / 1000)
       end
+    else
+      updated_date = Time.current
+    end
 
-      if @field == 'start_date'
-        @appointment.update_attributes(start_date: updated_date)
-      elsif @field == 'completed_date'
-        updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date unless updated_date.nil? #completed date cannot be before start date
-        @appointment.update_attributes(completed_date: updated_date)
-     end
+    if @field == 'start_date'
+      @appointment.update_attributes(start_date: updated_date)
+    elsif @field == 'completed_date'
+      updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date unless updated_date.nil? #completed date cannot be before start date
+      @appointment.update_attributes(completed_date: updated_date)
+    end
    end
 
   def reset_appointment
