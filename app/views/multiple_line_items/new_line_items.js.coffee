@@ -1,3 +1,3 @@
-$("#modal_area").html("<%= escape_javascript(render(:partial =>'study_schedule/management/manage_services/line_item_form', locals: {arm_ids: @arm_ids, header_text: 'Add a Service', button_text: 'Add Service', services: @services, protocol: @protocol, selected_service: @selected_service, page_hash: @page_hash, schedule_tab: @schedule_tab})) %>");
+$("#modal_area").html("<%= escape_javascript(render(:partial =>'study_schedule/management/manage_services/line_item_form', locals: {arm_ids: @arm_ids, header_text: 'Add a Service', button_text: 'Add Service', services: @services, protocol: @protocol, page_hash: @page_hash, schedule_tab: @schedule_tab})) %>");
 $("#modal_place").modal 'show'
 $(".selectpicker").selectpicker()

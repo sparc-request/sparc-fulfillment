@@ -177,7 +177,7 @@ $ ->
 ##          **END MANAGE LINE ITEMS**               ##
 
 (exports ? this).change_service = (service_id) ->
-  protocol_id = $('#arms').data('protocol_id')
+  protocol_id = $('#study_schedule_buttons').data('protocol-id')
   data =
     'protocol_id': protocol_id
     'service_id': service_id
