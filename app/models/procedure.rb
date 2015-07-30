@@ -82,6 +82,7 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  #TODO: The following 4 methods should be redefined as scopes
   def complete?
     status == 'complete'
   end

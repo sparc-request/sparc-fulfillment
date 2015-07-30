@@ -21,6 +21,8 @@ class Protocol < ActiveRecord::Base
   has_many :procedures,       through: :appointments
   has_many :documents,        as: :documentable
 
+  before_save :set_documents_count
+
   after_save :update_faye
   after_destroy :update_faye
 
@@ -77,5 +79,9 @@ class Protocol < ActiveRecord::Base
 
   def update_faye
     FayeJob.perform_later(self) unless self.document_counter_updated
+  end
+
+  def set_documents_count
+    update_attributes(unaccessed_documents_count: 0) if self.unaccessed_documents_count < 0
   end
 end
