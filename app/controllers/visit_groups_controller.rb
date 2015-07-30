@@ -1,6 +1,22 @@
 class VisitGroupsController < ApplicationController
   respond_to :json, :html
-  before_action :find_visit_group, only: [:destroy]
+  before_action :find_visit_group, only: [:edit, :update, :destroy]
+
+  def index
+    # Used in study schedule management for navigating to a visit group, given an index of them by arm.
+    @protocol = Protocol.find(params[:protocol_id])
+    @intended_action = params[:intended_action]
+    if params[:visit_group_id]
+      @visit_group = VisitGroup.find(params[:visit_group_id])
+      @arm = @visit_group.arm
+    elsif params[:arm_id]
+      @arm = Arm.find(params[:arm_id])
+      @visit_group = @arm.visit_groups.first
+    else
+      @arm = @protocol.arms.first
+      @visit_group = @arm.visit_groups.first
+    end
+  end
 
   def new
     @current_page = params[:page] # the current page of the study schedule
@@ -26,11 +42,9 @@ class VisitGroupsController < ApplicationController
 
   def edit
     @protocol = Protocol.find(params[:protocol_id])
-    @visit_group = VisitGroup.find(params[:visit_group_id])
   end
 
   def update
-    @visit_group = VisitGroup.find(params[:id])
     @arm = @visit_group.arm
     if @visit_group.update_attributes(visit_group_params)
       flash[:success] = t(:visit_groups)[:flash_messages][:updated]
@@ -40,15 +54,15 @@ class VisitGroupsController < ApplicationController
   end
 
   def destroy
-    @current_page = params[:page]
+    @current_page = params[:page].to_i
     @arm = @visit_group.arm
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     @schedule_tab = params[:schedule_tab]
     if @arm.visit_count == 1
-      flash.now[:alert] = t(:visit_groups)[:not_deleted]
+      @visit_group.errors.add(:arm, "must have at least one visit. Add another visit before deleting this one")
+      @errors = @visit_group.errors
     else
       @arm.update_attributes(visit_count: @arm.visit_count - 1)
-      @delete = true #used in the coffeescript to determine whether or not to remove the display of the visit
       flash.now[:alert] = t(:visit_groups)[:deleted]
       @visit_group.destroy
     end

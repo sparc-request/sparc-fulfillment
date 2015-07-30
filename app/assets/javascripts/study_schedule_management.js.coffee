@@ -4,7 +4,7 @@ $ ->
 
     $(document).on 'click', '#add_arm_button', ->
       data =
-        "protocol_id" : $('#manage_arms').data('protocol-id')
+        "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
         "schedule_tab" : $('#current_tab').attr('value')
       $.ajax
         type: 'GET'
@@ -26,13 +26,13 @@ $ ->
       # the server.
       arm_select = $("#remove_arm_select")
       if $("#remove_arm_select > option").size() > 1
-        protocol_id = $('#manage_arms').data('protocol-id')
         arm_id = arm_select.val()
         arm_name = $(".bootstrap-select > button[data-id='remove_arm_select']").attr('title')
         if confirm "Are you sure you want to remove arm: #{arm_name} from this protocol?"
           $.ajax
             type: 'DELETE'
-            url: "/arms/#{arm_id}?protocol_id=#{protocol_id}"
+            url: "/arms/#{arm_id}"
+            data: "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
       else
         alert("Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm.")
 
@@ -55,39 +55,65 @@ $ ->
 
 
     $(document).on 'click', '#add_visit_group_button', ->
-      current_page = $(".visit_dropdown").first().attr('page')
-      protocol_id = $('#manage_arms').data('protocol-id')
-      schedule_tab = $('#current_tab').attr('value')
       data =
-        'current_page': current_page
-        'schedule_tab': schedule_tab
-        'protocol_id' : protocol_id
+        'current_page': $(".visit_dropdown").first().attr('page')
+        'schedule_tab': $('#current_tab').attr('value')
+        'protocol_id' : $('#study_schedule_buttons').data('protocol-id')
       $.ajax
         type: 'GET'
         url: "/visit_groups/new"
         data: data
 
     $(document).on 'click', '#edit_visit_group_button', ->
-      visit_group_id = $('#visits').val()
-      protocol_id = $('#arms').data('protocol_id')
       data =
-        'protocol_id'    : protocol_id
-        'visit_group_id' : visit_group_id
+        'protocol_id'     : $('#study_schedule_buttons').data('protocol-id')
+        'intended_action' : "edit"
       $.ajax
         type: 'GET'
-        url: "/visit_groups/#{visit_group_id}/edit"
+        url: "/visit_groups"
         data: data
 
     $(document).on 'click', '#remove_visit_group_button', ->
+      data =
+        'protocol_id'     : $('#study_schedule_buttons').data('protocol-id')
+        'intended_action' : "destroy"
+      $.ajax
+        type: 'GET'
+        url: "/visit_groups"
+        data: data
+
+    $(document).on 'change', "#vg_form_arm_select", ->
+      arm_id = $(this).val()
+      data =
+        'protocol_id'     : $('#study_schedule_buttons').data('protocol-id')
+        "intended_action" : $("#visit_index_form").data('intended-action')
+        "arm_id" : arm_id
+      $.ajax
+        type: 'GET'
+        url: "/visit_groups"
+        data: data
+
+    $(document).on 'change', "#vg_form_select", ->
+      intended_action = $("#visit_index_form").data('intended-action')
+      if intended_action == "edit"
+        data =
+          'protocol_id'     : $('#study_schedule_buttons').data('protocol-id')
+          "intended_action" : intended_action
+          "visit_group_id"  : $(this).val()
+        $.ajax
+          type: 'GET'
+          url: "/visit_groups"
+          data: data
+
+    $(document).on 'click', '#remove_visit_group_form_button', ->
       schedule_tab = $('#current_tab').attr('value')
-      visit_group_id = $("#visits").val()
-      arm_id = $('#arms').val()
+      visit_group_id = $("#vg_form_select").val()
+      arm_id = $('#vg_form_arm_select').val()
       page = $("#visits_select_for_#{arm_id}").val()
-      del = confirm "Are you sure you want to delete the selected visit from all particpants?"
       data =
         'page': page
         'schedule_tab': schedule_tab
-      if del
+      if confirm "Are you sure you want to delete the selected visit from all particpants?"
         $.ajax
           type: 'DELETE'
           url: "/visit_groups/#{visit_group_id}.js"
@@ -104,7 +130,7 @@ $ ->
         key = $(this).data('arm_id')
         value = $(this).attr('page')
         page_hash[key] = value
-      protocol_id = $('#arms').data('protocol_id')
+      protocol_id = $('#study_schedule_buttons').data('protocol-id')
       service_id = $('#services').val()
       data =
         'page_hash': page_hash
@@ -174,15 +200,7 @@ $ ->
 (exports ? this).edit_visit_group_name = (name, id) ->
   $(".visit_dropdown option[value=#{id}]").text("- #{name}") #update page dropdown
   $(".visit_dropdown").selectpicker('refresh')
-  $("#visits option[value=#{id}]").text("#{name}") #update manage visits dropdown
-  $("#visits").selectpicker('refresh')
   $("#visit_group_#{id}").val("#{name}")
-
-(exports ? this).remove_visit_group = (visit_group_id) ->
-  $select = $('#visits')
-  $select.find("[value=#{visit_group_id}]").remove()
-  $select.selectpicker('refresh')
-  $(".study_schedule.service.visit_group_#{visit_group_id}").remove()
 
 # Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
 # containing content, which disappears after about 3 seconds.

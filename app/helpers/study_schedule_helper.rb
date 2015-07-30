@@ -36,9 +36,9 @@ module StudyScheduleHelper
     select_tag "visits_select_for_#{arm.id}", visits_select_options(arm, page), class: 'visit_dropdown form-control selectpicker', :'data-arm_id' => "#{arm.id}", page: page
   end
 
-  def on_current_page? current_page, visit_group
-    destination_page = visit_group.position / Visit.per_page
-    if visit_group.position % Visit.per_page != 0
+  def on_current_page? current_page, position
+    destination_page = position / Visit.per_page
+    if position % Visit.per_page != 0
       destination_page += 1
     end
     destination_page == current_page.to_i

@@ -320,6 +320,8 @@ en:
     check_row: "Check Row"
     uncheck_column: "Uncheck Column"
     uncheck_row: "Uncheck Row"
+    edit_visit: "Edit Visit"
+    remove_visit: "Remove Visit"
     flash_messages:
       updated: "Visit Updated"
 
