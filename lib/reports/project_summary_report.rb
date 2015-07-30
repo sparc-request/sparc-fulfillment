@@ -39,7 +39,8 @@ class ProjectSummaryReport < Report
 
         participants.each do |participant|
           participant_costs = visit_groups.map do |vg|
-            vg.total_completed_cost_for_participant(participant) || "N/A"
+
+            # vg.total_completed_cost_for_participant(participant) || "N/A"
           end
 
           participant_total     = sum_up(participant_costs)

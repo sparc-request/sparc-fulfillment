@@ -38,7 +38,7 @@ class Procedure < ActiveRecord::Base
   # select Procedures that belong to an Appointment without a start date
   scope :belonging_to_unbegun_appt, -> { joins(:appointment).where('appointments.start_date IS NULL') }
   scope :completed_r_in_date_range, ->(start_date, end_date) {
-        where("procedures.completed_date is not NULL AND DATE(procedures.completed_date) between ? AND ? AND billing_type = ?", start_date, end_date, "research_billing_qty")}
+        where("procedures.completed_date is not NULL AND DATE(procedures.completed_date) between ? AND ? AND billing_type = ?", start_date.to_date, end_date.to_date, "research_billing_qty")}
 
   def self.billing_display
     [["R", "research_billing_qty"],

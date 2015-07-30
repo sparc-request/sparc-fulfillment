@@ -18,7 +18,7 @@ module ApplicationHelper
   end
 
   def display_cost(cost)
-    dollars = (cost / 100) rescue nil
+    dollars = (cost / 100.0) rescue nil
     number_to_currency(dollars, seperator: ",")
   end
 

@@ -25,9 +25,9 @@ class VisitGroup < ActiveRecord::Base
 
   # Totals the service costs (for completed procedures) rendered
   # for given participant.
-  def total_completed_cost_for_participant(participant)
-    (appointment = appointments.where(participant: participant).first) ? appointment.total_completed_cost : nil
-  end
+  # def total_completed_cost_for_participant(participant)
+  #   (appointment = appointments.where(participant: participant).first) ? appointment.total_completed_cost : nil
+  # end
 
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)
