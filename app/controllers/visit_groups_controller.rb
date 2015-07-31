@@ -3,7 +3,7 @@ class VisitGroupsController < ApplicationController
   before_action :find_visit_group, only: [:edit, :update, :destroy]
 
   def new
-    @current_page = params[:page] # the current page of the study schedule
+    @current_page = params[:current_page] # the current page of the study schedule
     @protocol = Protocol.find(params[:protocol_id])
     @visit_group = VisitGroup.new()
     @schedule_tab = params[:schedule_tab]
