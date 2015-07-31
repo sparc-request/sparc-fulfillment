@@ -47,10 +47,6 @@ class Appointment < ActiveRecord::Base
     has_completed
   end
 
-  def total_completed_cost
-    procedures.complete.sum(:service_cost)
-  end
-
   def procedures_grouped_by_core
     procedures.group_by(&:sparc_core_id)
   end

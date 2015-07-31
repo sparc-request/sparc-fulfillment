@@ -39,7 +39,7 @@ class ProjectSummaryReport < Report
 
         participants.each do |participant|
           participant_costs = visit_groups.map do |vg|
-            vg.total_completed_cost_for_participant(participant) || "N/A"
+            total_completed_cost_for_participant(vg, participant) || "N/A"
           end
 
           participant_total     = sum_up(participant_costs)
@@ -101,5 +101,15 @@ class ProjectSummaryReport < Report
   # [0, 1, "N/A", 2] -> 3
   def sum_up(array)
     array.reject { |a| a == "N/A" }.reduce(0, :+)
+  end
+
+  # Totals the service costs (for completed procedures) rendered
+  # for given participant.
+  def total_completed_cost_for_participant(vg, participant)
+    (appointment = vg.appointments.where(participant: participant).first) ? total_completed_cost(appointment) : nil
+  end
+
+  def total_completed_cost(appointment)
+    appointment.procedures.completed_r_in_date_range(@start_date, @end_date).sum(:service_cost)
   end
 end
