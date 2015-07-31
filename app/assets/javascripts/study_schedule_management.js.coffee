@@ -134,51 +134,29 @@ $ ->
 ##          **BEGIN MANAGE LINE ITEMS**               ##
 
   $(document).on 'click', '#add_service_button', ->
-    schedule_tab = $('#current_tab').attr('value')
     page_hash = {}
     $(".visit_dropdown.form-control").each (index) ->
       key = $(this).data('arm_id')
       value = $(this).attr('page')
       page_hash[key] = value
-    protocol_id = $('#study_schedule_buttons').data('protocol-id')
-    service_id = $('#services').val()
     data =
-      'page_hash': page_hash
-      'schedule_tab': schedule_tab
-      'protocol_id': protocol_id
-      'service_id': service_id
+      'page_hash'   : page_hash
+      'schedule_tab': $('#current_tab').attr('value')
+      'protocol_id' : $('#study_schedule_buttons').data('protocol-id')
     $.ajax
       type: 'GET'
       url: "/multiple_line_items/new_line_items"
       data: data
 
   $(document).on 'click', '#remove_service_button', ->
-    schedule_tab = $('#current_tab').attr('value')
-    page_hash = {}
-    $(".visit_dropdown.form-control").each (index) ->
-      key = $(this).data('arm_id')
-      value = $(this).attr('page')
-      page_hash[key] = value
-    protocol_id = $('#study_schedule_buttons').data('protocol-id')
-    data =
-      'page_hash': page_hash
-      'schedule_tab': schedule_tab
-      'protocol_id': protocol_id
     $.ajax
       type: 'GET'
       url: "/multiple_line_items/edit_line_items"
-      data: data
+      data: 'protocol_id': $('#study_schedule_buttons').data('protocol-id')
 
-  $(document).on 'change', "#remove_service_select", ->
-    page_hash = {}
-    $(".visit_dropdown.form-control").each (index) ->
-      key = $(this).data('arm_id')
-      value = $(this).attr('page')
-      page_hash[key] = value
+  $(document).on 'change', "#remove_service_id", ->
     data =
-      'page_hash': page_hash
-      'schedule_tab': $('#current_tab').attr('value')
-      'protocol_id': $('#study_schedule_buttons').data('protocol-id')
+      'protocol_id' : $('#study_schedule_buttons').data('protocol-id')
       'service_id'  : $(this).find('option:selected').val()
     $.ajax
       type: 'GET'

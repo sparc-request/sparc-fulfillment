@@ -45,7 +45,7 @@ Rails.application.routes.draw do
       get 'new_line_items'
       put 'create_line_items'
       get 'edit_line_items'
-      get 'destroy_line_items'
+      put 'destroy_line_items'
     end
   end
 
