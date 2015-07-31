@@ -2,22 +2,6 @@ class VisitGroupsController < ApplicationController
   respond_to :json, :html
   before_action :find_visit_group, only: [:edit, :update, :destroy]
 
-  def index
-    # Used in study schedule management for navigating to a visit group, given an index of them by arm.
-    @protocol = Protocol.find(params[:protocol_id])
-    @intended_action = params[:intended_action]
-    if params[:visit_group_id]
-      @visit_group = VisitGroup.find(params[:visit_group_id])
-      @arm = @visit_group.arm
-    elsif params[:arm_id]
-      @arm = Arm.find(params[:arm_id])
-      @visit_group = @arm.visit_groups.first
-    else
-      @arm = @protocol.arms.first
-      @visit_group = @arm.visit_groups.first
-    end
-  end
-
   def new
     @current_page = params[:page] # the current page of the study schedule
     @protocol = Protocol.find(params[:protocol_id])
@@ -65,6 +49,22 @@ class VisitGroupsController < ApplicationController
       @arm.update_attributes(visit_count: @arm.visit_count - 1)
       flash.now[:alert] = t(:visit_groups)[:deleted]
       @visit_group.destroy
+    end
+  end
+
+  def navigate_to_visit_group
+    # Used in study schedule management for navigating to a visit group, given an index of them by arm.
+    @protocol = Protocol.find(params[:protocol_id])
+    @intended_action = params[:intended_action]
+    if params[:visit_group_id]
+      @visit_group = VisitGroup.find(params[:visit_group_id])
+      @arm = @visit_group.arm
+    elsif params[:arm_id]
+      @arm = Arm.find(params[:arm_id])
+      @visit_group = @arm.visit_groups.first
+    else
+      @arm = @protocol.arms.first
+      @visit_group = @arm.visit_groups.first
     end
   end
 

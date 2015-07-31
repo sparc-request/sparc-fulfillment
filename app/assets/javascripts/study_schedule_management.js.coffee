@@ -69,7 +69,7 @@ $ ->
         'intended_action' : "edit"
       $.ajax
         type: 'GET'
-        url: "/visit_groups"
+        url: "/visit_groups/navigate"
         data: data
 
     $(document).on 'click', '#remove_visit_group_button', ->
@@ -78,7 +78,7 @@ $ ->
         'intended_action' : "destroy"
       $.ajax
         type: 'GET'
-        url: "/visit_groups"
+        url: "/visit_groups/navigate"
         data: data
 
     $(document).on 'change', "#vg_form_arm_select", ->
@@ -89,7 +89,7 @@ $ ->
         "arm_id" : arm_id
       $.ajax
         type: 'GET'
-        url: "/visit_groups"
+        url: "/visit_groups/navigate"
         data: data
 
     $(document).on 'change', "#vg_form_select", ->
@@ -101,7 +101,7 @@ $ ->
           "visit_group_id"  : $(this).val()
         $.ajax
           type: 'GET'
-          url: "/visit_groups"
+          url: "/visit_groups/navigate"
           data: data
 
     $(document).on 'click', '#remove_visit_group_form_button', ->
