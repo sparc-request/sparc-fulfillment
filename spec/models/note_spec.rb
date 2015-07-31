@@ -12,7 +12,7 @@ RSpec.describe Note, type: :model do
     it 'should require a reason if notable type is Procedure and kind is reason' do
       procedure = create(:procedure)
       note      = build(:note_reason, notable: procedure, reason: '')
-      note.should_not be_valid
+      expect(note).to_not be_valid
     end
   end
 
