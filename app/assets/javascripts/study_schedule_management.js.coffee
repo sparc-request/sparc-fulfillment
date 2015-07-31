@@ -121,13 +121,14 @@ $ ->
 
     $(document).on 'change', '#visit_group_arm_id', ->
       arm_id = $(this).find('option:selected').val()
-      page = $("#visits_select_for_#{arm_id}").val()
-      $("#current_page").val(page)
       data =
-        'arm_id': arm_id
+        'current_page': $("#visits_select_for_#{arm_id}").val()
+        'schedule_tab': $('#current_tab').attr('value')
+        'protocol_id' : $('#study_schedule_buttons').data('protocol-id')
+        'arm_id'      : arm_id
       $.ajax
         type: 'GET'
-        url: '/visit_groups/update_positions_on_arm_change'
+        url: "/visit_groups/new"
         data: data
 
 ##          **END MANAGE VISIT GROUPS**               ##

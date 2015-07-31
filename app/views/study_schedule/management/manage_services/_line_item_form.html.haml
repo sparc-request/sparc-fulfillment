@@ -16,7 +16,7 @@
               = label_tag "service_id", t(:services)[:object], class: "col-sm-4 control-label"
               .col-sm-7= select_tag "service_id", options_from_collection_for_select(protocol.organization.inclusive_child_services(:per_participant), 'id' , 'name'), class: "form-control selectpicker"
             .form-group
-              = label_tag "arm_ids", t(:arm)[:object], class: "col-sm-4 control-label"
+              = label_tag "arm_ids", t(:arm)[:objects], class: "col-sm-4 control-label"
               .col-sm-7
                 = render_arm_checkboxes(protocol, arm_ids, page_hash)
       .modal-footer

@@ -60,6 +60,7 @@ en:
     deleted: "Arm Destroyed"
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
     object: "Arm"
+    objects: "Arms"
     selected_line_items: "Selected Services"
     edit_arm: Edit Arm
     remove_arm: Remove Arm
@@ -292,6 +293,7 @@ en:
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     object: "Service"
+    objects: "Services"
 
   task:
     new_task: "Create New Task"
