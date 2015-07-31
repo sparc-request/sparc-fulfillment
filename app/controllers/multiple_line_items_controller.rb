@@ -13,44 +13,15 @@ class MultipleLineItemsController < ApplicationController
     @arm_ids = @protocol.arms.map(&:id)
   end
 
-  def edit_line_items
-    #called to render modal to mass remove line items
-    @selected_service = params[:service_id]
-    @protocol = Protocol.find params[:protocol_id]
-    @services = @protocol.arms.map{ |arm| arm.line_items.map{ |li| li.service } }.flatten.uniq
-    @page_hash = params[:page_hash]
+  def create_line_items
+    #handles submission of the add line items form
+    @service_id = params[:service_id]
+    service = Service.find(@service_id)
+    @core_id = service.sparc_core_id
     @schedule_tab = params[:schedule_tab]
-    @arm_ids = @protocol.arms.map{ |arm| arm.id if arm.line_items.detect{|li| li.service_id.to_s == @selected_service} }
-  end
-
-  def update_line_items
-    #handles submission of the line item form
-    if params[:arm_ids]
-      @service_id = params[:service_id]
-      service = Service.find(@service_id)
-      @core_id = service.sparc_core_id
-      @schedule_tab = params[:schedule_tab]
-      @core_name = service.sparc_core_name
-
-      if params[:header_text].include? ("Add")
-        @action = 'create'
-        create(params)
-      else
-        @action = 'destroy'
-        destroy(params)
-      end
-    end
-  end
-
-  def necessary_arms
-    protocol = Protocol.find(params[:protocol_id])
-    service_id = params[:service_id]
-    @arm_ids = protocol.arms.map{ |arm| arm.id if arm.line_items.detect{|li| li.service_id.to_s == service_id} }
-  end
-
-  private
-
-  def create (params)
+    @core_name = service.sparc_core_name
+# **********
+    @action = 'create'
     @arm_hash = {}
     params[:arm_ids].each do |set|
       arm_id, page = set.split
@@ -63,7 +34,25 @@ class MultipleLineItemsController < ApplicationController
     flash.now[:success] = t(:services)[:created]
   end
 
-  def destroy (params)
+  def edit_line_items
+    #called to render modal to mass remove line items
+    @protocol = Protocol.find params[:protocol_id]
+    @all_services = @protocol.arms.map{ |arm| arm.line_items.map{ |li| li.service } }.flatten.uniq
+    @page_hash = params[:page_hash]
+    @schedule_tab = params[:schedule_tab]
+    @service = params[:service_id].present? ? Service.find(params[:service_id]) : @all_services.first
+    @arms = @protocol.arms.select{ |arm| arm.line_items.detect{|li| li.service_id == @service.id} }
+  end
+
+  def destroy_line_items
+    #handles submission of the remove line items form
+    @service_id = params[:service_id]
+    service = Service.find(@service_id)
+    @core_id = service.sparc_core_id
+    @schedule_tab = params[:schedule_tab]
+    @core_name = service.sparc_core_name
+# **********
+    @action = 'destroy'
     @line_item_ids = {}
     params[:arm_ids].each do |set|
       arm_id = set.split()[0]
