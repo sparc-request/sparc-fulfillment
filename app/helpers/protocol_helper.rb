@@ -24,21 +24,9 @@ module ProtocolHelper
     end
   end
 
-  def formatted_provider(protocol)
-    protocol.organization.find_in_organization_tree("Provider")
-  end
-
-  def formatted_program(protocol)
-    protocol.organization.find_in_organization_tree("Program")
-  end
-
-  def formatted_core(protocol)
-    protocol.organization.find_in_organization_tree("Core")
-  end
-
   def formatted_study_schedule_report(protocol)
     content_tag(:div, '', class: 'btn-group') do
-      content_tag(:a, href: '#', target: :blank, class: 'btn btn-default dropdown-toggle btn-xs study_schedule_report', id: "study_schedule_report_#{protocol.id.to_s}", title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'aria-expanded' => 'false') do
+      content_tag(:a, href: 'javascript:void(0)', target: :blank, class: 'btn btn-default dropdown-toggle btn-xs study_schedule_report', id: "study_schedule_report_#{protocol.id.to_s}", title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'aria-expanded' => 'false') do
         content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
       end +
       content_tag(:ul, '', class: 'dropdown-menu document-dropdown-menu menu-study-schedule', role: 'menu', id: "document_menu_study_schedule_report_#{protocol.id.to_s}")

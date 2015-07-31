@@ -8,9 +8,9 @@ RSpec.describe Visit, type: :model do
   it { is_expected.to have_many(:procedures) }
 
 
-  it { should validate_numericality_of(:research_billing_qty).is_greater_than_or_equal_to(0) }
-  it { should validate_numericality_of(:insurance_billing_qty).is_greater_than_or_equal_to(0) }
-  it { should validate_numericality_of(:effort_billing_qty).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:research_billing_qty).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:insurance_billing_qty).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:effort_billing_qty).is_greater_than_or_equal_to(0) }
 
   context 'class methods' do
 
@@ -97,7 +97,7 @@ RSpec.describe Visit, type: :model do
         3.times do
           create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
         end
-        visit.update_procedures 2
+        visit.update_procedures(2, 'research_billing_qty')
         expect(visit.procedures.count).to eq(2)
       end
 
@@ -111,7 +111,7 @@ RSpec.describe Visit, type: :model do
         3.times do
           create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
         end
-        visit.update_procedures 0
+        visit.update_procedures(0, 'research_billing_qty')
         expect(visit.procedures.count).to eq(3)
       end
 
@@ -124,7 +124,7 @@ RSpec.describe Visit, type: :model do
         3.times do
           create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
         end
-        visit.update_procedures 5
+        visit.update_procedures(5, 'research_billing_qty')
         expect(visit.procedures.count).to eq(5)
       end
     end

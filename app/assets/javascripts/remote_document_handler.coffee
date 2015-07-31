@@ -20,6 +20,7 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
       get_document_state = ->
         document_id = $(element).data("document_id")
+
         $.ajax
           type: 'GET'
           url: "/documents/#{document_id}.json"
@@ -51,22 +52,31 @@ generate_document = (element, tables_to_refresh, event = null) ->
                 button = $(ul).siblings('a.dropdown-toggle')
                 ul.toggle()
 
-                document_id = button.attr("data-document_id")
-                update_view_on_download_new_report $("a.attached_file[data-id=#{document_id}]") ,'table.protocol_reports', 'Protocol'
+                document_id = button.data("document_id")
 
+                update_view_on_download_new_report $("a.attached_file[data-id=#{document_id}]") ,'table.protocol_reports', 'Protocol'
 
               $("li a[title='Generate New Report']").off('click').on 'click', ->
                 ul = $(this).parents().eq(1)
                 button = $(ul).siblings('a.dropdown-toggle')
                 ul.toggle()
+
                 button.removeClass('btn-success')
-                
                 set_glyphicon_loading button
 
                 generate_document button, tables_to_refresh
-
+              
               $(element).off('click').on 'click', ->
+                ul = $(this).siblings("ul.document-dropdown-menu")
+                active = false
+
+                if ul.attr("style") == "display: block;"
+                  active = true
+
                 $("ul.document-dropdown-menu[style='display: block;']").toggle()
+
+                if active == false
+                  $(this).siblings("ul.document-dropdown-menu").toggle()
 
       get_document_state()
 

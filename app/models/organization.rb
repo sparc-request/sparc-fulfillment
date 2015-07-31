@@ -52,16 +52,6 @@ class Organization < ActiveRecord::Base
       joins(:sub_service_request).
       where(sub_service_requests: { organization_id: id })
   end
-
-  def find_in_organization_tree(klass_name)
-    if self.type == klass_name
-      self.name
-    elsif parent.present?
-      parent.find_in_organization_tree(klass_name)
-    else
-      '-'
-    end
-  end
 end
 
 class Program < Organization

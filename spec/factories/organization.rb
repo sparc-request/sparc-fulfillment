@@ -4,6 +4,12 @@ FactoryGirl.define do
     sequence(:name) { |n| "Fake Organization #{n}" }  # need this for fake data
     process_ssrs false
 
+    after :create do |organization, evaluator|
+      create_list(:pricing_setup, 3, organization: organization).each do |pricing_setup|
+        pricing_setup.update_attributes(organization_id: organization.id)
+      end
+    end
+
     trait :core do
       type "Core"
     end

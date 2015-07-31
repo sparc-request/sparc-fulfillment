@@ -102,7 +102,7 @@ feature 'Identity completes Procedure', js: true do
   end
 
   def then_i_should_see_a_helpful_message
-    expect(@alert).to eq('Please click Start Visit and enter a start date to continue.')
+    expect(@alert).to eq("Please click 'Start Visit' and enter a start date to continue.")
   end
 
   alias :and_i_close_the_notes_list :then_i_close_the_notes_list

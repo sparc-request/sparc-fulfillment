@@ -28,7 +28,7 @@ class DocumentsController < ApplicationController
         mark_document_as_accessed
         send_data File.read(@document.path),
           type: @document.content_type,
-          disposition: "attachment; filename=#{@document.original_filename}"
+          disposition: "attachment; filename=#{@document.original_filename.gsub(' ', '_')}"
       }
       format.json {
         render json: { document: { state: @document.state, document_id: @document.id, documentable_type: @document.documentable_type } }
