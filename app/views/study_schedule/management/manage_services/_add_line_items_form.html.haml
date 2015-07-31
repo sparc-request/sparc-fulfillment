@@ -5,12 +5,12 @@
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only= t(:actions)[:close]
-        %h4#line_item.modal-title.text-center= header_text
+        %h4#line_item.modal-title.text-center= t(:services)[:add_services]
       .modal-body
         #modal_errors
         .row
           .col-md-12
-            = hidden_field_tag :header_text, header_text
+            = hidden_field_tag :header_text, t(:services)[:add_services]
             = hidden_field_tag :schedule_tab, schedule_tab
             .form-group
               = label_tag "service_id", t(:services)[:object], class: "col-sm-4 control-label"
@@ -22,4 +22,4 @@
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: button_text}
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:add]}

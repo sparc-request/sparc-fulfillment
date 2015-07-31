@@ -28,6 +28,8 @@ en:
     delete: "Delete"
     save: "Save"
     options: "Options"
+    remove: "Remove"
+    add: "Add"
 
   appointment:
     srid: "SRID"
@@ -290,6 +292,8 @@ en:
     name: "Selected Service"
     arm: "Select Arm(s)"
     report: "Report"
+    remove_services: "Remove Services"
+    add_services: "Add Services"
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     object: "Service"
