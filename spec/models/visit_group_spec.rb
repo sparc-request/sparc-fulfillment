@@ -2,16 +2,16 @@ require 'rails_helper'
 
 RSpec.describe VisitGroup, type: :model do
 
-  it { should belong_to(:arm) }
-  it { should have_many(:visits).dependent(:destroy) }
-  it { should have_many(:line_items).through(:arm) }
-  it { should have_many(:appointments) }
+  it { is_expected.to belong_to(:arm) }
+  it { is_expected.to have_many(:visits).dependent(:destroy) }
+  it { is_expected.to have_many(:line_items).through(:arm) }
+  it { is_expected.to have_many(:appointments) }
 
   context 'validations' do
-    it { should validate_presence_of(:arm_id) }
-    it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:day) }
-    it { should validate_numericality_of(:day) }
+    it { is_expected.to validate_presence_of(:arm_id) }
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:day) }
+    it { is_expected.to validate_numericality_of(:day) }
   end
 
   context 'class methods' do
