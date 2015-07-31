@@ -75,6 +75,7 @@ feature 'Custom appointment', js: true do
 
   def when_i_select_the_appointment
     @service = @protocol.organization.inclusive_child_services(:per_participant).first
+
     @service.update_attributes(name: 'Test Service')
     bootstrap_select '#appointment_select', "Test Visit"
     wait_for_ajax
@@ -88,13 +89,15 @@ feature 'Custom appointment', js: true do
   end
 
   def then_i_complete_it
-    find('button.start_visit').click
+    find('.start_visit').click
+    wait_for_ajax
     find('label.status.complete').click
     wait_for_ajax
     click_button 'Complete Visit'
   end
 
   def then_it_should_appear_on_the_dashboard
+    wait_for_ajax
     expect(page).to have_content('Test Visit')
   end
 end

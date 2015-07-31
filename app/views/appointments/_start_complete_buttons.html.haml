@@ -2,7 +2,7 @@
   .start_date_input{class: hidden_class(appointment.start_date.blank?) }
     %label.control-label#start-date-label{for: 'start_date'}= t(:appointment)[:start_date]
     %input.form-control#start_date
-    %button.btn.btn-danger#start_appointment_date_remove{data:{appointment_id: appointment.id}}
+    %button.btn.btn-danger#start_appointment_date_remove{title: t(:appointment)[:remove_start], data:{appointment_id: appointment.id, toggle: 'tooltip', animation: false}}
       %span.glyphicon.glyphicon-remove
   .start_date_btn{class: hidden_class(!appointment.start_date.blank?) }
     %button.btn.btn-success.start_visit= t(:appointment)[:start_visit]
@@ -10,7 +10,7 @@
   .completed_date_input{class: hidden_class(appointment.completed_date.blank?) }
     %label.control-label.text-left{for: 'completed_date'}= t(:appointment)[:completed_date]
     %input.form-control#completed_date
-    %button.btn.btn-danger#complete_appointment_date_remove{data:{appointment_id: appointment.id}}
+    %button.btn.btn-danger#complete_appointment_date_remove{title: t(:appointment)[:remove_completed], data:{appointment_id: appointment.id, toggle: 'tooltip', animation: false}}
       %span.glyphicon.glyphicon-remove
   .completed_date_btn{class: [hidden_class(!appointment.completed_date.blank?), contains_disabled_class(!appointment.can_finish?)].join(' ')}
     %button.btn.btn-danger.complete_visit{class: disabled_class(!appointment.can_finish?) }= t(:appointment)[:complete_visit]

@@ -4,7 +4,6 @@ feature 'Identity edits complete Procedure date', js: true do
 
   scenario 'User edits a complete Procedure date' do
     given_i_have_added_a_procedure_to_an_appointment
-    when_i_begin_the_appointment
     and_i_complete_the_procedure
     and_i_edit_the_completed_date
     then_i_should_see_the_completed_date_has_been_updated
@@ -23,10 +22,6 @@ feature 'Identity edits complete Procedure date', js: true do
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
     wait_for_ajax
-  end
-
-  def when_i_begin_the_appointment
-    find('button.start_visit').click
   end
 
   def and_i_complete_the_procedure
