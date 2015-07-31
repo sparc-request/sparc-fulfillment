@@ -14,7 +14,7 @@
                 = render partial: 'visit_type_dropdown'
               .col-md-5.col-md-offset-2.text-right
                 = render partial: 'visit_indications_dropdown'
-      .row
+      .row.start_complete_buttons
         = render partial: 'start_complete_buttons', locals: {appointment: appointment}
       .row.calendar
         .col-xs-12

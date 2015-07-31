@@ -101,6 +101,38 @@ RSpec.describe AppointmentsController do
       expect(assigns(:appointment).completed_date.strftime("%F")).to eq(assigns(:appointment).start_date.strftime("%F"))
     end
 
+    it "should remove the completed date" do
+      appointment = create(:appointment, completed_date: nil, start_date: Time.now, completed_date: Time.now.tomorrow, arm: @arm, name: "Visit 1", participant: @participant)
+      patch :update ,{
+        id: appointment.id,
+        field: "completed_date",
+        new_date: "",
+        format: :js
+      }
+      appointment.reload
+      expect(appointment.completed_date).to eq(nil)
+    end
+
+    it "should remove the start date and reset the appointment" do
+      appointment = create(:appointment_with_procedures, start_date: Time.now, arm: @arm, name: "Visit 1", participant: @participant, visit_group: @arm.visit_groups.first)
+      task        = create(:task, due_at: "09-02-2022", complete: false, assignable_type: "Procedure", assignable_id: appointment.procedures.first.id, assignee_id: @identity.id)
+      appointment.procedures.each{ |procedure| procedure.update_attributes(status: "completed", completed_date: "09-12-2022") }
+
+      patch :update, {
+        id: appointment.id,
+        field: "start_date",
+        new_date: "",
+        format: :js
+      }
+      appointment.reload
+      expect(appointment.start_date).to eq(nil)
+      appointment.procedures.each do |procedure|
+        expect(procedure.status).to eq "unstarted"
+        expect(procedure.completed_date).to eq(nil)
+        expect(procedure.task).to eq(nil)
+      end
+    end
+
     it "should set the start date if one doesn't exist" do
       today = Time.current.strftime("%F")
       appointment = create(:appointment, start_date: nil, arm: @arm, name: "Visit 1", participant: @participant)

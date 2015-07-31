@@ -50,6 +50,8 @@ en:
     complete_visit: "Complete Visit"
     object: "Appointment"
     warning: "Please click 'Start Visit' and enter a start date to continue."
+    remove_completed: "Remove the completed date"
+    remove_start: "Remove the start date"
 
   arm:
     name: "Arm Name"
