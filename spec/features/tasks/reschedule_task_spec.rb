@@ -3,12 +3,12 @@ require "rails_helper"
 feature "rescheduling a Task", js: true do
 
   scenario "Identity reschedules a Task" do
-    as_a_identity_who_has_assigned_a_task
+    given_i_have_an_assigned_a_task
     when_i_reschedule_the_task
     then_i_should_see_the_task_has_been_rescheduled
   end
 
-  def as_a_identity_who_has_assigned_a_task
+  def given_i_have_an_assigned_a_task
     @identity = Identity.first
     create_list(:task, 2, identity: @identity, assignee: @identity)
     @task = Task.first
