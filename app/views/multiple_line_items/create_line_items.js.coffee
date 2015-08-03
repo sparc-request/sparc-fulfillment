@@ -1,6 +1,3 @@
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
-<% unless @errors %>
-
 <% @arm_hash.each do |arm_id, value| %>
 end_of_core = $("#arm_<%= arm_id %>_end_of_core_<%= @service.sparc_core_id %>")
 if end_of_core.length == 0
@@ -12,4 +9,3 @@ $('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
 $(".selectpicker").selectpicker()
 $("#modal_place").modal 'hide'
 $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
-<% end %>
