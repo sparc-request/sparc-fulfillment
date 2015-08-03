@@ -15,15 +15,12 @@ class MultipleLineItemsController < ApplicationController
     # handles submission of the add line items form
     if params[:add_service_arm_ids_and_pages] # if arms are selected
       @service = Service.find(params[:add_service_id])
-      arm_ids_and_pages = params[:add_service_arm_ids_and_pages].map do |set|
-        arm_id, page = set.split
-        [arm_id, [Arm.find(arm_id), page]]
-      end
       @schedule_tab = params[:schedule_tab]
       @arm_hash = {}
-      arm_ids_and_pages.each do |k,v|
-        arm_id, arm, page = [k,v].flatten
-        unless arm.line_items.map(&:service_id).include? @service.id # check if service is already on one of the selected arms
+      params[:add_service_arm_ids_and_pages].each do |set|
+        arm_id, page = set.split
+        arm = Arm.find(arm_id)
+        unless arm.line_items.map(&:service_id).include? @service.id # unless service is already on one of the selected arms
           line_item = LineItem.new(protocol_id: arm.protocol_id, arm_id: arm_id, service_id: @service.id, subject_count: arm.subject_count)
           importer = LineItemVisitsImporter.new(line_item)
           importer.save_and_create_dependents
