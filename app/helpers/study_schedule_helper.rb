@@ -43,4 +43,14 @@ module StudyScheduleHelper
     end
     destination_page == current_page.to_i
   end
+
+  def create_line_items_options page_hash
+    options = []
+    page_hash.each do |arm_id, page|
+      arm = Arm.find(arm_id)
+      options << ["#{arm.name}", "#{arm_id} #{page}"]
+    end
+
+    options_for_select(options)
+  end
 end

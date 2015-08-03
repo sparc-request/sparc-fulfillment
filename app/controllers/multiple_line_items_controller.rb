@@ -13,22 +13,32 @@ class MultipleLineItemsController < ApplicationController
 
   def create_line_items
     #handles submission of the add line items form
-    @service_id = params[:service_id]
-    service = Service.find(@service_id)
-    @core_id = service.sparc_core_id
-    @schedule_tab = params[:schedule_tab]
-    @core_name = service.sparc_core_name
-# **********
-    @arm_hash = {}
-    params[:arm_ids].each do |set|
-      arm_id, page = set.split
-      arm = Arm.find(arm_id)
-      line_item = LineItem.new(protocol_id: arm.protocol_id, arm_id: arm_id, service_id: @service_id, subject_count: arm.subject_count)
-      importer = LineItemVisitsImporter.new(line_item)
-      importer.save_and_create_dependents
-      @arm_hash[arm_id] = {page: page, line_item: line_item}
+    if params[:add_service_arm_ids_and_pages] #if arms are selected
+      @service = Service.find(params[:add_service_id])
+      arm_ids_and_pages = params[:add_service_arm_ids_and_pages].map do |set|
+        arm_id, page = set.split
+        [arm_id, [Arm.find(arm_id), page]]
+      end
+      # check if service is already on one of the selected arms
+      arm_ids_and_pages.each do |k,v|
+        arm = v[0]
+        @service.errors.add(:service, "'#{@service.name}' is already present on Arm '#{arm.name}'") if arm.line_items.map(&:service_id).include? @service.id
+      end
+      unless @service.errors.present? # if service is not on any selected arms
+        @schedule_tab = params[:schedule_tab]
+        @arm_hash = {}
+        arm_ids_and_pages.each do |k,v|
+          arm_id, arm, page = [k,v].flatten
+          line_item = LineItem.new(protocol_id: arm.protocol_id, arm_id: arm_id, service_id: @service.id, subject_count: arm.subject_count)
+          importer = LineItemVisitsImporter.new(line_item)
+          importer.save_and_create_dependents
+          @arm_hash[arm_id] = {page: page, line_item: line_item}
+        end
+        flash.now[:success] = t(:services)[:created]
+      else
+        @errors = @service.errors
+      end
     end
-    flash.now[:success] = t(:services)[:created]
   end
 
   def edit_line_items
@@ -41,7 +51,7 @@ class MultipleLineItemsController < ApplicationController
 
   def destroy_line_items
     #handles submission of the remove line items form
-    if params[:remove_service_arm_ids]
+    if params[:remove_service_arm_ids] #if arms are selected
       @service = Service.find(params[:remove_service_id])
       @arm_ids = [params[:remove_service_arm_ids]].flatten
       line_items = @arm_ids.map{ |arm_id| LineItem.where("arm_id = #{arm_id} AND service_id = #{@service.id}").first }
