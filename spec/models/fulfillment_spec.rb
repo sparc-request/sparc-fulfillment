@@ -15,6 +15,7 @@ RSpec.describe Fulfillment, type: :model do
 
     it { is_expected.to validate_presence_of(:line_item_id) }
     it { is_expected.to validate_presence_of(:fulfilled_at) }
+    it { is_expected.to validate_presence_of(:account_number) }
     it { is_expected.to validate_presence_of(:quantity) }
     it { is_expected.to validate_presence_of(:performer_id) }
     it { is_expected.to validate_numericality_of(:quantity) }
