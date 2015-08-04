@@ -62,11 +62,19 @@ RSpec.describe ApplicationHelper do
   describe "#truncated_formatter"
     it "should return html to truncate the data" do
       data = "Some name"
-      ridiculously_long_string = "<span data-toggle='tooltip' data-placement='left' data-animation='false' title='#{data}'>#{data}</span>"
-      expect(helper.truncated_formatter(data)).to eq(ridiculously_long_string)
+      html_return = truncated_formatter_return(data)
+      expect(helper.truncated_formatter(data)).to eq(html_return)
     end
 
   #Part of i18n
   describe "#current_translations" do
+  end
+
+  def truncated_formatter_return data
+    [
+    "<span data-toggle='tooltip' data-placement='left' data-animation='false' title='#{data}'>",
+    "#{data}",
+    "</span>"
+    ].join("")
   end
 end

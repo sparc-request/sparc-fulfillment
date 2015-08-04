@@ -3,7 +3,7 @@ module ApplicationHelper
   def format_date(date)
     if date.present?
       # date.strftime('%F')
-      date.strftime('%m/%d/%Y')
+      date.strftime(t(:documents)[:date_time_formatter_ruby])
     else
       ''
     end
