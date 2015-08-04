@@ -10,18 +10,18 @@ feature "Identity views Task", js: true do
   end
 
   scenario "Identity views a Task that have assigned to themselves" do
-    as_a_identity_who_is_on_the_tasks_page
+    given_i_am_on_the_tasks_page
     when_i_view_a_identity_task_assigned_to_myself
     then_i_should_see_the_identity_task_details
   end
 
   scenario "Identity views a Procedure Task they assigned to themselves" do
-    as_a_identity_who_has_been_assigned_a_procedure_task
+    given_i_have_been_assigned_a_procedure_task
     when_i_view_the_procedure_task_assigned_to_myself
     then_i_should_see_the_procedure_task_details
   end
 
-  def as_a_identity_who_is_on_the_tasks_page
+  def given_i_am_on_the_tasks_page
     visit tasks_path
   end
 
@@ -37,7 +37,7 @@ feature "Identity views Task", js: true do
     find("table.tasks tbody tr:first-child").click
   end
 
-  def as_a_identity_who_has_been_assigned_a_procedure_task
+  def given_i_have_been_assigned_a_procedure_task
     create(:protocol_imported_from_sparc)
     identity        = Identity.first
     appointment = Appointment.first
@@ -48,7 +48,7 @@ feature "Identity views Task", js: true do
   end
 
   def when_i_view_the_procedure_task_assigned_to_myself
-    as_a_identity_who_is_on_the_tasks_page
+    given_i_am_on_the_tasks_page
     find("table.tasks tbody tr:first-child").click
   end
 

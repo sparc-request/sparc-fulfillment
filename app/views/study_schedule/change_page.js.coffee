@@ -10,7 +10,7 @@ $("#arrow-right-#{arm_id}").attr('page', page + 1)
 # Disable arrows if needed
 disable_left = page == 1
 $("#arrow-left-#{arm_id}").attr('disabled', disable_left)
-disable_right = visit_count - page * <%= Visit.per_page %> < 0
+disable_right = visit_count - page * <%= Visit.per_page %> <= 0
 $("#arrow-right-#{arm_id}").attr('disabled', disable_right)
 
 # Overwrite the visit_groups

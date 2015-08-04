@@ -243,9 +243,7 @@ en:
     study_schedule_report: "Export"
     owner: "Owner"
     requester: "Service Requester"
-    provider: "Provider"
-    program: "Program"
-    core: "Core"
+    organizations: "Provider/Program/Core"
     tabs:
       study_schedule: "Study Schedule"
       participant_list: "Participant List"

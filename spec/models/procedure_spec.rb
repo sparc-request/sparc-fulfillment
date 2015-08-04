@@ -12,7 +12,7 @@ RSpec.describe Procedure, type: :model do
   it { is_expected.to have_many(:notes) }
   it { is_expected.to have_many(:tasks) }
 
-  it { should accept_nested_attributes_for(:notes) }
+  it { is_expected.to accept_nested_attributes_for(:notes) }
 
   it { is_expected.to validate_inclusion_of(:status).in_array(Procedure::STATUS_TYPES) }
 
