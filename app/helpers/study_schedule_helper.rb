@@ -12,7 +12,6 @@ module StudyScheduleHelper
   def visits_select_options arm, cur_page=1
     per_page = Visit.per_page
     visit_count = arm.visit_count
-    visit_group_names = arm.visit_groups.map(&:name)
     num_pages = (visit_count / per_page.to_f).ceil
     arr = []
 
@@ -25,7 +24,7 @@ module StudyScheduleHelper
       arr << option
 
       (beginning_visit..ending_visit).each do |y|
-        arr << ["&nbsp;&nbsp; - #{visit_group_names[y - 1]}".html_safe, "#{arm.visit_groups[y - 1].id}", :page => page + 1]
+        arr << ["&nbsp;&nbsp; - #{arm.visit_groups[y - 1].name}".html_safe, "#{arm.visit_groups[y - 1].id}", :page => page + 1] if arm.visit_groups.present?
       end
     end
 

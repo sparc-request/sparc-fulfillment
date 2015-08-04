@@ -43,7 +43,7 @@ class VisitGroupsController < ApplicationController
   end
 
   def destroy
-    @current_page = params[:page].to_i
+    @current_page = params[:page].to_i == 0 ? 1 : params[:page].to_i # can't be zero
     @arm = @visit_group.arm
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     @schedule_tab = params[:schedule_tab]
