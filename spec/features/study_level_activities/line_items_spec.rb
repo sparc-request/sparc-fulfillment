@@ -83,6 +83,7 @@ feature 'Line Items', js: true do
 
   def then_i_should_not_see_the_line_item
     expect(page).not_to have_css(".line_item[data-id='#{@line_item_without_fulfillment.id}']")
+    expect(page).not_to have_css("#fulfillments_list_#{@line_item_without_fulfillment.id}")
   end
 
   def then_i_should_still_see_the_line_item
