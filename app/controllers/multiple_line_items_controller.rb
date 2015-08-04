@@ -37,7 +37,7 @@ class MultipleLineItemsController < ApplicationController
   def edit_line_items
     # called to render modal to mass remove line items
     @protocol = Protocol.find params[:protocol_id]
-    @all_services = @protocol.arms.map{ |arm| arm.line_items.map{ |li| li.service } }.flatten.uniq
+    @all_services = @protocol.line_items.map(&:service).uniq
     @service = params[:service_id].present? ? Service.find(params[:service_id]) : @all_services.first
     @arms = @protocol.arms.select{ |arm| arm.line_items.detect{|li| li.service_id == @service.id} }
   end
