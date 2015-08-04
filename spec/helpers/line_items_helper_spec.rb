@@ -1,1 +1,4 @@
-# line_items_helper_spec.rb
+require 'rails_helper'
+
+RSpec.describe LineItemsHelper do
+end

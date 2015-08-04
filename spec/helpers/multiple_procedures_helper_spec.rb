@@ -1,1 +1,4 @@
-# multiple_procedures_helper_spec.rb
+require 'rails_helper'
+
+RSpec.describe MultipleProceduresHelper do
+end

@@ -1,1 +1,4 @@
-# study_level_activities_helper_spec.rb
+require 'rails_helper'
+
+RSpec.describe StudyLevelActivitiesHelper do
+end

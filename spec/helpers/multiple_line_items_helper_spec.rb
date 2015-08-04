@@ -1,1 +1,4 @@
-# multiple_line_items_helper.rb
+require 'rails_helper'
+
+RSpec.describe MultipleLineItemsHelper do
+end
