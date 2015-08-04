@@ -3,12 +3,12 @@ require "rails_helper"
 feature "Indicating a Status", js: true do
 
   scenario "User indicates an appointment status" do
-    as_a_user_who_selects_an_appointment
-    when_I_indicate_an_appointment_status
-    an_appointment_status_should_be_created_for_that_appointment
+    given_i_select_an_appointment
+    when_i_indicate_an_appointment_status
+    then_an_appointment_status_should_be_created_for_that_appointment
   end
 
-  def as_a_user_who_selects_an_appointment
+  def given_i_select_an_appointment
     protocol      = create_and_assign_protocol_to_me
     participant   = protocol.participants.first
     @appointment  = participant.appointments.first
@@ -18,12 +18,12 @@ feature "Indicating a Status", js: true do
     bootstrap_select '#appointment_select', visit_group.name
   end
 
-  def when_I_indicate_an_appointment_status
+  def when_i_indicate_an_appointment_status
     bootstrap_select '#appointment_indications', "Skipped Visit"
     wait_for_ajax
   end
 
-  def an_appointment_status_should_be_created_for_that_appointment
+  def then_an_appointment_status_should_be_created_for_that_appointment
     expect(@appointment.appointment_statuses.size).to eq(1)
   end
 end

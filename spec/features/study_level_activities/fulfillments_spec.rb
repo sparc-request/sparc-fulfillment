@@ -3,8 +3,8 @@ require 'rails_helper'
 feature 'Fulfillments', js: true do
 
   scenario 'User adds a new fulfillment' do
-    as_a_user_who_has_study_level_activities
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_have_study_level_activities
+    given_i_visit_the_study_level_activities_tab
     when_i_open_up_a_fulfillment
     when_i_click_on_the_add_fulfillment_button
     when_i_fill_out_the_fulfillment_form
@@ -14,8 +14,8 @@ feature 'Fulfillments', js: true do
   end
 
   scenario 'User adds a new fulfillment incorrectly' do
-    as_a_user_who_has_study_level_activities
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_have_study_level_activities
+    given_i_visit_the_study_level_activities_tab
     when_i_open_up_a_fulfillment
     when_i_click_on_the_add_fulfillment_button
     when_i_save_the_fulfillment_form
@@ -23,19 +23,19 @@ feature 'Fulfillments', js: true do
   end
 
   scenario 'User edits an existing fulfillment' do
-    as_a_user_who_has_study_level_activities
-    as_a_user_who_has_a_fulfillment
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_have_study_level_activities
+    given_i_have_a_fulfillment
+    given_i_visit_the_study_level_activities_tab
     when_i_open_up_a_fulfillment
     when_i_click_on_the_edit_fulfillment_button
     when_i_fill_out_the_fulfillment_form
     when_i_save_the_fulfillment_form
     then_i_should_see_the_new_fulfillment_in_the_table
     then_i_should_see_the_correct_components
-    and_should_see_the_changes_in_the_notes
+    then_i_should_see_the_changes_in_the_notes
   end
 
-  def as_a_user_who_has_study_level_activities
+  def given_i_have_study_level_activities
     @protocol = create_and_assign_protocol_to_me
     service     = create(:service_with_one_time_fee)
     @line_item  = create(:line_item, protocol: @protocol, service: service)
@@ -43,11 +43,11 @@ feature 'Fulfillments', js: true do
     @clinical_providers = Identity.first.clinical_providers
   end
 
-  def as_a_user_who_has_a_fulfillment
+  def given_i_have_a_fulfillment
     @fulfillment = create(:fulfillment, line_item: @line_item)
   end
 
-  def as_a_user_who_visits_study_level_activities_tab
+  def given_i_visit_the_study_level_activities_tab
     visit protocol_path(@protocol.id)
     click_link "Study Level Activities"
   end
@@ -71,6 +71,7 @@ feature 'Fulfillments', js: true do
   def when_i_fill_out_the_fulfillment_form
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    fill_in 'Account Number', with: "Th15 15 A f4k3 NUMb3r"
     fill_in 'Quantity', with: "45"
     bootstrap_select '#fulfillment_performer_id', @clinical_providers.first.identity.full_name
     bootstrap_select '#fulfillment_components', @components.first.component
@@ -95,13 +96,15 @@ feature 'Fulfillments', js: true do
 
   def then_i_should_see_form_errors
     expect(page).to have_content("Fulfilled at can't be blank")
+    expect(page).to have_content("Account number can't be blank")
     expect(page).to have_content("Quantity can't be blank")
     expect(page).to have_content("Quantity is not a number")
   end
 
-  def and_should_see_the_changes_in_the_notes
+  def then_i_should_see_the_changes_in_the_notes
     first('.notes.list[data-notable-type="Fulfillment"]').click
     wait_for_ajax
+    expect(page).to have_content "Account Number changed to Th15 15 A f4k3 NUMb3r"
     expect(page).to have_content "Quantity changed to 45"
   end
 end

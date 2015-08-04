@@ -3,41 +3,41 @@ require 'rails_helper'
 feature 'Identity manages Doucuments', js: true do
 
   scenario 'User views line item documents' do
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_visit_the_study_level_activities_tab
     when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
     then_i_should_see_the_line_item_documents_list
   end
 
   scenario 'User uploads new line item document' do
-    as_a_user_who_visits_study_level_activities_tab
-    if_i_have_a_document_to_upload
+    given_i_visit_the_study_level_activities_tab
+    when_i_have_a_document_to_upload
     when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
-    then_click_on_the_add_document_button
-    then_i_upload_a_document
+    when_i_click_on_the_add_document_button
+    when_i_upload_a_document
     when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
-    i_should_see_the_document
+    then_i_should_see_the_document
   end
 
 
   scenario 'User views fulfillment documents' do
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_visit_the_study_level_activities_tab
     when_i_open_up_a_fulfillment
     when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
     then_i_should_see_the_fulfillment_documents_list
   end
 
   scenario 'User uploads new fulfillment document' do
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_visit_the_study_level_activities_tab
     when_i_open_up_a_fulfillment
     when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
-    if_i_have_a_document_to_upload
-    then_click_on_the_add_document_button
-    then_i_upload_a_document
+    when_i_have_a_document_to_upload
+    when_i_click_on_the_add_document_button
+    when_i_upload_a_document
     when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
-    i_should_see_the_document
+    then_i_should_see_the_document
   end
 
-  def as_a_user_who_visits_study_level_activities_tab
+  def given_i_visit_the_study_level_activities_tab
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
@@ -49,6 +49,24 @@ feature 'Identity manages Doucuments', js: true do
     wait_for_ajax
   end
 
+  def when_i_have_a_document_to_upload
+    @filename = Rails.root.join('db', 'fixtures', 'test_document.txt')
+  end
+
+  def when_i_open_up_a_fulfillment
+    first('.otf_fulfillments.list').click
+  end
+
+  def when_i_click_on_the_add_document_button
+    find('.document.new').click
+  end
+
+  def when_i_upload_a_document
+    wait_for_ajax
+    attach_file(find("input[type='file']")[:id], @filename)
+    click_button "Save"
+  end
+
   def then_i_should_see_the_line_item_documents_list
     expect(page).to have_content('Line Item Documents')
   end
@@ -57,26 +75,7 @@ feature 'Identity manages Doucuments', js: true do
     expect(page).to have_content('Fulfillment Documents')
   end
 
-  def if_i_have_a_document_to_upload
-    @filename = Rails.root.join('db', 'fixtures', 'test_document.txt')
-  end
-
-  def then_click_on_the_add_document_button
-    find('.document.new').click
-  end
-
-  def then_i_upload_a_document
-    wait_for_ajax
-    attach_file(find("input[type='file']")[:id], @filename)
-    click_button "Save"
-  end
-
-  def i_should_see_the_document
+  def then_i_should_see_the_document
     expect(page).to have_content('test_document.txt')
   end
-
-  def when_i_open_up_a_fulfillment
-    first('.otf_fulfillments.list').click
-  end
-
 end

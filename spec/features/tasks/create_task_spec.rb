@@ -10,19 +10,19 @@ feature "create Task", js: true do
   end
 
   scenario 'Identity creates a new Task for themselves' do
-    as_a_identity_who_is_on_the_tasks_page
+    given_i_am_viewing_the_tasks_page
     when_i_create_a_task_assigned_to_myself
     then_i_should_see_the_task_is_assigned_to_me
   end
 
   scenario 'Identity creates a new Task for another Identity' do
-    as_a_identity_who_is_on_the_tasks_page
+    given_i_am_viewing_the_tasks_page
     when_i_create_a_task_assigned_to_another_identity
-    then_i_click_on_the_all_tasks_button
+    when_i_click_on_the_all_tasks_button
     then_i_should_see_the_task_is_assigned_to_the_identity
   end
 
-  def as_a_identity_who_is_on_the_tasks_page
+  def given_i_am_viewing_the_tasks_page
     visit tasks_path
     visit tasks_path
   end
@@ -45,6 +45,10 @@ feature "create Task", js: true do
     click_button 'Save'
   end
 
+  def when_i_click_on_the_all_tasks_button
+    find('#all_tasks').click
+  end
+  
   def then_i_should_see_the_task_is_assigned_to_me
     expect(page).to have_css("table.tasks tbody tr", count: 1)
     expect(page).to have_css(".notification.task-notifications", text: 1)
@@ -52,9 +56,5 @@ feature "create Task", js: true do
 
   def then_i_should_see_the_task_is_assigned_to_the_identity
     expect(page).to have_css("table.tasks tbody td.assignee_name", count: 1, text: @assignee.full_name)
-  end
-
-  def then_i_click_on_the_all_tasks_button
-    find('#all_tasks').click
   end
 end

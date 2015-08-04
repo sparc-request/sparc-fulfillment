@@ -15,36 +15,36 @@ feature 'Line Items', js: true do
   end
 
   scenario 'User adds a new line item' do
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_visit_the_study_level_activities_tab
     when_i_click_on_the_add_line_item_button
-    then_i_fill_in_new_line_item_form
-    i_should_see_the_line_item_on_the_page
-    and_the_line_item_should_pull_pricing_map_data
+    when_i_fill_in_new_line_item_form
+    then_i_should_see_the_line_item_on_the_page
+    then_the_line_item_should_pull_pricing_map_data
   end
 
   scenario 'User edits an existing line item' do
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_visit_the_study_level_activities_tab
     when_i_click_on_the_edit_line_item_button
-    then_i_fill_in_the_edit_line_item_form
-    i_should_see_the_changes_on_the_page
-    and_in_the_notes
+    when_i_fill_in_the_edit_line_item_form
+    then_i_should_see_the_changes_on_the_page
+    then_i_should_see_the_changes_in_the_notes
   end
 
   scenario 'User deletes a line item with fulfillments' do
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_visit_the_study_level_activities_tab
     when_i_click_on_the_delete_line_item_button_with_fulfillent
     then_i_should_see_a_flash_message
     then_i_should_still_see_the_line_item
   end
 
   scenario 'User deletes a line item without fulfillments' do
-    as_a_user_who_visits_study_level_activities_tab
+    given_i_visit_the_study_level_activities_tab
     when_i_click_on_the_delete_line_item_button_without_fulfillment
     then_i_should_see_a_flash_message
     then_i_should_not_see_the_line_item
   end
 
-  def as_a_user_who_visits_study_level_activities_tab
+  def given_i_visit_the_study_level_activities_tab
     visit protocol_path(@protocol.id)
     click_link 'Study Level Activities'
   end
@@ -61,6 +61,22 @@ feature 'Line Items', js: true do
     find(".line_item[data-id='#{@line_item_without_fulfillment.id}'] .options .otf_delete").click
   end
 
+  def when_i_fill_in_new_line_item_form
+    wait_for_ajax
+    bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
+    fill_in 'Quantity Requested', with: 50
+    page.execute_script %Q{ $('#date_started_field').trigger("focus") }
+    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    click_button 'Save Study Level Activity'
+  end
+
+  def when_i_fill_in_the_edit_line_item_form
+    wait_for_ajax
+    bootstrap_select '#line_item_service_id', 'Captain Cinnebon'
+    click_button 'Save Study Level Activity'
+    wait_for_ajax
+  end
+
   def then_i_should_see_a_flash_message
     expect(page).to have_css ".alert"
   end
@@ -73,16 +89,7 @@ feature 'Line Items', js: true do
     expect(page).to have_css(".line_item[data-id='#{@line_item_with_fulfillment.id}']")
   end
 
-  def then_i_fill_in_new_line_item_form
-    wait_for_ajax
-    bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
-    fill_in 'Quantity Requested', with: 50
-    page.execute_script %Q{ $('#date_started_field').trigger("focus") }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    click_button 'Save Study Level Activity'
-  end
-
-  def i_should_see_the_line_item_on_the_page
+  def then_i_should_see_the_line_item_on_the_page
     expect(page).to have_content('Admiral Tuskface')
   end
 
@@ -90,23 +97,16 @@ feature 'Line Items', js: true do
     find(".line_item[data-id='#{@line_item_without_fulfillment.id}'] .options .otf_edit").click
   end
 
-  def then_i_fill_in_the_edit_line_item_form
-    wait_for_ajax
-    bootstrap_select '#line_item_service_id', 'Captain Cinnebon'
-    click_button 'Save Study Level Activity'
-    wait_for_ajax
-  end
-
-  def i_should_see_the_changes_on_the_page
+  def then_i_should_see_the_changes_on_the_page
     wait_for_ajax
     expect(page).to have_content('Captain Cinnebon')
   end
 
-  def and_the_line_item_should_pull_pricing_map_data
+  def then_the_line_item_should_pull_pricing_map_data
     expect(page).to have_content('Case')
   end
 
-  def and_in_the_notes
+  def then_i_should_see_the_changes_in_the_notes
     first('.notes.list[data-notable-type="LineItem"]').click
     wait_for_ajax
     expect(page).to have_content "Study Level Activity Updated"
