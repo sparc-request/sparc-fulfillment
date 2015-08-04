@@ -51,7 +51,7 @@ class VisitGroupsController < ApplicationController
       @visit_group.errors.add(:arm, "must have at least one visit. Add another visit before deleting this one")
       @errors = @visit_group.errors
     elsif @visit_group.appointments.map{|a| a.has_completed_procedures?}.include?(true)
-      @visit_group.errors.add(:visit_group, " - #{@visit_group.name} has completed procedures and cannot be deleted")
+      @visit_group.errors.add(:visit_group, "'#{@visit_group.name}' has completed procedures and cannot be deleted")
       @errors = @visit_group.errors
     else
       @arm.update_attributes(visit_count: @arm.visit_count - 1)

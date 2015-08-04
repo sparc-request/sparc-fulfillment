@@ -29,7 +29,7 @@ class MultipleLineItemsController < ApplicationController
       end
       flash.now[:success] = t(:services)[:created]
     else
-      @service.errors.add(:arms, "to add #{@service.name} to must be selected")
+      @service.errors.add(:arms, "to add '#{@service.name}' to must be selected")
       @errors = @service.errors
     end
   end
@@ -51,7 +51,7 @@ class MultipleLineItemsController < ApplicationController
       @line_item_ids = line_items.map(&:id)
       line_items.each do |li|
         if li.visit_groups.map(&:appointments).flatten.map{|a| a.has_completed_procedures?}.include?(true) # don't delete if line_item has completed procedures
-          @service.errors.add(:service, "- #{li.name} on #{li.arm.name} has completed procedures and cannot be deleted")
+          @service.errors.add(:service, "'#{li.name}' on Arm '#{li.arm.name}' has completed procedures and cannot be deleted")
         end
       end
       unless @service.errors.present?
@@ -61,7 +61,7 @@ class MultipleLineItemsController < ApplicationController
         @errors = @service.errors
       end
     else
-      @service.errors.add(:arms, "to remove #{@service.name} from must be selected")
+      @service.errors.add(:arms, "to remove '#{@service.name}' from must be selected")
       @errors = @service.errors
     end
   end

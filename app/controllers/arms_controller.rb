@@ -47,7 +47,7 @@ class ArmsController < ApplicationController
       @arm.errors.add(:protocol, "must have at least one Arm.")
       @errors = @arm.errors
     elsif @arm.appointments.map{|a| a.has_completed_procedures?}.include?(true) # don't delete if arm has completed procedures
-      @arm.errors.add(:arm, " - #{@arm.name} has completed procedures and cannot be deleted")
+      @arm.errors.add(:arm, "'#{@arm.name}' has completed procedures and cannot be deleted")
       @errors = @arm.errors
     else
       @arm.delay.destroy
