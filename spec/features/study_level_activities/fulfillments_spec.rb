@@ -71,6 +71,7 @@ feature 'Fulfillments', js: true do
   def when_i_fill_out_the_fulfillment_form
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    fill_in 'Account Number', with: "Th15 15 A f4k3 NUMb3r"
     fill_in 'Quantity', with: "45"
     bootstrap_select '#fulfillment_performer_id', @clinical_providers.first.identity.full_name
     bootstrap_select '#fulfillment_components', @components.first.component
@@ -95,6 +96,7 @@ feature 'Fulfillments', js: true do
 
   def then_i_should_see_form_errors
     expect(page).to have_content("Fulfilled at can't be blank")
+    expect(page).to have_content("Account number can't be blank")
     expect(page).to have_content("Quantity can't be blank")
     expect(page).to have_content("Quantity is not a number")
   end
@@ -102,6 +104,7 @@ feature 'Fulfillments', js: true do
   def then_i_should_see_the_changes_in_the_notes
     first('.notes.list[data-notable-type="Fulfillment"]').click
     wait_for_ajax
+    expect(page).to have_content "Account Number changed to Th15 15 A f4k3 NUMb3r"
     expect(page).to have_content "Quantity changed to 45"
   end
 end

@@ -31,6 +31,6 @@ class Report
 
   def display_cost(cost)
     dollars = (cost / 100.0) rescue nil
-    number_to_currency(dollars, seperator: ",")
+    number_to_currency(dollars.round_down(2), seperator: ",")
   end
 end
