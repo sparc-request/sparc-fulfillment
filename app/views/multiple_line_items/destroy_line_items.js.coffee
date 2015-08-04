@@ -1,3 +1,6 @@
+$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
+<% unless @errors %>
+
 <% @line_item_ids.each do |li_id| %>
 $("#line_item_<%= li_id %>").remove()
 <% end %>
@@ -8,4 +11,6 @@ if core_header.next().attr('id') == "arm_<%= arm_id %>_end_of_core_<%= @service.
   core_header.remove()
 <% end %>
 $("#modal_place").modal 'hide'
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
+$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
+
+<% end %>

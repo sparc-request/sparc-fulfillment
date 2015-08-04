@@ -13,8 +13,8 @@ class MultipleLineItemsController < ApplicationController
 
   def create_line_items
     # handles submission of the add line items form
-    if params[:add_service_arm_ids_and_pages] # if arms are selected
-      @service = Service.find(params[:add_service_id])
+    @service = Service.find(params[:add_service_id])
+    if params[:add_service_arm_ids_and_pages] # if they selected arms, otherwise add error
       @schedule_tab = params[:schedule_tab]
       @arm_hash = {}
       params[:add_service_arm_ids_and_pages].each do |set|
@@ -28,6 +28,9 @@ class MultipleLineItemsController < ApplicationController
         end
       end
       flash.now[:success] = t(:services)[:created]
+    else
+      @service.errors.add(:arms, "to add #{@service.name} to must be selected")
+      @errors = @service.errors
     end
   end
 
@@ -41,12 +44,25 @@ class MultipleLineItemsController < ApplicationController
 
   def destroy_line_items
     # handles submission of the remove line items form
-    if params[:remove_service_arm_ids] # if arms are selected
-      @service = Service.find(params[:remove_service_id])
+    @service = Service.find(params[:remove_service_id])
+    if params[:remove_service_arm_ids] # if they selected arms, otherwise add error
       @arm_ids = [params[:remove_service_arm_ids]].flatten
-      line_items = @arm_ids.map{ |arm_id| LineItem.where("arm_id = #{arm_id} AND service_id = #{@service.id}").first }
+      line_items = @arm_ids.map{ |arm_id| LineItem.where("arm_id = #{arm_id} AND service_id = #{@service.id}").first } # get line_items to delete
       @line_item_ids = line_items.map(&:id)
-      flash.now[:success] = t(:services)[:deleted]
+      line_items.each do |li|
+        if li.visit_groups.map(&:appointments).flatten.map{|a| a.has_completed_procedures?}.include?(true) # don't delete if line_item has completed procedures
+          @service.errors.add(:service, "- #{li.name} on #{li.arm.name} has completed procedures and cannot be deleted")
+        end
+      end
+      unless @service.errors.present?
+        line_items.each{ |li| li.destroy }
+        flash.now[:success] = t(:services)[:deleted]
+      else
+        @errors = @service.errors
+      end
+    else
+      @service.errors.add(:arms, "to remove #{@service.name} from must be selected")
+      @errors = @service.errors
     end
   end
 end
