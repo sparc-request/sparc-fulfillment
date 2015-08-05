@@ -5,7 +5,7 @@ class ArmsController < ApplicationController
 
   def new
     @protocol = Protocol.find(params[:protocol_id])
-    @services = Service.find(services_for_protocol)
+    @services = @protocol.line_items.map(&:service).uniq
     @arm = Arm.new(protocol: @protocol)
     @schedule_tab = params[:schedule_tab]
   end
@@ -56,13 +56,6 @@ class ArmsController < ApplicationController
   end
 
   private
-
-  def services_for_protocol
-    services_on_protocol = []
-    @protocol.arms.each {|arm| services_on_protocol << arm.line_items.pluck(:service_id) }
-    #the only services avaliable for select in the modal are the ones which are already on other arms of this protocol
-    services_on_protocol.flatten.uniq
-  end
 
   def arm_params
     params.require(:arm).permit(:protocol_id, :name, :visit_count, :subject_count)
