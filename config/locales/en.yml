@@ -103,6 +103,7 @@ en:
     save_fulfillment: "Save Fulfillment"
     fulfillments: "Fulfillments"
     fulfillment_date: "Fulfillment Date"
+    account_number: "Account Number"
     quantity: "Quantity"
     qty_type: "Quantity Type"
     performed_by: "Performed By"
@@ -112,6 +113,7 @@ en:
       created: "Fulfillment Created"
     log_notes:
       fulfilled_at: "Fulfillment Date changed to "
+      account_number: "Account Number changed to "
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
 
