@@ -7,11 +7,7 @@ class VisitGroupsController < ApplicationController
     @protocol = Protocol.find(params[:protocol_id])
     @visit_group = VisitGroup.new()
     @schedule_tab = params[:schedule_tab]
-    if params[:arm_id]
-      @arm = Arm.find(params[:arm_id])
-    else
-      @arm = @protocol.arms.first
-    end
+    @arm = params[:arm_id].present? ? Arm.find(params[:arm_id]) : @protocol.arms.first
   end
 
   def create
@@ -63,11 +59,8 @@ class VisitGroupsController < ApplicationController
     if params[:visit_group_id]
       @visit_group = VisitGroup.find(params[:visit_group_id])
       @arm = @visit_group.arm
-    elsif params[:arm_id]
-      @arm = Arm.find(params[:arm_id])
-      @visit_group = @arm.visit_groups.first
     else
-      @arm = @protocol.arms.first
+      @arm = params[:arm_id].present? ? Arm.find(params[:arm_id]) : @protocol.arms.first
       @visit_group = @arm.visit_groups.first
     end
   end
