@@ -1,5 +1,5 @@
 module MultipleLineItemsHelper
-  def render_arm_checkboxes(protocol, arm_ids, page_hash)
+  def render_arm_checkboxes protocol, arm_ids, page_hash
     html = ""
     protocol.arms.each do |arm|
       html << content_tag(:div, class: "checkbox arm-checkbox", id: "arm_#{arm.id}_checkbox", style: arm_ids.include?(arm.id) ? "" : "display:none;") do

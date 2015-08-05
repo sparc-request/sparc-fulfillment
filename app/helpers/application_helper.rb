@@ -1,6 +1,6 @@
 module ApplicationHelper
 
-  def format_date(date)
+  def format_date date
     if date.present?
       # date.strftime('%F')
       date.strftime(t(:documents)[:date_time_formatter_ruby])
@@ -9,7 +9,7 @@ module ApplicationHelper
     end
   end
 
-  def format_datetime(date)
+  def format_datetime date
     if date.present?
       date.strftime('%F %H:%M')
     else
@@ -17,23 +17,23 @@ module ApplicationHelper
     end
   end
 
-  def display_cost(cost)
+  def display_cost cost
     dollars = (cost / 100.0) rescue nil
     number_to_currency(dollars.round_down(2), seperator: ",")
   end
 
-  def hidden_class(val)
+  def hidden_class val
     :hidden if val
   end
 
-  def disabled_class(val)
+  def disabled_class val
     :disabled if val
   end
 
   # Class a div containing a disabled button so that
   # you can attach an onclick listener to the div
   # to alert the user why button is disabled.
-  def contains_disabled_class(val)
+  def contains_disabled_class val
     :contains_disabled if val
   end
 
@@ -48,7 +48,7 @@ module ApplicationHelper
   end
 
   ##Sets css bootstrap classes for rails flash message types##
-  def twitterized_type(type)
+  def twitterized_type type
     case type.to_sym
       when :alert
         "alert-danger"
