@@ -4,32 +4,40 @@ require 'rails_helper'
 # documentable_type = 'Identity'
 feature 'Identity creates a document from the documents page', js: true do
 
-  before(:each) do
-    given_i_am_viewing_the_documents_page
+  before :each do
+    given_i_am_viewing_the_documents_index_page
+  end
+  
+  context 'of type Billing Report' do
+    scenario 'and sees the report' do
+      given_i_click_the_create_report_button_of_type 'billing_report'
+      when_i_fill_in_the_report_of_type 'billing_report'
+      then_i_will_see_the_new_report_listed 'Billing report'
+    end
   end
 
-  scenario 'of type Billing Report' do
-    given_i_click_the_create_report_button_of_type 'billing_report'
-    when_i_fill_in_the_report_of_type 'billing_report'
-    then_i_will_see_the_new_report_listed 'Billing report'
+  context 'of type Auditing Report' do
+    scenario 'and sees the report' do
+      given_i_click_the_create_report_button_of_type 'auditing_report'
+      when_i_fill_in_the_report_of_type 'auditing_report'
+      then_i_will_see_the_new_report_listed 'Auditing report'
+    end
   end
 
-  scenario 'of type Auditing Report' do
-    given_i_click_the_create_report_button_of_type 'auditing_report'
-    when_i_fill_in_the_report_of_type 'auditing_report'
-    then_i_will_see_the_new_report_listed 'Auditing report'
+  context 'of type Project Summary Report' do
+    scenario 'and sees the report' do
+      given_i_click_the_create_report_button_of_type 'project_summary_report'
+      when_i_fill_in_the_report_of_type 'project_summary_report'
+      then_i_will_see_the_new_report_listed 'Project summary report'
+    end
   end
 
-  scenario 'of type Project Summary Report' do
-    given_i_click_the_create_report_button_of_type 'project_summary_report'
-    when_i_fill_in_the_report_of_type 'project_summary_report'
-    then_i_will_see_the_new_report_listed 'Project summary report'
-  end
-
-  scenario 'with a custom title' do
-    given_i_click_the_create_report_button_of_type 'billing_report'
-    when_i_fill_in_the_report_with_custom_title 'Test title'
-    then_i_will_see_the_new_report_listed 'Test title'
+  context 'with a custom title' do
+    scenario 'and sees the report with a custom title' do
+      given_i_click_the_create_report_button_of_type 'billing_report'
+      when_i_fill_in_the_report_with_custom_title 'Test title'
+      then_i_will_see_the_new_report_listed 'Test title'
+    end
   end
 
   scenario 'and sees the documents counter increment' do
@@ -50,14 +58,15 @@ feature 'Identity creates a document from the documents page', js: true do
     when_i_open_the_protocol_dropdown
     then_i_should_not_see_protocols_not_assigned_to_me
   end
-
-  def given_i_am_viewing_the_documents_page
+  
+  #Must keep separated or else ClinicalProvider.destroy_all will not work 
+  def given_i_am_viewing_the_documents_index_page
     @protocol = create_and_assign_protocol_to_me
     create(:participant, protocol: @protocol)
 
     visit documents_path
   end
-  
+
   def given_i_click_the_create_report_button_of_type report_type
     find("[data-type='#{report_type}']").click
     wait_for_ajax

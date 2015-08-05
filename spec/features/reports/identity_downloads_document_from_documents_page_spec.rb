@@ -2,10 +2,6 @@ require 'rails_helper'
 
 feature 'Identity downloads a document from the documents page', js: true, enqueue: false do
 
-  before(:each) do
-    given_i_am_viewing_the_documents_page
-  end
-
   scenario 'and sees the documents counter decrement' do
     given_i_have_created_an_identity_based_report   
     when_i_download_the_report 
@@ -18,14 +14,12 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     then_i_should_see_the_downloaded_at_date_has_been_updated
   end
 
-  def given_i_am_viewing_the_documents_page
+  def given_i_click_the_create_report_button_of_type report_type
     @protocol = create_and_assign_protocol_to_me
     create(:participant, protocol: @protocol)
 
     visit documents_path
-  end
-
-  def given_i_click_the_create_report_button_of_type report_type
+    
     find("[data-type='#{report_type}']").click
     wait_for_ajax
   end

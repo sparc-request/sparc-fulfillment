@@ -2,11 +2,13 @@ require 'rails_helper'
 
 feature 'Performed by dropdown', js: true do
 
-  it 'should make a note whenever the performer is changed' do
-    given_i_have_added_a_procedure_to_an_appointment
-    when_i_select_another_name_in_the_performed_by_dropdown
-    when_i_view_the_notes
-    then_i_should_see_a_note_indicating_that_the_performer_was_changed
+  context 'User changes performeder in a procedure' do
+    scenario 'and sees a note indicating the performer was changed' do
+      given_i_have_added_a_procedure_to_an_appointment
+      when_i_select_another_name_in_the_performed_by_dropdown
+      when_i_view_the_notes
+      then_i_should_see_a_note_indicating_that_the_performer_was_changed
+    end
   end
 
   def given_i_have_added_a_procedure_to_an_appointment

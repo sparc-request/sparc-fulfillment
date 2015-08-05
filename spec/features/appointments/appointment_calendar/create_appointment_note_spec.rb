@@ -2,12 +2,14 @@ require 'rails_helper'
 
 feature 'Create Appointment Note', js: true do
 
-  scenario 'User creates an appointment note and sees it in the notes list' do
-    given_i_am_viewing_a_appointment
-    when_i_begin_the_appointment
-    when_i_add_a_note_to_the_appointment
-    when_i_view_the_notes_list
-    then_i_shoud_see_the_note
+  context 'User creates an appointment note' do
+    scenario 'and sees it in the notes list' do
+      given_i_am_viewing_a_appointment
+      when_i_begin_the_appointment
+      when_i_add_a_note_to_the_appointment
+      when_i_view_the_notes_list
+      then_i_shoud_see_the_note
+    end
   end
   
   def given_i_am_viewing_a_appointment
