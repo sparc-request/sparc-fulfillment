@@ -2,15 +2,13 @@ require 'rails_helper'
 
 feature 'Identity adds Procedure', js: true do
 
-  context 'User adds two procedures' do
-    scenario 'and sees them in the appointment calendar' do
-      given_i_am_viewing_a_participants_calendar
-      when_i_add_two_procedures
-      then_i_should_see_two_procedures_in_the_appointment_calendar
-    end
+  scenario 'and sees the Procedures in the Appointment Calendar' do
+    given_i_am_viewing_a_participant
+    when_i_add_two_procedures
+    then_i_should_see_two_procedures_in_the_appointment_calendar
   end
 
-  def given_i_am_viewing_a_participants_calendar
+  def given_i_am_viewing_a_participant
     @protocol     = create_and_assign_protocol_to_me
     @participant  = @protocol.participants.first
 
