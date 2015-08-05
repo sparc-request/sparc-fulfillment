@@ -81,7 +81,6 @@ $ ->
       $(".visit_dropdown.form-control").each (index) ->
         key = $(this).data('arm_id')
         value = $(this).attr('page')
-        alert value
         page_hash[key] = value
       protocol_id = $('#arms').data('protocol_id')
       service_id = $('#services').val()
@@ -101,7 +100,6 @@ $ ->
       $(".visit_dropdown.form-control").each (index) ->
         key = $(this).data('arm_id')
         value = $(this).attr('page')
-        alert value
         page_hash[key] = value
       protocol_id = $('#arms').data('protocol_id')
       service_id = $('#services').val()
