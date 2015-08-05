@@ -68,7 +68,7 @@ module ParticipantHelper
       "<i class='glyphicon glyphicon-calendar' title='Assign arm to view participant calendar' style='cursor:default'></i>"
     else
       [
-        "<a class='participant-calendar' href='#' title='Calendar' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+        "<a class='participant-calendar' href='javascript:void(0)' title='Calendar' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
         "<i class='glyphicon glyphicon-calendar'></i>",
         "</a>"
       ].join ""
