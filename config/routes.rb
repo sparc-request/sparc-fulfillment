@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   resources :arms
   resources :custom_appointments, controller: :appointments
 
-  resources :visit_groups, only: [:new, :create, :edit, :update, :destroy] do
+  resources :visit_groups, only: [:new, :create, :update, :destroy] do
     collection do
       get 'navigate', to: 'visit_groups#navigate_to_visit_group'
     end

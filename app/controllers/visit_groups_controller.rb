@@ -1,6 +1,6 @@
 class VisitGroupsController < ApplicationController
   respond_to :json, :html
-  before_action :find_visit_group, only: [:edit, :update, :destroy]
+  before_action :find_visit_group, only: [:update, :destroy]
 
   def new
     @current_page = params[:current_page] # the current page of the study schedule
@@ -27,10 +27,6 @@ class VisitGroupsController < ApplicationController
     else
       @errors = @visit_group.errors
     end
-  end
-
-  def edit
-    @protocol = Protocol.find(params[:protocol_id])
   end
 
   def update
