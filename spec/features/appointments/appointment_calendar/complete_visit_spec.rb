@@ -2,12 +2,11 @@ require 'rails_helper'
 
 feature 'Complete Visit', js: true do
 
-  before(:each) do
+  before :each do
     go_to_visit
   end
 
   context 'Appointment has not begun' do
-
     scenario 'User adds a Procedure' do
       as_a_user_who_adds_a_procedure_to_an_appointment
       i_should_not_be_able_to_complete_visit
@@ -25,9 +24,7 @@ feature 'Complete Visit', js: true do
   end
 
   context 'Appointment has begun' do
-
     context 'Procedures include a Procedure marked neither complete nor incomplete' do
-
       before(:each) do
         add_a_procedure
       end
@@ -81,7 +78,6 @@ feature 'Complete Visit', js: true do
     end
 
     context 'Procedures do not include a Procedure marked neither complete nor incomplete' do
-
       scenario 'User adds a Procedure' do
         as_a_user_who_adds_a_procedure_to_an_appointment
         then_begins_appointment

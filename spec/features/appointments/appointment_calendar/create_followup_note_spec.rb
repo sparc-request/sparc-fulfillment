@@ -2,51 +2,58 @@ require 'rails_helper'
 
 feature 'Followup note', js: true do
 
-  context 'appointment started' do
-
-    scenario 'User views followup button' do
+  context 'User starts an appointment' do
+    scenario 'and sees the followup button' do
       as_a_user_who_has_created_a_procedure
       and_begins_appointment
       i_should_see_the_followup_button
     end
 
-    scenario 'User creates followup note' do
-      as_a_user_who_has_created_a_procedure
-      and_begins_appointment
-      when_i_click_the_followup_button
-      and_i_fill_out_and_submit_the_followup_form
-      then_i_should_see_a_text_field_with_the_followup_date
-    end
+    context 'and creates a followup' do
+      scenario 'and sees the followup date' do
+        as_a_user_who_has_created_a_procedure
+        and_begins_appointment
+        when_i_click_the_followup_button
+        and_i_fill_out_and_submit_the_followup_form
+        then_i_should_see_a_text_field_with_the_followup_date
+      end
 
-    scenario 'User views Notes list after creating a followup note' do
-      as_a_user_who_has_created_a_followup_note
-      when_i_view_the_notes_list
-      i_should_see_the_note_i_created
-    end
+      context 'and creates a followup note' do
+        scenario 'and sees the note in the notes list' do
+          as_a_user_who_has_created_a_followup_note
+          when_i_view_the_notes_list
+          i_should_see_the_note_i_created
+        end
 
-    scenario 'User views Tasks list after creating a followup note' do
-      as_a_user_who_has_created_a_followup_note
-      when_i_visit_the_tasks_index_page
-      then_i_should_see_the_newly_created_task
+        scenario 'and sees the new respective task on the tasks page' do
+          as_a_user_who_has_created_a_followup_note
+          when_i_visit_the_tasks_index_page
+          then_i_should_see_the_newly_created_task
+        end
+
+        context 'and edits the followup date on the calendar' do
+          scenario 'and sees the followup date change' do
+            as_a_user_who_has_created_a_followup_note
+            i_should_be_able_to_edit_the_followup_date
+            and_the_date_should_change
+          end
+        end
+      end
     end
   end
 
-  context 'appointment not started' do
-    scenario 'User views followup button' do
+  context 'User does not start an appointment' do
+    scenario 'and sees the followup button' do
       as_a_user_who_has_created_a_procedure
       i_should_see_the_followup_button
     end
 
-    scenario 'User attempts to add follow up notes to a Procedure' do
-      as_a_user_who_has_created_a_procedure
-      when_i_try_to_add_a_follow_up_note_i_should_see_a_helpful_message
+    context 'and tries to add a followup note' do
+      scenario 'and sees a helpful error message' do
+        as_a_user_who_has_created_a_procedure
+        when_i_try_to_add_a_follow_up_note_i_should_see_a_helpful_message
+      end
     end
-  end
-
-  scenario 'User edits follow up date on the calendar' do
-    as_a_user_who_has_created_a_followup_note
-    i_should_be_able_to_edit_the_followup_date
-    and_the_date_should_change
   end
 
   def when_i_visit_the_tasks_index_page

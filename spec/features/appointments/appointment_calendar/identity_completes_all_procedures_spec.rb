@@ -2,18 +2,16 @@ require 'rails_helper'
 
 feature 'Identity completes all Procedures', js: true do
 
-  context 'User completes all procedures' do
-    scenario 'and sees the complete buttons are active' do
-      given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
-      when_i_complete_all_the_procedures
-      then_all_the_procedure_complete_buttons_should_be_active
-    end
+  scenario 'and sees the complete buttons are active' do
+    given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
+    when_i_complete_all_the_procedures
+    then_all_the_procedure_complete_buttons_should_be_active
+  end
 
-    scenario 'and sees the procedures are completed' do
-      given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
-      when_i_complete_all_the_procedures
-      then_all_procedures_should_be_completed
-    end
+  scenario 'and sees the procedures are completed' do
+    given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
+    when_i_complete_all_the_procedures
+    then_all_procedures_should_be_completed
   end
 
   def given_i_have_added_n_procedures_to_an_appointment_such_that_n_is number_of_procedures

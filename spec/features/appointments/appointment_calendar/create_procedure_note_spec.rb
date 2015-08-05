@@ -2,8 +2,8 @@ require 'rails_helper'
 
 feature 'Create Procedure Note', js: true do
   
-  context 'User starts an appointment' do
-    scenario 'and creates a procedure note, then views the notes list' do
+  context 'User creates a procedure note' do
+    scenario 'and sees the note in the notes list' do
       given_i_have_added_a_procedure_to_the_appointment_calendar
       when_i_begin_an_appointment
       when_i_add_a_note_to_the_procedure
