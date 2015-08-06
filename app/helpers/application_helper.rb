@@ -19,7 +19,10 @@ module ApplicationHelper
 
   def display_cost(cost)
     dollars = (cost / 100.0) rescue nil
-    number_to_currency(dollars.round_down(2), seperator: ",")
+    dollar, cent = dollars.to_s.split('.')
+    dollars_formatted = "#{int}.#{dec[0..1]}".to_f
+
+    number_to_currency(dollars_formatted, seperator: ",")
   end
 
   def hidden_class(val)
