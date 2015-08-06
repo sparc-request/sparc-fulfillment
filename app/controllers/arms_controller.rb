@@ -5,7 +5,7 @@ class ArmsController < ApplicationController
 
   def new
     @protocol = Protocol.find(params[:protocol_id])
-    @services = Service.find(services_for_protocol)
+    @services = @protocol.line_items.map(&:service).uniq
     @arm = Arm.new(protocol: @protocol)
     @schedule_tab = params[:schedule_tab]
   end
@@ -28,8 +28,9 @@ class ArmsController < ApplicationController
   end
 
   def edit
-    @arm = Arm.find(params[:arm_id])
+    @arm = Arm.find(params[:id])
     @protocol = @arm.protocol
+    @intended_action = params[:intended_action]
   end
 
   def update
@@ -42,26 +43,19 @@ class ArmsController < ApplicationController
   end
 
   def destroy
-    @has_completed_data = @arm.appointments.map{|a| a.has_completed_procedures?}.include?(true)
     if Arm.where("protocol_id = ?", params[:protocol_id]).count == 1
-      @delete = false
-    elsif  @has_completed_data
-      @delete = false
+      @arm.errors.add(:protocol, "must have at least one Arm.")
+      @errors = @arm.errors
+    elsif @arm.appointments.map{|a| a.has_completed_procedures?}.include?(true) # don't delete if arm has completed procedures
+      @arm.errors.add(:arm, "'#{@arm.name}' has completed procedures and cannot be deleted")
+      @errors = @arm.errors
     else
-      @delete = true #this variable is used in the coffescript logic to prevent the arm name from being removed from the dropdown
       @arm.delay.destroy
       flash.now[:alert] = t(:arm)[:deleted]
     end
   end
 
   private
-
-  def services_for_protocol
-    services_on_protocol = []
-    @protocol.arms.each {|arm| services_on_protocol << arm.line_items.pluck(:service_id) }
-    #the only services avaliable for select in the modal are the ones which are already on other arms of this protocol
-    services_on_protocol.flatten.uniq
-  end
 
   def arm_params
     params.require(:arm).permit(:protocol_id, :name, :visit_count, :subject_count)

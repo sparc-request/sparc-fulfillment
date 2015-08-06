@@ -12,7 +12,6 @@ module StudyScheduleHelper
   def visits_select_options arm, cur_page=1
     per_page = Visit.per_page
     visit_count = arm.visit_count
-    visit_group_names = arm.visit_groups.map(&:name)
     num_pages = (visit_count / per_page.to_f).ceil
     arr = []
 
@@ -25,7 +24,7 @@ module StudyScheduleHelper
       arr << option
 
       (beginning_visit..ending_visit).each do |y|
-        arr << ["&nbsp;&nbsp; - #{visit_group_names[y - 1]}".html_safe, "#{visit_group_names[y - 1]}", :page => page + 1]
+        arr << ["&nbsp;&nbsp; - #{arm.visit_groups[y - 1].name}".html_safe, "#{arm.visit_groups[y - 1].id}", :page => page + 1] if arm.visit_groups.present?
       end
     end
 
@@ -36,11 +35,21 @@ module StudyScheduleHelper
     select_tag "visits_select_for_#{arm.id}", visits_select_options(arm, page), class: 'visit_dropdown form-control selectpicker', :'data-arm_id' => "#{arm.id}", page: page
   end
 
-  def on_current_page? current_page, visit_group
-    destination_page = visit_group.position / Visit.per_page
-    if visit_group.position % Visit.per_page != 0
+  def on_current_page? current_page, position
+    destination_page = position / Visit.per_page
+    if position % Visit.per_page != 0
       destination_page += 1
     end
     destination_page == current_page.to_i
+  end
+
+  def create_line_items_options page_hash
+    options = []
+    page_hash.each do |arm_id, page|
+      arm = Arm.find(arm_id)
+      options << ["#{arm.name}", "#{arm_id} #{page}"]
+    end
+
+    options_for_select(options)
   end
 end

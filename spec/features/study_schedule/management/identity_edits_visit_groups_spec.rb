@@ -48,13 +48,12 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def when_i_remove_a_visit_group
-    bootstrap_select "#visits", @arm.visit_groups.first.name
-    wait_for_ajax
     find("#remove_visit_group_button").click
+    find("input[type='submit']").click
+    wait_for_ajax
   end
 
   def when_i_edit_a_visit_group
-    bootstrap_select "#visits", @arm.visit_groups.first.name
     find("#edit_visit_group_button").click
     fill_in "visit_group_name", with: "boredom"
     fill_in "visit_group_day", with: "80"
