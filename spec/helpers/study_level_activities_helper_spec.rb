@@ -6,23 +6,17 @@ RSpec.describe StudyLevelActivitiesHelper do
     it "should return components options" do
       components = []
       #No components
-      expect(helper.components_for_select(components)).to eq(components_for_select_return(components))
+      val = helper.components_for_select(components)
+      expect(val.include? 'value="This Service Has No Components"')
 
       #Components
       3.times do
         components << create(:component)
       end
-      expect(helper.components_for_select(components)).to eq(components_for_select_return(components))
-    end
-  end
-
-  def components_for_select_return components
-    if components.empty?
-      options_for_select(["This Service Has No Components"], disabled: "This Service Has No Components")
-    else
-      deleted_components = components.select{|c| c.deleted_at and c.selected } # deleted and selected
-      visible_components = deleted_components + components.select{ |c| not c.deleted_at } # (deleted and selected) or not deleted
-      options_from_collection_for_select( visible_components, 'id', 'component', selected: components.map{|c| c.id if c.selected}, disabled: deleted_components.map(&:id) )
+      val = helper.components_for_select(components)
+      expect(val.include? 'value="1"')
+      expect(val.include? 'value="2"')
+      expect(val.include? 'value="3"')
     end
   end
 end
