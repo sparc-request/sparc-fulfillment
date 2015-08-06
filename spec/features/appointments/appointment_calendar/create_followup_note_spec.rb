@@ -143,6 +143,6 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_see_a_helpful_message
-    expect(@alert).to eq('Please click Start Visit and enter a start date to continue.')
+    expect(@alert).to eq("Please click 'Start Visit' and enter a start date to continue.")
   end
 end
