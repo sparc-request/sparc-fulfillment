@@ -41,14 +41,6 @@ RSpec.describe ApplicationHelper do
     end
   end
 
-  #??
-  describe "#pretty_tag" do
-  end
-
-  #??
-  describe "#body_class" do
-  end
-
   describe "#twitterized_type" do
     it "should return a twitter-bootstrap type" do
       expect(helper.twitterized_type("alert")).to eq("alert-danger")
@@ -57,24 +49,5 @@ RSpec.describe ApplicationHelper do
       expect(helper.twitterized_type("success")).to eq("alert-success")
       expect(helper.twitterized_type("asdf")).to eq("asdf")
     end
-  end
-
-  describe "#truncated_formatter"
-    it "should return html to truncate the data" do
-      data = "Some name"
-      html_return = truncated_formatter_return(data)
-      expect(helper.truncated_formatter(data)).to eq(html_return)
-    end
-
-  #Part of i18n
-  describe "#current_translations" do
-  end
-
-  def truncated_formatter_return data
-    [
-    "<span data-toggle='tooltip' data-placement='left' data-animation='false' title='#{data}'>",
-    "#{data}",
-    "</span>"
-    ].join("")
   end
 end
