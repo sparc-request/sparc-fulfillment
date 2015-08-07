@@ -32,7 +32,7 @@ class Report
   def display_cost(cost)
     dollars = (cost / 100.0) rescue nil
     dollar, cent = dollars.to_s.split('.')
-    dollars_formatted = "#{int}.#{dec[0..1]}".to_f
+    dollars_formatted = "#{dollar}.#{cent[0..1]}".to_f
 
     number_to_currency(dollars_formatted, seperator: ",")
   end
