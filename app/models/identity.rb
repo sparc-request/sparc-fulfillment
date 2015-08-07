@@ -2,7 +2,7 @@ class Identity < ActiveRecord::Base
 
   include SparcShard
 
-  devise :database_authenticatable, :rememberable, :trackable
+  devise :database_authenticatable, :rememberable, :trackable, :omniauthable
 
   has_one :identity_counter, dependent: :destroy
 

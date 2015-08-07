@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'omniauth-shibboleth'
 gem 'activerecord-import'
 gem 'acts_as_list'
 gem 'addressable'
