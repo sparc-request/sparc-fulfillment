@@ -28,7 +28,7 @@ task :fix_procedure_data => :environment do
   end
 
   def change_organizations(deleted_organization, service_names)
-    old_procedures = Procedure.where(sparc_core_name: "#{deleted_organization}")
+    old_procedures = Procedure.where(sparc_core_name: "#{deleted_organization}").with_deleted
 
     if old_procedures.empty?
       puts "It appears that there are no procedures for this core. Exiting task..."
