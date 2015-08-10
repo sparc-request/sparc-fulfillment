@@ -11,10 +11,21 @@ module Devise
                                base:       ENV.fetch('LDAP_BASE'),
                                encryption: ENV.fetch('LDAP_ENCRYPTION').to_sym
                               )
-
-          ldap.auth "uid=#{ldap_uid},#{ENV.fetch('LDAP_BASE')}", password
-
-          if ldap.bind
+          authenticated = false
+          service_username = ENV.fetch('LDAP_AUTH_USERNAME'){ nil }
+          service_password = ENV.fetch('LDAP_AUTH_PASSWORD'){ nil }
+          if service_username && service_password
+            # support LDAP service account usage
+            ldap.auth service_username, service_password
+            ldap.bind
+            authenticated = ldap.authenticate(ldap_uid, password)  
+          else
+            # bind user directly to LDAP (without a service account)
+            ldap.auth "uid=#{ldap_uid},#{ENV.fetch('LDAP_BASE')}", password
+            authenticated = ldap.bind
+          end
+          
+          if authenticated
             identity = Identity.find_by(ldap_uid: [ldap_uid, ENV.fetch('LDAP_USER_DOMAIN')].join)
             success!(identity)
           else
