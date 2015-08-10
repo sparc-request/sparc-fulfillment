@@ -1,9 +1,3 @@
-GIT
-  remote: git@github.com:Slashek/bootstrap-select-rails.git
-  revision: 1b1dcb5ddd400b4887da30b1718ab5b707e1d91c
-  specs:
-    bootstrap-select-rails (1.6.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -69,6 +63,7 @@ GEM
     bootstrap-sass (3.3.4.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
+    bootstrap-select-rails (1.6.3)
     bootstrap3-datetimepicker-rails (4.0.0)
       momentjs-rails (>= 2.8.1)
     builder (3.2.2)
@@ -402,7 +397,7 @@ DEPENDENCIES
   autoprefixer-rails
   axlsx_rails
   bootstrap-sass
-  bootstrap-select-rails!
+  bootstrap-select-rails
   bootstrap3-datetimepicker-rails (~> 4.0.0)
   capistrano (~> 3.0)
   capistrano-passenger
