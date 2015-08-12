@@ -31,9 +31,12 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
 
   def when_i_add_services_to_an_arm
     find("#add_service_button").click
+    
     bootstrap_select "#add_service_id", "#{@services.last.name}"
+    
     bootstrap_select "#add_service_arm_ids_and_pages_", @arm.name
     find("h4#line_item").click # click out of bootstrap multiple select
+    
     click_button "Add"
   end
 
@@ -41,21 +44,12 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
     find("#remove_service_button").click
     wait_for_ajax
 
-    # find("button[data-id='remove_service_id']").click
-    # screenshot
-    # wait_for_ajax
-    # find("a", text: @protocol.organization.services.first.name).click
-    # find("h4#line_item").click # click out of bootstrap multiple select
-
-    # find("button[data-id='remove_service_arm_ids_']").click
-    # screenshot
-    # wait_for_ajax
-    # find("a", text: @arm.name).click
-    # find("h4#line_item").click # click out of bootstrap multiple select
     bootstrap_select "#remove_service_id", "#{@protocol.organization.services.first.name}"
     find("h4#line_item").click # click out of bootstrap multiple select
+    
     bootstrap_select "#remove_service_arm_ids_", "#{@arm.name}"
     find("h4#line_item").click # click out of bootstrap multiple select
+    
     click_button "Remove"
   end
 
