@@ -45,16 +45,16 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     given_i_click_the_create_report_button_of_type 'billing_report'
     when_i_fill_in_the_report_of_type 'billing_report'
 
-    expect(page).to have_css(".document-notifications", text: 1)
+    expect(page).to have_css(".identity_report_notifications", text: 1)
   end
 
-  def when_i_download_the_report 
+  def when_i_download_the_report
     find("a.attached_file").trigger("click")
     wait_for_ajax
   end
 
   def then_i_should_see_the_documents_counter_decrement
-    expect(page).to have_css(".document-notifications", text: 0)
+    expect(page).to have_css(".identity_report_notifications", text: 0)
   end
 
   def then_i_should_see_the_downloaded_at_date_has_been_updated

@@ -12,7 +12,7 @@
       = link_to t(:protocol)[:tabs][:study_level_activities], "#study_level_activities", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_level_activities'}
     %li.custom-tab.protocol-tab{role: 'presentation'}
       = link_to t(:protocol)[:tabs][:reports], "#reports", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'reports'}
-      %span.notification.report-notifications
+      %span.notification.protocol_report_notifications
         = @protocol.unaccessed_documents_count
         
   .tab-content

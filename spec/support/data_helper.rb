@@ -28,7 +28,7 @@ module DataHelpers
     protocol
   end
 
-  def create_blank_protocol
+  def create_and_assign_blank_protocol_to_me
     identity              = Identity.first
     protocol              = create(:protocol_with_sub_service_request)
     organization          = protocol.organization
@@ -38,5 +38,16 @@ module DataHelpers
     create(:clinical_provider, identity: identity, organization: organization)
 
     protocol
+  end
+
+  def create_and_assign_participant_to_me
+    protocol = create_and_assign_protocol_to_me
+    arm = create(:arm, protocol: protocol)
+    create(:participant, arm: arm, protocol: protocol)
+  end
+
+  def create_and_assign_appointment_to_me
+    participant = create_and_assign_participant_to_me
+    create(:appointment, name: "Appointment", participant: participant, arm: participant.arm)
   end
 end
