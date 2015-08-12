@@ -1,6 +1,6 @@
 module ParticipantHelper
 
-  def performed_by_dropdown(procedure)
+  def performed_by_dropdown procedure
     identities = Identity.joins(:clinical_providers).where(clinical_providers: { organization: procedure.protocol.organization })
 
     if procedure.performer.present?
@@ -12,7 +12,7 @@ module ParticipantHelper
     content_tag(:select, options, class: 'performed-by-dropdown selectpicker', data: { width: '125px' }, 'showIcon' => false, id: "performed-by-#{procedure.id}")
   end
 
-  def appointments_for_select(arm, participant)
+  def appointments_for_select arm, participant
     appointments = []
     participant.appointments.each do |appt|
       if appt.arm.name == arm.name
@@ -79,13 +79,13 @@ module ParticipantHelper
     select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id}
   end
 
-  def notes_formatter(participant)
+  def notes_formatter participant
     content_tag(:button, class: 'btn btn-primary btn-xs participant_notes list notes', 'data-notable-id' => participant.id, 'data-notable-type' => 'Participant') do
       content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
     end
   end
 
-  def participant_report_formatter(participant)
+  def participant_report_formatter participant
     content_tag(:div, '', class: 'btn-group') do
       content_tag(:a, class: 'btn btn-default dropdown-toggle btn-xs participant_report', id: "participant_report_#{participant.id.to_s}", href: 'javascript:void(0)', target: :blank, title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report', 'aria-expanded' => 'false') do
         content_tag(:span, '', class: 'glyphicon glyphicon-equalizer')
