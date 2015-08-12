@@ -82,7 +82,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
     
   def then_i_should_see_the_counter_increment
-    expect(page).to have_css(".report-notifications", text: 1)
+    expect(page).to have_css(".protocol_report_notifications", text: 1)
   end
 
   def then_i_should_see_the_document
@@ -94,11 +94,11 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
 
   def then_i_should_see_the_counter_decrement
-    expect(page).to have_css(".report-notifications", text: 0)
+    expect(page).to have_css(".protocol_report_notifications", text: 0)
   end
 
   def then_i_should_see_a_new_document_generate
-    expect(page).to have_css(".report-notifications", text: 2)
+    expect(page).to have_css(".protocol_report_notifications", text: 2)
 
     click_link 'Reports'
 
@@ -115,6 +115,6 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     when_i_click_the_created_document_icon
     when_i_click_the_download_option
 
-    expect(page).to have_css(".report-notifications", text: 1)
+    expect(page).to have_css(".protocol_report_notifications", text: 1)
   end
 end

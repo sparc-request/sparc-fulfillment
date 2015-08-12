@@ -69,3 +69,12 @@ $ ->
   $elt.tooltip('show')
   delay = (ms, func) -> setTimeout func, ms
   delay 3000, -> $elt.tooltip('destroy')
+
+(exports ? this).add_to_report_notification_count = (documentable_type, amount) ->
+  switch documentable_type
+    when 'Protocol'
+      notification_bubble = $('.notification.protocol_report_notifications')
+    when 'Identity'
+      notification_bubble = $('.notification.identity_report_notifications')
+  notification_count = parseInt(notification_bubble.text())
+  notification_bubble.text(notification_count + amount) if (notification_count + amount) >= 0
