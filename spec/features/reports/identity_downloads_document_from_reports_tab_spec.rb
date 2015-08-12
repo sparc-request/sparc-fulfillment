@@ -18,9 +18,10 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
     identity    = Identity.first
     @protocol    = create_and_assign_protocol_to_me
     @participant = @protocol.participants.first
-    @document = create(:document_with_csv_file, documentable_id: @protocol.id, documentable_type: "Protocol", report_type: "study_schedule_report", state: "Completed")
+    @document = create(:document_of_protocol_report, documentable_id: @protocol.id)
     visit protocol_path @protocol
     click_link 'Reports'
+    visit current_path
   end
 
   def when_i_download_the_report

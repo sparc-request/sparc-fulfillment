@@ -48,7 +48,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     expect(page).to have_css(".identity_report_notifications", text: 1)
   end
 
-  def when_i_download_the_report 
+  def when_i_download_the_report
     find("a.attached_file").trigger("click")
     wait_for_ajax
   end
