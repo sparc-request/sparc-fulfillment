@@ -10,7 +10,7 @@ feature 'Identity sets Procedure performer', js: true do
 
   scenario 'and then un-completes the Procedure' do
     given_i_have_completed_a_procedure
-    when_i_un_complete_the_procedure
+    when_i_incomplete_the_procedure
     then_i_should_see_that_the_performer_has_not_been_set
   end
 
@@ -40,7 +40,7 @@ feature 'Identity sets Procedure performer', js: true do
     wait_for_ajax
   end
 
-  def when_i_un_complete_the_procedure
+  def when_i_incomplete_the_procedure
     find('label.status.complete').click
     wait_for_ajax
   end

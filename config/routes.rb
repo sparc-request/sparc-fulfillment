@@ -3,7 +3,6 @@ Rails.application.routes.draw do
   devise_for :identities
 
   resources :protocols
-  resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
   resources :fulfillments, only: [:new, :create, :edit, :update]
   resources :procedures, only: [:create, :edit, :update, :destroy]
@@ -15,9 +14,9 @@ Rails.application.routes.draw do
   resources :arms
   resources :custom_appointments, controller: :appointments
 
-  resources :visit_groups do
+  resources :visit_groups, only: [:new, :create, :update, :destroy] do
     collection do
-      get 'update_positions_on_arm_change', to: 'visit_groups#update_positions_on_arm_change'
+      get 'navigate', to: 'visit_groups#navigate_to_visit_group'
     end
   end
 
@@ -44,9 +43,9 @@ Rails.application.routes.draw do
   resources :multiple_line_items, only: [] do
     collection do
       get 'new_line_items'
+      put 'create_line_items'
       get 'edit_line_items'
-      get 'necessary_arms'
-      put 'update_line_items'
+      put 'destroy_line_items'
     end
   end
 

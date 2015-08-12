@@ -2,11 +2,11 @@ require 'rails_helper'
 
 feature 'Identity edits complete Procedure date', js: true do
 
-  scenario 'User edits a complete Procedure date' do
+  scenario 'and sees the complete date update' do
     given_i_have_added_a_procedure_to_an_appointment
     when_i_begin_the_appointment
-    and_i_complete_the_procedure
-    and_i_edit_the_completed_date
+    when_i_complete_the_procedure
+    when_i_edit_the_completed_date
     then_i_should_see_the_completed_date_has_been_updated
   end
 
@@ -28,12 +28,12 @@ feature 'Identity edits complete Procedure date', js: true do
     find('button.start_visit').click
   end
 
-  def and_i_complete_the_procedure
+  def when_i_complete_the_procedure
     find('label.status.complete').click
     wait_for_ajax
   end
 
-  def and_i_edit_the_completed_date
+  def when_i_edit_the_completed_date
     page.execute_script %Q{ $(".datetimepicker").siblings(".input-group-addon").trigger("click")}
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     wait_for_ajax

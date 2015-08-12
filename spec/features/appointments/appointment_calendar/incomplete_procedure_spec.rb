@@ -2,72 +2,89 @@ require 'rails_helper'
 
 feature 'Incomplete Procedure', js: true do
 
-  context 'appointment started' do
-
-    scenario 'User marks a Procedure as incomplete once' do
-      as_a_user_who_has_added_a_procedure_to_an_appointment
-      and_begins_appointment
-      when_i_incomplete_the_procedure
-      and_i_view_the_notes_list
-      then_i_should_see_one_incomplete_note
+  context 'User starts an appointment' do
+    context 'and marks a procedure as incomplete once' do
+      scenario 'and sees a single incomplete note' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_begin_the_appointment
+        when_i_incomplete_the_procedure
+        when_i_view_the_notes_list
+        then_i_should_see_one_incomplete_note
+      end
     end
 
-    scenario 'User marks a Procedure as incomplete, then complete, then incomplete again' do
-      as_a_user_who_has_added_a_procedure_to_an_appointment
-      and_begins_appointment
-      when_i_incomplete_the_procedure
-      then_i_complete_the_procedure
-      and_i_incomplete_the_procedure_again
-      and_i_view_the_notes_list
-      then_i_should_see_two_incomplete_notes
+    context 'and attempts to mark a procedure as incomplete without selecting a reason' do
+      scenario 'and sees some errors' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_begin_the_appointment
+        when_i_click_the_incomplete_button
+        when_i_save_the_incomplete
+        then_i_should_see_errors
+      end
     end
 
-    scenario 'User marks a complete Procedure as incomplete and supplies a Note' do
-      as_a_user_who_is_viewing_a_procedure_marked_as_complete
-      when_i_incomplete_the_procedure
-      and_i_view_the_notes_list
-      then_i_should_see_one_complete_note_and_one_incomplete_note
+    context 'and marks a complete procedure as incomplete and selects a reason' do
+      scenario 'and sees a complete note and an incomplete note' do
+        given_i_am_viewing_a_procedure_marked_as_complete
+        when_i_incomplete_the_procedure
+        when_i_view_the_notes_list
+        then_i_should_see_one_complete_note_and_one_incomplete_note
+      end
     end
 
-    scenario 'User marks a complete Procedure as incomplete and then cancels' do
-      as_a_user_who_has_added_a_procedure_to_an_appointment
-      and_begins_appointment
-      when_i_click_the_incomplete_button
-      and_i_cancel_the_incomplete
-      then_i_should_see_that_the_procedure_status_has_not_changed
+    context 'and marks a complete procedure as incomplete and then cancels' do
+      scenario 'and sees that the procedure status is the same' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_begin_the_appointment
+        when_i_click_the_incomplete_button
+        when_i_cancel_the_incomplete
+        then_i_should_see_that_the_procedure_status_has_been_reset
+      end
     end
 
-    scenario 'User marks a Procedure as incomplete and then changes their mind, clicking incomplete again' do
-      as_a_user_who_has_added_a_procedure_to_an_appointment
-      and_begins_appointment
-      when_i_incomplete_the_procedure
-      and_i_view_the_notes_list
-      then_i_should_see_one_incomplete_note
-      then_i_close_the_notes_list
-      when_i_click_the_incomplete_button_again
-      and_i_view_the_notes_list
-      then_i_should_see_one_status_reset_note
-      then_i_close_the_notes_list
-      then_i_should_see_that_the_procedure_status_has_been_reset
+    context 'and marks a procedure as incomplete, then complete, then incomplete again' do
+      scenario 'and sees two incomplete notes' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_begin_the_appointment
+        when_i_incomplete_the_procedure
+        when_i_complete_the_procedure
+        when_i_incomplete_the_procedure
+        when_i_view_the_notes_list
+        then_i_should_see_two_incomplete_notes_and_one_complete_note
+      end
     end
 
-    scenario 'User attempts to mark a Procedure as incomplete without selecting a reason' do
-      as_a_user_who_has_added_a_procedure_to_an_appointment
-      and_begins_appointment
-      when_i_incomplete_the_procedure_without_selecting_a_reason
-      then_i_should_see_errors
+    context 'and marks a procedure as incomplete and then changes their mind, clicking incomplete again' do
+      scenario 'and sees that there is a status reset note' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_begin_the_appointment
+        when_i_incomplete_the_procedure
+        when_i_click_the_incomplete_button
+        when_i_view_the_notes_list
+        then_i_should_see_one_status_reset_note
+      end
+
+      scenario 'and sees that the status has been reset' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_begin_the_appointment
+        when_i_incomplete_the_procedure
+        when_i_click_the_incomplete_button
+        then_i_should_see_that_the_procedure_status_has_been_reset
+      end
     end
   end
 
-  context 'appointment not started' do
-
-    scenario 'User attempts to mark a Procedure as incomplete' do
-      as_a_user_who_has_added_a_procedure_to_an_appointment
-      when_i_try_to_incomplete_the_procedure_i_should_see_a_helpful_message
+  context 'User does not start an appointment' do
+    context 'and attempts to mark a procedure as incomplete' do
+      scenario 'and sees an error message' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_try_to_incomplete_the_procedure
+        then_i_should_see_a_helpful_message
+      end
     end
   end
 
-  def as_a_user_who_has_added_a_procedure_to_an_appointment
+  def given_i_am_viewing_an_appointment_with_a_procedure
     protocol    = create_and_assign_protocol_to_me
     participant = protocol.participants.first
     visit_group = participant.appointments.first.visit_group
@@ -80,14 +97,25 @@ feature 'Incomplete Procedure', js: true do
     find('button.add_service').click
   end
 
-  def as_a_user_who_is_viewing_a_procedure_marked_as_complete
-    as_a_user_who_has_added_a_procedure_to_an_appointment
-    and_begins_appointment
+  def given_i_am_viewing_a_procedure_marked_as_complete
+    given_i_am_viewing_an_appointment_with_a_procedure
+    when_i_begin_the_appointment
     find('label.status.complete').click
   end
 
-  def and_begins_appointment
+  def when_i_begin_the_appointment
     find('button.start_visit').click
+  end
+
+  def when_i_complete_the_procedure
+    find('label.status.complete').click
+    wait_for_ajax
+  end
+
+  def when_i_incomplete_the_procedure
+    when_i_click_the_incomplete_button
+    when_i_provide_a_reason
+    when_i_save_the_incomplete
   end
 
   def when_i_click_the_incomplete_button
@@ -95,46 +123,45 @@ feature 'Incomplete Procedure', js: true do
     wait_for_ajax
   end
 
-  def then_i_complete_the_procedure
-    find('label.status.complete').click
-    wait_for_ajax
-  end
-
-  def and_i_cancel_the_incomplete
-    first(".modal button.close").click
-  end
-
-  def when_i_incomplete_the_procedure
+  def when_i_provide_a_reason
     reason = Procedure::NOTABLE_REASONS.first
-
-    when_i_click_the_incomplete_button
     bootstrap_select '.reason-select', reason
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
+  end
+
+  def when_i_save_the_incomplete
     click_button 'Save'
   end
 
-  def and_i_view_the_notes_list
+  def when_i_cancel_the_incomplete
+    first(".modal button.close").click
+  end
+
+  def when_i_view_the_notes_list
     find('.procedure td.notes button.notes.list').click
   end
 
-  def then_i_should_see_that_the_procedure_status_has_not_changed
-    expect(page).to have_css("tr.procedure .date input[disabled]")
+  def when_i_close_the_notes_list
+    first(".modal button.close").click
   end
 
-  def then_i_should_see_one_incomplete_note
-    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to incomplete', count: 1)
-  end
-
-  def then_i_should_see_one_status_reset_note
-    expect(page).to have_css('.modal-body .detail .comment', text: 'Status reset', count: 1)
+  def when_i_try_to_incomplete_the_procedure
+    @alert_message = accept_alert(with: 'Please click Start Visit and enter a start date to continue.') do
+      find('label.status.incomplete').trigger('click')
+      wait_for_ajax
+    end
   end
 
   def then_i_should_see_one_complete_note
     expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to complete', count: 1)
   end
 
-  def then_i_should_see_two_incomplete_notes
-    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to incomplete', count: 2)
+  def then_i_should_see_one_incomplete_note
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to incomplete', count: 1)
+  end
+
+  def then_i_should_see_errors
+    expect(page).to_not have_css('.modal-dialog .alert')
   end
 
   def then_i_should_see_one_complete_note_and_one_incomplete_note
@@ -142,24 +169,19 @@ feature 'Incomplete Procedure', js: true do
     then_i_should_see_one_incomplete_note
   end
 
-  def when_i_try_to_incomplete_the_procedure_i_should_see_a_helpful_message
-    accept_alert(with: 'Please click Start Visit and enter a start date to continue.') do
-      find('label.status.incomplete').trigger('click')
-      wait_for_ajax
-    end
+  def then_i_should_see_two_incomplete_notes_and_one_complete_note
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to incomplete', count: 2)
   end
 
-  def when_i_incomplete_the_procedure_without_selecting_a_reason
-    when_i_click_the_incomplete_button
-    click_button 'Save'
+  def then_i_should_see_one_status_reset_note
+    expect(page).to have_css('.modal-body .detail .comment', text: 'Status reset', count: 1)
   end
 
-  def then_i_should_see_errors
-    expect(page).to_not have_css('.modal-dialog .alert')
+  def then_i_should_see_that_the_procedure_status_has_been_reset
+    expect(page).to have_css("tr.procedure .date input[disabled]")
   end
 
-  alias :and_i_incomplete_the_procedure_again :when_i_incomplete_the_procedure
-  alias :when_i_click_the_incomplete_button_again :when_i_click_the_incomplete_button
-  alias :then_i_should_see_that_the_procedure_status_has_been_reset :then_i_should_see_that_the_procedure_status_has_not_changed
-  alias :then_i_close_the_notes_list :and_i_cancel_the_incomplete
+  def then_i_should_see_a_helpful_message
+    expect(@alert_message).to eq("Please click 'Start Visit' and enter a start date to continue.")
+  end
 end

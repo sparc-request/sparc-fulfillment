@@ -1,6 +1,8 @@
 .row.table_row.fulfillment{data: {id: fulfillment.id}}
-  .col-xs-2.text-center.fulfillment_date
+  .col-xs-1.text-center.fulfillment_date
     = format_date(fulfillment.fulfilled_at)
+  .col-xs-2.text-center.truncate.account_number{title: fulfillment.account_number, data: {toggle: "tooltip", animation: 'false'}}
+    = fulfillment.account_number
   .col-xs-1.text-center.quantity
     = fulfillment.quantity
   .col-xs-2.text-center.qty_type
@@ -19,7 +21,6 @@
         - fulfillment.components.each do |c|
           %li
             %a= c.component
-  .col-xs-1
   .col-xs-2.text-center.options
     %button.btn.btn-primary.notes.list{title: t(:procedure)[:notes], type: "button", aria: {label: "Notes List"}, data: {notable_id: fulfillment.id, notable_type: "Fulfillment", toggle: "tooltip", animation: 'false'}}
       %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}

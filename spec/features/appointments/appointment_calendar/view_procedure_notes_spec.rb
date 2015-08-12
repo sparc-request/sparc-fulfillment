@@ -4,7 +4,7 @@ feature 'View Notes', js: true do
 
   scenario 'User views Notes list when no Notes are present' do
     given_i_am_viewing_a_procedure
-    after_appointment_starts
+    when_i_begin_an_appointment
     when_i_view_the_notes_list
     then_i_should_be_notified_that_there_are_no_notes
   end
@@ -21,27 +21,6 @@ feature 'View Notes', js: true do
     then_i_should_see_an_incomplete_note
   end
 
-  def given_i_have_marked_a_procedure_as_complete
-    given_i_am_viewing_a_procedure
-    after_appointment_starts
-    find('label.status.complete').click
-  end
-
-  def given_i_have_marked_a_procedure_as_incomplete
-    reason = Procedure::NOTABLE_REASONS.first
-
-    given_i_am_viewing_a_procedure
-    after_appointment_starts
-    find('label.status.incomplete').click
-    bootstrap_select '.reason-select', reason
-    fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
-    click_button 'Save'
-  end
-
-  def after_appointment_starts
-    find('button.start_visit').click
-  end
-
   def given_i_am_viewing_a_procedure
     protocol    = create_and_assign_protocol_to_me
     participant = protocol.participants.first
@@ -55,19 +34,40 @@ feature 'View Notes', js: true do
     find('button.add_service').click
   end
 
+  def given_i_have_marked_a_procedure_as_complete
+    given_i_am_viewing_a_procedure
+    when_i_begin_an_appointment
+    find('label.status.complete').click
+  end
+
+  def given_i_have_marked_a_procedure_as_incomplete
+    reason = Procedure::NOTABLE_REASONS.first
+
+    given_i_am_viewing_a_procedure
+    when_i_begin_an_appointment
+    find('label.status.incomplete').click
+    bootstrap_select '.reason-select', reason
+    fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
+    click_button 'Save'
+  end
+
+  def when_i_begin_an_appointment
+    find('button.start_visit').click
+  end
+
   def when_i_view_the_notes_list
     find('.procedure td.notes button.notes.list').click
   end
 
+  def then_i_should_be_notified_that_there_are_no_notes
+    expect(page).to have_css('.modal-body', text: 'This procedure has no notes.')
+  end
+  
   def then_i_should_see_a_complete_note
     expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to complete')
   end
 
   def then_i_should_see_an_incomplete_note
     expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to incomplete')
-  end
-
-  def then_i_should_be_notified_that_there_are_no_notes
-    expect(page).to have_css('.modal-body', text: 'This procedure has no notes.')
   end
 end

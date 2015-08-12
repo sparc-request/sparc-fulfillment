@@ -73,4 +73,29 @@ RSpec.describe ArmsController do
       }.not_to change(Arm, :count)
     end
   end
+
+  describe "GET #edit" do
+    it "should assign appropriate vars" do
+      xhr :get, :edit, {
+        id: @arm.id,
+        intended_action: "edit",
+        format: :js
+      }
+      expect(assigns(:arm)).to eq(@arm)
+      expect(assigns(:protocol)).to eq(@protocol)
+      expect(assigns(:intended_action)).to eq("edit")
+    end
+  end
+
+  describe "POST #update" do
+
+    it "should update the arm" do
+      post :update, {
+        id: @arm.id,
+        arm: @arm.attributes.merge({"name" => "BABOOM~*"}),
+        format: :js
+      }
+      expect(assigns(:arm)).to have_attributes(name: "BABOOM~*")
+    end
+  end
 end

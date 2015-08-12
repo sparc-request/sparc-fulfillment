@@ -9,7 +9,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     then_i_should_see_the_new_arm
   end
 
-  scenario 'identity edits an exsisting arm on the protocol' do
+  scenario 'identity edits an existing arm on the protocol' do
     given_a_protocol_with_one_arm
     when_i_click_the_edit_arm_button
     and_then_i_change_the_arm_name
@@ -18,21 +18,20 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   scenario 'identity deletes an arm' do
     given_a_protocol_with_multiple_arms
-    when_i_click_delete
+    when_i_delete_the_arm
     i_should_no_longer_see_the_arm
   end
 
   scenario 'identity is not allowed to delete an arm with fulfillments' do
     given_a_protocol_with_multiple_arms
     and_an_arm_with_completed_procedures
-    if_i_select_the_arm_with_completed_procedures
-    when_i_click_delete
-    then_i_should_still_see_the_arm @protocol.arms.first.name
+    if_i_delete_the_arm_with_completed_procedures
+    then_i_should_still_see_the_arm @protocol.arms.last.name
   end
 
   scenario 'identity is not allowed to delete the final arm on the protocol' do
     given_a_protocol_with_one_arm
-    when_i_click_delete
+    when_i_delete_the_arm
     then_i_should_still_see_the_arm
   end
 
@@ -67,7 +66,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     fill_in 'Arm Name', with: 'arm name'
     fill_in 'Subject Count', with: 1
     fill_in 'Visit Count', with: 3
-    click_button 'Add Arm'
+    click_button 'Add'
   end
 
   def then_i_should_see_the_new_arm
@@ -80,24 +79,26 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def and_then_i_change_the_arm_name
     fill_in 'Arm Name', with: "this here arm"
-    click_button "Submit"
+    click_button "Save"
   end
 
   def then_i_should_see_the_updated_arm
     expect(find(".study_schedule_container")).to have_content 'this here arm'
   end
 
-  def when_i_click_delete
+  def when_i_delete_the_arm
     find("#remove_arm_button").click
-    wait_for_ajax
+    click_button "Remove"
   end
 
   def i_should_no_longer_see_the_arm
     expect(find(".study_schedule_container")).not_to have_content @protocol.arms.first.name
   end
 
-  def if_i_select_the_arm_with_completed_procedures
-    bootstrap_select "#arms", @protocol.arms.last.name
+  def if_i_delete_the_arm_with_completed_procedures
+    find("#remove_arm_button").click
+    bootstrap_select "#remove_arm_select", @protocol.arms.last.name
+    click_button "Remove"
   end
 
   def then_i_should_still_see_the_arm name=@protocol.arms.last.name

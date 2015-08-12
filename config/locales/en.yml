@@ -28,6 +28,8 @@ en:
     delete: "Delete"
     save: "Save"
     options: "Options"
+    remove: "Remove"
+    add: "Add"
 
   appointment:
     srid: "SRID"
@@ -60,7 +62,10 @@ en:
     deleted: "Arm Destroyed"
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
     object: "Arm"
+    objects: "Arms"
     selected_line_items: "Selected Services"
+    edit_arm: Edit Arm
+    remove_arm: Remove Arm
     flash_messages:
       updated: "Arm Updated"
 
@@ -98,6 +103,7 @@ en:
     save_fulfillment: "Save Fulfillment"
     fulfillments: "Fulfillments"
     fulfillment_date: "Fulfillment Date"
+    account_number: "Account Number"
     quantity: "Quantity"
     qty_type: "Quantity Type"
     performed_by: "Performed By"
@@ -107,6 +113,7 @@ en:
       created: "Fulfillment Created"
     log_notes:
       fulfilled_at: "Fulfillment Date changed to "
+      account_number: "Account Number changed to "
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
 
@@ -285,9 +292,12 @@ en:
     name: "Selected Service"
     arm: "Select Arm(s)"
     report: "Report"
+    remove_services: "Remove Services"
+    add_services: "Add Services"
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     object: "Service"
+    objects: "Services"
 
   task:
     new_task: "Create New Task"
@@ -316,6 +326,8 @@ en:
     check_row: "Check Row"
     uncheck_column: "Uncheck Column"
     uncheck_row: "Uncheck Row"
+    edit_visit: "Edit Visit"
+    remove_visit: "Remove Visit"
     flash_messages:
       updated: "Visit Updated"
 

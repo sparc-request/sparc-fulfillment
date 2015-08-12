@@ -2,19 +2,19 @@ require 'rails_helper'
 
 feature 'Identity adds Procedure', js: true do
 
-  scenario 'and sees the Procedure in the Appointment Calendar' do
-    given_i_am_viewing_a_participant
+  scenario 'and sees it in the appointment calendar' do
+    given_i_am_viewing_a_participants_calendar
     when_i_add_a_procedure
     then_i_should_see_the_procedure_in_the_appointment_calendar
   end
 
   scenario 'and sees that the Performed By selector does not have a selection' do
-    given_i_am_viewing_a_participant
+    given_i_am_viewing_a_participants_calendar
     when_i_add_a_procedure
     then_i_should_see_that_the_performed_by_selector_does_not_have_a_selection
   end
 
-  def given_i_am_viewing_a_participant
+  def given_i_am_viewing_a_participants_calendar
     @protocol     = create_and_assign_protocol_to_me
     @participant  = @protocol.participants.first
 

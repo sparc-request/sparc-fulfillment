@@ -16,7 +16,7 @@
           = link_to documents_path, class: 'documents' do
             %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
             = t(:navbar)[:reports_link]
-            %span.notification.document-notifications
+            %span.notification.identity_report_notifications
               = current_identity.unaccessed_documents_count
 
         = yield :nav_buttons
