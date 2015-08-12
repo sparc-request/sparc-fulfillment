@@ -2,16 +2,14 @@ require 'rails_helper'
 
 feature 'Start Complete Buttons', js: true do
 
-  before :each do
-    given_i_am_viewing_an_appointment
-  end
-
   scenario 'User visits appointment with no start date or completed_date' do
+    given_i_am_viewing_an_appointment
     then_i_should_see_the_start_button
     then_i_should_see_the_complete_button_disabled
   end
 
   scenario 'User visits appointment with start date but no completed date' do
+    given_i_am_viewing_an_appointment
     given_there_is_a_start_date
     when_i_load_the_page
     then_i_should_see_the_start_datepicker
@@ -19,20 +17,22 @@ feature 'Start Complete Buttons', js: true do
   end
 
   scenario 'User visits appointment with start date and completed date' do
-    given_there_is_a_start_date
-    given_there_is_a_completed_date
+    given_i_am_viewing_an_appointment
+    given_there_is_a_start_date_and_a_completed_date
     when_i_load_the_page
     then_i_should_see_the_start_datepicker
     then_i_should_see_the_completed_datepicker
   end
 
   scenario 'User clicks start button' do
+    given_i_am_viewing_an_appointment
     when_i_click_the_start_button
     then_i_should_see_the_start_datepicker
     then_i_should_see_the_complete_button
   end
 
   scenario 'User clicks complete button' do
+    given_i_am_viewing_an_appointment
     given_there_is_a_start_date
     when_i_load_the_page
     when_i_click_the_complete_button
@@ -43,30 +43,32 @@ feature 'Start Complete Buttons', js: true do
   scenario 'User sets start date' do
     now = Time.current
 
+    given_i_am_viewing_an_appointment
     given_there_is_a_start_date
     when_i_load_the_page
-    when_i_set_the_start_date(now)
-    then_i_should_see_the_start_date_at(now)
+    when_i_set_the_start_date_to now
+    then_i_should_see_the_start_date_at now
   end
 
   scenario 'User sets completed date' do
     now = Time.current
 
-    given_there_is_a_start_date
-    given_there_is_a_completed_date
+    given_i_am_viewing_an_appointment
+    given_there_is_a_start_date_and_a_completed_date
     when_i_load_the_page
-    when_i_set_the_completed_date(now)
-    then_i_should_see_the_completed_date_at(now)
+    when_i_set_the_completed_date_to now
+    then_i_should_see_the_completed_date_at now
   end
 
   scenario 'User sets start date to future then clicks complete button' do
     future = Time.current + 1.day
 
+    given_i_am_viewing_an_appointment
     given_there_is_a_start_date
     when_i_load_the_page
-    when_i_set_the_start_date(future)
+    when_i_set_the_start_date_to future
     when_i_click_the_complete_button
-    then_i_should_see_the_completed_date_at(future)
+    then_i_should_see_the_completed_date_at future
   end
 
   def given_i_am_viewing_an_appointment
@@ -92,6 +94,11 @@ feature 'Start Complete Buttons', js: true do
     @appointment.reload
   end
 
+  def given_there_is_a_start_date_and_a_completed_date
+    given_there_is_a_start_date
+    given_there_is_a_completed_date
+  end
+
   def when_i_load_the_page
     visit current_path
     bootstrap_select '#appointment_select', @visit_group.name
@@ -108,7 +115,7 @@ feature 'Start Complete Buttons', js: true do
     wait_for_ajax
   end
 
-  def when_i_set_the_start_date date
+  def when_i_set_the_start_date_to date
     find('input#start_date').click
     within '.bootstrap-datetimepicker-widget' do
       first("td.day:not(.old)", text: "#{date.day}").click
@@ -116,7 +123,7 @@ feature 'Start Complete Buttons', js: true do
     find(".control-label", text: "Start Date:").click
   end
 
-  def when_i_set_the_completed_date date
+  def when_i_set_the_completed_date_to date
     find('input#completed_date').click
     within '.bootstrap-datetimepicker-widget' do
       first("td.day:not(.old)", text: "#{date.day}").click

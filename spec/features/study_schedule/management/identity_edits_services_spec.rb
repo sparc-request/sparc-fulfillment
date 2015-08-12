@@ -10,7 +10,6 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
 
   scenario 'identity deletes service from arm(s)' do
     given_an_arm_with_services
-    then_i_should_only_see_services_on_that_arm
     when_i_remove_services_from_an_arm
     then_i_should_not_see_it_on_that_arm
   end
@@ -18,23 +17,40 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
   def given_an_arm_with_services
     @protocol  = create_and_assign_protocol_to_me
     @protocol.arms.each{|a| a.delete}
+    @protocol.line_items.each{|li| li.delete}
     @services  = @protocol.organization.inclusive_child_services(:per_participant)
     @arm       = create(:arm_with_visit_groups, protocol: @protocol)
     @line_item = create(:line_item, arm: @arm, service: @services.first, protocol: @protocol)
 
+    Service.all.each do |s| #Clean up services otherwise service may not show up unless list scrolled
+      s.delete if !@services.include?(s)
+    end
+    
     visit protocol_path @protocol
   end
 
   def when_i_add_services_to_an_arm
     find("#add_service_button").click
-    bootstrap_select "#service_id", "#{@services.last.name}"
-    find("#arm_ids_[value='#{@arm.id} 1']").set(true)
-    find("input[type='submit']").click
+    
+    bootstrap_select "#add_service_id", "#{@services.last.name}"
+    
+    bootstrap_select "#add_service_arm_ids_and_pages_", @arm.name
+    find("h4#line_item").click # click out of bootstrap multiple select
+    
+    click_button "Add"
   end
 
   def when_i_remove_services_from_an_arm
-    find("#arm_ids_[value='#{@arm.id} 1']").set(true)
-    find("input[type='submit']").click
+    find("#remove_service_button").click
+    wait_for_ajax
+
+    bootstrap_select "#remove_service_id", "#{@protocol.organization.services.first.name}"
+    find("h4#line_item").click # click out of bootstrap multiple select
+    
+    bootstrap_select "#remove_service_arm_ids_", "#{@arm.name}"
+    find("h4#line_item").click # click out of bootstrap multiple select
+    
+    click_button "Remove"
   end
 
   def then_i_should_see_them_on_that_arm
@@ -46,11 +62,4 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
     arm = find(".arm_#{@arm.id}")
     expect(arm).not_to have_content "#{@services.first.name}"
   end
-
-  def then_i_should_only_see_services_on_that_arm
-    find("#remove_service_button").click
-    bootstrap_select "#service_id", "#{@services.first.name}"
-    assert_selector(".arm-checkbox > label", count: 1)
-  end
-
 end

@@ -12,12 +12,17 @@
           .col-md-12
             = form.hidden_field :line_item_id
             .form-group
-              = form.label "fulfilled_at", t(:fulfillment)[:fulfillment_date], class: "col-sm-4 control-label "
+              = form.label "fulfilled_at", t(:fulfillment)[:fulfillment_date], class: "col-sm-4 control-label"
               .col-sm-7
                 = form.text_field "fulfilled_at", {class: 'form-control datetimepicker', id: 'date_fulfilled_field', value: format_date(fulfillment.fulfilled_at)}
             .form-group
+              = form.label "account_number", t(:fulfillment)[:account_number], class: "col-sm-4 control-label"
+              .col-sm-7
+                = form.text_field "account_number", {class: 'form-control', :maxlength => 30}
+            .form-group
               = form.label "quantity", t(:fulfillment)[:quantity], class: "col-sm-4 control-label"
-              .col-sm-7= form.text_field "quantity", {class: 'form-control'}
+              .col-sm-7
+                = form.text_field "quantity", {class: 'form-control'}
             .form-group
               = form.label "performer_id", t(:fulfillment)[:performed_by], class: "col-sm-4 control-label"
               .col-sm-7

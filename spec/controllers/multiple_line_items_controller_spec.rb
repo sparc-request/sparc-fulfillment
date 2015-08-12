@@ -5,78 +5,65 @@ RSpec.describe MultipleLineItemsController, type: :controller do
   login_user
 
   before do
-    @protocol = create(:protocol_with_sub_service_request)
+    @protocol = create_and_assign_protocol_to_me
     @service  = @protocol.organization.services.first
   end
 
-  describe "GET #new" do
+  describe "GET #new_line_items" do
 
     it "renders a template to add a service to multiple arms" do
       xhr :get, :new_line_items, {
         protocol_id: @protocol.id,
-        service_id: @service.id,
+        schedule_tab: "template",
+        page_hash: ["1 1", "2 1", "3 2"],
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:selected_service)).to eq(@service.id)
-      expect(assigns(:services).map(&:id).sort).to eq(@protocol.organization.inclusive_child_services(:per_participant).map(&:id).sort)
-      expect(assigns(:arm_ids).map(&:id).sort).to eq(@protocol.arms.map(&:id).sort)
+      expect(assigns(:services)).to eq(@protocol.organization.inclusive_child_services(:per_participant))
+      expect(assigns(:page_hash)).to eq(["1 1", "2 1", "3 2"])
+      expect(assigns(:schedule_tab)).to eq("template")
     end
   end
 
-  describe "GET #edit" do
+  describe "PUT #create_line_items" do
+    it "handles the submission of the add line items form" do
+      expect{
+        post :create_line_items, {
+          add_service_id: @service.id,
+          add_service_arm_ids_and_pages: ["#{@protocol.arms.first.id} 1", "#{@protocol.arms.second.id} 1"],
+          schedule_tab: "template",
+          format: :js
+        }
+      }.to change(LineItem, :count).by(2)
+    end
+  end
+
+  describe "GET #edit_line_items" do
 
     it "renders a template to remove a service from multiple arms" do
-      xhr :get, :new_line_items, {
+      xhr :get, :edit_line_items, {
         protocol_id: @protocol.id,
         service_id: @service.id,
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:selected_service)).to eq(@service.id)
-      expect(assigns(:services).map(&:id).sort).to eq(@protocol.organization.inclusive_child_services(:per_participant).map(&:id).sort)
-      expect(assigns(:arm_ids).map(&:id).sort).to eq((@protocol.arms.map{ |arm| arm.id if arm.line_items.detect{|li| li.service_id.to_s == @selected_service} }).map(&:id).sort)
+      expect(assigns(:all_services)).to eq(@protocol.line_items.map(&:service).uniq)
+      expect(assigns(:service)).to eq(@service)
+      expect(assigns(:arms)).to eq((@protocol.arms.select{ |arm| arm.line_items.detect{|li| li.service_id == @service.id} }))
     end
   end
 
-  describe "PUT #update" do
-
-    it "should create multiple line items" do
-      arm1 = create(:arm, protocol: @protocol)
-      arm2 = create(:arm, protocol: @protocol)
-      put :update_line_items, {
-        header_text: "Add",
-        arm_ids: [arm1.id.to_s, arm2.id.to_s],
-        service_id: @service.id,
-        format: :js
-      }
-      arm1.reload
-      arm2.reload
-      expect(arm1.line_items.count).to eq(1)
-      expect(arm1.line_items.first.service_id).to eq(@service.id)
-      expect(arm2.line_items.count).to eq(1)
-      expect(arm2.line_items.first.service_id).to eq(@service.id)
+  describe "PUT #destroy_line_items" do
+    it "handles the submission of the remove line items form" do
+      create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
+      create(:line_item, service: @service, arm: @protocol.arms.second, protocol: @protocol)
+      expect{
+        post :destroy_line_items, {
+          remove_service_id: @service.id,
+          remove_service_arm_ids: ["#{@protocol.arms.first.id}", "#{@protocol.arms.second.id}"],
+          format: :js
+        }
+      }.to change(LineItem, :count).by(-2)
     end
-
-    it "should remove multiple line items" do
-      arm1 = create(:arm, protocol: @protocol)
-      arm2 = create(:arm, protocol: @protocol)
-      line_item1 = create(:line_item, arm_id: arm1.id, service_id: @service.id, protocol: @protocol)
-      line_item2 = create(:line_item, arm_id: arm2.id, service_id: @service.id, protocol: @protocol)
-      arm1.reload
-      arm2.reload
-      put :update_line_items, {
-        header_text: "Remove",
-        arm_ids: [arm1.id.to_s, arm2.id.to_s],
-        service_id: @service.id,
-        format: :js
-      }
-      arm1.reload
-      arm2.reload
-      expect(arm1.line_items.count).to eq(0)
-      expect(arm2.line_items.count).to eq(0)
-    end
-
   end
-
 end

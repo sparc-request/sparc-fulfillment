@@ -12,7 +12,7 @@
     = line_item.quantity_remaining
   .col-xs-1.text-center.started
     = format_date(line_item.started_at)
-  .col-xs-2.text-left.components
+  .col-xs-2.text-center.components
     %select.selectpicker{multiple: "", title: "Please Select", 'data-width' => '150px', 'data-selected-text-format' => 'count>2', showIcon: false}
       = components_for_select(line_item.components.with_deleted)
   .col-xs-1.text-right.last_fulfillment

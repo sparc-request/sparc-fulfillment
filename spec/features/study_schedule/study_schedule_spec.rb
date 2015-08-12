@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Study Schedule', type: :feature, js: true do
 
   before :each do
-    @protocol       = create_blank_protocol
+    @protocol       = create_and_assign_blank_protocol_to_me
     project_role    = create(:project_role_pi, protocol: @protocol)
     @arm            = create(:arm_with_only_per_patient_line_items, protocol: @protocol, visit_count: 10)
     @line_item      = @arm.line_items.first
