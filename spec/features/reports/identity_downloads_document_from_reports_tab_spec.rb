@@ -21,7 +21,6 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
     @document = create(:document_of_protocol_report, documentable_id: @protocol.id)
     visit protocol_path @protocol
     click_link 'Reports'
-    visit current_path
   end
 
   def when_i_download_the_report
