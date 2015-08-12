@@ -30,7 +30,7 @@ generate_document = (element, tables_to_refresh, event = null) ->
             if document_state != 'Completed'
               setTimeout get_document_state, 1500
             else
-              increment_notification data.document.documentable_type
+              add_to_report_notification_count(data.document.documentable_type, 1)
 
               set_glyphicon_finished element
 
