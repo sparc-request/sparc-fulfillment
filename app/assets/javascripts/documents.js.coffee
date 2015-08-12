@@ -19,7 +19,7 @@ $ ->
     $(document).on 'click', 'a.attached_file', ->
       update_view_on_download_new_report $(this), 'table.documents', 'Identity'
       
-window.update_view_on_download_new_report = (element, table_to_update, documentable_type) ->
+(exports ? this).update_view_on_download_new_report = (element, table_to_update, documentable_type) ->
   row_index = element.parents().eq(1).attr("data-index")
 
   date_downloaded_element = element.parent().siblings("td.downloaded_at")
