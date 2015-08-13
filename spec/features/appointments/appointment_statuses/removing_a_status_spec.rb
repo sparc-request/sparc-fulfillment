@@ -2,10 +2,12 @@ require 'rails_helper'
 
 feature 'Removing a Status', js: true do
 
-  scenario "User removes an appointment status" do
-    given_i_select_an_appointment
-    when_i_deselect_an_appointment_status
-    then_the_appointment_status_should_be_destroyed_for_that_appointment
+  context "User removes an appointment status" do
+    scenario 'and sees the appointment status is destroyed' do
+      given_i_select_an_appointment
+      when_i_deselect_an_appointment_status
+      then_the_appointment_status_should_be_destroyed_for_that_appointment
+    end
   end
 
   def given_i_select_an_appointment
