@@ -14,7 +14,7 @@ class Fulfillment < ActiveRecord::Base
 
   delegate :quantity_type, to: :line_item
 
-  validates :line_item_id, :performer_id, :fulfilled_at, :account_number, :quantity, presence: true
+  validates :line_item_id, :performer_id, :fulfilled_at, :quantity, presence: true
   validates_numericality_of :quantity
   validates_length_of :account_number, :maximum => 30
 
