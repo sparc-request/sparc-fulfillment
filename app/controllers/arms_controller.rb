@@ -27,12 +27,6 @@ class ArmsController < ApplicationController
     end
   end
 
-  def edit
-    @arm = Arm.find(params[:id])
-    @protocol = @arm.protocol
-    @intended_action = params[:intended_action]
-  end
-
   def update
     @arm = Arm.find(params[:id])
     if @arm.update_attributes(arm_params)
@@ -53,6 +47,13 @@ class ArmsController < ApplicationController
       @arm.delay.destroy
       flash.now[:alert] = t(:arm)[:deleted]
     end
+  end
+
+  def navigate_to_arm
+    # Used in study schedule management for navigating to a arm.
+    @protocol = Protocol.find(params[:protocol_id])
+    @intended_action = params[:intended_action]
+    @arm = params[:arm_id].present? ? Arm.find(params[:arm_id]) : @protocol.arms.first
   end
 
   private
