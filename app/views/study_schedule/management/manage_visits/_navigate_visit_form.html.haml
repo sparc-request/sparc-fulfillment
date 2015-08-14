@@ -8,7 +8,7 @@
     .modal-body
       #modal_errors
       .row
-        .col-md-12.form-horizontal#visit_index_form{data: { intended_action: intended_action }}
+        .col-md-12.form-horizontal#navigate_visit_form{data: { intended_action: intended_action }}
           .form-group
             = label_tag 'vg_form_arm_label', t(:arm)[:object], class: "col-sm-4 control-label"
             .col-sm-7= select_tag "vg_form_arm_select", options_from_collection_for_select(protocol.arms, 'id', 'name', arm.id), class: "selectpicker form-control"
