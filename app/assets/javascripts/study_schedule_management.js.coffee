@@ -50,7 +50,7 @@ $ ->
   $(document).on 'change', "#arm_form_select", ->
     data =
       "protocol_id"     : $('#study_schedule_buttons').data('protocol-id')
-      "intended_action" : "edit"
+      "intended_action" : $("#navigate_arm_form").data("intended-action")
       "arm_id"          : $(this).val()
     $.ajax
       type: 'GET'
