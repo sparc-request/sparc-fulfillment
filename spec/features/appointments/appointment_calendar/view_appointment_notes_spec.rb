@@ -2,17 +2,21 @@ require 'rails_helper'
 
 feature 'View appointment notes', js: true do
 
-  scenario 'User views Notes list when no Notes are present' do
-    given_i_am_viewing_an_appointment
-    when_i_view_the_notes_list
-    then_i_should_be_notified_that_there_are_no_notes
+  context 'User views Notes list when no Notes are present' do
+    scenario 'and sees a notification that there are no notes' do
+      given_i_am_viewing_an_appointment
+      when_i_view_the_notes_list
+      then_i_should_be_notified_that_there_are_no_notes
+    end
   end
   
-  scenario 'User views Notes list when Notes are present' do
-    given_i_am_viewing_an_appointment
-    when_i_create_a_note
-    when_i_view_the_notes_list
-    then_i_should_be_notified_that_there_are_notes
+  context 'User views Notes list when Notes are present' do
+    scenario 'and sees a notification that there are notes' do
+      given_i_am_viewing_an_appointment
+      when_i_create_a_note
+      when_i_view_the_notes_list
+      then_i_should_be_notified_that_there_are_notes
+    end
   end
 
   def given_i_am_viewing_an_appointment

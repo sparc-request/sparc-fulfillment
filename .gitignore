@@ -6,6 +6,8 @@
 
 .rvmrc
 
+fulfill.sql
+
 # Ignore bundler config.
 /.bundle
 

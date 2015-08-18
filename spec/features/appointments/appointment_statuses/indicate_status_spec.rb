@@ -2,10 +2,12 @@ require "rails_helper"
 
 feature "Indicating a Status", js: true do
 
-  scenario "User indicates an appointment status" do
-    given_i_select_an_appointment
-    when_i_indicate_an_appointment_status
-    then_an_appointment_status_should_be_created_for_that_appointment
+  context "User indicates an appointment status" do
+    scenario 'and sees the appointment status has been created' do
+      given_i_select_an_appointment
+      when_i_indicate_an_appointment_status
+      then_an_appointment_status_should_be_created_for_that_appointment
+    end
   end
 
   def given_i_select_an_appointment

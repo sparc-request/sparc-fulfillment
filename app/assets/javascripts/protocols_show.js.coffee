@@ -20,6 +20,5 @@ $ ->
 
       remote_document_generator 'a.study_schedule_report', tables_to_refresh
 
-    if $('#reports.tab-pane.active').length > 0
-      $(document).on 'click', 'a.attached_file', ->
-        update_view_on_download_new_report $(this), 'table.protocol_reports', 'Protocol'
+    $(document).on 'click', 'a.attached_file', ->
+      update_view_on_download_new_report $(this), 'table.protocol_reports', 'Protocol'
