@@ -22,6 +22,8 @@ class Appointment < ActiveRecord::Base
   has_many :notes, as: :notable
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
+  scope :unstarted, -> { where('appointments.start_date IS NULL AND appointments.completed_date IS NULL') }
+  scope :with_completed_procedures, -> { joins(:procedures).where("procedures.completed_date IS NOT NULL") }
 
   validates :participant_id, :name, :arm_id, presence: true
 
@@ -35,16 +37,7 @@ class Appointment < ActiveRecord::Base
   end
 
   def has_completed_procedures?
-    has_completed = false
-    unless self.procedures.empty?
-      self.procedures.each do |proc|
-        if proc.completed_date
-          has_completed = true
-        end
-      end
-    end
-
-    has_completed
+    procedures.any?(&:completed_date)
   end
 
   def procedures_grouped_by_core
