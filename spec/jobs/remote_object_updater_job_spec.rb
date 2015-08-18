@@ -23,6 +23,7 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
                                             sponsor_name: "sibling protocol",
                                             sub_service_request_id: 1)
         notification              = create( :notification_protocol_update,
+                                            sparc_id: @protocol.sparc_id,
                                             callback_url: "http://#{ENV.fetch('SPARC_API_HOST')}/v1/protocols/1.json")
 
         RemoteObjectUpdaterJob.perform_now(notification)
