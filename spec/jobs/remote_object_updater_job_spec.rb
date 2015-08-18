@@ -16,11 +16,11 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
 
         @protocol                 = create( :protocol,
                                             sparc_id: 1,
-                                            short_title: 'Short Title',
+                                            sponsor_name: "protocol",
                                             sub_service_request_id: 1)
         @sibling_protocol         = create( :protocol,
                                             sparc_id: 2,
-                                            short_title: 'Short Title',
+                                            sponsor_name: "sibling protocol",
                                             sub_service_request_id: 1)
         notification              = create( :notification_protocol_update,
                                             callback_url: "http://#{ENV.fetch('SPARC_API_HOST')}/v1/protocols/1.json")
@@ -29,11 +29,11 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
       end
 
       it 'should update the existing protocol' do
-        expect(@protocol.reload.short_title).to eq('GS-US-321-0106')
+        expect(@protocol.reload.sponsor_name).to eq("GILEAD")
       end
 
       it 'should update Protocol siblings' do
-        expect(@sibling_protocol.reload.short_title).to eq('GS-US-321-0106')
+        expect(@sibling_protocol.reload.sponsor_name).to eq("GILEAD")
       end
 
       it 'should not POST to the Faye server' do
