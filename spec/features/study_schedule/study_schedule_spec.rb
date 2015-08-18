@@ -45,9 +45,7 @@ RSpec.describe 'Study Schedule', js: true do
   context 'User clicks the next page button' do
     scenario 'and sees the next page' do
       given_i_am_viewing_a_protocol
-      puts 1
       when_i_click_the_next_page_button
-      puts 2
       then_i_should_see_the_next_page
     end
   end
@@ -222,13 +220,13 @@ RSpec.describe 'Study Schedule', js: true do
 
   def when_i_click_the_next_page_button
     @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1
-    find("#arrow-left-#{@arm.id}").trigger("click")
+    find("#arrow-right-#{@arm.id}").trigger("click")
     wait_for_ajax
   end
 
   def when_i_click_the_previous_page_button
     @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1 
-    find("#arrow-right-#{@arm.id}").click()
+    find("#arrow-left-#{@arm.id}").click()
     wait_for_ajax
   end
 
@@ -298,11 +296,11 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def then_i_should_see_the_next_page
-    expect(find("button#visits_select_for_#{@arm.id}")[:page].to_i).to eq(@page+1)
+    expect(find("#arrow-left-#{@arm.id}")[:page].to_i).to eq(@page)
   end
 
   def then_i_should_see_the_previous_page
-    expect(find("button#visits_select_for_#{@arm.id}")[:page].to_i).to eq(@page-1)
+    expect(find("#arrow-left-#{@arm.id}")[:page].to_i).to eq(@page-2)
   end
 
   def then_i_should_see_the_row_checked_in_the_tab tab_name

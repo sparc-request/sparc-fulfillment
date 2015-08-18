@@ -143,10 +143,12 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_visit_group
+    wait_for_ajax
     expect(page).to have_css("input[value='VG']")
   end
 
   def then_i_should_see_the_updated_visit_group
+    wait_for_ajax
     expect(page).to have_css("input[value='VG 2']")
   end
 
