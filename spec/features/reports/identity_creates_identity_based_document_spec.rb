@@ -117,7 +117,7 @@ feature 'Identity creates a document from the documents page', js: true do
   end
 
   def then_i_should_see_the_documents_counter_increment
-    expect(page).to have_css(".notification.document-notifications", text: 1)
+    expect(page).to have_css(".notification.identity_report_notifications", text: 1)
   end
 
   def then_i_should_see_protocols_assigned_to_me

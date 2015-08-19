@@ -16,8 +16,13 @@ Rails.application.routes.draw do
   resources :line_items
   resources :visits, only: [:update]
   resources :reports, only: [:new, :create]
-  resources :arms
   resources :custom_appointments, controller: :appointments
+
+  resources :arms, only: [:new, :create, :update, :destroy] do
+    collection do
+      get 'navigate', to: "arms#navigate_to_arm"
+    end
+  end
 
   resources :visit_groups, only: [:new, :create, :update, :destroy] do
     collection do

@@ -2,23 +2,29 @@ require 'rails_helper'
 
 feature 'View Notes', js: true do
 
-  scenario 'User views Notes list when no Notes are present' do
-    given_i_am_viewing_a_procedure
-    when_i_begin_an_appointment
-    when_i_view_the_notes_list
-    then_i_should_be_notified_that_there_are_no_notes
+  context 'User views Notes list when no Notes are present' do
+    scenario 'and sees a notification that there are no notes' do
+      given_i_am_viewing_a_procedure
+      when_i_begin_an_appointment
+      when_i_view_the_notes_list
+      then_i_should_be_notified_that_there_are_no_notes
+    end
   end
 
-  scenario 'User views Notes list after marking Procedure as complete' do
-    given_i_have_marked_a_procedure_as_complete
-    when_i_view_the_notes_list
-    then_i_should_see_a_complete_note
+  context 'User views Notes list after marking Procedure as complete' do
+    scenario 'and sees a completed note' do
+      given_i_have_marked_a_procedure_as_complete
+      when_i_view_the_notes_list
+      then_i_should_see_a_complete_note
+    end
   end
 
-  scenario 'User views Notes list after marking Procedure as incomplete' do
-    given_i_have_marked_a_procedure_as_incomplete
-    when_i_view_the_notes_list
-    then_i_should_see_an_incomplete_note
+  context 'User views Notes list after marking Procedure as incomplete' do
+    scenario 'and sees an incomplete note' do
+      given_i_have_marked_a_procedure_as_incomplete
+      when_i_view_the_notes_list
+      then_i_should_see_an_incomplete_note
+    end
   end
 
   def given_i_am_viewing_a_procedure

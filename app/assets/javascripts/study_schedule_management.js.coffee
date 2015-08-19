@@ -12,11 +12,13 @@ $ ->
       data: data
 
   $(document).on 'click', '#remove_arm_button', ->
-    arm_id = $('#manage_arms').data('first-arm')
+    data =
+      "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
+      "intended_action" : "destroy"
     $.ajax
       type: 'GET'
-      url: "/arms/#{arm_id}/edit"
-      data: "intended_action" : "destroy"
+      url: "/arms/navigate"
+      data: data
 
   $(document).on 'click', '#remove_arm_form_button', ->
     # Ensure there are at least two arms in dropdown
@@ -24,10 +26,10 @@ $ ->
     # Arms are deleted through a delayed job, so
     # we need the count from the dropdown and not
     # the server.
-    arm_select = $("#remove_arm_select")
-    if $("#remove_arm_select > option").size() > 1
+    arm_select = $("#arm_form_select")
+    if $("#arm_form_select > option").size() > 1
       arm_id = arm_select.val()
-      arm_name = $(".bootstrap-select > button[data-id='remove_arm_select']").attr('title')
+      arm_name = $(".bootstrap-select > button[data-id='arm_form_select']").attr('title')
       if confirm "Are you sure you want to remove arm: #{arm_name} from this protocol?"
         $.ajax
           type: 'DELETE'
@@ -37,18 +39,23 @@ $ ->
       alert("Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm.")
 
   $(document).on 'click', '#edit_arm_button', ->
-    arm_id = $('#manage_arms').data('first-arm')
+    data =
+      "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
+      "intended_action" : "edit"
     $.ajax
       type: 'GET'
-      url: "/arms/#{arm_id}/edit"
-      data: "intended_action" : "edit"
+      url: "/arms/navigate"
+      data: data
 
-  $(document).on 'change', "#edit_arm_select", ->
-    arm_id = $(this).val()
+  $(document).on 'change', "#arm_form_select", ->
+    data =
+      "protocol_id"     : $('#study_schedule_buttons').data('protocol-id')
+      "intended_action" : $("#navigate_arm_form").data("intended-action")
+      "arm_id"          : $(this).val()
     $.ajax
       type: 'GET'
-      url: "/arms/#{arm_id}/edit"
-      data: "intended_action" : "edit"
+      url: "/arms/navigate"
+      data: data
 
 ##              **END MANAGE ARMS**                     ##
 ##          **BEGIN MANAGE VISIT GROUPS**               ##
@@ -97,7 +104,7 @@ $ ->
     arm_id = $(this).val()
     data =
       'protocol_id'     : $('#study_schedule_buttons').data('protocol-id')
-      "intended_action" : $("#visit_index_form").data('intended-action')
+      "intended_action" : $("#navigate_visit_form").data('intended-action')
       "arm_id" : arm_id
     $.ajax
       type: 'GET'
@@ -105,7 +112,7 @@ $ ->
       data: data
 
   $(document).on 'change', "#vg_form_select", ->
-    intended_action = $("#visit_index_form").data('intended-action')
+    intended_action = $("#navigate_visit_form").data('intended-action')
     if intended_action == "edit"
       data =
         'protocol_id'     : $('#study_schedule_buttons').data('protocol-id')

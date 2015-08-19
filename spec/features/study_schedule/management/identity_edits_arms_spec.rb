@@ -79,7 +79,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def and_then_i_change_the_arm_name
     fill_in 'Arm Name', with: "this here arm"
-    click_button "Save"
+    find("input[type='submit']").click
   end
 
   def then_i_should_see_the_updated_arm
@@ -88,7 +88,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def when_i_delete_the_arm
     find("#remove_arm_button").click
-    click_button "Remove"
+    find("input[type='submit']").click
   end
 
   def i_should_no_longer_see_the_arm
@@ -97,8 +97,8 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def if_i_delete_the_arm_with_completed_procedures
     find("#remove_arm_button").click
-    bootstrap_select "#remove_arm_select", @protocol.arms.last.name
-    click_button "Remove"
+    bootstrap_select "#arm_form_select", @protocol.arms.last.name
+    find("input[type='submit']").click
   end
 
   def then_i_should_still_see_the_arm name=@protocol.arms.last.name

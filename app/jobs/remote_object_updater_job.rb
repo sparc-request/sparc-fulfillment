@@ -35,6 +35,8 @@ class RemoteObjectUpdaterJob < ActiveJob::Base
 
   def normalized_object_class(notification)
     case notification.kind.classify
+    when 'Project'
+      'Protocol'
     when 'Study'
       'Protocol'
     else
