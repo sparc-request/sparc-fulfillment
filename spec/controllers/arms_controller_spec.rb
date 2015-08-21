@@ -74,19 +74,6 @@ RSpec.describe ArmsController do
     end
   end
 
-  describe "GET #edit" do
-    it "should assign appropriate vars" do
-      xhr :get, :edit, {
-        id: @arm.id,
-        intended_action: "edit",
-        format: :js
-      }
-      expect(assigns(:arm)).to eq(@arm)
-      expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:intended_action)).to eq("edit")
-    end
-  end
-
   describe "POST #update" do
 
     it "should update the arm" do

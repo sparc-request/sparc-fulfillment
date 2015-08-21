@@ -44,12 +44,9 @@ RSpec.describe StudyScheduleHelper do
 
   describe "#visits_select_options" do
     it "should return the visit options" do
-      visit_group = create(:visit_group_with_arm)
-      3.times do
-        create(:visit, visit_group: visit_group)
-      end
+      arm = create(:arm_with_visit_groups, name: "Arm")
 
-      arr = helper.visits_select_options(visit_group.arm).split("\n")
+      arr = helper.visits_select_options(arm).split("\n")
       arr = arr[0..8] if arr.length > 9
 
       expect(arr[0].include?("title"))
@@ -63,18 +60,15 @@ RSpec.describe StudyScheduleHelper do
 
   describe "#on_current_page?" do
     it "should return whether or not a visit is on the page" do
-      visit_group = create(:visit_group_with_arm)
-      3.times do
-        create(:visit, visit_group: visit_group)
-      end
-      current_page = 1
+      position = 4
 
       #true
-      expect(helper.on_current_page?(current_page, visit_group)).to eq(true)
+      current_page = 1
+      expect(helper.on_current_page?(current_page, position)).to eq(true)
 
       #false
       current_page = 2
-      expect(helper.on_current_page?(current_page, visit_group)).to eq(false)
+      expect(helper.on_current_page?(current_page, position)).to eq(false)
     end
   end
 end
