@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'User creates Protocol in SPARC', type: :request, delay: false do
+RSpec.describe 'User creates Protocol in SPARC', type: :request, delay: false, enqueue: false do
 
   describe 'full lifecycle' do
 

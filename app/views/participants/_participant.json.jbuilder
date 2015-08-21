@@ -19,7 +19,7 @@ json.gender participant.gender
 json.ethnicity participant.ethnicity
 json.race participant.race
 json.address truncated_formatter(participant.address)
-json.phone participant.phone
+json.phone phoneNumberFormatter(participant)
 json.details detailsFormatter(participant)
 json.edit editFormatter(participant)
 json.delete deleteFormatter(participant)

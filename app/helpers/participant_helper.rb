@@ -75,6 +75,14 @@ module ParticipantHelper
     end
   end
 
+  def phoneNumberFormatter participant
+    if participant.phone.length == 10
+      "#{participant.phone[0..2]}-#{participant.phone[3..5]}-#{participant.phone[6..10]}"
+    else
+      participant.phone
+    end
+  end
+
   def statusFormatter participant
     select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id}
   end

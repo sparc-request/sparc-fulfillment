@@ -50,7 +50,7 @@ feature 'User views the participant tracker page', js: true do
     second_arm  = @protocol.arms.second
 
     first('.change-arm').click
-    select second_arm.name, from: 'Current Arm'
+    bootstrap_select "#participant_arm_id",second_arm.name
     click_button 'Save'
     wait_for_ajax
   end
