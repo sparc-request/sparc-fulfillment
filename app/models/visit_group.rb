@@ -3,11 +3,10 @@ class VisitGroup < ActiveRecord::Base
 
   has_paper_trail
   acts_as_paranoid
+  acts_as_list scope: [:arm_id]
 
   include CustomPositioning #custom methods around positioning, acts_as_list
 
-  after_create :reorder_visit_groups_up
-  after_destroy :reorder_visit_groups_down
   before_destroy :check_for_completed_data
 
   belongs_to :arm
@@ -32,22 +31,6 @@ class VisitGroup < ActiveRecord::Base
   end
 
   private
-
-  def reorder_visit_groups_up
-    if self.position != nil
-      VisitGroup.where("arm_id = ? AND position >= ?", self.arm_id, self.position).each do |group|
-        group.update_attributes(position: group.position + 1) unless group == self
-      end
-    else
-      self.update_attributes(position: (VisitGroup.where("arm_id = ?", self.arm_id)).count)
-    end
-  end
-
-  def reorder_visit_groups_down
-    VisitGroup.where("arm_id = ? AND position >= ?", self.arm_id, self.position).each do |group|
-      group.update_attributes(position: group.position - 1) unless group == self
-    end
-  end
 
   def check_for_completed_data
     self.appointments.each{ |appt| appt.destroy_if_incomplete }
