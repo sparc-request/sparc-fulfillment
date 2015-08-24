@@ -20,7 +20,7 @@ class MultipleProceduresController < ApplicationController
       if @note.valid?
         #Now update all procedures with incomplete status and create notes.
         procedures.each do |procedure|
-          procedure.update_attributes(status: "incomplete", performer_id: nil)
+          procedure.update_attributes(status: "incomplete", performer_id: current_identity.id)
           procedure.notes.create(identity_id: current_identity.id, kind: 'reason', reason: params[:reason], comment: params[:comment])
         end
       end
