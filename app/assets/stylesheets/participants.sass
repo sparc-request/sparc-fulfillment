@@ -82,6 +82,9 @@ body.participants
             word-wrap: break-word
             width: 13%
 
+            &.muted
+              color: rgba(119, 119, 119, 0.49)
+
           &.r-t, &.billing
             width: 5%
 
@@ -99,6 +102,20 @@ body.participants
 
           &.remove
             width: 8%
+
+          tr.procedure-group
+            font-weight: bold
+            background-color: #eee
+
+            td
+              text-align: left
+
+              .glyphicon
+                top: 1px
+
+                &.glyphicon-chevron-down
+                  top: 2px
+                  margin-left: 2px
 
         & > tbody
 

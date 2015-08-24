@@ -62,6 +62,10 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  def group_id
+    "#{formatted_billing_type}_#{service_id}"
+  end
+
   # Has this procedure's appointment started?
   def appt_started?
     appointment.start_date.present?
