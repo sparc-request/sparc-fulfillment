@@ -21,6 +21,8 @@ date_time_picker.
   date(null).
   disable()
 
+$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', null)
+
 <% elsif @procedure.complete? %>
 date_time_picker.
   date("<%= format_date(@procedure.completed_date) %>").
