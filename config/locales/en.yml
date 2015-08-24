@@ -103,7 +103,6 @@ en:
     save_fulfillment: "Save Fulfillment"
     fulfillments: "Fulfillments"
     fulfillment_date: "Fulfillment Date"
-    account_number: "Account Number"
     quantity: "Quantity"
     qty_type: "Quantity Type"
     performed_by: "Performed By"
@@ -131,6 +130,8 @@ en:
     last_fulfillment: "Last Fulfillment"
     components: "Service Components"
     save_li: "Save Study Level Activity"
+    account_number: "Account Number"
+    contact: "Contact Name"
     object: "Line Item"
     flash_messages:
       updated: "Study Level Activity Updated"
