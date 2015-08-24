@@ -19,6 +19,7 @@
 //= require moment/en-gb
 //= require jquery.remotipart
 //= require nprogress
+//= require underscore
 
 //= require global
 //= require protocols

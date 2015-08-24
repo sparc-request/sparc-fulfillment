@@ -242,3 +242,13 @@ $ ->
 
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
+
+  window.accordianize = () ->
+    cores = $('tr.core')
+    cores.each (index, core) ->
+      procedure_groups = _.groupBy($(core).find('tr.procedure'), (procedure) ->
+        [ $(procedure).data('service-id'), $(procedure).data('billing-type') ];
+      )
+      _.each(procedure_groups, (group, index) ->
+        $(_.values(group)).wrapAll("<tr><td colspan='8'><table class='table'><tbody></tbody></table></td></tr>")
+      )
