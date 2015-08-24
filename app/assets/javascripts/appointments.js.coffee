@@ -1,5 +1,10 @@
 $ ->
 
+  window.reset_multiselect_after_update = (element) ->
+    multiselect = $(element).siblings('#core_multiselect')
+    $(multiselect).multiselect('deselectAll', false)
+    $(multiselect).multiselect('updateButtonText')
+
   $(document).on 'click', 'tr.procedure-group button', ->
     core = $(this).closest('tr.core')
     pg = new ProcedureGrouper(core)
@@ -28,6 +33,11 @@ $ ->
       $.ajax
         type: 'GET'
         url: "/appointments/#{id}.js"
+        success: ->
+          pg = new ProcedureGrouper
+
+          pg.initialize()
+
     event.stopPropagation()
 
   $(document).on 'click', '.add_service', ->
@@ -40,6 +50,15 @@ $ ->
       type: 'POST'
       url:  "/procedures.js"
       data: data
+      success: ->
+        new_services = $('tr.procedure.new_service')
+        core = $(new_services).first().parents('.core')
+        multiselect = $(core).find('select.core_multiselect')
+        pg = new ProcedureGrouper(core)
+
+        pg.update_group_membership new_service for new_service in new_services
+        pg.initialize_multiselect(multiselect)
+        pg.build_core_multiselect_options(core)
 
   $(document).on 'click', '.start_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -97,9 +116,6 @@ $ ->
         group_id     = $(procedure).data('group-id')
         pg           = new ProcedureGrouper($(procedure).parents('tr.core'))
 
-        console.log original_group_id
-        console.log group_id
-
         pg.update_group_membership(procedure, original_group_id)
 
   $(document).on 'click', 'label.status.complete', ->
@@ -149,19 +165,35 @@ $ ->
         data: data
         url: "/procedures/#{procedure_id}/edit.js"
 
-  $(document).on 'click', 'button.incomplete_all_button', ->
-    data = status: "incomplete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
-    $.ajax
-      type: 'GET'
-      data: data
-      url: "/multiple_procedures/incomplete_all.js"
+  $(document).on 'click', 'button.incomplete_all', ->
+    status = 'incomplete'
+    procedure_ids = fetch_multiselect_group_ids(this)
+    self = this
 
-  $(document).on 'click', ".complete_all_button", ->
-    data = status: "complete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/multiple_procedures/update_procedures.js"
+    if procedure_ids.length > 0
+      $.ajax
+        type: 'GET'
+        data:
+          status: status
+          procedure_ids: _.flatten(procedure_ids)
+        url: "/multiple_procedures/incomplete_all.js"
+        success: ->
+          reset_multiselect_after_update(self) 
+          
+  $(document).on 'click', 'button.complete_all', ->
+    status = 'complete'
+    procedure_ids = fetch_multiselect_group_ids(this)
+    self = this
+
+    if procedure_ids.length > 0
+      $.ajax
+        type: 'PUT'
+        data:
+          status: status
+          procedure_ids: _.flatten(procedure_ids)
+        url: '/multiple_procedures/update_procedures.js'
+        success: ->
+          reset_multiselect_after_update(self)
 
   $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')
@@ -188,8 +220,9 @@ $ ->
       url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', '.procedure button.delete', ->
-    procedure_id = $(this).parents(".procedure").data("id")
-    group_id     = $(this).parents(".procedure").data("group-id")
+    element      = $(this).parents(".procedure")
+    procedure_id = $(element).data("id")
+    group_id     = $(element).data("group-id")
     pg           = new ProcedureGrouper($(this).closest('tr.core'))
 
     if confirm('Are you sure you want to remove this procedure?')
@@ -199,11 +232,7 @@ $ ->
         error: ->
           alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
         success: ->
-          # if group only has one procedure, merge into pasture
-          procedures = $("tr.procedure[data-group-id='#{group_id}']")
-          if procedures.length == 1
-            pg.remove_service_from_group(procedures[0], $("tr.procedure-group[data-group-id='#{group_id}']"))
-            pg.destroy_group(group_id)
+          pg.destroy_row(element)
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -268,6 +297,22 @@ $ ->
       $("button.complete_visit").addClass('disabled')
       $("div.completed_date_btn").addClass('contains_disabled')
 
+  window.fetch_multiselect_group_ids = (element) ->
+    multiselect = $(element).parents('.core').find('select.core_multiselect')
+    group_ids = multiselect.val()
+    procedure_ids = []
+
+    if group_ids
+      find_ids = (group_id) ->
+        rows = $("tr.procedure[data-group-id='#{group_id}']")
+
+        procedure_ids.push $.map rows, (row) ->
+          $(row).data('id')
+
+      find_ids group_id for group_id in group_ids
+
+      return procedure_ids
+
   # Display a helpful message when user clicks on a disabled UI element
   $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
     alert(I18n["appointment"]["warning"])
@@ -275,54 +320,3 @@ $ ->
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
 
-  $(document).on 'click', '.show_grouped_services', ->
-    $this		= $(this)
-    $span		= $this.children('.glyphicon')
-    $accordion	= $this.parents('table.accordion').find	('tbody')
-
-    if $span.hasClass('glyphicon-chevron-right')
-      $span.removeClass('glyphicon-chevron-right')
-      $span.addClass('glyphicon-chevron-down')
-    else
-      $span.removeClass('glyphicon-chevron-down')
-      $span.addClass('glyphicon-chevron-right')
-
-    $accordion.slideToggle()
-
-  window.accordionize = () ->
-    cores = $('tr.core')
-    cores.each (index, core) ->
-      # examine each accordion, extract services with differing billing types
-      # and merge in singleton groups
-      # $service_groups = $('tr.grouped_services_row').each (index, service_group) ->
-      #  $service_group = $(service_group)
-      #  billing_type = $service_group.data('billing-type')
-      #  $extract     = $service_group.has('tr.procedure td.billing button[title!=#{billing_type}]')
-      #  $extract.insertBefore($service_group)
-
-      # look at procedures that aren't grouped yet and if necessary, add them to
-      # present groups or create new ones
-      procedure_groups = _.groupBy($(core).find('table.procedures > tbody > tr.procedure'), (procedure) ->
-        [ $(procedure).data('service-id'), $(procedure).find('td:nth-child(2) button').attr('title') ]
-      )
-      _.each(procedure_groups, (procedures, index) ->
-        $procedures  = $(procedures)
-        $procedure   = $procedures.first()
-        service_name = $procedure.find('td:nth-child(1) span').html()
-        service_id   = $procedure.data('service-id')
-        billing_type = $procedure.find('td:nth-child(2) button').attr('title')
-        quantity     = procedures.length
-
-        $accordion = $("tr[data-billing-type=#{billing_type}][data-service-id=#{service_id}] tbody")
-        if $accordion.length > 0
-          # group already exists; add procedures to end of it
-          $procedures.appendTo($accordion)
-          $accordion.find('tr.procedure td:nth-child(1) span').hide()
-
-        else if quantity > 1
-          # group doesn't exist yet
-          $procedures.find('td:nth-child(1) span').hide()
-
-          $("<thead><tr><th colspan='8'><button class='btn btn-primary show_grouped_services'><span class='glyphicon glyphicon-chevron-right'></span></button>#{service_name} #{billing_type} (#{quantity})</th></tr></thead>").insertBefore($procedures.wrapAll("<tr class='grouped_services_row' data-billing-type=#{billing_type} data-service-id=#{service_id}><td colspan='8'><table class='table accordion'><tbody></tbody></table></td></tr>").closest('tbody'))
-          $('table.accordion > tbody').slideToggle()
-      )

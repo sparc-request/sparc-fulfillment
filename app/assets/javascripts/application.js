@@ -20,6 +20,7 @@
 //= require jquery.remotipart
 //= require nprogress
 //= require underscore
+//= require bootstrap-multiselect
 
 //= require global
 //= require protocols
