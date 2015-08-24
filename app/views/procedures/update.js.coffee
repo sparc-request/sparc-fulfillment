@@ -9,6 +9,9 @@ date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").
   datetimepicker(format: 'MM-DD-YYYY').
   data("DateTimePicker")
 
+$("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('billing-type', "<%= @procedure.billing_type %>").attr('data-billing-type', "<%= @procedure.billing_type %>")
+$("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('group-id', "<%= @procedure.group_id %>").attr('data-group-id', "<%= @procedure.group_id %>")
+
 <% if @procedure.unstarted? || @procedure.follow_up? %>
 date_time_picker.
   date(null).

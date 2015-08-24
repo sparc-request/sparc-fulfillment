@@ -1,5 +1,5 @@
 #incomplete_all_modal.modal-dialog
-  .modal-content{data:{core_id: core_id}}
+  .modal-content
     .modal-header
       %button.close.close_modal{type: 'button', data: {dismiss: 'modal'}}
         %span{aria: {hidden:'true'}} &times;
@@ -10,8 +10,8 @@
     = form_tag update_procedures_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
       .modal-body
         #modal_errors
-        = hidden_field_tag :core_id, core_id
-        = hidden_field_tag :appointment_id, appointment_id
+        - @procedures.each do |procedure|
+          = hidden_field_tag 'procedure_ids[]', procedure.id
         = hidden_field_tag :status, "incomplete"
         .form-group
           = label_tag "reason", t(:notes)[:reason], class: "col-sm-3 control-label"

@@ -60,60 +60,95 @@ body.participants
     .calendar
       padding-bottom: 20px
 
-      table.cores
+      .core
+        padding-bottom: 25px
 
-        & > thead
-          background-color: #113967
-
-          th
-            text-align: center
-            color: #fff
-            padding: 2em 0
-
-        td, th
+        td
           text-align: center
-          max-width: 0
 
-          &.title
-            padding-left: 0.5em
-            text-align: left
-            background-color: #ccc
-            padding-top: 5px
-            padding-bottom: 5px
+        .panel
+          margin: 0
 
-          &.name
-            vertical-align: middle
-            word-wrap: break-word
-            width: 13%
+          .panel-heading
 
-          &.r-t, &.billing
-            width: 5%
+            background-image: -webkit-linear-gradient(top,#EFEFEF 0,#CECECE 100%)
+            background-image: -o-linear-gradient(top,#EFEFEF 0,#CECECE 100%)
+            background-image: -webkit-gradient(linear,left top,left bottom,from(#EFEFEF),to(#CECECE))
+            background-image: linear-gradient(to bottom,#EFEFEF 0,#CECECE 100%)
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffEFEFEF', endColorstr='#ffCECECE', GradientType=0)
+            background-repeat: repeat-x
 
-          &.status
-            width: 17%
+            h3
+              font-weight: 500
+              font-size: 18px
+              margin: 8px
 
-          &.followup, &.completed-date
-            width: 13%
-
-          &.performed-by
-            width: 12%
-
-          &.notes
-            width: 8%
-
-          &.remove
-            width: 8%
-
-        & > tbody
-
-          & > tr > td
+          .panel-body
             padding: 0
 
-          td
+            .procedures
+              padding: 0
+              margin: 0
 
-            &.title
-              font-weight: bold
+              th
+                border-bottom: 2px #888 solid
+                text-align: center
+                padding: 1em 0
 
-            &.name
-              padding-left: 0.5em
-              text-align: left
+                &.name
+                  vertical-align: middle
+                  word-wrap: break-word
+                  width: 13%
+
+                &.r-t, &.billing
+                  width: 5%
+
+                &.status
+                  width: 17%
+
+                &.followup, &.completed-date
+                  width: 13%
+
+                &.performed-by
+                  width: 12%
+
+                &.notes
+                  width: 8%
+
+                &.remove
+                  width: 8%
+
+              tr
+                &.procedure
+                  td
+                    &.billing
+                      .bootstrap-select
+                        .btn 
+                          padding-right: 20px
+
+                &.procedure-group
+
+                  background-image: -webkit-linear-gradient(top,#f5f5f5 0,#e8e8e8 100%)
+                  background-image: -o-linear-gradient(top,#f5f5f5 0,#e8e8e8 100%)
+                  background-image: -webkit-gradient(linear,left top,left bottom,from(#f5f5f5),to(#e8e8e8))
+                  background-image: linear-gradient(to bottom,#f5f5f5 0,#e8e8e8 100%)
+                  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#ffe8e8e8', GradientType=0)
+                  background-repeat: repeat-x
+
+                  td
+                    text-align: left
+
+                  .glyphicon-chevron-right
+                    top: 1px
+
+                  .glyphicon-chevron-down
+                    top: 2px
+                    left: 1px
+
+                td
+
+                  &.name
+                    text-align: left
+
+                    &.muted
+                      color: rgba(119, 119, 119, 0.49)

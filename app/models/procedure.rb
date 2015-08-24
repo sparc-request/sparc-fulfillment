@@ -62,6 +62,10 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  def group_id
+    "#{formatted_billing_type}_#{service_id}"
+  end
+
   # Has this procedure's appointment started?
   def appt_started?
     appointment.start_date.present?
@@ -87,7 +91,6 @@ class Procedure < ActiveRecord::Base
     end
   end
 
-  #TODO: The following 4 methods should be redefined as scopes
   def complete?
     status == 'complete'
   end

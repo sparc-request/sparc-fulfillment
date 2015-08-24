@@ -1,5 +1,21 @@
 $ ->
 
+  window.reset_multiselect_after_update = (element) ->
+    multiselect = $(element).siblings('#core_multiselect')
+    $(multiselect).multiselect('deselectAll', false)
+    $(multiselect).multiselect('updateButtonText')
+
+  $(document).on 'click', 'tr.procedure-group button', ->
+    core = $(this).closest('tr.core')
+    pg = new ProcedureGrouper(core)
+    group = $(this).parents('.procedure-group')
+    group_id = $(group).data('group-id')
+
+    if $(group).find('span.glyphicon').hasClass('glyphicon-chevron-right')
+      pg.show_group(group_id)
+    else
+      pg.hide_group(group_id)
+
   $(document).on 'click', '.dashboard_link', ->
     if $(this).hasClass('active')
       $(this).removeClass('active')
@@ -17,7 +33,6 @@ $ ->
       $.ajax
         type: 'GET'
         url: "/appointments/#{id}.js"
-    event.stopPropagation()
 
   $(document).on 'click', '.add_service', ->
     data =
@@ -29,6 +44,15 @@ $ ->
       type: 'POST'
       url:  "/procedures.js"
       data: data
+      success: ->
+        new_services = $('tr.procedure.new_service')
+        core = $(new_services).first().parents('.core')
+        multiselect = $(core).find('select.core_multiselect')
+        pg = new ProcedureGrouper()
+
+        pg.update_group_membership new_service for new_service in new_services
+        pg.initialize_multiselect(multiselect)
+        pg.build_core_multiselect_options(core)
 
   $(document).on 'click', '.start_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -80,7 +104,9 @@ $ ->
       data: data
 
   $(document).on 'change', '.billing_type', ->
-    procedure_id = $(this).parents('.procedure').data('id')
+    procedure    = $(this).parents('tr.procedure')
+    procedure_id = $(procedure).data('id')
+    original_group_id = $(procedure).data('group-id')
     billing_type = $(this).val()
     data = procedure:
            billing_type: billing_type
@@ -88,7 +114,12 @@ $ ->
       type: 'PUT'
       url: "/procedures/#{procedure_id}"
       data: data
+      success: ->
+        procedure    = $("tr.procedure[data-id='#{procedure_id}']")
+        group_id     = $(procedure).data('group-id')
+        pg           = new ProcedureGrouper($(procedure).parents('tr.core'))
 
+        pg.update_group_membership(procedure, original_group_id)
 
   $(document).on 'click', 'label.status.complete', ->
     active        = $(this).hasClass('active')
@@ -137,19 +168,35 @@ $ ->
         data: data
         url: "/procedures/#{procedure_id}/edit.js"
 
-  $(document).on 'click', 'button.incomplete_all_button', ->
-    data = status: "incomplete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
-    $.ajax
-      type: 'GET'
-      data: data
-      url: "/multiple_procedures/incomplete_all.js"
+  $(document).on 'click', 'button.incomplete_all', ->
+    status = 'incomplete'
+    procedure_ids = fetch_multiselect_group_ids(this)
+    self = this
 
-  $(document).on 'click', ".complete_all_button", ->
-    data = status: "complete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/multiple_procedures/update_procedures.js"
+    if procedure_ids.length > 0
+      $.ajax
+        type: 'GET'
+        data:
+          status: status
+          procedure_ids: _.flatten(procedure_ids)
+        url: "/multiple_procedures/incomplete_all.js"
+        success: ->
+          reset_multiselect_after_update(self)
+
+  $(document).on 'click', 'button.complete_all', ->
+    status = 'complete'
+    procedure_ids = fetch_multiselect_group_ids(this)
+    self = this
+
+    if procedure_ids.length > 0
+      $.ajax
+        type: 'PUT'
+        data:
+          status: status
+          procedure_ids: _.flatten(procedure_ids)
+        url: '/multiple_procedures/update_procedures.js'
+        success: ->
+          reset_multiselect_after_update(self)
 
   $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')
@@ -176,7 +223,10 @@ $ ->
       url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', '.procedure button.delete', ->
-    procedure_id = $(this).parents(".procedure").data("id")
+    element      = $(this).parents(".procedure")
+    procedure_id = $(element).data("id")
+    group_id     = $(element).data("group-id")
+    pg           = new ProcedureGrouper($(this).closest('tr.core'))
 
     if confirm('Are you sure you want to remove this procedure?')
       $.ajax
@@ -184,6 +234,12 @@ $ ->
         url:  "/procedures/#{procedure_id}.js"
         error: ->
           alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
+        success: ->
+          procedures = $("tr.procedure[data-group-id='#{group_id}']")
+
+          if procedures.length == 1
+            pg.remove_service_from_group(procedures[0], $("tr.procedure-group[data-group-id='#{group_id}']"))
+            pg.destroy_group(group_id)
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -247,6 +303,22 @@ $ ->
     else
       $("button.complete_visit").addClass('disabled')
       $("div.completed_date_btn").addClass('contains_disabled')
+
+  window.fetch_multiselect_group_ids = (element) ->
+    multiselect = $(element).parents('.core').find('select.core_multiselect')
+    group_ids = multiselect.val()
+    procedure_ids = []
+
+    if group_ids
+      find_ids = (group_id) ->
+        rows = $("tr.procedure[data-group-id='#{group_id}']")
+
+        procedure_ids.push $.map rows, (row) ->
+          $(row).data('id')
+
+      find_ids group_id for group_id in group_ids
+
+      return procedure_ids
 
   # Display a helpful message when user clicks on a disabled UI element
   $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->

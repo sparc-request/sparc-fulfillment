@@ -1,9 +1,4 @@
-%tr.procedure{data: {"id" => procedure.id}}
-  -# Certain UI elements should be disabled before the appointment starts. If the appointment hasn't been started,
-  -# class their container element as pre_start_disabled, so that an on click handler can display a helpful
-  -# message if that UI element is clicked before appointment has started. Class to be removed once appointment
-  -# starts.
-
+%tr.procedure.new_service{ data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id } }
   %td.name
     %span= procedure.service_name
   %td.billing
