@@ -246,7 +246,7 @@ $ ->
   $(document).on 'click', '.show_grouped_services', ->
     $this		= $(this)
     $span		= $this.children('.glyphicon')
-    $accordion	= $this.parents('table.accordion').find('tbody')
+    $accordion	= $this.parents('table.accordion').find	('tbody')
 
     if $span.hasClass('glyphicon-chevron-right')
       $span.removeClass('glyphicon-chevron-right')
@@ -260,18 +260,37 @@ $ ->
   window.accordionize = () ->
     cores = $('tr.core')
     cores.each (index, core) ->
+      # examine each accordion, extract services with differing billing types
+      # and merge in singleton groups
+      # $service_groups = $('tr.grouped_services_row').each (index, service_group) ->
+      #  $service_group = $(service_group)
+      #  billing_type = $service_group.data('billing-type')
+      #  $extract     = $service_group.has('tr.procedure td.billing button[title!=#{billing_type}]')
+      #  $extract.insertBefore($service_group)
+
+      # look at procedures that aren't grouped yet and if necessary, add them to
+      # present groups or create new ones
       procedure_groups = _.groupBy($(core).find('table.procedures > tbody > tr.procedure'), (procedure) ->
-        [ $(procedure).data('service-id'), $(procedure).find('td:nth-child(2) button').attr('title') ];
+        [ $(procedure).data('service-id'), $(procedure).find('td:nth-child(2) button').attr('title') ]
       )
-      _.each(procedure_groups, (group, index) ->
-        procedures = _.values(group)
-        if procedures.length > 1
-          service_name = $(procedures).first().find('td:nth-child(1) span').html()
-          billing_type = $(procedures).first().find('td:nth-child(2) button').attr('title')
-          quantity     = procedures.length
+      _.each(procedure_groups, (procedures, index) ->
+        $procedures  = $(procedures)
+        $procedure   = $procedures.first()
+        service_name = $procedure.find('td:nth-child(1) span').html()
+        service_id   = $procedure.data('service-id')
+        billing_type = $procedure.find('td:nth-child(2) button').attr('title')
+        quantity     = procedures.length
 
-          $(procedures).find('td:nth-child(1) span').hide()
+        $accordion = $("tr[data-billing-type=#{billing_type}][data-service-id=#{service_id}] tbody")
+        if $accordion.length > 0
+          # group already exists; add procedures to end of it
+          $procedures.appendTo($accordion)
+          $accordion.find('tr.procedure td:nth-child(1) span').hide()
 
-          $("<thead><tr><th colspan='8'><button class='btn btn-primary show_grouped_services'><span class='glyphicon glyphicon-chevron-right'></span></button>#{service_name} #{billing_type} (#{quantity})</th></tr></thead>").insertBefore($(procedures).wrapAll("<tr class='grouped_services_row'><td colspan='8'><table class='table accordion'><tbody></tbody></table></td></tr>").closest('tbody'))
+        else if quantity > 1
+          # group doesn't exist yet
+          $procedures.find('td:nth-child(1) span').hide()
+
+          $("<thead><tr><th colspan='8'><button class='btn btn-primary show_grouped_services'><span class='glyphicon glyphicon-chevron-right'></span></button>#{service_name} #{billing_type} (#{quantity})</th></tr></thead>").insertBefore($procedures.wrapAll("<tr class='grouped_services_row' data-billing-type=#{billing_type} data-service-id=#{service_id}><td colspan='8'><table class='table accordion'><tbody></tbody></table></td></tr>").closest('tbody'))
           $('table.accordion > tbody').slideToggle()
       )
