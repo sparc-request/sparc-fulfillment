@@ -90,7 +90,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-webkit (1.5.1)
+    capybara-webkit (1.6.0)
       capybara (>= 2.3.0, < 2.5.0)
       json
     coercible (1.0.0)
@@ -412,7 +412,7 @@ DEPENDENCIES
   capistrano-rails (~> 1.1)
   capistrano-rvm
   capistrano3-delayed-job (~> 1.0)
-  capybara-webkit (~> 1.5.1)
+  capybara-webkit
   coffee-rails (~> 4.0.0)
   daemons
   database_cleaner

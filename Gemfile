@@ -67,7 +67,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-webkit', '~> 1.5.1'
+  gem 'capybara-webkit'
   gem 'database_cleaner'
   gem 'launchy'
   gem 'rspec-activejob', '~> 0.4.0'

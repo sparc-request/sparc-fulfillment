@@ -34,7 +34,7 @@ class ProceduresController < ApplicationController
   end
 
   def update
-    @procedure.update_attributes(params_for_update)
+    @procedure.update_attributes(procedure_params)
   end
 
   def destroy
@@ -42,14 +42,6 @@ class ProceduresController < ApplicationController
   end
 
   private
-
-  def params_for_update
-    if procedure_params[:performer_id].present?
-      procedure_params
-    else
-      procedure_params.to_h.merge!(performer_id: current_identity.id)
-    end
-  end
 
   def save_original_procedure_status
     @original_procedure_status = @procedure.status
