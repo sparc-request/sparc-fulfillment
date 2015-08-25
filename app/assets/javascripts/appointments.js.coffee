@@ -243,7 +243,21 @@ $ ->
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
 
-  window.accordianize = () ->
+  $(document).on 'click', '.show_grouped_services', ->
+    $this		= $(this)
+    $span		= $this.children('.glyphicon')
+    $accordion	= $this.parents('table.accordion').find('tbody')
+
+    if $span.hasClass('glyphicon-chevron-right')
+      $span.removeClass('glyphicon-chevron-right')
+      $span.addClass('glyphicon-chevron-down')
+    else
+      $span.removeClass('glyphicon-chevron-down')
+      $span.addClass('glyphicon-chevron-right')
+
+    $accordion.slideToggle()
+
+  window.accordionize = () ->
     cores = $('tr.core')
     cores.each (index, core) ->
       procedure_groups = _.groupBy($(core).find('table.procedures > tbody > tr.procedure'), (procedure) ->
@@ -257,7 +271,7 @@ $ ->
           quantity     = procedures.length
 
           $(procedures).find('td:nth-child(1) span').hide()
-          $(procedures).find('td:nth-child(2) div').hide()
 
-          $("<thead><tr><th colspan='8'>#{service_name} #{billing_type} (#{quantity})</th></tr></thead>").insertBefore($(procedures).wrapAll("<tr class='grouped_services_row'><td colspan='8'><table class='table accordian'><tbody></tbody></table></td></tr>").closest('tbody'))
+          $("<thead><tr><th colspan='8'><button class='btn btn-primary show_grouped_services'><span class='glyphicon glyphicon-chevron-right'></span></button>#{service_name} #{billing_type} (#{quantity})</th></tr></thead>").insertBefore($(procedures).wrapAll("<tr class='grouped_services_row'><td colspan='8'><table class='table accordion'><tbody></tbody></table></td></tr>").closest('tbody'))
+          $('table.accordion > tbody').slideToggle()
       )
