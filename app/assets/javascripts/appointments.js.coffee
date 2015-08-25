@@ -110,7 +110,10 @@ $ ->
     procedure_id  = $(this).parents('.procedure').data('id')
     # undo incomplete status
     if active
-      data = procedure: status: "unstarted"
+      $(".procedure[data-id='#{procedure_id}'] .performed-by .selectpicker").selectpicker('val', null)
+      data = procedure:
+              status: "unstarted"
+              performer_id: null
 
       $.ajax
         type: 'PUT'
