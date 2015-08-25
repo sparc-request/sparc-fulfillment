@@ -34,6 +34,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_arm_with_single_and_duplicate_services do
+      after(:create) do |protocol, evaluator|
+        create(:arm_with_single_and_duplicate_services, protocol: protocol)
+      end
+    end
+
     trait :with_pi do
       after(:create) do |protocol, evaluator|
         create(:project_role_pi, protocol_id: protocol.sparc_id)
@@ -68,6 +74,7 @@ FactoryGirl.define do
                                                     :with_pi,
                                                     :with_coordinators,
                                                     :with_sub_service_request]
-    factory :protocol_with_duplicate_services, traits: [:with_arm, :with_pi, :with_coordinators, :with_sub_service_request]
+    factory :protocol_with_single_service, traits: [:with_arm_with_single_service, :with_pi, :with_coordinators, :with_sub_service_request]
+    factory :protocol_with_duplicate_services, traits: [:with_arm_with_duplicate_services, :with_pi, :with_coordinators, :with_sub_service_request]
   end
 end
