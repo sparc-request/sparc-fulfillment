@@ -247,8 +247,17 @@ $ ->
     cores = $('tr.core')
     cores.each (index, core) ->
       procedure_groups = _.groupBy($(core).find('tr.procedure'), (procedure) ->
-        [ $(procedure).data('service-id'), $(procedure).data('billing-type') ];
+        [ $(procedure).data('service-id'), $(procedure).find('td:nth-child(2) button').attr('title') ];
       )
       _.each(procedure_groups, (group, index) ->
-        $(_.values(group)).wrapAll("<tr><td colspan='8'><table class='table'><tbody></tbody></table></td></tr>")
+        procedures = _.values(group)
+        if procedures.length > 1
+          service_name = $(procedures).first().find('td:nth-child(1) span').html()
+          billing_type = $(procedures).first().find('td:nth-child(2) button').attr('title')
+          quantity     = procedures.length
+
+          $(procedures).find('td:nth-child(1) span').hide()
+          $(procedures).find('td:nth-child(2) div').hide()
+
+          $("<thead><tr><th colspan='8'>#{service_name} #{billing_type} (#{quantity})</th></tr></thead>").insertBefore($(procedures).wrapAll("<tr class='accordian'><td colspan='8'><table class='table'><tbody></tbody></table></td></tr>").closest('tbody'))
       )
