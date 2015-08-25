@@ -259,5 +259,5 @@ $ ->
           $(procedures).find('td:nth-child(1) span').hide()
           $(procedures).find('td:nth-child(2) div').hide()
 
-          $("<thead><tr><th colspan='8'>#{service_name} #{billing_type} (#{quantity})</th></tr></thead>").insertBefore($(procedures).wrapAll("<tr class='accordian'><td colspan='8'><table class='table'><tbody></tbody></table></td></tr>").closest('tbody'))
+          $("<thead><tr><th colspan='8'>#{service_name} #{billing_type} (#{quantity})</th></tr></thead>").insertBefore($(procedures).wrapAll("<tr class='grouped_services_row'><td colspan='8'><table class='table accordian'><tbody></tbody></table></td></tr>").closest('tbody'))
       )
