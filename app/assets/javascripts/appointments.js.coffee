@@ -246,7 +246,7 @@ $ ->
   window.accordianize = () ->
     cores = $('tr.core')
     cores.each (index, core) ->
-      procedure_groups = _.groupBy($(core).find('tr.procedure'), (procedure) ->
+      procedure_groups = _.groupBy($(core).find('table.procedures > tbody > tr.procedure'), (procedure) ->
         [ $(procedure).data('service-id'), $(procedure).find('td:nth-child(2) button').attr('title') ];
       )
       _.each(procedure_groups, (group, index) ->
