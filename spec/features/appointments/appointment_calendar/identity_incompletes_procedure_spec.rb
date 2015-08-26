@@ -37,10 +37,8 @@ feature 'Identity incompletes Procedure', js: true do
   end
 
   def then_i_should_see_that_i_am_the_procedure_performer
-    procedure  = Procedure.first
     identity   = Identity.first
-
-    expect(page).to have_css("tr.procedure[data-id='#{procedure.id}'] .bootstrap-select.performed-by-dropdown span.filter-option", text: identity.full_name)
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: identity.full_name)
   end
 
   def when_i_view_the_notes_list
