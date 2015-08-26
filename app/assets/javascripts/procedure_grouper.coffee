@@ -8,7 +8,7 @@ $ ->
       service_ids = []
 
       map_service_ids = (row) ->
-        service_ids.push $(row).data('service-id')
+        service_ids.push $(row).data('group-id')
 
       detect_duplicates = (ids) ->
         duplicate_ids = []
@@ -24,5 +24,6 @@ $ ->
       map_service_ids row for row in rows
 
       return detect_duplicates(service_ids)
+
 
   window.ProcedureGrouper = ProcedureGrouper
