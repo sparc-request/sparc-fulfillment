@@ -36,3 +36,4 @@
 //= require remote_document_handler
 //= require faye
 //= require ajax_progress_bar
+//= require procedure_grouper
