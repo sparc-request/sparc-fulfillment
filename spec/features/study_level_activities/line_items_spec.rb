@@ -2,7 +2,67 @@ require 'rails_helper'
 
 feature 'Line Items', js: true do
 
-  before :each do
+  context 'User adds a new line item' do
+    scenario 'and sees the line item on the page' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_the_add_line_item_button
+      when_i_fill_in_new_line_item_form
+      then_i_should_see_the_line_item_on_the_page
+    end
+
+    scenario 'and sees the pricing map data' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_the_add_line_item_button
+      when_i_fill_in_new_line_item_form
+      then_the_line_item_should_pull_pricing_map_data
+    end
+  end
+
+  context 'User edits an existing line item' do
+    scenario 'and sees the changes on the page' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_the_edit_line_item_button
+      when_i_fill_in_the_edit_line_item_form
+      then_i_should_see_the_changes_on_the_page
+    end
+
+    scenario 'and sees a note for the changes' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_the_edit_line_item_button
+      when_i_fill_in_the_edit_line_item_form
+      then_i_should_see_the_changes_in_the_notes
+    end
+  end
+
+  context 'User deletes a line item with fulfillments' do
+    scenario 'and sees a flash message' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_the_delete_line_item_button_with_fulfillent
+      then_i_should_see_a_flash_message
+    end
+    
+    scenario 'and sees the line item' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_the_delete_line_item_button_with_fulfillent
+      then_i_should_still_see_the_line_item
+    end
+  end
+
+  context 'User deletes a line item without fulfillments' do
+    scenario 'and sees a flash message' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_the_delete_line_item_button_without_fulfillment
+      then_i_should_see_a_flash_message
+    end
+
+    scenario 'and does not see the line item' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_the_delete_line_item_button_without_fulfillment
+      then_i_should_not_see_the_line_item
+    end
+  end
+
+  def given_i_am_viewing_the_study_level_activities_tab
     @protocol      = create_and_assign_protocol_to_me
     @service1      = @protocol.organization.inclusive_child_services(:per_participant).first
     @service1.update_attributes(name: 'Admiral Tuskface', one_time_fee: true)
@@ -12,40 +72,9 @@ feature 'Line Items', js: true do
     @line_item_with_fulfillment = create(:line_item, service: @service1, protocol: @protocol)
     @fulfillment   = create(:fulfillment, line_item: @line_item_with_fulfillment)
     @line_item_without_fulfillment = create(:line_item, service: @service1, protocol: @protocol)
-  end
 
-  scenario 'User adds a new line item' do
-    given_i_visit_the_study_level_activities_tab
-    when_i_click_on_the_add_line_item_button
-    when_i_fill_in_new_line_item_form
-    then_i_should_see_the_line_item_on_the_page
-    then_the_line_item_should_pull_pricing_map_data
-  end
-
-  scenario 'User edits an existing line item' do
-    given_i_visit_the_study_level_activities_tab
-    when_i_click_on_the_edit_line_item_button
-    when_i_fill_in_the_edit_line_item_form
-    then_i_should_see_the_changes_on_the_page
-    then_i_should_see_the_changes_in_the_notes
-  end
-
-  scenario 'User deletes a line item with fulfillments' do
-    given_i_visit_the_study_level_activities_tab
-    when_i_click_on_the_delete_line_item_button_with_fulfillent
-    then_i_should_see_a_flash_message
-    then_i_should_still_see_the_line_item
-  end
-
-  scenario 'User deletes a line item without fulfillments' do
-    given_i_visit_the_study_level_activities_tab
-    when_i_click_on_the_delete_line_item_button_without_fulfillment
-    then_i_should_see_a_flash_message
-    then_i_should_not_see_the_line_item
-  end
-
-  def given_i_visit_the_study_level_activities_tab
     visit protocol_path(@protocol.id)
+
     click_link 'Study Level Activities'
   end
 

@@ -3,7 +3,6 @@ $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', l
 <% if @visit_group.errors[:name].any? %>
 # reset name field, if there was a validation error
 $("#visit_group_<%= @visit_group.id %>").val("<%= @visit_group.reload.name %>")
-error_tooltip_on("#visit_group_<%= @visit_group.id %>", "Name " + "<%= raw(@visit_group.errors[:name][0]) %>")
 <% end %>
 
 <% unless @errors %>

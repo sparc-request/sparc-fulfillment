@@ -11,6 +11,7 @@ $(".core[data-core-id='<%= @core_id %>'] .selectpicker.performed-by-dropdown").s
 <% if @status == "incomplete" %>
 $(".core[data-core-id='<%= @core_id %>'] td.status .incomplete").addClass('active')
 $(".core[data-core-id='<%= @core_id %>'] div.completed_date_field input.datetimepicker").val("").prop('disabled', true)
+$(".core[data-core-id='<%= @core_id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= current_identity.id %>")
 $("#modal_place").modal 'hide'
 
 <% elsif @status == "complete" %>

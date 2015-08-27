@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Identity sets Procedure performer', js: true do
 
-  scenario 'without selecting a Performer from the Performer dropdown' do
+  scenario 'completing without selecting a Performer from the Performer dropdown' do
     given_i_have_added_a_procedure_to_an_appointment
     when_i_complete_the_procedure
     then_i_should_see_that_i_am_the_procedure_performer
@@ -10,7 +10,19 @@ feature 'Identity sets Procedure performer', js: true do
 
   scenario 'and then un-completes the Procedure' do
     given_i_have_completed_a_procedure
+    when_i_uncomplete_the_procedure
+    then_i_should_see_that_the_performer_has_not_been_set
+  end
+
+  scenario 'incompleting without selecting a Performer from the Performer dropdown' do
+    given_i_have_added_a_procedure_to_an_appointment
     when_i_incomplete_the_procedure
+    then_i_should_see_that_i_am_the_procedure_performer
+  end
+
+  scenario 'and then un-incompletes the Procedure' do
+    given_i_have_incompleted_a_procedure
+    when_i_un_incomplete_the_procedure
     then_i_should_see_that_the_performer_has_not_been_set
   end
 
@@ -33,6 +45,11 @@ feature 'Identity sets Procedure performer', js: true do
     when_i_complete_the_procedure
   end
 
+  def given_i_have_incompleted_a_procedure
+    given_i_have_added_a_procedure_to_an_appointment
+    when_i_incomplete_the_procedure
+  end
+
   def when_i_complete_the_procedure
     find('button.start_visit').click
     wait_for_ajax
@@ -40,21 +57,32 @@ feature 'Identity sets Procedure performer', js: true do
     wait_for_ajax
   end
 
-  def when_i_incomplete_the_procedure
+  def when_i_uncomplete_the_procedure
     find('label.status.complete').click
     wait_for_ajax
   end
 
-  def then_i_should_see_that_i_am_the_procedure_performer
-    @procedure  = Procedure.first
-    @identity   = Identity.first
+  def when_i_un_incomplete_the_procedure
+    find('label.status.incomplete').click
+    wait_for_ajax
+  end
 
-    expect(page).to have_css("tr.procedure[data-id='#{@procedure.id}'] .bootstrap-select.performed-by-dropdown span.filter-option", text: @identity.full_name)
+  def when_i_incomplete_the_procedure
+    find('button.start_visit').click
+    wait_for_ajax
+    find('label.status.incomplete').click
+    wait_for_ajax
+    bootstrap_select '.reason-select', "Assessment missed"
+    click_button 'Save'
+    wait_for_ajax
+  end
+
+  def then_i_should_see_that_i_am_the_procedure_performer
+    @identity   = Identity.first
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: @identity.full_name)
   end
 
   def then_i_should_see_that_the_performer_has_not_been_set
-    @procedure = Procedure.first
-
-    expect(page).to have_css("tr.procedure[data-id='#{@procedure.id}'] .bootstrap-select.performed-by-dropdown span.filter-option", text: 'Nothing selected')
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: "")
   end
 end

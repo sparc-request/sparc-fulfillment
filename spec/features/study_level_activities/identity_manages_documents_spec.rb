@@ -2,42 +2,50 @@ require 'rails_helper'
 
 feature 'Identity manages Doucuments', js: true do
 
-  scenario 'User views line item documents' do
-    given_i_visit_the_study_level_activities_tab
-    when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
-    then_i_should_see_the_line_item_documents_list
+  context 'User views line item documents' do
+    scenario 'and sees the line item documents list' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
+      then_i_should_see_the_line_item_documents_list
+    end
   end
 
-  scenario 'User uploads new line item document' do
-    given_i_visit_the_study_level_activities_tab
-    when_i_have_a_document_to_upload
-    when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
-    when_i_click_on_the_add_document_button
-    when_i_upload_a_document
-    when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
-    then_i_should_see_the_document
+  context 'User uploads new line item document' do
+    scenario 'and sees the document' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_have_a_document_to_upload
+      when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
+      when_i_click_on_the_add_document_button
+      when_i_upload_a_document
+      when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
+      then_i_should_see_the_document
+    end
   end
 
 
-  scenario 'User views fulfillment documents' do
-    given_i_visit_the_study_level_activities_tab
-    when_i_open_up_a_fulfillment
-    when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
-    then_i_should_see_the_fulfillment_documents_list
+  context 'User views fulfillment documents' do
+    scenario 'and sees the fulfillments documents list' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
+      then_i_should_see_the_fulfillment_documents_list
+    end
   end
 
-  scenario 'User uploads new fulfillment document' do
-    given_i_visit_the_study_level_activities_tab
-    when_i_open_up_a_fulfillment
-    when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
-    when_i_have_a_document_to_upload
-    when_i_click_on_the_add_document_button
-    when_i_upload_a_document
-    when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
-    then_i_should_see_the_document
+  context 'User uploads new fulfillment document' do
+    scenario 'and sees the document' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
+      when_i_have_a_document_to_upload
+      when_i_click_on_the_add_document_button
+      when_i_upload_a_document
+      when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
+      then_i_should_see_the_document
+    end
   end
 
-  def given_i_visit_the_study_level_activities_tab
+  def given_i_am_viewing_the_study_level_activities_tab
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)

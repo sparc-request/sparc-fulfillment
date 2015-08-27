@@ -30,6 +30,11 @@ feature 'Incomplete Procedure', js: true do
         when_i_view_the_notes_list
         then_i_should_see_one_complete_note_and_one_incomplete_note
       end
+      scenario 'and sees they are the performer' do
+        given_i_am_viewing_a_procedure_marked_as_complete
+        when_i_incomplete_the_procedure
+        then_i_should_see_that_i_am_the_procedure_performer
+      end
     end
 
     context 'and marks a complete procedure as incomplete and then cancels' do
@@ -70,6 +75,14 @@ feature 'Incomplete Procedure', js: true do
         when_i_incomplete_the_procedure
         when_i_click_the_incomplete_button
         then_i_should_see_that_the_procedure_status_has_been_reset
+      end
+
+      scenario 'and sees that the performed by dropdown has been reset' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_begin_the_appointment
+        when_i_incomplete_the_procedure
+        when_i_click_the_incomplete_button
+        then_i_should_see_that_the_procedure_performed_by_has_been_reset
       end
     end
   end
@@ -131,10 +144,18 @@ feature 'Incomplete Procedure', js: true do
 
   def when_i_save_the_incomplete
     click_button 'Save'
+    wait_for_ajax
   end
 
   def when_i_cancel_the_incomplete
     first(".modal button.close").click
+  end
+
+  def then_i_should_see_that_i_am_the_procedure_performer
+    procedure  = Procedure.first
+    identity   = Identity.first
+
+    expect(page).to have_css("tr.procedure[data-id='#{procedure.id}'] .bootstrap-select.performed-by-dropdown span.filter-option", text: identity.full_name)
   end
 
   def when_i_view_the_notes_list
@@ -161,7 +182,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def then_i_should_see_errors
-    expect(page).to_not have_css('.modal-dialog .alert')
+    expect(page).to have_css('.modal-dialog .alert', text: "Notes reason can't be blank")
   end
 
   def then_i_should_see_one_complete_note_and_one_incomplete_note
@@ -179,6 +200,10 @@ feature 'Incomplete Procedure', js: true do
 
   def then_i_should_see_that_the_procedure_status_has_been_reset
     expect(page).to have_css("tr.procedure .date input[disabled]")
+  end
+
+  def then_i_should_see_that_the_procedure_performed_by_has_been_reset
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: "")
   end
 
   def then_i_should_see_a_helpful_message
