@@ -55,17 +55,19 @@ $ ->
       $(rows).slideUp('slow')
 
   fire = () ->
-    core = $('tr.core').first()
-    pg = new ProcedureGrouper(core)
-    group = pg.create_group('R_18')
-    rows = $("tr.procedure[data-group-id='R_18']")
-    $(rows).first().css('border-bottom', '2px #333 solid')
+    for core in $('tr.core')
+      pg = new ProcedureGrouper(core)
 
-    add = (row, group) ->
-      pg.add_service_to_group row, group
+      for service in pg.duplicate_services()
+        group = pg.create_group(service)
+        rows = $("tr.procedure[data-group-id='#{service}']")
+        $(rows).first().css('border-bottom', '2px #333 solid')
 
-    add row, group for row in rows
-    pg.hide_group('R_18')
+        add = (row, group) ->
+          pg.add_service_to_group row, group
+
+        add row, group for row in rows
+        pg.hide_group(service)
 
   window.fire = fire
 
