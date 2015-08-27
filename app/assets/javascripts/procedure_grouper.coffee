@@ -2,7 +2,8 @@ $ ->
 
   class ProcedureGrouper
     constructor: (@core) ->
-      @rows = $(@core).find('tbody tr')
+      @rows = $(@core).find('tbody tr.procedure')
+      @procedures_table = $(@core).find('table.procedures tbody')
 
     duplicate_services: (rows = this.rows) ->
       service_ids = []
@@ -25,5 +26,12 @@ $ ->
 
       return detect_duplicates(service_ids)
 
+    create_group: (group_id) ->
+      [service_billing_type, service_id] = group_id.split('_')
+      services = $(this.procedures_table).find("tr[data-group-id='#{group_id}']")
+      title = $(services[0]).find('td.name').text()
+      service_count = services.length
+
+      this.procedures_table.prepend("<tr class='procedure-group'><td colspan='8' class='text-left'>#{title} (#{service_count}) #{service_billing_type}</td></tr>")
 
   window.ProcedureGrouper = ProcedureGrouper
