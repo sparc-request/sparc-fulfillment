@@ -71,7 +71,8 @@ $ ->
       data: data
 
   $(document).on 'change', '.billing_type', ->
-    procedure_id = $(this).parents('.procedure').data('id')
+    procedure    = $(this).parents('tr.procedure')
+    procedure_id = $(procedure).data('id')
     billing_type = $(this).val()
     data = procedure:
            billing_type: billing_type
@@ -79,7 +80,14 @@ $ ->
       type: 'PUT'
       url: "/procedures/#{procedure_id}"
       data: data
-
+      success: ->
+        procedure    = $("tr.procedure[data-id='#{procedure_id}']")
+        group_id     = $(procedure).attr("data-group-id")
+        pg           = new ProcedureGrouper($(procedure).closest('tr.core'))
+        if pg.group_size(group_id) == 1
+          pg.remove_service_from_group($(procedure), $(procedure).prevAll("tr.procedure-group").first())
+        else
+          # move to another group
 
   $(document).on 'click', 'label.status.complete', ->
     active        = $(this).hasClass('active')
@@ -165,6 +173,8 @@ $ ->
 
   $(document).on 'click', '.procedure button.delete', ->
     procedure_id = $(this).parents(".procedure").data("id")
+    group_id     = $(this).parents(".procedure").data("group-id")
+    pg           = new ProcedureGrouper($(this).closest('tr.core'))
 
     if confirm('Are you sure you want to remove this procedure?')
       $.ajax
@@ -172,6 +182,12 @@ $ ->
         url:  "/procedures/#{procedure_id}.js"
         error: ->
           alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
+        success: ->
+          # if group only has one procedure, merge into pasture
+          procedures = $("tr.procedure[data-group-id='#{group_id}']")
+          if procedures.length == 1
+            pg.remove_service_from_group(procedures[0], $("tr.procedure-group[data-group-id='#{group_id}']"))
+            pg.destroy_group(group_id)
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
