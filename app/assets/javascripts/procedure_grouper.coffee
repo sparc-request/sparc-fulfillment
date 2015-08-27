@@ -32,6 +32,41 @@ $ ->
       title = $(services[0]).find('td.name').text()
       service_count = services.length
 
-      this.procedures_table.prepend("<tr class='procedure-group'><td colspan='8' class='text-left'>#{title} (#{service_count}) #{service_billing_type}</td></tr>")
+      this.procedures_table.prepend("<tr class='procedure-group'><td colspan='8'><button type='button', class='btn btn-xs btn-primary'>#{service_count}<span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
+
+      return $(this.procedures_table).find('.procedure-group').first()
+
+    add_service_to_group: (service_row, service_group) ->
+      row = $(service_row).detach()
+
+      $(service_group).after(row)
+      $(service_group).css('border', '2px #333 solid')
+      $(service_row).css('border-right', '2px #333 solid').css('border-left', '2px #333 solid')
+      $(service_row).find('td.name').addClass('muted')
+
+    show_group: (group_id) ->
+      rows = $("tr.procedure[data-group-id=#{group_id}]")
+
+      $(rows).slideDown('slow')
+
+    hide_group: (group_id) ->
+      rows = $("tr.procedure[data-group-id=#{group_id}]")
+
+      $(rows).slideUp('slow')
+
+  fire = () ->
+    core = $('tr.core').first()
+    pg = new ProcedureGrouper(core)
+    group = pg.create_group('R_18')
+    rows = $("tr.procedure[data-group-id='R_18']")
+    $(rows).first().css('border-bottom', '2px #333 solid')
+
+    add = (row, group) ->
+      pg.add_service_to_group row, group
+
+    add row, group for row in rows
+    pg.hide_group('R_18')
+
+  window.fire = fire
 
   window.ProcedureGrouper = ProcedureGrouper
