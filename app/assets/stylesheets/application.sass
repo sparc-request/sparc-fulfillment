@@ -15,7 +15,6 @@
 @import "participants"
 @import "tasks"
 @import "notifications"
-@import "study_level_activities"
 @import "study_schedule"
 
 .opacity50
@@ -65,6 +64,10 @@ table.custom_striped
       cursor: pointer
     td[colspan='8']:hover
       cursor: auto
+
+  tbody tr.bs-highlighted
+    border: 5px solid #f0ad4e
+
 
 table.custom_striped_financial
   thead th

@@ -4,7 +4,7 @@ $ ->
   $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))
   $(".selectpicker").selectpicker()
 
-  $(document).on 'load-success.bs.table', 'table', ->
+  $(document).on 'all.bs.table', 'table', ->
     $(".selectpicker").selectpicker()
 
   $(document).on 'search.bs.table', "table", (event, input)->

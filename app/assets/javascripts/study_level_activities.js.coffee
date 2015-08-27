@@ -35,6 +35,16 @@ $ ->
         type: "DELETE"
         url: "/line_items/#{line_item_id}"
 
+  $('table.study_level_activities').on 'click', 'td:not(td.components):not(td.options)', ->
+    row_index   = $(this).parents("tr").data("index")
+    line_item_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
+    $("tr").removeClass("bs-highlighted")
+    $(this).parents("tr").addClass("bs-highlighted")
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments"
+      data: "line_item_id" : line_item_id
+
   # Fulfillment Bindings
 
   $(document).on 'click', '.otf_fulfillment_new', ->
@@ -51,12 +61,3 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
-
-  $('table.study_level_activities').on 'click', 'td:not(td.components):not(td.options)', ->
-    if $(this).find("div.card-view").length == 0
-      row_index   = $(this).parents("tr").data("index")
-      line_item_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
-      $.ajax
-        type: 'GET'
-        url: "/fulfillments"
-        data: "line_item_id" : line_item_id
