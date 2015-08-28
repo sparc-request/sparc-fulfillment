@@ -84,6 +84,7 @@ $ ->
   $(document).on 'change', '.billing_type', ->
     procedure    = $(this).parents('tr.procedure')
     procedure_id = $(procedure).data('id')
+    original_group_id = $(procedure).data('group-id')
     billing_type = $(this).val()
     data = procedure:
            billing_type: billing_type
@@ -96,13 +97,10 @@ $ ->
         group_id     = $(procedure).data('group-id')
         pg           = new ProcedureGrouper($(procedure).parents('tr.core'))
 
-        if pg.group_size(group_id) == 1
-          service_group = $(procedure).prev("tr.procedure-group")
+        console.log original_group_id
+        console.log group_id
 
-          pg.remove_service_from_group($(procedure), service_group)
-          pg.destroy_group(group_id)
-        else
-          # move to another group
+        # pg.update_group_membership(procedure, original_group_id)
 
   $(document).on 'click', 'label.status.complete', ->
     active        = $(this).hasClass('active')

@@ -81,6 +81,30 @@ $ ->
     group_size: (group_id) ->
       $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']").length
 
+    update_group_membership: (row, original_group_id) ->
+      group_id = $(row).data('group-id')
+      service_group = $(row).("tr.procedure-group[data-group-id='#{group_id}']")
+
+      if i_have_siblings
+        if my_siblings_are_in_group
+          join_group
+        else
+          create_group
+          join_group
+          invite_siblings
+      else
+        go_to_pasture
+
+      if i_left_a_group && that_group_has_1_member
+        destroy_group
+
+      # if this.group_size(group_id) == 1
+      #   this.remove_service_from_group($(row), service_group)
+      #   this.destroy_group(group_id)
+      # else if service_group.length != 0 && service_group.data('group-id') == group_id
+      #   add_service_to_group(row, service_group)
+
+
   fire = () ->
     for core in $('tr.core')
       pg = new ProcedureGrouper(core)
