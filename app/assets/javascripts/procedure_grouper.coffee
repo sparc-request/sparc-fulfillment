@@ -83,15 +83,39 @@ $ ->
 
     update_group_membership: (row, original_group_id) ->
       group_id = $(row).data('group-id')
-      service_group = $(row).("tr.procedure-group[data-group-id='#{group_id}']")
+      service_group = $(this.procedures_table).find("tr.procedure-group[data-group-id='#{group_id}']")
+
+      do_i_have_siblings = ->
+        group_size(group_id) > 1
+
+      does_my_group_exist = ->
+        service_group.length == 1
+
+      join_group = ->
+        add_service_to_group(row, service_group)
+
+      create_a_group = ->
+        create_group(group_id)
+
+      wrangle_siblings = ->
+        siblings = $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']")
+
+        add_service_to_group sibling, service_group for sibling in siblings
+
+      go_to_pasture = ->
+        remove_service_from_group(row, service_group)
+
+      i_left_a_group = ->
+        #Brain fart
+        service_group.data('original_group_id') == original_group_id
 
       if i_have_siblings
-        if my_siblings_are_in_group
+        if does_my_group_exist
           join_group
         else
           create_group
           join_group
-          invite_siblings
+          wrangle_siblings
       else
         go_to_pasture
 
