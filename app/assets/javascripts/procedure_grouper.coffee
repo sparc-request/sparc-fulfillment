@@ -32,7 +32,7 @@ $ ->
       title = $(services[0]).find('td.name').text()
       service_count = services.length
 
-      this.procedures_table.prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button', class='btn btn-xs btn-primary'><span>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
+      this.procedures_table.prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
 
       return $(this.procedures_table).find('.procedure-group').first()
 
@@ -55,13 +55,19 @@ $ ->
 
     show_group: (group_id) ->
       rows = $("tr.procedure[data-group-id=#{group_id}]")
+      group = $("tr.procedure-group[data-group-id='#{group_id}']")
+      button_span = $(group).find('span.glyphicon')
 
-      $(rows).slideDown('slow')
+      $(rows).slideDown()
+      $(button_span).addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-right')
 
     hide_group: (group_id) ->
       rows = $("tr.procedure[data-group-id=#{group_id}]")
+      group = $("tr.procedure-group[data-group-id='#{group_id}']")
+      button_span = $(group).find('span.glyphicon')
 
-      $(rows).slideUp('slow')
+      $(rows).slideUp()
+      $(button_span).addClass('glyphicon-chevron-right').removeClass('glyphicon-chevron-down')
 
     style_group: (service_group) ->
       $(service_group).css('border', '2px #333 solid')

@@ -1,5 +1,16 @@
 $ ->
 
+  $(document).on 'click', 'tr.procedure-group button', ->
+    core = $(this).closest('tr.core')
+    pg = new ProcedureGrouper(core)
+    group = $(this).parents('.procedure-group')
+    group_id = $(group).data('group-id')
+
+    if $(group).find('span.glyphicon').hasClass('glyphicon-chevron-right')
+      pg.show_group(group_id)
+    else
+      pg.hide_group(group_id)
+
   $(document).on 'click', '.dashboard_link', ->
     if $(this).hasClass('active')
       $(this).removeClass('active')
