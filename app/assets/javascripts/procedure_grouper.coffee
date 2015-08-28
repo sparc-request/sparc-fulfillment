@@ -52,6 +52,7 @@ $ ->
 
     destroy_group: (group_id) ->
       $("tr.procedure-group[data-group-id='#{group_id}']").remove()
+      $("tr.procedure[data-group-id='#{group_id}']").removeAttr('style').find('td.name').removeClass('muted')
 
     show_group: (group_id) ->
       rows = $("tr.procedure[data-group-id=#{group_id}]")

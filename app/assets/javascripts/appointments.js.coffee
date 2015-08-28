@@ -93,10 +93,14 @@ $ ->
       data: data
       success: ->
         procedure    = $("tr.procedure[data-id='#{procedure_id}']")
-        group_id     = $(procedure).attr("data-group-id")
-        pg           = new ProcedureGrouper($(procedure).closest('tr.core'))
+        group_id     = $(procedure).data('group-id')
+        pg           = new ProcedureGrouper($(procedure).parents('tr.core'))
+
         if pg.group_size(group_id) == 1
-          pg.remove_service_from_group($(procedure), $(procedure).prevAll("tr.procedure-group").first())
+          service_group = $(procedure).prev("tr.procedure-group")
+
+          pg.remove_service_from_group($(procedure), service_group)
+          pg.destroy_group(group_id)
         else
           # move to another group
 
