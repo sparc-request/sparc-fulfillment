@@ -5,6 +5,12 @@ $ ->
       @rows = $(@core).find('tbody tr.procedure')
       @procedures_table = $(@core).find('table.procedures tbody')
 
+    find_rows: (group_id) ->
+      $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']")
+
+    find_group: (group_id) ->
+      $(this.procedures_table).find("tr.procedure-group[data-group-id='#{group_id}']")
+
     duplicate_services: (rows = this.rows) ->
       service_ids = []
 
@@ -28,7 +34,7 @@ $ ->
 
     create_group: (group_id) ->
       [service_billing_type, service_id] = group_id.split('_')
-      services = $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']")
+      services = this.find_rows(group_id)
       title = $(services[0]).find('td.name').text()
       service_count = services.length
 
@@ -51,20 +57,20 @@ $ ->
       $(service_group).find('span').first().text("#{parseInt(qty) - 1}")
 
     destroy_group: (group_id) ->
-      $("tr.procedure-group[data-group-id='#{group_id}']").remove()
-      $("tr.procedure[data-group-id='#{group_id}']").removeAttr('style').find('td.name').removeClass('muted')
+      this.find_group(group_id).remove()
+      this.find_rows(group_id).removeAttr("style").find("td.name")
 
     show_group: (group_id) ->
-      rows = $("tr.procedure[data-group-id=#{group_id}]")
-      group = $("tr.procedure-group[data-group-id='#{group_id}']")
+      rows = this.find_rows(group_id)
+      group = this.find_group(group_id)
       button_span = $(group).find('span.glyphicon')
 
       $(rows).slideDown()
       $(button_span).addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-right')
 
     hide_group: (group_id) ->
-      rows = $("tr.procedure[data-group-id=#{group_id}]")
-      group = $("tr.procedure-group[data-group-id='#{group_id}']")
+      rows = this.find_rows(group_id)
+      group = this.find_group(group_id)
       button_span = $(group).find('span.glyphicon')
 
       $(rows).slideUp()
@@ -73,54 +79,61 @@ $ ->
     style_group: (service_group) ->
       $(service_group).css('border', '2px #333 solid')
       group_id   = $(service_group).data('group-id')
-      group_rows = $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']")
+      group_rows = this.find_rows(group_id)
       $(group_rows).css('border-right', '2px #333 solid').css('border-left', '2px #333 solid')
       $(group_rows).find("td.name").addClass('muted')
       $(group_rows).last().css('border-bottom', '2px #333 solid')
 
     group_size: (group_id) ->
-      $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']").length
+      this.find_rows(group_id).length
 
     update_group_membership: (row, original_group_id) ->
       group_id = $(row).data('group-id')
-      service_group = $(this.procedures_table).find("tr.procedure-group[data-group-id='#{group_id}']")
+      service_group = this.find_group(group_id)
+      self = this
 
       do_i_have_siblings = ->
-        group_size(group_id) > 1
+        self.group_size(group_id) > 1
 
       does_my_group_exist = ->
         service_group.length == 1
 
       join_group = ->
-        add_service_to_group(row, service_group)
+        self.add_service_to_group(row, service_group)
 
       create_a_group = ->
-        create_group(group_id)
+        self.create_group(group_id)
 
       wrangle_siblings = ->
-        siblings = $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']")
+        siblings = self.find_rows()
 
-        add_service_to_group sibling, service_group for sibling in siblings
+        self.add_service_to_group sibling, service_group for sibling in siblings
 
       go_to_pasture = ->
-        remove_service_from_group(row, service_group)
+        self.remove_service_from_group(row, service_group)
+        #attach somewhere in pasture
 
       i_left_a_group = ->
-        #Brain fart
-        service_group.data('original_group_id') == original_group_id
+        group_id != original_group_id
 
-      if i_have_siblings
-        if does_my_group_exist
-          join_group
+      does_original_group_have_1_member = ->
+        self.group_size(original_group_id) == 1
+
+      destroy_a_group = ->
+        self.destroy_group(original_group_id)
+
+      if do_i_have_siblings()
+        if does_my_group_exist()
+          join_group()
         else
-          create_group
-          join_group
-          wrangle_siblings
+          create_a_group()
+          join_group()
+          wrangle_siblings()
       else
-        go_to_pasture
+        go_to_pasture()
 
-      if i_left_a_group && that_group_has_1_member
-        destroy_group
+      if i_left_a_group() && does_original_group_have_1_member()
+        destroy_a_group()
 
       # if this.group_size(group_id) == 1
       #   this.remove_service_from_group($(row), service_group)

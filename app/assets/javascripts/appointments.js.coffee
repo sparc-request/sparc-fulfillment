@@ -100,7 +100,7 @@ $ ->
         console.log original_group_id
         console.log group_id
 
-        # pg.update_group_membership(procedure, original_group_id)
+        pg.update_group_membership(procedure, original_group_id)
 
   $(document).on 'click', 'label.status.complete', ->
     active        = $(this).hasClass('active')
