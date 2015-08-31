@@ -118,9 +118,11 @@ $ ->
 
         self.add_service_to_group sibling, group for sibling in siblings
         self.redraw_group(group_id)
+        self.show_group(group_id)
 
       go_to_pasture = ->
         self.remove_service_from_group(row, original_service_group)
+        self.redraw_group(original_group_id)
 
       i_left_a_group = ->
         group_id != original_group_id
