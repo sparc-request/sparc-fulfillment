@@ -96,7 +96,7 @@ $ ->
         self.group_size(group_id) > 1
 
       does_my_group_exist = ->
-        service_group.length == 1
+        service_group.length >= 1
 
       join_group = ->
         self.add_service_to_group(row, service_group)
