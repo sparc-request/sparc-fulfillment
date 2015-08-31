@@ -58,14 +58,11 @@ $ ->
       row = $(service_row).detach()
 
       $(service_group).before(row)
-      $(row).removeAttr('style')
-      $(row).find('td.name').removeClass('muted')
-      qty = $(service_group).find('span').first().text()
-      $(service_group).find('span').first().text("#{parseInt(qty) - 1}")
+      $(row).removeAttr('style').find('td.name').removeClass('muted')
 
     destroy_group: (group_id) ->
       this.find_group(group_id).remove()
-      this.find_rows(group_id).removeAttr("style").find("td.name")
+      this.find_rows(group_id).removeAttr('style').find('td.name').removeClass('muted')
 
     show_group: (group_id) ->
       rows = this.find_rows(group_id)
@@ -88,7 +85,7 @@ $ ->
       group_id   = $(service_group).data('group-id')
       group_rows = this.find_rows(group_id)
       $(group_rows).css('border-right', '2px #333 solid').css('border-left', '2px #333 solid')
-      $(group_rows).find("td.name").addClass('muted')
+      $(group_rows).find('td.name').addClass('muted')
       $(group_rows).first().css('border-bottom', 'none')
       $(group_rows).last().css('border-bottom', '2px #333 solid')
 
@@ -106,22 +103,23 @@ $ ->
       does_my_group_exist = ->
         service_group.length == 1
 
-      join_group = ->
-        self.add_service_to_group(row, service_group)
+      join_group = (group) ->
+        self.add_service_to_group(row, group)
         self.redraw_group(group_id)
         self.redraw_group(original_group_id)
 
       create_a_group = ->
         self.create_group(group_id)
 
-      wrangle_siblings = ->
-        siblings = self.find_rows()
+      wrangle_siblings = (group) ->
+        group_id = $(group).data('group-id')
+        siblings = self.find_rows(group_id)
 
-        self.add_service_to_group sibling, service_group for sibling in siblings
+        self.add_service_to_group sibling, group for sibling in siblings
+        self.redraw_group(group_id)
 
       go_to_pasture = ->
         self.remove_service_from_group(row, service_group)
-        #attach somewhere in pasture
 
       i_left_a_group = ->
         group_id != original_group_id
@@ -133,24 +131,20 @@ $ ->
         self.destroy_group(original_group_id)
 
       if do_i_have_siblings()
+        console.log 'SIBLINGS'
         if does_my_group_exist()
-          join_group()
+          join_group(service_group)
         else
-          create_a_group()
-          join_group()
-          wrangle_siblings()
+          group = create_a_group()
+          join_group(group)
+          wrangle_siblings(group)
       else
+        console.log 'NO SIBLINGS'
         go_to_pasture()
 
       if i_left_a_group() && does_original_group_have_1_member()
+        console.log 'DESTROY'
         destroy_a_group()
-
-      # if this.group_size(group_id) == 1
-      #   this.remove_service_from_group($(row), service_group)
-      #   this.destroy_group(group_id)
-      # else if service_group.length != 0 && service_group.data('group-id') == group_id
-      #   add_service_to_group(row, service_group)
-
 
   fire = () ->
     for core in $('tr.core')
