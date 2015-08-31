@@ -92,6 +92,18 @@ $ ->
     group_size: (group_id) ->
       this.find_rows(group_id).length
 
+    destroy_row: (row) ->
+      group_id = $(row).data('group-id')
+      group = this.find_group(group_id)
+
+      $(row).remove()
+
+      if this.group_size(group_id) == 1
+        this.destroy_group(group_id)
+      else
+        this.redraw_group(group_id)
+
+
     update_group_membership: (row, original_group_id) ->
       group_id = $(row).data('group-id')
       service_group = this.find_group(group_id)
@@ -134,7 +146,6 @@ $ ->
         self.destroy_group(original_group_id)
 
       if do_i_have_siblings()
-        console.log 'SIBLINGS'
         if does_my_group_exist()
           join_group(service_group)
         else
@@ -142,11 +153,9 @@ $ ->
           join_group(group)
           wrangle_siblings(group)
       else
-        console.log 'NO SIBLINGS'
         go_to_pasture()
 
       if i_left_a_group() && does_original_group_have_1_member()
-        console.log 'DESTROY'
         destroy_a_group()
 
   fire = () ->

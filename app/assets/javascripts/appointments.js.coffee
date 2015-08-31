@@ -182,9 +182,11 @@ $ ->
       url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', '.procedure button.delete', ->
-    procedure_id = $(this).parents(".procedure").data("id")
-    group_id     = $(this).parents(".procedure").data("group-id")
+    element      = $(this).parents(".procedure")
+    procedure_id = $(element).data("id")
+    group_id     = $(element).data("group-id")
     pg           = new ProcedureGrouper($(this).closest('tr.core'))
+
 
     if confirm('Are you sure you want to remove this procedure?')
       $.ajax
@@ -193,11 +195,7 @@ $ ->
         error: ->
           alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
         success: ->
-          # if group only has one procedure, merge into pasture
-          procedures = $("tr.procedure[data-group-id='#{group_id}']")
-          if procedures.length == 1
-            pg.remove_service_from_group(procedures[0], $("tr.procedure-group[data-group-id='#{group_id}']"))
-            pg.destroy_group(group_id)
+          pg.destroy_row(element)
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
