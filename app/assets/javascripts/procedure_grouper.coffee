@@ -95,6 +95,7 @@ $ ->
     update_group_membership: (row, original_group_id) ->
       group_id = $(row).data('group-id')
       service_group = this.find_group(group_id)
+      original_service_group = this.find_group(original_group_id)
       self = this
 
       do_i_have_siblings = ->
@@ -119,7 +120,7 @@ $ ->
         self.redraw_group(group_id)
 
       go_to_pasture = ->
-        self.remove_service_from_group(row, service_group)
+        self.remove_service_from_group(row, original_service_group)
 
       i_left_a_group = ->
         group_id != original_group_id

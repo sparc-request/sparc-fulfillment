@@ -97,9 +97,6 @@ $ ->
         group_id     = $(procedure).data('group-id')
         pg           = new ProcedureGrouper($(procedure).parents('tr.core'))
 
-        console.log original_group_id
-        console.log group_id
-
         pg.update_group_membership(procedure, original_group_id)
 
   $(document).on 'click', 'label.status.complete', ->
