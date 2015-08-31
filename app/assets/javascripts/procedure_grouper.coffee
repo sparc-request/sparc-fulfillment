@@ -38,9 +38,16 @@ $ ->
       title = $(services[0]).find('td.name').text()
       service_count = services.length
 
-      this.procedures_table.prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
+      this.procedures_table.prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
 
       return $(this.procedures_table).find('.procedure-group').first()
+
+    redraw_group: (group_id) ->
+      count = this.find_rows(group_id).length
+      group = this.find_group(group_id)
+
+      $(group).find('span.count').text(count)
+      this.style_group(group)
 
     add_service_to_group: (service_row, service_group) ->
       row = $(service_row).detach()
@@ -82,6 +89,7 @@ $ ->
       group_rows = this.find_rows(group_id)
       $(group_rows).css('border-right', '2px #333 solid').css('border-left', '2px #333 solid')
       $(group_rows).find("td.name").addClass('muted')
+      $(group_rows).first().css('border-bottom', 'none')
       $(group_rows).last().css('border-bottom', '2px #333 solid')
 
     group_size: (group_id) ->
@@ -96,10 +104,12 @@ $ ->
         self.group_size(group_id) > 1
 
       does_my_group_exist = ->
-        service_group.length >= 1
+        service_group.length == 1
 
       join_group = ->
         self.add_service_to_group(row, service_group)
+        self.redraw_group(group_id)
+        self.redraw_group(original_group_id)
 
       create_a_group = ->
         self.create_group(group_id)
