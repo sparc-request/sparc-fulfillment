@@ -114,9 +114,10 @@ $ ->
       else
         this.redraw_group(group_id)
 
+    remove_all_new_row_classes: () ->
+      $('tr.procedure.new').removeClass('new')
 
     update_group_membership: (row, original_group_id) ->
-      console.log("update")
       group_id = $(row).data('group-id')
       service_group = this.find_group(group_id)
       original_service_group = this.find_group(original_group_id)
@@ -156,6 +157,9 @@ $ ->
       destroy_a_group = ->
         self.destroy_group(original_group_id)
 
+      i_am_a_new_row = (row) ->
+        $(row).hasClass('new')
+
       if do_i_have_siblings()
         if does_my_group_exist()
           join_group(service_group)
@@ -164,10 +168,13 @@ $ ->
           join_group(group)
           wrangle_siblings(group)
       else
-        go_to_pasture()
+        if !i_am_a_new_row(row)
+          go_to_pasture()
 
       if i_left_a_group() && does_original_group_have_1_member()
         destroy_a_group()
+
+      self.remove_all_new_row_classes()
 
   fire = () ->
     for core in $('tr.core')
@@ -183,7 +190,8 @@ $ ->
         add row, group for row in rows
         pg.style_group group
         pg.hide_group(service)
-        pg.rows.removeClass('new')
+
+      pg.remove_all_new_row_classes()
 
   window.fire = fire
 
