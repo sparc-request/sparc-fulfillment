@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-# server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
+server 'cwf-s.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
@@ -31,7 +31,12 @@
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
 
-
+set :branch, 'staging'
+set :rails_env, 'staging'
+set :rvm_ruby_version, '2.1.5@fulfillment-staging --create'
+set :passenger_restart_with_touch, true
+#set :passenger_environment_variables, { :path => '/usr/local/rvm/gems/ruby-1.9.3-p286/bin:$PATH' }
+#set :passenger_rvm_ruby_version, 'ruby-1.9.3-p286'
 
 # Custom SSH Options
 # ==================
