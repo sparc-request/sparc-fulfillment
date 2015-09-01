@@ -13,15 +13,19 @@ $ ->
 
     duplicate_services: (rows = this.rows) ->
       service_ids = []
+      self = this
 
       map_service_ids = (row) ->
         service_ids.push $(row).data('group-id')
+
+      is_already_grouped = (group_id) ->
+        self.find_group(group_id).length == 1
 
       detect_duplicates = (ids) ->
         duplicate_ids = []
 
         find_duplicate = (id) ->
-          if _.indexOf(service_ids, id) != _.lastIndexOf(service_ids, id)
+          if _.indexOf(service_ids, id) != _.lastIndexOf(service_ids, id) && !is_already_grouped(id)
             duplicate_ids.push id
 
         find_duplicate id for id in _.uniq ids
@@ -51,6 +55,9 @@ $ ->
 
     add_service_to_group: (service_row, service_group) ->
       row = $(service_row).detach()
+      group_id = $(service_row).data('group-id')
+      if !this.is_group_open(group_id)
+        $(row).hide()
 
       $(service_group).after(row)
 
@@ -71,6 +78,10 @@ $ ->
 
       $(rows).slideDown()
       $(button_span).addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-right')
+
+    is_group_open: (group_id) ->
+      group = this.find_group(group_id)
+      $(group).find('.glyphicon-chevron-down').length > 0
 
     hide_group: (group_id) ->
       rows = this.find_rows(group_id)
@@ -105,6 +116,7 @@ $ ->
 
 
     update_group_membership: (row, original_group_id) ->
+      console.log("update")
       group_id = $(row).data('group-id')
       service_group = this.find_group(group_id)
       original_service_group = this.find_group(original_group_id)
@@ -120,7 +132,6 @@ $ ->
         self.add_service_to_group(row, group)
         self.redraw_group(group_id)
         self.redraw_group(original_group_id)
-
       create_a_group = ->
         self.create_group(group_id)
 
@@ -172,6 +183,7 @@ $ ->
         add row, group for row in rows
         pg.style_group group
         pg.hide_group(service)
+        pg.rows.removeClass('new')
 
   window.fire = fire
 

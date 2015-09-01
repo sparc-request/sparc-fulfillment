@@ -40,6 +40,15 @@ $ ->
       type: 'POST'
       url:  "/procedures.js"
       data: data
+      success: ->
+        new_services = $('tr.procedure.new')
+        core = $(new_services).first().parents('.core')
+        console.log '********'
+        console.log core
+        pg = new ProcedureGrouper(core)
+        pg.update_group_membership new_service, "" for new_service in new_services
+
+
 
   $(document).on 'click', '.start_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
