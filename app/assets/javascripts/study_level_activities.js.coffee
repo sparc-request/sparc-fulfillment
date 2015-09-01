@@ -38,12 +38,25 @@ $ ->
   $('table.study_level_activities').on 'click', 'td:not(td.components):not(td.options)', ->
     row_index   = $(this).parents("tr").data("index")
     line_item_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
-    $("tr").removeClass("bs-highlighted")
-    $(this).parents("tr").addClass("bs-highlighted")
-    $.ajax
-      type: 'GET'
-      url: "/fulfillments"
-      data: "line_item_id" : line_item_id
+    if $('#fulfillments_table_area').hasClass('slide_active') # if fulfillment table shown
+      $('#fulfillments_table_area').removeClass('slide_active') # remove active class
+      $("tr").removeClass("bs-highlighted") # remove highlighting from clicked row
+      if $("#fulfillments_table_area").attr('data-line_item_id') == "#{line_item_id}" # fulfillments for clicked line item already displayed
+        $('#fulfillments_table_area').slideUp() # hide fulfillments
+      else # a new line item has been clicked
+        $(this).parents("tr").addClass("bs-highlighted") # highlight clicked row
+        $('#fulfillments_table_area').slideUp('normal', 'swing', -> # on hide completion, call for new fulfillments
+          $.ajax
+            type: 'GET'
+            url: "/fulfillments"
+            data: "line_item_id" : line_item_id
+        )
+    else # not already displayed
+      $(this).parents("tr").addClass("bs-highlighted") # highlight clicked row
+      $.ajax # call for new fulfillments
+        type: 'GET'
+        url: "/fulfillments"
+        data: "line_item_id" : line_item_id
 
   # Fulfillment Bindings
 
