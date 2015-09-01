@@ -193,7 +193,6 @@ $ ->
     group_id     = $(element).data("group-id")
     pg           = new ProcedureGrouper($(this).closest('tr.core'))
 
-
     if confirm('Are you sure you want to remove this procedure?')
       $.ajax
         type: 'DELETE'

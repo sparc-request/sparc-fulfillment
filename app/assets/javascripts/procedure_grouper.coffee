@@ -107,6 +107,9 @@ $ ->
       group_id = $(row).data('group-id')
       group = this.find_group(group_id)
 
+      if this.rows.length == 1
+        $(row).parents('.core').remove()
+
       $(row).remove()
 
       if this.group_size(group_id) == 1
