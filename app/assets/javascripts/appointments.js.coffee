@@ -29,6 +29,10 @@ $ ->
         type: 'GET'
         url: "/appointments/#{id}.js"
         success: ->
+          pg = new ProcedureGrouper
+
+          pg.initialize()
+
     event.stopPropagation()
 
   $(document).on 'click', '.add_service', ->

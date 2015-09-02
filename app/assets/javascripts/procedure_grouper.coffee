@@ -179,8 +179,33 @@ $ ->
 
       self.remove_all_new_row_classes()
 
+    build_core_multiselect_options: (core) ->
+      option_data = []
+
+      find_row_name = (group_id) ->
+        row = $("tr[data-group-id='#{group_id}']").first()
+
+        if $(row).hasClass('procedure-group')
+          name = $(row).text().split(/\s+/).join(' ')
+        else
+          quantity = 1
+          service_name = $(row).find('td.name').text().trim()
+          billing_type = group_id.split('_')[0]
+          name = [quantity, service_name, billing_type].join(' ')
+
+        option_data.push label: name, title: name, value: group_id
+
+      group_ids = _.uniq $.map $(core).find('tr.procedure'), (row) ->
+        $(row).data('group-id')
+
+      find_row_name group_id for group_id in group_ids
+
+      $(core).find('.multiselect').multiselect('dataprovider', option_data).multiselect('rebuild')
+
     initialize: ->
       self = this
+
+      $('.core_multiselect').multiselect()
 
       for core in this.cores
         rows = $(core).find('tbody tr.procedure')
@@ -196,6 +221,7 @@ $ ->
           self.style_group group
           self.hide_group(service)
 
+        self.build_core_multiselect_options(core)
         self.remove_all_new_row_classes()
 
   window.ProcedureGrouper = ProcedureGrouper
