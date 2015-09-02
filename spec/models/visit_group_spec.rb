@@ -51,19 +51,6 @@ RSpec.describe VisitGroup, type: :model do
       end
     end
 
-    describe 'callbacks' do
-
-      it 'should callback :reorder_visit_groups_up after create' do
-        visit_group = create(:visit_group_with_arm)
-        expect(visit_group).to callback(:reorder_visit_groups_up).after(:create)
-      end
-
-      it 'should callback :reorder_visit_groups_down after destroy' do
-        visit_group = create(:visit_group_with_arm)
-        expect(visit_group).to callback(:reorder_visit_groups_down).after(:destroy)
-      end
-    end
-
     describe 'public' do
 
       it 'should return correct insertion_name' do

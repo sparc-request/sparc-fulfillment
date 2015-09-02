@@ -42,9 +42,11 @@ $ ->
 
   $(document).on 'click', '.otf_delete', ->
     line_item_id = $(this).parents(".row.line_item").data('id')
-    $.ajax
-      type: "DELETE"
-      url: "/line_items/#{line_item_id}"
+    del = confirm "Are you sure you want to delete the selected Study Level Activity from this protocol"
+    if del
+      $.ajax
+        type: "DELETE"
+        url: "/line_items/#{line_item_id}"
   # Accordion Display Binding
 
   $(document).on 'click', '.otf_fulfillments', ->

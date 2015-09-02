@@ -2,136 +2,180 @@ require 'rails_helper'
 
 feature 'Complete Visit', js: true do
 
-  before(:each) do
-    go_to_visit
-  end
-
-  context 'Appointment has not begun' do
-
-    scenario 'User adds a Procedure' do
-      as_a_user_who_adds_a_procedure_to_an_appointment
-      i_should_not_be_able_to_complete_visit
-    end
-
-    scenario 'User adds no Procedure' do
-      i_should_not_be_able_to_complete_visit
-    end
-
-    scenario 'User adds a Procedure, then removes it' do
-      as_a_user_who_adds_a_procedure_to_an_appointment
-      then_removes_procedure
-      i_should_not_be_able_to_complete_visit
-    end
-  end
-
-  context 'Appointment has begun' do
-
-    context 'Procedures include a Procedure marked neither complete nor incomplete' do
-
-      before(:each) do
-        add_a_procedure
-      end
-
-      scenario 'User adds a Procedure' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        i_should_not_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, then sets a follow up date for it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_adds_a_follow_up_date
-        i_should_not_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, then completes it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_completes_procedure
-        i_should_not_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, then incompletes it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_incompletes_procedure
-        i_should_not_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, completes it, then incompletes it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_completes_procedure
-        then_incompletes_procedure
-        i_should_not_be_able_to_complete_visit
-      end
-
-      scenario 'User adds no Procedure' do
-        as_a_user_who_begins_an_appointment
-        i_should_not_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, then removes it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_removes_procedure
-        i_should_not_be_able_to_complete_visit
+  context 'User views an unstarted appointment' do
+    context 'and adds a procedure' do
+      scenario 'and cant complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_add_a_procedure
+        then_i_should_not_be_able_to_complete_visit
       end
     end
 
-    context 'Procedures do not include a Procedure marked neither complete nor incomplete' do
-
-      scenario 'User adds a Procedure' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        i_should_not_be_able_to_complete_visit
+    context 'and does not add a procedure' do
+      scenario 'and cant complete the visit' do
+        given_i_am_viewing_an_appointment
+        then_i_should_not_be_able_to_complete_visit
       end
+    end
 
-      scenario 'User adds a Procedure, then sets a follow up date for it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_adds_a_follow_up_date
-        i_should_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, then completes it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_completes_procedure
-        i_should_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, then incompletes it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_incompletes_procedure
-        i_should_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, completes it, then incompletes it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_completes_procedure
-        then_incompletes_procedure
-        i_should_be_able_to_complete_visit
-      end
-
-      scenario 'User adds no Procedure' do
-        as_a_user_who_begins_an_appointment
-        i_should_be_able_to_complete_visit
-      end
-
-      scenario 'User adds a Procedure, then removes it' do
-        as_a_user_who_adds_a_procedure_to_an_appointment
-        then_begins_appointment
-        then_removes_procedure
-        i_should_be_able_to_complete_visit
+    context 'and adds a procedure, then removes it' do
+      scenario 'and cant complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_add_a_procedure
+        when_i_remove_the_procedure
+        then_i_should_not_be_able_to_complete_visit
       end
     end
   end
 
-  def go_to_visit
+  context 'User views a started appointment' do
+    context 'and does not add a Procedure' do
+      scenario 'and can complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_begin_the_appointment
+        then_i_should_be_able_to_complete_visit
+      end
+    end
+
+    context 'and adds a Procedure' do
+      scenario 'and cant complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_add_a_procedure
+        when_i_begin_the_appointment
+        then_i_should_not_be_able_to_complete_visit
+      end
+    end
+
+    context 'and adds a Procedure, then sets a follow up date for it' do
+      scenario 'and can complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_add_a_procedure
+        when_i_begin_the_appointment
+        when_i_add_a_follow_up_date
+        then_i_should_be_able_to_complete_visit
+      end
+    end
+
+    context 'and adds a Procedure, then completes it' do
+      scenario 'and can complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_add_a_procedure
+        when_i_begin_the_appointment
+        when_i_complete_the_procedure
+        then_i_should_be_able_to_complete_visit
+      end
+    end
+
+    context 'and adds a Procedure, then incompletes it' do
+      scenario 'and can complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_add_a_procedure
+        when_i_begin_the_appointment
+        when_i_incomplete_the_procedure
+        then_i_should_be_able_to_complete_visit
+      end
+    end
+
+    context 'and adds a Procedure, completes it, then incompletes it' do
+      scenario 'and can complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_add_a_procedure
+        when_i_begin_the_appointment
+        when_i_complete_the_procedure
+        when_i_incomplete_the_procedure
+        then_i_should_be_able_to_complete_visit
+      end
+    end
+
+    context 'and adds a Procedure, then removes it' do
+      scenario 'and can complete the visit' do
+        given_i_am_viewing_an_appointment
+        when_i_add_a_procedure
+        when_i_begin_the_appointment
+        when_i_remove_the_procedure
+        then_i_should_be_able_to_complete_visit
+      end
+    end
+    
+    context 'and adds a procedure which will never be completed or incompleted' do
+      context 'and does not add a Procedure' do
+        scenario 'and cant complete the visit' do
+          given_i_am_viewing_an_appointment
+          when_i_add_a_procedure #**The extra procedure**#
+          when_i_begin_the_appointment
+          then_i_should_not_be_able_to_complete_visit
+        end
+      end
+
+      context 'and adds a Procedure' do
+        scenario 'and cant complete the visit' do
+          given_i_am_viewing_an_appointment
+          when_i_add_a_procedure #**The extra procedure**#
+          when_i_add_a_procedure
+          when_i_begin_the_appointment
+          then_i_should_not_be_able_to_complete_visit
+        end
+      end
+
+      context 'and adds a Procedure, then sets a follow up date for it' do
+        scenario 'and cant complete the visit' do
+          given_i_am_viewing_an_appointment
+          when_i_add_a_procedure #**The extra procedure**#
+          when_i_add_a_procedure
+          when_i_begin_the_appointment
+          when_i_add_a_follow_up_date
+          then_i_should_not_be_able_to_complete_visit
+        end
+      end
+
+      context 'and adds a Procedure, then completes it' do
+        scenario 'and cant complete the visit' do
+          given_i_am_viewing_an_appointment
+          when_i_add_a_procedure #**The extra procedure**#
+          when_i_add_a_procedure
+          when_i_begin_the_appointment
+          when_i_complete_the_procedure
+          then_i_should_not_be_able_to_complete_visit
+        end
+      end
+
+      context 'and adds a Procedure, then incompletes it' do
+        scenario 'and cant complete the visit' do
+          given_i_am_viewing_an_appointment
+          when_i_add_a_procedure #**The extra procedure**#
+          when_i_add_a_procedure
+          when_i_begin_the_appointment
+          when_i_incomplete_the_procedure
+          then_i_should_not_be_able_to_complete_visit
+        end
+      end
+
+      context 'and adds a Procedure, completes it, then incompletes it' do
+        scenario 'and cant complete the visit' do
+          given_i_am_viewing_an_appointment
+          when_i_add_a_procedure #**The extra procedure**#
+          when_i_add_a_procedure
+          when_i_begin_the_appointment
+          when_i_complete_the_procedure
+          when_i_incomplete_the_procedure
+          then_i_should_not_be_able_to_complete_visit
+        end
+      end
+
+      context 'and adds a Procedure, then removes it' do
+        scenario 'and cant complete the visit' do
+          given_i_am_viewing_an_appointment
+          when_i_add_a_procedure #**The extra procedure**#
+          when_i_add_a_procedure
+          when_i_begin_the_appointment
+          when_i_remove_the_procedure
+          then_i_should_not_be_able_to_complete_visit
+        end
+      end
+    end
+  end
+
+  def given_i_am_viewing_an_appointment
     protocol     = create_and_assign_protocol_to_me
     @identity    = Identity.first
     participant  = protocol.participants.first
@@ -143,40 +187,7 @@ feature 'Complete Visit', js: true do
     wait_for_ajax
   end
 
-  def begin_appointment
-    find('button.start_visit').click
-    wait_for_ajax
-  end
-
-  def i_should_not_be_able_to_complete_visit
-    accept_alert do
-      find("button.complete_visit.disabled").trigger('click')
-    end
-    wait_for_ajax
-  end
-
-  def i_should_be_able_to_complete_visit
-    expect(page).not_to have_css("button.complete_visit.disabled")
-    find("button.complete_visit").click
-    wait_for_ajax
-    # completed date input should be visible after clicking Complete Visit
-    expect(page).not_to have_css('div.completed_date_input.hidden')
-  end
-
-  def then_completes_procedure
-    find("tr[data-id='#{@procedure.id}'] label.status.complete").click
-    wait_for_ajax
-  end
-
-  def then_incompletes_procedure
-    find("tr[data-id='#{@procedure.id}'] label.status.incomplete").click
-    wait_for_ajax
-    bootstrap_select '.reason-select', "Assessment missed"
-    click_button "Save"
-    wait_for_ajax
-  end
-
-  def add_a_procedure
+  def when_i_add_a_procedure
     bootstrap_select '#service_list', @service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
@@ -186,7 +197,32 @@ feature 'Complete Visit', js: true do
     @procedure = @visit_group.appointments.first.procedures.where(service_id: @service.id).first
   end
 
-  def then_adds_a_follow_up_date
+  def when_i_remove_the_procedure
+    accept_confirm do
+      find("tr[data-id='#{@procedure.id}'] button.delete").click
+    end
+    wait_for_ajax
+  end
+
+  def when_i_begin_the_appointment
+    find('button.start_visit').click
+    wait_for_ajax
+  end
+
+  def when_i_complete_the_procedure
+    find("tr[data-id='#{@procedure.id}'] label.status.complete").click
+    wait_for_ajax
+  end
+
+  def when_i_incomplete_the_procedure
+    find("tr[data-id='#{@procedure.id}'] label.status.incomplete").click
+    wait_for_ajax
+    bootstrap_select '.reason-select', "Assessment missed"
+    click_button "Save"
+    wait_for_ajax
+  end
+
+  def when_i_add_a_follow_up_date
     find("tr[data-id='#{@procedure.id}'] button.followup.new").click
     wait_for_ajax
 
@@ -199,14 +235,18 @@ feature 'Complete Visit', js: true do
     wait_for_ajax
   end
 
-  def then_removes_procedure
-    accept_confirm do
-      find("tr[data-id='#{@procedure.id}'] button.delete").click
+  def then_i_should_be_able_to_complete_visit
+    expect(page).not_to have_css("button.complete_visit.disabled")
+    find("button.complete_visit").click
+    wait_for_ajax
+    # completed date input should be visible after clicking Complete Visit
+    expect(page).not_to have_css('div.completed_date_input.hidden')
+  end
+
+  def then_i_should_not_be_able_to_complete_visit
+    accept_alert do
+      find("button.complete_visit.disabled").trigger('click')
     end
     wait_for_ajax
   end
-
-  alias :as_a_user_who_begins_an_appointment :begin_appointment
-  alias :then_begins_appointment             :begin_appointment
-  alias :as_a_user_who_adds_a_procedure_to_an_appointment :add_a_procedure
 end

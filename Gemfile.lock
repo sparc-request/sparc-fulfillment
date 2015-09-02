@@ -1,9 +1,3 @@
-GIT
-  remote: git@github.com:Slashek/bootstrap-select-rails.git
-  revision: 1b1dcb5ddd400b4887da30b1718ab5b707e1d91c
-  specs:
-    bootstrap-select-rails (1.6.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -69,6 +63,7 @@ GEM
     bootstrap-sass (3.3.4.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
+    bootstrap-select-rails (1.6.3)
     bootstrap3-datetimepicker-rails (4.0.0)
       momentjs-rails (>= 2.8.1)
     builder (3.2.2)
@@ -194,6 +189,7 @@ GEM
     hashie (3.4.2)
     hashie-forbidden_attributes (0.1.1)
       hashie (>= 3.0)
+    highline (1.6.21)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
       haml (~> 4.0.0)
@@ -238,6 +234,9 @@ GEM
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
+    omniauth-shibboleth (1.2.1)
+      omniauth (>= 1.0.0)
+    options (2.3.2)
     orm_adapter (0.5.0)
     paper_trail (4.0.0.rc1)
       activerecord (>= 3.0, < 6.0)
@@ -245,6 +244,9 @@ GEM
       request_store (~> 1.1.0)
     paranoia (2.1.2)
       activerecord (~> 4.0)
+    progress_bar (1.0.3)
+      highline (~> 1.6.1)
+      options (~> 2.3.0)
     puma (2.11.3)
       rack (>= 1.1, < 2.0)
     rack (1.6.4)
@@ -402,7 +404,7 @@ DEPENDENCIES
   autoprefixer-rails
   axlsx_rails
   bootstrap-sass
-  bootstrap-select-rails!
+  bootstrap-select-rails
   bootstrap3-datetimepicker-rails (~> 4.0.0)
   capistrano (~> 3.0)
   capistrano-passenger
@@ -431,8 +433,10 @@ DEPENDENCIES
   mysql2
   net-ldap
   omniauth
+  omniauth-shibboleth
   paper_trail (~> 4.0.0.beta)
   paranoia (~> 2.0)
+  progress_bar
   puma
   rack-mini-profiler
   rails (= 4.2.2)

@@ -15,13 +15,13 @@ date_time_picker.
   disable()
 $(".procedure[data-id='<%= @procedure.id %>']").
   find(".status label.active").removeClass("active")
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").
-  selectpicker('val', null)
 
 <% elsif @procedure.incomplete? %>
 date_time_picker.
   date(null).
   disable()
+
+$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% elsif @procedure.complete? %>
 date_time_picker.

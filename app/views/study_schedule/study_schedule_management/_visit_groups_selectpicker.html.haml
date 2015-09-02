@@ -1,7 +1,0 @@
-%select.selectpicker#visits
-  -protocol.arms.each do |arm|
-    %option{disabled: true, style: 'font-weight:bold'}= arm.name
-    = options_from_collection_for_select(arm.visit_groups,'id','name')
-.btn.btn-success.btn-sm.glyphicon.glyphicon-plus#add_visit_group_button{title: t(:protocol)[:study_schedule][:add_visit_group], type: "button", aria: {label: "Add Visit Group"}, data: {toggle: "tooltip", animation: 'false'}}
-.btn.btn-danger.btn-sm.glyphicon.glyphicon-remove#remove_visit_group_button{title: t(:protocol)[:study_schedule][:remove_visit_group], type: "button", aria: {label: "Remove Visit Group"}, data: {toggle: "tooltip", animation: 'false'}}
-.btn.btn-warning.btn-sm.glyphicon.glyphicon-edit#edit_visit_group_button{title: t(:protocol)[:study_schedule][:edit_visit_group], type: "button", aria: {label: "Edit Visit Group"}, data: {toggle: "tooltip", animation: 'false'}}

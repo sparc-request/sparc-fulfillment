@@ -6,6 +6,8 @@
 
 .rvmrc
 
+fulfill.sql
+
 # Ignore bundler config.
 /.bundle
 
@@ -41,3 +43,4 @@ config/database.yml
 config/faye.yml
 config/setup_load_paths.rb
 config/shards.yml
+fulfill.sql

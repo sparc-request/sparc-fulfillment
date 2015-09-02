@@ -2,28 +2,29 @@ require 'rails_helper'
 
 feature 'Date completed', js: true do
 
-  scenario 'User sees disabled datepicker when :date_completed is not set' do
-    given_i_am_viewing_an_appointment
-    when_i_add_a_procedure
-    then_i_should_see_a_disabled_datepicker
+  context 'Date completed is not set' do
+    scenario 'and User sees a disabled datepicker' do
+      given_i_am_viewing_an_appointment
+      when_i_add_a_procedure
+      then_i_should_see_a_disabled_datepicker
+    end
   end
 
-  scenario 'User marks Procedure as complete and sees :date_completed updated and enabled' do
-    given_i_am_viewing_a_procedure
-    after_appointment_has_started
-    when_i_complete_the_procedure
-    then_i_should_see_an_enabled_datepicker_with_the_current_date
+  context 'User marks Procedure as complete' do
+    scenario 'and sees date completed updated and enabled' do
+      given_i_am_viewing_a_procedure
+      given_an_appointment_has_started
+      when_i_complete_the_procedure
+      then_i_should_see_an_enabled_datepicker_with_the_current_date
+    end
   end
 
-  scenario 'User marks Procedure as incomplete and sees :date_completed disabled' do
-    given_i_am_viewing_a_completed_procedure
-    when_i_incomplete_the_procedure
-    then_i_should_see_a_disabled_datepicker
-  end
-
-  def given_i_am_viewing_a_complete_procedure
-    given_i_am_viewing_a_procedure
-    when_i_complete_the_procedure
+  context 'User marks Procedure as incomplete' do
+    scenario 'and sees date completed disabled' do
+      given_i_am_viewing_a_completed_procedure
+      when_i_incomplete_the_procedure
+      then_i_should_see_a_disabled_datepicker
+    end
   end
 
   def given_i_am_viewing_an_appointment
@@ -40,11 +41,11 @@ feature 'Date completed', js: true do
 
   def given_i_am_viewing_a_completed_procedure
     given_i_am_viewing_a_procedure
-    after_appointment_has_started
+    given_an_appointment_has_started
     when_i_complete_the_procedure
   end
 
-  def after_appointment_has_started
+  def given_an_appointment_has_started
     find('button.start_visit').click
   end
 

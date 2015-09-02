@@ -4,10 +4,6 @@ require 'rails_helper'
 # documentable_type = 'Protocol'
 feature 'Identity creates a protocol-based Document', js: true, enqueue: false do
 
-  before :each do
-    given_i_am_viewing_the_protocol_show_page
-  end
-
   scenario 'and sees the reports counter increment' do
     given_i_have_created_a_protocol_based_document
     then_i_should_see_the_counter_increment
@@ -47,15 +43,13 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     then_i_should_see_the_documents_title_update  
   end
 
-  def given_i_am_viewing_the_protocol_show_page
+  def given_i_have_created_a_protocol_based_document
     identity    = Identity.first
     @protocol    = create_and_assign_protocol_to_me
     @participant = @protocol.participants.first
 
     visit protocol_path @protocol
-  end
 
-  def given_i_have_created_a_protocol_based_document
     find("a#study_schedule_report_#{@protocol.id.to_s}").click
     wait_for_ajax
 
@@ -88,7 +82,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
     
   def then_i_should_see_the_counter_increment
-    expect(page).to have_css(".report-notifications", text: 1)
+    expect(page).to have_css(".protocol_report_notifications", text: 1)
   end
 
   def then_i_should_see_the_document
@@ -100,11 +94,11 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
 
   def then_i_should_see_the_counter_decrement
-    expect(page).to have_css(".report-notifications", text: 0)
+    expect(page).to have_css(".protocol_report_notifications", text: 0)
   end
 
   def then_i_should_see_a_new_document_generate
-    expect(page).to have_css(".report-notifications", text: 2)
+    expect(page).to have_css(".protocol_report_notifications", text: 2)
 
     click_link 'Reports'
 
@@ -121,6 +115,6 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     when_i_click_the_created_document_icon
     when_i_click_the_download_option
 
-    expect(page).to have_css(".report-notifications", text: 1)
+    expect(page).to have_css(".protocol_report_notifications", text: 1)
   end
 end

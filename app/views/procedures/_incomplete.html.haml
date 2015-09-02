@@ -12,6 +12,7 @@
         #modal_errors
         = form.hidden_field :status, value: "incomplete"
         = form.hidden_field :completed_date, value: ""
+        = form.hidden_field :performer_id, value: current_identity.id
         = form.fields_for :notes, note do |note_form|
           = note_form.hidden_field :identity_id, value: current_identity.id
           = note_form.hidden_field :kind
