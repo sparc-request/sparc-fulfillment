@@ -28,6 +28,7 @@ $ ->
       $.ajax
         type: 'GET'
         url: "/appointments/#{id}.js"
+        success: ->
     event.stopPropagation()
 
   $(document).on 'click', '.add_service', ->

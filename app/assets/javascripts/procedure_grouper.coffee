@@ -1,17 +1,17 @@
 $ ->
 
   class ProcedureGrouper
-    constructor: (@core) ->
-      @rows = $(@core).find('tbody tr.procedure')
-      @procedures_table = $(@core).find('table.procedures tbody')
+
+    constructor: () ->
+      @cores = $('tr.core')
 
     find_rows: (group_id) ->
-      $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']")
+      $("tr.procedure[data-group-id='#{group_id}']")
 
     find_group: (group_id) ->
-      $(this.procedures_table).find("tr.procedure-group[data-group-id='#{group_id}']")
+      $("tr.procedure-group[data-group-id='#{group_id}']")
 
-    duplicate_services: (rows = this.rows) ->
+    duplicate_services: (rows) ->
       service_ids = []
       self = this
 
@@ -38,13 +38,13 @@ $ ->
 
     create_group: (group_id) ->
       [service_billing_type, service_id] = group_id.split('_')
-      services = this.find_rows(group_id)
-      title = $(services[0]).find('td.name').text()
-      service_count = services.length
+      rows = this.find_rows(group_id)
+      title = $(rows[0]).find('td.name').text()
+      service_count = rows.length
 
-      this.procedures_table.prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
+      $(rows).first().after("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
 
-      return $(this.procedures_table).find('.procedure-group').first()
+      return this.find_group(group_id)
 
     redraw_group: (group_id) ->
       count = this.find_rows(group_id).length
@@ -179,23 +179,23 @@ $ ->
 
       self.remove_all_new_row_classes()
 
-  fire = () ->
-    for core in $('tr.core')
-      pg = new ProcedureGrouper(core)
+    initialize: ->
+      self = this
 
-      for service in pg.duplicate_services()
-        group = pg.create_group(service)
-        rows = $("tr.procedure[data-group-id='#{service}']")
+      for core in this.cores
+        rows = $(core).find('tbody tr.procedure')
 
-        add = (row, group) ->
-          pg.add_service_to_group row, group
+        for service in self.duplicate_services(rows)
+          group = self.create_group(service)
+          rows = $("tr.procedure[data-group-id='#{service}']")
 
-        add row, group for row in rows
-        pg.style_group group
-        pg.hide_group(service)
+          add = (row, group) ->
+            self.add_service_to_group row, group
 
-      pg.remove_all_new_row_classes()
+          add row, group for row in rows
+          self.style_group group
+          self.hide_group(service)
 
-  window.fire = fire
+        self.remove_all_new_row_classes()
 
   window.ProcedureGrouper = ProcedureGrouper
