@@ -41,8 +41,9 @@ $ ->
       rows = this.find_rows(group_id)
       title = $(rows[0]).find('td.name').text()
       service_count = rows.length
+      procedure_table = $(rows).first().parents('table.procedures tbody')
 
-      $(rows).first().after("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
+      $(procedure_table).prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
 
       return this.find_group(group_id)
 
@@ -61,15 +62,17 @@ $ ->
 
       $(service_group).after(row)
 
-    remove_service_from_group: (service_row, service_group) ->
+    remove_service_from_group: (service_row) ->
+      procedure_table = $(service_row).parents("table.procedures tbody")
       row = $(service_row).detach()
 
-      $(service_group).before(row)
+      $(procedure_table).append(row)
       $(row).removeAttr('style').find('td.name').removeClass('muted')
 
     destroy_group: (group_id) ->
+      row = this.find_rows(group_id)
+      this.remove_service_from_group(row)
       this.find_group(group_id).remove()
-      this.find_rows(group_id).removeAttr('style').find('td.name').removeClass('muted')
 
     show_group: (group_id) ->
       rows = this.find_rows(group_id)
@@ -148,7 +151,7 @@ $ ->
         self.show_group(group_id)
 
       go_to_pasture = ->
-        self.remove_service_from_group(row, original_service_group)
+        self.remove_service_from_group(row)
         self.redraw_group(original_group_id)
 
       i_left_a_group = ->
