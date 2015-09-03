@@ -12,7 +12,7 @@ $ ->
 
   $(document).on 'change', '.components > .selectpicker', ->
     row_index   = $(this).parents("tr").data("index")
-    line_item_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
+    line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
     data = components: $(this).val(), line_item_id: line_item_id
     $.ajax
       type: 'PUT'
@@ -21,14 +21,14 @@ $ ->
 
   $(document).on 'click', '.otf_edit', ->
     row_index   = $(this).parents("tr").data("index")
-    line_item_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
+    line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
     $.ajax
       type: 'GET'
       url: "/line_items/#{line_item_id}/edit"
 
   $(document).on 'click', '.otf_delete', ->
     row_index   = $(this).parents("tr").data("index")
-    line_item_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
+    line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
     del = confirm "Are you sure you want to delete the selected Study Level Activity from this protocol"
     if del
       $.ajax
@@ -37,7 +37,7 @@ $ ->
 
   $('table.study_level_activities').on 'click', 'td:not(td.components):not(td.options)', ->
     row_index   = $(this).parents("tr").data("index")
-    line_item_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
+    line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
     fulfillments_already_displayed = $("#fulfillments_row").attr('data-line_item_id') == "#{line_item_id}"
     $("#fulfillments_row").remove()
     unless fulfillments_already_displayed
@@ -59,7 +59,7 @@ $ ->
 
   $(document).on 'click', '.otf_fulfillment_edit', ->
     row_index   = $(this).parents("tr").data("index")
-    fulfillment_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
+    fulfillment_id = $(this).parents("#fulfillments-table").bootstrapTable("getData")[row_index].id
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
