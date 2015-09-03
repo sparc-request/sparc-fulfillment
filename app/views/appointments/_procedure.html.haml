@@ -15,7 +15,7 @@
       %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''} #{ procedure.appt_started? ? '' : 'disabled' }"}
         %input{class: "procedure_status", type: "radio", value: "incomplete", autocomplete: "off", id: "incomplete_button_#{procedure.id}"} Incomplete
   %td.followup{id: "follow_up_#{procedure.id}"}
-    = render partial: "appointments/followup_calendar", locals: { procedure: procedure }
+    = render partial: "/appointments/followup_calendar", locals: { procedure: procedure }
   %td.completed-date
     .input-group.date.completed_date_field
       %input.datetimepicker{type: "text", class: "form-control", disabled: !(procedure.appt_started? && procedure.complete?), value: format_date(procedure.completed_date)}
