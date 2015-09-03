@@ -107,7 +107,7 @@ $ ->
       group_id = $(row).data('group-id')
       group = this.find_group(group_id)
 
-      if this.rows.length == 1
+      if this.find_rows(group_id).length == 1
         $(row).parents('.core').remove()
 
       $(row).remove()
@@ -179,6 +179,14 @@ $ ->
 
       self.remove_all_new_row_classes()
 
+    initialize_multiselect: (multiselect) ->
+      $(multiselect).multiselect(includeSelectAllOption: true)
+
+    initialize_multiselects: ->
+      multiselects = $('select.core_multiselect')
+
+      this.initialize_multiselect multiselect for multiselect in multiselects
+
     build_core_multiselect_options: (core) ->
       option_data = []
       multiselect = $(core).find('select.core_multiselect')
@@ -207,7 +215,7 @@ $ ->
     initialize: ->
       self = this
 
-      $('select.core_multiselect').multiselect()
+      self.initialize_multiselects()
 
       for core in this.cores
         rows = $(core).find('tbody tr.procedure')
