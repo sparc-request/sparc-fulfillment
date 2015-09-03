@@ -161,12 +161,27 @@ $ ->
       data: data
       url: "/multiple_procedures/incomplete_all.js"
 
-  $(document).on 'click', ".complete_all_button", ->
-    data = status: "complete", core_id: $(this).data('core-id'), appointment_id: $(this).parents('div.row.appointment').data('id')
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/multiple_procedures/update_procedures.js"
+  $(document).on 'click', 'button.complete_all', ->
+    status = 'complete'
+    multiselect = $(this).parents('.core').find('select.core_multiselect')
+    group_ids = multiselect.val()
+    procedure_ids = []
+
+    if group_ids
+      find_ids = (group_id) ->
+        rows = $("tr.procedure[data-group-id='#{group_id}']")
+
+        procedure_ids.push $.map rows, (row) ->
+          $(row).data('id')
+
+      find_ids group_id for group_id in group_ids
+
+      $.ajax
+        type: 'PUT'
+        data:
+          status: status
+          procedure_ids: _.flatten(procedure_ids)
+        url: '/multiple_procedures/update_procedures.js'
 
   $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')

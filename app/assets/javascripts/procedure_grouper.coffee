@@ -181,6 +181,7 @@ $ ->
 
     build_core_multiselect_options: (core) ->
       option_data = []
+      multiselect = $(core).find('select.core_multiselect')
 
       find_row_name = (group_id) ->
         row = $("tr[data-group-id='#{group_id}']").first()
@@ -200,12 +201,13 @@ $ ->
 
       find_row_name group_id for group_id in group_ids
 
-      $(core).find('.multiselect').multiselect('dataprovider', option_data).multiselect('rebuild')
+      $(multiselect).multiselect('dataprovider', option_data)
+      $(multiselect).multiselect('rebuild')
 
     initialize: ->
       self = this
 
-      $('.core_multiselect').multiselect()
+      $('select.core_multiselect').multiselect()
 
       for core in this.cores
         rows = $(core).find('tbody tr.procedure')
