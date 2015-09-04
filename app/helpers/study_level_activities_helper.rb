@@ -11,7 +11,11 @@ module StudyLevelActivitiesHelper
   end
 
   def sla_components_select line_item_id, components
-    select_tag "sla_#{line_item_id}_components", components_for_select(components), class: "sla_components selectpicker form-control", title: "Please Select", multiple: "", data:{container: "body", id: line_item_id, width: '150px', 'selected-text-format' => 'count>2'}
+    if components.any?
+      select_tag "sla_#{line_item_id}_components", components_for_select(components), class: "sla_components selectpicker form-control", title: "Please Select", multiple: "", data:{container: "body", id: line_item_id, width: '150px', 'selected-text-format' => 'count>2'}
+    else
+      '-'
+    end
   end
 
   def sla_options_buttons line_item_id
