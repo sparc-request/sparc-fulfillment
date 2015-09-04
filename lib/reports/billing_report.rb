@@ -88,7 +88,7 @@ class BillingReport < Report
           total += ((procedures.size * procedure.service_cost.to_f) / 100)
         end
         if total > 0
-          csv << ["", "", "", "", "", "", "", "", "", "Total: $#{total}"]
+          csv << ["", "", "", "", "", "", "", "", "Total:", total]
           csv << [""]
           csv << [""]
         end
