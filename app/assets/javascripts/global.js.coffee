@@ -6,6 +6,7 @@ $ ->
 
   $(document).on 'all.bs.table', 'table', ->
     $(".selectpicker").selectpicker()
+    $('[data-toggle="tooltip"]').tooltip()
 
   $(document).on 'search.bs.table', "table", (event, input)->
     unless input == ''

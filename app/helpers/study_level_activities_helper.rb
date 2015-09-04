@@ -29,20 +29,23 @@ module StudyLevelActivitiesHelper
     end
   end
 
-  def fulfillment_components_dropdown fulfillment
-    content_tag(:button, class: 'btn btn-default dropdown-toggle', type: "button", data: {toggle: "dropdown"}, "aria-expanded" => "false") do
-      content_tag(:span, t(:fulfillment)[:components], class: 'pull-left') +
-      content_tag(:span, '', class: 'caret')
-    end +
-    content_tag(:ul, class: "dropdown-menu", role: "menu") do
-      if fulfillment.components.empty?
-        content_tag(:li) do
-          content_tag(:a, t(:fulfillment)[:no_components])
-        end
-      else
-        fulfillment.components.collect {|c| concat(content_tag(:li, content_tag(:a, c.component)))}
+  def fulfillment_components_dropdown components=Array.new
+    html = '-'
+
+    if components.any?
+      li = Array.new
+
+      span = raw content_tag(:span, '', class: 'caret')
+      button = raw content_tag(:button, raw('Fulfillment Components ' + span), type: 'button', class: 'btn btn-default btn-xs dropdown-toggle', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
+      components.each do |c|
+        li.push raw(content_tag(:li, raw(content_tag(:a, c.component, href: 'javascript:;'))))
       end
+      ul = raw content_tag(:ul, raw(li.join), class: 'dropdown-menu', role: 'menu')
+
+      html = raw content_tag(:div, button + ul, class: 'btn-group')
     end
+
+    html
   end
 
   def fulfillment_options_buttons fulfillment_id
