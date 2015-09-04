@@ -47,8 +47,6 @@ $ ->
       data: data
       success: ->
         new_services = $('tr.procedure.new_service')
-        console.log "new services"
-        console.log new_services
         core = $(new_services).first().parents('.core')
         multiselect = $(core).find('select.core_multiselect')
         pg = new ProcedureGrouper(core)
@@ -182,6 +180,12 @@ $ ->
           status: status
           procedure_ids: _.flatten(procedure_ids)
         url: '/multiple_procedures/update_procedures.js'
+        success: ->
+          new_services = $('tr.procedure.new_service')
+          core = $(new_services).first().parents('.core')
+          multiselect = $(core).find('select.core_multiselect')
+          pg = new ProcedureGrouper(core)
+          pg.reset_multiselect_after_update(multiselect)
 
   $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')

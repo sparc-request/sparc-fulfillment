@@ -125,7 +125,6 @@ $ ->
       $('tr.procedure.new_service').removeClass('new_service')
 
     update_group_membership: (row, original_group_id) ->
-      console.log "made it into update group membership"
       group_id = $(row).data('group-id')
       service_group = this.find_group(group_id)
       original_service_group = this.find_group(original_group_id)
@@ -191,6 +190,9 @@ $ ->
       multiselects = $('select.core_multiselect')
 
       this.initialize_multiselect multiselect for multiselect in multiselects
+    
+    reset_multiselect_after_update: (multiselect) ->
+      $(multiselect).multiselect('refresh')
 
     build_core_multiselect_options: (core) ->
       option_data = []
@@ -200,8 +202,9 @@ $ ->
       find_row_name = (group_id) ->
         row = self.find_rows(group_id).first()
 
-        if $(row).hasClass('procedure-group')
-          name = $(row).text().split(/\s+/).join(' ')
+        if self.find_group(group_id).length != 0
+          name = self.find_group(group_id).find('td').text().split(/\s+/).join(' ')
+
         else
           quantity = 1
           service_name = $(row).find('td.name').text().trim()
