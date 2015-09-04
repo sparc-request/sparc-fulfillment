@@ -65,10 +65,17 @@ body.participants
         .panel
           margin: 0
 
+          .panel-heading
+
+            h3
+              font-weight: 500
+              font-size: 16px
+              margin: 8px
+
           .panel-body
             padding: 0
 
-            .core-table
+            .procedures
               padding: 0
               margin: 0
 
@@ -80,9 +87,6 @@ body.participants
                   vertical-align: middle
                   word-wrap: break-word
                   width: 13%
-
-                  &.muted
-                    color: rgba(119, 119, 119, 0.49)
 
                 &.r-t, &.billing
                   width: 5%
@@ -102,50 +106,19 @@ body.participants
                 &.remove
                   width: 8%
 
+              tr
 
-        & > thead
-          background-image: linear-gradient(to bottom, #f5f5f5 0, #e8e8e8 100%)
+                &.procedure-group
 
-          th
-            text-align: center
-            padding: 1em 0
+                  td
+                    text-align: left
 
-        td, th
-          max-width: 0
+                td
 
-          &.title
-            padding-left: 0.5em
-            text-align: left
-            background-color: #ccc
-            padding-top: 5px
-            padding-bottom: 5px
+                  &.name
+                    text-align: left
+
+                    &.muted
+                      color: rgba(119, 119, 119, 0.49)
 
 
-
-          tr.procedure-group
-            font-weight: bold
-            background-color: #eee
-
-            td
-              text-align: left
-
-              .glyphicon
-                top: 1px
-
-                &.glyphicon-chevron-down
-                  top: 2px
-                  margin-left: 2px
-
-        & > tbody
-
-          & > tr > td
-            padding: 0
-
-          td
-
-            &.title
-              font-weight: bold
-
-            &.name
-              padding-left: 0.5em
-              text-align: left

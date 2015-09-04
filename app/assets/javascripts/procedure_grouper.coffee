@@ -3,7 +3,7 @@ $ ->
   class ProcedureGrouper
 
     constructor: () ->
-      @cores = $('tr.core')
+      @cores = $('.core')
 
     find_rows: (group_id) ->
       $("tr.procedure[data-group-id='#{group_id}']")
@@ -41,9 +41,9 @@ $ ->
       rows = this.find_rows(group_id)
       title = $(rows[0]).find('td.name').text()
       service_count = rows.length
-      core_table = $(rows).first().parents('table.core-table tbody')
+      procedures_table = $(rows).first().parents('.procedures tbody')
 
-      $(core_table).prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
+      $(procedures_table).prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{service_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
 
       return this.find_group(group_id)
 
@@ -63,10 +63,10 @@ $ ->
       $(service_group).after(row)
 
     remove_service_from_group: (service_row) ->
-      core_table = $(service_row).parents("table.core-table tbody")
+      procedures_table = $(service_row).parents('.procedures tbody')
       row = $(service_row).detach()
 
-      $(core_table).append(row)
+      $(procedures_table).append(row)
       $(row).removeAttr('style').find('td.name').removeClass('muted')
 
     destroy_group: (group_id) ->
@@ -121,7 +121,7 @@ $ ->
         this.redraw_group(group_id)
 
     remove_all_new_row_classes: () ->
-      $('tr.procedure.new').removeClass('new')
+      $('procedure.new').removeClass('new')
 
     update_group_membership: (row, original_group_id) ->
       group_id = $(row).data('group-id')
@@ -195,7 +195,7 @@ $ ->
       multiselect = $(core).find('select.core_multiselect')
 
       find_row_name = (group_id) ->
-        row = $("tr[data-group-id='#{group_id}']").first()
+        row = $(".procedure[data-group-id='#{group_id}']").first()
 
         if $(row).hasClass('procedure-group')
           name = $(row).text().split(/\s+/).join(' ')
@@ -207,7 +207,7 @@ $ ->
 
         option_data.push label: name, title: name, value: group_id
 
-      group_ids = _.uniq $.map $(core).find('tr.procedure'), (row) ->
+      group_ids = _.uniq $.map $(core).find('.procedure'), (row) ->
         $(row).data('group-id')
 
       find_row_name group_id for group_id in group_ids
@@ -221,11 +221,11 @@ $ ->
       self.initialize_multiselects()
 
       for core in this.cores
-        rows = $(core).find('tbody tr.procedure')
+        rows = $(core).find('.procedures .procedure')
 
         for service in self.duplicate_services(rows)
           group = self.create_group(service)
-          rows = $("tr.procedure[data-group-id='#{service}']")
+          rows = $(".procedure[data-group-id='#{service}']")
 
           add = (row, group) ->
             self.add_service_to_group row, group
