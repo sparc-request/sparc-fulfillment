@@ -109,8 +109,9 @@ $ ->
     destroy_row: (row) ->
       group_id = $(row).data('group-id')
       group = this.find_group(group_id)
+      services_remaining_in_core = $(row).parents('.core').find('tr.procedure').length
 
-      if this.find_rows(group_id).length == 1
+      if services_remaining_in_core == 1
         $(row).parents('.core').remove()
 
       $(row).remove()
@@ -121,7 +122,7 @@ $ ->
         this.redraw_group(group_id)
 
     remove_all_new_row_classes: () ->
-      $('procedure.new').removeClass('new')
+      $('tr.procedure.new').removeClass('new')
 
     update_group_membership: (row, original_group_id) ->
       group_id = $(row).data('group-id')
@@ -193,9 +194,10 @@ $ ->
     build_core_multiselect_options: (core) ->
       option_data = []
       multiselect = $(core).find('select.core_multiselect')
+      self = this
 
       find_row_name = (group_id) ->
-        row = $(".procedure[data-group-id='#{group_id}']").first()
+        row = self.find_rows(group_id).first()
 
         if $(row).hasClass('procedure-group')
           name = $(row).text().split(/\s+/).join(' ')
@@ -207,7 +209,7 @@ $ ->
 
         option_data.push label: name, title: name, value: group_id
 
-      group_ids = _.uniq $.map $(core).find('.procedure'), (row) ->
+      group_ids = _.uniq $.map $(core).find('tr.procedure'), (row) ->
         $(row).data('group-id')
 
       find_row_name group_id for group_id in group_ids
