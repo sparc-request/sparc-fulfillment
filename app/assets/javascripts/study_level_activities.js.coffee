@@ -36,6 +36,7 @@ $ ->
         url: "/line_items/#{line_item_id}"
 
   $('table.study_level_activities').on 'click', 'td:not(td.components):not(td.options)', ->
+    return if $(this).parents('#fulfillments-table').length > 0
     row_index   = $(this).parents("tr").data("index")
     line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
     fulfillments_already_displayed = $("#fulfillments_row").attr('data-line_item_id') == "#{line_item_id}"

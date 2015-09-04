@@ -130,8 +130,8 @@ en:
     last_fulfillment: "Last Fulfillment"
     components: "Service Components"
     save_li: "Save Study Level Activity"
-    account_number: "Account Number"
-    contact: "Contact Name"
+    account_number: "Account"
+    contact: "Contact"
     object: "Line Item"
     flash_messages:
       updated: "Study Level Activity Updated"
