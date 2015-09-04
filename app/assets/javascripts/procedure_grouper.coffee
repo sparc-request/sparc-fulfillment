@@ -122,9 +122,10 @@ $ ->
         this.redraw_group(group_id)
 
     remove_all_new_row_classes: () ->
-      $('tr.procedure.new').removeClass('new')
+      $('tr.procedure.new_service').removeClass('new_service')
 
     update_group_membership: (row, original_group_id) ->
+      console.log "made it into update group membership"
       group_id = $(row).data('group-id')
       service_group = this.find_group(group_id)
       original_service_group = this.find_group(original_group_id)
@@ -165,7 +166,7 @@ $ ->
         self.destroy_group(original_group_id)
 
       i_am_a_new_row = (row) ->
-        $(row).hasClass('new')
+        $(row).hasClass('new_service')
 
       if do_i_have_siblings()
         if does_my_group_exist()

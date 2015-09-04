@@ -46,7 +46,9 @@ $ ->
       url:  "/procedures.js"
       data: data
       success: ->
-        new_services = $('tr.procedure.new')
+        new_services = $('tr.procedure.new_service')
+        console.log "new services"
+        console.log new_services
         core = $(new_services).first().parents('.core')
         multiselect = $(core).find('select.core_multiselect')
         pg = new ProcedureGrouper(core)
