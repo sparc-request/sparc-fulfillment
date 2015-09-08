@@ -34,11 +34,9 @@ $ ->
         type: 'GET'
         url: "/appointments/#{id}.js"
         success: ->
-          pg = new ProcedureGrouper
+          pg = new ProcedureGrouper()
 
           pg.initialize()
-
-    event.stopPropagation()
 
   $(document).on 'click', '.add_service', ->
     data =
@@ -54,7 +52,7 @@ $ ->
         new_services = $('tr.procedure.new_service')
         core = $(new_services).first().parents('.core')
         multiselect = $(core).find('select.core_multiselect')
-        pg = new ProcedureGrouper(core)
+        pg = new ProcedureGrouper()
 
         pg.update_group_membership new_service for new_service in new_services
         pg.initialize_multiselect(multiselect)
@@ -178,8 +176,8 @@ $ ->
           procedure_ids: _.flatten(procedure_ids)
         url: "/multiple_procedures/incomplete_all.js"
         success: ->
-          reset_multiselect_after_update(self) 
-          
+          reset_multiselect_after_update(self)
+
   $(document).on 'click', 'button.complete_all', ->
     status = 'complete'
     procedure_ids = fetch_multiselect_group_ids(this)
