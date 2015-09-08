@@ -11,11 +11,11 @@
                 %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
             .row
               .col-md-5
-                = render partial: 'visit_type_dropdown'
+                = render partial: '/appointments/visit_type_dropdown'
               .col-md-5.col-md-offset-2.text-right
-                = render partial: 'visit_indications_dropdown'
+                = render partial: '/appointments/visit_indications_dropdown'
       .row
-        = render partial: 'start_complete_buttons', locals: {appointment: appointment}
+        = render partial: '/appointments/start_complete_buttons', locals: {appointment: appointment}
       .row.calendar
         .col-xs-12
           %table.table.table-bordered.table-hover.cores
@@ -39,7 +39,7 @@
                   = t(:procedure)[:remove]
             %tbody
               - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-                = render partial: "core", locals: {core_id: core_id, procedures: procedures, appointment_started: appointment.start_date.present? }
+                = render partial: "/appointments/core", locals: {core_id: core_id, procedures: procedures, appointment_started: appointment.start_date.present? }
       .row.services
         .col-xs-4
           = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker'

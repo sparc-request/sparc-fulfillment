@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
-  
+
   if ENV.fetch('USE_SHIBBOLETH_ONLY') == 'true' # Shibboleth is the only authentication option and all URLs are protected by it
     devise_for :identities, :controllers => { :omniauth_callbacks => "identities/omniauth_callbacks" }, :path_names => {:sign_in => 'auth/shibboleth' }
   else # add Shibboleth as an option and allow users to view 'sign in' page
     devise_for :identities, :controllers => { :omniauth_callbacks => "identities/omniauth_callbacks" }
   end
-  
+
   resources :protocols
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
@@ -63,6 +63,7 @@ Rails.application.routes.draw do
     collection do
       get 'incomplete_all'
       put 'update_procedures'
+      put 'reset_procedures'
     end
   end
 

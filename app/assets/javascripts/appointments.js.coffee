@@ -48,6 +48,15 @@ $ ->
       type: 'PATCH'
       url:  "/appointments/#{appointment_id}?field=completed_date"
 
+  $(document).on 'click', '.reset_visit', ->
+    data = appointment_id: $(this).parents('.row.appointment').data('id')
+    if confirm("Resetting this appointment will delete all data which has been recorded for this appointment, are you sure you wish to continue?")
+      $.ajax
+        type: 'PUT'
+        url: "/multiple_procedures/reset_procedures.js"
+        data: data
+
+
   # Procedure buttons
 
   $(document).on 'dp.hide', ".completed_date_field", ->

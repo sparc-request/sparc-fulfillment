@@ -118,6 +118,25 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  def destroy_regardless_of_status
+    #Destroy task, since delete won't fire after_destroy hooks
+    task.destroy if task
+    #Destroy notes, for same reason
+    notes.destroy_all if notes.any?
+    #Finally, delete, not destroy procedure
+    self.delete
+  end
+
+  def reset
+    #Reset Status
+    self.update_attributes(status: "unstarted")
+    #Remove tasks
+    task.destroy if task
+    #Remove notes
+    notes.destroy_all if notes.any?
+    self.reload
+  end
+
   def completed_date=(completed_date)
     if completed_date.present?
       write_attribute(:completed_date, Time.strptime(completed_date, "%m-%d-%Y"))

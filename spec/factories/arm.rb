@@ -9,7 +9,7 @@ FactoryGirl.define do
 
     trait :with_line_items do
       after(:create) do |arm, evaluator|
-        x = rand(12)+1
+        x = rand(11)+2
         x.times do
           create(:line_item_with_fulfillments, protocol: arm.protocol, service: create(:service_with_one_time_fee)) # one time fee
           create(:line_item, protocol: arm.protocol, arm: arm, service: create(:service)) # pppv

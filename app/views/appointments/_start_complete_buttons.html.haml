@@ -1,16 +1,21 @@
 .col-xs-4.start-col
-  .start_date_input{class: hidden_class(appointment.start_date.blank?) }
+  .start_date_input{class: hidden_class(appointment.start_date.blank?)}
     %form.form-horizontal
       .form-group
-        %label.col-xs-6.control-label#start-date-label{for: 'start_date'}= t(:appointment)[:start_date]
+        %label.col-xs-1.control-label#start-date-label{for: 'start_date'}= t(:appointment)[:start_date]
         .col-xs-6= text_field_tag 'start_date', '', class: 'form-control'
+        .col-xs-1.reset_button
+          %button.btn.btn-warning.reset_visit{type: "button"}= t(:appointment)[:reset_visit]
+
   .start_date_btn{class: hidden_class(!appointment.start_date.blank?) }
     %button.btn.btn-success.start_visit= t(:appointment)[:start_visit]
+
 .col-xs-4.col-xs-offset-4.complete-col
-  .completed_date_input{class: hidden_class(appointment.completed_date.blank?) }
+  .completed_date_input{class: hidden_class(appointment.completed_date.blank?)}
     %form.form-horizontal
       .form-group
-        %label.col-xs-6.control-label{for: 'completed_date'}= t(:appointment)[:completed_date]
+        %label.col-xs-1.control-label#completed-date-label{for: 'completed_date'}= t(:appointment)[:completed_date]
         .col-xs-6= text_field_tag 'completed_date', '', class: 'form-control'
+
   .completed_date_btn{class: [hidden_class(!appointment.completed_date.blank?), contains_disabled_class(!appointment.can_finish?)].join(' ')}
     %button.btn.btn-danger.complete_visit{class: disabled_class(!appointment.can_finish?) }= t(:appointment)[:complete_visit]
