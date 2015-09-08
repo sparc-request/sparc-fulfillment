@@ -56,17 +56,6 @@ $ ->
         url: "/multiple_procedures/reset_procedures.js"
         data: data
 
-  # $(document).on 'click', '.remove_completed_date', ->
-  #   appointment_id = $(this).parents('.row.appointment').data('id')
-  #   $.ajax
-  #     type: 'PATCH'
-  #     url: "/appointments/#{appointment_id}?field=completed_date"
-  #     success: ->
-  #       # reload table of procedures, so that UI elements disabled
-  #       # before start of appointment can be reenabled
-  #       $.ajax
-  #         type: 'GET'
-  #         url: "/appointments/#{appointment_id}.js"
 
   # Procedure buttons
 

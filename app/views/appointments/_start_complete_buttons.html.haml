@@ -4,8 +4,6 @@
       .form-group
         %label.col-xs-1.control-label#start-date-label{for: 'start_date'}= t(:appointment)[:start_date]
         .col-xs-6= text_field_tag 'start_date', '', class: 'form-control'
-
-        -# This can't go here, it submits a "form"
         .col-xs-1.reset_button
           %button.btn.btn-warning.reset_visit{type: "button"}= t(:appointment)[:reset_visit]
 
@@ -18,9 +16,6 @@
       .form-group
         %label.col-xs-1.control-label#completed-date-label{for: 'completed_date'}= t(:appointment)[:completed_date]
         .col-xs-6= text_field_tag 'completed_date', '', class: 'form-control'
-        / .col-xs-1#remove_completed_date_button
-        /   %button.btn.btn-danger.remove_completed_date{type: "button"}
-        /     %span.glyphicon.glyphicon-remove
 
   .completed_date_btn{class: [hidden_class(!appointment.completed_date.blank?), contains_disabled_class(!appointment.can_finish?)].join(' ')}
     %button.btn.btn-danger.complete_visit{class: disabled_class(!appointment.can_finish?) }= t(:appointment)[:complete_visit]
