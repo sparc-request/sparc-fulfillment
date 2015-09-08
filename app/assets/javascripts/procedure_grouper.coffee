@@ -95,13 +95,13 @@ $ ->
       $(button_span).addClass('glyphicon-chevron-right').removeClass('glyphicon-chevron-down')
 
     style_group: (service_group) ->
-      $(service_group).css('border', '2px #333 solid')
+      $(service_group).css('border', '2px #888 solid')
       group_id   = $(service_group).data('group-id')
       group_rows = this.find_rows(group_id)
-      $(group_rows).css('border-right', '2px #333 solid').css('border-left', '2px #333 solid')
+      $(group_rows).css('border-right', '2px #888 solid').css('border-left', '2px #888 solid')
       $(group_rows).find('td.name').addClass('muted')
       $(group_rows).first().css('border-bottom', 'none')
-      $(group_rows).last().css('border-bottom', '2px #333 solid')
+      $(group_rows).last().css('border-bottom', '2px #888 solid')
 
     group_size: (group_id) ->
       this.find_rows(group_id).length
