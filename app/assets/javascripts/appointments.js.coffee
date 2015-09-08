@@ -1,11 +1,11 @@
 $ ->
 
   $(document).on 'click', '.dashboard_link', ->
-    if $(this).hasClass('slide_active')
-      $(this).removeClass('slide_active')
+    if $(this).hasClass('active')
+      $(this).removeClass('active')
       $(this).text("-- Show Dashboard --")
     else
-      $(this).addClass('slide_active')
+      $(this).addClass('active')
       $(this).text("-- Hide Dashboard --")
 
     $('#dashboard').slideToggle()
