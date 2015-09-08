@@ -2,6 +2,13 @@ module Features
 
   module BootstrapHelpers
 
+    def bootstrap_multiselect(class_or_id, selections)
+      bootstrap_multiselect = page.find("select#{class_or_id} + .btn-group")
+
+      save_and_open_screenshot
+      bootstrap_multiselect.click
+    end
+
     def bootstrap_select(class_or_id, choice)
       bootstrap_select = page.find("select#{class_or_id} + .bootstrap-select")
 
