@@ -33,6 +33,12 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def fulfillments_drop_button line_item_id
+    content_tag(:button, class: 'btn btn-primary btn-sm otf_fulfillments list', title: t(:fulfillment)[:view], type: "button", aria: {label: "Fulfillments List"}, data: {toggle: "tooltip", animation: 'false'}) do
+      content_tag(:span, '', class: "glyphicon glyphicon-chevron-right", aria: {hidden: "true"})
+    end
+  end
+
   def fulfillment_components_dropdown components=Array.new
     html = '-'
 
