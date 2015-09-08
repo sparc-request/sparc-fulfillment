@@ -106,8 +106,36 @@ $ ->
     group_size: (group_id) ->
       this.find_rows(group_id).length
 
+    build_core_multiselect_options: (core) ->
+      option_data = []
+      multiselect = $(core).find('select.core_multiselect')
+      self = this
+
+      find_row_name = (group_id) ->
+        row = self.find_rows(group_id).first()
+
+        if self.find_group(group_id).length != 0
+          name = self.find_group(group_id).find('td').text().split(/\s+/).join(' ')
+
+        else
+          quantity = 1
+          service_name = $(row).find('td.name').text().trim()
+          billing_type = group_id.split('_')[0]
+          name = [quantity, service_name, billing_type].join(' ')
+
+        option_data.push label: name, title: name, value: group_id
+
+      group_ids = _.uniq $.map $(core).find('tr.procedure'), (row) ->
+        $(row).data('group-id')
+
+      find_row_name group_id for group_id in group_ids
+
+      $(multiselect).multiselect('dataprovider', option_data)
+      $(multiselect).multiselect('rebuild')
+
     destroy_row: (row) ->
       group_id = $(row).data('group-id')
+      core = $(row).parents('.core')
       group = this.find_group(group_id)
       services_remaining_in_core = $(row).parents('.core').find('tr.procedure').length
 
@@ -120,6 +148,7 @@ $ ->
         this.destroy_group(group_id)
       else
         this.redraw_group(group_id)
+      this.build_core_multiselect_options(core)
 
     remove_all_new_row_classes: () ->
       $('tr.procedure.new_service').removeClass('new_service')
@@ -182,6 +211,7 @@ $ ->
         destroy_a_group()
 
       self.remove_all_new_row_classes()
+      self.build_core_multiselect_options($(row).parents('.core'))
 
     initialize_multiselect: (multiselect) ->
       $(multiselect).multiselect(includeSelectAllOption: true)
@@ -190,33 +220,6 @@ $ ->
       multiselects = $('select.core_multiselect')
 
       this.initialize_multiselect multiselect for multiselect in multiselects
-
-    build_core_multiselect_options: (core) ->
-      option_data = []
-      multiselect = $(core).find('select.core_multiselect')
-      self = this
-
-      find_row_name = (group_id) ->
-        row = self.find_rows(group_id).first()
-
-        if self.find_group(group_id).length != 0
-          name = self.find_group(group_id).find('td').text().split(/\s+/).join(' ')
-
-        else
-          quantity = 1
-          service_name = $(row).find('td.name').text().trim()
-          billing_type = group_id.split('_')[0]
-          name = [quantity, service_name, billing_type].join(' ')
-
-        option_data.push label: name, title: name, value: group_id
-
-      group_ids = _.uniq $.map $(core).find('tr.procedure'), (row) ->
-        $(row).data('group-id')
-
-      find_row_name group_id for group_id in group_ids
-
-      $(multiselect).multiselect('dataprovider', option_data)
-      $(multiselect).multiselect('rebuild')
 
     initialize: ->
       self = this
