@@ -41,12 +41,7 @@ feature 'Identity incompletes all Procedures', js: true do
   end
 
   def when_i_click_the_incomplete_all_button
-    puts 'CONSOLE:'
-    puts page.driver.console_messages
-    puts 'ERROR:'
-    puts page.driver.error_messages
-    save_and_open_screenshot
-    bootstrap_multiselect '#core_multiselect', []
+    bootstrap_multiselect '#core_multiselect'
     find('button.incomplete_all').click
     wait_for_ajax
   end
@@ -63,7 +58,7 @@ feature 'Identity incompletes all Procedures', js: true do
   end
 
   def then_all_the_procedure_incomplete_buttons_should_be_active
-    expect(page).to have_css('label.status.incomplete.active', count: 2)
+    expect(page).to have_css('label.status.incomplete.active', count: 2, visible: false)
   end
 
   def then_all_procedures_should_be_incomplete
