@@ -75,8 +75,8 @@ $ ->
       this.find_group(group_id).remove()
 
     show_group: (group_id) ->
-      rows = this.find_rows(group_id)
-      group = this.find_group(group_id)
+      rows        = $("tr.procedure[data-group-id=#{group_id}]")
+      group       = $("tr.procedure-group[data-group-id='#{group_id}']")
       button_span = $(group).find('span.glyphicon')
 
       $(rows).slideDown()
@@ -87,8 +87,8 @@ $ ->
       $(group).find('.glyphicon-chevron-down').length > 0
 
     hide_group: (group_id) ->
-      rows = this.find_rows(group_id)
-      group = this.find_group(group_id)
+      rows = $("tr.procedure[data-group-id=#{group_id}]")
+      group = $("tr.procedure-group[data-group-id='#{group_id}']")
       button_span = $(group).find('span.glyphicon')
 
       $(rows).slideUp()
@@ -104,7 +104,7 @@ $ ->
       $(group_rows).last().css('border-bottom', '2px #888 solid')
 
     group_size: (group_id) ->
-      this.find_rows(group_id).length
+      $(this.procedures_table).find("tr.procedure[data-group-id='#{group_id}']").length
 
     build_core_multiselect_options: (core) ->
       option_data = []
@@ -154,13 +154,13 @@ $ ->
       $('tr.procedure.new_service').removeClass('new_service')
 
     update_group_membership: (row, original_group_id) ->
-      group_id = $(row).data('group-id')
-      service_group = this.find_group(group_id)
-      original_service_group = this.find_group(original_group_id)
-      self = this
+      group_id                = $(row).data('group-id')
+      service_group           = this.find_group(group_id)
+      original_service_group  = this.find_group(original_group_id)
+      self                    = this
 
       do_i_have_siblings = ->
-        self.group_size(group_id) > 1
+        group_size(group_id) > 1
 
       does_my_group_exist = ->
         service_group.length == 1
@@ -170,7 +170,7 @@ $ ->
         self.redraw_group(group_id)
         self.redraw_group(original_group_id)
       create_a_group = ->
-        self.create_group(group_id)
+        create_group(group_id)
 
       wrangle_siblings = (group) ->
         group_id = $(group).data('group-id')
@@ -185,13 +185,10 @@ $ ->
         self.redraw_group(original_group_id)
 
       i_left_a_group = ->
-        group_id != original_group_id
+        service_group.data('original_group_id') == original_group_id
 
-      does_original_group_have_1_member = ->
-        self.group_size(original_group_id) == 1
-
-      destroy_a_group = ->
-        self.destroy_group(original_group_id)
+      i_am_a_new_row = (row) ->
+        $(row).hasClass('new_service')
 
       i_am_a_new_row = (row) ->
         $(row).hasClass('new_service')

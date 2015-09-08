@@ -1,9 +1,4 @@
-%tr.procedure.new_service{data: {"id" => procedure.id, "service_id" => procedure.service_id, "billing_type" => procedure.billing_type, group_id: procedure.group_id }}
-  -# Certain UI elements should be disabled before the appointment starts. If the appointment hasn't been started,
-  -# class their container element as pre_start_disabled, so that an on click handler can display a helpful
-  -# message if that UI element is clicked before appointment has started. Class to be removed once appointment
-  -# starts.
-
+%tr.procedure.new_service{ data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id } }
   %td.name
     %span= procedure.service_name
   %td.billing
@@ -15,7 +10,7 @@
       %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''} #{ procedure.appt_started? ? '' : 'disabled' }"}
         %input{class: "procedure_status", type: "radio", value: "incomplete", autocomplete: "off", id: "incomplete_button_#{procedure.id}"} Incomplete
   %td.followup{id: "follow_up_#{procedure.id}"}
-    = render partial: "appointments/followup_calendar", locals: { procedure: procedure }
+    = render partial: "/appointments/followup_calendar", locals: { procedure: procedure }
   %td.completed-date
     .input-group.date.completed_date_field
       %input.datetimepicker{type: "text", class: "form-control", disabled: !(procedure.appt_started? && procedure.complete?), value: format_date(procedure.completed_date)}
