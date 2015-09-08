@@ -1,5 +1,10 @@
 $ ->
 
+  window.reset_multiselect_after_update = (element) ->
+    multiselect = $(element).siblings('#core_multiselect')
+    $(multiselect).multiselect('deselectAll', false)
+    $(multiselect).multiselect('updateButtonText')
+
   $(document).on 'click', 'tr.procedure-group button', ->
     core = $(this).closest('tr.core')
     pg = new ProcedureGrouper(core)
@@ -160,6 +165,7 @@ $ ->
   $(document).on 'click', 'button.incomplete_all', ->
     status = 'incomplete'
     procedure_ids = fetch_multiselect_group_ids(this)
+    self = this
 
     if procedure_ids.length > 0
       $.ajax
@@ -168,13 +174,13 @@ $ ->
           status: status
           procedure_ids: _.flatten(procedure_ids)
         url: "/multiple_procedures/incomplete_all.js"
-      core = $(this).parents('.core').closest()
-      pg = new ProcedureGrouper(core)
-      pg.reset_multiselect_after_update()   
+        success: ->
+          reset_multiselect_after_update(self) 
           
   $(document).on 'click', 'button.complete_all', ->
     status = 'complete'
     procedure_ids = fetch_multiselect_group_ids(this)
+    self = this
 
     if procedure_ids.length > 0
       $.ajax
@@ -183,10 +189,8 @@ $ ->
           status: status
           procedure_ids: _.flatten(procedure_ids)
         url: '/multiple_procedures/update_procedures.js'
-      core = $(this).parents('.core').closest()
-      pg = new ProcedureGrouper(core)
-      pg.reset_multiselect_after_update()
-
+        success: ->
+          reset_multiselect_after_update(self)
 
   $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')
