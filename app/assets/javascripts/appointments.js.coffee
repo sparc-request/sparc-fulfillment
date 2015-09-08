@@ -72,6 +72,15 @@ $ ->
       type: 'PATCH'
       url:  "/appointments/#{appointment_id}?field=completed_date"
 
+  $(document).on 'click', '.reset_visit', ->
+    data = appointment_id: $(this).parents('.row.appointment').data('id')
+    if confirm("Resetting this appointment will delete all data which has been recorded for this appointment, are you sure you wish to continue?")
+      $.ajax
+        type: 'PUT'
+        url: "/multiple_procedures/reset_procedures.js"
+        data: data
+
+
   # Procedure buttons
 
   $(document).on 'dp.hide', ".completed_date_field", ->
@@ -226,7 +235,11 @@ $ ->
         error: ->
           alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
         success: ->
-          pg.destroy_row(element)
+          procedures = $("tr.procedure[data-group-id='#{group_id}']")
+
+          if procedures.length == 1
+            pg.remove_service_from_group(procedures[0], $("tr.procedure-group[data-group-id='#{group_id}']"))
+            pg.destroy_group(group_id)
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')

@@ -10,9 +10,9 @@
                 %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
             .row
               .col-md-5
-                = render partial: 'visit_type_dropdown'
+                = render partial: '/appointments/visit_type_dropdown'
               .col-md-5.col-md-offset-2.text-right
-                = render partial: 'visit_indications_dropdown'
+                = render partial: '/appointments/visit_indications_dropdown'
       .row
         = render partial: 'start_complete_buttons', locals: { appointment: appointment }
       .row.calendar
