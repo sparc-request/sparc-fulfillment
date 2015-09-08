@@ -6,6 +6,7 @@ FactoryGirl.define do
     description 'Description'
     abbreviation 'Abbreviation'
     one_time_fee false
+    is_available true
 
     after(:create) do |service|
       pricing_map = build(:pricing_map_past)
