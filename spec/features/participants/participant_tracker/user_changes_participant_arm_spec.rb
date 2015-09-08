@@ -20,7 +20,6 @@ feature 'User changes Participant Arm', js: true do
   def when_i_change_a_participants_arm
     page.find('table.participants tbody tr:first-child td.change_arm a').click
     wait_for_ajax
-    screenshot
     bootstrap_select "#participant_arm_id", @second_arm.name
 
     click_button 'Save'

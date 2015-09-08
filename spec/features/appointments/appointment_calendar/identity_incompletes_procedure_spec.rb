@@ -5,6 +5,7 @@ feature 'Identity incompletes Procedure', js: true do
   scenario 'and sees completed and incompleted Notes' do
     given_i_have_completed_an_appointment
     when_i_incomplete_the_procedure
+    then_i_should_see_that_i_am_the_procedure_performer
     when_i_view_the_notes_list
     then_i_should_see_two_complete_notes
   end
@@ -33,6 +34,11 @@ feature 'Identity incompletes Procedure', js: true do
     bootstrap_select '.reason-select', "Assessment missed"
     click_button 'Save'
     wait_for_ajax
+  end
+
+  def then_i_should_see_that_i_am_the_procedure_performer
+    identity   = Identity.first
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: identity.full_name)
   end
 
   def when_i_view_the_notes_list

@@ -2,37 +2,72 @@ require 'rails_helper'
 
 feature 'Fulfillments', js: true do
 
-  scenario 'User adds a new fulfillment' do
-    given_i_have_study_level_activities
-    given_i_visit_the_study_level_activities_tab
-    when_i_open_up_a_fulfillment
-    when_i_click_on_the_add_fulfillment_button
-    when_i_fill_out_the_fulfillment_form
-    when_i_save_the_fulfillment_form
-    then_i_should_see_the_new_fulfillment_in_the_table
-    then_i_should_see_the_correct_components
+  context 'User adds a new fulfillment' do
+    scenario 'and sees the fulfillment' do
+      given_i_have_study_level_activities
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_the_add_fulfillment_button
+      when_i_fill_out_the_fulfillment_form
+      when_i_save_the_fulfillment_form
+      then_i_should_see_the_new_fulfillment_in_the_table
+    end
+
+    scenario 'and sees the components' do
+      given_i_have_study_level_activities
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_the_add_fulfillment_button
+      when_i_fill_out_the_fulfillment_form
+      when_i_save_the_fulfillment_form
+      then_i_should_see_the_correct_components
+    end
   end
 
-  scenario 'User adds a new fulfillment incorrectly' do
-    given_i_have_study_level_activities
-    given_i_visit_the_study_level_activities_tab
-    when_i_open_up_a_fulfillment
-    when_i_click_on_the_add_fulfillment_button
-    when_i_save_the_fulfillment_form
-    then_i_should_see_form_errors
+  context 'User adds a new fulfillment incorrectly' do
+    scenario 'and sees form errors' do
+      given_i_have_study_level_activities
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_the_add_fulfillment_button
+      when_i_save_the_fulfillment_form
+      then_i_should_see_form_errors
+    end
   end
 
-  scenario 'User edits an existing fulfillment' do
-    given_i_have_study_level_activities
-    given_i_have_a_fulfillment
-    given_i_visit_the_study_level_activities_tab
-    when_i_open_up_a_fulfillment
-    when_i_click_on_the_edit_fulfillment_button
-    when_i_fill_out_the_fulfillment_form
-    when_i_save_the_fulfillment_form
-    then_i_should_see_the_new_fulfillment_in_the_table
-    then_i_should_see_the_correct_components
-    then_i_should_see_the_changes_in_the_notes
+  context 'User edits an existing fulfillment' do
+    scenario 'and sees the fulfillment' do
+      given_i_have_study_level_activities
+      given_i_have_a_fulfillment
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_the_edit_fulfillment_button
+      when_i_fill_out_the_fulfillment_form
+      when_i_save_the_fulfillment_form
+      then_i_should_see_the_new_fulfillment_in_the_table
+    end
+
+    scenario 'and sees the components' do
+      given_i_have_study_level_activities
+      given_i_have_a_fulfillment
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_the_edit_fulfillment_button
+      when_i_fill_out_the_fulfillment_form
+      when_i_save_the_fulfillment_form
+      then_i_should_see_the_correct_components
+    end
+
+    scenario 'and sees a note for the changes' do
+      given_i_have_study_level_activities
+      given_i_have_a_fulfillment
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_the_edit_fulfillment_button
+      when_i_fill_out_the_fulfillment_form
+      when_i_save_the_fulfillment_form
+      then_i_should_see_the_changes_in_the_notes
+    end
   end
 
   def given_i_have_study_level_activities
@@ -47,7 +82,7 @@ feature 'Fulfillments', js: true do
     @fulfillment = create(:fulfillment, line_item: @line_item)
   end
 
-  def given_i_visit_the_study_level_activities_tab
+  def given_i_am_viewing_the_study_level_activities_tab
     visit protocol_path(@protocol.id)
     click_link "Study Level Activities"
   end
@@ -96,7 +131,6 @@ feature 'Fulfillments', js: true do
 
   def then_i_should_see_form_errors
     expect(page).to have_content("Fulfilled at can't be blank")
-    expect(page).to have_content("Account number can't be blank")
     expect(page).to have_content("Quantity can't be blank")
     expect(page).to have_content("Quantity is not a number")
   end
