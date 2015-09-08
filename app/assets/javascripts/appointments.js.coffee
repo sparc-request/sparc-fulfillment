@@ -33,10 +33,6 @@ $ ->
       $.ajax
         type: 'GET'
         url: "/appointments/#{id}.js"
-        success: ->
-          pg = new ProcedureGrouper()
-
-          pg.initialize()
 
   $(document).on 'click', '.add_service', ->
     data =
@@ -317,4 +313,3 @@ $ ->
 
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
-
