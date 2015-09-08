@@ -192,8 +192,8 @@ $ ->
       this.initialize_multiselect multiselect for multiselect in multiselects
     
     reset_multiselect_after_update: ->
-      $('#core_multiselect-deselectAll').multiselect('deselectAll', false)
-      $('#core_multiselect-deselectAll').multiselect('updateButtonText')
+      $('#core_multiselect').multiselect('deselectAll', false)
+      $('#core_multiselect').multiselect('updateButtonText')
       console.log "made it into the reset multiselect"
 
     build_core_multiselect_options: (core) ->
