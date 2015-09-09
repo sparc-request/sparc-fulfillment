@@ -41,15 +41,32 @@ feature 'Identity views Procedures grouped by Service', js: true do
     then_i_should_not_see_grouped_service_row
   end
 
-  scenario 'and sees that grouped services are completed when the Complete All button is clicked' do
+  scenario 'and sees that grouped services are completed when the Complete Selected button is clicked' do
     given_an_appointment_with_duplicated_procedures
     when_i_select_the_service_in_the_core_dropdown
     and_i_click_complete_all
     then_i_should_see_all_procedures_completed
   end
 
-  scenario 'and sees that single services are completed when the Complete All button is clicked' do
+  scenario 'and sees that single services are completed when the Complete Selected button is clicked' do
+    given_an_appointment_with_two_procedures_with_different_billing
+    when_i_select_all_in_the_core_dropdown
+    and_i_click_complete_all
+    then_i_should_see_all_procedures_completed
+  end
 
+  scenario 'and sees that grouped services are incomplete when the Incomplete Selected button is clicked' do
+    given_an_appointment_with_duplicated_procedures
+    when_i_select_the_service_in_the_core_dropdown
+    and_i_click_incomplete_all_and_give_a_reason
+    then_i_should_see_all_procedures_as_incomplete
+  end
+
+  def and_i_click_incomplete_all_and_give_a_reason
+    find('button.incomplete_all').click
+    reason = Procedure::NOTABLE_REASONS.first
+    bootstrap_select '.reason-select', reason
+    fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
   end
 
   def given_an_appointment_with_unique_procedures
@@ -64,6 +81,10 @@ feature 'Identity views Procedures grouped by Service', js: true do
     bootstrap_multiselect '#core_multiselect', [Procedure.first.service_name]
   end
 
+  def when_i_select_all_in_the_core_dropdown
+    bootstrap_multiselect '#core_multiselect'
+  end
+
   def and_i_click_complete_all
     find('button.complete_all').click
   end
@@ -72,6 +93,12 @@ feature 'Identity views Procedures grouped by Service', js: true do
     expect(page).to have_css('label.status.complete.active', count: 2)
     expect(@participant.procedures.first.status).to eq("complete")
     expect(@participant.procedures.last.status).to eq("complete")
+  end
+
+  def then_i_should_see_all_procedures_as_incomplete
+    expect(page).to have_css('label.status.incomplete.active', count: 2)
+    expect(@participant.procedures.first.status).to eq("incomplete")
+    expect(@participant.procedures.last.status).to eq("incomplete")
   end
 
   def given_an_appointment_with_duplicated_procedures

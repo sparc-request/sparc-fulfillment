@@ -9,9 +9,10 @@ module Features
       if selections.first == 'all'
         check 'Select all'
       else
-        # check selections
+        selections.each do |selection|
+          check selection
+        end
       end
-
       find('body').click # Click away
     end
 
