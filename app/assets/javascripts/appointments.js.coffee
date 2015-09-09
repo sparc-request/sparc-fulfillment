@@ -45,10 +45,10 @@ $ ->
       url:  "/procedures.js"
       data: data
       success: ->
-        new_rows = $('tr.procedure.new_service')
-        core = $(new_rows).first().parents('.core')
+        new_rows    = $('tr.procedure.new_service')
+        core        = $(new_rows).first().parents('.core')
         multiselect = $(core).find('select.core_multiselect')
-        pg = new ProcedureGrouper()
+        pg          = new ProcedureGrouper()
 
         pg.update_group_membership new_row for new_row in new_rows
         pg.initialize_multiselect(multiselect)
