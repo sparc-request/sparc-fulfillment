@@ -45,12 +45,12 @@ $ ->
       url:  "/procedures.js"
       data: data
       success: ->
-        new_services = $('tr.procedure.new_service')
-        core = $(new_services).first().parents('.core')
+        new_rows = $('tr.procedure.new_service')
+        core = $(new_rows).first().parents('.core')
         multiselect = $(core).find('select.core_multiselect')
         pg = new ProcedureGrouper()
 
-        pg.update_group_membership new_service for new_service in new_services
+        pg.update_group_membership new_row for new_row in new_rows
         pg.initialize_multiselect(multiselect)
         pg.build_core_multiselect_options(core)
 
@@ -225,8 +225,6 @@ $ ->
   $(document).on 'click', '.procedure button.delete', ->
     element      = $(this).parents(".procedure")
     procedure_id = $(element).data("id")
-    group_id     = $(element).data("group-id")
-    pg           = new ProcedureGrouper($(this).closest('tr.core'))
 
     if confirm('Are you sure you want to remove this procedure?')
       $.ajax
@@ -235,11 +233,10 @@ $ ->
         error: ->
           alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
         success: ->
-          procedures = $("tr.procedure[data-group-id='#{group_id}']")
+          pg  = new ProcedureGrouper()
+          row = $("tr.procedure[data-id='#{procedure_id}']")
 
-          if procedures.length == 1
-            pg.remove_service_from_group(procedures[0], $("tr.procedure-group[data-group-id='#{group_id}']"))
-            pg.destroy_group(group_id)
+          pg.destroy_row(row)
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')

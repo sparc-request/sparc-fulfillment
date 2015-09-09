@@ -11,7 +11,7 @@ $ ->
     find_group: (group_id) ->
       $("tr.procedure-group[data-group-id='#{group_id}']")
 
-    duplicate_rows: (rows) ->
+    duplicate_group_ids: (rows) ->
       group_ids = []
       self      = this
 
@@ -48,7 +48,7 @@ $ ->
       return this.find_group(group_id)
 
     redraw_group: (group_id) ->
-      count = this.find_rows(group_id).length
+      count = this.group_size(group_id)
       group = this.find_group(group_id)
 
       $(group).find('span.count').text(count)
@@ -77,8 +77,8 @@ $ ->
       this.find_group(group_id).remove()
 
     show_group: (group_id) ->
-      rows        = find_rows(group_id)
-      group       = find_group(group_id)
+      rows        = this.find_rows(group_id)
+      group       = this.find_group(group_id)
       button_span = $(group).find('span.glyphicon')
 
       $(rows).slideDown()
@@ -90,8 +90,8 @@ $ ->
       $(group).find('.glyphicon-chevron-down').length > 0
 
     hide_group: (group_id) ->
-      rows        = find_rows(group_id)
-      group       = find_group(group_id)
+      rows        = this.find_rows(group_id)
+      group       = this.find_group(group_id)
       button_span = $(group).find('span.glyphicon')
 
       $(rows).slideUp()
@@ -108,7 +108,7 @@ $ ->
       $(rows).last().css('border-bottom', '2px #888 solid')
 
     group_size: (group_id) ->
-      find_group(group_id).length
+      this.find_rows(group_id).length
 
     build_core_multiselect_options: (core) ->
       option_data = []
@@ -141,19 +141,18 @@ $ ->
       group_id        = $(row).data('group-id')
       core            = $(row).parents('.core')
       group           = this.find_group(group_id)
-      remaining_rows  = $(row).parents('.core').find('tr.procedure').length
+      group_siblings_count  = this.group_size(group_id) - 1
+      core_siblings_count  = $(core).find('tr.procedure').length - 1
 
-      if remaining_rows == 1
-        $(row).parents('.core').remove()
-
-      $(row).remove()
-
-      if this.group_size(group_id) == 1
-        this.destroy_group(group_id)
+        $(core).remove()
       else
-        this.redraw_group(group_id)
-
-      this.build_core_multiselect_options(core)
+        if group_siblings_count == 1
+          $(row).remove()
+          this.destroy_group(group_id)
+        else
+          $(row).remove()
+          this.redraw_group(group_id)
+        this.build_core_multiselect_options(core)
 
     remove_all_new_row_classes: () ->
       $('tr.procedure.new_service').removeClass('new_service')
@@ -165,7 +164,7 @@ $ ->
       self            = this
 
       do_i_have_siblings = ->
-        group_size(group_id) > 1
+        self.group_size(group_id) > 1
 
       does_my_group_exist = ->
         group.length == 1
@@ -176,7 +175,7 @@ $ ->
         self.redraw_group(original_group_id)
 
       create_a_group = ->
-        create_group(group_id)
+        self.create_group(group_id)
 
       wrangle_siblings = (group) ->
         group_id = $(group).data('group-id')
@@ -192,6 +191,12 @@ $ ->
 
       i_left_a_group = ->
         group.data('original_group_id') == original_group_id
+
+      does_original_group_have_1_member = ->
+        self.group_size(original_group_id) == 1
+
+      destroy_a_group = ->
+        self.destroy_group(original_group_id)
 
       i_am_a_new_row = (row) ->
         $(row).hasClass('new_service')
@@ -227,18 +232,18 @@ $ ->
       self.initialize_multiselects()
 
       for core in this.cores
-        rows = $(core).find('procedures tr.procedure')
+        rows = $(core).find('tr.procedure')
 
-        for group_id in self.duplicate_rows(rows)
+        for group_id in self.duplicate_group_ids(rows)
           group = self.create_group(group_id)
-          rows  = find_rows(group_id)
+          rows  = self.find_rows(group_id)
 
           add = (row, group) ->
             self.add_service_to_group row, group
 
           add row, group for row in rows
           self.style_group group
-          self.hide_group(service)
+          self.hide_group(group_id)
 
         self.build_core_multiselect_options(core)
         self.remove_all_new_row_classes()
