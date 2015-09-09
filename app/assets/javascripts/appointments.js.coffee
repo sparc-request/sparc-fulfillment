@@ -52,7 +52,6 @@ $ ->
 
         pg.update_group_membership new_row for new_row in new_rows
         pg.initialize_multiselect(multiselect)
-        pg.build_core_multiselect_options(core)
 
   $(document).on 'click', '.start_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')

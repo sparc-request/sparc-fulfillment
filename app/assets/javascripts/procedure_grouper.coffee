@@ -135,6 +135,7 @@ $ ->
       find_row_name group_id for group_id in group_ids
 
       $(multiselect).multiselect('dataprovider', option_data)
+      $(multiselect).multiselect('setOptions', includeSelectAllOption: true)
       $(multiselect).multiselect('rebuild')
 
     destroy_row: (row) ->
