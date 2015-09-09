@@ -4,8 +4,8 @@
       .btn-group.pull-right
         .btn-group
           = select_tag 'core_multiselect', nil, class: 'core_multiselect', style: 'display: inline-block', multiple: true
-          %button.btn.btn-default.btn-primary.multiselect.complete_all{ type: 'button', id: "core_#{core_id}_multiselect_complete_all" } Complete All
-          %button.btn.btn-default.btn-warning.multiselect.incomplete_all{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all" } Incomplete All
+          %button.btn.btn-default.btn-primary.multiselect.complete_all{ type: 'button', id: "core_#{core_id}_multiselect_complete_all" } Complete Selected
+          %button.btn.btn-default.btn-warning.multiselect.incomplete_all{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all" } Incomplete Selected
       %h3
         = procedures.first.sparc_core_name
     .panel-body

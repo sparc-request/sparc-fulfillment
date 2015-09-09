@@ -135,7 +135,7 @@ $ ->
       find_row_name group_id for group_id in group_ids
 
       $(multiselect).multiselect('dataprovider', option_data)
-      $(multiselect).multiselect('setOptions', includeSelectAllOption: true)
+      $(multiselect).multiselect('setOptions', includeSelectAllOption: true, numberDisplayed: 0, nonSelectedText: 'Please Select')
       $(multiselect).multiselect('rebuild')
 
     destroy_row: (row) ->
@@ -221,7 +221,7 @@ $ ->
       self.build_core_multiselect_options($(row).parents('.core'))
 
     initialize_multiselect: (multiselect) ->
-      $(multiselect).multiselect(includeSelectAllOption: true)
+      $(multiselect).multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
 
     initialize_multiselects: ->
       multiselects = $('select.core_multiselect')
