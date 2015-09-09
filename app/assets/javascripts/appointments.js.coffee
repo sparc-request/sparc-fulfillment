@@ -116,7 +116,7 @@ $ ->
       success: ->
         procedure    = $("tr.procedure[data-id='#{procedure_id}']")
         group_id     = $(procedure).data('group-id')
-        pg           = new ProcedureGrouper($(procedure).parents('tr.core'))
+        pg           = new ProcedureGrouper()
 
         pg.update_group_membership(procedure, original_group_id)
 

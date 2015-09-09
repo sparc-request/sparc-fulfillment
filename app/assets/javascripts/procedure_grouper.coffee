@@ -148,7 +148,7 @@ $ ->
       if core_siblings_count == 0
         $(core).remove()
       else
-        if group_siblings_count == 1
+        if group_siblings_count == 0
           $(row).remove()
           this.destroy_group(group_id)
         else
@@ -192,7 +192,7 @@ $ ->
         self.redraw_group(original_group_id)
 
       i_left_a_group = ->
-        group.data('original_group_id') == original_group_id
+        group_id != original_group_id
 
       does_original_group_have_1_member = ->
         self.group_size(original_group_id) == 1
