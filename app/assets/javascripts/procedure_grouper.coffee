@@ -144,6 +144,7 @@ $ ->
       group_siblings_count  = this.group_size(group_id) - 1
       core_siblings_count  = $(core).find('tr.procedure').length - 1
 
+      if core_siblings_count == 0
         $(core).remove()
       else
         if group_siblings_count == 1
