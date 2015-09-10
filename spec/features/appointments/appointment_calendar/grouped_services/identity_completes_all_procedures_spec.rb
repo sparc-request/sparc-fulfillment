@@ -21,7 +21,6 @@ feature 'Identity completes all Services', js: true do
       and_i_select_all_in_the_core_dropdown
       and_i_click_complete_all
       then_i_should_see_all_procedures_completed
-      screenshot
     end 
   end
 
