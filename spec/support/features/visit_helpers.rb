@@ -2,6 +2,10 @@ module Features
 
   module VisitHelpers
 
+    def and_the_visit_has_one_grouped_procedure
+      2.times { add_a_procedure services.first }
+    end
+
     def add_a_procedure(service, count = 1)
       bootstrap_select '#service_list', service.name
       fill_in 'service_quantity', with: count

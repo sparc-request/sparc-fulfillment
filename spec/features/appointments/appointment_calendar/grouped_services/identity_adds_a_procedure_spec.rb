@@ -41,16 +41,12 @@ feature 'Identity adds a Procedure', js: true do
     then_i_should_see_the_group_counter_is_correct
   end
 
-  def and_the_visit_has_one_grouped_procedure
-    2.times { add_a_procedure services.first, 1 }
-  end
-
   def when_i_add_a_procedure
-    add_a_procedure services.first, 1
+    add_a_procedure services.first
   end
 
   def when_i_add_a_different_procedure
-    add_a_procedure services.last, 1
+    add_a_procedure services.last
   end
 
   def then_i_should_see_the_group_counter_is_correct
