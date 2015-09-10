@@ -227,6 +227,7 @@ en:
     incomplete: "Incomplete All"
 
   protocol:
+    id: "Protocol ID"
     object: "Protocol"
     updates: "Updates"
     sparc_id: "SPARC ID"

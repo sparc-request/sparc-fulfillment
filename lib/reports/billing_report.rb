@@ -68,6 +68,7 @@ class BillingReport < Report
       csv << [""]
 
       protocols.each do |protocol|
+        total = 0
         protocol.procedures.completed_r_in_date_range(@start_date, @end_date).to_a.group_by(&:service).each do |service, procedures|
           procedure = procedures.first
           participant = procedure.participant
@@ -84,6 +85,12 @@ class BillingReport < Report
             (procedure.service_cost.to_f / 100),
             (procedures.size * procedure.service_cost.to_f) / 100
           ]
+          total += ((procedures.size * procedure.service_cost.to_f) / 100)
+        end
+        if total > 0
+          csv << ["", "", "", "", "", "", "", "", "Total:", total]
+          csv << [""]
+          csv << [""]
         end
       end
     end
