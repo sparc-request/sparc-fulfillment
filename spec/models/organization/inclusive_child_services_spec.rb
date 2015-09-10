@@ -11,7 +11,7 @@ RSpec.describe Organization, type: :model do
         child_1       = create(:organization_with_services, parent: organization)
         child_2       = create(:organization_with_services, parent: organization, process_ssrs: true)
 
-        expect(organization.inclusive_child_services(:per_participant).length).to eq(6)
+        expect(organization.inclusive_child_services(:per_participant).length).to eq(8)
       end
 
       it "should only return Services of Organizations which are not process_ssrs" do
@@ -19,7 +19,7 @@ RSpec.describe Organization, type: :model do
         child_1       = create(:organization_with_services, parent: organization)
         child_2       = create(:organization_with_services, parent: child_1, process_ssrs: true)
 
-        expect(organization.inclusive_child_services(:per_participant).length).to eq(6)
+        expect(organization.inclusive_child_services(:per_participant).length).to eq(8)
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe Organization, type: :model do
         end
 
         it "should return an array of its Services and its child's Services" do
-          expect(@organization.inclusive_child_services(:per_participant).length).to eq(39)
+          expect(@organization.inclusive_child_services(:per_participant).length).to eq(52)
         end
       end
 
