@@ -125,6 +125,7 @@ en:
     change_service: "Change Service"
     service: "Service"
     qty_req: "Requested"
+    quantity: "Quantity"
     qty_type: "Type"
     qty_rem: "Remaining"
     started: "Date Started"

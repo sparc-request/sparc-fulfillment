@@ -71,7 +71,7 @@ feature 'Line Items', js: true do
     @pricing_map   = create(:pricing_map, service: @service1, quantity_type: 'Case', effective_date: Time.current)
     @line_item_with_fulfillment = create(:line_item, service: @service1, protocol: @protocol)
     @fulfillment   = create(:fulfillment, line_item: @line_item_with_fulfillment)
-    @line_item_without_fulfillment = create(:line_item, service: @service1, protocol: @protocol)
+    @line_item_without_fulfillment = create(:line_item, service: @service2, protocol: @protocol)
 
     visit protocol_path(@protocol.id)
 
@@ -83,17 +83,17 @@ feature 'Line Items', js: true do
   end
 
   def when_i_click_on_the_delete_line_item_button_with_fulfillent
-    find(".line_item[data-id='#{@line_item_with_fulfillment.id}'] .options .otf_delete").click
+    find(".documents[data-documentable-id='#{@line_item_with_fulfillment.id}'] + .otf_edit + .otf_delete").click
   end
 
   def when_i_click_on_the_delete_line_item_button_without_fulfillment
-    find(".line_item[data-id='#{@line_item_without_fulfillment.id}'] .options .otf_delete").click
+    find(".documents[data-documentable-id='#{@line_item_without_fulfillment.id}'] + .otf_edit + .otf_delete").click
   end
 
   def when_i_fill_in_new_line_item_form
     wait_for_ajax
     bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
-    fill_in 'Quantity Requested', with: 50
+    fill_in 'Quantity', with: 50
     page.execute_script %Q{ $('#date_started_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     click_button 'Save Study Level Activity'
@@ -111,11 +111,11 @@ feature 'Line Items', js: true do
   end
 
   def then_i_should_not_see_the_line_item
-    expect(page).not_to have_css(".line_item[data-id='#{@line_item_without_fulfillment.id}']")
+    expect(page).to have_content("#{@service2.name}") #without fulfillments
   end
 
   def then_i_should_still_see_the_line_item
-    expect(page).to have_css(".line_item[data-id='#{@line_item_with_fulfillment.id}']")
+    expect(page).to have_content("#{@service1.name}") #with fulfillments
   end
 
   def then_i_should_see_the_line_item_on_the_page
@@ -123,7 +123,7 @@ feature 'Line Items', js: true do
   end
 
   def when_i_click_on_the_edit_line_item_button
-    find(".line_item[data-id='#{@line_item_without_fulfillment.id}'] .options .otf_edit").click
+    find(".documents[data-documentable-id='#{@line_item_without_fulfillment.id}'] + .otf_edit").click
   end
 
   def then_i_should_see_the_changes_on_the_page

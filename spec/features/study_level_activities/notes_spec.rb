@@ -51,6 +51,7 @@ feature 'Notes', js: true do
 
   def when_i_open_up_a_fulfillment
     first('.otf_fulfillments.list').click
+    wait_for_ajax
   end
   
   def when_i_click_on_notes_icon css_class
