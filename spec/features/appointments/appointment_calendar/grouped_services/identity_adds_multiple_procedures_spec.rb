@@ -21,12 +21,28 @@ feature 'Identity adds multiple Procedures', js: true do
     then_i_should_see_one_group_with_four_procedures
   end
 
+  scenario 'and sees the multiselect dropdown instantiated with Select All option and Service option' do
+    given_i_am_viewing_a_visit
+    when_i_add_5_procedures
+    then_i_should_see_the_multiselect_instantiated_with_2_options
+  end
+
   def when_i_add_two_similar_procedures
     add_a_procedure services.first, 2
   end
 
   def when_i_add_two_different_procedures
     add_a_procedure services.last, 2
+  end
+
+  def when_i_add_5_procedures
+    add_a_procedure services.first, 5
+  end
+
+  def then_i_should_see_the_multiselect_instantiated_with_2_options
+    find("select#core_multiselect + .btn-group").click
+    expect(page).to have_content("Select all")
+    expect(page).to have_content("5 #{Procedure.first.service_name} R")
   end
 
   def then_i_should_see_one_group_with_four_procedures
