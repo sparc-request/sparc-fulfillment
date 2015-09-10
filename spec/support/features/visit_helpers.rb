@@ -2,7 +2,7 @@ module Features
 
   module VisitHelpers
 
-    def add_a_service(service, count = 1)
+    def add_a_procedure(service, count = 1)
       bootstrap_select '#service_list', service.name
       find('button.add_service').click
       wait_for_ajax
