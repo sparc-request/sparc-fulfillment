@@ -5,10 +5,18 @@ FactoryGirl.define do
     participant nil
 
     trait :with_procedures do
+
       after(:create) do |appointment, evaluator|
         service = create(:service)
+
         appointment.visit_group.visits.each do |v|
-          create(:procedure_with_notes, appointment: appointment, visit_id: v.id, service_id: service.id, service_name: service.name, sparc_core_id: service.sparc_core_id, sparc_core_name: service.sparc_core_id)
+          create(:procedure_research_billing_qty_with_notes,
+                  appointment: appointment,
+                  visit_id: v.id,
+                  service_id: service.id,
+                  service_name: service.name,
+                  sparc_core_id: service.sparc_core_id,
+                  sparc_core_name: service.sparc_core_id)
         end
       end
     end
