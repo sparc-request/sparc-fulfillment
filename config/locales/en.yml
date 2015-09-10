@@ -50,6 +50,7 @@ en:
     edit_header: "Custom Visit"
     start_visit: "Start Visit"
     complete_visit: "Complete Visit"
+    reset_visit: "Reset Visit"
     object: "Appointment"
     warning: "Please click 'Start Visit' and enter a start date to continue."
 
@@ -224,6 +225,7 @@ en:
     incomplete: "Incomplete All"
 
   protocol:
+    id: "Protocol ID"
     object: "Protocol"
     updates: "Updates"
     sparc_id: "SPARC ID"

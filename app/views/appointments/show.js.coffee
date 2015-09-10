@@ -1,4 +1,4 @@
-$(".appointments").html("<%= escape_javascript(render(partial: 'calendar', locals: {appointment: @appointment})) %>")
+$(".appointments").html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: {appointment: @appointment})) %>")
 
 if !$('.start_date_input').hasClass('hidden')
   start_date_init("<%= format_datetime(@appointment.start_date) %>")
