@@ -148,7 +148,7 @@ $ ->
       if core_siblings_count == 0
         $(core).remove()
       else
-        if group_siblings_count == 0
+        if group_siblings_count == 1
           $(row).remove()
           this.destroy_group(group_id)
         else
