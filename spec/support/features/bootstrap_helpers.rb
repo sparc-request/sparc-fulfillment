@@ -23,6 +23,7 @@ module Features
       within bootstrap_select do
         first('a', text: choice).click
       end
+      wait_for_ajax
     end
 
     def bootstrap_selected?(element, choice)

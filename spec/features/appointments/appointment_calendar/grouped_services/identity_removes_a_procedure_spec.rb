@@ -21,6 +21,11 @@ feature 'Identity removes a Procedure', js: true do
       when_i_remove_the_first_procedure
       then_i_should_see_the_group_counter_decrement_by_1
     end
+
+    scenario 'and sees the quantity decremented in the multiselect menu' do
+      when_i_remove_the_first_procedure
+      then_i_should_see_the_quantity_decremented_in_the_multiselect_menu
+    end 
   end
 
   context 'when group has 2 members' do
@@ -64,6 +69,11 @@ feature 'Identity removes a Procedure', js: true do
 
   def then_i_should_no_longer_see_the_group
     expect(page).to_not have_css('tr.procedure-group')
+  end
+
+  def then_i_should_see_the_quantity_decremented_in_the_multiselect_menu
+    find("select#core_multiselect + .btn-group").click
+    expect(page).to have_content("2 #{Procedure.first.service_name} R")
   end
 
 end
