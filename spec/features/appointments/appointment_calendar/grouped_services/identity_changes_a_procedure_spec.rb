@@ -32,6 +32,12 @@ feature 'Identity changes a Service', js: true do
     then_i_should_see_one_procedure_group
   end
 
+  scenario 'and sees the quantity incremented in the multiselect menu' do
+    given_i_am_viewing_a_visit_with_two_procedures_with_different_billing_types
+    when_i_change_one_procedure_billing_type_to_be_the_same_as_the_other
+    then_i_should_see_the_quantity_incremented_in_the_multiselect_menu
+  end
+
   scenario 'and sees the Service counter of the joined group has been incremented' do
     given_i_am_viewing_a_visit_with_one_procedure_group
     and_the_visit_has_one_ungrouped_procedure
@@ -152,4 +158,9 @@ feature 'Identity changes a Service', js: true do
 
     expect(page).to have_css("tr.procedure[data-group-id='#{group_id}']", count: 4, visible: false)
   end
+  def then_i_should_see_the_quantity_incremented_in_the_multiselect_menu
+    find("select#core_multiselect + .btn-group").click
+    expect(page).to have_content("2 #{Procedure.first.service_name} R")
+  end
+
 end
