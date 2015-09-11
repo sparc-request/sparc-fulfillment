@@ -137,6 +137,10 @@ $ ->
       $(multiselect).multiselect('dataprovider', option_data)
       $(multiselect).multiselect('setOptions', includeSelectAllOption: true, numberDisplayed: 0, nonSelectedText: 'Please Select')
       $(multiselect).multiselect('rebuild')
+      if $(multiselect).hasClass('disabled')
+        $(multiselect).multiselect('disable')
+      
+  
 
     destroy_row: (row) ->
       group_id        = $(row).data('group-id')

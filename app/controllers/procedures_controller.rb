@@ -5,14 +5,14 @@ class ProceduresController < ApplicationController
   before_action :create_note_before_update, only: [:update]
 
   def create
-    @appointment_id = params[:appointment_id]
+    @appointment = Appointment.find params[:appointment_id]
     qty             = params[:qty].to_i
     service         = Service.find params[:service_id]
     performer_id    = params[:performer_id]
     @procedures     = []
 
     qty.times do
-      @procedures << Procedure.create(appointment_id: @appointment_id,
+      @procedures << Procedure.create(appointment: @appointment,
                                       service_id: service.id,
                                       service_name: service.name,
                                       performer_id: performer_id,
