@@ -18,7 +18,7 @@
       .row.calendar
         .col-xs-12
           - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-            = render partial: '/appointments/core', locals: { core_id: core_id, procedures: procedures, appointment_started: appointment.start_date.present? }
+            = render partial: '/appointments/core', locals: { core_id: core_id, procedures: procedures, appointment: appointment }
       .row.services
         .col-xs-4
           = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker'
