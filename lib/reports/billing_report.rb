@@ -81,8 +81,8 @@ class BillingReport < Report
             format_date(appointment.start_date),
             procedure.service_name,
             procedures.size,
-            (procedure.service_cost.to_f / 100),
-            (procedures.size * procedure.service_cost.to_f) / 100
+            display_cost(procedure.service_cost),
+            display_cost(procedures.size * procedure.service_cost)
           ]
         end
       end
