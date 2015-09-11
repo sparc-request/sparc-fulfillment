@@ -7,14 +7,25 @@ feature 'Identity incompletes all Services', js: true do
   let!(:appointment) { Appointment.first }
   let!(:services)    { protocol.organization.inclusive_child_services(:per_participant) }
 
-  context 'in a Core with grouped and ungrouped Procedures' do
+  before :each do
+    given_i_am_viewing_a_visit
+    i_add_some_ungrouped_procedures
+    and_i_add_some_grouped_procedures
+  end
 
-    before :each do
-      given_i_am_viewing_a_visit
-      i_add_some_ungrouped_procedures
-      and_i_add_some_grouped_procedures
-      and_i_start_the_visit
+  context 'before visit has begun' do
+
+    scenario 'selects all procedures' do
+      when_i_select_all_procedures_in_the_core_dropdown
+      and_i_click_incomplete_all_and_close_the_alert
+      and_i_unroll_accordion
+      then_all_procedures_should_remain_unstarted
     end
+  end
+
+  context 'after visit has begun' do
+
+    before :each do i_start_the_visit end
 
     scenario 'selects an ungrouped procedure' do
       when_i_select_an_ungrouped_procedure_in_the_core_dropdown
@@ -59,7 +70,7 @@ feature 'Identity incompletes all Services', js: true do
     add_a_procedure services.fourth, 2
   end
 
-  def and_i_start_the_visit
+  def i_start_the_visit
     find('button.start_visit').click
     wait_for_ajax
   end
@@ -98,6 +109,12 @@ feature 'Identity incompletes all Services', js: true do
     wait_for_ajax
   end
 
+ def and_i_click_incomplete_all_and_close_the_alert
+   accept_alert do
+    find('button.incomplete_all').click
+   end
+ end
+
   def and_i_unroll_accordion
     find("tr.procedure-group td[colspan='8'] button").click
     wait_for_ajax
@@ -114,6 +131,13 @@ feature 'Identity incompletes all Services', js: true do
     unselected_procedures.each do |procedure|
       expect(procedure.status).to eq 'unstarted'
       expect(page).to_not have_css("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
+    end
+  end
+
+  def then_all_procedures_should_remain_unstarted
+    expect(page).to_not have_css("tr.procedure label.status.incomplete.active")
+    Procedure.all.each do |p|
+      expect(p.status).to eq 'unstarted'
     end
   end
 end
