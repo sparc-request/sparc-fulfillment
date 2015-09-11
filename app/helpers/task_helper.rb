@@ -25,7 +25,7 @@ module TaskHelper
   def format_task_protocol_id task
     case task.assignable_type
     when 'Procedure'
-      Procedure.find(task.assignable_id).protocol.id
+      Procedure.find(task.assignable_id).protocol.srid
     else
       '-'
     end
