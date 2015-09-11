@@ -14,7 +14,7 @@ feature 'Identity adds a Procedure', js: true do
   end
 
   scenario 'and sees the multiselect dropdown instantiated with Select All option and Procedure option' do
-    given_i_am_viewing_a_visit
+    given_i_am_viewing_a_started_visit
     when_i_add_a_procedure
     then_i_should_see_the_multiselect_instantiated_with_2_options
   end
@@ -27,7 +27,7 @@ feature 'Identity adds a Procedure', js: true do
   end
 
   scenario 'and sees the quantity increment for the group in the multiselect dropdown' do
-    given_i_am_viewing_a_visit
+    given_i_am_viewing_a_started_visit
     and_the_visit_has_one_grouped_procedure
     when_i_add_a_similar_procedure
     then_i_should_see_the_quantity_increment_for_the_group_in_the_multiselect_dropdown

@@ -22,7 +22,7 @@ feature 'Identity adds multiple Procedures', js: true do
   end
 
   scenario 'and sees the multiselect dropdown instantiated with Select All option and Service option' do
-    given_i_am_viewing_a_visit
+    given_i_am_viewing_a_started_visit
     when_i_add_5_procedures
     then_i_should_see_the_multiselect_instantiated_with_2_options
   end

@@ -7,13 +7,13 @@ feature 'Identity incompletes all Services', js: true do
   let!(:appointment) { Appointment.first }
   let!(:services)    { protocol.organization.inclusive_child_services(:per_participant) }
 
-  before :each do
-    given_i_am_viewing_a_visit
-    i_add_some_ungrouped_procedures
-    and_i_add_some_grouped_procedures
-  end
 
-  context 'before visit has begun' do
+  context 'after visit has begun' do
+    before :each do
+      given_i_am_viewing_a_started_visit
+      i_add_some_ungrouped_procedures
+      and_i_add_some_grouped_procedures
+    end
 
     scenario 'selects all procedures' do
       when_i_select_all_procedures_in_the_core_dropdown
@@ -21,11 +21,6 @@ feature 'Identity incompletes all Services', js: true do
       and_i_unroll_accordion
       then_all_procedures_should_remain_unstarted
     end
-  end
-
-  context 'after visit has begun' do
-
-    before :each do i_start_the_visit end
 
     scenario 'selects an ungrouped procedure' do
       when_i_select_an_ungrouped_procedure_in_the_core_dropdown
@@ -70,11 +65,6 @@ feature 'Identity incompletes all Services', js: true do
     add_a_procedure services.fourth, 2
   end
 
-  def i_start_the_visit
-    find('button.start_visit').click
-    wait_for_ajax
-  end
-
   def when_i_select_an_ungrouped_procedure_in_the_core_dropdown
     @selected = [services.first]
     bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
@@ -109,11 +99,11 @@ feature 'Identity incompletes all Services', js: true do
     wait_for_ajax
   end
 
- def and_i_click_incomplete_all_and_close_the_alert
-   accept_alert do
+  def and_i_click_incomplete_all_and_close_the_alert
     find('button.incomplete_all').click
-   end
- end
+    click_button 'Close'
+    wait_for_ajax
+  end
 
   def and_i_unroll_accordion
     find("tr.procedure-group td[colspan='8'] button").click

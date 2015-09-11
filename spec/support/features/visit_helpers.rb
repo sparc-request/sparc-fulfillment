@@ -18,5 +18,12 @@ module Features
       bootstrap_select '#appointment_select', appointment.name
       wait_for_ajax
     end
+
+    def given_i_am_viewing_a_started_visit
+      visit participant_path participant
+      bootstrap_select '#appointment_select', appointment.name
+      wait_for_ajax
+      find('button.start_visit').click
+    end
   end
 end

@@ -9,7 +9,7 @@ feature 'Identity completes all Services', js: true do
 
   context 'in a Core with a ungrouped procedure and grouped procedures' do
     before do
-      given_i_am_viewing_a_visit
+      given_i_am_viewing_a_started_visit
       when_i_add_a_grouped_procedure_and_ungrouped_procedure
     end
     scenario 'and sees that all selected Procedures are completed' do
