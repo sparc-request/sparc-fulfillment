@@ -34,6 +34,6 @@ class Report
     dollar, cent = dollars.to_s.split('.')
     dollars_formatted = "#{dollar}.#{cent[0..1]}".to_f
 
-    dollars_formatted
+    number_to_currency(dollars_formatted, seperator: ",", unit: "")
   end
 end
