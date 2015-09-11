@@ -4,9 +4,11 @@
     = link_to t(:task)[:new_task], new_task_path, {class: 'btn btn-default btn-primary', id: 'new_task_button', type: 'button', data: {toggle: 'modal', target: '#modal_place'}, remote: true}
     %button{class: "btn btn-default btn-primary", id: 'complete', value: 'complete'}= t(:task)[:show_complete]
     %button{class: "btn btn-default btn-primary", id: 'all_tasks', value: 'all'}= t(:task)[:all_tasks]
-%table.tasks.custom_striped{style: "padding: 0px 0px;",id: "task-list", data: {"idField" => "id", toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: tasks_path(scope: 'mine', format: :json), "sort-name" => "due_at", "sort-order" => 'desc', striped: "true", toolbar: "#custom_tool_buttons"}}
+%table.tasks.custom_striped{style: "padding: 0px 0px;",id: "task-list", data: {"idField" => "id", toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: tasks_path(scope: 'mine', format: :json), "sort-name" => "due_at", "sort-order" => 'desc', striped: "true", toolbar: "#custom_tool_buttons", "show-export" => "true", "export-types" => ['excel']}}
   %thead
     %tr
+      %th{data: {class: 'protocol_id', align: 'center', field: 'protocol_id', width: "5", visible: "false", sortable: "true"}}
+        = t(:protocol)[:id]
       %th{data: {class: 'user_name', align: 'left', sortable: "true", field: 'user_name'}}
         = t(:task)[:identity_name]
       %th{data: {class: 'assignee_name', align: 'left', sortable: "true", field: 'assignee_name'}}
@@ -21,5 +23,4 @@
         = t(:task)[:completed]
       %th{data: {class: 'reschedule', align: 'center', field: 'reschedule', width: "5"}}
         = t(:task)[:reschedule]
-
 
