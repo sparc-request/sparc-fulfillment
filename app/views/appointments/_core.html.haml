@@ -1,12 +1,31 @@
-%tr.core{data: {core: {id: core_id}}}
-  %td{colspan: 8}
-    %table.table.procedures
-      %thead
-        %th.title{colspan: 8}
-          = "#{procedures.first.sparc_core_name}"
-          .complete-all-container{ class: "#{ procedures.first.appt_started? ? '' : 'contains_disabled' }" }
-            %button.btn.btn-xs.btn-primary.complete_all_button{class: "#{procedures.first.appt_started? ? '' : 'disabled'}", data: {core_id: "#{core_id}"}, style: "margin-left: 5px;"}=t(:procedure)[:complete]
-          .incomplete-all-container{class: "#{procedures.first.appt_started? ? '' : 'contains_disabled'}"}
-            %button.btn.btn-xs.btn-warning.incomplete_all_button{class: "#{procedures.first.appt_started? ? '' : 'disabled'}", data: {core_id: "#{core_id}"}, style: "margin-left:5px;"}=t(:procedure)[:incomplete]
-      %tbody
-        = render partial: 'appointments/procedure', collection: procedures, as: :procedure
+.core{ data: { core: { id: core_id } } }
+  .panel.panel-default
+    .panel-heading
+      .btn-group.pull-right
+        .btn-group
+          = select_tag 'core_multiselect', nil, class: "core_multiselect #{disabled_class(!appointment.started?)}", style: 'display: inline-block', multiple: true
+          %button.btn.btn-default.btn-primary.multiselect.complete_all{ type: 'button', id: "core_#{core_id}_multiselect_complete_all", class: disabled_class(!appointment.started?) } Complete Selected
+          %button.btn.btn-default.btn-warning.multiselect.incomplete_all{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete Selected
+      %h3
+        = procedures.first.sparc_core_name  
+    .panel-body
+      %table.table.table-bordered.procedures
+        %thead
+          %th.name
+            = t(:procedure)[:object]
+          %th.r-t
+            = t(:procedure)[:r_t]
+          %th.status
+            = t(:procedure)[:status]
+          %th.followup
+            = t(:procedure)[:followup]
+          %th.completed-date
+            = t(:procedure)[:completed_date]
+          %th.performed-by
+            = t(:procedure)[:performed_by]
+          %th.notes
+            = t(:procedure)[:notes]
+          %th.remove
+            = t(:procedure)[:remove]
+        %tbody
+          = render partial: 'appointments/procedure', collection: procedures, as: :procedure

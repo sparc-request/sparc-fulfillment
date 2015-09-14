@@ -82,13 +82,13 @@ class BillingReport < Report
             format_date(appointment.start_date),
             procedure.service_name,
             procedures.size,
-            (procedure.service_cost.to_f / 100),
-            (procedures.size * procedure.service_cost.to_f) / 100
+            display_cost(procedure.service_cost),
+            display_cost(procedures.size * procedure.service_cost.to_f)
           ]
-          total += ((procedures.size * procedure.service_cost.to_f) / 100)
+          total += procedures.size * procedure.service_cost.to_f
         end
         if total > 0
-          csv << ["", "", "", "", "", "", "", "", "Total:", total]
+          csv << ["", "", "", "", "", "", "", "", "Total:", display_cost(total)]
           csv << [""]
           csv << [""]
         end

@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 feature 'Identity resets appointment', js: true do
+
   scenario 'the appointment is completed, but is then reset' do
     given_i_am_viewing_a_participants_calendar_with_procedures
     and_i_start_the_appointment
@@ -38,11 +39,12 @@ feature 'Identity resets appointment', js: true do
   end
 
   def and_i_add_an_unscheduled_procedure
-    service     = @protocol.organization.inclusive_child_services(:per_participant).first
+    service = @protocol.organization.inclusive_child_services(:per_participant).first
 
     bootstrap_select('#service_list', service.name)
     fill_in 'service_quantity', with: '1'
-    page.find('button.add_service').click
+    click_button 'Add Service'
+
     wait_for_ajax
   end
 

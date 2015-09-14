@@ -21,7 +21,7 @@ FactoryGirl.define do
     trait :provider do
       type "Provider"
     end
- 
+
     trait :with_protocols do
       after(:create) do |organization, evaluator|
         create(:sub_service_request, organization: organization)
@@ -30,8 +30,8 @@ FactoryGirl.define do
 
     trait :with_services do
       after(:create) do |organization, evaluator|
-        create_list(:service, 3, organization: organization)
-        create_list(:service_with_one_time_fee, 3, organization: organization)
+        create_list(:service, 4, organization: organization)
+        create_list(:service_with_one_time_fee, 4, organization: organization)
       end
     end
 
