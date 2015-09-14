@@ -1,12 +1,11 @@
 .col-xs-12
-  .row.appointment{data: {id: appointment.id}}
+  .row.appointment{ data: { id: appointment.id } }
     .col-xs-12
       .row
         .col-xs-12
           .page-header
             %h3.appointment_header
               = "Visit: #{appointment.name}"
-              \-
               %button.btn.btn-primary.notes.list{title: t(:procedure)[:notes], type: "button", aria: {label: "Notes List"}, data: {notable_id: appointment.id, notable_type: "Appointment", toggle: "tooltip", animation: 'false'}}
                 %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
             .row
@@ -15,31 +14,11 @@
               .col-md-5.col-md-offset-2.text-right
                 = render partial: '/appointments/visit_indications_dropdown'
       .row
-        = render partial: '/appointments/start_complete_buttons', locals: {appointment: appointment}
+        = render partial: '/appointments/start_complete_buttons', locals: { appointment: appointment }
       .row.calendar
         .col-xs-12
-          %table.table.table-bordered.table-hover.cores
-            %thead
-              %tr
-                %th.name
-                  = t(:procedure)[:object]
-                %th.r-t
-                  = t(:procedure)[:r_t]
-                %th.status
-                  = t(:procedure)[:status]
-                %th.followup
-                  = t(:procedure)[:followup]
-                %th.completed-date
-                  = t(:procedure)[:completed_date]
-                %th.performed-by
-                  = t(:procedure)[:performed_by]
-                %th.notes
-                  = t(:procedure)[:notes]
-                %th.remove
-                  = t(:procedure)[:remove]
-            %tbody
-              - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-                = render partial: "/appointments/core", locals: {core_id: core_id, procedures: procedures, appointment_started: appointment.start_date.present? }
+          - appointment.procedures_grouped_by_core.each do |core_id, procedures|
+            = render partial: '/appointments/core', locals: { core_id: core_id, procedures: procedures, appointment: appointment }
       .row.services
         .col-xs-4
           = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker'

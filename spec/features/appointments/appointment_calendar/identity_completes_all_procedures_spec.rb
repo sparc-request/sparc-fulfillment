@@ -5,6 +5,7 @@ feature 'Identity completes all Procedures', js: true do
   scenario 'and sees the complete buttons are active' do
     given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
     when_i_complete_all_the_procedures
+    and_i_unroll_the_procedures_accordion
     then_all_the_procedure_complete_buttons_should_be_active
   end
 
@@ -15,10 +16,10 @@ feature 'Identity completes all Procedures', js: true do
   end
 
   def given_i_have_added_n_procedures_to_an_appointment_such_that_n_is number_of_procedures
-    protocol    = create_and_assign_protocol_to_me
+    protocol     = create_and_assign_protocol_to_me
     @participant = protocol.participants.first
-    visit_group = @participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_child_services(:per_participant).first
+    visit_group  = @participant.appointments.first.visit_group
+    service      = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path @participant
     bootstrap_select '#appointment_select', visit_group.name
@@ -31,8 +32,13 @@ feature 'Identity completes all Procedures', js: true do
   end
 
   def when_i_complete_all_the_procedures
-    find('.complete_all_button').click
+    bootstrap_multiselect('#core_multiselect')
+    find('button.complete_all').click
     wait_for_ajax
+  end
+
+  def and_i_unroll_the_procedures_accordion
+    find("tr.procedure-group td[colspan='8'] button.btn").click
   end
 
   def then_all_the_procedure_complete_buttons_should_be_active

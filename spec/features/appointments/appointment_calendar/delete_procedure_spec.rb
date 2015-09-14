@@ -12,9 +12,9 @@ feature 'Delete Procedure', js: true do
 
   context 'User deletes a procedure but not a core' do
     scenario 'and does not see the procedure' do
-    given_i_am_viewing_a_core_with_n_procedures_such_that_n_is '2'
-    when_i_delete_the_first_procedure
-    then_i_should_not_see_the_first_procedure
+      given_i_am_viewing_a_core_with_n_procedures_such_that_n_is '2'
+      when_i_delete_the_first_procedure
+      then_i_should_not_see_the_first_procedure
     end
   end
 
@@ -30,12 +30,10 @@ feature 'Delete Procedure', js: true do
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: number_of_procedures
     find('button.add_service').trigger('click')
+    wait_for_ajax
   end
 
   def when_i_delete_the_first_procedure
-    sleep 1
-    procedure = Procedure.first
-
     accept_confirm do
       first('.procedure button.delete').click
     end
@@ -44,7 +42,7 @@ feature 'Delete Procedure', js: true do
   def then_i_should_not_see_the_core
     expect(page).to have_css('.cores .core', count: 0)
   end
-  
+
   def then_i_should_not_see_the_first_procedure
     expect(page).to have_css('.procedures .procedure', count: 1)
   end

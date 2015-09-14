@@ -19,6 +19,8 @@
 //= require moment/en-gb
 //= require jquery.remotipart
 //= require nprogress
+//= require underscore
+//= require bootstrap-multiselect
 
 //= require global
 //= require protocols
@@ -35,3 +37,4 @@
 //= require remote_document_handler
 //= require faye
 //= require ajax_progress_bar
+//= require procedure_grouper

@@ -96,7 +96,7 @@ feature 'Complete Visit', js: true do
         then_i_should_be_able_to_complete_visit
       end
     end
-    
+
     context 'and adds a procedure which will never be completed or incompleted' do
       context 'and does not add a Procedure' do
         scenario 'and cant complete the visit' do
@@ -123,6 +123,7 @@ feature 'Complete Visit', js: true do
           when_i_add_a_procedure #**The extra procedure**#
           when_i_add_a_procedure
           when_i_begin_the_appointment
+          when_i_view_the_procedures_in_the_group
           when_i_add_a_follow_up_date
           then_i_should_not_be_able_to_complete_visit
         end
@@ -134,6 +135,7 @@ feature 'Complete Visit', js: true do
           when_i_add_a_procedure #**The extra procedure**#
           when_i_add_a_procedure
           when_i_begin_the_appointment
+          when_i_view_the_procedures_in_the_group
           when_i_complete_the_procedure
           then_i_should_not_be_able_to_complete_visit
         end
@@ -145,6 +147,7 @@ feature 'Complete Visit', js: true do
           when_i_add_a_procedure #**The extra procedure**#
           when_i_add_a_procedure
           when_i_begin_the_appointment
+          when_i_view_the_procedures_in_the_group
           when_i_incomplete_the_procedure
           then_i_should_not_be_able_to_complete_visit
         end
@@ -156,6 +159,7 @@ feature 'Complete Visit', js: true do
           when_i_add_a_procedure #**The extra procedure**#
           when_i_add_a_procedure
           when_i_begin_the_appointment
+          when_i_view_the_procedures_in_the_group
           when_i_complete_the_procedure
           when_i_incomplete_the_procedure
           then_i_should_not_be_able_to_complete_visit
@@ -168,6 +172,7 @@ feature 'Complete Visit', js: true do
           when_i_add_a_procedure #**The extra procedure**#
           when_i_add_a_procedure
           when_i_begin_the_appointment
+          when_i_view_the_procedures_in_the_group
           when_i_remove_the_procedure
           then_i_should_not_be_able_to_complete_visit
         end
@@ -190,7 +195,7 @@ feature 'Complete Visit', js: true do
   def when_i_add_a_procedure
     bootstrap_select '#service_list', @service.name
     fill_in 'service_quantity', with: 1
-    find('button.add_service').click
+    click_button 'Add Service'
     wait_for_ajax
 
     @visit_group.appointments.first.procedures.reload
@@ -210,20 +215,19 @@ feature 'Complete Visit', js: true do
   end
 
   def when_i_complete_the_procedure
-    find("tr[data-id='#{@procedure.id}'] label.status.complete").click
+    find("tr.procedure[data-id='#{@procedure.id}'] label.status.complete").click
     wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
-    find("tr[data-id='#{@procedure.id}'] label.status.incomplete").click
-    wait_for_ajax
-    bootstrap_select '.reason-select', "Assessment missed"
-    click_button "Save"
+    find("tr.procedure[data-id='#{@procedure.id}'] label.status.incomplete").click
+    bootstrap_select '.reason-select', 'Assessment missed'
+    click_button 'Save'
     wait_for_ajax
   end
 
   def when_i_add_a_follow_up_date
-    find("tr[data-id='#{@procedure.id}'] button.followup.new").click
+    find("tr.procedure[data-id='#{@procedure.id}'] button.followup.new").click
     wait_for_ajax
 
     bootstrap_select '#task_assignee_id', @identity.full_name
@@ -247,6 +251,11 @@ feature 'Complete Visit', js: true do
     accept_alert do
       find("button.complete_visit.disabled").trigger('click')
     end
+    wait_for_ajax
+  end
+
+  def when_i_view_the_procedures_in_the_group
+    find('tr.procedure-group button').click
     wait_for_ajax
   end
 end
