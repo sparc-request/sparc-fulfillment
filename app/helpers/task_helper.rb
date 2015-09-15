@@ -30,4 +30,14 @@ module TaskHelper
       '-'
     end
   end
+
+  def format_due_date task
+    if task.due_at < Time.now
+      content_tag(:span, class: "overdue-task") do
+        "#{format_date(task.due_at)} - PAST DUE"
+      end
+    else
+      format_date(task.due_at)
+    end
+  end
 end
