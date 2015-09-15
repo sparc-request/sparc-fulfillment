@@ -31,13 +31,13 @@ module TaskHelper
     end
   end
 
-  def format_due_date task
-    if task.due_at < Time.now
-      content_tag(:span, class: "overdue-task") do
-        "#{format_date(task.due_at)} - PAST DUE"
-      end
+  def format_due_date due_date
+    if due_date <= Time.now # due date has passed
+      content_tag(:span, class: "overdue-task"){"#{format_date(due_date)} - PAST DUE"}
+    elsif (due_date - 7.days) <= Time.now # due date is within 7 days
+      content_tag(:span, class: "overdue-task"){format_date(due_date)}
     else
-      format_date(task.due_at)
+      format_date(due_date)
     end
   end
 end
