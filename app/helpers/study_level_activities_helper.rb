@@ -19,18 +19,26 @@ module StudyLevelActivitiesHelper
   end
 
   def sla_options_buttons line_item_id
-    content_tag(:button, class: 'btn btn-primary btn-sm notes list', title: t(:procedure)[:notes], type: "button", aria: {label: "Notes List"}, data: {notable_id: line_item_id, notable_type: "LineItem", toggle: "tooltip", animation: 'false'}) do
-      content_tag(:span, '', class: "glyphicon glyphicon-list-alt", aria: {hidden: "true"})
-    end +
-    content_tag(:button, class: 'btn btn-primary btn-sm documents list', title: t(:documents)[:documents], type: "button", aria: {label: "Documents List"}, data: {documentable_id: line_item_id, documentable_type: "LineItem", toggle: "tooltip", animation: 'false'}) do
-      content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"})
-    end +
-    content_tag(:button, class: 'btn btn-warning btn-sm otf_edit', title: t(:notes)[:lineitem][:edit], type: "button", aria: {label: "Edit Line Item"}, data: {toggle: "tooltip", animation: 'false'}) do
-      content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"})
-    end +
-    content_tag(:button, class: 'btn btn-danger btn-sm otf_delete', title: t(:line_item)[:delete_line_item], type: "button", aria: {label: "Delete Line Item"}, data: {toggle: "tooltip", animation: 'false'}) do
-      content_tag(:span, '', class: "glyphicon glyphicon-remove", aria: {hidden: "true"})
-    end
+    options = raw(
+      content_tag(:li, raw(
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt", aria: {hidden: "true"}))+' Notes', type: 'button', class: 'btn btn-default form-control actions-button notes list', data: {notable_id: line_item_id, notable_type: "LineItem"}))
+      )+
+      content_tag(:li, raw(
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: line_item_id, documentable_type: "LineItem"}))
+      )+
+      content_tag(:li, raw(
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_edit'))
+      )+
+      content_tag(:li, raw(
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-remove", aria: {hidden: "true"}))+' Delete Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_delete'))
+      )
+    )
+
+    span = raw content_tag(:span, '', class: 'caret')
+    button = raw content_tag(:button, raw('Available Actions  ' + span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
+    ul = raw content_tag(:ul, options, class: 'dropdown-menu', role: 'menu')
+
+    raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
   def fulfillments_drop_button line_item_id
@@ -46,7 +54,7 @@ module StudyLevelActivitiesHelper
       li = Array.new
 
       span = raw content_tag(:span, '', class: 'caret')
-      button = raw content_tag(:button, raw('Fulfillment Components ' + span), type: 'button', class: 'btn btn-default btn-xs dropdown-toggle', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
+      button = raw content_tag(:button, raw('Display Components  ' + span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
       components.each do |c|
         li.push raw(content_tag(:li, raw(content_tag(:a, c.component, href: 'javascript:;'))))
       end
@@ -59,14 +67,22 @@ module StudyLevelActivitiesHelper
   end
 
   def fulfillment_options_buttons fulfillment_id
-    content_tag(:button, class: 'btn btn-primary btn-sm notes list', title: t(:procedure)[:notes], type: "button", aria: {label: "Notes List"}, data: {notable_id: fulfillment_id, notable_type: "Fulfillment", toggle: "tooltip", animation: 'false'}) do
-      content_tag(:span, '', class: "glyphicon glyphicon-list-alt", aria: {hidden: "true"})
-    end +
-    content_tag(:button, class: 'btn btn-primary btn-sm documents list', title: t(:documents)[:documents], type: "button", aria: {label: "Documents List"}, data: {documentable_id: fulfillment_id, documentable_type: "Fulfillment", toggle: "tooltip", animation: 'false'}) do
-      content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"})
-    end +
-    content_tag(:button, class: 'btn btn-warning btn-sm otf_fulfillment_edit', title: t(:fulfillment)[:edit], type: "button", aria: {label: "Edit Fulfillment"}, data: {toggle: "tooltip", animation: 'false'}) do
-      content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"})
-    end
+    options = raw(
+      content_tag(:li, raw(
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt", aria: {hidden: "true"}))+' Notes', type: 'button', class: 'btn btn-default form-control actions-button notes list', data: {notable_id: fulfillment_id, notable_type: "Fulfillment"}))
+      )+
+      content_tag(:li, raw(
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: fulfillment_id, documentable_type: "Fulfillment"}))
+      )+
+      content_tag(:li, raw(
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Fulfillment', type: 'button', class: 'btn btn-default form-control actions-button otf_fulfillment_edit'))
+      )
+    )
+
+    span = raw content_tag(:span, '', class: 'caret')
+    button = raw content_tag(:button, raw('Available Actions  ' + span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
+    ul = raw content_tag(:ul, options, class: 'dropdown-menu', role: 'menu')
+
+    raw content_tag(:div, button + ul, class: 'btn-group')
   end
 end
