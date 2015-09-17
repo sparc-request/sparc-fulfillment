@@ -4,11 +4,6 @@ $ ->
 
     # Bootstrap Tab persistence
 
-    current_tab = $.cookie('active-protocol-tab')
-
-    if current_tab && current_tab.length > 0
-      $(".protocol-tab > a[href='##{current_tab}']").tab('show') # show tab on load
-
     $('.protocol-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
       tab = String(e.target).split('#')[1]
       $.cookie('active-protocol-tab', tab, expires: 1, path: '/') # save tab to cookie
