@@ -7,7 +7,7 @@ feature 'Identity creates a document from the documents page', js: true do
   before :each do
     given_i_am_viewing_the_documents_index_page
   end
-  
+
   context 'of type Billing Report' do
     scenario 'and sees the report' do
       given_i_click_the_create_report_button_of_type 'billing_report'
@@ -21,6 +21,14 @@ feature 'Identity creates a document from the documents page', js: true do
       given_i_click_the_create_report_button_of_type 'auditing_report'
       when_i_fill_in_the_report_of_type 'auditing_report'
       then_i_will_see_the_new_report_listed 'Auditing report'
+    end
+  end
+
+  context 'of type Incomplete Visit Report' do
+    scenario 'and sees the report' do
+      given_i_click_the_create_report_button_of_type 'incomplete_visit_report'
+      when_i_fill_in_the_report_of_type 'incomplete_visit_report'
+      then_i_will_see_the_new_report_listed 'Incomplete visit report'
     end
   end
 
@@ -58,8 +66,8 @@ feature 'Identity creates a document from the documents page', js: true do
     when_i_open_the_protocol_dropdown
     then_i_should_not_see_protocols_not_assigned_to_me
   end
-  
-  #Must keep separated or else ClinicalProvider.destroy_all will not work 
+
+  #Must keep separated or else ClinicalProvider.destroy_all will not work
   def given_i_am_viewing_the_documents_index_page
     @protocol = create_and_assign_protocol_to_me
     create(:participant, protocol: @protocol)
@@ -73,6 +81,13 @@ feature 'Identity creates a document from the documents page', js: true do
   end
 
   def when_i_fill_in_the_report_of_type report_type
+    if report_type == 'incomplete_visit_report'
+      wait_for_ajax
+      find("input[type='submit']").click
+      wait_for_ajax
+      return
+    end
+
     fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
     fill_in 'End Date', with: Date.tomorrow.strftime("%m-%d-%Y")
 

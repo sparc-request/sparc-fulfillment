@@ -276,19 +276,20 @@ en:
 
 
   reports:
-    page_title: "All Reports"
-    request_report: "Request Report"
-    billing_report: "Billing Report"
     auditing_report: "Auditing Report"
+    billing_report: "Billing Report"
+    end_date: "End Date"
+    incomplete_visit_report: "Incomplete Visit Report"
+    organization: "Organization(s)"
+    page_title: "All Reports"
+    participant: "Participant"
     participant_report: "Participant Report"
     project_summary_report: "Project Summary Report"
-    protocols: "Protocol(s)"
     protocol: "Protocol"
-    organization: "Organization(s)"
-    participant: "Participant"
-    start_date: "Start Date"
-    end_date: "End Date"
     protocol_instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
+    protocols: "Protocol(s)"
+    request_report: "Request Report"
+    start_date: "Start Date"
 
   services:
     name: "Selected Service"
