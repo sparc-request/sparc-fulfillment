@@ -15,6 +15,15 @@ RSpec.describe 'Study Schedule', js: true do
       when_i_select_a_new_tab
       then_i_should_see_the_tab
     end
+
+    context 'and reloads the page' do
+      scenario 'and sees the same tab' do
+        given_i_am_viewing_a_protocol
+        when_i_select_a_new_tab
+        when_i_refresh_the_page
+        then_i_should_see_the_same_tab
+      end
+    end
   end
 
   context 'User changes a visit groups name to an invalid name' do
@@ -62,6 +71,8 @@ RSpec.describe 'Study Schedule', js: true do
   context 'User selects a visit group from the calendar dropdown' do
     scenario 'and sees the correct page' do
       given_i_am_viewing_a_protocol
+      when_i_select_a_visit_group_from_the_dropdown
+      then_i_should_see_the_page_change
     end
   end
 
@@ -200,6 +211,10 @@ RSpec.describe 'Study Schedule', js: true do
     wait_for_ajax
   end
 
+  def when_i_refresh_the_page
+    visit protocol_path(@protocol.id)
+  end
+
   def when_i_fill_in_a_visit_group_name_with name
     fill_in "visit_group_#{@visit_group.id}", with: name
     first('.study_schedule.service').click()
@@ -227,6 +242,14 @@ RSpec.describe 'Study Schedule', js: true do
   def when_i_click_the_previous_page_button
     @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1 
     find("#arrow-left-#{@arm.id}").click()
+    wait_for_ajax
+  end
+
+  def when_i_select_a_visit_group_from_the_dropdown
+    @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1
+    data_id = "visits_select_for_#{@arm.id}"
+    find("button[data-id = #{data_id}]").click()
+    all(".visit_dropdown ul.dropdown-menu li a")[10].click()
     wait_for_ajax
   end
 
@@ -283,6 +306,11 @@ RSpec.describe 'Study Schedule', js: true do
     expect(page).to have_css("#visits_#{@visit.id}_insurance_billing_qty")
   end
 
+  def then_i_should_see_the_same_tab
+    expect(page).to have_css("#visits_#{@visit.id}_research_billing_qty")
+    expect(page).to have_css("#visits_#{@visit.id}_insurance_billing_qty")
+  end
+
   def then_i_should_see_that_the_name_is_still name
     expect(find_field("visit_group_#{@visit_group.id}").value).to eq(name)
   end
@@ -301,6 +329,10 @@ RSpec.describe 'Study Schedule', js: true do
 
   def then_i_should_see_the_previous_page
     expect(find("#arrow-left-#{@arm.id}")[:page].to_i).to eq(@page-2)
+  end
+
+  def then_i_should_see_the_page_change
+    expect(find("#arrow-left-#{@arm.id}")[:page].to_i).to eq(@page)
   end
 
   def then_i_should_see_the_row_checked_in_the_tab tab_name
