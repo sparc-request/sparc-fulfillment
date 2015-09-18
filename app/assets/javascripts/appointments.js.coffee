@@ -55,21 +55,26 @@ $ ->
 
   $(document).on 'click', '.start_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
+    data = appointment: start_date: new Date($.now()).toUTCString()
     $.ajax
-      type: 'PATCH'
-      url:  "/appointments/#{appointment_id}?field=start_date"
+      type: 'PUT'
+      data: data
+      url:  "/appointments/#{appointment_id}"
       success: ->
         # reload table of procedures, so that UI elements disabled
         # before start of appointment can be reenabled
         $.ajax
           type: 'GET'
+          data: data
           url: "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.complete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
+    data = appointment: completed_date: new Date($.now()).toUTCString()
     $.ajax
-      type: 'PATCH'
-      url:  "/appointments/#{appointment_id}?field=completed_date"
+      type: 'PUT'
+      data: data
+      url:  "/appointments/#{appointment_id}"
 
   $(document).on 'click', '.reset_visit', ->
     data = appointment_id: $(this).parents('.row.appointment').data('id')
@@ -81,12 +86,14 @@ $ ->
 
   $(document).on 'click', '.uncomplete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
+    data = appointment: completed_date: null
     $.ajax
-      type: 'PATCH'
+      type: 'PUT'
+      data: data
       url: "/appointments/#{appointment_id}?field=completed_date"
       success: ->
         # reload table of procedures, so that UI elements disabled
-        # before start of appointment can be reenabled
+        # before start of appointment can be re-enabled
         $.ajax
           type: 'GET'
           url: "/appointments/#{appointment_id}.js"
@@ -251,7 +258,7 @@ $ ->
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     contents = $(this).val()
-    data = 'contents' : contents
+    data = appointment: 'contents' : contents
     $.ajax
       type: 'PUT'
       data: data
@@ -260,12 +267,12 @@ $ ->
   $(document).on 'change', '#appointment_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     statuses = $(this).val()
-    data = 'statuses'       : statuses
+    data = id: appointment_id, 'statuses' : statuses
 
     $.ajax
       type: 'PUT'
       data: data
-      url: "/appointments/#{appointment_id}/"
+      url: "/appointments/update_statuses"
 
   $(document).on 'change', 'td.performed-by .selectpicker', ->
     procedure_id = $(this).parents(".procedure").data("id")
@@ -281,9 +288,11 @@ $ ->
     $('#start_date').datetimepicker(defaultDate: date)
     $('#start_date').on 'dp.hide', (e) ->
       appointment_id = $(this).parents('.row.appointment').data('id')
+      data = appointment: start_date: e.date
       $.ajax
-        type: 'PATCH'
-        url:  "/appointments/#{appointment_id}?field=start_date&new_date=#{e.date}"
+        type: 'PUT'
+        data: data
+        url:  "/appointments/#{appointment_id}"
         success: ->
           if !$('.completed_date_input').hasClass('hidden')
             $('#completed_date').data("DateTimePicker").minDate(e.date)
@@ -294,9 +303,11 @@ $ ->
     $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
     $('#completed_date').on 'dp.hide', (e) ->
       appointment_id = $(this).parents('.row.appointment').data('id')
+      data = appointment: completed_date: e.date
       $.ajax
-        type: 'PATCH'
-        url:  "/appointments/#{appointment_id}?field=completed_date&new_date=#{e.date}"
+        type: 'PUT'
+        data: data
+        url:  "/appointments/#{appointment_id}"
         success: ->
           $('#start_date').data("DateTimePicker").maxDate(e.date)
 

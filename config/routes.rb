@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     collection do
       get 'completed_appointments'
     end
+    put 'update_statuses'
   end
 
 
