@@ -37,6 +37,7 @@ class AppointmentsController < ApplicationController
 
   def update
     @appointment = Appointment.find params[:id]
+    @field = params[:field]
 
     @appointment.update_attributes(appointment_params)
 

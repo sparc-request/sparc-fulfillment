@@ -59,7 +59,7 @@ $ ->
     $.ajax
       type: 'PUT'
       data: data
-      url:  "/appointments/#{appointment_id}"
+      url:  "/appointments/#{appointment_id}?field=start_date"
       success: ->
         # reload table of procedures, so that UI elements disabled
         # before start of appointment can be reenabled
@@ -74,7 +74,7 @@ $ ->
     $.ajax
       type: 'PUT'
       data: data
-      url:  "/appointments/#{appointment_id}"
+      url:  "/appointments/#{appointment_id}?field=completed_date"
 
   $(document).on 'click', '.reset_visit', ->
     data = appointment_id: $(this).parents('.row.appointment').data('id')
@@ -90,7 +90,7 @@ $ ->
     $.ajax
       type: 'PUT'
       data: data
-      url: "/appointments/#{appointment_id}?field=completed_date"
+      url: "/appointments/#{appointment_id}"
       success: ->
         # reload table of procedures, so that UI elements disabled
         # before start of appointment can be re-enabled
