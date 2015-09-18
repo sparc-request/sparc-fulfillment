@@ -12,8 +12,8 @@ class ServerAuth
     callback.call(message)
   end
 end
-
-faye_server = Faye::RackAdapter.new(:mount => '/faye', :timeout => 45)
+# the FAYE_REFRESH_INTERVAL should be less than the faye.yml timeout value to prevent 502 errors in Firefox
+faye_server = Faye::RackAdapter.new(:mount => '/faye', :timeout => ENV.fetch('FAYE_REFRESH_INTERVAL', 45))
 faye_server.add_extension(ServerAuth.new)
 
 run faye_server
