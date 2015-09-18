@@ -92,6 +92,7 @@ en:
       none: "This fulfillment has no documents."
     flash_messages:
       created: "Document Created"
+      removed: "Document Removed"
       no_file_chosen: "You must choose a file"
       updated: "Title updated"
 

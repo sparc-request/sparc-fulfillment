@@ -1,7 +1,7 @@
 class DocumentsController < ApplicationController
   layout nil
 
-  before_action :find_document, only: [:show]
+  before_action :find_document, only: [:show, :destroy]
   before_action :authorize_document_access, only: [:show]
   before_action :validate_presence_of_upload, only: [:create]
 
@@ -72,6 +72,14 @@ class DocumentsController < ApplicationController
     else
       @errors = @document.errors
     end
+  end
+
+  def destroy
+    @document.destroy
+    
+    mark_document_as_accessed
+
+    flash[:alert] = t(:documents)[:flash_messages][:removed]
   end
 
   private

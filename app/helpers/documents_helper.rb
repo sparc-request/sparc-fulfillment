@@ -26,4 +26,11 @@ module DocumentsHelper
     ].join ""
   end
 
+  def delete_formatter document
+    [
+      "<a class='remove remove-document' href='javascript:void(0)' title='Remove' document_id='#{document.id}'>",
+      "<i class='glyphicon glyphicon-remove'></i>",
+      "</a>"
+    ].join ""
+  end
 end

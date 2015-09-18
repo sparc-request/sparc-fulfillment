@@ -36,13 +36,6 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     and_i_should_be_able_to_interact_with_the_new_report
   end
 
-  scenario 'with a custom title' do
-    given_i_have_created_a_protocol_based_document
-    when_i_visit_the_reports_tab
-    when_i_edit_the_document_title
-    then_i_should_see_the_documents_title_update  
-  end
-
   def given_i_have_created_a_protocol_based_document
     identity    = Identity.first
     @protocol    = create_and_assign_protocol_to_me
@@ -71,15 +64,6 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   def when_i_click_the_generate_new_option
     find("ul#document_menu_study_schedule_report_#{@protocol.id.to_s} li a[title='Generate New Report']").click
   end
-
-  def when_i_edit_the_document_title
-    find("a.edit-document").click
-
-    fill_in "Title", with: "Test Title"
-
-    find("button[type='submit']").click
-    wait_for_ajax
-  end
     
   def then_i_should_see_the_counter_increment
     expect(page).to have_css(".protocol_report_notifications", text: 1)
@@ -103,10 +87,6 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     click_link 'Reports'
 
     then_i_should_see_the_document
-  end
-
-  def then_i_should_see_the_documents_title_update  
-    expect(page).to have_css("td.title", text: "Test Title")
   end
 
   def and_i_should_be_able_to_interact_with_the_new_report
