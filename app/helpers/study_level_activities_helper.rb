@@ -35,7 +35,7 @@ module StudyLevelActivitiesHelper
     )
 
     span = raw content_tag(:span, '', class: 'caret')
-    button = raw content_tag(:button, raw('Available Actions  ' + span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
+    button = raw content_tag(:button, raw('Available Actions  ' + span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control available-actions-button', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
     ul = raw content_tag(:ul, options, class: 'dropdown-menu', role: 'menu')
 
     raw content_tag(:div, button + ul, class: 'btn-group')
@@ -54,7 +54,7 @@ module StudyLevelActivitiesHelper
       li = Array.new
 
       span = raw content_tag(:span, '', class: 'caret')
-      button = raw content_tag(:button, raw('Display Components  ' + span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
+      button = raw content_tag(:button, raw('Display Components  ' + span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control available-actions-button', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
       components.each do |c|
         li.push raw(content_tag(:li, raw(content_tag(:a, c.component, href: 'javascript:;'))))
       end
