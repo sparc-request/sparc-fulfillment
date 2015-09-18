@@ -79,7 +79,7 @@ $ ->
         url: "/multiple_procedures/reset_procedures.js"
         data: data
 
-  $(document).on 'click', '.remove_completed_date', ->
+  $(document).on 'click', '.uncomplete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     $.ajax
       type: 'PATCH'
