@@ -4,7 +4,7 @@
     = link_to t(:task)[:new_task], new_task_path, {class: 'btn btn-default btn-primary', id: 'new_task_button', type: 'button', data: {toggle: 'modal', target: '#modal_place'}, remote: true}
     %button{class: "btn btn-default btn-primary", id: 'complete', value: 'complete'}= t(:task)[:show_complete]
     %button{class: "btn btn-default btn-primary", id: 'all_tasks', value: 'all'}= t(:task)[:all_tasks]
-%table.tasks.custom_striped{style: "padding: 0px 0px;",id: "task-list", data: {"idField" => "id", toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: tasks_path(scope: 'mine', format: :json), "sort-name" => "due_at", "sort-order" => 'desc', striped: "true", toolbar: "#custom_tool_buttons", "show-export" => "true", "export-types" => ['excel']}}
+%table.tasks.custom_striped{style: "padding: 0px 0px;",id: "task-list", data: {"idField" => "id", toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: tasks_path(scope: 'mine', format: :json), "sort-name" => "due_at", "sort-order" => 'asc', striped: "true", toolbar: "#custom_tool_buttons", "show-export" => "true", "export-types" => ['excel']}}
   %thead
     %tr
       %th{data: {class: 'protocol_id', align: 'center', field: 'protocol_id', width: "5", visible: "false", sortable: "true"}}
@@ -17,7 +17,7 @@
         = t(:task)[:assignable_type]
       %th{data: {class: 'body', align: 'left', sortable: "true", field: 'body'}}
         = t(:task)[:object]
-      %th{data: {class: 'due_at', align: 'left', sortable: "true", sorter: "dateSorter", field: 'due_at'}}
+      %th{data: {class: 'due_at', align: 'left', sortable: "true", sorter: "dueDateSorter", field: 'due_at'}}
         = t(:task)[:due_at]
       %th{data: {class: 'complete', align: 'center', field: 'complete'}}
         = t(:task)[:completed]

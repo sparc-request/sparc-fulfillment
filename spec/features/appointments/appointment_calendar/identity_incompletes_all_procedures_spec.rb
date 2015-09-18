@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'Identity incompletes all Procedures', js: true do
 
   context 'and gives a valid reason' do
+
     scenario 'and sees the incomplete procedures' do
       given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
       when_i_click_the_incomplete_all_button
@@ -13,6 +14,7 @@ feature 'Identity incompletes all Procedures', js: true do
   end
 
   context 'and gives an invalid reason' do
+
     scenario 'User gives invalid reason' do
       given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
       when_i_click_the_incomplete_all_button
@@ -21,14 +23,15 @@ feature 'Identity incompletes all Procedures', js: true do
     end
   end
 
-  def given_i_have_added_n_procedures_to_an_appointment_such_that_n_is qty=1
-    protocol    = create_and_assign_protocol_to_me
-    @participant = protocol.participants.first
-    visit_group = @participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_child_services(:per_participant).first
+  def given_i_have_added_n_procedures_to_an_appointment_such_that_n_is(qty=1)
+    protocol      = create_and_assign_protocol_to_me
+    @participant  = protocol.participants.first
+    visit_group   = @participant.appointments.first.visit_group
+    service       = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path @participant
     bootstrap_select '#appointment_select', visit_group.name
+    wait_for_ajax
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: qty
     find('button.add_service').click
@@ -38,23 +41,24 @@ feature 'Identity incompletes all Procedures', js: true do
   end
 
   def when_i_click_the_incomplete_all_button
-    find('.incomplete_all_button').click
+    bootstrap_multiselect '#core_multiselect'
+    find('button.incomplete_all').click
     wait_for_ajax
   end
 
   def when_i_give_a_valid_reason
     bootstrap_select '#reason.reason-select', "Assessment missed"
-    find('button.btn.save').click
+    find('button.save').click
     wait_for_ajax
   end
-  
+
   def when_i_give_an_invalid_reason
-    find('button.btn.save').click
+    find('button.save').click
     wait_for_ajax
   end
 
   def then_all_the_procedure_incomplete_buttons_should_be_active
-    expect(page).to have_css('label.status.incomplete.active', count: 2)
+    expect(page).to have_css('label.status.incomplete.active', count: 2, visible: false)
   end
 
   def then_all_procedures_should_be_incomplete

@@ -40,6 +40,7 @@ gem 'therubyracer'
 gem 'thin'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
+gem 'underscore-rails', '~> 1.8.3'
 gem 'will_paginate'
 gem 'yajl-ruby', '~> 1.2.1', require: 'yajl'
 
@@ -66,7 +67,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-webkit', '~> 1.5.1'
+  gem 'capybara-webkit'
   gem 'database_cleaner'
   gem 'launchy'
   gem 'rspec-activejob', '~> 0.4.0'

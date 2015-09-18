@@ -18,7 +18,7 @@
   .tab-content
     - if @services_present
       .tab-pane.active#study_schedule{role: 'tabpanel'}
-        = render partial: 'study_schedule/calendar', locals: {protocol: @protocol, page: @page, tab: 'template'}
+        = render partial: 'study_schedule/calendar', locals: {protocol: @protocol, page: @page, tab: (tab = cookies["active-schedule-tab".to_sym]) ? tab : 'template'}
 
       .tab-pane#participant_list{role: 'tabpanel'}
         = render partial: 'participant_list', locals: {protocol: @protocol, participant: @participant}
