@@ -26,19 +26,12 @@ class Appointment < ActiveRecord::Base
   scope :with_completed_procedures, -> { joins(:procedures).where("procedures.completed_date IS NOT NULL") }
 
   validates :participant_id, :name, :arm_id, presence: true
-  validate :completed_date_after_start_date
 
   accepts_nested_attributes_for :notes
 
   # Can appointment be finished? It must have a start date, and
   # all its procedures must either be complete, incomplete, or
   # have a follow up date assigned to it.
-
-  def completed_date_after_start_date
-    if completed_date.present? && completed_date < start_date
-      errors.add(:completed_date, "can't be before start date")
-    end
-  end
 
   def started?
     start_date.present?

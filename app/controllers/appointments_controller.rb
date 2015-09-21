@@ -40,21 +40,6 @@ class AppointmentsController < ApplicationController
     @field = params[:field]
 
     @appointment.update_attributes(appointment_params)
-
-
-    # if ['start_date', 'completed_date'].include? params[:field]
-    #   @field = params[:field]
-    #   if params[:new_date]
-    #     updated_date = Time.at(params[:new_date].to_i / 1000)
-    #   else
-    #     updated_date = Time.current
-    #   end
-    #   if @field == 'start_date'
-    #     @appointment.update_attributes(start_date: updated_date)
-    #   elsif @field == 'completed_date'
-    #     updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date #completed date cannot be before start date
-    #     @appointment.update_attributes(completed_date: updated_date)
-    #   end
   end
 
   def update_statuses

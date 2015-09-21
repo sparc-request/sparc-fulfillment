@@ -69,8 +69,15 @@ $ ->
           url: "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.complete_visit', ->
+    start_date = new Date($('#start_date').data("date"))
+    end_date = new Date($.now())
+
+    if start_date > end_date
+      data = appointment: completed_date: start_date.toUTCString()
+    else
+      data = appointment: completed_date: end_date.toUTCString()
+
     appointment_id = $(this).parents('.row.appointment').data('id')
-    data = appointment: completed_date: new Date($.now()).toUTCString()
     $.ajax
       type: 'PUT'
       data: data
@@ -303,7 +310,7 @@ $ ->
     $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
     $('#completed_date').on 'dp.hide', (e) ->
       appointment_id = $(this).parents('.row.appointment').data('id')
-      data = appointment: start_date: e.date.toDate().toUTCString()
+      data = appointment: completed_date: e.date.toDate().toUTCString()
       $.ajax
         type: 'PUT'
         data: data
