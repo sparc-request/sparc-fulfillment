@@ -288,7 +288,7 @@ $ ->
     $('#start_date').datetimepicker(defaultDate: date)
     $('#start_date').on 'dp.hide', (e) ->
       appointment_id = $(this).parents('.row.appointment').data('id')
-      data = appointment: start_date: e.date
+      data = appointment: start_date: e.date.toDate().toUTCString()
       $.ajax
         type: 'PUT'
         data: data
@@ -303,7 +303,7 @@ $ ->
     $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
     $('#completed_date').on 'dp.hide', (e) ->
       appointment_id = $(this).parents('.row.appointment').data('id')
-      data = appointment: completed_date: e.date
+      data = appointment: start_date: e.date.toDate().toUTCString()
       $.ajax
         type: 'PUT'
         data: data
