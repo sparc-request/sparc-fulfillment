@@ -17,3 +17,5 @@ LDAP_USER_DOMAIN=@musc.edu
 # for LDAP service accounts, remove these keys if you're not using them
 LDAP_AUTH_USERNAME=
 LDAP_AUTH_PASSWORD=
+# add the following line if EPIC is turned off for your institution
+USE_EPIC=false
