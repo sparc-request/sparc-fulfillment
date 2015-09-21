@@ -26,7 +26,7 @@ class Appointment < ActiveRecord::Base
   scope :with_completed_procedures, -> { joins(:procedures).where("procedures.completed_date IS NOT NULL") }
 
   validates :participant_id, :name, :arm_id, presence: true
-  validates :completed_date_after_start_date
+  validate :completed_date_after_start_date
 
   accepts_nested_attributes_for :notes
 
