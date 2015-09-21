@@ -98,7 +98,9 @@ feature 'Fulfillments', js: true do
   end
 
   def when_i_click_on_the_edit_fulfillment_button
-    find(".documents[data-documentable-type='Fulfillment'] + .otf_fulfillment_edit").click
+    first("#fulfillments-table .available-actions-button").click
+    wait_for_ajax
+    find(".otf_fulfillment_edit").click
   end
 
   def when_i_fill_out_the_fulfillment_form
@@ -121,7 +123,7 @@ feature 'Fulfillments', js: true do
   end
 
   def then_i_should_see_the_correct_components
-    click_button "Fulfillment Components"
+    click_button "Display Components"
     expect(first('.dropdown-menu > li').text).to eq @components.first.component
     first('.dropdown-menu > li').click
     wait_for_ajax
@@ -134,6 +136,8 @@ feature 'Fulfillments', js: true do
   end
 
   def then_i_should_see_the_changes_in_the_notes
+    first("#fulfillments-table .available-actions-button").click
+    wait_for_ajax
     first('.notes.list[data-notable-type="Fulfillment"]').click
     wait_for_ajax
     expect(page).to have_content "Quantity changed to 45"
