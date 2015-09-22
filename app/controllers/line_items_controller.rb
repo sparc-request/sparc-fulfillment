@@ -2,6 +2,17 @@ class LineItemsController < ApplicationController
 
   before_action :find_line_item, only: [:edit, :update]
 
+  def index
+    respond_to do |format|
+      format.json {
+        @protocol = Protocol.find(params[:protocol_id])
+        @line_items = @protocol.one_time_fee_line_items
+
+        render
+      }
+    end
+  end
+
   def new
     @protocol = Protocol.find(params[:protocol_id])
     @line_item = LineItem.new(protocol: @protocol)
@@ -85,7 +96,7 @@ class LineItemsController < ApplicationController
   end
 
   def line_item_params
-    params.require(:line_item).permit(:protocol_id, :quantity_requested, :service_id, :started_at)
+    params.require(:line_item).permit(:protocol_id, :quantity_requested, :service_id, :started_at, :account_number, :contact_name)
   end
 
   def find_line_item
