@@ -43,6 +43,7 @@ class AppointmentsController < ApplicationController
   end
 
   def update_statuses
+    @appointment = Appointment.find params[:appointment_id]
     new_statuses = params[:statuses]
     @appointment.appointment_statuses.destroy_all
 
@@ -51,6 +52,8 @@ class AppointmentsController < ApplicationController
         @appointment.appointment_statuses.create(status: status)
       end
     end
+
+    render nothing: true
   end
 
   private

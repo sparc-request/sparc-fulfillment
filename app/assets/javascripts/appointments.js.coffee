@@ -274,12 +274,12 @@ $ ->
   $(document).on 'change', '#appointment_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     statuses = $(this).val()
-    data = id: appointment_id, 'statuses' : statuses
+    data = 'statuses' : statuses
 
     $.ajax
       type: 'PUT'
       data: data
-      url: "/appointments/update_statuses"
+      url: "/appointments/#{appointment_id}/update_statuses"
 
   $(document).on 'change', 'td.performed-by .selectpicker', ->
     procedure_id = $(this).parents(".procedure").data("id")
