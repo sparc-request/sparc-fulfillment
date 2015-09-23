@@ -152,7 +152,6 @@ $ ->
       # undo complete status
       $(this).removeClass('selected_before')
       $(".procedure[data-id='#{procedure_id}'] .completed_date_field input").val(null)
-      $(".procedure[data-id='#{procedure_id}'] .performed-by .selectpicker").selectpicker('val', null)
       data = procedure:
               status: "unstarted"
               performer_id: null
@@ -174,7 +173,6 @@ $ ->
     procedure_id  = $(this).parents('.procedure').data('id')
     # undo incomplete status
     if active
-      $(".procedure[data-id='#{procedure_id}'] .performed-by .selectpicker").selectpicker('val', null)
       data = procedure:
               status: "unstarted"
               performer_id: null
