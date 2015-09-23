@@ -55,11 +55,11 @@ $ ->
 
   $(document).on 'click', '.start_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
-    data = appointment: start_date: new Date($.now()).toUTCString()
+    data = field: "start_date", appointment: start_date: new Date($.now()).toUTCString()
     $.ajax
       type: 'PUT'
       data: data
-      url:  "/appointments/#{appointment_id}?field=start_date"
+      url:  "/appointments/#{appointment_id}.js"
       success: ->
         # reload table of procedures, so that UI elements disabled
         # before start of appointment can be reenabled
@@ -73,15 +73,15 @@ $ ->
     end_date = new Date($.now())
 
     if start_date > end_date
-      data = appointment: completed_date: start_date.toUTCString()
+      data = field: "completed_date", appointment: completed_date: start_date.toUTCString()
     else
-      data = appointment: completed_date: end_date.toUTCString()
+      data = field: "completed_date", appointment: completed_date: end_date.toUTCString()
 
     appointment_id = $(this).parents('.row.appointment').data('id')
     $.ajax
       type: 'PUT'
       data: data
-      url:  "/appointments/#{appointment_id}?field=completed_date"
+      url:  "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.reset_visit', ->
     data = appointment_id: $(this).parents('.row.appointment').data('id')
@@ -97,7 +97,7 @@ $ ->
     $.ajax
       type: 'PUT'
       data: data
-      url: "/appointments/#{appointment_id}"
+      url: "/appointments/#{appointment_id}.js"
       success: ->
         # reload table of procedures, so that UI elements disabled
         # before start of appointment can be re-enabled
@@ -114,7 +114,7 @@ $ ->
             completed_date: completed_date
     $.ajax
       type: 'PUT'
-      url: "/procedures/#{procedure_id}"
+      url: "/procedures/#{procedure_id}.js"
       data: data
 
   $(document).on 'dp.hide', ".followup_procedure_datepicker", ->
@@ -124,7 +124,7 @@ $ ->
             due_at: due_at
     $.ajax
       type: 'PUT'
-      url: "/tasks/#{task_id}"
+      url: "/tasks/#{task_id}.js"
       data: data
 
   $(document).on 'change', '.billing_type', ->
@@ -136,7 +136,7 @@ $ ->
            billing_type: billing_type
     $.ajax
       type: 'PUT'
-      url: "/procedures/#{procedure_id}"
+      url: "/procedures/#{procedure_id}.js"
       data: data
       success: ->
         procedure    = $("tr.procedure[data-id='#{procedure_id}']")
@@ -235,7 +235,7 @@ $ ->
     $.ajax
       type: 'GET'
       data: data
-      url: "/custom_appointments/new"
+      url: "/custom_appointments/new.js"
 
   $(document).on 'click', 'button.followup.new', ->
     procedure_id  = $(this).parents('.procedure').data('id')
@@ -263,11 +263,11 @@ $ ->
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     contents = $(this).val()
-    data = appointment: 'contents' : contents
+    data = appointment: contents : contents
     $.ajax
       type: 'PUT'
       data: data
-      url:  "/appointments/#{appointment_id}"
+      url:  "/appointments/#{appointment_id}.js"
 
   $(document).on 'change', '#appointment_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -277,7 +277,7 @@ $ ->
     $.ajax
       type: 'PUT'
       data: data
-      url: "/appointments/#{appointment_id}/update_statuses"
+      url: "/appointments/#{appointment_id}/update_statuses.js"
 
   $(document).on 'change', 'td.performed-by .selectpicker', ->
     procedure_id = $(this).parents(".procedure").data("id")
@@ -297,7 +297,7 @@ $ ->
       $.ajax
         type: 'PUT'
         data: data
-        url:  "/appointments/#{appointment_id}"
+        url:  "/appointments/#{appointment_id}.js"
         success: ->
           if !$('.completed_date_input').hasClass('hidden')
             $('#completed_date').data("DateTimePicker").minDate(e.date)
@@ -312,7 +312,7 @@ $ ->
       $.ajax
         type: 'PUT'
         data: data
-        url:  "/appointments/#{appointment_id}"
+        url:  "/appointments/#{appointment_id}.js"
         success: ->
           $('#start_date').data("DateTimePicker").maxDate(e.date)
 
