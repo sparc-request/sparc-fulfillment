@@ -11,7 +11,7 @@ feature 'Identity incompletes all Services', js: true do
   context 'after visit has begun' do
     before :each do
       given_i_am_viewing_a_started_visit
-      _i_add_some_ungrouped_procedures
+      i_add_some_ungrouped_procedures
       and_i_add_some_grouped_procedures
     end
 
@@ -55,7 +55,7 @@ feature 'Identity incompletes all Services', js: true do
     end
   end
 
-  def _i_add_some_ungrouped_procedures
+  def i_add_some_ungrouped_procedures
     services[0..2].each do |service|
       add_a_procedure service, 1
     end
