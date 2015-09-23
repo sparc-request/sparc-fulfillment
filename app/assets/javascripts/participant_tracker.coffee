@@ -5,7 +5,6 @@ $ ->
     
     $.each $('table.participants td.participant_report a'), (index, value) ->
       remote_document_generator value, tables_to_refresh
-    $("table.participants .selectpicker").selectpicker()
 
   $(document).on 'change', '.participant_status', ->
     participant_id = $(this).data("id")

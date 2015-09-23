@@ -11,6 +11,25 @@ RSpec.describe LineItemsController do
     @pppv_line_item = create(:line_item, protocol: @protocol, service: create(:service), arm: create(:arm, protocol: @protocol))
   end
 
+  describe "GET #index" do
+
+    context 'content-type: application/json' do
+
+      it 'renders the :index action' do
+        get :index, protocol_id: @protocol.id, format: :json
+
+        expect(response).to be_success
+      end
+
+      it 'assigns @protocol and @line_items' do
+        get :index, protocol_id: @protocol.id, format: :json
+
+        expect(assigns(:protocol)).to be
+        expect(assigns(:line_items)).to be
+      end
+    end
+  end
+
   describe "GET #new" do
     it "should instantiate a new LineItem" do
       xhr :get, :new, {
