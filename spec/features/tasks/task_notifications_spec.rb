@@ -46,7 +46,7 @@ feature "Task notifications", js: true do
   end
 
   def then_i_should_see_that_i_have_no_tasks
-    expect(page).to have_css(".notification.task-notifications", text: "0")
+    expect(page).to have_no_css(".notification.task-notifications", text: "0")
   end
 
   def then_i_should_see_that_i_have_one_task

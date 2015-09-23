@@ -75,6 +75,11 @@ $ ->
     when 'Protocol'
       notification_bubble = $('.notification.protocol_report_notifications')
     when 'Identity'
+      if !$('.notification.identity_report_notifications').length
+        $('<span class="notification identity_report_notifications">0</span>').appendTo($('a.documents'))
       notification_bubble = $('.notification.identity_report_notifications')
   notification_count = parseInt(notification_bubble.text())
   notification_bubble.text(notification_count + amount) if (notification_count + amount) >= 0
+  notification_count = parseInt(notification_bubble.text())
+  if notification_count == 0
+    notification_bubble.remove();

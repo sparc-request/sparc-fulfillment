@@ -94,7 +94,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
 
   def then_i_should_see_the_counter_decrement
-    expect(page).to have_css(".protocol_report_notifications", text: 0)
+    expect(page).to have_no_css(".protocol_report_notifications", text: 0)
   end
 
   def then_i_should_see_a_new_document_generate
