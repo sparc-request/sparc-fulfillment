@@ -73,6 +73,8 @@ $ ->
 (exports ? this).add_to_report_notification_count = (documentable_type, amount) ->
   switch documentable_type
     when 'Protocol'
+      if !$('.notification.protocol_report_notifications').length
+        $('<span class="notification protocol_report_notifications">0</span>').appendTo($('#protocol-reports-tab'))
       notification_bubble = $('.notification.protocol_report_notifications')
     when 'Identity'
       if !$('.notification.identity_report_notifications').length
