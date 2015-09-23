@@ -2,11 +2,11 @@ $ ->
   $('[data-toggle="tooltip"]').tooltip()
   $("input[placeholder='Search']").wrap("<div class='input-group search-bar'/>")
   $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))
+  $(".selectpicker").selectpicker()
 
-  window.update_tooltip = (object, string) ->
-    $(object).tooltip('hide')
-    $(object).attr('data-original-title', string)
-    $(object).tooltip('fixTitle')
+  $(document).on 'all.bs.table', 'table', ->
+    $(".selectpicker").selectpicker()
+    $('[data-toggle="tooltip"]').tooltip()
 
   $(document).on 'search.bs.table', "table", (event, input)->
     unless input == ''
@@ -83,3 +83,8 @@ $ ->
   notification_count = parseInt(notification_bubble.text())
   if notification_count == 0
     notification_bubble.remove();
+
+(exports ? this).update_tooltip = (object, string) ->
+  $(object).tooltip('hide')
+  $(object).attr('data-original-title', string)
+  $(object).tooltip('fixTitle')

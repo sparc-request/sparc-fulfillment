@@ -16,7 +16,6 @@ class Fulfillment < ActiveRecord::Base
 
   validates :line_item_id, :performer_id, :fulfilled_at, :quantity, presence: true
   validates_numericality_of :quantity
-  validates_length_of :account_number, :maximum => 30
 
   after_create :update_line_item_name
 

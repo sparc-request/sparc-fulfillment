@@ -8,6 +8,33 @@ RSpec.describe FulfillmentsController do
     @fulfillment = create(:fulfillment, line_item: @line_item)
   end
 
+  describe "GET #index" do
+
+    context 'content-type: application/json' do
+
+      it 'renders the :index action' do
+        xhr :get, :index, line_item_id: @line_item.id, format: :js
+
+        expect(response).to be_success
+      end
+
+      it 'assigns @line_item' do
+        xhr :get, :index, line_item_id: @line_item.id, format: :js
+
+        expect(assigns(:line_item)).to be
+      end
+    end
+
+    context 'content-type: application/js' do
+
+      it 'assigns @fulfillments' do
+        get :index, line_item_id: @line_item.id, format: :json
+
+        expect(assigns(:fulfillments)).to be
+      end
+    end
+  end
+
   describe "GET #new" do
     it "should instantiate a new Fulfillment" do
       xhr :get, :new, {
