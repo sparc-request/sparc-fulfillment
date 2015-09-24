@@ -203,6 +203,10 @@ $ ->
     if $("#complete_button_#{id}").parent().hasClass('selected_before')
       $("#complete_button_#{id}").parent().addClass('active')
 
+  $(document).on 'change', "label.checkbox input[type='checkbox']", (event) ->
+    all_unchecked = !$(event.target).closest('.multiselect-container').find('li.active').length
+    $(event.target).closest('.align-select-menu').find('.complete_all, .incomplete_all').toggleClass('disabled', all_unchecked)
+
   $(document).on 'click', 'button.appointment.new', ->
     participant_id = $(this).data('participant-id')
     arm_id = $(this).data('arm-id')
