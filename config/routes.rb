@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :protocols
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
-  resources :fulfillments, only: [:new, :create, :edit, :update]
+  resources :fulfillments, only: [:index, :new, :create, :edit, :update]
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents
@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     collection do
       get 'completed_appointments'
     end
+    put 'update_statuses'
   end
 
 

@@ -47,8 +47,8 @@ class ReportJob < ActiveJob::Base
   end
 
   def find_or_create_document_root_path
-    unless Dir.exists? ENV.fetch('DOCUMENT_ROOT')
-      Dir.mkdir ENV.fetch('DOCUMENT_ROOT')
+    unless Dir.exists? ENV.fetch('DOCUMENTS_FOLDER')
+      Dir.mkdir ENV.fetch('DOCUMENTS_FOLDER')
     end
   end
 end
