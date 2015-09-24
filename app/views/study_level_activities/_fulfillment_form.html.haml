@@ -16,10 +16,6 @@
               .col-sm-7
                 = form.text_field "fulfilled_at", {class: 'form-control datetimepicker', id: 'date_fulfilled_field', value: format_date(fulfillment.fulfilled_at)}
             .form-group
-              = form.label "account_number", t(:fulfillment)[:account_number], class: "col-sm-4 control-label"
-              .col-sm-7
-                = form.text_field "account_number", {class: 'form-control', :maxlength => 30}
-            .form-group
               = form.label "quantity", t(:fulfillment)[:quantity], class: "col-sm-4 control-label"
               .col-sm-7
                 = form.text_field "quantity", {class: 'form-control'}
