@@ -21,6 +21,8 @@ fulfill.sql
 /public/system/documents/*
 /public/assets/*
 
+# ignore documents_folder
+/documents/*
 
 .rspec
 .sass-cache/
