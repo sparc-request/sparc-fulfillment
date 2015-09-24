@@ -9,10 +9,12 @@ feature "create Task", js: true do
     @assignee = clinical_providers.first.identity
   end
 
-  scenario 'Identity creates a new Task for themselves' do
+  scenario 'Identity creates a multiple Tasks for themselves' do
     given_i_am_viewing_the_tasks_page
     when_i_create_a_task_assigned_to_myself
     then_i_should_see_the_task_is_assigned_to_me
+    when_i_create_a_task_assigned_to_myself
+    then_i_should_see_two_tasks_are_assigned_to_me
   end
 
   scenario 'Identity creates a new Task for another Identity' do
@@ -52,6 +54,11 @@ feature "create Task", js: true do
   def then_i_should_see_the_task_is_assigned_to_me
     expect(page).to have_css("table.tasks tbody tr", count: 1)
     expect(page).to have_css(".notification.task-notifications", text: 1)
+  end
+  
+  def then_i_should_see_two_tasks_are_assigned_to_me
+    expect(page).to have_css("table.tasks tbody tr", count: 2)
+    expect(page).to have_css(".notification.task-notifications", text: 2)
   end
 
   def then_i_should_see_the_task_is_assigned_to_the_identity
