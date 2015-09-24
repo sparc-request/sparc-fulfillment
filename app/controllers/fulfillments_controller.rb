@@ -2,6 +2,18 @@ class FulfillmentsController < ApplicationController
 
   before_action :find_fulfillment, only: [:edit, :update]
 
+  def index
+    @line_item = LineItem.find(params[:line_item_id])
+    respond_to do |format|
+      format.js { render }
+      format.json {
+        @fulfillments = @line_item.fulfillments
+
+        render
+      }
+    end
+  end
+
   def new
     @line_item = LineItem.find(params[:line_item_id])
     @clinical_providers = ClinicalProvider.where(organization_id: @line_item.protocol.sub_service_request.organization_id)
@@ -97,7 +109,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :account_number, :quantity, :performer_id)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id)
   end
 
   def find_fulfillment

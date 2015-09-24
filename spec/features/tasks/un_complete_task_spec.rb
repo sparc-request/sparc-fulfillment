@@ -14,6 +14,8 @@ feature "un-completing a Task", js: true do
     create_list(:task, 2, identity: assignor, assignee: assignee)
 
     visit tasks_path
+    wait_for_ajax
+    
     first('input.complete').click
     wait_for_ajax
     expect(page).to have_css("table.tasks tbody tr", count: 1)
