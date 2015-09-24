@@ -83,6 +83,6 @@ feature 'Identity sets Procedure performer', js: true do
   end
 
   def then_i_should_see_that_the_performer_has_not_been_set
-    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: "")
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: "N/A")
   end
 end

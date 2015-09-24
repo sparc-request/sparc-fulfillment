@@ -1,15 +1,15 @@
 class AppointmentsController < ApplicationController
 
   respond_to :json, :html
-  
+
   #### BEGIN CUSTOM APPOINTMENTS ####
-  
-  def new 
+
+  def new
     @appointment = CustomAppointment.new(custom_appointment_params)
     @note = @appointment.notes.new(kind: 'reason')
   end
 
-  def create 
+  def create
     ##### TODO, figure out a way to not have to use base model
     @appointment = Appointment.new(custom_appointment_params)
 
@@ -18,7 +18,7 @@ class AppointmentsController < ApplicationController
       @appointment.update_attribute(:type, "CustomAppointment")
     end
   end
-  
+
   #### END CUSTOM APPOINTMENTS ####
 
   def show
@@ -37,35 +37,23 @@ class AppointmentsController < ApplicationController
 
   def update
     @appointment = Appointment.find params[:id]
+    @field = params[:field]
 
-    if params[:contents]
-      @appointment.update_attributes(contents: params[:contents])
-    end
+    @appointment.update_attributes(appointment_params)
+  end
 
-    if ['start_date', 'completed_date'].include? params[:field]
-      @field = params[:field]
-      if params[:new_date]
-        updated_date = Time.at(params[:new_date].to_i / 1000)
-      else
-        updated_date = Time.current
-      end
-      if @field == 'start_date'
-        @appointment.update_attributes(start_date: updated_date)
-      elsif @field == 'completed_date'
-        updated_date = @appointment.start_date if !@appointment.start_date.blank? && @appointment.start_date > updated_date #completed date cannot be before start date
-        @appointment.update_attributes(completed_date: updated_date)
-      end
+  def update_statuses
+    @appointment = Appointment.find params[:appointment_id]
+    new_statuses = params[:statuses]
+    @appointment.appointment_statuses.destroy_all
 
-    elsif params[:statuses]
-      new_statuses = params[:statuses]
-      @appointment.appointment_statuses.destroy_all
-
-      if params[:statuses].present?
-        new_statuses.each do |status|
-          @appointment.appointment_statuses.create(status: status)
-        end
+    if params[:statuses].present?
+      new_statuses.each do |status|
+        @appointment.appointment_statuses.create(status: status)
       end
     end
+
+    render nothing: true
   end
 
   private
@@ -74,9 +62,13 @@ class AppointmentsController < ApplicationController
     in_time.blank? ? Time.now : in_time
   end
 
+  def appointment_params
+    params.require(:appointment).permit(:contents, :start_date, :completed_date)
+  end
+
   def custom_appointment_params
     params.require(:custom_appointment)
-          .permit(:arm_id, :participant_id, :name, :position, 
+          .permit(:arm_id, :participant_id, :name, :position,
                  notes_attributes: [:comment, :kind, :identity_id, :reason])
   end
 end
