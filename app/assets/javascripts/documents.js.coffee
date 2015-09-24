@@ -23,7 +23,7 @@ $ ->
       document_id = $(this).attr('document_id')
       del = confirm "Are you sure you want to delete this document?"
       if del
-        if $(this).parent().siblings("td.downloaded_at").text() == ""
+        if $(this).parent().siblings("td.viewed_at").text() == ""
           add_to_report_notification_count('Identity', -1)
         $.ajax
           type: 'DELETE'
@@ -32,7 +32,7 @@ $ ->
 (exports ? this).update_view_on_download_new_report = (element, table_to_update, documentable_type) ->
   row_index = element.parents().eq(1).attr("data-index")
 
-  date_downloaded_element = element.parent().siblings("td.downloaded_at")
+  date_downloaded_element = element.parent().siblings("td.viewed_at")
   
   if date_downloaded_element.text().length == 0
     add_to_report_notification_count(documentable_type, -1)
@@ -41,7 +41,7 @@ $ ->
     
     $(table_to_update).bootstrapTable 'updateCell', 
       rowIndex: row_index
-      fieldName: 'downloaded_at'
+      fieldName: 'viewed_at'
       fieldValue: utcdate
 
 (exports ? this).refreshDocumentsTables = ->

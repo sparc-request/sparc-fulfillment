@@ -1,6 +1,6 @@
 module DocumentsHelper
 
-  def format_date date
+  def format_document_date date
     if date.present?
       date.strftime(t(:documents)[:date_time_formatter_ruby])
     else
@@ -27,10 +27,14 @@ module DocumentsHelper
   end
 
   def delete_formatter document
+    if document.completed?
     [
       "<a class='remove remove-document' href='javascript:void(0)' title='Remove' document_id='#{document.id}'>",
       "<i class='glyphicon glyphicon-remove'></i>",
       "</a>"
     ].join ""
+  else
+    "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
+  end
   end
 end

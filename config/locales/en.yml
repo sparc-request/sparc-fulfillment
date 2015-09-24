@@ -79,7 +79,7 @@ en:
     title: "Title"
     state: "Report Status"
     file: "Attached File"
-    downloaded_at: "Date Downloaded"
+    viewed_at: "Date Viewed"
     new_header: "Add Document"
     date_created: "Date Created"
     object: "Document"

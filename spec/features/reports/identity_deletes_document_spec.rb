@@ -4,10 +4,19 @@ feature 'Identity edits document title', js: true, enqueue: false do
 
   context "User deletes a document" do
     context "from the All Reports page" do
+      context "except they don't because the document is still processing" do
+        scenario "and they see the delete icon is greyed out" do
+          given_i_am_viewing_the_all_reports_page
+          when_an_identity_document_is_not_completed
+          then_i_should_see_the_delete_icon_is_greyed_out
+        end
+      end
+
       scenario "and does not see the report" do
         given_i_am_viewing_the_all_reports_page
         when_i_create_an_identity_based_document
-        when_i_delete_the_document
+        when_i_click_the_delete_icon
+        when_i_accept_the_alert
         then_i_should_not_see_the_document
       end
 
@@ -15,17 +24,27 @@ feature 'Identity edits document title', js: true, enqueue: false do
         scenario "and sees the documents counter decrement" do
           given_i_am_viewing_the_all_reports_page
           when_i_create_an_identity_based_document
-          when_i_delete_the_document
+          when_i_click_the_delete_icon
+          when_i_accept_the_alert
           then_i_should_see_the_identity_docs_counter_was_decremented
         end
       end
     end
 
     context "from the Reports Tab" do
+      context "except they don't because the document is still processing" do
+        scenario "and they see the delete icon is greyed out" do
+          given_i_am_viewing_the_reports_tab
+          when_a_protocol_document_is_not_completed
+          then_i_should_see_the_delete_icon_is_greyed_out
+        end
+      end
+
       scenario "and does not see the report" do
         given_i_am_viewing_the_reports_tab
         when_i_create_a_protocol_based_document
-        when_i_delete_the_document
+        when_i_click_the_delete_icon
+        when_i_accept_the_alert
         then_i_should_not_see_the_document
       end
 
@@ -33,12 +52,14 @@ feature 'Identity edits document title', js: true, enqueue: false do
         scenario "and sees the documents counter decrement" do
           given_i_am_viewing_the_all_reports_page
           when_i_create_an_identity_based_document
-          when_i_delete_the_document
+          when_i_click_the_delete_icon
+          when_i_accept_the_alert
           then_i_should_see_the_protocol_docs_counter_was_decremented
         end
       end
     end
   end
+
 
   def given_i_am_viewing_the_all_reports_page
     @protocol = create_and_assign_protocol_to_me
@@ -78,19 +99,43 @@ feature 'Identity edits document title', js: true, enqueue: false do
     wait_for_ajax
   end
 
+  def when_an_identity_document_is_not_completed
+    when_i_create_an_identity_based_document
+
+    Document.first.update_attributes(state: "Processing")
+    
+    visit documents_path
+    wait_for_ajax
+  end
+
   def when_i_create_a_protocol_based_document
     find("a#study_schedule_report_#{@protocol.id.to_s}").click
     wait_for_ajax
   end
 
-  def when_i_delete_the_document
+  def when_a_protocol_document_is_not_completed
+    when_i_create_a_protocol_based_document
+    
+    Document.first.update_attributes(state: "Processing")
+
+    visit protocol_path(@protocol)
+    wait_for_ajax
+  end
+
+  def when_i_click_the_delete_icon
     first("a.remove-document").click
     wait_for_ajax
+  end
 
+  def when_i_accept_the_alert
     page.accept_alert do
       click_button('OK')
     end
     wait_for_ajax
+  end
+
+  def then_i_should_see_the_delete_icon_is_greyed_out
+    expect(page).to have_css("i.glyphicon-remove[style='cursor:default']")
   end
 
   def then_i_should_not_see_the_document

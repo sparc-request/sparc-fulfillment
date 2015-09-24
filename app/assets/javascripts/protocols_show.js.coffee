@@ -27,7 +27,7 @@ $ ->
       document_id = $(this).attr('document_id')
       del = confirm "Are you sure you want to delete this document?"
       if del
-        if $(this).parent().siblings("td.downloaded_at").text() == ""
+        if $(this).parent().siblings("td.viewed_at").text() == ""
           add_to_report_notification_count('Protocol', -1)
 
         $.ajax
