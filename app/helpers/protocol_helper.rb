@@ -73,4 +73,27 @@ module ProtocolHelper
 
     line_items
   end
+
+  def current_tab? tab_name, services_present = nil
+    case tab_name
+      when "study_schedule"
+        if cookies['active-protocol-tab'.to_sym]
+          cookies['active-protocol-tab'.to_sym] == tab_name ? "active" : ""
+        else
+          "active"
+        end
+      when "study_level_activities"
+        if services_present
+          cookies['active-protocol-tab'.to_sym] == tab_name ? "active" : ""
+        else
+          if cookies['active-protocol-tab'.to_sym]
+            cookies['active-protocol-tab'.to_sym] == tab_name ? "active" : ""
+          else
+            "active"
+          end
+        end
+      else
+        cookies['active-protocol-tab'.to_sym] == tab_name ? "active" : ""
+    end 
+  end
 end
