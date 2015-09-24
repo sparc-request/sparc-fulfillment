@@ -135,7 +135,7 @@ $ ->
       find_row_name group_id for group_id in group_ids
 
       $(multiselect).multiselect('dataprovider', option_data)
-      $(multiselect).multiselect('setOptions', includeSelectAllOption: true, numberDisplayed: 0, nonSelectedText: 'Please Select')
+      $(multiselect).multiselect('setOptions', includeSelectAllOption: true, numberDisplayed: 0, nonSelectedText: 'Select Services')
       $(multiselect).multiselect('rebuild')
       if $(multiselect).hasClass('disabled')
         $(multiselect).multiselect('disable')
