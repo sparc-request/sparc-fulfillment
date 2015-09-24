@@ -17,7 +17,7 @@
       %span.input-group-addon{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
         %span.glyphicon.glyphicon-calendar
   %td.performed-by
-    = select_tag "performed-by-#{procedure.id}", options_for_select(procedure.performable_by, procedure.performer_id), include_blank: " ", class: "performed-by-dropdown selectpicker", data: { width: '125px' }, 'showIcon' => false
+    = select_tag "performed-by-#{procedure.id}", options_for_select(procedure.performable_by, procedure.performer_id), include_blank: "N/A", class: "performed-by-dropdown selectpicker", data: { width: '125px' }, 'showIcon' => false
   %td.notes
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
