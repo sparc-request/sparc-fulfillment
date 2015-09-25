@@ -23,9 +23,9 @@
 
         = yield :nav_buttons
       %ul.nav.navbar-nav.navbar-right
-        - if session[:last_page]
+        - if session[:breadcrumbs] && session[:breadcrumbs].present?
           %li
-            = link_to session[:last_page] do
+            = link_to "#{session[:breadcrumbs].last}?back=true" do
               %span.glyphicon.glyphicon-arrow-left{aria: {hidden: "true"}}
               Back
         %li
