@@ -2,7 +2,7 @@
 #custom-toolbar
   = link_to t(:participant)[:new_participant], new_participant_path(protocol_id: protocol.id), {class: 'btn btn-default btn-primary', id: 'new_participant_button', type: 'button', data: {toggle: 'modal', target: '#modal_place'}, remote: true}
 %table.participants{id: "participants-list-table", data: {toggle: 'table', search: "true", toolbar: '#custom-toolbar',  url: "/participants.json?protocol_id=#{protocol.id}", striped: "true", height: "400", sort: {name: 'last_name', order: 'asc'}, show: {columns: "true", refresh: "true", toggle: "true", export: "true"}, export: {types: ['excel']}, select: {item: {name: "toolbar1"}}}}
-  %thead
+  %thead.primary-header
     %tr
       %th{data: {class: 'last_name truncate', align: "left", sortable: "true", field: "last_name"}}
         = t(:participant)[:last_name]

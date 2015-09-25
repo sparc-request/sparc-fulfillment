@@ -1,7 +1,7 @@
 %h3= t(:participant)[:tracker]
 #participant_tracker
   %table.participants{id: "participants-tracker-table", data: {toggle: 'table', search: "true", height: "400", url: participants_path(protocol_id: protocol.id, format: :json), striped: "true", show: {columns: "true", refresh: "true", export: "true", toggle: "true"}, export: {types: ['excel']}, select: {item: {name: "toolbar1"}}, sort: {name: 'last_name', order: 'asc'}}}
-    %thead
+    %thead.primary-header
       %tr
         %th{data: {class: 'calendar', align: "center", width: "5", field: "calendar"}}= t(:participant)[:calendar]
         %th{data: {class: 'participant_report', align: "center", width: "5", field: "participant_report"}}= t(:participant)[:participant_report]

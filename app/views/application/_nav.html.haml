@@ -10,14 +10,16 @@
           = link_to tasks_path, class: 'tasks' do
             %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
             = t(:navbar)[:tasks_link]
-            %span.notification.task-notifications
-              = current_identity.tasks_count
+            - if current_identity.tasks_count > 0
+              %span.notification.task-notifications
+                = current_identity.tasks_count
         %li
           = link_to documents_path, class: 'documents' do
             %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
             = t(:navbar)[:reports_link]
-            %span.notification.identity_report_notifications
-              = current_identity.unaccessed_documents_count
+            - if current_identity.unaccessed_documents_count > 0
+              %span.notification.identity_report_notifications
+                = current_identity.unaccessed_documents_count
 
         = yield :nav_buttons
       %ul.nav.navbar-nav.navbar-right

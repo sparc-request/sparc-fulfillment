@@ -52,6 +52,10 @@ feature 'Identity creates a document from the documents page', js: true do
     given_i_click_the_create_report_button_of_type 'billing_report'
     when_i_fill_in_the_report_of_type 'auditing_report'
     then_i_should_see_the_documents_counter_increment
+    # submit a request for a second report
+    given_i_click_the_create_report_button_of_type 'project_summary_report'
+    when_i_fill_in_the_report_of_type 'project_summary_report'
+    then_i_should_see_the_documents_counter_increment_to_two
   end
 
   scenario 'and sees protocols assigned to the them' do
@@ -133,6 +137,10 @@ feature 'Identity creates a document from the documents page', js: true do
 
   def then_i_should_see_the_documents_counter_increment
     expect(page).to have_css(".notification.identity_report_notifications", text: 1)
+  end
+  
+  def then_i_should_see_the_documents_counter_increment_to_two
+    expect(page).to have_css(".notification.identity_report_notifications", text: 2)
   end
 
   def then_i_should_see_protocols_assigned_to_me

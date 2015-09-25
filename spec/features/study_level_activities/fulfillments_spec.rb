@@ -88,7 +88,8 @@ feature 'Fulfillments', js: true do
   end
 
   def when_i_open_up_a_fulfillment
-    first(".line_item[data-id='#{@line_item.id}'] > .fulfillments > .otf_fulfillments.list").click
+    first(".otf_fulfillments.list").click
+    wait_for_ajax
   end
 
   def when_i_click_on_the_add_fulfillment_button
@@ -97,16 +98,14 @@ feature 'Fulfillments', js: true do
   end
 
   def when_i_click_on_the_edit_fulfillment_button
-    fulfillment_row = find(".fulfillment[data-id='#{@fulfillment.id}']")
-    within fulfillment_row do
-      find(".otf_fulfillment_edit").click
-    end
+    first("#fulfillments-table .available-actions-button").click
+    wait_for_ajax
+    find(".otf_fulfillment_edit").click
   end
 
   def when_i_fill_out_the_fulfillment_form
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    fill_in 'Account Number', with: "Th15 15 A f4k3 NUMb3r"
     fill_in 'Quantity', with: "45"
     bootstrap_select '#fulfillment_performer_id', @clinical_providers.first.identity.full_name
     bootstrap_select '#fulfillment_components', @components.first.component
@@ -119,11 +118,12 @@ feature 'Fulfillments', js: true do
   end
 
   def then_i_should_see_the_new_fulfillment_in_the_table
-    expect(page).to have_css(".row.fulfillment")
+    wait_for_ajax
+    expect(page).to have_css("#fulfillments-table tr[data-index='0']")
   end
 
   def then_i_should_see_the_correct_components
-    click_button "Fulfillment Components"
+    click_button "Display Components"
     expect(first('.dropdown-menu > li').text).to eq @components.first.component
     first('.dropdown-menu > li').click
     wait_for_ajax
@@ -136,9 +136,10 @@ feature 'Fulfillments', js: true do
   end
 
   def then_i_should_see_the_changes_in_the_notes
+    first("#fulfillments-table .available-actions-button").click
+    wait_for_ajax
     first('.notes.list[data-notable-type="Fulfillment"]').click
     wait_for_ajax
-    expect(page).to have_content "Account Number changed to Th15 15 A f4k3 NUMb3r"
     expect(page).to have_content "Quantity changed to 45"
   end
 end
