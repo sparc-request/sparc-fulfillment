@@ -20,7 +20,9 @@ class VisitGroup < ActiveRecord::Base
   validates :arm_id,
             :name,
             presence: true
-  validates :day, presence: true, numericality: true
+
+  validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
+  validates :day, numericality: true, if: "self.day.present?"
 
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)

@@ -68,6 +68,7 @@ end
 
 group :test do
   gem 'capybara-webkit'
+  gem 'climate_control'
   gem 'database_cleaner'
   gem 'launchy'
   gem 'rspec-activejob', '~> 0.4.0'
