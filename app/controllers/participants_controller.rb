@@ -15,7 +15,11 @@ class ParticipantsController < ApplicationController
   end
 
   def new
-    @participant = Participant.new(protocol_id: params[:protocol_id])
+    respond_to do |format|
+      format.js {
+        @participant = Participant.new(protocol_id: params[:protocol_id])
+      }
+    end
   end
 
   def show

@@ -13,11 +13,11 @@ $ ->
 
   $(document).on 'click', '.new-participant', ->
     data = 
-      'protocol_id' : $(this).attr('protocol_id')
-
+      'protocol_id' : $(this).data('protocol-id')
+ 
     $.ajax
       type: 'GET'
-      url: "/participants/new"
+      url: "/participants/new.js"
       data: data
 
   $(document).on 'click', '.remove-participant', ->
