@@ -5,7 +5,7 @@ class Document < ActiveRecord::Base
   belongs_to :documentable, polymorphic: true
 
   def path
-    [ENV.fetch('DOCUMENT_ROOT'), id].join('/')
+    [ENV.fetch('DOCUMENTS_FOLDER'), id].join('/')
   end
 
   def completed?

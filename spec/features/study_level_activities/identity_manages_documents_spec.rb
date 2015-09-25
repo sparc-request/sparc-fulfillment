@@ -5,7 +5,7 @@ feature 'Identity manages Doucuments', js: true do
   context 'User views line item documents' do
     scenario 'and sees the line item documents list' do
       given_i_am_viewing_the_study_level_activities_tab
-      when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
+      when_i_click_on_line_item_documents_icon
       then_i_should_see_the_line_item_documents_list
     end
   end
@@ -14,10 +14,10 @@ feature 'Identity manages Doucuments', js: true do
     scenario 'and sees the document' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_have_a_document_to_upload
-      when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
+      when_i_click_on_line_item_documents_icon
       when_i_click_on_the_add_document_button
       when_i_upload_a_document
-      when_i_click_on_documents_icon('.documents[data-documentable-type="LineItem"]')
+      when_i_click_on_line_item_documents_icon
       then_i_should_see_the_document
     end
   end
@@ -27,7 +27,7 @@ feature 'Identity manages Doucuments', js: true do
     scenario 'and sees the fulfillments documents list' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_open_up_a_fulfillment
-      when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
+      when_i_click_on_fulfillment_documents_icon
       then_i_should_see_the_fulfillment_documents_list
     end
   end
@@ -36,11 +36,11 @@ feature 'Identity manages Doucuments', js: true do
     scenario 'and sees the document' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_open_up_a_fulfillment
-      when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
+      when_i_click_on_fulfillment_documents_icon
       when_i_have_a_document_to_upload
       when_i_click_on_the_add_document_button
       when_i_upload_a_document
-      when_i_click_on_documents_icon('.documents[data-documentable-type="Fulfillment"]')
+      when_i_click_on_fulfillment_documents_icon
       then_i_should_see_the_document
     end
   end
@@ -52,8 +52,17 @@ feature 'Identity manages Doucuments', js: true do
     click_link "Study Level Activities"
   end
 
-  def when_i_click_on_documents_icon css_class
-    first(css_class).click
+  def when_i_click_on_fulfillment_documents_icon
+    first("#fulfillments-table .available-actions-button").click
+    wait_for_ajax
+    first('.documents[data-documentable-type="Fulfillment"]').click
+    wait_for_ajax
+  end
+
+  def when_i_click_on_line_item_documents_icon
+    first("#study-level-activities-table .available-actions-button").click
+    wait_for_ajax
+    first('.documents[data-documentable-type="LineItem"]').click
     wait_for_ajax
   end
 
@@ -63,6 +72,7 @@ feature 'Identity manages Doucuments', js: true do
 
   def when_i_open_up_a_fulfillment
     first('.otf_fulfillments.list').click
+    wait_for_ajax
   end
 
   def when_i_click_on_the_add_document_button

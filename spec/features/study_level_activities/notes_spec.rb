@@ -5,7 +5,7 @@ feature 'Notes', js: true do
   context 'User views line item notes' do
     scenario 'and sees the line item notes list' do
       given_i_am_viewing_the_study_level_activities_tab
-      when_i_click_on_notes_icon('.notes.list[data-notable-type="LineItem"]')
+      when_i_click_on_line_item_notes_icon
       then_i_should_see_the_line_item_notes_list
     end
   end
@@ -13,10 +13,10 @@ feature 'Notes', js: true do
   context 'User creates line item note' do
     scenario 'and sees the note in the line items notes list' do
       given_i_am_viewing_the_study_level_activities_tab
-      when_i_click_on_notes_icon('.notes.list[data-notable-type="LineItem"]')
+      when_i_click_on_line_item_notes_icon
       when_i_click_on_the_add_note_button
       when_i_fill_out_and_save_the_note
-      when_i_click_on_notes_icon('.notes.list[data-notable-type="LineItem"]')
+      when_i_click_on_line_item_notes_icon
       then_i_should_see_the_note
     end
   end
@@ -25,7 +25,7 @@ feature 'Notes', js: true do
     scenario 'and sees the fulfillments notes list' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_open_up_a_fulfillment
-      when_i_click_on_notes_icon('.notes.list[data-notable-type="Fulfillment"]')
+      when_i_click_on_fulfillment_notes_icon
       then_i_should_see_the_fulfillment_notes_list
     end
   end
@@ -34,10 +34,10 @@ feature 'Notes', js: true do
     scenario 'and sees the note in the fulfillments notes list' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_open_up_a_fulfillment
-      when_i_click_on_notes_icon('.notes.list[data-notable-type="Fulfillment"]')
+      when_i_click_on_fulfillment_notes_icon
       when_i_click_on_the_add_note_button
       when_i_fill_out_and_save_the_note
-      when_i_click_on_notes_icon('.notes.list[data-notable-type="Fulfillment"]')
+      when_i_click_on_fulfillment_notes_icon
       then_i_should_see_the_note
     end
   end
@@ -51,10 +51,20 @@ feature 'Notes', js: true do
 
   def when_i_open_up_a_fulfillment
     first('.otf_fulfillments.list').click
+    wait_for_ajax
+  end
+
+  def when_i_click_on_line_item_notes_icon
+    first("#study-level-activities-table .available-actions-button").click
+    wait_for_ajax
+    first('.notes.list[data-notable-type="LineItem"]').click
+    wait_for_ajax
   end
   
-  def when_i_click_on_notes_icon css_class
-    first(css_class).click
+  def when_i_click_on_fulfillment_notes_icon
+    first("#fulfillments-table .available-actions-button").click
+    wait_for_ajax
+    first('.notes.list[data-notable-type="Fulfillment"]').click
     wait_for_ajax
   end
   

@@ -141,8 +141,4 @@ $ ->
     $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
-
-  # go to cookie-saved tab on page load
-  current_tab = $.cookie("active-schedule-tab")
-  if current_tab && current_tab.length > 0
-    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
+    

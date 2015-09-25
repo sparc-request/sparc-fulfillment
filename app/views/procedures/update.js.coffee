@@ -4,34 +4,25 @@ $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', l
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 
-date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").
-  find(".completed_date_field").
-  datetimepicker(format: 'MM-DD-YYYY').
-  data("DateTimePicker")
+date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").find(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY').data("DateTimePicker")
 
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('billing-type', "<%= @procedure.billing_type %>").attr('data-billing-type', "<%= @procedure.billing_type %>")
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('group-id', "<%= @procedure.group_id %>").attr('data-group-id', "<%= @procedure.group_id %>")
 
 <% if @procedure.unstarted? || @procedure.follow_up? %>
-date_time_picker.
-  date(null).
-  disable()
-$(".procedure[data-id='<%= @procedure.id %>']").
-  find(".status label.active").removeClass("active")
+date_time_picker.date(null).disable()
+$(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
+$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "")
 
 <% elsif @procedure.incomplete? %>
-date_time_picker.
-  date(null).
-  disable()
+date_time_picker.date(null).disable()
 
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% elsif @procedure.complete? %>
-date_time_picker.
-  date("<%= format_date(@procedure.completed_date) %>").
-  enable()
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").
-  selectpicker('val', '<%= @procedure.performer_id %>')
+date_time_picker.date("<%= format_date(@procedure.completed_date) %>").enable()
+
+$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% end %>
 

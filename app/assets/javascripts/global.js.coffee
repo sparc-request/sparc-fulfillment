@@ -2,11 +2,11 @@ $ ->
   $('[data-toggle="tooltip"]').tooltip()
   $("input[placeholder='Search']").wrap("<div class='input-group search-bar'/>")
   $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))
+  $(".selectpicker").selectpicker()
 
-  window.update_tooltip = (object, string) ->
-    $(object).tooltip('hide')
-    $(object).attr('data-original-title', string)
-    $(object).tooltip('fixTitle')
+  $(document).on 'all.bs.table', 'table', ->
+    $(".selectpicker").selectpicker()
+    $('[data-toggle="tooltip"]').tooltip()
 
   $(document).on 'search.bs.table', "table", (event, input)->
     unless input == ''
@@ -73,8 +73,20 @@ $ ->
 (exports ? this).add_to_report_notification_count = (documentable_type, amount) ->
   switch documentable_type
     when 'Protocol'
+      if !$('.notification.protocol_report_notifications').length
+        $('<span class="notification protocol_report_notifications">0</span>').appendTo($('#protocol-reports-tab'))
       notification_bubble = $('.notification.protocol_report_notifications')
     when 'Identity'
+      if !$('.notification.identity_report_notifications').length
+        $('<span class="notification identity_report_notifications">0</span>').appendTo($('a.documents'))
       notification_bubble = $('.notification.identity_report_notifications')
   notification_count = parseInt(notification_bubble.text())
   notification_bubble.text(notification_count + amount) if (notification_count + amount) >= 0
+  notification_count = parseInt(notification_bubble.text())
+  if notification_count == 0
+    notification_bubble.remove();
+
+(exports ? this).update_tooltip = (object, string) ->
+  $(object).tooltip('hide')
+  $(object).attr('data-original-title', string)
+  $(object).tooltip('fixTitle')

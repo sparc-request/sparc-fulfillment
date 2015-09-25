@@ -4,9 +4,12 @@ require 'rails_helper'
 # documentable_type = 'Protocol'
 feature 'Identity creates a protocol-based Document', js: true, enqueue: false do
 
-  scenario 'and sees the reports counter increment' do
+  scenario 'and sees the reports counter increment from zero to 1 to 2' do
     given_i_have_created_a_protocol_based_document
     then_i_should_see_the_counter_increment
+    # request a second report
+    given_i_have_created_a_protocol_based_document
+    then_i_should_see_the_counter_increment_to_two
   end
 
   scenario 'and sees the report has been created in the reports tab' do
@@ -25,7 +28,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     given_i_have_created_a_protocol_based_document
     when_i_click_the_created_document_icon
     when_i_click_the_download_option
-    then_i_should_see_the_counter_decrement
+    then_i_should_see_the_counter_decrement_and_disappear
   end
 
   scenario 'and generates a new document' do
@@ -84,6 +87,10 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   def then_i_should_see_the_counter_increment
     expect(page).to have_css(".protocol_report_notifications", text: 1)
   end
+  
+  def then_i_should_see_the_counter_increment_to_two
+    expect(page).to have_css(".protocol_report_notifications", text: 2)
+  end
 
   def then_i_should_see_the_document
     expect(page).to have_css("a#file_#{@study_schedule_report_document_id}")
@@ -93,8 +100,8 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     expect(page).to have_selector("ul#document_menu_study_schedule_report_#{@protocol.id.to_s}", visible: true)
   end
 
-  def then_i_should_see_the_counter_decrement
-    expect(page).to have_css(".protocol_report_notifications", text: 0)
+  def then_i_should_see_the_counter_decrement_and_disappear
+    expect(page).to have_no_css(".protocol_report_notifications", text: 0)
   end
 
   def then_i_should_see_a_new_document_generate

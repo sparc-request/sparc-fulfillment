@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Identity downloads a document from the reports tab', js: true, enqueue: false do
 
-  scenario 'and sees the reports counter decrement' do
+  scenario 'and sees the reports counter decrement and disappear' do
     given_i_have_a_report_and_visit_the_reports_tab
     when_i_download_the_report
     then_i_should_see_the_reports_counter_at_zero
@@ -30,7 +30,7 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
 
   def then_i_should_see_the_reports_counter_at_zero
     wait_for_ajax
-    expect(page).to have_css(".protocol_report_notifications", text: 0)
+    expect(page).to have_no_css(".protocol_report_notifications", text: 0)
   end
 
   def then_i_should_see_the_downloaded_at_date_has_been_updated
