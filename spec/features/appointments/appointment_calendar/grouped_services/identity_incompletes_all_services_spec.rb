@@ -3,15 +3,15 @@ require 'rails_helper'
 feature 'Identity incompletes all Services', js: true do
 
   let!(:protocol)    { create_and_assign_protocol_to_me }
-  let!(:participant) { protocol.participants.first }
-  let!(:appointment) { participant.appointments.first }
+  let!(:participant) { Participant.first }
+  let!(:appointment) { Appointment.first }
   let!(:services)    { protocol.organization.inclusive_child_services(:per_participant) }
 
 
   context 'after visit has begun' do
     before :each do
       given_i_am_viewing_a_started_visit
-      when_i_add_some_ungrouped_procedures
+      i_add_some_ungrouped_procedures
       and_i_add_some_grouped_procedures
     end
 
@@ -55,7 +55,7 @@ feature 'Identity incompletes all Services', js: true do
     end
   end
 
-  def when_i_add_some_ungrouped_procedures
+  def i_add_some_ungrouped_procedures
     services[0..2].each do |service|
       add_a_procedure service, 1
     end

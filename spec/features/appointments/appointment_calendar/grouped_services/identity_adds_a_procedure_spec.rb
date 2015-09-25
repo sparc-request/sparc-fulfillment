@@ -3,8 +3,8 @@ require 'rails_helper'
 feature 'Identity adds a Procedure', js: true do
 
   let!(:protocol)     { create_and_assign_protocol_to_me }
-  let!(:participant)  { protocol.participants.first }
-  let!(:appointment)  { participant.appointments.first }
+  let!(:participant)  { Participant.first }
+  let!(:appointment)  { Appointment.first }
   let!(:services)     { protocol.organization.inclusive_child_services(:per_participant) }
 
   scenario 'and sees the procedure in the correct Core' do
