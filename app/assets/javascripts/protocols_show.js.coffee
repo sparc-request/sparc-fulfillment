@@ -24,7 +24,7 @@ $ ->
       update_view_on_download_new_report $(this), 'table.protocol_reports', 'Protocol'
 
     $(document).on 'click', 'a.remove-document', ->
-      document_id = $(this).attr('document_id')
+      document_id = $(this).data('document_id')
       del = confirm "Are you sure you want to delete this document?"
       if del
         if $(this).parent().siblings("td.viewed_at").text() == ""

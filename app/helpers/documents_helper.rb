@@ -20,7 +20,7 @@ module DocumentsHelper
 
   def edit_formatter document
     [
-      "<a class='edit edit-document ml10' href='javascript:void(0)' title='Edit' document_id='#{document.id}'>",
+      "<a class='edit edit-document ml10' href='javascript:void(0)' title='Edit' data-document_id='#{document.id}'>",
       "<i class='glyphicon glyphicon-edit'></i>",
       "</a>"
     ].join ""
@@ -29,7 +29,7 @@ module DocumentsHelper
   def delete_formatter document
     if document.completed?
     [
-      "<a class='remove remove-document' href='javascript:void(0)' title='Remove' document_id='#{document.id}'>",
+      "<a class='remove remove-document' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}'>",
       "<i class='glyphicon glyphicon-remove'></i>",
       "</a>"
     ].join ""
