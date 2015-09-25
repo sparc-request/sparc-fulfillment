@@ -32,5 +32,5 @@ $ ->
 
         $.ajax
           type: 'DELETE'
-          url: "/documents/#{document_id}"
+          url: "/documents/#{document_id}.js"
         $('table.protocol_reports').bootstrapTable('refresh', {silent: "true"})

@@ -3,7 +3,7 @@ $ ->
       document_id = $(this).data('document_id')
       $.ajax
         type: 'GET'
-        url: "/documents/#{document_id}/edit"
+        url: "/documents/#{document_id}/edit.js"
 
 
   if $("body.documents-index").length > 0
@@ -27,7 +27,7 @@ $ ->
           add_to_report_notification_count('Identity', -1)
         $.ajax
           type: 'DELETE'
-          url: "/documents/#{document_id}"
+          url: "/documents/#{document_id}.js"
 
 (exports ? this).update_view_on_download_new_report = (element, table_to_update, documentable_type) ->
   row_index = element.parents().eq(1).attr("data-index")

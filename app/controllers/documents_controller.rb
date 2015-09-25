@@ -59,7 +59,11 @@ class DocumentsController < ApplicationController
   end
 
   def edit
-    @document = Document.find(params[:id])
+    respond_to do |format|
+      format.js {
+        @document = Document.find(params[:id])
+      }
+    end
   end
 
   def update
@@ -75,11 +79,15 @@ class DocumentsController < ApplicationController
   end
 
   def destroy
-    @document.destroy
-    
-    mark_document_as_accessed
+    respond_to do |format|
+      format.js {
+        @document.destroy
+        
+        mark_document_as_accessed
 
-    flash[:alert] = t(:documents)[:flash_messages][:removed]
+        flash[:alert] = t(:documents)[:flash_messages][:removed]
+      }
+    end
   end
 
   private
