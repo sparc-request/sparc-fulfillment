@@ -32,6 +32,7 @@ class Appointment < ActiveRecord::Base
   # Can appointment be finished? It must have a start date, and
   # all its procedures must either be complete, incomplete, or
   # have a follow up date assigned to it.
+
   def started?
     start_date.present?
   end

@@ -1,13 +1,13 @@
 .core{ data: { core: { id: core_id } } }
   .panel.panel-default
     .panel-heading
-      .btn-group.pull-right
-        .btn-group
-          = select_tag 'core_multiselect', nil, class: "core_multiselect #{disabled_class(!appointment.started?)}", style: 'display: inline-block', multiple: true
-          %button.btn.btn-default.btn-primary.multiselect.complete_all{ type: 'button', id: "core_#{core_id}_multiselect_complete_all", class: disabled_class(!appointment.started?) } Complete Selected
-          %button.btn.btn-default.btn-warning.multiselect.incomplete_all{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete Selected
-      %h3
+      %h3.panel-title
         = procedures.first.sparc_core_name  
+      .row
+        .btn-group.align-select-menu
+          = select_tag 'core_multiselect', nil, class: "core_multiselect #{disabled_class(!appointment.started?)}", style: 'display: inline-block', multiple: true
+          %button.btn.btn-default.btn-primary.multiselect.complete_all.disabled{ type: 'button', id: "core_#{core_id}_multiselect_complete_all", class: disabled_class(!appointment.started?) } Complete
+          %button.btn.btn-default.btn-warning.multiselect.incomplete_all.disabled{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete
     .panel-body
       %table.table.table-bordered.procedures
         %thead

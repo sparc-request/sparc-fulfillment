@@ -93,6 +93,8 @@ GEM
     capybara-webkit (1.7.0)
       capybara (>= 2.3.0, < 2.6.0)
       json
+    climate_control (0.0.3)
+      activesupport (>= 3.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     coffee-rails (4.0.1)
@@ -413,6 +415,7 @@ DEPENDENCIES
   capistrano-rvm
   capistrano3-delayed-job (~> 1.0)
   capybara-webkit
+  climate_control
   coffee-rails (~> 4.0.0)
   daemons
   database_cleaner
