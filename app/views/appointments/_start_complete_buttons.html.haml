@@ -16,6 +16,9 @@
       .form-group
         %label.col-xs-1.control-label#completed-date-label{for: 'completed_date'}= t(:appointment)[:completed_date]
         .col-xs-6= text_field_tag 'completed_date', '', class: 'form-control'
+        .col-xs-1#remove_completed_date_button
+          %button.btn.btn-danger.uncomplete_visit{type: "button"}
+            %span.glyphicon.glyphicon-remove
 
   .completed_date_btn{class: [hidden_class(!appointment.completed_date.blank?), contains_disabled_class(!appointment.can_finish?)].join(' ')}
     %button.btn.btn-danger.complete_visit{class: disabled_class(!appointment.can_finish?) }= t(:appointment)[:complete_visit]

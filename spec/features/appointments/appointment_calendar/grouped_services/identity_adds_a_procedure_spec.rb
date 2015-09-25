@@ -3,8 +3,8 @@ require 'rails_helper'
 feature 'Identity adds a Procedure', js: true do
 
   let!(:protocol)     { create_and_assign_protocol_to_me }
-  let!(:participant)  { Participant.first }
-  let!(:appointment)  { Appointment.first }
+  let!(:participant)  { protocol.participants.first }
+  let!(:appointment)  { participant.appointments.first }
   let!(:services)     { protocol.organization.inclusive_child_services(:per_participant) }
 
   scenario 'and sees the procedure in the correct Core' do
@@ -17,6 +17,27 @@ feature 'Identity adds a Procedure', js: true do
     given_i_am_viewing_a_started_visit
     when_i_add_a_procedure
     then_i_should_see_the_multiselect_instantiated_with_2_options
+  end
+
+  scenario 'and sees that the Complete and Incomplete buttons on the multiselect are disabled when no Services have been selected' do
+    given_i_am_viewing_a_started_visit
+    when_i_add_a_procedure
+    then_i_should_see_a_disabled_complete_and_incomplete_button
+  end
+
+  scenario 'and sees that the Complete and Incomplete buttons on the multiselect are enabled when a Service has been selected' do
+    given_i_am_viewing_a_started_visit
+    when_i_add_a_procedure
+    and_select_a_procedure_from_multiselect
+    then_i_should_see_a_enabled_complete_and_incomplete_button
+  end
+
+  scenario 'and sees that the Complete and Incomplete buttons on the multiselect are enabled when all Services have been selected' do
+    given_i_am_viewing_a_started_visit
+    when_i_add_a_procedure
+    when_i_add_a_different_procedure
+    and_select_all_procedures_from_multiselect
+    then_i_should_see_a_enabled_complete_and_incomplete_button
   end
 
   scenario 'which is part of an existing group and sees the Procedure in a group' do
@@ -66,6 +87,24 @@ feature 'Identity adds a Procedure', js: true do
     group_id = Procedure.first.group_id
 
     expect(page).to have_css("tr.procedure-group[data-group-id='#{group_id}'] span.count", text: '3')
+  end
+
+  def then_i_should_see_a_disabled_complete_and_incomplete_button
+    expect(page).to have_css("button.complete_all.disabled")
+    expect(page).to have_css("button.incomplete_all.disabled")
+  end
+
+  def and_select_a_procedure_from_multiselect
+    bootstrap_multiselect '#core_multiselect', [services.first.name]
+  end
+
+  def and_select_all_procedures_from_multiselect
+    bootstrap_multiselect '#core_multiselect'
+  end
+
+  def then_i_should_see_a_enabled_complete_and_incomplete_button
+    expect(page).to_not have_css("button.complete_all.disabled")
+    expect(page).to_not have_css("button.incomplete_all.disabled")
   end
 
   def then_i_should_not_see_the_procedure_in_the_group

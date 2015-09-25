@@ -19,6 +19,7 @@ feature "Task notifications", js: true do
     when_i_visit_the_home_page
     when_i_click_on_the_task_notification
     then_i_should_be_on_the_tasks_page
+    then_i_should_see_that_i_have_no_tasks
   end
 
   def given_i_have_no_tasks
@@ -46,7 +47,7 @@ feature "Task notifications", js: true do
   end
 
   def then_i_should_see_that_i_have_no_tasks
-    expect(page).to have_css(".notification.task-notifications", text: "0")
+    expect(page).to have_no_css(".notification.task-notifications", text: "0")
   end
 
   def then_i_should_see_that_i_have_one_task
