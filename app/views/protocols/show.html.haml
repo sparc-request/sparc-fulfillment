@@ -10,10 +10,11 @@
         = link_to t(:protocol)[:tabs][:participant_tracker], "#participant_tracker", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'participant_tracker'}
     %li.custom-tab.protocol-tab{role: 'presentation', class: @services_present ? 'inactive' : 'active'}
       = link_to t(:protocol)[:tabs][:study_level_activities], "#study_level_activities", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_level_activities'}
-    %li.custom-tab.protocol-tab{role: 'presentation'}
+    %li.custom-tab.protocol-tab{role: 'presentation', :id => "protocol-reports-tab"}
       = link_to t(:protocol)[:tabs][:reports], "#reports", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'reports'}
-      %span.notification.protocol_report_notifications
-        = @protocol.unaccessed_documents_count
+      - if @protocol.unaccessed_documents_count > 0
+        %span.notification.protocol_report_notifications
+          = @protocol.unaccessed_documents_count
         
   .tab-content
     - if @services_present
