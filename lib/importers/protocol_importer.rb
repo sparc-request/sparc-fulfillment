@@ -2,6 +2,7 @@ class ProtocolImporter
 
   def initialize(callback_url)
     @callback_url = callback_url
+    @logger = Logger.new(File.join(Rails.root, 'log', "protocol_importer-#{Rails.env}.log"))
   end
 
   def create
@@ -18,13 +19,12 @@ class ProtocolImporter
     fulfillment_protocol = nil # need this to return at the end
 
     ActiveRecord::Base.transaction do
-
+      @logger.info "ActiveRecord transaction started for sparc_sub_service_request: #{sparc_sub_service_request.inspect}" 
       # protocol creation
       attr = normalized_attributes('Protocol', sparc_protocol).merge!({sparc_id: sparc_protocol.id,
                                                                        study_cost: grand_total,
                                                                        stored_percent_subsidy: stored_percent_subsidy,
                                                                        sub_service_request_id: sparc_sub_service_request.id})
-
       fulfillment_protocol = validate_and_save(Protocol.new(attr))
       # end protocol creation
 
@@ -43,8 +43,8 @@ class ProtocolImporter
             # visit_group creation
             attr = normalized_attributes('VisitGroup', sparc_visit_group).merge!({sparc_id: sparc_visit_group.id,
                                                                                   arm_id: fulfillment_arm.id})
-            fulfillment_visit_group = validate_and_save(VisitGroup.new(attr))
             
+            fulfillment_visit_group = validate_and_save(VisitGroup.new(attr))
             #comment out above and use below if you don't want to validate visit group attributes, useful for initial bulk import
             #fulfillment_visit_group = VisitGroup.new(attr)
             #fulfillment_visit_group.save(validate: false)
@@ -89,13 +89,14 @@ class ProtocolImporter
                                                                           quantity_requested: sparc_line_item_quantity_requested,
                                                                           quantity_type: sparc_line_item.service.current_effective_pricing_map.quantity_type})
         fulfillment_line_item = validate_and_save(LineItem.new(attr))
+        
       end
       # end one_time_fee line_item creation
 
       # update views via Faye
       FayeJob.perform_later fulfillment_protocol
       # end Faye
-
+      @logger.info "ActiveRecord transaction completed for sparc_sub_service_request: #{sparc_sub_service_request.inspect}" 
     end # end Active Record Transaction
 
     PaperTrail.enabled = true
@@ -114,9 +115,9 @@ class ProtocolImporter
     if object.valid?
       object.save
     else
-      puts "#"*50
-      puts "Invalid object #{object.errors.inspect}"
-      puts "#"*50
+      @logger.info "#"*50
+      @logger.info "Invalid object #{object.errors.inspect}"
+      @logger.info "#"*50
       raise ActiveRecord::Rollback 
     end
 

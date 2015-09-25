@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Identity downloads a document from the documents page', js: true, enqueue: false do
 
-  scenario 'and sees the documents counter decrement' do
+  scenario 'and sees the documents counter decrement and disappear' do
     given_i_have_created_an_identity_based_report   
     when_i_download_the_report 
     then_i_should_see_the_documents_counter_decrement
@@ -54,7 +54,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
   end
 
   def then_i_should_see_the_documents_counter_decrement
-    expect(page).to have_css(".identity_report_notifications", text: 0)
+    expect(page).to have_no_css(".identity_report_notifications", text: 0)
   end
 
   def then_i_should_see_the_downloaded_at_date_has_been_updated

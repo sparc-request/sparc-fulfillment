@@ -3,8 +3,8 @@ require 'rails_helper'
 feature 'Identity changes a Service', js: true do
 
   let!(:protocol)     { create_and_assign_protocol_to_me }
-  let!(:participant)  { Participant.first }
-  let!(:appointment)  { Appointment.first }
+  let!(:participant)  { protocol.participants.first }
+  let!(:appointment)  { participant.appointments.first }
   let!(:services)     { protocol.organization.inclusive_child_services(:per_participant) }
 
   scenario 'and sees it join an existing group' do
