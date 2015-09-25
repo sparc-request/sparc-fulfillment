@@ -9,6 +9,7 @@ feature 'Identity views nav bar', js: true do
   end
 
   scenario 'after returning to the Protocol page from the Participant Tracker page' do
+    given_i_am_viewing_a_protocol
     given_i_am_on_the_participant_page
     when_i_click_the_browser_back_button
     then_i_should_see_the_participant_tracker_tab_is_active
@@ -35,13 +36,13 @@ feature 'Identity views nav bar', js: true do
   end
 
   def given_i_am_viewing_a_protocol
-    protocol = create_and_assign_protocol_to_me
+    @protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.id)
+    visit protocol_path(@protocol.id)
+    wait_for_ajax
   end
 
   def given_i_am_on_the_participant_page
-    given_i_am_viewing_a_protocol
     click_link 'Participant Tracker'
     page.find('table.participants tbody tr:first-child td.calendar a').click
   end
@@ -55,7 +56,7 @@ feature 'Identity views nav bar', js: true do
   end
 
   def when_i_click_the_browser_back_button
-    click_browser_back_button
+    visit protocol_path(@protocol.id)
   end
 
   def when_i_view_the_first_protocol_participant_tracker
@@ -92,7 +93,7 @@ feature 'Identity views nav bar', js: true do
   def then_i_should_see_the_participant_tracker_tab_is_active
     expect(page.body).to have_css('.tab-pane.active#participant_tracker')
   end
-  
+
   def then_the_study_schedule_tab_should_be_active
     expect(page.body).to have_css('.tab-pane.active#study_schedule')
   end
