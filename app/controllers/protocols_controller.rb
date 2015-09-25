@@ -2,6 +2,7 @@ class ProtocolsController < ApplicationController
 
   before_action :find_protocol, only: [:show]
   before_action :authorize_protocol, only: [:show]
+  before_action :get_current_tab, only: [:show]
 
   respond_to :json, :html
 
@@ -21,6 +22,7 @@ class ProtocolsController < ApplicationController
   end
 
   def show
+    @current_tab = get_current_tab
     @services = @protocol.organization.inclusive_child_services(:per_participant)
     @services_present = @services.present?
 
@@ -36,5 +38,9 @@ class ProtocolsController < ApplicationController
       flash[:alert] = t(:protocol)[:flash_messages][:not_found]
       redirect_to root_path
     end
+  end
+
+  def get_current_tab
+    cookies['active-protocol-tab'.to_sym] ? cookies['active-protocol-tab'.to_sym] : nil
   end
 end
