@@ -5,7 +5,7 @@ $ ->
   $(document).on 'click', '.new-task', ->
     $.ajax
       type: 'GET'
-      url: "/tasks/new"
+      url: "/tasks/new.js"
 
   $(document).on 'click', 'table.tasks tbody td:not(td.complete, td.reschedule)', ->
     row_id  = $(this).parents("tr").attr("data-index")
