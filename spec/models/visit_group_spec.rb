@@ -8,10 +8,25 @@ RSpec.describe VisitGroup, type: :model do
   it { is_expected.to have_many(:appointments) }
 
   context 'validations' do
-    it { is_expected.to validate_presence_of(:arm_id) }
-    it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_presence_of(:day) }
-    it { is_expected.to validate_numericality_of(:day) }
+    it { is_expected.to validate_presence_of :arm_id }
+    it { is_expected.to validate_presence_of :name }
+  end
+
+  context 'if use epic:' do
+    it "set use_epic to true " do
+      ClimateControl.modify USE_EPIC: 'true' do
+        is_expected.to validate_presence_of :day
+        is_expected.to validate_numericality_of :day
+      end
+    end
+  end
+
+  context 'if not use epic:' do
+    it "sets USE_EPIC to false" do
+      ClimateControl.modify USE_EPIC: 'false' do
+        is_expected.not_to validate_presence_of :day
+      end
+    end
   end
 
   context 'class methods' do
