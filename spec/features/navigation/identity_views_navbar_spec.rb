@@ -44,7 +44,9 @@ feature 'Identity views nav bar', js: true do
 
   def given_i_am_on_the_participant_page
     click_link 'Participant Tracker'
+    wait_for_ajax
     page.find('table.participants tbody tr:first-child td.calendar a').click
+    wait_for_ajax
   end
 
   def given_there_are_two_protocols
@@ -53,37 +55,45 @@ feature 'Identity views nav bar', js: true do
 
   def when_i_click_the_home_button
     click_link 'Home'
+    wait_for_ajax
   end
 
   def when_i_click_the_browser_back_button
     visit protocol_path(@protocol.id)
+    wait_for_ajax
   end
 
   def when_i_view_the_first_protocol_participant_tracker
     protocol = Protocol.first
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def when_i_visit_the_home_page
     visit root_path
+    wait_for_ajax
   end
 
   def when_i_view_the_second_protocol
     protocol = Protocol.second
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
   end
 
   def when_i_sign_out
     accept_confirm do
       click_link 'sign-out-link'
     end
+    wait_for_ajax
   end
 
   def when_i_click_the_all_reports_link
     click_link 'All Reports'
+    wait_for_ajax
   end
 
   def then_i_should_be_on_the_home_page

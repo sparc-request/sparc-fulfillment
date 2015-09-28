@@ -40,7 +40,7 @@ feature 'Line Items', js: true do
       when_i_click_on_the_delete_line_item_button
       then_i_should_see_a_flash_message
     end
-    
+
     scenario 'and sees the line item' do
       given_i_am_viewing_the_study_level_activities_tab_with_fulfillments
       when_i_click_on_the_delete_line_item_button
@@ -71,8 +71,10 @@ feature 'Line Items', js: true do
     @fulfillment   = create(:fulfillment, line_item: @line_item_with_fulfillment)
 
     visit protocol_path(@protocol.id)
+    wait_for_ajax
 
     click_link 'Study Level Activities'
+    wait_for_ajax
   end
 
   def given_i_am_viewing_the_study_level_activities_tab_without_fulfillments
@@ -82,31 +84,34 @@ feature 'Line Items', js: true do
     @line_item_without_fulfillment = create(:line_item, service: @service2, protocol: @protocol)
 
     visit protocol_path(@protocol.id)
+    wait_for_ajax
 
     click_link 'Study Level Activities'
+    wait_for_ajax
   end
 
   def when_i_click_on_the_add_line_item_button
     first('.otf_service_new').click
+    wait_for_ajax
   end
 
   def when_i_click_on_the_delete_line_item_button
     first("#study-level-activities-table .available-actions-button").click
     wait_for_ajax
     find(".otf_delete").click
+    wait_for_ajax
   end
 
   def when_i_fill_in_new_line_item_form
-    wait_for_ajax
     bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
     fill_in 'Quantity', with: 50
     page.execute_script %Q{ $('#date_started_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     click_button 'Save Study Level Activity'
+    wait_for_ajax
   end
 
   def when_i_fill_in_the_edit_line_item_form
-    wait_for_ajax
     bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
     click_button 'Save Study Level Activity'
     wait_for_ajax
@@ -117,7 +122,7 @@ feature 'Line Items', js: true do
   end
 
   def then_i_should_not_see_the_line_item
-    expect(page).to have_content("#{@service2.name}") #without fulfillments
+    expect(page).to_not have_content("#{@service2.name}") #without fulfillments
   end
 
   def then_i_should_still_see_the_line_item
@@ -132,10 +137,10 @@ feature 'Line Items', js: true do
     first("#study-level-activities-table .available-actions-button").click
     wait_for_ajax
     find(".otf_edit").click
+    wait_for_ajax
   end
 
   def then_i_should_see_the_changes_on_the_page
-    wait_for_ajax
     expect(page).to have_content('Admiral Tuskface')
   end
 

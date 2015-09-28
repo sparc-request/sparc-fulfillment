@@ -24,6 +24,7 @@ feature "Identity views protocol", js: true do
 
   def when_i_visit_the_protocol_page
     visit protocol_path(@protocol.id)
+    wait_for_ajax
   end
 
   def then_i_should_see_a_correctly_formatted_irb_expiration_date
