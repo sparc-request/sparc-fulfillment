@@ -7,7 +7,6 @@ module ApplicationHelper
       when 'index'
         ['All', h[:controller].humanize].join(' ')
       when 'show'
-        puts "hellow worlD"
         klass = h[:controller].classify.constantize
         klass.title h[:id]
       end
