@@ -105,6 +105,6 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def then_i_should_see_the_title_has_been_updated
-    expect(page).to have_css('table.documents tbody tr td', text: "A custom title")
+    expect(page).to have_css('table tbody tr td', text: "A custom title")
   end
 end

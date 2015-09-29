@@ -16,7 +16,6 @@ feature 'Identity edits document title', js: true, enqueue: false do
         given_i_am_viewing_the_all_reports_page
         when_i_create_an_identity_based_document
         when_i_click_the_delete_icon
-        when_i_accept_the_alert
         then_i_should_not_see_the_document
       end
 
@@ -24,8 +23,8 @@ feature 'Identity edits document title', js: true, enqueue: false do
         scenario "and sees the documents counter decrement" do
           given_i_am_viewing_the_all_reports_page
           when_i_create_an_identity_based_document
+          when_i_create_an_identity_based_document
           when_i_click_the_delete_icon
-          when_i_accept_the_alert
           then_i_should_see_the_identity_docs_counter_was_decremented
         end
       end
@@ -44,16 +43,17 @@ feature 'Identity edits document title', js: true, enqueue: false do
         given_i_am_viewing_the_reports_tab
         when_i_create_a_protocol_based_document
         when_i_click_the_delete_icon
-        when_i_accept_the_alert
         then_i_should_not_see_the_document
       end
 
       context "which has not been accessed" do
         scenario "and sees the documents counter decrement" do
-          given_i_am_viewing_the_all_reports_page
-          when_i_create_an_identity_based_document
+          given_i_am_viewing_the_reports_tab
+          when_i_create_a_protocol_based_document
+          when_i_create_a_protocol_based_document
+          screenshot
           when_i_click_the_delete_icon
-          when_i_accept_the_alert
+          screenshot
           then_i_should_see_the_protocol_docs_counter_was_decremented
         end
       end
@@ -66,6 +66,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
     create(:participant, protocol: @protocol)
 
     visit documents_path
+    wait_for_ajax
   end
 
   def given_i_am_viewing_the_reports_tab
@@ -109,7 +110,8 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def when_i_create_a_protocol_based_document
-    find("a#study_schedule_report_#{@protocol.id.to_s}").click
+    create(:document_of_protocol_report, documentable_id: @protocol.id)
+    visit protocol_path @protocol
     wait_for_ajax
   end
 
@@ -127,13 +129,6 @@ feature 'Identity edits document title', js: true, enqueue: false do
     wait_for_ajax
   end
 
-  def when_i_accept_the_alert
-    page.accept_alert do
-      click_button('OK')
-    end
-    wait_for_ajax
-  end
-
   def then_i_should_see_the_delete_icon_is_greyed_out
     expect(page).to have_css("i.glyphicon-remove[style='cursor:default']")
   end
@@ -143,10 +138,10 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def then_i_should_see_the_identity_docs_counter_was_decremented
-    expect(page).to have_css(".identity_report_notifications", text: 0)
+    expect(page).to have_css(".identity_report_notifications", text: 1)
   end
 
   def then_i_should_see_the_protocol_docs_counter_was_decremented
-    expect(page).to have_css(".protocol_report_notifications", text: 0)
+    expect(page).to have_css(".protocol_report_notifications", text: 1)
   end
 end
