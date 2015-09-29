@@ -4,7 +4,7 @@ FactoryGirl.define do
     protocol nil
     sparc_id
     sequence(:name) { Faker::App.name }
-    visit_count { rand(3..15) }
+    visit_count 5
     subject_count 5
 
     trait :with_singe_line_item do
@@ -25,7 +25,7 @@ FactoryGirl.define do
 
     trait :with_line_items do
       after(:create) do |arm, evaluator|
-        x = rand(11)+2
+        x = 3
         x.times do
           create(:line_item_with_fulfillments, protocol: arm.protocol, service: create(:service_with_one_time_fee)) # one time fee
           create(:line_item, protocol: arm.protocol, arm: arm, service: create(:service)) # pppv

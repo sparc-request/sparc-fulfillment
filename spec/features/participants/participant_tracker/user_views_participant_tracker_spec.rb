@@ -20,7 +20,7 @@ feature 'User views Participant Tracker', js: true do
   end
 
   def given_i_am_viewing_the_participant_tracker
-    protocol    = create_and_assign_protocol_to_me
+    protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
     click_link 'Participant Tracker'

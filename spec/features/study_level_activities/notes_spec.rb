@@ -46,7 +46,9 @@ feature 'Notes', js: true do
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
     click_link "Study Level Activities"
+    wait_for_ajax
   end
 
   def when_i_open_up_a_fulfillment
@@ -60,23 +62,24 @@ feature 'Notes', js: true do
     first('.notes.list[data-notable-type="LineItem"]').click
     wait_for_ajax
   end
-  
+
   def when_i_click_on_fulfillment_notes_icon
     first("#fulfillments-table .available-actions-button").click
     wait_for_ajax
     first('.notes.list[data-notable-type="Fulfillment"]').click
     wait_for_ajax
   end
-  
+
   def when_i_click_on_the_add_note_button
     find('.note.new').click
+    wait_for_ajax
   end
 
   def when_i_fill_out_and_save_the_note
-    wait_for_ajax
     fill_in 'note_comment', with: "Test Comment"
     wait_for_ajax
     click_button 'Save'
+    wait_for_ajax
   end
 
   def then_i_should_see_the_line_item_notes_list
