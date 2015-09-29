@@ -26,7 +26,7 @@ feature "create Task", js: true do
 
   def given_i_am_viewing_the_tasks_page
     visit tasks_path
-    visit tasks_path
+    wait_for_ajax
   end
 
   def when_i_create_a_task_assigned_to_myself
@@ -36,6 +36,7 @@ feature "create Task", js: true do
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
     click_button 'Save'
+    wait_for_ajax
   end
 
   def when_i_create_a_task_assigned_to_another_identity
@@ -45,17 +46,19 @@ feature "create Task", js: true do
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
     click_button 'Save'
+    wait_for_ajax
   end
 
   def when_i_click_on_the_all_tasks_button
     find('#all_tasks').click
+    wait_for_ajax
   end
-  
+
   def then_i_should_see_the_task_is_assigned_to_me
     expect(page).to have_css("table.tasks tbody tr", count: 1)
     expect(page).to have_css(".notification.task-notifications", text: 1)
   end
-  
+
   def then_i_should_see_two_tasks_are_assigned_to_me
     expect(page).to have_css("table.tasks tbody tr", count: 2)
     expect(page).to have_css(".notification.task-notifications", text: 2)

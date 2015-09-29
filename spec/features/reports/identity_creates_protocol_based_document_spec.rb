@@ -8,7 +8,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     given_i_have_created_a_protocol_based_document
     then_i_should_see_the_counter_increment
     # request a second report
-    given_i_have_created_a_protocol_based_document
+    given_i_have_created_a_second_protocol_based_document
     then_i_should_see_the_counter_increment_to_two
   end
 
@@ -43,7 +43,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     given_i_have_created_a_protocol_based_document
     when_i_visit_the_reports_tab
     when_i_edit_the_document_title
-    then_i_should_see_the_documents_title_update  
+    then_i_should_see_the_documents_title_update
   end
 
   def given_i_have_created_a_protocol_based_document
@@ -52,6 +52,17 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     @participant = @protocol.participants.first
 
     visit protocol_path @protocol
+    wait_for_ajax
+
+    find("a#study_schedule_report_#{@protocol.id.to_s}").click
+    wait_for_ajax
+
+    @study_schedule_report_document_id = find("a#study_schedule_report_#{@protocol.id.to_s}")["document_id"]
+  end
+
+  def given_i_have_created_a_second_protocol_based_document
+    visit protocol_path @protocol
+    wait_for_ajax
 
     find("a#study_schedule_report_#{@protocol.id.to_s}").click
     wait_for_ajax
@@ -61,33 +72,38 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
 
   def when_i_visit_the_reports_tab
     click_link 'Reports'
+    wait_for_ajax
   end
 
   def when_i_click_the_created_document_icon
     find("a#study_schedule_report_#{@protocol.id.to_s}").trigger('click')
+    wait_for_ajax
   end
 
   def when_i_click_the_download_option
     find("ul#document_menu_study_schedule_report_#{@protocol.id.to_s} li a[title='Download Report']").click
+    wait_for_ajax
   end
 
   def when_i_click_the_generate_new_option
     find("ul#document_menu_study_schedule_report_#{@protocol.id.to_s} li a[title='Generate New Report']").click
+    wait_for_ajax
   end
 
   def when_i_edit_the_document_title
     find("a.edit-document").click
+    wait_for_ajax
 
     fill_in "Title", with: "Test Title"
 
     find("button[type='submit']").click
     wait_for_ajax
   end
-    
+
   def then_i_should_see_the_counter_increment
     expect(page).to have_css(".protocol_report_notifications", text: 1)
   end
-  
+
   def then_i_should_see_the_counter_increment_to_two
     expect(page).to have_css(".protocol_report_notifications", text: 2)
   end
@@ -108,16 +124,18 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     expect(page).to have_css(".protocol_report_notifications", text: 2)
 
     click_link 'Reports'
+    wait_for_ajax
 
     then_i_should_see_the_document
   end
 
-  def then_i_should_see_the_documents_title_update  
+  def then_i_should_see_the_documents_title_update
     expect(page).to have_css("td.title", text: "Test Title")
   end
 
   def and_i_should_be_able_to_interact_with_the_new_report
     click_link 'Participant Tracker'
+    wait_for_ajax
 
     when_i_click_the_created_document_icon
     when_i_click_the_download_option
