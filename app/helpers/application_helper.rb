@@ -9,6 +9,8 @@ module ApplicationHelper
       when 'show'
         klass = h[:controller].classify.constantize
         klass.title h[:id]
+      else
+        url
       end
     rescue Exception => e
       puts "#"*20
