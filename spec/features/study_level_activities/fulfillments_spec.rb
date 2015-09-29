@@ -84,7 +84,9 @@ feature 'Fulfillments', js: true do
 
   def given_i_am_viewing_the_study_level_activities_tab
     visit protocol_path(@protocol.id)
+    wait_for_ajax
     click_link "Study Level Activities"
+    wait_for_ajax
   end
 
   def when_i_open_up_a_fulfillment
@@ -101,6 +103,7 @@ feature 'Fulfillments', js: true do
     first("#fulfillments-table .available-actions-button").click
     wait_for_ajax
     find(".otf_fulfillment_edit").click
+    wait_for_ajax
   end
 
   def when_i_fill_out_the_fulfillment_form
@@ -110,6 +113,7 @@ feature 'Fulfillments', js: true do
     bootstrap_select '#fulfillment_performer_id', @clinical_providers.first.identity.full_name
     bootstrap_select '#fulfillment_components', @components.first.component
     find('.modal-header').click
+    wait_for_ajax
   end
 
   def when_i_save_the_fulfillment_form
@@ -118,12 +122,12 @@ feature 'Fulfillments', js: true do
   end
 
   def then_i_should_see_the_new_fulfillment_in_the_table
-    wait_for_ajax
     expect(page).to have_css("#fulfillments-table tr[data-index='0']")
   end
 
   def then_i_should_see_the_correct_components
     click_button "Display Components"
+    wait_for_ajax
     expect(first('.dropdown-menu > li').text).to eq @components.first.component
     first('.dropdown-menu > li').click
     wait_for_ajax

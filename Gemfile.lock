@@ -90,7 +90,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-webkit (1.7.0)
+    capybara-webkit (1.7.1)
       capybara (>= 2.3.0, < 2.6.0)
       json
     climate_control (0.0.3)
@@ -218,7 +218,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
-    mime-types (2.6.1)
+    mime-types (2.6.2)
     mini_portile (0.6.2)
     minitest (5.7.0)
     momentjs-rails (2.10.2)
