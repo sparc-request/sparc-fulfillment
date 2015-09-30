@@ -73,26 +73,4 @@ module ProtocolHelper
 
     line_items
   end
-
-  def current_tab? current_tab, tab_name, services_present = true
-    unless current_tab.nil?
-      if current_tab == tab_name
-        "active"
-      else
-        ""
-      end
-    else
-      case tab_name
-        when "study_schedule"
-          puts "*" * 50
-          puts current_tab
-          puts services_present
-          services_present == true ? "active" : ""
-        when "study_level_activities"
-          services_present == true ? "" : "active"
-        else
-          ""
-      end
-    end
-  end
 end
