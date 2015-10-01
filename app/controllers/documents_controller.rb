@@ -80,10 +80,9 @@ class DocumentsController < ApplicationController
 
   def destroy
     respond_to do |format|
-      format.js {
+      format.js {        
+        mark_document_as_accessed if @document.last_accessed_at.nil?
         @document.destroy
-        
-        mark_document_as_accessed
 
         flash[:alert] = t(:documents)[:flash_messages][:removed]
       }
