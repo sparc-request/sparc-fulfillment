@@ -40,14 +40,6 @@ feature 'Identity creates a document from the documents page', js: true do
     end
   end
 
-  context 'with a custom title' do
-    scenario 'and sees the report with a custom title' do
-      given_i_click_the_create_report_button_of_type 'billing_report'
-      when_i_fill_in_the_report_with_custom_title 'Test title'
-      then_i_will_see_the_new_report_listed 'Test title'
-    end
-  end
-
   scenario 'and sees the documents counter increment' do
     given_i_click_the_create_report_button_of_type 'billing_report'
     when_i_fill_in_the_report_of_type 'auditing_report'
@@ -100,24 +92,6 @@ feature 'Identity creates a document from the documents page', js: true do
     wait_for_ajax
 
     bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'), @protocol.short_title_with_sparc_id
-
-    # close protocol dropdown, so it's not covering 'Request Report' button
-    first('.modal-header').click
-    wait_for_ajax
-    find("input[type='submit']").click
-    wait_for_ajax
-  end
-
-  def when_i_fill_in_the_report_with_custom_title title
-    fill_in 'Title', with: title
-    fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
-    fill_in 'End Date', with: Date.tomorrow.strftime("%m-%d-%Y")
-
-    # close calendar thing, so it's not covering protocol dropdown
-    first('.modal-header').click
-    wait_for_ajax
-
-    bootstrap_select '#protocol_ids', @protocol.short_title_with_sparc_id
 
     # close protocol dropdown, so it's not covering 'Request Report' button
     first('.modal-header').click
