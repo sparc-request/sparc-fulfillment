@@ -11,6 +11,15 @@ $ ->
       type: 'GET'
       url: "/participants/#{participant_id}/change_arm?arm_id=#{arm_id}"
 
+  $(document).on 'click', '.new-participant', ->
+    data = 
+      'protocol_id' : $(this).data('protocol-id')
+ 
+    $.ajax
+      type: 'GET'
+      url: "/participants/new.js"
+      data: data
+
   $(document).on 'click', '.remove-participant', ->
     participant_id = $(this).attr('participant_id')
     name = $(this).attr('participant_name')
