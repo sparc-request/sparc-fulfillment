@@ -23,6 +23,7 @@ class ProtocolsController < ApplicationController
   def show
     @services = @protocol.organization.inclusive_child_services(:per_participant)
     @services_present = @services.present?
+    @current_protocol_tab = get_current_protocol_tab
 
     @page = 1
 
@@ -36,5 +37,9 @@ class ProtocolsController < ApplicationController
       flash[:alert] = t(:protocol)[:flash_messages][:not_found]
       redirect_to root_path
     end
+  end
+
+  def get_current_protocol_tab
+    cookies['active-protocol-tab'.to_sym] ? cookies['active-protocol-tab'.to_sym] : (@services_present ? "study_schedule" : "study_level_activities")
   end
 end
