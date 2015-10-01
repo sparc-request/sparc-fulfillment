@@ -51,9 +51,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
           given_i_am_viewing_the_reports_tab
           when_i_create_a_protocol_based_document
           when_i_create_a_protocol_based_document
-          screenshot
           when_i_click_the_delete_icon
-          screenshot
           then_i_should_see_the_protocol_docs_counter_was_decremented
         end
       end
