@@ -26,6 +26,7 @@ generate_document = (element, tables_to_refresh, event = null) ->
           url: "/documents/#{document_id}.json"
           success: (data) ->
             document_state = data.document.state
+            document_state = data.document.state
 
             $.each tables_to_refresh, (index, value) ->
                 $(value).bootstrapTable 'refresh', silent: true

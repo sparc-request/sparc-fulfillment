@@ -29,7 +29,7 @@ module DocumentsHelper
   def delete_formatter(document)
     if document.completed?
     [
-      "<a class='remove remove-document' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}'>",
+      "<a class='remove remove-document' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}' data-documentable_type='#{document.documentable_type}'>",
       "<i class='glyphicon glyphicon-remove'></i>",
       "</a>"
     ].join ""
