@@ -3,7 +3,9 @@ $ ->
   # Use cookie to remember study schedule tab
   $('.schedule-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
     tab = String(e.target).split("#")[1]
-    $.cookie("active-schedule-tab", tab, expires: 1, path: '/') # save tab to cookie
+    date = new Date()
+    date.setTime(date.getTime() + (60 * 60 * 1000))
+    $.cookie("active-schedule-tab", tab, expires: date, path: '/') # save tab to cookie
 
   $(document).on 'click', '.page_change_arrow', ->
     data =
