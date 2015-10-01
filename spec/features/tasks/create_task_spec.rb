@@ -30,8 +30,7 @@ feature "create Task", js: true do
   end
 
   def when_i_create_a_task_assigned_to_myself
-    click_link "Create New Task"
-    wait_for_ajax
+    find(".new-task").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
     page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
@@ -41,8 +40,7 @@ feature "create Task", js: true do
   end
 
   def when_i_create_a_task_assigned_to_another_identity
-    click_link "Create New Task"
-    wait_for_ajax
+    find(".new-task").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
     page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
