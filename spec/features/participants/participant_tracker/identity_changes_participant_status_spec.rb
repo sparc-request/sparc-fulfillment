@@ -28,4 +28,10 @@ feature 'Identity changes the status of a participant on the participant tracker
   def then_i_should_see_the_updated_status
     expect(bootstrap_selected?("participant_status_#{@participant.id}", "Screening")).to be
   end
+
+  def and_i_should_see_an_associated_note
+    find(".participant_notes[data-notable-id='#{@participant.id}']").click
+    wait_for_ajax
+    expect(page).to have_content('Status changed')
+  end
 end
