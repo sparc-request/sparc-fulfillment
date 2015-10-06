@@ -16,7 +16,7 @@ feature 'User creates Participant', js: true do
   end
 
   def when_i_create_a_new_participant
-    click_link 'Create New Participant'
+    find('.new-participant').click
 
     participant = build(:participant_with_protocol)
 

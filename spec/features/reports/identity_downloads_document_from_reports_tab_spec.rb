@@ -8,10 +8,10 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
     then_i_should_see_the_reports_counter_at_zero
   end
 
-  scenario 'and sees the downloaded_at date has been updated' do
+  scenario 'and sees the viewed_at date has been updated' do
     given_i_have_a_report_and_visit_the_reports_tab
     when_i_download_the_report
-    then_i_should_see_the_downloaded_at_date_has_been_updated
+    then_i_should_see_the_viewed_at_date_has_been_updated
   end
 
   def given_i_have_a_report_and_visit_the_reports_tab
@@ -33,8 +33,8 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
     expect(page).to have_no_css(".protocol_report_notifications", text: 0)
   end
 
-  def then_i_should_see_the_downloaded_at_date_has_been_updated
+  def then_i_should_see_the_viewed_at_date_has_been_updated
     #Get formatter from en.yml -> documents -> date_time_formatter_ruby
-    expect(page).to have_css("td.downloaded_at", text: Time.now.strftime("%m/%d/%Y"))
+    expect(page).to have_css("td.viewed_at", text: Time.now.strftime("%m/%d/%Y"))
   end
 end
