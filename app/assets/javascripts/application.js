@@ -21,6 +21,7 @@
 //= require nprogress
 //= require underscore
 //= require bootstrap-multiselect
+//= require bootstrap-contextmenu
 
 //= require global
 //= require protocols
