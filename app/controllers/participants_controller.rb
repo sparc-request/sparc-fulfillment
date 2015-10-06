@@ -88,14 +88,14 @@ class ParticipantsController < ApplicationController
 
   def note_successful_changes
     if participant_params[:status] and ( @old_attributes["status"] != participant_params[:status] ) # Status Changed
-      old_status = @old_attributes["status"].blank? ? "N/A" : @old_attributes["status"]
-      new_status = participant_params[:status].blank? ? "N/A" : participant_params[:status]
+      old_status = @old_attributes["status"].blank? ? t(:actions)[:n_a] : @old_attributes["status"]
+      new_status = participant_params[:status].blank? ? t(:actions)[:n_a] : participant_params[:status]
       @participant.notes.create(identity: current_identity, comment: "Status changed from #{old_status} to #{new_status}")
     end
 
     if participant_params[:arm_id] and ( @old_attributes["arm_id"].to_s != participant_params[:arm_id] ) # Arm Changed
-      old_arm = @old_attributes["arm_id"].blank? ? "N/A" : Arm.find(@old_attributes["arm_id"]).name
-      new_arm = participant_params[:arm_id].blank? ? "N/A" : Arm.find(participant_params[:arm_id]).name
+      old_arm = @old_attributes["arm_id"].blank? ? t(:actions)[:n_a] : Arm.find(@old_attributes["arm_id"]).name
+      new_arm = participant_params[:arm_id].blank? ? t(:actions)[:n_a] : Arm.find(participant_params[:arm_id]).name
       @participant.notes.create(identity: current_identity, comment: "Arm changed from #{old_arm} to #{new_arm}")
     end
   end
