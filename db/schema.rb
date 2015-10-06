@@ -237,20 +237,6 @@ ActiveRecord::Schema.define(version: 20150824143847) do
   add_index "procedures", ["sparc_id"], name: "index_procedures_on_sparc_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
 
-  create_table "project_roles", force: :cascade do |t|
-    t.integer  "identity_id", limit: 4
-    t.integer  "protocol_id", limit: 4
-    t.string   "rights",      limit: 255
-    t.string   "role",        limit: 255
-    t.string   "role_other",  limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "project_roles", ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
-  add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
-
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",                   limit: 4
     t.string   "sponsor_name",               limit: 255
@@ -271,22 +257,6 @@ ActiveRecord::Schema.define(version: 20150824143847) do
   add_index "protocols", ["deleted_at"], name: "index_protocols_on_deleted_at", using: :btree
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", using: :btree
   add_index "protocols", ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id", using: :btree
-
-  create_table "services", force: :cascade do |t|
-    t.integer  "sparc_id",        limit: 4
-    t.decimal  "cost",                          precision: 10
-    t.string   "name",            limit: 255
-    t.string   "abbreviation",    limit: 255
-    t.text     "description",     limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-    t.integer  "sparc_core_id",   limit: 4
-    t.string   "sparc_core_name", limit: 255
-  end
-
-  add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
-  add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
 
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"
