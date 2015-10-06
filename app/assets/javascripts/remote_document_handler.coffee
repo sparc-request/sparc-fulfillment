@@ -26,7 +26,6 @@ generate_document = (element, tables_to_refresh, event = null) ->
           url: "/documents/#{document_id}.json"
           success: (data) ->
             document_state = data.document.state
-            document_state = data.document.state
 
             $.each tables_to_refresh, (index, value) ->
                 $(value).bootstrapTable 'refresh', silent: true
@@ -68,16 +67,17 @@ generate_document = (element, tables_to_refresh, event = null) ->
                 generate_document button, tables_to_refresh
               
               $(element).off('click').on 'click', ->
-                ul = $(this).siblings("ul.document-dropdown-menu")
-                active = false
+                if $(element).hasClass("btn-success")
+                  ul = $(this).siblings("ul.document-dropdown-menu")
+                  active = false
 
-                if ul.attr("style") == "display: block;"
-                  active = true
+                  if ul.attr("style") == "display: block;"
+                    active = true
 
-                $("ul.document-dropdown-menu[style='display: block;']").toggle()
+                  $("ul.document-dropdown-menu[style='display: block;']").toggle()
 
-                if active == false
-                  $(this).siblings("ul.document-dropdown-menu").toggle()
+                  if active == false
+                    $(this).siblings("ul.document-dropdown-menu").toggle()
 
       get_document_state()
 
