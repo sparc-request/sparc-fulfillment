@@ -20,7 +20,7 @@
               .col-sm-7= a.text_field "name", {class: 'form-control'}
             .form-group
               = a.label "day", t(:visit_groups)[:day], class: "col-sm-4 control-label"
-              .col-sm-7= a.text_field "day", {class: 'form-control'}
+              .col-sm-7= a.text_field "day", {class: 'form-control', maxlength: 4}
             .form-group
               = a.label "position", t(:visit_groups)[:position], class: "col-sm-4 control-label"
               .col-sm-7= a.select "position", options_from_collection_for_select(arm.visit_groups, 'position', 'insertion_name'), {include_blank: 'add as last'}, :class => "form-control selectpicker"
