@@ -41,4 +41,13 @@ module TaskHelper
       content_tag(:span, class: "overdue-task"){format_date(due_date)}
     end
   end
+
+  def format_org task
+    case task.assignable_type
+    when 'Procedure'
+      Procedure.find(task.assignable_id).sparc_core_name
+    else
+      '-'
+    end
+  end
 end
