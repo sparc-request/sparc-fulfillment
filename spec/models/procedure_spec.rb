@@ -8,6 +8,7 @@ RSpec.describe Procedure, type: :model do
 
   it { is_expected.to belong_to(:appointment) }
   it { is_expected.to belong_to(:visit) }
+  it { is_expected.to belong_to(:core) }
 
   it { is_expected.to have_many(:notes) }
   it { is_expected.to have_many(:tasks) }
