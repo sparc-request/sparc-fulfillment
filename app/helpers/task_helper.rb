@@ -45,10 +45,10 @@ module TaskHelper
   def format_org task
     case task.assignable_type
     when 'Procedure'
-      core = Procedure.find(task.assignable_id).sparc_core_name
-      program = Organization.find_by_name(core).parent.name
+      core = Procedure.find(task.assignable_id).core
+      program = core.parent
 
-      "#{program} / #{core}"
+      "#{program.name} / #{core.name}"
     else
       '-'
     end
