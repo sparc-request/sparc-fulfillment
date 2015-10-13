@@ -6,7 +6,7 @@ namespace :data do
     CSV.open("/tmp/fixed_procedure_service_costs.csv", "wb+") do |csv|
       begin
         proc = nil
-        Procedure.complete.each do |procedure|
+        Procedure.complete.find_each do |procedure|
           proc = procedure
           current_amount = procedure.service_cost
           calculated_amount = 0
