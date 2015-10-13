@@ -26,6 +26,10 @@ generate_document = (element, tables_to_refresh, event = null) ->
           url: "/documents/#{document_id}.json"
           success: (data) ->
             document_state = data.document.state
+            document_state = data.document.state
+
+            $.each tables_to_refresh, (index, value) ->
+                $(value).bootstrapTable 'refresh', silent: true
 
             if document_state != 'Completed'
               setTimeout get_document_state, 1500
@@ -43,9 +47,6 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
               $(element).attr('data-toggle', 'dropdown')
               $(element).siblings('#'+dropdown_id_indicator).replaceWith(dropdown)
-
-              $.each tables_to_refresh, (index, value) ->
-                $(value).bootstrapTable 'refresh', silent: true
 
               $("li a[title='Download Report']").off('click').on 'click', ->
                 ul = $(this).parents().eq(1)

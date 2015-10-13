@@ -1,16 +1,17 @@
 = render partial: 'protocol', locals: { protocol: @protocol }
+= hidden_field_tag :protocol_id, @protocol.id
 %div{role: 'tabpanel'}
   %ul.nav.nav-tabs.nav-justified{role: 'tablist'}
     - if @services_present
-      %li.active.custom-tab.protocol-tab{role: 'presentation'}
+      %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "study_schedule" ? "active" : "")}
         = link_to t(:protocol)[:tabs][:study_schedule], "#study_schedule", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_schedule'}
-      %li.custom-tab.protocol-tab{role: 'presentation'}
+      %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "participant_list" ? "active" : "")}
         = link_to t(:protocol)[:tabs][:participant_list], "#participant_list", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'participant_list'}
-      %li.custom-tab.protocol-tab{role: 'presentation'}
+      %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "participant_tracker" ? "active" : "")}
         = link_to t(:protocol)[:tabs][:participant_tracker], "#participant_tracker", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'participant_tracker'}
-    %li.custom-tab.protocol-tab{role: 'presentation', class: @services_present ? 'inactive' : 'active'}
+    %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "study_level_activities" ? "active" : "")}
       = link_to t(:protocol)[:tabs][:study_level_activities], "#study_level_activities", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_level_activities'}
-    %li.custom-tab.protocol-tab{role: 'presentation', :id => "protocol-reports-tab"}
+    %li.custom-tab.protocol-tab{role: 'presentation', :id => "protocol-reports-tab", class: (@current_protocol_tab == "reports" ? "active" : "")}
       = link_to t(:protocol)[:tabs][:reports], "#reports", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'reports'}
       - if @protocol.unaccessed_documents_count > 0
         %span.notification.protocol_report_notifications
@@ -18,17 +19,17 @@
         
   .tab-content
     - if @services_present
-      .tab-pane.active#study_schedule{role: 'tabpanel'}
-        = render partial: 'study_schedule/calendar', locals: {protocol: @protocol, page: @page, tab: (tab = cookies["active-schedule-tab".to_sym]) ? tab : 'template'}
+      .tab-pane#study_schedule{role: 'tabpanel', class: (@current_protocol_tab == "study_schedule" ? "active" : "")}
+        = render partial: 'study_schedule/calendar', locals: {protocol: @protocol, page: @page, tab: (cookies["active-schedule-tab".to_sym]) ? cookies["active-schedule-tab".to_sym] : 'template'}
 
-      .tab-pane#participant_list{role: 'tabpanel'}
+      .tab-pane#participant_list{role: 'tabpanel', class: (@current_protocol_tab == "participant_list" ? "active" : "")}
         = render partial: 'participant_list', locals: {protocol: @protocol, participant: @participant}
 
-      .tab-pane#participant_tracker{role: 'tabpanel'}
+      .tab-pane#participant_tracker{role: 'tabpanel', class: (@current_protocol_tab == "participant_tracker" ? "active" : "")}
         = render partial: 'participant_tracker', locals: {protocol: @protocol}
 
-    .tab-pane#study_level_activities{role: 'tabpanel', class: @services_present ? 'inactive' : 'active'}
+    .tab-pane#study_level_activities{role: 'tabpanel', class: (@current_protocol_tab == "study_level_activities" ? "active" : "")}
       = render partial: 'study_level_activities', locals: {protocol: @protocol}
 
-    .tab-pane#reports{role: 'tabpanel'}
+    .tab-pane#reports{role: 'tabpanel', class: (@current_protocol_tab == "reports" ? "active" : "")}
       = render 'reports'

@@ -28,7 +28,7 @@ feature "Identity views Task", js: true do
   def when_i_view_a_identity_task_assigned_to_myself
     assignee = Identity.first
 
-    click_link "Create New Task"
+    find(".new-task").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
     page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
