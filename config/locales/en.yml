@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  default_title: 'Work Fulfillment'
 
   actions:
     close: "Close"
@@ -74,14 +75,14 @@ en:
   documents:
     documents: "Documents"
     date: "Date Requested"
-    date_time_formatter_ruby: "%m/%d/%Y"
-    date_time_formatter_js:   "MM/DD/YYYY"
+    date_time_formatter_ruby: "%m/%d/%Y %r"
+    date_time_formatter_js:   "MM/DD/YYYY hh:mm:ss A"
     title: "Title"
     state: "Report Status"
     file: "Attached File"
-    downloaded_at: "Date Downloaded"
+    viewed_at: "Date Viewed"
     new_header: "Add Document"
-    date_uploaded: "Date Uploaded"
+    date_created: "Date Created"
     object: "Document"
     upload_button: "Upload Document"
     edit_header: "Edit Report Title"
@@ -93,6 +94,7 @@ en:
       none: "This fulfillment has no documents."
     flash_messages:
       created: "Document Created"
+      removed: "Document Removed"
       no_file_chosen: "You must choose a file"
       updated: "Title updated"
 
@@ -226,6 +228,7 @@ en:
     object: "Procedure"
     complete: "Complete All"
     incomplete: "Incomplete All"
+    prog_core: "Program / Core"
 
   protocol:
     id: "Protocol ID"

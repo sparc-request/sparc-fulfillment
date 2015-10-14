@@ -8,10 +8,10 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     then_i_should_see_the_documents_counter_decrement
   end
 
-  scenario 'and sees the downloaded_at date has been updated' do
+  scenario 'and sees the viewed_at date has been updated' do
     given_i_have_created_an_identity_based_report
     when_i_download_the_report
-    then_i_should_see_the_downloaded_at_date_has_been_updated
+    then_i_should_see_the_viewed_at_date_has_been_updated
   end
 
   def given_i_click_the_create_report_button_of_type report_type
@@ -57,8 +57,8 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     expect(page).to have_no_css(".identity_report_notifications", text: 0)
   end
 
-  def then_i_should_see_the_downloaded_at_date_has_been_updated
+  def then_i_should_see_the_viewed_at_date_has_been_updated
     #Get formatter from en.yml -> documents -> date_time_formatter_ruby
-    expect(page).to have_css("td.downloaded_at", text: Time.now.strftime("%m/%d/%Y"))
+    expect(page).to have_css("td.viewed_at", text: Time.now.strftime("%m/%d/%Y"))
   end 
 end

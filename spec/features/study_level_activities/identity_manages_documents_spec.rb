@@ -49,7 +49,9 @@ feature 'Identity manages Doucuments', js: true do
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
     click_link "Study Level Activities"
+    wait_for_ajax
   end
 
   def when_i_click_on_fulfillment_documents_icon
@@ -77,12 +79,13 @@ feature 'Identity manages Doucuments', js: true do
 
   def when_i_click_on_the_add_document_button
     find('.document.new').click
+    wait_for_ajax
   end
 
   def when_i_upload_a_document
-    wait_for_ajax
     attach_file(find("input[type='file']")[:id], @filename)
     click_button "Save"
+    wait_for_ajax
   end
 
   def then_i_should_see_the_line_item_documents_list

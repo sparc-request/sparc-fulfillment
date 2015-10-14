@@ -38,7 +38,7 @@ class AuditingReport < Report
       if @params[:protocol_ids].present?
         protocols = Protocol.find(@params[:protocol_ids])
       else
-        protocols = Protocol.all
+        protocols = Identity.find(@params[:identity_id]).protocols
       end
 
       protocols.each do |protocol|

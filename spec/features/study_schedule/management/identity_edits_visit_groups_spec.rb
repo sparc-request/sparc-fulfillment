@@ -25,7 +25,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
 
         @original_visit_group_1 = @arm.visit_groups.first
         @original_visit_group_2 = @arm.visit_groups.second
-        
+
         when_i_click_the_add_visit_group_button
         when_i_fill_in_the_form
         when_i_set_the_position_to "insert before #{@arm.visit_groups.second.name}"
@@ -88,7 +88,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       scenario "and sees the original name" do
         given_i_am_viewing_an_arm_with_one_visit_group
         @original_name = @arm.visit_groups.first.name
-        
+
         when_i_enter_the_name ""
         then_i_should_see_the_original_name
       end
@@ -127,7 +127,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     end
     @arm      = create(:arm_with_visit_groups, visit_count: 2, protocol: @protocol, subject_count: 3)
     @visit_groups = @arm.visit_groups
+
     visit protocol_path @protocol
+    wait_for_ajax
   end
 
   def given_i_am_viewing_an_arm_with_one_visit_group
@@ -136,19 +138,24 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       arm.delete
     end
     @arm      = create(:arm_with_one_visit_group, visit_count: 1, protocol: @protocol, subject_count: 3)
+
     visit protocol_path @protocol
+    wait_for_ajax
   end
 
   def when_i_click_the_add_visit_group_button
     find("#add_visit_group_button").click
+    wait_for_ajax
   end
 
   def when_i_click_the_edit_visit_group_button
     find("#edit_visit_group_button").click
+    wait_for_ajax
   end
 
   def when_i_click_the_remove_visit_group_button
     find("#remove_visit_group_button").click
+    wait_for_ajax
   end
 
   def when_i_fill_in_the_form
@@ -194,7 +201,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_visit_group
-    wait_for_ajax
     expect(page).to have_css("input[value='VG']")
   end
 
@@ -229,13 +235,10 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     case action_type
       when 'add'
         expect(page).to have_content("Name can't be blank")
-        expect(page).to have_content("Day can't be blank")
-        expect(page).to have_content("Day is not a number")
+        expect(page).to have_content("Day can't be blank") unless ENV.fetch('USE_EPIC'){nil} == 'false'
       when 'edit'
         expect(page).to have_content("Name can't be blank")
-        expect(page).to have_content("Day can't be blank")
-        expect(page).to have_content("Day is not a number")
-
+        expect(page).to have_content("Day can't be blank") unless ENV.fetch('USE_EPIC'){nil} == 'false'
       when 'last vg'
         expect(page).to have_content("Arm must have at least one visit. Add another visit before deleting this one")
     end

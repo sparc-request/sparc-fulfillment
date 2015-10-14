@@ -2,7 +2,7 @@
 %html{ lang: 'en' }
   %head
     %meta{ charset: 'utf-8' }
-    %title Clinical Work Fulfillment
+    %title= t('default_title') 
     :javascript
       window.I18n = #{current_translations.to_json.html_safe}
     = javascript_include_tag 'libraries'

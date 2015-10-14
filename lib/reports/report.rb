@@ -30,10 +30,15 @@ class Report
   end
 
   def display_cost(cost)
-    dollars = (cost / 100.0) rescue nil
-    dollar, cent = dollars.to_s.split('.')
-    dollars_formatted = "#{dollar}.#{cent[0..1]}".to_f
+    if cost
+      dollars = (cost / 100.0) rescue nil
+      dollar, cent = dollars.to_s.split('.')
+      dollars_formatted = "#{dollar}.#{cent[0..1]}".to_f
 
-    number_to_currency(dollars_formatted, seperator: ",", unit: "")
+      number_to_currency(dollars_formatted, seperator: ",", unit: "")
+
+    else
+      "N/A"
+    end
   end
 end

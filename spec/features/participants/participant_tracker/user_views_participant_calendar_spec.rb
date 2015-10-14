@@ -54,7 +54,9 @@ feature 'User tries to view the participant calendar', js: true do
     @participant = @protocol.participants.first
 
     visit protocol_path @protocol
+    wait_for_ajax
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def given_a_participant_has_an_arm
@@ -70,7 +72,8 @@ feature 'User tries to view the participant calendar', js: true do
     @visit_group = @appointment.visit_group
 
     visit participant_path @participant
-    
+    wait_for_ajax
+
     bootstrap_select '#appointment_select', @visit_group.name
 
     wait_for_ajax
@@ -78,8 +81,9 @@ feature 'User tries to view the participant calendar', js: true do
     wait_for_ajax
     click_button 'Complete Visit'
     wait_for_ajax
-    
-    visit protocol_path @protocol 
+
+    visit protocol_path @protocol
+    wait_for_ajax
     click_link 'Participant Tracker'
     wait_for_ajax
   end
@@ -90,6 +94,7 @@ feature 'User tries to view the participant calendar', js: true do
 
   def when_i_click_the_participant_calendar_icon
     find("tr[data-index='0'] td.calendar").click
+    wait_for_ajax
   end
 
   def then_the_participant_calendar_icon_should_be_active
@@ -99,7 +104,7 @@ feature 'User tries to view the participant calendar', js: true do
   def then_the_participant_calendar_icon_should_be_inactive
     expect(page).to have_css("tr[data-index='0'] td.calendar i.glyphicon")
   end
-  
+
   def then_i_will_see_the_participant_calendar
     expect(current_path) == participants_path + '/' + @participant.id.to_s
   end
