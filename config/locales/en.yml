@@ -228,6 +228,7 @@ en:
     object: "Procedure"
     complete: "Complete All"
     incomplete: "Incomplete All"
+    prog_core: "Program / Core"
 
   protocol:
     id: "Protocol ID"

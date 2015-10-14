@@ -20,6 +20,7 @@ class Procedure < ActiveRecord::Base
   belongs_to :visit
   belongs_to :service
   belongs_to :performer, class_name: "Identity"
+  belongs_to :core, class_name: "Organization", foreign_key: :sparc_core_id
 
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
