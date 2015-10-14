@@ -25,15 +25,15 @@ generate_document = (element, tables_to_refresh, event = null) ->
           type: 'GET'
           url: "/documents/#{document_id}.json"
           success: (data) ->
-            console.log("Test")
             document_state = data.document.state
             document_state = data.document.state
 
             $.each tables_to_refresh, (index, value) ->
                 $(value).bootstrapTable 'refresh', silent: true
 
-            if document_state == 'Completed'
-              console.log("Test Complete State")
+            if document_state != 'Completed'
+              setTimeout get_document_state, 1500
+            else
               add_to_report_notification_count(data.document.documentable_type, 1)
 
               set_glyphicon_finished element
@@ -78,12 +78,6 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
                 if active == false
                   $(this).siblings("ul.document-dropdown-menu").toggle()
-
-            else if document_state == 'Error'
-              console.log("Test Error State")
-
-            else
-              setTimeout get_document_state, 1500
 
       get_document_state()
 
