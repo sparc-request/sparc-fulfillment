@@ -72,7 +72,7 @@ RSpec.describe Procedure, type: :model do
       end
     end
 
-    describe '.set_status_dependencies' do
+    describe '.set_save_dependencies' do
 
       context 'status changed to complete' do
 
