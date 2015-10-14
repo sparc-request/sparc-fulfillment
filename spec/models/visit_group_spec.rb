@@ -86,7 +86,7 @@ RSpec.describe VisitGroup, type: :model do
           @vg_c        = create(:visit_group, name: 'C', position: 3, arm_id: @arm.id)
           @participant = create(:participant, arm: @arm, protocol: @protocol)
           @appointment = create(:appointment, visit_group: @vg_a, participant: @participant, name: @vg_a.name, arm_id: @vg_a.arm_id)
-          @procedure   = create(:procedure, appointment: @appointment)
+          @procedure   = create(:procedure, :complete, appointment: @appointment)
         end
 
       describe 'reorder' do
@@ -116,6 +116,7 @@ RSpec.describe VisitGroup, type: :model do
       describe 'check for completed data' do
 
         it "should allow the appointment to be deleted if it is not completed" do
+          @procedure.update_attributes(status: "unstarted")
           @vg_a.destroy
           expect(@participant.appointments.empty?).to eq(true)
         end
@@ -127,7 +128,6 @@ RSpec.describe VisitGroup, type: :model do
         end
 
         it "should not allow the appointment to be deleted if any of it's procedures are completed" do
-          @procedure.update_attributes(completed_date: Time.current.strftime("%m-%d-%Y"))
           @vg_a.destroy
           expect(@participant.appointments.empty?).to eq(false)
         end

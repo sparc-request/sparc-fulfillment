@@ -235,10 +235,10 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     case action_type
       when 'add'
         expect(page).to have_content("Name can't be blank")
-        expect(page).to have_content("Day can't be blank")
+        expect(page).to have_content("Day can't be blank") unless ENV.fetch('USE_EPIC'){nil} == 'false'
       when 'edit'
         expect(page).to have_content("Name can't be blank")
-        expect(page).to have_content("Day can't be blank")
+        expect(page).to have_content("Day can't be blank") unless ENV.fetch('USE_EPIC'){nil} == 'false'
       when 'last vg'
         expect(page).to have_content("Arm must have at least one visit. Add another visit before deleting this one")
     end

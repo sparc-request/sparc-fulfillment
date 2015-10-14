@@ -228,6 +228,7 @@ en:
     incomplete: "Incomplete All"
     notes: "Notes"
     performed_by: "Performed By"
+    prog_core: "Program / Core"
     remove: "Remove"
     r_t: "R/T"
     select_reason: "Select a Reason"
