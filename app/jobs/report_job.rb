@@ -24,6 +24,7 @@ class ReportJob < ActiveJob::Base
 
   rescue_from(StandardError) do |error|
     arguments.first.update_attributes state: 'Error'
+    FayeJob.perform_later arguments.first
   end
 
   after_perform do |job|
