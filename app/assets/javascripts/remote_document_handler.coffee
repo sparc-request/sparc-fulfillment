@@ -21,19 +21,26 @@ generate_document = (element, tables_to_refresh, event = null) ->
       get_document_state = ->
         document_id = $(element).data("document_id")
 
+        set_glyphicon_error = (element) ->
+          $(element).
+            addClass('btn-danger').
+            removeClass('btn-warning').
+            find('span.glyphicon').
+            addClass('glyphicon-alert').
+            removeClass('glyphicon-refresh spin')
+
         $.ajax
           type: 'GET'
           url: "/documents/#{document_id}.json"
           success: (data) ->
             document_state = data.document.state
-            document_state = data.document.state
 
             $.each tables_to_refresh, (index, value) ->
                 $(value).bootstrapTable 'refresh', silent: true
 
-            if document_state != 'Completed'
+            if document_state == 'Pending'
               setTimeout get_document_state, 1500
-            else
+            else if document_state == 'Completed'
               add_to_report_notification_count(data.document.documentable_type, 1)
 
               set_glyphicon_finished element
@@ -78,12 +85,14 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
                 if active == false
                   $(this).siblings("ul.document-dropdown-menu").toggle()
+            else
+              set_glyphicon_error element
 
       get_document_state()
 
 set_glyphicon_loading = (element) ->
   $(element).
-    addClass('btn-danger').
+    addClass('btn-warning').
     removeClass('btn-default').
     find('span.glyphicon').
     addClass('glyphicon-refresh spin').
@@ -92,7 +101,7 @@ set_glyphicon_loading = (element) ->
 set_glyphicon_finished = (element) ->
   $(element).
     addClass('btn-success').
-    removeClass('btn-danger').
+    removeClass('btn-warning').
     find('span.glyphicon').
     addClass('glyphicon-equalizer').
     removeClass('glyphicon-refresh spin')
