@@ -9,12 +9,15 @@ module DocumentsHelper
   end
 
   def attached_file_formatter(document)
-    if document.completed?
+    case document.state
+    when 'Completed'
       content_tag(:a, class: 'attached_file', id: "file_#{document.id}", href: document_path(document), target: :blank, title: 'Download File', 'data-id' => document.id) do
         content_tag(:span, '', class: 'glyphicon glyphicon-file')
       end
-    else
+    when 'Pending'
       content_tag(:span, '', class: 'glyphicon glyphicon-refresh spin', style: 'cursor:auto')
+    else
+      content_tag(:span, '', class: 'glyphicon glyphicon-alert danger', style: 'cursor:auto')
     end
   end
 

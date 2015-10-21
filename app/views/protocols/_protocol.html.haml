@@ -1,18 +1,20 @@
 .fixed-table-container.bootstrap-table-dropdown-overflow
-  %table.protocol.details.custom_striped{id: dom_id(protocol), "data-toggle" => 'table', "data-url" => protocol_path(protocol, format: :json)}
+  %table.protocol.details.custom_striped{ id: dom_id(protocol), data: { toggle: 'table', url: protocol_path(protocol, format: :json) } }
     %thead
       %tr
-        %th{data: {class: "srid", align: "left", field: "srid"}}
+        %th{ data: { class: 'srid', align: 'left', field: 'srid' } }
           = t(:protocol)[:srid]
-        %th{data: {class: "pi", align: "left", field: "pi"}}
+        %th{ data: { class: 'pi', align: 'left', field: 'pi' } }
           = t(:protocol)[:principal_investigator]
-        %th{data: {class: "coordinators", align: "center", field: "coordinators"}}
+        %th{ data: { class: 'coordinators', align: 'center', field: 'coordinators' } }
           = t(:protocol)[:coordinators]
-        %th{data: {class: "short_title", align: "left", field: "short_title"}}
+        %th{ data: { class: 'short_title', align: 'left', field: 'short_title' } }
           = t(:protocol)[:short_title]
-        %th{data: {class: "irb_number", align: "left", field: "irb_number"}}
+        %th{ data: { class: 'irb_number', align: 'left', field: 'irb_number' } }
           = t(:protocol)[:irb_number]
-        %th{data: {class: "irb_expiration_date", align: "center", field: "irb_expiration_date"}}
+        %th{ data: { class: 'irb_expiration_date', align: 'center', field: 'irb_expiration_date' } }
           = t(:protocol)[:irb_expiration_date]
-        %th{data: {class: "study_schedule_report", align: "center", field: "study_schedule_report"}}
+        %th{ data: { class: 'study_schedule_report', align: 'center', field: 'study_schedule_report' } }
           = t(:protocol)[:study_schedule_report]
+        %th{ data: { class: 'admin_portal_link', align: 'center', field: 'admin_portal_link' } }
+          = t(:protocol)[:admin_portal_link]
