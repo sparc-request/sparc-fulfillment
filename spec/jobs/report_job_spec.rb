@@ -6,6 +6,7 @@ RSpec.describe ReportJob, type: :job do
 
     before :each do
       @document = create(:document, report_type: 'auditing_report')
+
       ReportJob.perform_now(@document, auditing_report_params)
     end
 
@@ -22,8 +23,16 @@ RSpec.describe ReportJob, type: :job do
     end
   end
 
+  describe '#rescue_from' do
+    let(:document) { create(:document, report_type: 'auditing_report') }
+
+    it 'should update the Report state' do
+      expect { ReportJob.perform_now(document, nil) }.to change { document.state }.from('Pending').to('Error')
+    end
+  end
+
   def auditing_report_params
-    2.times{ create(:protocol) }
+    2.times { create(:protocol) }
     {
       title: 'auditing_report',
       start_date: '01-01-2015',
