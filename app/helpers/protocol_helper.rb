@@ -1,5 +1,11 @@
 module ProtocolHelper
 
+  def admin_portal_link(protocol)
+    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-default btn-xs admin_portal_link', title: 'Admin Portal link', aria: { expanded: 'false' }) do
+      content_tag(:span, '', class: 'glyphicon glyphicon-link')
+    end
+  end
+
   def formatted_status protocol
     if protocol.status.present?
       t(:sub_service_request)[:statuses][protocol.status.to_sym]
