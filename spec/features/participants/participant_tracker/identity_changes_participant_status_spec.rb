@@ -6,6 +6,7 @@ feature 'Identity changes the status of a participant on the participant tracker
     given_i_am_viewing_the_participant_tracker
     when_i_update_the_participant_status
     then_i_should_see_the_updated_status
+    and_i_should_see_an_associated_note
   end
 
   def given_i_am_viewing_the_participant_tracker
