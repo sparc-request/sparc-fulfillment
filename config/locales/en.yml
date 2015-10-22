@@ -236,6 +236,7 @@ en:
 
   protocol:
     object: "Protocol"
+    admin_portal_link: "Admin Portal"
     coordinators: "Coordinators"
     end_date: "Study End Date"
     flash_messages:
@@ -243,7 +244,7 @@ en:
       unauthorized: "Authorization Failure"
     id: "Protocol ID"
     irb_approval_date: "IRB Approval Date"
-    irb_expiration_date: "Current IRB Expiration Date"
+    irb_expiration_date: "IRB Expiration"
     irb_number: "IRB #"
     organizations: "Provider/Program/Core"
     owner: "Owner"
@@ -259,8 +260,6 @@ en:
     subsidy_amount: "Percent Subsidy"
     subsidy_committed: "Subsidy Amount"
     subsidy_expended: "Subsidy Expended"
-    udak_project_number: "UDAK Project #"
-    updates: "Updates"
     study_schedule:
       add_arm: "Add Arm"
       add_service: "Add Service"
@@ -282,6 +281,8 @@ en:
       reports: "Reports"
       study_level_activities: "Study Level Activities"
       study_schedule: "Study Schedule"
+    udak_project_number: "UDAK Project #"
+    updates: "Updates"
 
   reports:
     auditing_report: "Auditing Report"

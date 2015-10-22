@@ -1,6 +1,6 @@
 class Protocol < ActiveRecord::Base
 
-  attr_accessor :document_counter_updated  
+  attr_accessor :document_counter_updated
 
   has_paper_trail
   acts_as_paranoid
@@ -41,9 +41,19 @@ class Protocol < ActiveRecord::Base
            :title,
            :funding_source,
            to: :sparc_protocol
-  
+
   def self.title id
     ["Protocol", Protocol.find(id).srid].join(' ')
+  end
+
+  def sparc_uri
+    [
+      ENV.fetch('GLOBAL_SCHEME'),
+      '://',
+      ENV.fetch('SPARC_API_HOST'),
+      '/portal/admin/sub_service_requests/',
+      sparc_id
+    ].join
   end
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id
