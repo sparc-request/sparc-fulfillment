@@ -59,7 +59,7 @@ feature 'User views Participant', js: true do
 
   def then_i_should_see_an_ordered_list_of_visits
     @appointments.sort_by { |appointment| appointment.completed_date }.reverse.each_with_index do |appointment, index|
-      expect(page).to have_css("table.appointments tbody tr:nth-of-type(#{index + 1})", text: appointment.name)
+      expect(page).to have_css("table.visits tbody tr:nth-of-type(#{index + 1})", text: appointment.name)
     end
   end
 end
