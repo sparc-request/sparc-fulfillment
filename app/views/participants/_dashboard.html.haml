@@ -4,9 +4,12 @@
     %br
     #dashboard_container
       #dashboard
-        %table{id: "completed-appointments-table", data: {toggle: 'table', url: "/appointments/completed_appointments.json?participant_id=#{participant.id}", striped: "true", "sort-name" => "completed_date", "sort-order" => 'asc'}}
+        %table.visits#completed-appointments-table{ data: { toggle: 'table', url: completed_appointments_appointments_path(participant_id: participant.id, format: :json), striped: 'true', 'sort-name' => 'completed_date', 'sort-order' => 'asc' } }
           %thead
             %tr
-              %th{data: {align: "left", field: "name"}}= t(:appointment)[:completed]
-              %th{data: {align: "left", field: "completed_date", sortable: "true"}}= t(:appointment)[:date_of_visit]
-              %th{data: {align: "left", field: "arm"}}= t(:arm)[:name]
+              %th{ data: { align: 'left', field: 'name' } }
+                = t(:appointment)[:completed]
+              %th{ data: { align: 'left', field: 'completed_date', sortable: 'true', sorter: 'visitSorter' } }
+                = t(:appointment)[:date_of_visit]
+              %th{ data: { align: 'left', field: 'arm' } }
+                = t(:arm)[:name]
