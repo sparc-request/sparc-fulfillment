@@ -23,7 +23,7 @@ class LineItem < ActiveRecord::Base
             allow_nil: true
 
   validates :protocol_id, :service_id, presence: true
-  validates :quantity_requested, presence: true, numericality: true, :if => Proc.new { |li| li.one_time_fee }
+  validates :quantity_requested, presence: true, numericality: { greater_than: 0 }, :if => Proc.new { |li| li.one_time_fee }
 
   after_create :create_line_item_components
   after_create :increment_sparc_service_counter

@@ -21,6 +21,7 @@ class ProtocolsController < ApplicationController
   end
 
   def show
+    @page_details = @protocol.srid
     @services = @protocol.organization.inclusive_child_services(:per_participant)
     @services_present = @services.present?
     @current_protocol_tab = get_current_protocol_tab

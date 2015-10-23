@@ -1,4 +1,24 @@
 module ApplicationHelper
+  def generate_history_text url
+    h = Rails.application.routes.recognize_path(url)
+   
+    begin
+      case h[:action]
+      when 'index'
+        ['All', h[:controller].humanize].join(' ')
+      when 'show'
+        klass = h[:controller].classify.constantize
+        klass.title h[:id]
+      else
+        url
+      end
+    rescue Exception => e
+      puts "#"*20
+      puts e.message
+      puts "#"*20
+      'Unable to determine route'
+    end
+  end
 
   def format_date date
     if date.present?
@@ -77,5 +97,9 @@ module ApplicationHelper
   def current_translations
     @translations ||= I18n.backend.send(:translations)
     @translations[I18n.locale].with_indifferent_access
+  end
+
+  def back_link url
+    url.to_s + "?back=true" # handles root url as well (nil)
   end
 end

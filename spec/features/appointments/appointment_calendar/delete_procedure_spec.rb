@@ -37,6 +37,7 @@ feature 'Delete Procedure', js: true do
     accept_confirm do
       first('.procedure button.delete').click
     end
+    wait_for_ajax
   end
 
   def then_i_should_not_see_the_core
