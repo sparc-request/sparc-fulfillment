@@ -73,4 +73,16 @@ RSpec.describe ArmsController do
       }.not_to change(Arm, :count)
     end
   end
+
+  describe "POST #update" do
+
+    it "should update the arm" do
+      post :update, {
+        id: @arm.id,
+        arm: @arm.attributes.merge({"name" => "BABOOM~*"}),
+        format: :js
+      }
+      expect(assigns(:arm)).to have_attributes(name: "BABOOM~*")
+    end
+  end
 end

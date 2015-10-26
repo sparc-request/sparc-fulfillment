@@ -1,0 +1,20 @@
+.modal-dialog
+  .modal-content
+    = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4.modal-title.text-center= t(:reports)[:incomplete_visit_report]
+      .modal-body
+        #modal_errors
+        .row
+          .col-md-12
+            =hidden_field_tag "report_type", report_type
+            .form-group
+              =label_tag "title", t(:documents)[:title], class: "col-sm-3 control-label"
+              .col-sm-9= text_field_tag "title", title, class: "form-control"
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:reports)[:request_report]}

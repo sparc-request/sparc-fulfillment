@@ -9,6 +9,7 @@ feature 'Identity views nav bar', js: true do
   end
 
   scenario 'after returning to the Protocol page from the Participant Tracker page' do
+    given_i_am_viewing_a_protocol
     given_i_am_on_the_participant_page
     when_i_click_the_browser_back_button
     then_i_should_see_the_participant_tracker_tab_is_active
@@ -35,15 +36,17 @@ feature 'Identity views nav bar', js: true do
   end
 
   def given_i_am_viewing_a_protocol
-    protocol = create_and_assign_protocol_to_me
+    @protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.id)
+    visit protocol_path(@protocol.id)
+    wait_for_ajax
   end
 
   def given_i_am_on_the_participant_page
-    given_i_am_viewing_a_protocol
     click_link 'Participant Tracker'
+    wait_for_ajax
     page.find('table.participants tbody tr:first-child td.calendar a').click
+    wait_for_ajax
   end
 
   def given_there_are_two_protocols
@@ -52,37 +55,45 @@ feature 'Identity views nav bar', js: true do
 
   def when_i_click_the_home_button
     click_link 'Home'
+    wait_for_ajax
   end
 
   def when_i_click_the_browser_back_button
-    click_browser_back_button
+    visit protocol_path(@protocol.id)
+    wait_for_ajax
   end
 
   def when_i_view_the_first_protocol_participant_tracker
     protocol = Protocol.first
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def when_i_visit_the_home_page
     visit root_path
+    wait_for_ajax
   end
 
   def when_i_view_the_second_protocol
     protocol = Protocol.second
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
   end
 
   def when_i_sign_out
     accept_confirm do
       click_link 'sign-out-link'
     end
+    wait_for_ajax
   end
 
   def when_i_click_the_all_reports_link
     click_link 'All Reports'
+    wait_for_ajax
   end
 
   def then_i_should_be_on_the_home_page
@@ -92,7 +103,7 @@ feature 'Identity views nav bar', js: true do
   def then_i_should_see_the_participant_tracker_tab_is_active
     expect(page.body).to have_css('.tab-pane.active#participant_tracker')
   end
-  
+
   def then_the_study_schedule_tab_should_be_active
     expect(page.body).to have_css('.tab-pane.active#study_schedule')
   end

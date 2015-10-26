@@ -14,6 +14,7 @@ feature "Completing a Task", js: true do
     create_list(:task, 2, identity: assignor, assignee: assignee)
 
     visit tasks_path
+    wait_for_ajax
   end
 
   def when_i_mark_the_task_as_complete

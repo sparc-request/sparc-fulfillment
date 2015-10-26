@@ -1,10 +1,7 @@
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>");
 if $("#modal_errors > .alert.alert-danger > p").length == 0
-  $(".line_item[data-id=<%= @line_item.id %>] > .qty_rem").html("<%= @line_item.quantity_remaining %>")
-  $(".line_item[data-id=<%= @line_item.id %>] > .last_fulfillment").html("<%= format_date(@line_item.last_fulfillment) %>")
-  $(".fulfillment[data-id=<%= @fulfillment.id %>]").replaceWith("<%= escape_javascript(render(:partial =>'study_level_activities/fulfillment', locals: {fulfillment: @fulfillment})) %>")
-  $(".selectpicker").selectpicker()
   $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
+  $("#fulfillments-table").bootstrapTable('refresh')
+  $("#fulfillments_row").prev('tr').find('.qty_rem').text("<%= @line_item.quantity_remaining %>")
+  $("#fulfillments_row").prev('tr').find('.last_fulfillment').text("<%= format_date(@line_item.last_fulfillment) %>")
   $("#modal_place").modal 'hide'
-
-  $(".fulfillment[data-id=<%= @fulfillment.id %>] [data-toggle='tooltip']").tooltip()

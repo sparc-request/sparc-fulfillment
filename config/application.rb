@@ -26,9 +26,6 @@ module ClinicalWorkFulfillment
     config.autoload_paths += Dir[Rails.root.join('lib')]
     config.paths.add File.join('lib/reports'), glob: File.join('**', '*.rb')
     config.autoload_paths += Dir[Rails.root.join('lib/reports')]
-    config.paths.add File.join('lib/extensions'), glob: File.join('**', '*.rb')
-    config.autoload_paths += Dir[Rails.root.join('lib/extensions')]
-    require 'extensions/float'
 
     # Importers
     config.autoload_paths += Dir[Rails.root.join('lib/importers')]

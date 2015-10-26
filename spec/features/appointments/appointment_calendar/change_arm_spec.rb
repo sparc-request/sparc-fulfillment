@@ -13,9 +13,9 @@ feature "Change Participant Arm", js: :true do
   end
 
   def when_i_start_work_on_an_appointment
-    @protocol = create_and_assign_protocol_to_me
+    @protocol     = create_and_assign_protocol_to_me
     @original_arm = @protocol.arms.first
-    @participant = @protocol.participants.first
+    @participant  = @protocol.participants.first
     @participant.update_attribute(:arm_id, @original_arm.id)
     @procedure = create(:procedure, visit_group: @original_arm.visit_groups.first, completed_date: "08-08-2013")
     @service   = @protocol.organization.inclusive_child_services(:per_participant).first

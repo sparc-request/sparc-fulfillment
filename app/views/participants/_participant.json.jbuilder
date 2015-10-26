@@ -19,7 +19,7 @@ json.gender participant.gender
 json.ethnicity participant.ethnicity
 json.race participant.race
 json.address truncated_formatter(participant.address)
-json.phone participant.phone
+json.phone phoneNumberFormatter(participant)
 json.details detailsFormatter(participant)
 json.edit editFormatter(participant)
 json.delete deleteFormatter(participant)
@@ -27,4 +27,4 @@ json.calendar calendarFormatter(participant)
 json.participant_report participant_report_formatter(participant)
 json.chg_arm changeArmFormatter(participant)
 json.recruitment_source truncated_formatter(participant.recruitment_source)
-json.coordinators formatted_coordinators(participant.protocol.coordinators.map(&:full_name))\
+json.coordinators formatted_coordinators(participant.protocol.coordinators.map(&:full_name))

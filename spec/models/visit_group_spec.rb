@@ -8,10 +8,25 @@ RSpec.describe VisitGroup, type: :model do
   it { is_expected.to have_many(:appointments) }
 
   context 'validations' do
-    it { is_expected.to validate_presence_of(:arm_id) }
-    it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_presence_of(:day) }
-    it { is_expected.to validate_numericality_of(:day) }
+    it { is_expected.to validate_presence_of :arm_id }
+    it { is_expected.to validate_presence_of :name }
+  end
+
+  context 'if use epic:' do
+    it "set use_epic to true " do
+      ClimateControl.modify USE_EPIC: 'true' do
+        is_expected.to validate_presence_of :day
+        is_expected.to validate_numericality_of :day
+      end
+    end
+  end
+
+  context 'if not use epic:' do
+    it "sets USE_EPIC to false" do
+      ClimateControl.modify USE_EPIC: 'false' do
+        is_expected.not_to validate_presence_of :day
+      end
+    end
   end
 
   context 'class methods' do
@@ -51,19 +66,6 @@ RSpec.describe VisitGroup, type: :model do
       end
     end
 
-    describe 'callbacks' do
-
-      it 'should callback :reorder_visit_groups_up after create' do
-        visit_group = create(:visit_group_with_arm)
-        expect(visit_group).to callback(:reorder_visit_groups_up).after(:create)
-      end
-
-      it 'should callback :reorder_visit_groups_down after destroy' do
-        visit_group = create(:visit_group_with_arm)
-        expect(visit_group).to callback(:reorder_visit_groups_down).after(:destroy)
-      end
-    end
-
     describe 'public' do
 
       it 'should return correct insertion_name' do
@@ -84,7 +86,7 @@ RSpec.describe VisitGroup, type: :model do
           @vg_c        = create(:visit_group, name: 'C', position: 3, arm_id: @arm.id)
           @participant = create(:participant, arm: @arm, protocol: @protocol)
           @appointment = create(:appointment, visit_group: @vg_a, participant: @participant, name: @vg_a.name, arm_id: @vg_a.arm_id)
-          @procedure   = create(:procedure, appointment: @appointment)
+          @procedure   = create(:procedure, :complete, appointment: @appointment)
         end
 
       describe 'reorder' do
@@ -114,6 +116,7 @@ RSpec.describe VisitGroup, type: :model do
       describe 'check for completed data' do
 
         it "should allow the appointment to be deleted if it is not completed" do
+          @procedure.update_attributes(status: "unstarted")
           @vg_a.destroy
           expect(@participant.appointments.empty?).to eq(true)
         end
@@ -125,7 +128,6 @@ RSpec.describe VisitGroup, type: :model do
         end
 
         it "should not allow the appointment to be deleted if any of it's procedures are completed" do
-          @procedure.update_attributes(completed_date: Time.current.strftime("%m-%d-%Y"))
           @vg_a.destroy
           expect(@participant.appointments.empty?).to eq(false)
         end

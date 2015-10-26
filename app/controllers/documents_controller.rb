@@ -1,7 +1,7 @@
 class DocumentsController < ApplicationController
   layout nil
 
-  before_action :find_document, only: [:show]
+  before_action :find_document, only: [:show, :destroy]
   before_action :authorize_document_access, only: [:show]
   before_action :validate_presence_of_upload, only: [:create]
 
@@ -48,7 +48,8 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.js {
         @document = Document.create(document_params.merge!(original_filename: params[:document][:document].original_filename,
-                                                           content_type: params[:document][:document].content_type))
+                                                           content_type: params[:document][:document].content_type,
+                                                           state: "Completed"))
 
         create_document_file
 
@@ -58,7 +59,11 @@ class DocumentsController < ApplicationController
   end
 
   def edit
-    @document = Document.find(params[:id])
+    respond_to do |format|
+      format.js {
+        @document = Document.find(params[:id])
+      }
+    end
   end
 
   def update
@@ -70,6 +75,17 @@ class DocumentsController < ApplicationController
       flash.now[:success] = t(:documents)[:flash_messages][:updated]
     else
       @errors = @document.errors
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      format.js {        
+        mark_document_as_accessed if @document.last_accessed_at.nil?
+        @document.destroy
+
+        flash[:alert] = t(:documents)[:flash_messages][:removed]
+      }
     end
   end
 

@@ -2,14 +2,16 @@ require 'rails_helper'
 
 feature 'Performed by dropdown', js: true do
 
-  it 'should make a note whenever the performer is changed' do
-    as_a_user_who_adds_a_procedure_to_an_appointment
-    and_i_select_another_name_in_the_performed_by_dropdown
-    and_i_view_the_notes
-    then_i_should_see_a_note_indicating_that_the_performer_was_changed
+  context 'User changes performeder in a procedure' do
+    scenario 'and sees a note indicating the performer was changed' do
+      given_i_have_added_a_procedure_to_an_appointment
+      when_i_select_another_name_in_the_performed_by_dropdown
+      when_i_view_the_notes
+      then_i_should_see_a_note_indicating_that_the_performer_was_changed
+    end
   end
 
-  def as_a_user_who_adds_a_procedure_to_an_appointment
+  def given_i_have_added_a_procedure_to_an_appointment
     protocol    = create_and_assign_protocol_to_me
     @performer  = create(:identity)
     ClinicalProvider.create(identity: @performer, organization: protocol.organization)
@@ -31,11 +33,11 @@ feature 'Performed by dropdown', js: true do
     @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
   end
 
-  def and_i_select_another_name_in_the_performed_by_dropdown
+  def when_i_select_another_name_in_the_performed_by_dropdown
     bootstrap_select "#performed-by-#{@procedure.id}", @performer.full_name
   end
 
-  def and_i_view_the_notes
+  def when_i_view_the_notes
     find('.procedure td.notes button.notes.list').click
   end
 

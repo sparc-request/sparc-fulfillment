@@ -27,14 +27,15 @@ feature 'User views the participant tracker page', js: true do
 
   def given_i_am_viewing_the_participant_tracker
     @protocol = create_and_assign_protocol_to_me
-    @participant = @protocol.participants.first
+    @participant = create(:participant, protocol: @protocol, arm: @protocol.arms.first)
+    @original_arm = @participant.arm
 
     visit protocol_path @protocol
     click_link 'Participant Tracker'
   end
 
   def when_i_click_on_the_notes_button
-    first('.participant_notes').click
+    find(".participant_notes[data-notable-id='#{@participant.id}']").click
     wait_for_ajax
   end
 
@@ -47,10 +48,11 @@ feature 'User views the participant tracker page', js: true do
   end
 
   def when_i_change_the_particpants_arm
-    second_arm  = @protocol.arms.second
+    find(".change-arm[participant_id='#{@participant.id}']").click
+    wait_for_ajax
 
-    first('.change-arm').click
-    select second_arm.name, from: 'Current Arm'
+    bootstrap_select "#participant_arm_id", @protocol.arms.second.name
+    
     click_button 'Save'
     wait_for_ajax
   end
@@ -64,7 +66,7 @@ feature 'User views the participant tracker page', js: true do
   end
 
   def then_i_should_see_the_arm_change_note_in_the_index
-    first_arm_name = @participant.arm.name
+    first_arm_name = @original_arm.name
     second_arm_name = @protocol.arms.second.name
 
     expect(page).to have_content("Arm changed from #{first_arm_name} to #{second_arm_name}")

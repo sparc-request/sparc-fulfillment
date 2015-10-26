@@ -4,14 +4,11 @@ $ ->
 
     # Bootstrap Tab persistence
 
-    current_tab = $.cookie('active-protocol-tab')
-
-    if current_tab && current_tab.length > 0
-      $(".protocol-tab > a[href='##{current_tab}']").tab('show') # show tab on load
-
     $('.protocol-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
       tab = String(e.target).split('#')[1]
-      $.cookie('active-protocol-tab', tab, expires: 1, path: '/') # save tab to cookie
+      date = new Date()
+      date.setTime(date.getTime() + (60 * 60 * 1000))
+      $.cookie('active-protocol-tab', tab, expires: date, path: '/') # save tab to cookie
 
     # Study Schedule Report button
 
@@ -20,6 +17,5 @@ $ ->
 
       remote_document_generator 'a.study_schedule_report', tables_to_refresh
 
-    if $('#reports.tab-pane.active').length > 0
-      $(document).on 'click', 'a.attached_file', ->
-        update_view_on_download_new_report $(this), 'table.protocol_reports', 'Protocol'
+    $(document).on 'click', 'a.attached_file', ->
+      update_view_on_download_new_report $(this), 'table.protocol_reports', 'Protocol'

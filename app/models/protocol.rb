@@ -41,6 +41,10 @@ class Protocol < ActiveRecord::Base
            :title,
            :funding_source,
            to: :sparc_protocol
+  
+  def self.title id
+    ["Protocol", Protocol.find(id).srid].join(' ')
+  end
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id
     "#{sparc_id} - #{sub_service_request.ssr_id}"

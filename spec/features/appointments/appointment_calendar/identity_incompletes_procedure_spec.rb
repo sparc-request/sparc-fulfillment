@@ -5,7 +5,8 @@ feature 'Identity incompletes Procedure', js: true do
   scenario 'and sees completed and incompleted Notes' do
     given_i_have_completed_an_appointment
     when_i_incomplete_the_procedure
-    and_i_view_the_notes_list
+    then_i_should_see_that_i_am_the_procedure_performer
+    when_i_view_the_notes_list
     then_i_should_see_two_complete_notes
   end
 
@@ -16,6 +17,7 @@ feature 'Identity incompletes Procedure', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path participant
+
     bootstrap_select '#appointment_select', visit_group.name
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: 1
@@ -34,7 +36,12 @@ feature 'Identity incompletes Procedure', js: true do
     wait_for_ajax
   end
 
-  def and_i_view_the_notes_list
+  def then_i_should_see_that_i_am_the_procedure_performer
+    identity   = Identity.first
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: identity.full_name)
+  end
+
+  def when_i_view_the_notes_list
     find('.procedure td.notes button.notes.list').click
   end
 

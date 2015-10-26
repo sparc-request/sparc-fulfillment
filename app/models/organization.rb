@@ -4,7 +4,8 @@ class Organization < ActiveRecord::Base
 
   belongs_to :parent, class_name: "Organization"
 
-  has_many :services
+  has_many :services,
+            -> {where(is_available: true)}
   has_many :sub_service_requests
   has_many :pricing_setups
   has_many :non_process_ssrs_children,

@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  default_title: 'Work Fulfillment'
 
   actions:
     close: "Close"
@@ -28,6 +29,9 @@ en:
     delete: "Delete"
     save: "Save"
     options: "Options"
+    remove: "Remove"
+    add: "Add"
+    actions: "Actions"
 
   appointment:
     srid: "SRID"
@@ -48,6 +52,7 @@ en:
     edit_header: "Custom Visit"
     start_visit: "Start Visit"
     complete_visit: "Complete Visit"
+    reset_visit: "Reset Visit"
     object: "Appointment"
     warning: "Please click 'Start Visit' and enter a start date to continue."
 
@@ -60,21 +65,24 @@ en:
     deleted: "Arm Destroyed"
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
     object: "Arm"
+    objects: "Arms"
     selected_line_items: "Selected Services"
+    edit_arm: Edit Arm
+    remove_arm: Remove Arm
     flash_messages:
       updated: "Arm Updated"
 
   documents:
     documents: "Documents"
     date: "Date Requested"
-    date_time_formatter_ruby: "%m/%d/%Y"
-    date_time_formatter_js:   "MM/DD/YYYY"
+    date_time_formatter_ruby: "%m/%d/%Y %r"
+    date_time_formatter_js:   "MM/DD/YYYY hh:mm:ss A"
     title: "Title"
     state: "Report Status"
     file: "Attached File"
-    downloaded_at: "Date Downloaded"
+    viewed_at: "Date Viewed"
     new_header: "Add Document"
-    date_uploaded: "Date Uploaded"
+    date_created: "Date Created"
     object: "Document"
     upload_button: "Upload Document"
     edit_header: "Edit Report Title"
@@ -86,6 +94,7 @@ en:
       none: "This fulfillment has no documents."
     flash_messages:
       created: "Document Created"
+      removed: "Document Removed"
       no_file_chosen: "You must choose a file"
       updated: "Title updated"
 
@@ -98,7 +107,6 @@ en:
     save_fulfillment: "Save Fulfillment"
     fulfillments: "Fulfillments"
     fulfillment_date: "Fulfillment Date"
-    account_number: "Account Number"
     quantity: "Quantity"
     qty_type: "Quantity Type"
     performed_by: "Performed By"
@@ -119,13 +127,16 @@ en:
     edit: "Edit Study Level Activity"
     change_service: "Change Service"
     service: "Service"
-    qty_req: "Quantity Requested"
-    qty_type: "Quantity Type"
-    qty_rem: "Quantity Remaining"
-    started: "Date Started"
+    qty_req: "Requested"
+    quantity: "Quantity"
+    qty_type: "Type"
+    qty_rem: "Remaining"
+    started: "Started"
     last_fulfillment: "Last Fulfillment"
-    components: "Service Components"
+    components: "Components"
     save_li: "Save Study Level Activity"
+    account_number: "Account"
+    contact: "Contact"
     object: "Line Item"
     flash_messages:
       updated: "Study Level Activity Updated"
@@ -217,8 +228,10 @@ en:
     object: "Procedure"
     complete: "Complete All"
     incomplete: "Incomplete All"
+    prog_core: "Program / Core"
 
   protocol:
+    id: "Protocol ID"
     object: "Protocol"
     updates: "Updates"
     sparc_id: "SPARC ID"
@@ -269,27 +282,31 @@ en:
 
 
   reports:
-    page_title: "All Reports"
-    request_report: "Request Report"
-    billing_report: "Billing Report"
     auditing_report: "Auditing Report"
+    billing_report: "Billing Report"
+    end_date: "End Date"
+    incomplete_visit_report: "Incomplete Visit Report"
+    organization: "Organization(s)"
+    page_title: "All Reports"
+    participant: "Participant"
     participant_report: "Participant Report"
     project_summary_report: "Project Summary Report"
-    protocols: "Protocol(s)"
     protocol: "Protocol"
-    organization: "Organization(s)"
-    participant: "Participant"
-    start_date: "Start Date"
-    end_date: "End Date"
     protocol_instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
+    protocols: "Protocol(s)"
+    request_report: "Request Report"
+    start_date: "Start Date"
 
   services:
     name: "Selected Service"
     arm: "Select Arm(s)"
     report: "Report"
+    remove_services: "Remove Services"
+    add_services: "Add Services"
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     object: "Service"
+    objects: "Services"
 
   task:
     new_task: "Create New Task"
@@ -318,6 +335,8 @@ en:
     check_row: "Check Row"
     uncheck_column: "Uncheck Column"
     uncheck_row: "Uncheck Row"
+    edit_visit: "Edit Visit"
+    remove_visit: "Remove Visit"
     flash_messages:
       updated: "Visit Updated"
 

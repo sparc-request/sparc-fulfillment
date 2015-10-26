@@ -2,13 +2,15 @@ require 'rails_helper'
 
 feature 'Create Note', js: true do
 
-  scenario 'User sets the content box' do
-    as_a_user_who_has_selected_an_appointment
-    when_i_select_from_the_contents_dropdown
-    i_should_be_able_to_view_the_selection
+  context 'User sets the content box' do
+    scenario 'and sees the selection' do
+      given_i_am_viewing_an_appointment
+      when_i_select_from_the_contents_dropdown
+      then_i_should_be_able_to_view_the_selection
+    end
   end
 
-  def as_a_user_who_has_selected_an_appointment
+  def given_i_am_viewing_an_appointment
     protocol      = create_and_assign_protocol_to_me
     @participant  = protocol.participants.first
     @appointment  = @participant.appointments.first
@@ -24,7 +26,7 @@ feature 'Create Note', js: true do
     wait_for_ajax
   end
 
-  def i_should_be_able_to_view_the_selection
+  def then_i_should_be_able_to_view_the_selection
     visit participant_path @participant
     bootstrap_select '#appointment_select', @visit_group.name
 

@@ -1,4 +1,4 @@
-- visits = line_item.visits.paginate(page: page)
+- visits = line_item.visits.paginate(page: page, per_page: Visit.per_page)
 - visits.each_with_index do |visit, index|
   .col-xs-1.text-center{class: "line_item_#{line_item.id}_visit_#{index} visit_for_visit_group_#{visit.visit_group_id}", visit_group_id: visit.visit_group_id}
     - if tab == 'template'

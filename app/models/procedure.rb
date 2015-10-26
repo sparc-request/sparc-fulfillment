@@ -20,11 +20,12 @@ class Procedure < ActiveRecord::Base
   belongs_to :visit
   belongs_to :service
   belongs_to :performer, class_name: "Identity"
+  belongs_to :core, class_name: "Organization", foreign_key: :sparc_core_id
 
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
 
-  before_update :set_status_dependencies
+  before_update :set_save_dependencies
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
@@ -46,6 +47,11 @@ class Procedure < ActiveRecord::Base
      ["O", "other_billing_qty"]]
   end
 
+  def performable_by
+    #Returns identities that are allowed to be the performer for this procedure, formatted for an options_for_select helper
+    Identity.joins(:clinical_providers).where(clinical_providers: {organization: self.protocol.organization}).map {|identity| [identity.full_name, identity.id]}
+  end
+
   def formatted_billing_type
     case self.billing_type
     when "research_billing_qty"
@@ -55,6 +61,10 @@ class Procedure < ActiveRecord::Base
     when "other_billing_qty"
       return "O"
     end
+  end
+
+  def group_id
+    "#{formatted_billing_type}_#{service_id}"
   end
 
   # Has this procedure's appointment started?
@@ -82,7 +92,6 @@ class Procedure < ActiveRecord::Base
     end
   end
 
-  #TODO: The following 4 methods should be redefined as scopes
   def complete?
     status == 'complete'
   end
@@ -113,6 +122,25 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  def destroy_regardless_of_status
+    #Destroy task, since delete won't fire after_destroy hooks
+    task.destroy if task
+    #Destroy notes, for same reason
+    notes.destroy_all if notes.any?
+    #Finally, delete, not destroy procedure
+    self.delete
+  end
+
+  def reset
+    #Reset Status
+    self.update_attributes(status: "unstarted")
+    #Remove tasks
+    task.destroy if task
+    #Remove notes
+    notes.destroy_all if notes.any?
+    self.reload
+  end
+
   def completed_date=(completed_date)
     if completed_date.present?
       write_attribute(:completed_date, Time.strptime(completed_date, "%m-%d-%Y"))
@@ -131,20 +159,23 @@ class Procedure < ActiveRecord::Base
 
   def cost(funding_source = protocol.funding_source, date = Time.current)
     if service_cost
-      amount = service_cost
+      service_cost.to_i
     else
-      if visit
-        amount = visit.line_item.cost(funding_source, date)
-      else
-        amount = service.cost(funding_source, date)
-      end
+      new_cost(funding_source, date)
     end
-    amount.to_i
   end
 
   private
 
-  def set_status_dependencies
+  def new_cost(funding_source, date)
+    if visit
+      visit.line_item.cost(funding_source, date).to_i
+    else
+      service.cost(funding_source, date).to_i
+    end
+  end
+
+  def set_save_dependencies
     if status_changed?(from: "unstarted") && service.present?
       write_attribute(:service_name, service.name)
     end
@@ -152,7 +183,6 @@ class Procedure < ActiveRecord::Base
     if status_changed?(to: "complete")
       write_attribute(:incompleted_date, nil)
       write_attribute(:completed_date, Date.today)
-      write_attribute(:service_cost, cost)
     elsif status_changed?(to: "incomplete")
       write_attribute(:completed_date, nil)
       write_attribute(:incompleted_date, Date.today)
@@ -166,6 +196,10 @@ class Procedure < ActiveRecord::Base
 
     if status_changed?(from: "complete")
       write_attribute(:service_cost, nil)
+    end
+
+    if completed_date_changed? && !completed_date_changed?(to: nil)
+      write_attribute(:service_cost, new_cost(protocol.funding_source, completed_date))
     end
   end
 end

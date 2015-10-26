@@ -3,7 +3,9 @@ $ ->
   # Use cookie to remember study schedule tab
   $('.schedule-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
     tab = String(e.target).split("#")[1]
-    $.cookie("active-schedule-tab", tab, expires: 1, path: '/') # save tab to cookie
+    date = new Date()
+    date.setTime(date.getTime() + (60 * 60 * 1000))
+    $.cookie("active-schedule-tab", tab, expires: date, path: '/') # save tab to cookie
 
   $(document).on 'click', '.page_change_arrow', ->
     data =
@@ -141,18 +143,4 @@ $ ->
     $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
-
-  (exports ? this).change_service = (service_id) ->
-    protocol_id = $('#arms').data('protocol_id')
-    data =
-      'protocol_id': protocol_id
-      'service_id': service_id
-    $.ajax
-      type: 'GET'
-      url: "/multiple_line_items/necessary_arms"
-      data: data
-
-  # go to cookie-saved tab on page load
-  current_tab = $.cookie("active-schedule-tab")
-  if current_tab && current_tab.length > 0
-    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
+    
