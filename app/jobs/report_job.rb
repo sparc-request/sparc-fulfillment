@@ -14,8 +14,8 @@ class ReportJob < ActiveJob::Base
   end
 
   def perform(document, params)
-    document_name = params[:title]
-    report        = params[:title].classify.constantize.new(params)
+    document_name = document.title
+    report        = document.report_type.classify.constantize.new(params)
 
     report.generate(document)
 
@@ -27,7 +27,17 @@ class ReportJob < ActiveJob::Base
       arguments.
       first.
       update_attributes state: 'Completed'
-    find_identity(job).update_counter(:unaccessed_documents, 1)
+    
+    document = job.arguments.first
+
+    case document.documentable_type
+      when 'Protocol' 
+        protocol = Protocol.find(job.arguments.last[:documentable_id])
+        protocol.document_counter_updated = true
+        protocol.update_attributes(unaccessed_documents_count: (protocol.unaccessed_documents_count + 1))
+      when 'Identity' 
+        find_identity(job).update_counter(:unaccessed_documents, 1)
+    end
   end
 
   private
@@ -37,8 +47,8 @@ class ReportJob < ActiveJob::Base
   end
 
   def find_or_create_document_root_path
-    unless Dir.exists? ENV.fetch('DOCUMENT_ROOT')
-      Dir.mkdir ENV.fetch('DOCUMENT_ROOT')
+    unless Dir.exists? ENV.fetch('DOCUMENTS_FOLDER')
+      Dir.mkdir ENV.fetch('DOCUMENTS_FOLDER')
     end
   end
 end

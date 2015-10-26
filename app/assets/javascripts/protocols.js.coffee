@@ -16,9 +16,7 @@ $ ->
     $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
     $('#protocol-list').bootstrapTable('hideColumn', 'owner')
     $('#protocol-list').bootstrapTable('hideColumn', 'requester')
-    $('#protocol-list').bootstrapTable('hideColumn', 'provider')
-    $('#protocol-list').bootstrapTable('hideColumn', 'program')
-
+    $('#protocol-list').bootstrapTable('hideColumn', 'organizations')
 
     $(".bootstrap-table .fixed-table-toolbar").
       prepend('<div class="columns btn-group pull-right financial--view" data-toggle="buttons"><label class="btn btn-default financial" title="Financial View"><input type="radio" autocomplete="off" value="financial"><i class="glyphicon glyphicon-usd"></i></label><label class="btn btn-default management" title="Management View"><input type="radio" autocomplete="off" value="management"><i class="glyphicon glyphicon-book"></i></label></div>')

@@ -5,7 +5,7 @@ class Document < ActiveRecord::Base
   belongs_to :documentable, polymorphic: true
 
   def path
-    [ENV.fetch('DOCUMENT_ROOT'), id].join('/')
+    [ENV.fetch('DOCUMENTS_FOLDER'), id].join('/')
   end
 
   def completed?
@@ -15,12 +15,8 @@ class Document < ActiveRecord::Base
   def downloaded?
     last_accessed_at
   end
-
-  def belongs_to_identity?
-    documentable_type == 'Identity'
-  end
-
+  
   def accessible_by?(identity)
-    !belongs_to_identity? || (belongs_to_identity? && documentable == identity)
+    !(documentable_type == 'Identity') || (documentable_type == 'Identity' && documentable == identity)
   end
 end

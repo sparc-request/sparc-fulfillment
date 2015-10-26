@@ -5,13 +5,14 @@ class ProceduresController < ApplicationController
   before_action :create_note_before_update, only: [:update]
 
   def create
-    @appointment_id = params[:appointment_id]
-    qty = params[:qty].to_i
-    service = Service.find params[:service_id]
-    performer_id = params[:performer_id] || current_identity.id
-    @procedures = []
+    @appointment = Appointment.find params[:appointment_id]
+    qty             = params[:qty].to_i
+    service         = Service.find params[:service_id]
+    performer_id    = params[:performer_id]
+    @procedures     = []
+
     qty.times do
-      @procedures << Procedure.create(appointment_id: @appointment_id,
+      @procedures << Procedure.create(appointment: @appointment,
                                       service_id: service.id,
                                       service_name: service.name,
                                       performer_id: performer_id,
@@ -64,9 +65,10 @@ class ProceduresController < ApplicationController
                               comment: 'Status set to complete',
                               kind: 'log')
     elsif change_in_performer_detected?
-      new_performer = Identity.find(procedure_params[:performer_id]).full_name
+      new_performer = Identity.find(procedure_params[:performer_id])
+
       @procedure.notes.create(identity: current_identity,
-                              comment: "Performer changed to #{new_performer}",
+                              comment: "Performer changed to #{new_performer.full_name}",
                               kind: 'log')
     end
   end
@@ -92,15 +94,19 @@ class ProceduresController < ApplicationController
   end
 
   def change_in_performer_detected?
-    procedure_params[:performer_id].present? and procedure_params[:performer_id] != @procedure.performer_id
+    procedure_params[:performer_id].present? && procedure_params[:performer_id] != @procedure.performer_id
   end
 
   def procedure_params
-    @procedure_params ||= params.
-                        require(:procedure).
-                        permit(:status, :follow_up_date, :completed_date, :billing_type, :performer_id,
-                                notes_attributes: [:comment, :kind, :identity_id, :reason],
-                                tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
+    params.
+      require(:procedure).
+      permit(:status,
+             :follow_up_date,
+             :completed_date,
+             :billing_type,
+             :performer_id,
+             notes_attributes: [:comment, :kind, :identity_id, :reason],
+             tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
   end
 
   def find_procedure

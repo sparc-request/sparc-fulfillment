@@ -3,11 +3,10 @@ class VisitGroup < ActiveRecord::Base
 
   has_paper_trail
   acts_as_paranoid
+  acts_as_list scope: [:arm_id]
 
   include CustomPositioning #custom methods around positioning, acts_as_list
 
-  after_create :reorder_visit_groups_up
-  after_destroy :reorder_visit_groups_down
   before_destroy :check_for_completed_data
 
   belongs_to :arm
@@ -21,13 +20,9 @@ class VisitGroup < ActiveRecord::Base
   validates :arm_id,
             :name,
             presence: true
-  validates :day, presence: true, numericality: true
 
-  # Totals the service costs (for completed procedures) rendered
-  # for given participant.
-  def total_completed_cost_for_participant(participant)
-    (appointment = appointments.where(participant: participant).first) ? appointment.total_completed_cost : nil
-  end
+  validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
+  validates :day, numericality: true, if: "self.day.present?"
 
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)
@@ -38,22 +33,6 @@ class VisitGroup < ActiveRecord::Base
   end
 
   private
-
-  def reorder_visit_groups_up
-    if self.position != nil
-      VisitGroup.where("arm_id = ? AND position >= ?", self.arm_id, self.position).each do |group|
-        group.update_attributes(position: group.position + 1) unless group == self
-      end
-    else
-      self.update_attributes(position: (VisitGroup.where("arm_id = ?", self.arm_id)).count)
-    end
-  end
-
-  def reorder_visit_groups_down
-    VisitGroup.where("arm_id = ? AND position >= ?", self.arm_id, self.position).each do |group|
-      group.update_attributes(position: group.position - 1) unless group == self
-    end
-  end
 
   def check_for_completed_data
     self.appointments.each{ |appt| appt.destroy_if_incomplete }

@@ -32,16 +32,17 @@ class Appointment < ActiveRecord::Base
   # Can appointment be finished? It must have a start date, and
   # all its procedures must either be complete, incomplete, or
   # have a follow up date assigned to it.
+
+  def started?
+    start_date.present?
+  end
+
   def can_finish?
     !start_date.blank? && (procedures.all? { |proc| !proc.unstarted? })
   end
 
   def has_completed_procedures?
     procedures.any?(&:completed_date)
-  end
-
-  def total_completed_cost
-    procedures.complete.sum(:service_cost)
   end
 
   def procedures_grouped_by_core
@@ -68,7 +69,7 @@ class Appointment < ActiveRecord::Base
               appointment_id: self.id,
               visit_id: visit.id,
               service_name: li.service.name,
-              service_cost: li.service.cost,
+              service_cost: li.service.cost(li.protocol.funding_source),
               service_id: li.service.id,
               sparc_core_id: li.service.sparc_core_id,
               sparc_core_name: li.service.sparc_core_name

@@ -1,6 +1,7 @@
 class DocumentsController < ApplicationController
+  layout nil
 
-  before_action :find_document, only: [:show]
+  before_action :find_document, only: [:show, :destroy]
   before_action :authorize_document_access, only: [:show]
   before_action :validate_presence_of_upload, only: [:create]
 
@@ -16,7 +17,7 @@ class DocumentsController < ApplicationController
         @documentable_sym = @documentable_type.downcase.to_sym
       }
       format.json {
-        @documents = find_documentable.documents
+        @documents = find_documentable.documents.order("CREATED_AT DESC")
       }
     end
   end
@@ -24,13 +25,13 @@ class DocumentsController < ApplicationController
   def show
     respond_to do |format|
       format.html {
+        mark_document_as_accessed
         send_data File.read(@document.path),
           type: @document.content_type,
-          disposition: "attachment; filename=#{@document.original_filename}"
-        mark_document_as_accessed
+          disposition: "attachment; filename=#{@document.original_filename.gsub(' ', '_')}"
       }
       format.json {
-        render json: { document: { state: @document.state } }
+        render json: { document: { state: @document.state, document_id: @document.id, documentable_type: @document.documentable_type } }
       }
     end
   end
@@ -47,11 +48,43 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.js {
         @document = Document.create(document_params.merge!(original_filename: params[:document][:document].original_filename,
-                                                           content_type: params[:document][:document].content_type))
+                                                           content_type: params[:document][:document].content_type,
+                                                           state: "Completed"))
 
         create_document_file
 
-        flash[:success] = t(:documents)[:flash_messages][:created]
+        flash.now[:success] = t(:documents)[:flash_messages][:created]
+      }
+    end
+  end
+
+  def edit
+    respond_to do |format|
+      format.js {
+        @document = Document.find(params[:id])
+      }
+    end
+  end
+
+  def update
+    # only allow title to be updated
+    @document = Document.find(params[:id])
+    @document.title = params[:document][:title]
+    if @document.valid?
+      @document.save
+      flash.now[:success] = t(:documents)[:flash_messages][:updated]
+    else
+      @errors = @document.errors
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      format.js {        
+        mark_document_as_accessed if @document.last_accessed_at.nil?
+        @document.destroy
+
+        flash[:alert] = t(:documents)[:flash_messages][:removed]
       }
     end
   end
@@ -95,13 +128,21 @@ class DocumentsController < ApplicationController
   end
 
   def mark_document_as_accessed
-    update_identity_unaccessed_documents_counter
+    update_unaccessed_documents_counter(@document.documentable_type)
+
     @document.update_attributes last_accessed_at: Time.current
   end
 
-  def update_identity_unaccessed_documents_counter
-    if !@document.downloaded? && @document.belongs_to_identity?
-      current_identity.update_counter :unaccessed_documents, -1
+  def update_unaccessed_documents_counter documentable_type
+    if !@document.downloaded?
+      case documentable_type
+        when 'Protocol'
+          protocol = Protocol.find(@document.documentable_id)
+          protocol.document_counter_updated = true
+          protocol.update_attributes(unaccessed_documents_count: (protocol.unaccessed_documents_count - 1))
+        when 'Identity'
+          current_identity.update_counter :unaccessed_documents, -1
+      end
     end
   end
 

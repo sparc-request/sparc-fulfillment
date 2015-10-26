@@ -3,7 +3,9 @@ $ ->
   # Use cookie to remember study schedule tab
   $('.schedule-tab > a[data-toggle="tab"]').on 'shown.bs.tab', (e) ->
     tab = String(e.target).split("#")[1]
-    $.cookie("active-schedule-tab", tab, expires: 1, path: '/') # save tab to cookie
+    date = new Date()
+    date.setTime(date.getTime() + (60 * 60 * 1000))
+    $.cookie("active-schedule-tab", tab, expires: date, path: '/') # save tab to cookie
 
   $(document).on 'click', '.page_change_arrow', ->
     data =
@@ -109,9 +111,9 @@ $ ->
         # Update text fields
         identifier = ".visits_for_line_item_#{line_item_id}"
         if check == 'true'
-          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
+          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_row"], true, 1, 0)
         else
-          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
+          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_row"], false, 0, 0)
 
   $(document).on 'click', '.check_column', ->
     check = $(this).attr('check')
@@ -128,38 +130,17 @@ $ ->
         # Update text fields
         identifier = ".visit_for_visit_group_#{visit_group_id}"
         if check == 'true'
-          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', true, 1, 0)
+          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_column"], true, 1, 0)
         else
-          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', false, 0, 0)
+          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_column"], false, 0, 0)
 
-  check_row_column = (obj, identifier, remove_class, add_class, attr_check, prop_check, research_val, insurance_val) ->
+  check_row_column = (obj, identifier, remove_class, add_class, attr_check, attr_title, prop_check, research_val, insurance_val) ->
     obj.removeClass(remove_class).addClass(add_class)
     obj.attr('check', attr_check)
+    obj.attr('title', attr_title)
+    obj.tooltip('destroy')
+    obj.tooltip()
     $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
-
-  # Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
-  # containing content, which disappears when user focuses to it.
-  (exports ? this).error_tooltip_on = (elt, content) ->
-    $elt = $(elt)
-    $elt.attr('data-toggle', 'tooltip').attr('title', content)
-    $elt.tooltip({container: 'body'})
-    $elt.tooltip('show')
-    delay = (ms, func) -> setTimeout func, ms
-    delay 3000, -> $elt.tooltip('destroy')
-
-  (exports ? this).change_service = (service_id) ->
-    protocol_id = $('#arms').data('protocol_id')
-    data =
-      'protocol_id': protocol_id
-      'service_id': service_id
-    $.ajax
-      type: 'GET'
-      url: "/multiple_line_items/necessary_arms"
-      data: data
-
-  # go to cookie-saved tab on page load
-  current_tab = $.cookie("active-schedule-tab")
-  if current_tab && current_tab.length > 0
-    $(".schedule-tab > a[href='##{current_tab}']").click() # show tab on load
+    

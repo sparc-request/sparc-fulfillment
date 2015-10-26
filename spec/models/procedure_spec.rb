@@ -8,21 +8,28 @@ RSpec.describe Procedure, type: :model do
 
   it { is_expected.to belong_to(:appointment) }
   it { is_expected.to belong_to(:visit) }
+  it { is_expected.to belong_to(:core) }
 
   it { is_expected.to have_many(:notes) }
   it { is_expected.to have_many(:tasks) }
 
-  it { should accept_nested_attributes_for(:notes) }
+  it { is_expected.to accept_nested_attributes_for(:notes) }
 
   it { is_expected.to validate_inclusion_of(:status).in_array(Procedure::STATUS_TYPES) }
 
   context 'class methods' do
 
+    before :each do
+      @service = create(:service)
+      protocol = create(:protocol)
+      arm = create(:arm, protocol: protocol)
+      @appointment = create(:appointment, arm: arm, participant_id: 5, name: "Super Arm")
+    end
+
     describe 'service_name' do
 
       before(:each) do
-        @service = create(:service)
-        @procedure = create(:procedure, service: @service)
+        @procedure = create(:procedure, service: @service, appointment: @appointment)
       end
 
       it "should be equal to the service's name when the procedure is unstarted" do
@@ -66,17 +73,15 @@ RSpec.describe Procedure, type: :model do
       end
     end
 
-    describe '.set_status_dependencies' do
+    describe '.set_save_dependencies' do
 
       context 'status changed to complete' do
 
         before do
           to_status = 'complete'
-          @service = create(:service)
           @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
             procedure = create(:procedure, from_status.to_sym)
-            procedure.update_attributes(service_id: @service.id)
-            procedure.update_attributes(status: to_status)
+            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment)
             procedure # may not be necessary
           end
         end
@@ -98,11 +103,9 @@ RSpec.describe Procedure, type: :model do
 
         before do
           to_status = 'incomplete'
-          @service = create(:service)
           @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
             procedure = create(:procedure, from_status.to_sym)
-            procedure.update_attributes(service_id: @service.id)
-            procedure.update_attributes(status: to_status)
+            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment)
             procedure # may not be necessary
           end
         end
@@ -124,13 +127,10 @@ RSpec.describe Procedure, type: :model do
 
         before do
           to_statuses = ['unstarted', 'follow_up']
-          @service = create(:service)
           from_statuses = Procedure::STATUS_TYPES - to_statuses
-
           @procedures = from_statuses.product(to_statuses).map do |from_status, to_status|
             procedure = create(:procedure, from_status.to_sym)
-            procedure.update_attributes(service_id: @service.id)
-            procedure.update_attributes(status: to_status)
+            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment)
             procedure
           end
         end
@@ -148,13 +148,11 @@ RSpec.describe Procedure, type: :model do
 
         before do
           to_statuses = ['unstarted', 'follow_up']
-          @service = create(:service)
           from_statuses = Procedure::STATUS_TYPES - to_statuses
 
           @procedures = from_statuses.product(to_statuses).map do |from_status, to_status|
             procedure = create(:procedure, from_status.to_sym, :with_task)
-            procedure.update_attributes(service_id: @service.id)
-            procedure.update_attributes(status: to_status)
+            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment)
             procedure
           end
         end

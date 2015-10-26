@@ -6,6 +6,8 @@
 
 .rvmrc
 
+fulfill.sql
+
 # Ignore bundler config.
 /.bundle
 
@@ -19,6 +21,8 @@
 /public/system/documents/*
 /public/assets/*
 
+# ignore documents_folder
+/documents/*
 
 .rspec
 .sass-cache/

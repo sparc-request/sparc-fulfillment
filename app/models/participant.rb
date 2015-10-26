@@ -14,6 +14,7 @@ class Participant < ActiveRecord::Base
 
   has_many :appointments
   has_many :procedures, through: :appointments
+  has_many :notes, as: :notable
 
   delegate :srid,
            to: :protocol
@@ -23,6 +24,11 @@ class Participant < ActiveRecord::Base
 
   validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, :address, :city, :state, :zipcode, presence: true
   validate :phone_number_format, :middle_initial_format, :zip_code_format
+
+  def self.title id
+    participant = Participant.find id
+    [Protocol.title(participant.protocol.id), participant.last_name, participant.first_name].join(', ')
+  end
 
   def date_of_birth=(dob)
     write_attribute(:date_of_birth, Time.strptime(dob, "%m-%d-%Y")) if dob.present?

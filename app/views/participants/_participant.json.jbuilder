@@ -11,13 +11,15 @@ json.last_name truncated_formatter(participant.last_name)
 json.name truncated_formatter(participant.full_name)
 json.mrn truncated_formatter(participant.mrn)
 json.external_id truncated_formatter(participant.external_id)
-json.status participant.status
+json.statusText participant.status
+json.statusDropdown statusFormatter(participant)
+json.notes notes_formatter(participant)
 json.date_of_birth format_date(participant.date_of_birth)
 json.gender participant.gender
 json.ethnicity participant.ethnicity
 json.race participant.race
 json.address truncated_formatter(participant.address)
-json.phone participant.phone
+json.phone phoneNumberFormatter(participant)
 json.details detailsFormatter(participant)
 json.edit editFormatter(participant)
 json.delete deleteFormatter(participant)

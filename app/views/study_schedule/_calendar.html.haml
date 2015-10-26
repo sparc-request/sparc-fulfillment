@@ -1,14 +1,13 @@
-= hidden_field_tag :protocol_id, protocol.id
 = hidden_field_tag :current_tab, tab
-= render :partial => 'study_schedule/study_schedule_management/schedule_edit_buttons', locals: {protocol: protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
+= render :partial => 'study_schedule/management/schedule_edit_buttons', locals: {protocol: protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
 %br
 %br
 %div{role: 'tabpanel'}
   %div{role: 'tablist'}
     %ul.nav.nav-tabs{id: 'study_schedule_tabs', role: 'navigation'}
-      %li.active.custom-tab.schedule-tab{role: 'presentation'}= link_to "Template", "#template", data: {toggle: 'tab', tab: 'template', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/template'
-      %li.custom-tab.schedule-tab{role: 'presentation'}= link_to "Quantity/Billing Tab", "#quantity", data: {toggle: 'tab', tab: 'quantity', protocol: protocol.id}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing'
-      %li.custom-tab.schedule-tab{role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
+      %li.custom-tab.schedule-tab{class: (tab == "template") ? "active" : "", role: 'presentation'}= link_to "Template", "#template", data: {toggle: 'tab', tab: 'template', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/template'
+      %li.custom-tab.schedule-tab{class: (tab == "quantity") ? "active" : "",role: 'presentation'}= link_to "Quantity/Billing Tab", "#quantity", data: {toggle: 'tab', tab: 'quantity', protocol: protocol.id}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing'
+      %li.custom-tab.schedule-tab{class: (tab == "consolidated") ? "active" : "",role: 'presentation'}= link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request'
     .study_schedule_container
       - protocol.arms.each do |arm|
         = render partial: 'study_schedule/arm', locals: {arm: arm, page: page, tab: tab}

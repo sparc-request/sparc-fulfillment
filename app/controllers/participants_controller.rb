@@ -15,7 +15,11 @@ class ParticipantsController < ApplicationController
   end
 
   def new
-    @participant = Participant.new(protocol_id: params[:protocol_id])
+    respond_to do |format|
+      format.js {
+        @participant = Participant.new(protocol_id: params[:protocol_id])
+      }
+    end
   end
 
   def show
@@ -54,6 +58,7 @@ class ParticipantsController < ApplicationController
 
   def update_arm
     @participant = Participant.find(params[:participant_id])
+    create_note_for_arm_change(params, @participant)
     @participant.update_attributes(arm_id: params[:participant][:arm_id])
     @participant.update_appointments_on_arm_change
     flash[:success] = t(:participant)[:flash_messages][:arm_change]
@@ -87,6 +92,15 @@ class ParticipantsController < ApplicationController
     else
       flash[:alert] = t(:participant)[:flash_messages][:not_found]
       redirect_to root_path
+    end
+  end
+
+  def create_note_for_arm_change(params, participant)
+    if participant.arm_id.to_s != params[:participant][:arm_id]
+      current_arm_name = participant.arm.blank? ? "BLANK ARM" : participant.arm.name
+      new_arm_name = params[:participant][:arm_id].blank? ? "BLANK ARM" : Arm.find(params[:participant][:arm_id]).name
+      @note = Note.create(identity: current_identity, notable_type: 'Participant', notable_id: participant.id,
+                          comment: "Arm changed from #{current_arm_name} to #{new_arm_name}")
     end
   end
 end

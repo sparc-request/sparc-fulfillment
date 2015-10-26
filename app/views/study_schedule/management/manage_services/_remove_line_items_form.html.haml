@@ -1,0 +1,22 @@
+.modal-dialog
+  .modal-content
+    = form_tag(destroy_line_items_multiple_line_items_path, method: "put", class: "form-horizontal new_visit", remote: true) do
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4#line_item.modal-title.text-center= t(:services)[:remove_services]
+      .modal-body
+        #modal_errors
+        .row
+          .col-md-12
+            .form-group
+              = label_tag "remove_service_id", t(:services)[:object], class: "col-sm-4 control-label"
+              .col-sm-7= select_tag "remove_service_id", options_from_collection_for_select(all_services, 'id' , 'name', service.id), class: "form-control selectpicker"
+            .form-group
+              = label_tag "remove_service_arm_ids", t(:arm)[:objects], class: "col-sm-4 control-label"
+              .col-sm-7= select_tag "remove_service_arm_ids[]", options_from_collection_for_select(arms, 'id' , 'name'), { class: "form-control selectpicker", multiple: "", title: "Please Select Arms", 'data-selected-text-format' => 'count>2'}
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:remove]}

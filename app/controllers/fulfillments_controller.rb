@@ -2,6 +2,18 @@ class FulfillmentsController < ApplicationController
 
   before_action :find_fulfillment, only: [:edit, :update]
 
+  def index
+    @line_item = LineItem.find(params[:line_item_id])
+    respond_to do |format|
+      format.js { render }
+      format.json {
+        @fulfillments = @line_item.fulfillments
+
+        render
+      }
+    end
+  end
+
   def new
     @line_item = LineItem.find(params[:line_item_id])
     @clinical_providers = ClinicalProvider.where(organization_id: @line_item.protocol.sub_service_request.organization_id)
@@ -11,7 +23,8 @@ class FulfillmentsController < ApplicationController
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
     service = @line_item.service
-    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: service.cost }))
+    funding_source = @line_item.protocol.funding_source
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: service.cost(funding_source) }))
     if @fulfillment.valid?
       @fulfillment.save
       update_components_and_create_notes('create')
@@ -45,7 +58,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def detect_changes_and_create_notes
-    tracked_fields = [:fulfilled_at, :quantity, :performer_id]
+    tracked_fields = [:fulfilled_at, :account_number, :quantity, :performer_id]
     tracked_fields.each do |field|
       current_field = @original_attributes[field.to_s]
       new_field = fulfillment_params[field]

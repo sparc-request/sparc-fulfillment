@@ -1,35 +1,49 @@
 require 'rails_helper'
 
-feature 'I try to view the participant calendar', js: true do
+feature 'User tries to view the participant calendar', js: true do
 
   before :each do
     given_i_am_viewing_the_participant_tracker
   end
 
   context 'and the participant is assigned to an arm' do
-    scenario 'so I am able to access the participant calendar' do
+    scenario 'so the user sees the calendar icon is active' do
       given_a_participant_has_an_arm
-      then_the_participant_calendar_icon_will_be_active
+      then_the_participant_calendar_icon_should_be_active
+    end
+
+    scenario 'so the user can access the participant calendar' do
+      given_a_participant_has_an_arm
       when_i_click_the_participant_calendar_icon
       then_i_will_see_the_participant_calendar
     end
   end
 
   context 'and the participant is not assigned to an arm but has completed appointments/visits' do
-    scenario 'so I am able to access the participant calendar' do
+    scenario 'so the user sees the calendar icon is active' do
       given_a_participant_does_not_have_an_arm
       given_a_participant_has_completed_appointments
-      then_the_participant_calendar_icon_will_be_active
+      then_the_participant_calendar_icon_should_be_active
+    end
+
+    scenario 'so the user can access the participant calendar' do
+      given_a_participant_does_not_have_an_arm
+      given_a_participant_has_completed_appointments
       when_i_click_the_participant_calendar_icon
       then_i_will_see_the_participant_calendar
     end
   end
 
   context 'and the participant is not assigned to an arm and has no completed appointments/visits' do
-    scenario 'so I am not able to access the participant calendar' do
+    scenario 'so the user sees the calendar icon is inactive' do
       given_a_participant_does_not_have_an_arm
       given_a_participant_does_not_have_completed_appointments
-      then_the_participant_calendar_icon_will_not_be_active
+      then_the_participant_calendar_icon_should_be_inactive
+    end
+
+    scenario 'so the user cant access the participant calendar' do
+      given_a_participant_does_not_have_an_arm
+      given_a_participant_does_not_have_completed_appointments
       when_i_click_the_participant_calendar_icon
       then_i_will_not_be_redirected
     end
@@ -40,7 +54,9 @@ feature 'I try to view the participant calendar', js: true do
     @participant = @protocol.participants.first
 
     visit protocol_path @protocol
+    wait_for_ajax
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def given_a_participant_has_an_arm
@@ -56,7 +72,8 @@ feature 'I try to view the participant calendar', js: true do
     @visit_group = @appointment.visit_group
 
     visit participant_path @participant
-    
+    wait_for_ajax
+
     bootstrap_select '#appointment_select', @visit_group.name
 
     wait_for_ajax
@@ -64,8 +81,9 @@ feature 'I try to view the participant calendar', js: true do
     wait_for_ajax
     click_button 'Complete Visit'
     wait_for_ajax
-    
-    visit protocol_path @protocol 
+
+    visit protocol_path @protocol
+    wait_for_ajax
     click_link 'Participant Tracker'
     wait_for_ajax
   end
@@ -74,16 +92,17 @@ feature 'I try to view the participant calendar', js: true do
     @participant.appointments.completed.clear
   end
 
-  def then_the_participant_calendar_icon_will_be_active
+  def when_i_click_the_participant_calendar_icon
+    find("tr[data-index='0'] td.calendar").click
+    wait_for_ajax
+  end
+
+  def then_the_participant_calendar_icon_should_be_active
     expect(page).to have_css("tr[data-index='0'] td.calendar a.participant-calendar i.glyphicon")
   end
 
-  def then_the_participant_calendar_icon_will_not_be_active
+  def then_the_participant_calendar_icon_should_be_inactive
     expect(page).to have_css("tr[data-index='0'] td.calendar i.glyphicon")
-  end
-
-  def when_i_click_the_participant_calendar_icon
-    find("tr[data-index='0'] td.calendar").click
   end
 
   def then_i_will_see_the_participant_calendar

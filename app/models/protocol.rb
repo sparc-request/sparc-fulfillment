@@ -1,9 +1,12 @@
 class Protocol < ActiveRecord::Base
 
+  attr_accessor :document_counter_updated  
+
   has_paper_trail
   acts_as_paranoid
 
   belongs_to :sub_service_request
+  belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
@@ -18,6 +21,8 @@ class Protocol < ActiveRecord::Base
   has_many :procedures,       through: :appointments
   has_many :documents,        as: :documentable
 
+  before_save :set_documents_count
+
   after_save :update_faye
   after_destroy :update_faye
 
@@ -31,6 +36,15 @@ class Protocol < ActiveRecord::Base
             :owner,
             :service_requester,
             to: :sub_service_request
+
+  delegate :short_title,
+           :title,
+           :funding_source,
+           to: :sparc_protocol
+  
+  def self.title id
+    ["Protocol", Protocol.find(id).srid].join(' ')
+  end
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id
     "#{sparc_id} - #{sub_service_request.ssr_id}"
@@ -68,6 +82,10 @@ class Protocol < ActiveRecord::Base
   private
 
   def update_faye
-    FayeJob.perform_later self
+    FayeJob.perform_later(self) unless self.document_counter_updated
+  end
+
+  def set_documents_count
+    update_attributes(unaccessed_documents_count: 0) if self.unaccessed_documents_count < 0
   end
 end

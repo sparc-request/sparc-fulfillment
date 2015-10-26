@@ -1,4 +1,4 @@
-.modal-dialog
+#incomplete_modal.modal-dialog
   .modal-content{data:{id: "#{procedure.id}"}}
     .modal-header
       %button.close.close_modal{type: 'button', data: {dismiss: 'modal'}}
@@ -12,13 +12,14 @@
         #modal_errors
         = form.hidden_field :status, value: "incomplete"
         = form.hidden_field :completed_date, value: ""
+        = form.hidden_field :performer_id, value: current_identity.id
         = form.fields_for :notes, note do |note_form|
           = note_form.hidden_field :identity_id, value: current_identity.id
           = note_form.hidden_field :kind
           .form-group
             = note_form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
             .col-sm-8
-              = note_form.select :reason, Procedure::NOTABLE_REASONS, { prompt: "Select a reason" }, class: "form-control reason-select"
+              = note_form.select :reason, Procedure::NOTABLE_REASONS, { prompt: "Select a reason" }, class: "selectpicker form-control reason-select"
           .form-group
             = note_form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
             .col-sm-8

@@ -10,22 +10,28 @@
           = link_to tasks_path, class: 'tasks' do
             %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
             = t(:navbar)[:tasks_link]
-            %span.notification.task-notifications
-              = current_identity.tasks_count
+            - if current_identity.tasks_count > 0
+              %span.notification.task-notifications
+                = current_identity.tasks_count
         %li
           = link_to documents_path, class: 'documents' do
             %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
             = t(:navbar)[:reports_link]
-            %span.notification.document-notifications
-              = current_identity.unaccessed_documents_count
+            - if current_identity.unaccessed_documents_count > 0
+              %span.notification.identity_report_notifications
+                = current_identity.unaccessed_documents_count
 
         = yield :nav_buttons
       %ul.nav.navbar-nav.navbar-right
-        - if session[:last_page]
+        - if session[:breadcrumbs] && session[:breadcrumbs].present?
           %li
-            = link_to session[:last_page] do
+            = link_to back_link(session[:breadcrumbs].last), id: 'history-back', title: generate_history_text(session[:breadcrumbs].last), aria: {label: "Go Back"}, data: {toggle: "tooltip", animation: 'false'} do
               %span.glyphicon.glyphicon-arrow-left{aria: {hidden: "true"}}
               Back
+              #history-menu
+                %ul.dropdown-menu{role: 'menu'}
+                  - session[:breadcrumbs].reverse.each do |url|
+                    %li= link_to generate_history_text(url), url
         %li
           = link_to(destroy_identity_session_path, id: "sign-out-link", method: :delete, data: { confirm: "Are you sure you want to sign out?" }) do
             %span.glyphicon.glyphicon-log-out{aria: {hidden: "true"}}

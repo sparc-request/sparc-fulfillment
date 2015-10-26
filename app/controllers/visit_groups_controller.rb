@@ -1,12 +1,13 @@
 class VisitGroupsController < ApplicationController
   respond_to :json, :html
-  before_action :find_visit_group, only: [:destroy]
+  before_action :find_visit_group, only: [:update, :destroy]
 
   def new
-    @current_page = params[:page] # the current page of the study schedule
+    @current_page = params[:current_page] # the current page of the study schedule
     @protocol = Protocol.find(params[:protocol_id])
     @visit_group = VisitGroup.new()
     @schedule_tab = params[:schedule_tab]
+    @arm = params[:arm_id].present? ? Arm.find(params[:arm_id]) : @protocol.arms.first
   end
 
   def create
@@ -24,13 +25,7 @@ class VisitGroupsController < ApplicationController
     end
   end
 
-  def edit
-    @protocol = Protocol.find(params[:protocol_id])
-    @visit_group = VisitGroup.find(params[:visit_group_id])
-  end
-
   def update
-    @visit_group = VisitGroup.find(params[:id])
     @arm = @visit_group.arm
     if @visit_group.update_attributes(visit_group_params)
       flash[:success] = t(:visit_groups)[:flash_messages][:updated]
@@ -40,22 +35,34 @@ class VisitGroupsController < ApplicationController
   end
 
   def destroy
-    @current_page = params[:page]
+    @current_page = params[:page].to_i == 0 ? 1 : params[:page].to_i # can't be zero
     @arm = @visit_group.arm
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     @schedule_tab = params[:schedule_tab]
     if @arm.visit_count == 1
-      flash.now[:alert] = t(:visit_groups)[:not_deleted]
+      @visit_group.errors.add(:arm, "must have at least one visit. Add another visit before deleting this one")
+      @errors = @visit_group.errors
+    elsif @visit_group.appointments.map{|a| a.has_completed_procedures?}.include?(true)
+      @visit_group.errors.add(:visit_group, "'#{@visit_group.name}' has completed procedures and cannot be deleted")
+      @errors = @visit_group.errors
     else
       @arm.update_attributes(visit_count: @arm.visit_count - 1)
-      @delete = true #used in the coffeescript to determine whether or not to remove the display of the visit
       flash.now[:alert] = t(:visit_groups)[:deleted]
       @visit_group.destroy
     end
   end
 
-  def update_positions_on_arm_change
-    @visit_groups = Arm.find(params[:arm_id]).visit_groups
+  def navigate_to_visit_group
+    # Used in study schedule management for navigating to a visit group, given an index of them by arm.
+    @protocol = Protocol.find(params[:protocol_id])
+    @intended_action = params[:intended_action]
+    if params[:visit_group_id]
+      @visit_group = VisitGroup.find(params[:visit_group_id])
+      @arm = @visit_group.arm
+    else
+      @arm = params[:arm_id].present? ? Arm.find(params[:arm_id]) : @protocol.arms.first
+      @visit_group = @arm.visit_groups.first
+    end
   end
 
   private
