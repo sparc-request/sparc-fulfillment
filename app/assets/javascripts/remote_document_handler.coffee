@@ -21,6 +21,14 @@ generate_document = (element, tables_to_refresh, event = null) ->
       get_document_state = ->
         document_id = $(element).data("document_id")
 
+        set_glyphicon_error = (element) ->
+          $(element).
+            addClass('btn-danger').
+            removeClass('btn-warning').
+            find('span.glyphicon').
+            addClass('glyphicon-alert').
+            removeClass('glyphicon-refresh spin')
+
         $.ajax
           type: 'GET'
           url: "/documents/#{document_id}.json"
@@ -30,60 +38,64 @@ generate_document = (element, tables_to_refresh, event = null) ->
             $.each tables_to_refresh, (index, value) ->
                 $(value).bootstrapTable 'refresh', silent: true
 
-            if document_state != 'Completed'
-              setTimeout get_document_state, 1500
-            else
-              add_to_report_notification_count(data.document.documentable_type, 1)
+            switch document_state
+              when 'Completed'
+                add_to_report_notification_count(data.document.documentable_type, 1)
 
-              set_glyphicon_finished element
+                set_glyphicon_finished element
 
-              dropdown_id_indicator = "document_menu_#{$(element).attr('id')}"
-              dropdown  = $(["<ul class='dropdown-menu document-dropdown-menu' role='menu' id=#{dropdown_id_indicator}>",
-                                "<li><a href='/documents/#{document_id}.html' target='blank' title='Download Report'>Download Report</a></li>"
-                                "<li><a href='javascript:void(0)' title='Generate New Report'>Generate New Report</a></li>"
-                              "</ul>"
-                            ].join(""))
+                dropdown_id_indicator = "document_menu_#{$(element).attr('id')}"
+                dropdown  = $(["<ul class='dropdown-menu document-dropdown-menu' role='menu' id=#{dropdown_id_indicator}>",
+                                  "<li><a href='/documents/#{document_id}.html' target='blank' title='Download Report'>Download Report</a></li>"
+                                  "<li><a href='javascript:void(0)' title='Generate New Report'>Generate New Report</a></li>"
+                                "</ul>"
+                              ].join(""))
 
-              $(element).attr('data-toggle', 'dropdown')
-              $(element).siblings('#'+dropdown_id_indicator).replaceWith(dropdown)
+                $(element).attr('data-toggle', 'dropdown')
+                $(element).siblings('#'+dropdown_id_indicator).replaceWith(dropdown)
 
-              $("li a[title='Download Report']").off('click').on 'click', ->
-                ul = $(this).parents().eq(1)
-                button = $(ul).siblings('a.dropdown-toggle')
-                ul.toggle()
+                $("li a[title='Download Report']").off('click').on 'click', ->
+                  ul = $(this).parents().eq(1)
+                  button = $(ul).siblings('a.dropdown-toggle')
+                  ul.toggle()
 
-                document_id = button.data("document_id")
+                  document_id = button.data("document_id")
 
-                update_view_on_download_new_report $("a.attached_file[data-id=#{document_id}]") ,'table.protocol_reports', 'Protocol'
+                  update_view_on_download_new_report $("a.attached_file[data-id=#{document_id}]") ,'table.protocol_reports', 'Protocol'
 
-              $("li a[title='Generate New Report']").off('click').on 'click', ->
-                ul = $(this).parents().eq(1)
-                button = $(ul).siblings('a.dropdown-toggle')
-                ul.toggle()
+                $("li a[title='Generate New Report']").off('click').on 'click', ->
+                  ul = $(this).parents().eq(1)
+                  button = $(ul).siblings('a.dropdown-toggle')
+                  ul.toggle()
 
-                button.removeClass('btn-success')
-                set_glyphicon_loading button
+                  button.removeClass('btn-success')
+                  set_glyphicon_loading button
 
-                generate_document button, tables_to_refresh
-              
-              $(element).off('click').on 'click', ->
-                if $(element).hasClass("btn-success")
-                  ul = $(this).siblings("ul.document-dropdown-menu")
-                  active = false
+                  generate_document button, tables_to_refresh
 
-                  if ul.attr("style") == "display: block;"
-                    active = true
+                $(element).off('click').on 'click', ->
+                  if $(element).hasClass("btn-success")
+                    ul = $(this).siblings("ul.document-dropdown-menu")
+                    active = false
 
-                  $("ul.document-dropdown-menu[style='display: block;']").toggle()
+                    if ul.attr("style") == "display: block;"
+                      active = true
 
-                  if active == false
-                    $(this).siblings("ul.document-dropdown-menu").toggle()
+                    $("ul.document-dropdown-menu[style='display: block;']").toggle()
+
+                    if active == false
+                      $(this).siblings("ul.document-dropdown-menu").toggle()
+
+              when 'Error'
+                set_glyphicon_error element
+              else
+                setTimeout get_document_state, 1500
 
       get_document_state()
 
 set_glyphicon_loading = (element) ->
   $(element).
-    addClass('btn-danger').
+    addClass('btn-warning').
     removeClass('btn-default').
     find('span.glyphicon').
     addClass('glyphicon-refresh spin').
@@ -92,7 +104,7 @@ set_glyphicon_loading = (element) ->
 set_glyphicon_finished = (element) ->
   $(element).
     addClass('btn-success').
-    removeClass('btn-danger').
+    removeClass('btn-warning').
     find('span.glyphicon').
     addClass('glyphicon-equalizer').
     removeClass('glyphicon-refresh spin')

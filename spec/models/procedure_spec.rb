@@ -8,6 +8,7 @@ RSpec.describe Procedure, type: :model do
 
   it { is_expected.to belong_to(:appointment) }
   it { is_expected.to belong_to(:visit) }
+  it { is_expected.to belong_to(:core) }
 
   it { is_expected.to have_many(:notes) }
   it { is_expected.to have_many(:tasks) }
@@ -72,7 +73,7 @@ RSpec.describe Procedure, type: :model do
       end
     end
 
-    describe '.set_status_dependencies' do
+    describe '.set_save_dependencies' do
 
       context 'status changed to complete' do
 

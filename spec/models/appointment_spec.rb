@@ -34,17 +34,16 @@ RSpec.describe Appointment, type: :model do
         arm = create(:arm, protocol: protocol)
         participant = create(:participant, protocol: protocol, arm: arm)
         @appt = create(:appointment, arm: arm, name: "Visit 1", participant: participant)
-        @proc1 = create(:procedure, appointment: @appt)
+        @proc1 = create(:procedure, :complete, appointment: @appt)
         @proc2 = create(:procedure, appointment: @appt)
       end
 
       it 'should return true when appt has completed procedures' do
-        @proc1.completed_date = Date.today.strftime('%m-%d-%Y')
-        @proc1.save
         expect(@appt.has_completed_procedures?).to be true
       end
 
       it 'should return false when appt doesnt have completed procedures' do
+        @proc1.update_attributes(status: "unstarted")
         expect(@appt.has_completed_procedures?).to be false
       end
     end
