@@ -74,16 +74,18 @@ generate_document = (element, tables_to_refresh, event = null) ->
                   generate_document button, tables_to_refresh
 
                 $(element).off('click').on 'click', ->
-                  ul = $(this).siblings("ul.document-dropdown-menu")
-                  active = false
+                  if $(element).hasClass("btn-success")
+                    ul = $(this).siblings("ul.document-dropdown-menu")
+                    active = false
 
-                  if ul.attr("style") == "display: block;"
-                    active = true
+                    if ul.attr("style") == "display: block;"
+                      active = true
 
-                  $("ul.document-dropdown-menu[style='display: block;']").toggle()
+                    $("ul.document-dropdown-menu[style='display: block;']").toggle()
 
-                  if active == false
-                    $(this).siblings("ul.document-dropdown-menu").toggle()
+                    if active == false
+                      $(this).siblings("ul.document-dropdown-menu").toggle()
+
               when 'Error'
                 set_glyphicon_error element
               else
