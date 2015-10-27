@@ -12,9 +12,9 @@ $ ->
       url: "/participants/#{participant_id}/change_arm?arm_id=#{arm_id}"
 
   $(document).on 'click', '.new-participant', ->
-    data = 
+    data =
       'protocol_id' : $(this).data('protocol-id')
- 
+
     $.ajax
       type: 'GET'
       url: "/participants/new.js"
@@ -60,3 +60,8 @@ $ ->
   $("#participants-list-table").bootstrapTable 'refresh', {silent: true}
   $("#participants-tracker-table").bootstrapTable 'refresh', {silent: true}
   $("#participant-info").bootstrapTable 'refresh', {silent: true}
+
+(exports ? this).visitSorter = (a, b) ->
+  format = (string) -> parseInt string.split('/').reverse().join('')
+
+  if format(a) > format(b) then -1 else 1

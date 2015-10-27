@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
     request_url = request_url.split('?').first if request_url # take off the GET parameters unless nil
 
     # add to history if we are not going back, request is html, it's not the sign in page, and we aren't going to the same page that we are currently on
-    if !params[:back] && request.format.to_sym === :html && (referrer && referrer.exclude?('sign_in')) && referrer != request_url
+    if !params[:back] && request.format.to_sym === :html && (referrer && referrer.exclude?('sign_in') && referrer.exclude?('shibboleth')) && referrer != request_url
       session[:breadcrumbs].push(referrer)
     elsif params[:back]
       session[:breadcrumbs].pop # remove last element if we are going back
