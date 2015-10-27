@@ -27,4 +27,4 @@ json.calendar calendarFormatter(participant)
 json.participant_report participant_report_formatter(participant)
 json.chg_arm changeArmFormatter(participant)
 json.recruitment_source truncated_formatter(participant.recruitment_source)
-json.coordinators formatted_coordinators(participant.protocol.coordinators.map(&:full_name))\
+json.coordinators formatted_coordinators(participant.protocol.coordinators.map(&:full_name))

@@ -240,7 +240,7 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_click_the_previous_page_button
-    @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1 
+    @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1
     find("#arrow-left-#{@arm.id}").click()
     wait_for_ajax
   end
@@ -254,7 +254,10 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_click_a_check_all_row_box
-    find("#line_item_#{@line_item.id} .check_row").click()
+    @alert = accept_confirm(with: "This will reset custom values for this row, do you wish to continue?") do
+      find("#line_item_#{@line_item.id} .check_row").click()
+    end
+    expect(@alert).to eq("This will reset custom values for this row, do you wish to continue?")
     wait_for_ajax
   end
 
@@ -264,7 +267,10 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_click_a_check_all_column_box
-    first(".check_column").click()
+    @alert = accept_confirm(with: "This will reset custom values for this column, do you wish to continue?") do
+      first(".check_column").click()
+    end
+    expect(@alert).to eq("This will reset custom values for this column, do you wish to continue?")
     wait_for_ajax
   end
 
