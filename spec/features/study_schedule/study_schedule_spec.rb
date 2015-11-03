@@ -128,42 +128,6 @@ RSpec.describe 'Study Schedule', js: true do
         then_i_should_see_the_research_billing_quantity_is '6'
       end
     end
-
-    context 'User clicks the check all button for a row' do
-      scenario 'and sees research fields set to 1 and insurance fields set to 0 for the line item' do
-        given_i_am_viewing_a_protocol
-        given_i_am_viewing_the_quantity_billing_tab
-        when_i_click_a_check_all_row_box
-        then_i_should_see_the_row_checked_in_the_tab 'quantity/billing'
-      end
-    end
-
-    context 'User clicks the uncheck all button for a row' do
-      scenario 'and sees research fields set to 0 and insurance fields set to 0 for the line item' do
-        given_i_am_viewing_a_protocol
-        given_i_am_viewing_the_quantity_billing_tab
-        when_i_click_an_uncheck_all_row_box
-        then_i_should_see_the_column_unchecked_in_the_tab 'quantity/billing'
-      end
-    end
-
-    context 'User clicks the check all button for a column' do
-      scenario 'and sees research fields set to 1 and insurance fields set to 0 for the visit group' do
-        given_i_am_viewing_a_protocol
-        given_i_am_viewing_the_quantity_billing_tab
-        when_i_click_a_check_all_column_box
-        then_i_should_see_the_column_checked_in_the_tab 'quantity/billing'
-      end
-    end
-
-    context 'User clicks the uncheck all button for a column' do
-      scenario 'and sees research fields set to 0 and insurance fields set to 0 for the visit group' do
-        given_i_am_viewing_a_protocol
-        given_i_am_viewing_the_quantity_billing_tab
-        when_i_click_an_uncheck_all_column_box
-        then_i_should_see_the_column_unchecked_in_the_tab 'quantity/billing'
-      end
-    end
   end
 
   context 'User clicks the line item edit button' do
