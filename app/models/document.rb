@@ -12,6 +12,10 @@ class Document < ActiveRecord::Base
     state == 'Completed'
   end
 
+  def failed?
+    state == 'Error'
+  end
+
   def downloaded?
     last_accessed_at
   end
