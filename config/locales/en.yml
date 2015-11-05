@@ -32,6 +32,9 @@ en:
     remove: "Remove"
     add: "Add"
     actions: "Actions"
+    required: " * "
+    required_message: "Fields marked with an asterisk ( * ) are required to continue."
+
 
   appointment:
     srid: "SRID"
