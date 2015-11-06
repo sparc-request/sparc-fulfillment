@@ -81,11 +81,10 @@ module ParticipantHelper
   end
 
   def participant_report_formatter participant
-    content_tag(:div, '', class: 'btn-group') do
-      content_tag(:a, class: 'btn btn-default dropdown-toggle btn-xs participant_report', id: "participant_report_#{participant.id.to_s}", href: 'javascript:void(0)', target: :blank, title: 'Participant Report', 'data-documentable_type' => 'Protocol', 'data-documentable_id' => participant.protocol.id, 'data-participant_id' => participant.id, 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report', 'aria-expanded' => 'false') do
-        content_tag(:span, '', class: 'glyphicon glyphicon-equalizer')
-      end +
-      content_tag(:ul, '', class: 'dropdown-menu document-dropdown-menu menu-participant', role: 'menu', id: "document_menu_participant_report_#{participant.id.to_s}")
-    end
+    protocol  = participant.protocol
+    icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
+    button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button participant_report dropdown-toggle', id: "participant_report_#{participant.id.to_s}", 'aria-expanded' => 'false', title: 'Participant Report', 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-participant_id' => participant.id)
+    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu', id: "document_menu_participant_report_#{participant.id.to_s}", role: 'menu')
+    html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
 end
