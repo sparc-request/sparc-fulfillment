@@ -90,7 +90,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def when_i_create_a_protocol_based_document
-    find("a#study_schedule_report_#{@protocol.id.to_s}").click
+    find("button#study_schedule_report_#{@protocol.id.to_s}").click
     wait_for_ajax
   end
 
