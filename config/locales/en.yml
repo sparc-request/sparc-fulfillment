@@ -32,6 +32,7 @@ en:
     remove: "Remove"
     add: "Add"
     actions: "Actions"
+    n_a: "N/A"
 
   appointment:
     srid: "SRID"
