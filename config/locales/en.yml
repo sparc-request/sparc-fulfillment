@@ -29,6 +29,7 @@ en:
     delete: "Delete"
     details: "Details"
     edit: "Edit"
+    n_a: "N/A"
     options: "Options"
     remove: "Remove"
     save: "Save"
