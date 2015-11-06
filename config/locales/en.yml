@@ -77,8 +77,8 @@ en:
     documents: "Documents"
     date: "Date Requested"
     date_created: "Date Created"
-    date_time_formatter_ruby: "%m/%d/%Y %r"
-    date_time_formatter_js:   "MM/DD/YYYY hh:mm:ss A"
+    date_time_formatter_ruby: "%m/%d/%Y %H:%M:%S"
+    date_time_formatter_js:   "MM/DD/YYYY HH:mm:ss"
     edit_header: "Edit Report Title"
     file: "Attached File"
     flash_messages:

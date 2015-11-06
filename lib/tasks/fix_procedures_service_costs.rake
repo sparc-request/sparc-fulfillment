@@ -4,9 +4,9 @@ namespace :data do
     bar = ProgressBar.new(Procedure.complete.count)
 
     CSV.open("/tmp/fixed_procedure_service_costs.csv", "wb+") do |csv|
-      begin
-        proc = nil
-        Procedure.complete.find_each do |procedure|
+      proc = nil
+      Procedure.complete.find_each do |procedure|
+        begin
           proc = procedure
           current_amount = procedure.service_cost
           calculated_amount = 0
@@ -28,11 +28,11 @@ namespace :data do
           end
 
           bar.increment! rescue nil
+        rescue Exception => e
+          puts "Error with #{proc.inspect}, Message: #{e.message}"
+          next
         end
-      rescue Exception => e
-        puts "Error with #{proc.inspect}, Message: #{e.message}"
       end
     end
   end
 end
-
