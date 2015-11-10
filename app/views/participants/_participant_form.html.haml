@@ -8,10 +8,7 @@
         %h4#CreateNewParticipant.modal-title.text-center= header_text
       .modal-body
         #modal_errors
-        .row
-          .col-lg-12.required-message
-            = t(:actions)[:required_message]
-        %br
+        = render partial: 'required_fields'
         .row
           .col-md-12
             = p.hidden_field :protocol_id
