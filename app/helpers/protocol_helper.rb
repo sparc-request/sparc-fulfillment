@@ -1,5 +1,11 @@
 module ProtocolHelper
 
+  def admin_portal_link(protocol)
+    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-default btn-xs admin_portal_link', title: 'Admin Portal link', aria: { expanded: 'false' }) do
+      content_tag(:span, '', class: 'glyphicon glyphicon-link')
+    end
+  end
+
   def formatted_status protocol
     if protocol.status.present?
       t(:sub_service_request)[:statuses][protocol.status.to_sym]
@@ -25,12 +31,10 @@ module ProtocolHelper
   end
 
   def formatted_study_schedule_report protocol
-    content_tag(:div, '', class: 'btn-group') do
-      content_tag(:a, href: 'javascript:void(0)', target: :blank, class: 'btn btn-default dropdown-toggle btn-xs study_schedule_report', id: "study_schedule_report_#{protocol.id.to_s}", title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report', 'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'aria-expanded' => 'false') do
-        content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
-      end +
-      content_tag(:ul, '', class: 'dropdown-menu document-dropdown-menu menu-study-schedule', role: 'menu', id: "document_menu_study_schedule_report_#{protocol.id.to_s}")
-    end
+    icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
+    button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button study_schedule_report dropdown-toggle', id: "study_schedule_report_#{protocol.id.to_s}", 'aria-expanded' => 'false', title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-protocol_id' => protocol.id)
+    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu', id: "document_menu_study_schedule_report_#{protocol.id.to_s}", role: 'menu')
+    html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
   def formatted_coordinators coordinators=Array.new

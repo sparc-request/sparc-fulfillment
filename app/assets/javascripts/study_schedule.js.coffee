@@ -97,42 +97,44 @@ $ ->
       url: "/line_items/#{line_item_id}/edit"
 
   $(document).on 'click', '.check_row', ->
-    check = $(this).attr('check')
-    line_item_id = $(this).data('line_item_id')
-    data =
-      'line_item_id': line_item_id,
-      'check':        check
-    $.ajax
-      type: 'PUT'
-      url:  '/study_schedule/check_row'
-      data: data
-      success: =>
-        # Check off visits
-        # Update text fields
-        identifier = ".visits_for_line_item_#{line_item_id}"
-        if check == 'true'
-          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_row"], true, 1, 0)
-        else
-          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_row"], false, 0, 0)
+    if confirm("This will reset custom values for this row, do you wish to continue?")
+      check = $(this).attr('check')
+      line_item_id = $(this).data('line_item_id')
+      data =
+        'line_item_id': line_item_id,
+        'check':        check
+      $.ajax
+        type: 'PUT'
+        url:  '/study_schedule/check_row'
+        data: data
+        success: =>
+          # Check off visits
+          # Update text fields
+          identifier = ".visits_for_line_item_#{line_item_id}"
+          if check == 'true'
+            check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_row"], true, 1, 0)
+          else
+            check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_row"], false, 0, 0)
 
   $(document).on 'click', '.check_column', ->
-    check = $(this).attr('check')
-    visit_group_id = $(this).attr('visit_group_id')
-    data =
-      'visit_group_id': visit_group_id,
-      'check':        check
-    $.ajax
-      type: 'PUT'
-      url:  '/study_schedule/check_column'
-      data: data
-      success: =>
-        # Check off visits
-        # Update text fields
-        identifier = ".visit_for_visit_group_#{visit_group_id}"
-        if check == 'true'
-          check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_column"], true, 1, 0)
-        else
-          check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_column"], false, 0, 0)
+    if confirm("This will reset custom values for this column, do you wish to continue?")
+      check = $(this).attr('check')
+      visit_group_id = $(this).attr('visit_group_id')
+      data =
+        'visit_group_id': visit_group_id,
+        'check':        check
+      $.ajax
+        type: 'PUT'
+        url:  '/study_schedule/check_column'
+        data: data
+        success: =>
+          # Check off visits
+          # Update text fields
+          identifier = ".visit_for_visit_group_#{visit_group_id}"
+          if check == 'true'
+            check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_column"], true, 1, 0)
+          else
+            check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_column"], false, 0, 0)
 
   check_row_column = (obj, identifier, remove_class, add_class, attr_check, attr_title, prop_check, research_val, insurance_val) ->
     obj.removeClass(remove_class).addClass(add_class)
@@ -143,4 +145,4 @@ $ ->
     $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
-    
+

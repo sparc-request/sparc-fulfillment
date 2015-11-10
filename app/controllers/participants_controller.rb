@@ -1,7 +1,8 @@
 class ParticipantsController < ApplicationController
 
   before_action :find_protocol, only: [:index, :new]
-  before_action :find_participant, only: [:show, :edit, :update, :destroy]
+  before_action :find_participant, only: [:show, :edit, :update, :destroy, :edit_arm, :update_arm, :details]
+  before_action :note_old_participant_attributes, only: [:update, :update_arm]
   before_action :authorize_protocol, only: [:show]
 
   def index
@@ -17,7 +18,7 @@ class ParticipantsController < ApplicationController
   def new
     respond_to do |format|
       format.js {
-        @participant = Participant.new(protocol_id: params[:protocol_id])
+        @participant = Participant.new(protocol_id: @protocol.id)
       }
     end
   end
@@ -40,6 +41,7 @@ class ParticipantsController < ApplicationController
 
   def update
     if @participant.update_attributes(participant_params)
+      note_successful_changes
       flash[:success] = t(:participant)[:flash_messages][:updated]
     else
       @errors = @participant.errors
@@ -52,27 +54,11 @@ class ParticipantsController < ApplicationController
     flash[:alert] = t(:participant)[:flash_messages][:removed]
   end
 
-  def edit_arm
-    @participant = Participant.find(params[:participant_id])
-  end
-
   def update_arm
-    @participant = Participant.find(params[:participant_id])
-    create_note_for_arm_change(params, @participant)
-    @participant.update_attributes(arm_id: params[:participant][:arm_id])
+    @participant.update_attributes(arm_id: participant_params[:arm_id])
     @participant.update_appointments_on_arm_change
+    note_successful_changes
     flash[:success] = t(:participant)[:flash_messages][:arm_change]
-  end
-
-  def details
-    @participant = Participant.find(params[:participant_id])
-  end
-
-  def set_recruitment_source
-    source = params[:source] == "" ? nil : params[:source]
-    @participant = Participant.find(params[:participant_id])
-    @participant.update_attributes(recruitment_source: source)
-    flash[:success] = t(:participant)[:flash_messages][:recruitment_source]
   end
 
   private
@@ -82,11 +68,12 @@ class ParticipantsController < ApplicationController
   end
 
   def participant_params
-    params.require(:participant).permit(:protocol_id, :last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
+    params.require(:participant).permit(:protocol_id, :arm_id, :last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
   end
 
   def find_participant
-    @participant = Participant.where(id: params[:id]).first
+    participant_id = params[:id] || params[:participant_id]
+    @participant = Participant.where(id: participant_id).first
     if @participant.present?
       @protocol = @participant.protocol
     else
@@ -95,12 +82,21 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def create_note_for_arm_change(params, participant)
-    if participant.arm_id.to_s != params[:participant][:arm_id]
-      current_arm_name = participant.arm.blank? ? "BLANK ARM" : participant.arm.name
-      new_arm_name = params[:participant][:arm_id].blank? ? "BLANK ARM" : Arm.find(params[:participant][:arm_id]).name
-      @note = Note.create(identity: current_identity, notable_type: 'Participant', notable_id: participant.id,
-                          comment: "Arm changed from #{current_arm_name} to #{new_arm_name}")
+  def note_old_participant_attributes
+    @old_attributes = @participant.attributes
+  end
+
+  def note_successful_changes
+    if participant_params[:status] and ( @old_attributes["status"] != participant_params[:status] ) # Status Changed
+      old_status = @old_attributes["status"].blank? ? t(:actions)[:n_a] : @old_attributes["status"]
+      new_status = participant_params[:status].blank? ? t(:actions)[:n_a] : participant_params[:status]
+      @participant.notes.create(identity: current_identity, comment: "Status changed from #{old_status} to #{new_status}")
+    end
+
+    if participant_params[:arm_id] and ( @old_attributes["arm_id"].to_s != participant_params[:arm_id] ) # Arm Changed
+      old_arm = @old_attributes["arm_id"].blank? ? t(:actions)[:n_a] : Arm.find(@old_attributes["arm_id"]).name
+      new_arm = participant_params[:arm_id].blank? ? t(:actions)[:n_a] : Arm.find(participant_params[:arm_id]).name
+      @participant.notes.create(identity: current_identity, comment: "Arm changed from #{old_arm} to #{new_arm}")
     end
   end
 end
