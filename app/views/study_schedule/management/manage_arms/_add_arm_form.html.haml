@@ -8,10 +8,7 @@
         %h4#add_arm.modal-title.text-center Add Arm
       .modal-body
         #modal_errors
-        .row
-          .col-lg-12.required-message
-            = t(:actions)[:required_message]
-        %br
+        = render partial: 'required_fields'
         .row
           .col-md-12
             = a.hidden_field :protocol_id

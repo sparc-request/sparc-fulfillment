@@ -8,10 +8,7 @@
     .modal-body
       #modal_errors
       - if intended_action == "edit"
-        .row
-          .col-lg-12.required-message
-            = t(:actions)[:required_message]
-        %br
+        = render partial: 'required_fields'
       .row
         .col-md-12.form-horizontal#navigate_arm_form{data: { intended_action: intended_action }}
           .form-group
