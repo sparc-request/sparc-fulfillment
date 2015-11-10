@@ -4,7 +4,7 @@
     %br
     #dashboard_container
       #dashboard
-        %table.visits#completed-appointments-table{ data: { toggle: 'table', url: completed_appointments_appointments_path(participant_id: participant.id, format: :json), striped: 'true', 'sort-name' => 'completed_date', 'sort-order' => 'asc' } }
+        %table.visits#completed-appointments-table{ data: { height: 300, toggle: 'table', url: completed_appointments_appointments_path(participant_id: participant.id, format: :json), striped: 'true', 'sort-name' => 'completed_date', 'sort-order' => 'asc' } }
           %thead
             %tr
               %th{ data: { align: 'left', field: 'name' } }
