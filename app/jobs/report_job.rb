@@ -6,13 +6,6 @@ class ReportJob < ActiveJob::Base
     find_or_create_document_root_path
   end
 
-  before_perform do |job|
-    job.
-      arguments.
-      first.
-      update_attributes state: 'Processing'
-  end
-
   def perform(document, params)
     document_name = document.title
     report        = document.report_type.classify.constantize.new(params)

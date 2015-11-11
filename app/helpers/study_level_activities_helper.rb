@@ -38,7 +38,7 @@ module StudyLevelActivitiesHelper
     button = raw content_tag(:button, raw(span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control available-actions-button', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
     ul = raw content_tag(:ul, options, class: 'dropdown-menu', role: 'menu')
 
-    raw content_tag(:div, button + ul, class: 'btn-group')
+    raw content_tag(:div, button + ul, class: 'btn-group overflow_webkit_button')
   end
 
   def fulfillments_drop_button line_item_id
