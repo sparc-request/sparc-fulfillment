@@ -12,8 +12,9 @@
           = t(:appointment)[:edit_header]
       .modal-body
         #appointment_modal_errors
+        = render partial: 'required_fields'
         .form-group
-          = form.label "name", t(:appointment)[:name], class: "col-sm-3 control-label"
+          = form.label "name", t(:appointment)[:name]+t(:actions)[:required], class: "col-sm-3 control-label"
           .col-sm-8
             = form.text_field :name, {class: 'form-control'}
         .form-group
