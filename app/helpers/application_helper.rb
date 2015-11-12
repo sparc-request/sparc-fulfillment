@@ -9,7 +9,7 @@ module ApplicationHelper
         klass = h[:controller].classify.constantize
         klass.title h[:id]
       else
-        url
+        "/" # default to home page so shibboleth authentication redirects don't link back to shibboleth URL
       end
     rescue Exception => e
       puts "#"*20
