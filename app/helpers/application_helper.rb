@@ -15,7 +15,7 @@ module ApplicationHelper
       puts "#"*20
       puts e.message
       puts "#"*20
-      return url
+      return "/" # default to home page.
     end
   end
 
