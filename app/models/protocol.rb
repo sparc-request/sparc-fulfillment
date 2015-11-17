@@ -52,7 +52,7 @@ class Protocol < ActiveRecord::Base
       '://',
       ENV.fetch('SPARC_API_HOST'),
       '/portal/admin/sub_service_requests/',
-      sparc_id
+      sub_service_request_id
     ].join
   end
 
