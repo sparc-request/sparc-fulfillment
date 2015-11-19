@@ -128,7 +128,8 @@ en:
   line_item:
     object: "Line Item"
     account_number: "Account"
-    add_line_item: "Add Study Level Activity"
+    add_line_item_study: "Add Study Level Activity"
+    add_line_item_project: "Add Project Level Activity"
     change_service: "Change Service"
     components: "Components"
     contact: "Contact"
@@ -285,6 +286,7 @@ en:
       participant_tracker: "Participant Tracker"
       reports: "Reports"
       study_level_activities: "Study Level Activities"
+      project_level_activities: "Project Level Activities"
       study_schedule: "Study Schedule"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
