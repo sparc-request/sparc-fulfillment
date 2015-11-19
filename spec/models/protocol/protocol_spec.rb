@@ -94,6 +94,14 @@ RSpec.describe Protocol, type: :model do
       end
     end
 
+    describe 'protocol type' do
+      it 'should return the protocol type' do
+        protocol = create_and_assign_protocol_to_me
+        
+        expect(protocol.protocol_type).to eq Sparc::Protocol.where(id: protocol.sparc_id).first.type
+      end
+    end
+
     describe 'delegated methods' do
 
       let!(:protocol)            { create(:protocol) }
