@@ -96,8 +96,11 @@ RSpec.describe Protocol, type: :model do
 
     describe 'protocol type' do
       it 'should return the protocol type' do
-        protocol = create_and_assign_protocol_to_me
         
+        protocol = create(:protocol)
+        sparc_protocol = protocol.sparc_protocol
+        sparc_protocol.update_attributes(type: 'Study')
+
         expect(protocol.protocol_type).to eq Sparc::Protocol.where(id: protocol.sparc_id).first.type
       end
     end
