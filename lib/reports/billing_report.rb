@@ -35,8 +35,6 @@ class BillingReport < Report
             "Account #",
             "Contact",
             "",
-            "",
-            "",
             "Research Rate",
             "Total Cost"
           ]
@@ -51,8 +49,6 @@ class BillingReport < Report
               fulfillment.quantity,
               fulfillment.line_item.account_number,
               fulfillment.line_item.contact_name,
-              "",
-              "",
               "",
               display_cost(fulfillment.service_cost),
               display_cost(fulfillment.total_cost)
