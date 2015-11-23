@@ -166,7 +166,6 @@ RSpec.describe 'Study Schedule', js: true do
     @visit          = @line_item.visits.first
     visit protocol_path(@protocol.id)
     wait_for_ajax
-    save_and_open_screenshot
   end
 
   def given_i_am_viewing_the_quantity_billing_tab

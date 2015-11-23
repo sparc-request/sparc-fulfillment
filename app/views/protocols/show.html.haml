@@ -20,7 +20,7 @@
            
   .tab-content
     - if @services_present
-      .tab-pane#study_schedule{role: 'tabpanel', class: (["study_schedule", "project_schedule"].include? @current_protocol_tab ? "active" : "")}
+      .tab-pane#study_schedule{role: 'tabpanel', class: (@current_protocol_tab == "study_schedule" ? "active" : "")}
         = render partial: 'study_schedule/calendar', locals: {protocol: @protocol, page: @page, tab: (cookies["active-schedule-tab".to_sym]) ? cookies["active-schedule-tab".to_sym] : 'template'}
 
       .tab-pane#participant_list{role: 'tabpanel', class: (@current_protocol_tab == "participant_list" ? "active" : "")}
