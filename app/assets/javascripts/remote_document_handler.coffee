@@ -38,24 +38,27 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
               set_glyphicon_finished element
 
-              dropdown_id_indicator = "document_menu_#{$(element).attr('id')}"
-              dropdown  = $(["<ul class='dropdown-menu document-dropdown-menu' role='menu' id=#{dropdown_id_indicator}>",
-                                "<li><a href='/documents/#{document_id}.html' target='blank' title='Download Report'>Download Report</a></li>"
-                                "<li><a href='javascript:void(0)' title='Generate New Report'>Generate New Report</a></li>"
-                              "</ul>"
-                            ].join(""))
+              add_dropdown_to_button element
 
-              $(element).attr('data-toggle', 'dropdown')
-              $(element).siblings('#'+dropdown_id_indicator).replaceWith(dropdown)
-
+              #Download Report
               $("li a[title='Download Report']").off('click').on 'click', ->
-                ul = $(this).parents().eq(1)
-                button = $(ul).siblings('a.dropdown-toggle')
-                ul.toggle()
+                ul = $(this).parents('.document-dropdown-menu')
+                button = $(ul).siblings('.report-button')
+
+                $(ul).toggle()
+                $(button).
+                  attr('aria-expanded', 'false').
+                  removeAttr('data-toggle').
+                  parents('div.btn-group').
+                  removeClass('open')
 
                 document_id = button.data("document_id")
 
                 update_view_on_download_new_report $("a.attached_file[data-id=#{document_id}]") ,'table.protocol_reports', 'Protocol'
+
+                set_glyphicon_default button
+
+                remote_document_generator button, tables_to_refresh
 
               $("li a[title='Generate New Report']").off('click').on 'click', ->
                 ul = $(this).parents().eq(1)
@@ -81,18 +84,70 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
       get_document_state()
 
+set_glyphicon_default = (element) ->
+  $(element).
+    addClass('btn-default').
+    removeClass('btn-success').
+    removeClass('btn-warning').
+    removeClass('btn-danger')
+  $(element).
+    find('span.glyphicon').
+    removeClass('glyphicon-refresh spin').
+    addClass('glyphicon-equalizer')
+  
+  remove_caret element
+
 set_glyphicon_loading = (element) ->
   $(element).
-    addClass('btn-danger').
     removeClass('btn-default').
+    removeClass('btn-success').
+    removeClass('btn-danger')
+  $(element).
     find('span.glyphicon').
     addClass('glyphicon-refresh spin').
     removeClass('glyphicon-equalizer')
+  
+  remove_caret element
+
+set_glyphicon_error = (element) ->
+  $(element).
+    addClass('btn-danger').
+    removeClass('btn-default').
+    removeClass('btn-success').
+    removeClass('btn-warning')
+  $(element).
+    find('span.glyphicon').
+    addClass('glyphicon-alert').
+    removeClass('glyphicon-refresh spin')
+
+  remove_caret element
 
 set_glyphicon_finished = (element) ->
   $(element).
     addClass('btn-success').
-    removeClass('btn-danger').
+    removeClass('btn-default').
+    removeClass('btn-warning').
+    removeClass('btn-danger')
+  $(element).
     find('span.glyphicon').
     addClass('glyphicon-equalizer').
     removeClass('glyphicon-refresh spin')
+
+remove_caret = (element) ->
+  $(element).
+    find('span.caret').
+    remove()
+
+add_dropdown_to_button = (element) ->
+  dropdown_id_indicator = "document_menu_#{$(element).attr('id')}"
+  dropdown  = $(["<ul class='dropdown-menu document-dropdown-menu' role='menu' id=#{dropdown_id_indicator}>",
+                    "<li><a href='/documents/#{document_id}.html' target='blank' title='Download Report'>Download Report</a></li>"
+                    "<li><a href='javascript:void(0)' title='Generate New Report'>Generate New Report</a></li>"
+                  "</ul>"
+                ].join(""))
+
+  $(element).attr('data-toggle', 'dropdown')
+  $(element).siblings('#'+dropdown_id_indicator).replaceWith(dropdown)
+
+  caret = "<span class='caret'></span>"
+  $(element).append(caret)

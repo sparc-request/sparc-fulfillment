@@ -24,11 +24,20 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     then_i_should_see_the_options_dropdown
   end
 
-  scenario 'and downloads the document' do
-    given_i_have_created_a_protocol_based_document
-    when_i_click_the_created_document_icon
-    when_i_click_the_download_option
-    then_i_should_see_the_counter_decrement_and_disappear
+  context 'and downloads the document' do
+    scenario 'and sees the button default so that a new report can be run' do
+      given_i_have_created_a_protocol_based_document
+      when_i_click_the_created_document_icon
+      when_i_click_the_download_option
+      then_i_should_see_the_button_is_defaulted
+    end
+
+    scenario 'and sees the counter decrement/disappear' do
+      given_i_have_created_a_protocol_based_document
+      when_i_click_the_created_document_icon
+      when_i_click_the_download_option
+      then_i_should_see_the_counter_decrement_and_disappear
+    end
   end
 
   scenario 'and generates a new document' do
@@ -97,6 +106,11 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
 
   def then_i_should_see_the_options_dropdown
     expect(page).to have_selector("ul#document_menu_study_schedule_report_#{@protocol.id.to_s}", visible: true)
+  end
+
+  def then_i_should_see_the_button_is_defaulted
+    expect(page).to have_css("button.study_schedule_report.btn-default")
+    expect(page).not_to have_css("button.study_schedule_report span.caret")
   end
 
   def then_i_should_see_the_counter_decrement_and_disappear
