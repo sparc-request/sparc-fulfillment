@@ -4,6 +4,13 @@ $ ->
   $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))
   $(".selectpicker").selectpicker()
 
+  $('#history-back').contextmenu
+    target: '#history-menu',
+    onItem: (context, e) ->
+      window.location.href = $(e.target).attr('href')
+
+  $('#history-back').tooltip()
+
   $(document).on 'all.bs.table', 'table', ->
     $(".selectpicker").selectpicker()
     $('[data-toggle="tooltip"]').tooltip()
@@ -15,6 +22,9 @@ $ ->
   $(document).on 'click', '.clear_search', ->
     $(this).siblings("input").val("").trigger("keyup")
     $(this).hide()
+
+  $(document).on 'dp.hide', '.datetimepicker', ->
+    $(this).blur()
 
   $(document).on 'click', 'button.notes.list',  ->
     id = $(this).data('notable-id')
@@ -70,6 +80,11 @@ $ ->
   delay = (ms, func) -> setTimeout func, ms
   delay 3000, -> $elt.tooltip('destroy')
 
+(exports ? this).update_tooltip = (object, string) ->
+  $(object).tooltip('hide')
+  $(object).attr('data-original-title', string)
+  $(object).tooltip('fixTitle')
+
 (exports ? this).add_to_report_notification_count = (documentable_type, amount) ->
   switch documentable_type
     when 'Protocol'
@@ -85,8 +100,3 @@ $ ->
   notification_count = parseInt(notification_bubble.text())
   if notification_count == 0
     notification_bubble.remove();
-
-(exports ? this).update_tooltip = (object, string) ->
-  $(object).tooltip('hide')
-  $(object).attr('data-original-title', string)
-  $(object).tooltip('fixTitle')

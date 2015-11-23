@@ -34,7 +34,6 @@ Rails.application.routes.draw do
     get 'change_arm(/:id)', to: 'participants#edit_arm'
     post 'change_arm(/:id)', to: 'participants#update_arm'
     get 'details', to: 'participants#details'
-    put 'set_recruitment_source', to: 'participants#set_recruitment_source'
   end
 
   resources :tasks do

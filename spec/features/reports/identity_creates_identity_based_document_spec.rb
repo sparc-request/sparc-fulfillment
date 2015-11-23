@@ -69,6 +69,7 @@ feature 'Identity creates a document from the documents page', js: true do
     create(:participant, protocol: @protocol)
 
     visit documents_path
+    wait_for_ajax
   end
 
   def given_i_click_the_create_report_button_of_type report_type

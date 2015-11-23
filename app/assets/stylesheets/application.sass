@@ -18,6 +18,16 @@
 @import "notifications"
 @import "study_schedule"
 @import "study_level_activities"
+@import "customize"
+
+.overflow_webkit_button
+  -ms-overflow-style: none
+
+::-webkit-scrollbar
+  display: none
+
+.danger
+  color: #d9534f
 
 .opacity50
   opacity: 0.5
@@ -34,6 +44,10 @@
 
 .slide-toggle-hidden
   display: none
+
+.required-message
+  text-align: center
+  padding-bottom: 15px
 
 /************Main Layout Styling************/
 .header
@@ -135,4 +149,3 @@ td.truncate
 div.tooltip-inner
   max-width: 800px
 
-@import "customize"

@@ -22,8 +22,13 @@ class Participant < ActiveRecord::Base
   after_save :update_faye
   after_destroy :update_faye
 
-  validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, :address, :city, :state, :zipcode, presence: true
+  validates :protocol_id, :last_name, :first_name, :mrn, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, presence: true
   validate :phone_number_format, :middle_initial_format, :zip_code_format
+
+  def self.title id
+    participant = Participant.find id
+    [Protocol.title(participant.protocol.id), participant.last_name, participant.first_name].join(', ')
+  end
 
   def date_of_birth=(dob)
     write_attribute(:date_of_birth, Time.strptime(dob, "%m-%d-%Y")) if dob.present?

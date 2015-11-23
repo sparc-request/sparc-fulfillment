@@ -7,6 +7,8 @@
       %h4.modal-title.text-center= intended_action == "edit" ? t(:visit)[:edit_visit] : t(:visit)[:remove_visit]
     .modal-body
       #modal_errors
+      - if intended_action == "edit"
+        = render partial: 'required_fields'
       .row
         .col-md-12.form-horizontal#navigate_visit_form{data: { intended_action: intended_action }}
           .form-group

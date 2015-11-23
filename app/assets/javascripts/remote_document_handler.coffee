@@ -26,61 +26,64 @@ generate_document = (element, tables_to_refresh, event = null) ->
           url: "/documents/#{document_id}.json"
           success: (data) ->
             document_state = data.document.state
-            document_state = data.document.state
 
             $.each tables_to_refresh, (index, value) ->
                 $(value).bootstrapTable 'refresh', silent: true
 
-            if document_state != 'Completed'
-              setTimeout get_document_state, 1500
-            else
-              add_to_report_notification_count(data.document.documentable_type, 1)
+            switch document_state
+              when 'Completed'
+                add_to_report_notification_count(data.document.documentable_type, 1)
+                set_glyphicon_finished(element)
+                add_dropdown_to_button(element)
 
-              set_glyphicon_finished element
+                #Download Report
+                $("li a[title='Download Report']").off('click').on 'click', ->
+                  ul = $(this).parents('.document-dropdown-menu')
+                  button = $(ul).siblings('.report-button')
+                  
+                  $(ul).toggle()
+                  $(button).
+                    attr('aria-expanded', 'false').
+                    removeAttr('data-toggle').
+                    parents('div.btn-group').
+                    removeClass('open')
 
-              add_dropdown_to_button element
+                  set_glyphicon_default button
 
-              #Download Report
-              $("li a[title='Download Report']").off('click').on 'click', ->
-                ul = $(this).parents('.document-dropdown-menu')
-                button = $(ul).siblings('.report-button')
+                  update_view_on_download_new_report $("a.attached_file[data-id=#{button.data('document_id')}]") ,'table.protocol_reports', 'Protocol'
 
-                $(ul).toggle()
-                $(button).
-                  attr('aria-expanded', 'false').
-                  removeAttr('data-toggle').
-                  parents('div.btn-group').
-                  removeClass('open')
+                  remote_document_generator button, tables_to_refresh
 
-                document_id = button.data("document_id")
+                #Generate New Report
+                $("li a[title='Generate New Report']").off('click').on 'click', ->
+                  ul = $(this).parents('.document-dropdown-menu')
+                  button = $(ul).siblings('.report-button')
+                  
+                  $(ul).toggle()
 
-                update_view_on_download_new_report $("a.attached_file[data-id=#{document_id}]") ,'table.protocol_reports', 'Protocol'
+                  set_glyphicon_loading button
 
-                set_glyphicon_default button
+                  generate_document button, tables_to_refresh
 
-                remote_document_generator button, tables_to_refresh
+                #Toggle Dropdown **Intentionally Not a Bootstrap Dropdown**
+                $(element).off('click').on 'click', ->
+                  if $(element).hasClass("btn-success")
+                    ul = $(this).parents('document-dropdown-menu')
+                    active = false
 
-              $("li a[title='Generate New Report']").off('click').on 'click', ->
-                ul = $(this).parents().eq(1)
-                button = $(ul).siblings('a.dropdown-toggle')
-                ul.toggle()
+                    if $(ul).is(':visible')
+                      active = true
 
-                button.removeClass('btn-success')
-                set_glyphicon_loading button
+                    #Toggle all other open dropdown menus
+                    $("ul.document-dropdown-menu").filter("visible").toggle()
 
-                generate_document button, tables_to_refresh
-              
-              $(element).off('click').on 'click', ->
-                ul = $(this).siblings("ul.document-dropdown-menu")
-                active = false
+                    if active == false
+                      $(ul).toggle()
 
-                if ul.attr("style") == "display: block;"
-                  active = true
-
-                $("ul.document-dropdown-menu[style='display: block;']").toggle()
-
-                if active == false
-                  $(this).siblings("ul.document-dropdown-menu").toggle()
+              when 'Error'
+                set_glyphicon_error element
+              else
+                setTimeout get_document_state, 1500
 
       get_document_state()
 
@@ -99,6 +102,7 @@ set_glyphicon_default = (element) ->
 
 set_glyphicon_loading = (element) ->
   $(element).
+    addClass('btn-warning').
     removeClass('btn-default').
     removeClass('btn-success').
     removeClass('btn-danger')
@@ -122,6 +126,14 @@ set_glyphicon_error = (element) ->
 
   remove_caret element
 
+set_glyphicon_error = (element) ->
+  $(element).
+    addClass('btn-danger').
+    removeClass('btn-warning').
+    find('span.glyphicon').
+    addClass('glyphicon-alert').
+    removeClass('glyphicon-refresh spin')
+            
 set_glyphicon_finished = (element) ->
   $(element).
     addClass('btn-success').

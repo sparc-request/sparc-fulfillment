@@ -6,13 +6,6 @@ class ReportJob < ActiveJob::Base
     find_or_create_document_root_path
   end
 
-  before_perform do |job|
-    job.
-      arguments.
-      first.
-      update_attributes state: 'Processing'
-  end
-
   def perform(document, params)
     document_name = document.title
     report        = document.report_type.classify.constantize.new(params)
@@ -22,20 +15,25 @@ class ReportJob < ActiveJob::Base
     FayeJob.perform_later document
   end
 
+  rescue_from(StandardError) do |error|
+    arguments.first.update_attributes state: 'Error'
+    FayeJob.perform_later arguments.first
+  end
+
   after_perform do |job|
     job.
       arguments.
       first.
       update_attributes state: 'Completed'
-    
+
     document = job.arguments.first
 
     case document.documentable_type
-      when 'Protocol' 
+      when 'Protocol'
         protocol = Protocol.find(job.arguments.last[:documentable_id])
         protocol.document_counter_updated = true
         protocol.update_attributes(unaccessed_documents_count: (protocol.unaccessed_documents_count + 1))
-      when 'Identity' 
+      when 'Identity'
         find_identity(job).update_counter(:unaccessed_documents, 1)
     end
   end
