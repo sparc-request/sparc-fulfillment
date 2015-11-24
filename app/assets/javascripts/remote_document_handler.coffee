@@ -40,17 +40,27 @@ generate_document = (element, tables_to_refresh, event = null) ->
                 $("li a[title='Download Report']").off('click').on 'click', ->
                   ul = $(this).parents('.document-dropdown-menu')
                   button = $(ul).siblings('.report-button')
+                  
                   $(ul).toggle()
+                  $(button).
+                    attr('aria-expanded', 'false').
+                    removeAttr('data-toggle').
+                    parents('div.btn-group').
+                    removeClass('open')
+
+                  set_glyphicon_default button
 
                   update_view_on_download_new_report $("a.attached_file[data-id=#{button.data('document_id')}]") ,'table.protocol_reports', 'Protocol'
+
+                  remote_document_generator button, tables_to_refresh
 
                 #Generate New Report
                 $("li a[title='Generate New Report']").off('click').on 'click', ->
                   ul = $(this).parents('.document-dropdown-menu')
                   button = $(ul).siblings('.report-button')
+                  
                   $(ul).toggle()
 
-                  $(button).children('.caret').remove()
                   set_glyphicon_loading button
 
                   generate_document button, tables_to_refresh
@@ -77,14 +87,44 @@ generate_document = (element, tables_to_refresh, event = null) ->
 
       get_document_state()
 
+set_glyphicon_default = (element) ->
+  $(element).
+    addClass('btn-default').
+    removeClass('btn-success').
+    removeClass('btn-warning').
+    removeClass('btn-danger')
+  $(element).
+    find('span.glyphicon').
+    removeClass('glyphicon-refresh spin').
+    addClass('glyphicon-equalizer')
+  
+  remove_caret element
+
 set_glyphicon_loading = (element) ->
   $(element).
     addClass('btn-warning').
-    removeClass('btn-success').
     removeClass('btn-default').
+    removeClass('btn-success').
+    removeClass('btn-danger')
+  $(element).
     find('span.glyphicon').
     addClass('glyphicon-refresh spin').
     removeClass('glyphicon-equalizer')
+  
+  remove_caret element
+
+set_glyphicon_error = (element) ->
+  $(element).
+    addClass('btn-danger').
+    removeClass('btn-default').
+    removeClass('btn-success').
+    removeClass('btn-warning')
+  $(element).
+    find('span.glyphicon').
+    addClass('glyphicon-alert').
+    removeClass('glyphicon-refresh spin')
+
+  remove_caret element
 
 set_glyphicon_error = (element) ->
   $(element).
@@ -97,11 +137,18 @@ set_glyphicon_error = (element) ->
 set_glyphicon_finished = (element) ->
   $(element).
     addClass('btn-success').
-    removeClass('btn-warning').
     removeClass('btn-default').
+    removeClass('btn-warning').
+    removeClass('btn-danger')
+  $(element).
     find('span.glyphicon').
     addClass('glyphicon-equalizer').
     removeClass('glyphicon-refresh spin')
+
+remove_caret = (element) ->
+  $(element).
+    find('span.caret').
+    remove()
 
 add_dropdown_to_button = (element) ->
   dropdown_id_indicator = "document_menu_#{$(element).attr('id')}"
