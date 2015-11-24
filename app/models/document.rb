@@ -19,7 +19,7 @@ class Document < ActiveRecord::Base
   def downloaded?
     last_accessed_at
   end
-  
+
   def accessible_by?(identity)
     !(documentable_type == 'Identity') || (documentable_type == 'Identity' && documentable == identity)
   end

@@ -4,7 +4,9 @@ class ReportsController < ApplicationController
   before_action :find_report_type, only: [:new, :create]
 
   def new
-    @title = @report_type.titleize
+    @report = find_report_type.
+                classify.
+                constantize.new
   end
 
   def create
@@ -12,7 +14,7 @@ class ReportsController < ApplicationController
     @report = @report_type.classify.constantize.new(reports_params)
 
     @errors = @report.errors
-    
+
     if @report.valid?
       @reports_params = reports_params
       @documentable.documents.push @document
@@ -31,7 +33,7 @@ class ReportsController < ApplicationController
   end
 
   def find_report_type
-    @report_type = reports_params[:report_type]
+    @report_type ||= reports_params[:report_type]
   end
 
   def reports_params

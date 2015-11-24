@@ -99,9 +99,14 @@ en:
       none: "This line item has no documents"
     new_header: "Add Document"
     state: "Report Status"
-    title: "Title"
+    title:
+      label: "Title"
+      placeholder: "Report title"
     upload_button: "Upload Document"
     viewed_at: "Date Viewed"
+    incomplete_visit:
+      start_date: "Start date"
+      end_date: "End date"
 
   fulfillment:
     object: "Fulfillment"

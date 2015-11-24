@@ -15,6 +15,8 @@ class IncompleteVisitReport < Report
   # report columns
   REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Start Date", "List of Cores which have incomplete visits"]
 
+  attr_accessor :title, :start_date, :end_date
+
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
     _24_hours_ago = DateTime.now.ago(24*60*60)
