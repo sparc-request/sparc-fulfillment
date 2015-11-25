@@ -1,8 +1,6 @@
 require 'csv'
 
 class IncompleteVisitReport < Report
-  VALIDATES_PRESENCE_OF     = [:title].freeze
-  VALIDATES_NUMERICALITY_OF = [].freeze
 
   # db columns of interest; qualified because of ambiguities
   START_DATE  = '`appointments`.`start_date`'
@@ -14,8 +12,6 @@ class IncompleteVisitReport < Report
 
   # report columns
   REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Start Date", "List of Cores which have incomplete visits"]
-
-  attr_accessor :title, :start_date, :end_date
 
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
@@ -37,6 +33,24 @@ class IncompleteVisitReport < Report
         each     { |x|    csv << x }
     end
   end
+
+  def first_incomplete_visit
+
+  end
+
+  def last_incomplete_visit
+
+  end
+
+  def incomplete_appointments
+    @incomplete_appointments ||= Appointment.
+                                  where('start_date IS NOT NULL').
+                                  joins(:procedures).
+                                  where(procedures: { status: 'unstarted' }).
+                                  uniq
+  end
+
+  private
 
   def get_protocol_srids(result_set)
     protocol_ids = result_set.map(&:first).uniq

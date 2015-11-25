@@ -4,6 +4,10 @@ FactoryGirl.define do
     appointment nil
     visit nil
 
+    trait :without_validations do
+      to_create { |instance| instance.save(validate: false) }
+    end
+
     trait :insurance_billing_qty do
       billing_type 'insurance_billing_qty'
     end
@@ -52,5 +56,6 @@ FactoryGirl.define do
     factory :procedure_incomplete, traits: [:incomplete]
     factory :procedure_with_notes, traits: [:with_notes]
     factory :procedure_follow_up, traits: [:follow_up]
+    factory :procedure_without_validations, traits: [:without_validations]
   end
 end
