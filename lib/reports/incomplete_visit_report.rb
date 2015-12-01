@@ -16,6 +16,7 @@ class IncompleteVisitReport < Report
   def initialize(*)
     super
     @start_date = @attributes[:start_date] || nil
+    @end_date   = @attributes[:end_date] || nil
   end
 
   def generate(document)
@@ -55,6 +56,14 @@ class IncompleteVisitReport < Report
                                   where(procedures: { status: 'unstarted' }).
                                   order('start_date DESC').
                                   uniq
+  end
+
+  def end_at
+    if end_date
+      end_date
+    else
+      last_incomplete_visit.start_date
+    end
   end
 
   def start_at
