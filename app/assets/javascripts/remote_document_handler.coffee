@@ -11,7 +11,8 @@ generate_document = (element, tables_to_refresh, event = null) ->
   $.ajax
     type: 'POST'
     url: '/reports.js'
-    data: data
+    data:
+      report: data
     success: ->
       set_glyphicon_loading element
 
@@ -133,7 +134,7 @@ set_glyphicon_error = (element) ->
     find('span.glyphicon').
     addClass('glyphicon-alert').
     removeClass('glyphicon-refresh spin')
-            
+
 set_glyphicon_finished = (element) ->
   $(element).
     addClass('btn-success').

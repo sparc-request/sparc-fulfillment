@@ -13,8 +13,14 @@ class IncompleteVisitReport < Report
   # report columns
   REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Start Date", "List of Cores which have incomplete visits"]
 
+  def initialize(*)
+    super
+    @start_date = @attributes[:start_date] || nil
+  end
+
   def generate(document)
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update_attributes  content_type: 'text/csv',
+                                original_filename: "#{@attributes[:title]}.csv"
     _24_hours_ago = DateTime.now.ago(24*60*60)
 
     CSV.open(document.path, "wb") do |csv|
@@ -35,11 +41,11 @@ class IncompleteVisitReport < Report
   end
 
   def first_incomplete_visit
-
+    incomplete_appointments.first
   end
 
   def last_incomplete_visit
-
+    incomplete_appointments.last
   end
 
   def incomplete_appointments
@@ -47,7 +53,16 @@ class IncompleteVisitReport < Report
                                   where('start_date IS NOT NULL').
                                   joins(:procedures).
                                   where(procedures: { status: 'unstarted' }).
+                                  order('start_date DESC').
                                   uniq
+  end
+
+  def start_at
+    if start_date
+      start_date
+    else
+      first_incomplete_visit.start_date
+    end
   end
 
   private

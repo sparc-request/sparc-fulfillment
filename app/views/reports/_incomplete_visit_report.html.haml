@@ -1,7 +1,7 @@
 .form-group
   =label_tag 'title', t(:documents)[:title][:label], class: 'col-sm-3 control-label'
   .col-sm-7
-    = form.text_field :title, class: 'form-control', autofocus: true, placeholder: t(:documents)[:title][:placeholder]
+    = form.text_field :title, class: 'form-control', autofocus: true, placeholder: t(:documents)[:title][:placeholder], required: true
 .form-group
   =label_tag 'start_date', t(:documents)[:incomplete_visit][:start_date], class: 'col-sm-3 control-label'
   .col-sm-7

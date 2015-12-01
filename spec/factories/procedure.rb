@@ -35,9 +35,6 @@ FactoryGirl.define do
       end
     end
 
-    trait :unstarted do
-    end
-
     trait :with_notes do
       after(:create) do |procedure, evaluator|
         create_list(:note, 3, notable: procedure)

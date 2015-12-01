@@ -1,8 +1,8 @@
 $ ->
 
   $(document).on 'load-success.bs.table', '#participants-tracker-table', ->
-    tables_to_refresh = ['table.protocol_reports']
-    
+    tables_to_refresh = ['table.protocol_reports', 'table.participants']
+
     $.each $('table.participants td.participant_report button'), (index, value) ->
       remote_document_generator value, tables_to_refresh
 

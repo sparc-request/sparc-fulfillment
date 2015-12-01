@@ -5,11 +5,12 @@ class Report
   extend ActiveModel::Naming
   extend ActiveModel::Translation
 
+  attr_accessor :title, :start_date, :end_date
+
   attr_reader :errors
 
-  def initialize(*attributes)
+  def initialize(attributes = Hash.new)
     @attributes = attributes
-    @errors     = ActiveModel::Errors.new(self)
   end
 
   def valid?

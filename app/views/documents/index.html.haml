@@ -11,19 +11,19 @@
         = t(:reports)[:page_title]
 .row.report-buttons
   .col-md-3
-    %button.btn-block.new_report.btn.btn-primary{ data: { type: "billing_report" } }
+    %button.btn-block.new_report.btn.btn-primary{ data: { kind: "billing_report" } }
       %i.glyphicon.glyphicon-equalizer
       Billing Report
   .col-md-3
-    %button.btn-block.new_report.btn.btn-primary{ data: { type: "auditing_report" } }
+    %button.btn-block.new_report.btn.btn-primary{ data: { kind: "auditing_report" } }
       %i.glyphicon.glyphicon-equalizer
       Auditing Report
   .col-md-3
-    %button.btn-block.new_report.btn.btn-primary{ data: { type: "project_summary_report" } }
+    %button.btn-block.new_report.btn.btn-primary{ data: { kind: "project_summary_report" } }
       %i.glyphicon.glyphicon-equalizer
       Project Summary Report
   .col-md-3
-    %button.btn-block.new_report.btn.btn-primary{ data: { type: "incomplete_visit_report" } }
+    %button.btn-block.new_report.btn.btn-primary{ data: { kind: "incomplete_visit_report" } }
       %i.glyphicon.glyphicon-equalizer
       Incomplete Visit Report
 .row

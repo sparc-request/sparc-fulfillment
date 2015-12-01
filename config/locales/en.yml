@@ -101,6 +101,7 @@ en:
     state: "Report Status"
     title:
       label: "Title"
+      table_header: "Title"
       placeholder: "Report title"
     upload_button: "Upload Document"
     viewed_at: "Date Viewed"
