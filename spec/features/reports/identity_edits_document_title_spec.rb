@@ -10,7 +10,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
         then_i_should_see_the_title_has_been_updated
       end
     end
-    
+
     context "from the All Reports page" do
       scenario "and sees the title has changed" do
         given_i_am_viewing_the_all_reports_page
@@ -49,7 +49,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def when_i_create_an_identity_based_document_with_a_custom_title
-    find("[data-type='billing_report']").click
+    find("[data-type='invoice_report']").click
     wait_for_ajax
 
     fill_in 'Title', with: "A custom title"
@@ -70,7 +70,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def when_i_create_an_identity_based_document
-    find("[data-type='billing_report']").click
+    find("[data-type='invoice_report']").click
     wait_for_ajax
 
     fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
@@ -78,7 +78,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
 
     # close calendar thing, so it's not covering protocol dropdown
     first('.modal-header').click
-    wait_for_ajax 
+    wait_for_ajax
 
     bootstrap_select ('#protocol_ids'), @protocol.short_title_with_sparc_id
 
