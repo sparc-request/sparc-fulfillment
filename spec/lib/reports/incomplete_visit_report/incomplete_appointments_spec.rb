@@ -17,6 +17,30 @@ RSpec.describe IncompleteVisitReport do
                                                     status: 'complete'
       end
 
+      context ':start_date and :end_date present' do
+
+        let!(:past_appointment)   { create :appointment_without_validations,  start_date: 1.day.ago,
+                                                                              participant: participant_1 }
+        let!(:future_appointment) { create :appointment_without_validations,  start_date: 1.day.from_now,
+                                                                              participant: participant_2 }
+        let!(:report)             { IncompleteVisitReport.new start_date: 1.week.ago,
+                                                              end_date: Time.current }
+
+        before do
+          past_appointment.update_attribute :created_at, 1.minute.ago
+          create_list :procedure_without_validations, 3,
+                                                      appointment: past_appointment,
+                                                      status: 'unstarted'
+          create_list :procedure_without_validations, 3,
+                                                      appointment: future_appointment,
+                                                      status: 'unstarted'
+        end
+
+        it 'should return incomplete Appointments younger than :end_date' do
+          expect(report.incomplete_appointments).to eq([past_appointment])
+        end
+      end
+
       context ':end_date present' do
 
         let!(:past_appointment)   { create :appointment_without_validations,  start_date: 1.day.ago,
