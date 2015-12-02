@@ -50,8 +50,9 @@ class IncompleteVisitReport < Report
   def first_incomplete_visit
     Appointment.
       unscoped.
-      unstarted.
-      order('created_at ASC').
+      joins(:procedures).
+        where(procedures: { status: 'unstarted' }).
+      order(created_at: :asc).
       limit(1).
       first
   end
@@ -59,19 +60,20 @@ class IncompleteVisitReport < Report
   def last_incomplete_visit
     Appointment.
       unscoped.
-      unstarted.
-      order('created_at DESC').
+      joins(:procedures).
+        where(procedures: { status: 'unstarted' }).
+      order(created_at: :desc).
       limit(1).
       first
   end
 
   def incomplete_appointments
     @incomplete_appointments ||= Appointment.
-                                  where('start_date IS NOT NULL').
+                                  unscoped.
                                   joins(:participant).
                                   joins(:procedures).
                                     where(procedures: { status: 'unstarted' }).
-                                  order('start_date DESC').
+                                  order(start_date: :desc).
                                   uniq
   end
 
