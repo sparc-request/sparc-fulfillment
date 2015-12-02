@@ -70,6 +70,8 @@ class IncompleteVisitReport < Report
   def incomplete_appointments
     @incomplete_appointments ||= Appointment.
                                   unscoped.
+                                  where('start_date >= ?', start_at).
+                                  where('start_date <= ?', end_at).
                                   joins(:participant).
                                   joins(:procedures).
                                     where(procedures: { status: 'unstarted' }).
@@ -81,16 +83,20 @@ class IncompleteVisitReport < Report
   def start_at
     if start_date
       start_date
+    elsif first_incomplete_visit
+        first_incomplete_visit.start_date
     else
-      first_incomplete_visit.start_date
+      Time.current
     end
   end
 
   def end_at
     if end_date
       end_date
-    else
+    elsif last_incomplete_visit
       last_incomplete_visit.start_date
+    else
+      Time.current
     end
   end
 
