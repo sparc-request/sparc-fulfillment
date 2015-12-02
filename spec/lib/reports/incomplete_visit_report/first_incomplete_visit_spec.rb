@@ -4,17 +4,14 @@ RSpec.describe IncompleteVisitReport do
 
   describe '.first_incomplete_visit' do
 
-    let!(:appointment_1) { create :appointment_without_validations, start_date: Time.current }
-    let!(:appointment_2) { create :appointment_without_validations, start_date: Time.current }
-    let!(:report)        { IncompleteVisitReport.new }
+    let!(:appointment_first)  { create :appointment_without_validations }
+    let!(:appointment_last)   { create :appointment_without_validations }
+    let!(:report)             { IncompleteVisitReport.new }
 
-    before do
-      create :procedure_without_validations, appointment: appointment_1
-      create :procedure_without_validations, appointment: appointment_2
-    end
+    before { appointment_first.update_attribute :created_at, 1.minute.ago }
 
     it 'should return the first incomplete Visit' do
-      expect(report.first_incomplete_visit).to eq(appointment_1)
+      expect(report.first_incomplete_visit).to eq(appointment_first)
     end
   end
 end

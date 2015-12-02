@@ -10,13 +10,19 @@ class IncompleteVisitReport < Report
   FIRST_NAME  = '`participants`.`first_name`'
   VISIT_NAME  = :name
 
-  # report columns
-  REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Start Date", "List of Cores which have incomplete visits"]
+  REPORT_COLUMNS = [
+    'Protocol ID (SRID)',
+    'Patient Last Name',
+    'Patient First Name',
+    'Visit Name',
+    'Start Date',
+    'List of Cores which have incomplete visits'
+    ].freeze
 
   def initialize(*)
     super
-    @start_date = @attributes[:start_date] || nil
-    @end_date   = @attributes[:end_date] || nil
+    @start_date = @attributes[:start_date]  || nil
+    @end_date   = @attributes[:end_date]    || nil
   end
 
   def generate(document)
@@ -42,20 +48,40 @@ class IncompleteVisitReport < Report
   end
 
   def first_incomplete_visit
-    incomplete_appointments.first
+    Appointment.
+      unscoped.
+      unstarted.
+      order('created_at ASC').
+      limit(1).
+      first
   end
 
   def last_incomplete_visit
-    incomplete_appointments.last
+    Appointment.
+      unscoped.
+      unstarted.
+      order('created_at DESC').
+      limit(1).
+      first
   end
 
   def incomplete_appointments
     @incomplete_appointments ||= Appointment.
                                   where('start_date IS NOT NULL').
+                                  joins(:participant).
                                   joins(:procedures).
-                                  where(procedures: { status: 'unstarted' }).
+                                    where(procedures: { status: 'unstarted' }).
                                   order('start_date DESC').
                                   uniq
+  end
+
+
+  def start_at
+    if start_date
+      start_date
+    else
+      first_incomplete_visit.start_date
+    end
   end
 
   def end_at
@@ -63,14 +89,6 @@ class IncompleteVisitReport < Report
       end_date
     else
       last_incomplete_visit.start_date
-    end
-  end
-
-  def start_at
-    if start_date
-      start_date
-    else
-      first_incomplete_visit.start_date
     end
   end
 
