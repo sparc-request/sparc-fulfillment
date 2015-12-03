@@ -22,7 +22,10 @@ $ ->
 
       $.ajax
         type: 'GET'
-        url: "/reports/new.js?kind=#{report_kind}"
+        data:
+          report:
+            kind: report_kind
+        url: '/reports/new.js'
         success: (data) ->
           add_to_report_notification_count('Identity', 1)
 

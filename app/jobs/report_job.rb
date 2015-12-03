@@ -10,7 +10,7 @@ class ReportJob < ActiveJob::Base
     report = document.
               kind.
               classify.
-              constantize.new document, report_params
+              constantize.new report_params
 
     report.generate document
 

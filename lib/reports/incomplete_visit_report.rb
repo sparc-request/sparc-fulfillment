@@ -26,11 +26,11 @@ class IncompleteVisitReport < Report
 
     CSV.open(document.path, 'wb') do |csv|
       csv << REPORT_COLUMNS
-
-      appointments.group_by { |x| x[0..3] }.
+      appointments.
+        group_by { |x| x[0..3] }.
         map      { |x, y| [ srids[x[0]] ] + x[1..3] << y[0][4] << core_list(y) }.
         sort     { |x, y| x <=> y || 1 }. # by default, sort won't handle nils
-        each     { |x|    csv << x }
+        each     { |x| csv << x }
     end
   end
 
@@ -59,6 +59,8 @@ class IncompleteVisitReport < Report
   def incomplete_appointments
     Appointment.
       unscoped.
+      includes(:procedures).
+      includes(:participant).
       where('start_date IS NOT NULL').
       where('start_date >= ?', start_at).
       where('start_date <= ?', end_at).
@@ -89,8 +91,8 @@ class IncompleteVisitReport < Report
   end
 
   def start_at
-    if start_date
-      start_date
+    if start_date.present?
+      Time.parse start_date
     elsif first_incomplete_visit
       first_incomplete_visit.start_date
     else
@@ -99,8 +101,8 @@ class IncompleteVisitReport < Report
   end
 
   def end_at
-    if end_date
-      end_date
+    if end_date.present?
+      Time.parse end_date
     elsif last_incomplete_visit
       last_incomplete_visit.start_date
     else
