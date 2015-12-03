@@ -6,6 +6,7 @@ RSpec.describe IncompleteVisitReport do
   let!(:appointment_2) { create :appointment_without_validations, start_date: 1.day.from_now }
 
   before do
+    appointment_1.update_attribute :created_at, 1.minute.ago
     create :procedure_without_validations, appointment: appointment_1
     create :procedure_without_validations, appointment: appointment_2
   end

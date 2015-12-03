@@ -4,8 +4,8 @@ RSpec.describe IncompleteVisitReport do
 
   describe '.first_incomplete_visit' do
 
-    let!(:appointment_first)  { create :appointment_without_validations }
-    let!(:appointment_last)   { create :appointment_without_validations }
+    let!(:appointment_first)  { create :appointment_without_validations, start_date: 1.day.ago }
+    let!(:appointment_last)   { create :appointment_without_validations, start_date: Time.current }
     let!(:report)             { IncompleteVisitReport.new }
 
     before do
