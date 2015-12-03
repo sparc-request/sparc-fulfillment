@@ -1,12 +1,12 @@
 .form-group
-  =label_tag 'title', t(:documents)[:title][:label], class: 'col-sm-3 control-label'
+  =label_tag 'title', t(:reports)[:title], class: 'col-sm-3 control-label'
   .col-sm-7
-    = form.text_field :title, class: 'form-control', autofocus: true, placeholder: t(:documents)[:title][:placeholder], required: true
+    = form.text_field :title, class: 'form-control', autofocus: true, placeholder: t(:reports)[:title_placeholder], required: true
 .form-group
-  =label_tag 'start_date', t(:documents)[:incomplete_visit][:start_date], class: 'col-sm-3 control-label'
+  =label_tag 'start_date', t(:reports)[:start_date], class: 'col-sm-3 control-label'
   .col-sm-7
     = form.text_field :start_date, class: 'form-control datepicker'
 .form-group
-  =label_tag 'end_date', t(:documents)[:incomplete_visit][:end_date], class: 'col-sm-3 control-label'
+  =label_tag 'end_date', t(:reports)[:end_date], class: 'col-sm-3 control-label'
   .col-sm-7
     = form.text_field :end_date, class: 'form-control datepicker'

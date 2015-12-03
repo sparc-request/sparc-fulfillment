@@ -99,15 +99,8 @@ en:
       none: "This line item has no documents"
     new_header: "Add Document"
     state: "Report Status"
-    title:
-      label: "Title"
-      table_header: "Title"
-      placeholder: "Report title"
     upload_button: "Upload Document"
     viewed_at: "Date Viewed"
-    incomplete_visit:
-      start_date: "Start date"
-      end_date: "End date"
 
   fulfillment:
     object: "Fulfillment"
@@ -296,20 +289,25 @@ en:
     updates: "Updates"
 
   reports:
-    auditing_report: "Auditing Report"
-    billing_report: "Billing Report"
+    auditing_report:
+      title: "Auditing Report"
+    billing_report:
+      title: "Billing Report"
+      protocol_ids: "Protocol(s)"
+      instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
     end_date: "End Date"
-    incomplete_visit_report: "Incomplete Visit Report"
+    incomplete_visit_report:
+      title: "Incomplete Visit Report"
     organization: "Organization(s)"
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"
     project_summary_report: "Project Summary Report"
     protocol: "Protocol"
-    protocol_instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
-    protocols: "Protocol(s)"
     request_report: "Request Report"
     start_date: "Start Date"
+    title_placeholder: "Report title"
+    title: "Title"
 
   services:
     object: "Service"

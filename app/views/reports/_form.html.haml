@@ -8,7 +8,7 @@
           %span.sr-only
             = t(:actions)[:close]
         %h4.modal-title.text-center
-          = t(:reports)[report.class.name.underscore.to_sym]
+          = t(:reports)[report.class.name.underscore.to_sym][:title]
       .modal-body
         = render partial: report.class.name.underscore, locals: { form: form, report: report }
       .modal-footer
