@@ -23,8 +23,8 @@ RSpec.describe IncompleteVisitReport do
                                                                               participant: participant_1 }
         let!(:future_appointment) { create :appointment_without_validations,  start_date: 1.day.from_now,
                                                                               participant: participant_2 }
-        let!(:report)             { IncompleteVisitReport.new start_date: 1.week.ago,
-                                                              end_date: Time.current }
+        let!(:report)             { IncompleteVisitReport.new start_date: 1.week.ago.strftime('%Y/%m/%d'),
+                                                              end_date: Time.current.strftime('%Y/%m/%d') }
 
         before do
           past_appointment.update_attribute :created_at, 1.minute.ago
@@ -47,7 +47,7 @@ RSpec.describe IncompleteVisitReport do
                                                                               participant: participant_1 }
         let!(:future_appointment) { create :appointment_without_validations,  start_date: 1.day.from_now,
                                                                               participant: participant_2 }
-        let!(:report)             { IncompleteVisitReport.new end_date: Time.current }
+        let!(:report)             { IncompleteVisitReport.new end_date: Time.current.strftime('%Y/%m/%d') }
 
         before do
           past_appointment.update_attribute :created_at, 1.minute.ago
@@ -70,7 +70,7 @@ RSpec.describe IncompleteVisitReport do
                                                                               participant: participant_1 }
         let!(:future_appointment) { create :appointment_without_validations,  start_date: 1.day.from_now,
                                                                               participant: participant_2 }
-        let!(:report)             { IncompleteVisitReport.new start_date: Time.current }
+        let!(:report)             { IncompleteVisitReport.new start_date: Time.current.strftime('%Y/%m/%d') }
 
         before do
           past_appointment.update_attribute :created_at, 1.minute.ago

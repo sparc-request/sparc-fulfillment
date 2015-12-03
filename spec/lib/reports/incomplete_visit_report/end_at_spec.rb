@@ -1,4 +1,4 @@
-require 'rails_helper'
+  require 'rails_helper'
 
 RSpec.describe IncompleteVisitReport do
 
@@ -15,11 +15,11 @@ RSpec.describe IncompleteVisitReport do
 
     context 'end_date attribute present' do
 
-      let!(:report_params)           { { end_date: 2.days.ago } }
+      let!(:report_params)           { { end_date: 2.days.ago.strftime('%Y/%m/%d') } }
       let!(:incomplete_visit_report) { IncompleteVisitReport.new report_params }
 
       it 'should return the instance end_date attribute' do
-        expect(incomplete_visit_report.end_at).to eq(report_params[:end_date])
+        expect(incomplete_visit_report.end_at).to eq(Time.parse report_params[:end_date])
       end
     end
 

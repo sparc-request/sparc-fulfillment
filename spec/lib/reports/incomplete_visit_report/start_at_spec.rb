@@ -15,11 +15,11 @@ RSpec.describe IncompleteVisitReport do
 
     context 'start_date attribute present' do
 
-      let!(:report_params)           { { start_date: 2.days.from_now } }
+      let!(:report_params)           { { start_date: 2.days.from_now.strftime('%Y/%m/%d') } }
       let!(:incomplete_visit_report) { IncompleteVisitReport.new report_params }
 
       it 'should return the instance start_date attribute' do
-        expect(incomplete_visit_report.start_at).to eq(report_params[:start_date])
+        expect(incomplete_visit_report.start_at).to eq(Time.parse report_params[:start_date])
       end
     end
 
