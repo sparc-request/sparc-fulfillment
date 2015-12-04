@@ -99,6 +99,8 @@ en:
       none: "This line item has no documents"
     new_header: "Add Document"
     state: "Report Status"
+    title:
+      placeholder: "Report title"
     upload_button: "Upload Document"
     viewed_at: "Date Viewed"
 
@@ -290,11 +292,13 @@ en:
 
   reports:
     auditing_report:
+      instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
+      protocol_ids: "Protocol(s)"
       title: "Auditing Report"
     billing_report:
-      title: "Billing Report"
-      protocol_ids: "Protocol(s)"
       instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
+      protocol_ids: "Protocol(s)"
+      title: "Billing Report"
     end_date: "End Date"
     incomplete_visit_report:
       title: "Incomplete Visit Report"
@@ -302,7 +306,9 @@ en:
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"
-    project_summary_report: "Project Summary Report"
+    project_summary_report:
+      protocol_ids: "Protocol(s)"
+      title: "Project Summary Report"
     protocol: "Protocol"
     request_report: "Request Report"
     start_date: "Start Date"
