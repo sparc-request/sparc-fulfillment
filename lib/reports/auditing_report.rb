@@ -1,10 +1,5 @@
 class AuditingReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
-  VALIDATES_NUMERICALITY_OF = [].freeze
-
-  require 'csv'
-
   def generate(document)
     @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
     @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")

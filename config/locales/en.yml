@@ -307,6 +307,7 @@ en:
     participant: "Participant"
     participant_report: "Participant Report"
     project_summary_report:
+      instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
       protocol_ids: "Protocol(s)"
       title: "Project Summary Report"
     protocol: "Protocol"

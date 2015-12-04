@@ -1,5 +1,3 @@
-require 'csv'
-
 class IncompleteVisitReport < Report
 
   REPORT_COLUMNS = [
@@ -10,12 +8,6 @@ class IncompleteVisitReport < Report
     'Start Date',
     'List of Cores which have incomplete visits'
   ].freeze
-
-  def initialize(*)
-    super
-    @start_date = @attributes[:start_date]  || nil
-    @end_date   = @attributes[:end_date]    || nil
-  end
 
   def generate(document)
     appointments  = formatted_incomplete_appointments
@@ -91,7 +83,7 @@ class IncompleteVisitReport < Report
   end
 
   def start_at
-    if start_date.present?
+    if @start_date
       Time.parse start_date
     elsif first_incomplete_visit
       first_incomplete_visit.start_date
@@ -101,7 +93,7 @@ class IncompleteVisitReport < Report
   end
 
   def end_at
-    if end_date.present?
+    if @end_date
       Time.parse end_date
     elsif last_incomplete_visit
       last_incomplete_visit.start_date
