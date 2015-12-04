@@ -5,15 +5,15 @@
 .form-group
   =label_tag 'start_date', t(:reports)[:start_date], class: 'col-sm-3 control-label'
   .col-sm-7
-    = form.text_field :start_date, class: 'form-control datepicker'
+    = form.text_field :start_date, class: 'form-control datepicker', required: true
 .form-group
   =label_tag 'end_date', t(:reports)[:end_date], class: 'col-sm-3 control-label'
   .col-sm-7
-    = form.text_field :end_date, class: 'form-control datepicker'
+    = form.text_field :end_date, class: 'form-control datepicker', required: true
 .form-group
-  =label_tag 'protocol', t(:reports)[:project_summary_report][:protocol_ids], class: 'col-sm-3 control-label'
+  =label_tag 'protocol_id', t(:reports)[:project_summary_report][:protocol_ids], class: 'col-sm-3 control-label'
   .col-sm-7
-    = select_tag 'protocol_ids', options_from_collection_for_select(current_identity.protocols, 'id', 'short_title_with_sparc_id'), multiple: true, data: { 'live-search' => true }, class: 'selectpicker form-control'
+    = form.select :protocol_id, options_from_collection_for_select(current_identity.protocols, 'id', 'short_title_with_sparc_id'), {}, data: { 'live-search' => true }, class: 'selectpicker form-control'
 .form-group
   .col-sm-9.col-sm-offset-3
     = t(:reports)[:project_summary_report][:instructions]

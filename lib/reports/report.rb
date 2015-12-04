@@ -4,7 +4,11 @@ class Report
 
   include ActionView::Helpers::NumberHelper
 
-  attr_accessor :title, :start_date, :end_date
+  attr_accessor :title,
+                :start_date,
+                :end_date,
+                :protocol_id,
+                :protocol_ids
 
   def initialize(attributes = Hash.new)
     @attributes = attributes

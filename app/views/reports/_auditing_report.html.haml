@@ -11,9 +11,9 @@
   .col-sm-7
     = form.text_field :end_date, class: 'form-control datepicker', required: true
 .form-group
-  =label_tag 'protocol', t(:reports)[:auditing_report][:protocol_ids], class: 'col-sm-3 control-label'
+  =label_tag 'protocol_ids', t(:reports)[:auditing_report][:protocol_ids], class: 'col-sm-3 control-label'
   .col-sm-7
-    = select_tag 'protocol_ids', options_from_collection_for_select(current_identity.protocols, 'id', 'short_title_with_sparc_id'), multiple: true, data: { 'live-search' => true }, class: 'selectpicker form-control'
+    = form.select :protocol_ids, options_from_collection_for_select(current_identity.protocols, 'id', 'short_title_with_sparc_id'), {}, multiple: true, data: { 'live-search' => true }, class: 'selectpicker form-control'
 .form-group
   .col-sm-9.col-sm-offset-3
     = t(:reports)[:auditing_report][:instructions]

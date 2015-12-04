@@ -84,7 +84,7 @@ class IncompleteVisitReport < Report
 
   def start_at
     if @start_date
-      Time.parse start_date
+      @start_date
     elsif first_incomplete_visit
       first_incomplete_visit.start_date
     else
@@ -94,7 +94,7 @@ class IncompleteVisitReport < Report
 
   def end_at
     if @end_date
-      Time.parse end_date
+      @end_date
     elsif last_incomplete_visit
       last_incomplete_visit.start_date
     else

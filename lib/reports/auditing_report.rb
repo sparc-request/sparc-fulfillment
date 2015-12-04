@@ -27,9 +27,8 @@ class AuditingReport < Report
         'Follow-Up date and comment',
         'Cost'
       ]
-
       if @attributes[:protocol_ids].present?
-        protocols = Protocol.find(@attributes[:protocol_ids])
+        protocols = Protocol.where(id: @attributes[:protocol_ids].compact)
       else
         protocols = Identity.find(@attributes[:identity_id]).protocols
       end
