@@ -32,6 +32,10 @@ GEM
       arel (~> 6.0)
     activerecord-import (0.8.0)
       activerecord (>= 3.0)
+    activerecord-session_store (0.1.2)
+      actionpack (>= 4.0.0, < 5)
+      activerecord (>= 4.0.0, < 5)
+      railties (>= 4.0.0, < 5)
     activesupport (4.2.2)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -401,6 +405,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
+  activerecord-session_store
   acts_as_list
   addressable
   ar-octopus (~> 0.8.5)
