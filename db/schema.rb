@@ -93,7 +93,7 @@ ActiveRecord::Schema.define(version: 20150824143847) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "title",             limit: 255
-    t.string   "state",             limit: 255, default: "Pending"
+    t.string   "state",             limit: 255, default: "Processing"
     t.datetime "last_accessed_at"
     t.string   "original_filename", limit: 255
     t.string   "content_type",      limit: 255

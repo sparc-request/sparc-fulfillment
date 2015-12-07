@@ -10,14 +10,15 @@
         %h4.modal-title.text-center= t(:task)[:create_task]
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         .row
           .col-md-12
             .form-group
-              = f.label "assignee_id", t(:task)[:assignee_name], class: "col-sm-4 control-label"
+              = f.label "assignee_id", t(:task)[:assignee_name]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7
                 = f.select :assignee_id, options_from_collection_for_select(clinical_providers.map(&:identity), 'id', 'full_name'), { include_blank: true }, :class => "form-control selectpicker"
             .form-group
-              = f.label "follow_up_date", t(:task)[:due_at], class: "col-sm-4 control-label"
+              = f.label "follow_up_date", t(:task)[:due_at]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7
                 .input-group.date#follow_up_datepicker
                   = f.text_field :due_at, {class: 'form-control'}

@@ -1,8 +1,7 @@
 module ApplicationHelper
   def generate_history_text url
-    h = Rails.application.routes.recognize_path(url)
-   
     begin
+      h = Rails.application.routes.recognize_path(url)
       case h[:action]
       when 'index'
         ['All', h[:controller].humanize].join(' ')
@@ -16,7 +15,7 @@ module ApplicationHelper
       puts "#"*20
       puts e.message
       puts "#"*20
-      'Unable to determine route'
+      return url
     end
   end
 

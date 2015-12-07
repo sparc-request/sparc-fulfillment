@@ -8,6 +8,7 @@
         %h4#CreateNewParticipant.modal-title.text-center= "Add Visit"
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         .row
           = hidden_field_tag :schedule_tab, schedule_tab
           = hidden_field_tag :current_page, current_page
@@ -16,10 +17,10 @@
               = a.label "arm_id", t(:visit_groups)[:arm], class: "col-sm-4 control-label"
               .col-sm-7= a.select "arm_id", options_from_collection_for_select(protocol.arms,'id','name', arm.id), {include_blank: false}, class: "form-control selectpicker"
             .form-group
-              = a.label "name", t(:visit_groups)[:name], class: "col-sm-4 control-label"
+              = a.label "name", t(:visit_groups)[:name]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= a.text_field "name", {class: 'form-control'}
             .form-group
-              = a.label "day", t(:visit_groups)[:day], class: "col-sm-4 control-label"
+              = a.label "day", t(:visit_groups)[:day]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= a.text_field "day", {class: 'form-control', maxlength: 4}
             .form-group
               = a.label "position", t(:visit_groups)[:position], class: "col-sm-4 control-label"

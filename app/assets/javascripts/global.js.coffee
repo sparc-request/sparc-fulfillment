@@ -23,6 +23,9 @@ $ ->
     $(this).siblings("input").val("").trigger("keyup")
     $(this).hide()
 
+  $(document).on 'dp.hide', '.datetimepicker', ->
+    $(this).blur()
+
   $(document).on 'click', 'button.notes.list',  ->
     id = $(this).data('notable-id')
     type = $(this).data('notable-type')
@@ -77,6 +80,11 @@ $ ->
   delay = (ms, func) -> setTimeout func, ms
   delay 3000, -> $elt.tooltip('destroy')
 
+(exports ? this).update_tooltip = (object, string) ->
+  $(object).tooltip('hide')
+  $(object).attr('data-original-title', string)
+  $(object).tooltip('fixTitle')
+
 (exports ? this).add_to_report_notification_count = (documentable_type, amount) ->
   switch documentable_type
     when 'Protocol'
@@ -92,8 +100,3 @@ $ ->
   notification_count = parseInt(notification_bubble.text())
   if notification_count == 0
     notification_bubble.remove();
-
-(exports ? this).update_tooltip = (object, string) ->
-  $(object).tooltip('hide')
-  $(object).attr('data-original-title', string)
-  $(object).tooltip('fixTitle')
