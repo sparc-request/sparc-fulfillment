@@ -128,42 +128,6 @@ RSpec.describe 'Study Schedule', js: true do
         then_i_should_see_the_research_billing_quantity_is '6'
       end
     end
-
-    context 'User clicks the check all button for a row' do
-      scenario 'and sees research fields set to 1 and insurance fields set to 0 for the line item' do
-        given_i_am_viewing_a_protocol
-        given_i_am_viewing_the_quantity_billing_tab
-        when_i_click_a_check_all_row_box
-        then_i_should_see_the_row_checked_in_the_tab 'quantity/billing'
-      end
-    end
-
-    context 'User clicks the uncheck all button for a row' do
-      scenario 'and sees research fields set to 0 and insurance fields set to 0 for the line item' do
-        given_i_am_viewing_a_protocol
-        given_i_am_viewing_the_quantity_billing_tab
-        when_i_click_an_uncheck_all_row_box
-        then_i_should_see_the_column_unchecked_in_the_tab 'quantity/billing'
-      end
-    end
-
-    context 'User clicks the check all button for a column' do
-      scenario 'and sees research fields set to 1 and insurance fields set to 0 for the visit group' do
-        given_i_am_viewing_a_protocol
-        given_i_am_viewing_the_quantity_billing_tab
-        when_i_click_a_check_all_column_box
-        then_i_should_see_the_column_checked_in_the_tab 'quantity/billing'
-      end
-    end
-
-    context 'User clicks the uncheck all button for a column' do
-      scenario 'and sees research fields set to 0 and insurance fields set to 0 for the visit group' do
-        given_i_am_viewing_a_protocol
-        given_i_am_viewing_the_quantity_billing_tab
-        when_i_click_an_uncheck_all_column_box
-        then_i_should_see_the_column_unchecked_in_the_tab 'quantity/billing'
-      end
-    end
   end
 
   context 'User clicks the line item edit button' do
@@ -240,7 +204,7 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_click_the_previous_page_button
-    @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1 
+    @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1
     find("#arrow-left-#{@arm.id}").click()
     wait_for_ajax
   end
@@ -254,7 +218,10 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_click_a_check_all_row_box
-    find("#line_item_#{@line_item.id} .check_row").click()
+    @alert = accept_confirm(with: "This will reset custom values for this row, do you wish to continue?") do
+      find("#line_item_#{@line_item.id} .check_row").click()
+    end
+    expect(@alert).to eq("This will reset custom values for this row, do you wish to continue?")
     wait_for_ajax
   end
 
@@ -264,7 +231,10 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_click_a_check_all_column_box
-    first(".check_column").click()
+    @alert = accept_confirm(with: "This will reset custom values for this column, do you wish to continue?") do
+      first(".check_column").click()
+    end
+    expect(@alert).to eq("This will reset custom values for this column, do you wish to continue?")
     wait_for_ajax
   end
 

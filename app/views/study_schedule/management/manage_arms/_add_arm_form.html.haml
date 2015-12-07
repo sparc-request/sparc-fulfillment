@@ -8,18 +8,19 @@
         %h4#add_arm.modal-title.text-center Add Arm
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         .row
           .col-md-12
             = a.hidden_field :protocol_id
             = hidden_field_tag :schedule_tab, schedule_tab
             .form-group
-              = a.label "name", t(:arm)[:name], class: "col-sm-4 control-label"
+              = a.label "name", t(:arm)[:name]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= a.text_field "name", {class: 'form-control'}
             .form-group
-              = a.label "subject_count", t(:arm)[:subject_count], class: "col-sm-4 control-label"
+              = a.label "subject_count", t(:arm)[:subject_count]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= a.text_field "subject_count", {class: 'form-control'}
             .form-group
-              = a.label "visit_count", t(:arm)[:visit_count], class: "col-sm-4 control-label"
+              = a.label "visit_count", t(:arm)[:visit_count]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= a.text_field "visit_count", {class: 'form-control'}
             .form-group
               = label_tag "service_ids", t(:services)[:objects], class: "col-sm-4 control-label"

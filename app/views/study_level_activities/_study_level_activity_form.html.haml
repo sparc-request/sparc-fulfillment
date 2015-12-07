@@ -8,11 +8,12 @@
         %h4.modal-title.text-center= header_text
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         .row
           .col-md-12
             = form.hidden_field :protocol_id
             .form-group
-              = form.label "service", t(:line_item)[:service], class: "col-sm-4 control-label"
+              = form.label "service", t(:line_item)[:service]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7
                 = form.select "service_id", options_from_collection_for_select(protocol.organization.inclusive_child_services(:one_time_fee), 'id', 'name', line_item.service_id), {include_blank: true}, :class => 'form-control selectpicker'
             .form-group

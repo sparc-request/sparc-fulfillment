@@ -22,7 +22,7 @@ class Participant < ActiveRecord::Base
   after_save :update_faye
   after_destroy :update_faye
 
-  validates :protocol_id, :first_name, :last_name, :mrn, :date_of_birth, :ethnicity, :race, :gender, :address, :city, :state, :zipcode, presence: true
+  validates :protocol_id, :last_name, :first_name, :mrn, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, presence: true
   validate :phone_number_format, :middle_initial_format, :zip_code_format
 
   def self.title id

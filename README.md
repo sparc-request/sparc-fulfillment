@@ -1,4 +1,6 @@
-clinical_work_fulfillment
+Latest stable release v2.0.0
+
+Work Fulfillment
 =========================
 
 # Customize the header background color and logos

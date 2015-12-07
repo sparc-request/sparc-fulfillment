@@ -26,7 +26,7 @@ class ProjectSummaryReport < Report
       protocol.arms.each do |arm|
         visit_groups          = arm.visit_groups
         visit_group_subtotals = [0] * visit_groups.count # total costs for each visit group
-        participants = Participant.find(arm.appointments.group_by(&:participant_id).keys)
+        participants = arm.participants
         participant_totals    = []  # totals per participant
 
         csv << [""]
