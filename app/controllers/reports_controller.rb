@@ -26,8 +26,8 @@ class ReportsController < ApplicationController
   end
 
   def find_documentable
-    if params[:documentable_id].present? && params[:documentable_type].present?
-      @documentable = params[:documentable_type].constantize.find params[:documentable_id]
+    if report_params[:documentable_id].present? && report_params[:documentable_type].present?
+      @documentable = report_params[:documentable_type].constantize.find report_params[:documentable_id]
     else
       @documentable = current_identity
     end

@@ -99,8 +99,7 @@ en:
       none: "This line item has no documents"
     new_header: "Add Document"
     state: "Report Status"
-    title:
-      placeholder: "Report title"
+    title: "Title"
     upload_button: "Upload Document"
     viewed_at: "Date Viewed"
 

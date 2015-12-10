@@ -1,33 +1,26 @@
 class StudyScheduleReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title].freeze
-  VALIDATES_NUMERICALITY_OF = [].freeze
-
   VISIT_GROUP_OFFSET = 2
-
-  def initialize(document)
-
-  end
 
   def generate(document)
     @protocol = document.documentable
 
-    document.update_attributes(content_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                               original_filename: "#{@params[:title]}.xlsx")
+    document.update_attributes content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                               original_filename: "#{@attributes[:title]}.xlsx"
 
     p                     = Axlsx::Package.new
     wb                    = p.workbook
     default               = wb.styles.add_style alignment: { horizontal: :left }
     centered              = wb.styles.add_style alignment: { horizontal: :center }
-    bordered              = wb.styles.add_style border: { style: :thin, color: "00000000" }
-    centered_bordered     = wb.styles.add_style border: { style: :thin, color: "00000000" }, alignment: { horizontal: :center }
+    bordered              = wb.styles.add_style border: { style: :thin, color: '00000000' }
+    centered_bordered     = wb.styles.add_style border: { style: :thin, color: '00000000' }, alignment: { horizontal: :center }
     row_header_style      = wb.styles.add_style b: true
     primary_header_style  = wb.styles.add_style sz: 12, b: true, bg_color: '0099FF', fg_color: 'FFFFFF', alignment: { horizontal: :left }
     header_centered_style = wb.styles.add_style sz: 12, b: true, bg_color: '0099FF', fg_color: 'FFFFFF', alignment: { horizontal: :center }
     sub_header_style      = wb.styles.add_style sz: 12, b: true, bg_color: 'E8E8E8', alignment: { horizontal: :left }
     arm_header_style      = wb.styles.add_style sz: 12, b: true, bg_color: 'ADADAD', alignment: { horizontal: :left }
 
-    wb.add_worksheet(name: @params[:title].humanize) do |sheet|
+    wb.add_worksheet(name: @attributes[:title].humanize) do |sheet|
 
       # Study Information header row
       sheet.add_row study_information_header_row, style: primary_header_style
@@ -89,7 +82,7 @@ class StudyScheduleReport < Report
   def arm_r_t_row(arm)
     cells = [spacer_array(VISIT_GROUP_OFFSET)]
 
-    arm.visit_count.times { cells.push ["R", "T"] }
+    arm.visit_count.times { cells.push ['R', 'T'] }
 
     cells.flatten
   end
@@ -103,9 +96,9 @@ class StudyScheduleReport < Report
 
   def arm_header_row(arm)
     cells = [
-      "Selected Services",
-      "# of Subjects",
-      arm.visit_groups.map { |visit_group| [visit_group.name, ""] }
+      'Selected Services',
+      '# of Subjects',
+      arm.visit_groups.map { |visit_group| [visit_group.name, ''] }
     ].flatten
 
     cells.push [
@@ -121,27 +114,27 @@ class StudyScheduleReport < Report
 
   def study_information_header_row
     [
-      [@protocol.class.to_s, "information"].join(" "),
+      [@protocol.class.to_s, 'information'].join(' '),
       spacer_array(max_width - 1)
     ].flatten
   end
 
   def study_information_id_row
     [
-      [@protocol.class.to_s, "ID:"].join(" "),
+      [@protocol.class.to_s, 'ID:'].join(' '),
       @protocol.id
     ].flatten
   end
 
   def study_information_title_row
     [
-      "Title:",
+      'Title:',
       @protocol.short_title
     ]
   end
 
   def file_name
-    ["protocol", @protocol.id].join("_")
+    ['protocol', @protocol.id].join('_')
   end
 
   private
@@ -155,6 +148,6 @@ class StudyScheduleReport < Report
   end
 
   def spacer_array(count)
-    Array.new(count, "")
+    Array.new(count, '')
   end
 end
