@@ -3,8 +3,8 @@ require 'rails_helper'
 feature 'Identity downloads a document from the documents page', js: true, enqueue: false do
 
   scenario 'and sees the documents counter decrement and disappear' do
-    given_i_have_created_an_identity_based_report   
-    when_i_download_the_report 
+    given_i_have_created_an_identity_based_report
+    when_i_download_the_report
     then_i_should_see_the_documents_counter_decrement
   end
 
@@ -19,12 +19,13 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     create(:participant, protocol: @protocol)
 
     visit documents_path
-    
-    find("[data-type='#{report_type}']").click
+
+    find("[data-kind='#{report_type}']").click
     wait_for_ajax
   end
 
   def when_i_fill_in_the_report_of_type report_type
+    fill_in 'Title', with: 'Title'
     fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
     fill_in 'End Date', with: Date.tomorrow.strftime("%m-%d-%Y")
 
@@ -32,12 +33,12 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     first('.modal-header').click
     wait_for_ajax
 
-    bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'), @protocol.short_title_with_sparc_id
+    bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#report_protocol_ids'), @protocol.short_title_with_sparc_id
 
     # close protocol dropdown, so it's not covering 'Request Report' button
     first('.modal-header').click
     wait_for_ajax
-    find("input[type='submit']").click
+    click_button 'Request Report'
     wait_for_ajax
   end
 
@@ -49,7 +50,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
   end
 
   def when_i_download_the_report
-    find("a.attached_file").trigger("click")
+    find('a.attached_file').trigger('click')
     wait_for_ajax
   end
 
@@ -60,5 +61,5 @@ feature 'Identity downloads a document from the documents page', js: true, enque
   def then_i_should_see_the_viewed_at_date_has_been_updated
     #Get formatter from en.yml -> documents -> date_time_formatter_ruby
     expect(page).to have_css("td.viewed_at", text: Time.now.strftime("%m/%d/%Y"))
-  end 
+  end
 end

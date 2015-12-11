@@ -4,6 +4,9 @@ FactoryGirl.define do
     appointment nil
     visit nil
 
+    trait :unstarted do
+    end
+
     trait :without_validations do
       to_create { |instance| instance.save(validate: false) }
     end

@@ -1,17 +1,17 @@
 .form-group
-  =label_tag 'title', t(:reports)[:title], class: 'col-sm-3 control-label'
+  = form.label 'title', t(:reports)[:title], class: 'col-sm-3 control-label'
   .col-sm-7
-    = form.text_field :title, class: 'form-control', autofocus: true, placeholder: t(:documents)[:title][:placeholder], required: true
+    = form.text_field :title, class: 'form-control', autofocus: true, placeholder: t(:documents)[:title], required: true
 .form-group
-  =label_tag 'start_date', t(:reports)[:start_date], class: 'col-sm-3 control-label'
+  = form.label 'start_date', t(:reports)[:start_date], class: 'col-sm-3 control-label'
   .col-sm-7
     = form.text_field :start_date, class: 'form-control datepicker', required: true
 .form-group
-  =label_tag 'end_date', t(:reports)[:end_date], class: 'col-sm-3 control-label'
+  = form.label 'end_date', t(:reports)[:end_date], class: 'col-sm-3 control-label'
   .col-sm-7
     = form.text_field :end_date, class: 'form-control datepicker', required: true
 .form-group
-  =label_tag 'protocol_ids', t(:reports)[:billing_report][:protocol_ids], class: 'col-sm-3 control-label'
+  = form.label 'protocol_ids', t(:reports)[:billing_report][:protocol_ids], class: 'col-sm-3 control-label'
   .col-sm-7
     = form.select :protocol_ids, options_from_collection_for_select(current_identity.protocols, 'id', 'short_title_with_sparc_id'), {}, multiple: true, data: { 'live-search' => true }, class: 'selectpicker form-control'
 .form-group

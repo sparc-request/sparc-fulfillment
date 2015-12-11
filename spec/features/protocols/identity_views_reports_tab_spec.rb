@@ -24,8 +24,9 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path protocol
-    
-    find("a#study_schedule_report_#{protocol.id.to_s}").click
+    wait_for_ajax
+
+    find("button#study_schedule_report_#{protocol.id}").click
     wait_for_ajax
   end
 
@@ -36,9 +37,9 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     visit protocol_path protocol
 
     click_link 'Participant Tracker'
-    
-    find("a#participant_report_#{participant.id.to_s}").click
-    wait_for_ajax    
+
+    find("button#participant_report_#{participant.id}").click
+    wait_for_ajax
   end
 
   def when_i_view_the_reports_tab

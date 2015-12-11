@@ -2,12 +2,6 @@ require 'rails_helper'
 
 feature 'Identity creates incomplete visit report', js: true do
 
-  scenario 'and sees a default start date' do
-    given_i_am_requesting_an_incomplete_visit_report
-    when_i_click_the_incomplete_visit_report_button
-    then_i_should_see_a_default_start_date
-  end
-
   scenario 'with a start and end date' do
     given_i_am_requesting_an_incomplete_visit_report
     when_i_click_the_incomplete_visit_report_button
@@ -39,9 +33,5 @@ feature 'Identity creates incomplete visit report', js: true do
 
   def then_i_should_see_the_report_in_the_list_of_reports
     expect(page).to have_css('table.documents tbody td.title', text: 'Report title')
-  end
-
-  def then_i_should_see_a_default_start_date
-    expect(page).to have_selector("input#report_start_date[value='11-25-2015']")
   end
 end

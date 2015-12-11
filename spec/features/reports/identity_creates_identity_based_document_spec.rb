@@ -72,19 +72,13 @@ feature 'Identity creates a document from the documents page', js: true do
     wait_for_ajax
   end
 
-  def given_i_click_the_create_report_button_of_type report_type
-    find("[data-type='#{report_type}']").click
+  def given_i_click_the_create_report_button_of_type(report_type)
+    find("[data-kind='#{report_type}']").click
     wait_for_ajax
   end
 
-  def when_i_fill_in_the_report_of_type report_type
-    if report_type == 'incomplete_visit_report'
-      wait_for_ajax
-      find("input[type='submit']").click
-      wait_for_ajax
-      return
-    end
-
+  def when_i_fill_in_the_report_of_type(report_type)
+    fill_in 'Title', with: 'Title'
     fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
     fill_in 'End Date', with: Date.tomorrow.strftime("%m-%d-%Y")
 
@@ -92,12 +86,15 @@ feature 'Identity creates a document from the documents page', js: true do
     first('.modal-header').click
     wait_for_ajax
 
-    bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'), @protocol.short_title_with_sparc_id
+    unless report_type == 'incomplete_visit_report'
+      bootstrap_select (report_type == 'project_summary_report' ? '#report_protocol_id' : '#report_protocol_ids'), @protocol.short_title_with_sparc_id
 
-    # close protocol dropdown, so it's not covering 'Request Report' button
-    first('.modal-header').click
-    wait_for_ajax
-    find("input[type='submit']").click
+      # close protocol dropdown, so it's not covering 'Request Report' button
+      first('.modal-header').click
+      wait_for_ajax
+    end
+
+    click_button 'Request Report'
     wait_for_ajax
   end
 
@@ -107,13 +104,13 @@ feature 'Identity creates a document from the documents page', js: true do
   end
 
   def then_i_will_see_the_new_report_listed report_type
-    expect(page).to have_css('table.documents tbody tr td', text: "#{report_type}")
+    expect(page).to have_css('table.documents tbody tr td.title', text: 'Title')
   end
 
   def then_i_should_see_the_documents_counter_increment
     expect(page).to have_css(".notification.identity_report_notifications", text: 1)
   end
-  
+
   def then_i_should_see_the_documents_counter_increment_to_two
     expect(page).to have_css(".notification.identity_report_notifications", text: 2)
   end

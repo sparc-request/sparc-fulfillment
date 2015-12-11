@@ -17,7 +17,7 @@ FactoryGirl.define do
 
     trait :of_protocol_report do
      documentable_type "Protocol"
-      report_type "study_schedule_report"
+      kind "study_schedule_report"
       state "Completed"
       original_filename "file.csv"
       content_type 'text/csv'
