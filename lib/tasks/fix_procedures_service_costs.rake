@@ -3,7 +3,7 @@ namespace :data do
   task fix_procedure_service_cost: :environment do
     bar = ProgressBar.new(Procedure.complete.count)
 
-    CSV.open("/tmp/fixed_procedure_service_costs.csv", "wb+") do |csv|
+    CSV.open("tmp/fixed_procedure_service_costs.csv", "wb+") do |csv|
       proc = nil
       Procedure.complete.find_each do |procedure|
         begin
