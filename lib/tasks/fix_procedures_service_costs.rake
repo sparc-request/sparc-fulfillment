@@ -23,7 +23,7 @@ namespace :data do
           end
 
           if calculated_amount != current_amount
-            csv << ["Updating cost for procedure #{procedure.id} from #{current_amount} to #{calculated_amount}"]
+            csv << ["Protocol ID: #{procedure.protocol.sparc_id}", "Service Name: #{procedure.service_name}","Updating cost for procedure #{procedure.id} from #{current_amount} to #{calculated_amount}"]
             procedure.update_attribute(:service_cost, calculated_amount)
           end
 
