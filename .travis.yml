@@ -19,7 +19,7 @@ before_script:
   - cp config/epic.yml.example config/epic.yml
   - cp config/ldap.yml.example config/ldap.yml
   - RAILS_ENV=test bundle exec rake db:migrate
-  - cd ..
+  - cd ../sparc-fulfillment
   - pwd
   - rvm use $(< .ruby-version) --install --binary --fuzzy
   - export BUNDLE_GEMFILE=$PWD/Gemfile
