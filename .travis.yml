@@ -22,4 +22,4 @@ before_script:
   - cd ..
 script:
   - RAILS_ENV=test bundle exec rake db:migrate 
-  - bundle exec rspec 
+  - bundle exec rspec  
