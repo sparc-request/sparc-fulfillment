@@ -6,7 +6,7 @@ before_script:
   - cp config/shards.yml.example config/shards.yml
   - cp config/faye.yml.example config/faye.yml
   - cp dotenv.example .env
-  - mysql -e 'create database `sparc-request_test`;'
+  - mysql -e 'create database test_sparc_request;'
   - mysql -e 'create database cwf_test;'  
   - cd ..
   - git clone https://github.com/sparc-request/sparc-request.git
