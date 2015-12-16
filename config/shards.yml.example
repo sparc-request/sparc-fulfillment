@@ -14,4 +14,4 @@ octopus:
     sparc:
       adapter: mysql2
       username: root
-      database: sparc-request_test
+      database: test_sparc_request # for travis-ci, needs to match sparc-request test database name
