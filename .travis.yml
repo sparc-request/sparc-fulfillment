@@ -4,7 +4,7 @@ cache: bundler
 before_script:
   - cp config/database.yml.example config/database.yml
   - cp config/shards.yml.example config/shards.yml
-  - cp config/epic.yml.example config/epic.yml
+  - cp config/faye.yml.example config/faye.yml
   - cp dotenv.example .env
   - mysql -e 'create database sparc-request_test;'
   - mysql -e 'create database cwf_test;'  
