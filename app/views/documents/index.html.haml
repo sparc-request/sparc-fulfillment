@@ -26,6 +26,14 @@
     %button.btn-block.new_report.btn.btn-primary{ data: { type: "incomplete_visit_report" } }
       %i.glyphicon.glyphicon-equalizer
       Incomplete Visit Report
+-# Bootstrap should provide spacing between rows and so the following empty row shouldn't be necessary      
+.row 
+  .col-md-12
+.row.report-buttons
+  .col-md-3
+    %button.btn-block.new_report.btn.btn-primary{ data: { type: "service_provider_report" } }
+      %i.glyphicon.glyphicon-equalizer
+      Service Provider Report
 .row
   .col-md-12
     = render "documents"
