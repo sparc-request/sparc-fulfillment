@@ -49,27 +49,27 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
 
   def given_i_have_created_a_protocol_based_document
-    identity    = Identity.first
-    @protocol    = create_and_assign_protocol_to_me
-    @participant = @protocol.participants.first
+    identity      = Identity.first
+    @protocol     = create_and_assign_protocol_to_me
+    @participant  = @protocol.participants.first
 
     visit protocol_path @protocol
     wait_for_ajax
 
-    find("button#study_schedule_report_#{@protocol.id.to_s}").click
+    find('button.study_schedule_report').click
     wait_for_ajax
 
-    @study_schedule_report_document_id = find("button#study_schedule_report_#{@protocol.id.to_s}")["document_id"]
+    @study_schedule_report_document_id = evaluate_script "$('button.study_schedule_report').data('document_id')"
   end
 
   def given_i_have_created_a_second_protocol_based_document
     visit protocol_path @protocol
     wait_for_ajax
 
-    find("button#study_schedule_report_#{@protocol.id.to_s}").click
+    find("button#study_schedule_report_#{@protocol.id}").click
     wait_for_ajax
 
-    @study_schedule_report_document_id = find("button#study_schedule_report_#{@protocol.id.to_s}")["data-document_id"]
+    @study_schedule_report_document_id = evaluate_script "$('button.study_schedule_report').data('document_id')"
   end
 
   def when_i_visit_the_reports_tab
@@ -78,7 +78,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
 
   def when_i_click_the_created_document_icon
-    find("button#study_schedule_report_#{@protocol.id.to_s}").trigger('click')
+    find("button#study_schedule_report_#{@protocol.id}").trigger('click')
     wait_for_ajax
   end
 

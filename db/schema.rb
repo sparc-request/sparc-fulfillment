@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015141652) do
+ActiveRecord::Schema.define(version: 20151124202959) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -97,7 +97,7 @@ ActiveRecord::Schema.define(version: 20151015141652) do
     t.datetime "last_accessed_at"
     t.string   "original_filename", limit: 255
     t.string   "content_type",      limit: 255
-    t.string   "report_type",       limit: 255
+    t.string   "kind",              limit: 255
   end
 
   add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree

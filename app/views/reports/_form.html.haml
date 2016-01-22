@@ -1,0 +1,19 @@
+.modal-dialog
+  .modal-content
+    = form_for :report, url: reports_path, remote: true, html: { class: 'form-horizontal', role: 'form' } do |form|
+      = form.hidden_field :kind, value: report.class.name.underscore
+      .modal-header
+        %button.close{ type: 'button', data: { dismiss: 'modal' } }
+          %span{ aria: { hidden: 'true' } } &times;
+          %span.sr-only
+            = t(:actions)[:close]
+        %h4.modal-title.text-center
+          = t(:reports)[report.class.name.underscore.to_sym][:title]
+      .modal-body
+        = render partial: report.class.name.underscore, locals: { form: form, report: report }
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{ data: { dismiss: 'modal' } }
+            = t(:actions)[:close]
+          %button.btn.btn-primary{ type: 'submit'}
+            = t(:reports)[:request_report]

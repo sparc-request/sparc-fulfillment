@@ -11,7 +11,8 @@ generate_document = (element, tables_to_refresh, event = null) ->
   $.ajax
     type: 'POST'
     url: '/reports.js'
-    data: data
+    data:
+      report: data
     success: ->
       set_glyphicon_loading element
 
@@ -19,7 +20,7 @@ generate_document = (element, tables_to_refresh, event = null) ->
       document_state = ''
 
       get_document_state = ->
-        document_id = $(element).data("document_id")
+        document_id = $(element).data('document_id')
 
         $.ajax
           type: 'GET'
@@ -28,19 +29,19 @@ generate_document = (element, tables_to_refresh, event = null) ->
             document_state = data.document.state
 
             $.each tables_to_refresh, (index, value) ->
-                $(value).bootstrapTable 'refresh', silent: true
+              $(value).bootstrapTable 'refresh', silent: true
 
             switch document_state
               when 'Completed'
                 add_to_report_notification_count(data.document.documentable_type, 1)
                 set_glyphicon_finished(element)
-                add_dropdown_to_button(element)
+                add_dropdown_to_button(element, document_id)
 
                 #Download Report
                 $("li a[title='Download Report']").off('click').on 'click', ->
                   ul = $(this).parents('.document-dropdown-menu')
                   button = $(ul).siblings('.report-button')
-                  
+
                   $(ul).toggle()
                   $(button).
                     attr('aria-expanded', 'false').
@@ -58,7 +59,7 @@ generate_document = (element, tables_to_refresh, event = null) ->
                 $("li a[title='Generate New Report']").off('click').on 'click', ->
                   ul = $(this).parents('.document-dropdown-menu')
                   button = $(ul).siblings('.report-button')
-                  
+
                   $(ul).toggle()
 
                   set_glyphicon_loading button
@@ -97,7 +98,7 @@ set_glyphicon_default = (element) ->
     find('span.glyphicon').
     removeClass('glyphicon-refresh spin').
     addClass('glyphicon-equalizer')
-  
+
   remove_caret element
 
 set_glyphicon_loading = (element) ->
@@ -110,7 +111,7 @@ set_glyphicon_loading = (element) ->
     find('span.glyphicon').
     addClass('glyphicon-refresh spin').
     removeClass('glyphicon-equalizer')
-  
+
   remove_caret element
 
 set_glyphicon_error = (element) ->
@@ -133,7 +134,7 @@ set_glyphicon_error = (element) ->
     find('span.glyphicon').
     addClass('glyphicon-alert').
     removeClass('glyphicon-refresh spin')
-            
+
 set_glyphicon_finished = (element) ->
   $(element).
     addClass('btn-success').
@@ -150,7 +151,7 @@ remove_caret = (element) ->
     find('span.caret').
     remove()
 
-add_dropdown_to_button = (element) ->
+add_dropdown_to_button = (element, document_id) ->
   dropdown_id_indicator = "document_menu_#{$(element).attr('id')}"
   dropdown  = $(["<ul class='dropdown-menu document-dropdown-menu' role='menu' id=#{dropdown_id_indicator}>",
                     "<li><a href='/documents/#{document_id}.html' target='blank' title='Download Report'>Download Report</a></li>"

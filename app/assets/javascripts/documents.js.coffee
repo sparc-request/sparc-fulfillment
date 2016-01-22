@@ -15,13 +15,17 @@ $ ->
           type: 'DELETE'
           url: "/documents/#{document_id}.js"
 
-  if $("body.documents-index").length > 0
+  if $('body.documents-index').length > 0
 
     $(document).on 'click', '.report-buttons button', ->
-      report_type = $(this).data("type")
+      report_kind = $(this).data('kind')
+
       $.ajax
         type: 'GET'
-        url: "/reports/new.js?report_type=#{report_type}"
+        data:
+          report:
+            kind: report_kind
+        url: '/reports/new.js'
         success: (data) ->
           add_to_report_notification_count('Identity', 1)
 
@@ -32,13 +36,13 @@ $ ->
   row_index = element.parents().eq(1).attr("data-index")
 
   date_downloaded_element = element.parent().siblings("td.viewed_at")
-  
+
   if date_downloaded_element.text().length == 0
     add_to_report_notification_count(documentable_type, -1)
-    
+
     utcdate = moment().format(I18n["documents"]["date_time_formatter_js"])
-    
-    $(table_to_update).bootstrapTable 'updateCell', 
+
+    $(table_to_update).bootstrapTable 'updateCell',
       rowIndex: row_index
       fieldName: 'viewed_at'
       fieldValue: utcdate

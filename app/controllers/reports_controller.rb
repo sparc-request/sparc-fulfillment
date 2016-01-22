@@ -1,45 +1,42 @@
 class ReportsController < ApplicationController
 
   before_action :find_documentable, only: [:create]
-  before_action :find_report_type, only: [:new, :create]
 
   def new
-    @title = @report_type.titleize
+    @report = report_params[:kind].classify.constantize.new
   end
 
   def create
-    @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
-    @report = @report_type.classify.constantize.new(reports_params)
+    @document = Document.new document_params
 
-    @errors = @report.errors
-    
-    if @report.valid?
-      @reports_params = reports_params
-      @documentable.documents.push @document
-      ReportJob.perform_later(@document, reports_params)
+    if @documentable.documents.push @document
+      ReportJob.perform_later @document, @report_params
     end
   end
 
   private
 
+  def document_params
+    {
+      start_date: report_params[:start_date],
+      end_date:   report_params[:end_date],
+      kind:       report_params[:kind],
+      title:      report_params[:title]
+    }
+  end
+
   def find_documentable
-    if params[:documentable_id].present? && params[:documentable_type].present?
-      @documentable = params[:documentable_type].constantize.find params[:documentable_id]
+    if report_params[:documentable_id].present? && report_params[:documentable_type].present?
+      @documentable = report_params[:documentable_type].constantize.find report_params[:documentable_id]
     else
       @documentable = current_identity
     end
   end
 
-  def find_report_type
-    @report_type = reports_params[:report_type]
-  end
-
-  def reports_params
-    params.require(:report_type) # raises error if report_type not present
-
-    params.permit(:format,
-              :utf8,
-              :report_type,
+  def report_params
+    @report_params ||= params.
+      require(:report).
+      permit( :kind,
               :title,
               :start_date,
               :end_date,
@@ -47,6 +44,7 @@ class ReportsController < ApplicationController
               :participant_id,
               :documentable_id,
               :documentable_type,
-              :protocol_ids => []).merge(identity_id: current_identity.id)
+              protocol_ids: []).
+        merge(identity_id: current_identity.id)
   end
 end

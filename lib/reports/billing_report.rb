@@ -1,44 +1,37 @@
 class BillingReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
-  VALIDATES_NUMERICALITY_OF = [].freeze
-
-  require 'csv'
-
   def generate(document)
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
+    document.update_attributes  content_type: 'text/csv',
+                                original_filename: "#{@attributes[:title]}.csv"
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    CSV.open(document.path, 'wb') do |csv|
+      csv << ['From', format_date(@start_date), 'To', format_date(@end_date)]
+      csv << ['']
 
-    CSV.open(document.path, "wb") do |csv|
-      csv << ["From", format_date(@start_date), "To", format_date(@end_date)]
-      csv << [""]
-
-      if @params[:protocol_ids].present?
-        protocols = Protocol.find(@params[:protocol_ids])
+      if @attributes[:protocol_ids].present?
+        protocols = Protocol.where(id: @attributes[:protocol_ids].compact)
       else
-        protocols = Identity.find(@params[:identity_id]).protocols
+        protocols = Identity.find(@attributes[:identity_id]).protocols
       end
 
       protocols.each do |protocol|
         total = 0
 
         if protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).any?
-          csv << ["Study Level Charges:"]
+          csv << ['Study Level Charges:']
           csv << [
-            "Protocol ID",
-            "Primary PI",
-            "Fulfillment Date",
-            "Service(s) Completed",
-            "Quantity Completed",
-            "Account #",
-            "Contact",
-            "",
-            "Research Rate",
-            "Total Cost"
+            'Protocol ID',
+            'Primary PI',
+            'Fulfillment Date',
+            'Service(s) Completed',
+            'Quantity Completed',
+            'Account #',
+            'Contact',
+            '',
+            'Research Rate',
+            'Total Cost'
           ]
-          csv << [""]
+          csv << ['']
 
           protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |fulfillment|
             csv << [
@@ -59,23 +52,23 @@ class BillingReport < Report
         end
 
         if protocol.procedures.completed_r_in_date_range(@start_date, @end_date).any?
-          csv << [""]
-          csv << [""]
+          csv << ['']
+          csv << ['']
 
-          csv << ["Procedures/Per-Patient-Per-Visit:"]
+          csv << ['Procedures/Per-Patient-Per-Visit:']
           csv << [
-            "Protocol ID",
-            "Primary PI",
-            "Patient Name",
-            "Patient ID",
-            "Visit Name",
-            "Visit Date",
-            "Service(s) Completed",
-            "Quantity Completed",
-            "Research Rate",
-            "Total Cost"
+            'Protocol ID',
+            'Primary PI',
+            'Patient Name',
+            'Patient ID',
+            'Visit Name',
+            'Visit Date',
+            'Service(s) Completed',
+            'Quantity Completed',
+            'Research Rate',
+            'Total Cost'
           ]
-          csv << [""]
+          csv << ['']
           protocol.procedures.completed_r_in_date_range(@start_date, @end_date).group_by(&:appointment).each do |appointment, appointment_procedures|
             participant = appointment.participant
 
@@ -99,10 +92,10 @@ class BillingReport < Report
           end
         end
         if total > 0
-          csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
-          csv << [""]
-          csv << [""]
+          csv << ['']
+          csv << ['', '', '', '', '', '', '', '', 'Study Level and Per Patient Total:', display_cost(total)]
+          csv << ['']
+          csv << ['']
         end
       end
     end

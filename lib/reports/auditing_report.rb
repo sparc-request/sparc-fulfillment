@@ -1,44 +1,36 @@
 class AuditingReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
-  VALIDATES_NUMERICALITY_OF = [].freeze
-
-  require 'csv'
-
   def generate(document)
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
+    document.update_attributes  content_type: 'text/csv',
+                                original_filename: "#{@attributes[:title]}.csv"
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
-
-    CSV.open(document.path, "wb") do |csv|
-      csv << ["From", format_date(@start_date), "To", format_date(@end_date)]
-      csv << [""]
-      csv << [""]
+    CSV.open(document.path, 'wb') do |csv|
+      csv << ['From', format_date(@start_date), 'To', format_date(@end_date)]
+      csv << ['']
+      csv << ['']
       csv << [
-        "Protocol ID",
-        "Patient Name",
-        "Patient ID",
-        "Arm Name",
-        "Visit Name",
-        "Service Completion Date",
-        "Marked as Incomplete Date",
-        "Marked with Follow-Up Date",
-        "Added?",
-        "Nexus Core",
-        "Service Name",
-        "Completed?",
-        "Billing Type (R/T/O)",
-        "If not completed,
-        reason and comment",
-        "Follow-Up date and comment",
-        "Cost"
+        'Protocol ID',
+        'Patient Name',
+        'Patient ID',
+        'Arm Name',
+        'Visit Name',
+        'Service Completion Date',
+        'Marked as Incomplete Date',
+        'Marked with Follow-Up Date',
+        'Added?',
+        'Nexus Core',
+        'Service Name',
+        'Completed?',
+        'Billing Type (R/T/O)',
+        'If not completed,
+        reason and comment',
+        'Follow-Up date and comment',
+        'Cost'
       ]
-
-      if @params[:protocol_ids].present?
-        protocols = Protocol.find(@params[:protocol_ids])
+      if @attributes[:protocol_ids].present?
+        protocols = Protocol.where(id: @attributes[:protocol_ids].compact)
       else
-        protocols = Identity.find(@params[:identity_id]).protocols
+        protocols = Identity.find(@attributes[:identity_id]).protocols
       end
 
       protocols.each do |protocol|
@@ -71,11 +63,11 @@ class AuditingReport < Report
   private
 
   def added_formatter(procedure)
-    procedure.visit ? "" : "**Added**"
+    procedure.visit ? '' : '**Added**'
   end
 
   def complete_formatter(procedure)
-    procedure.complete? ? "Yes" : "No"
+    procedure.complete? ? 'Yes' : 'No'
   end
 
   def reason_formatter(procedure)

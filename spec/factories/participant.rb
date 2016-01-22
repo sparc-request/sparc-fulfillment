@@ -22,6 +22,10 @@ FactoryGirl.define do
       protocol
     end
 
+    trait :without_validations do
+      to_create { |instance| instance.save(validate: false) }
+    end
+
     trait :with_appointments do
       after(:create) do | participant, evaluator|
         participant.arm.visit_groups.each do |vg|
@@ -51,6 +55,7 @@ FactoryGirl.define do
       end
     end
 
+    factory :participant_without_validations, traits: [:without_validations]
     factory :participant_with_protocol, traits: [:with_protocol]
     factory :participant_with_appointments, traits: [:with_appointments]
     factory :participant_with_completed_appointments, traits: [:with_completed_appointments]

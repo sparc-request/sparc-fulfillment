@@ -290,20 +290,30 @@ en:
     updates: "Updates"
 
   reports:
-    auditing_report: "Auditing Report"
-    billing_report: "Billing Report"
+    auditing_report:
+      instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
+      protocol_ids: "Protocol(s)"
+      title: "Auditing Report"
+    billing_report:
+      instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
+      protocol_ids: "Protocol(s)"
+      title: "Billing Report"
     end_date: "End Date"
-    incomplete_visit_report: "Incomplete Visit Report"
+    incomplete_visit_report:
+      title: "Incomplete Visit Report"
     organization: "Organization(s)"
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"
-    project_summary_report: "Project Summary Report"
+    project_summary_report:
+      instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
+      protocol_ids: "Protocol(s)"
+      title: "Project Summary Report"
     protocol: "Protocol"
-    protocol_instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
-    protocols: "Protocol(s)"
     request_report: "Request Report"
     start_date: "Start Date"
+    title_placeholder: "Report title"
+    title: "Title"
 
   services:
     object: "Service"

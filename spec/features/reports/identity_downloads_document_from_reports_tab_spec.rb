@@ -15,10 +15,11 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
   end
 
   def given_i_have_a_report_and_visit_the_reports_tab
-    identity    = Identity.first
-    @protocol    = create_and_assign_protocol_to_me
-    @participant = @protocol.participants.first
-    @document = create(:document_of_protocol_report, documentable_id: @protocol.id)
+    identity      = Identity.first
+    @protocol     = create_and_assign_protocol_to_me
+    @participant  = @protocol.participants.first
+    @document     = create(:document_of_protocol_report, documentable_id: @protocol.id)
+
     visit protocol_path @protocol
     click_link 'Reports'
   end

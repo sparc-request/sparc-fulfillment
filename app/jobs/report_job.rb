@@ -6,11 +6,13 @@ class ReportJob < ActiveJob::Base
     find_or_create_document_root_path
   end
 
-  def perform(document, params)
-    document_name = document.title
-    report        = document.report_type.classify.constantize.new(params)
+  def perform(document, report_params)
+    report = document.
+              kind.
+              classify.
+              constantize.new report_params
 
-    report.generate(document)
+    report.generate document
 
     FayeJob.perform_later document
   end

@@ -6,7 +6,7 @@ feature 'Report form validations', js: true do
     scenario 'and sees a blank start date error' do
       given_i_have_opened_the_blank_billing_report_form_modal
       when_i_click_request_report
-      then_i_should_see_an_error_saying "Start date must not be blank"
+      then_i_shouls_not_be_able_to_submit_the_form
     end
   end
 
@@ -15,7 +15,7 @@ feature 'Report form validations', js: true do
       given_i_have_opened_the_blank_billing_report_form_modal
       given_i_have_filled_out_the_form_without_a_title
       when_i_click_request_report
-      then_i_should_see_an_error_saying "Title must not be blank"
+      then_i_shouls_not_be_able_to_submit_the_form
     end
   end
 
@@ -24,7 +24,7 @@ feature 'Report form validations', js: true do
     create(:participant, protocol: protocol)
     visit documents_path
 
-    find("button[data-type='billing_report']").click
+    find("button[data-kind='billing_report']").click
     wait_for_ajax
   end
 
@@ -33,11 +33,11 @@ feature 'Report form validations', js: true do
   end
 
   def when_i_click_request_report
-    find(".modal input[type='submit']").click
+    click_button 'Request Report'
     wait_for_ajax
   end
 
-  def then_i_should_see_an_error_saying(message)
-    expect(page).to have_css('#modal_errors', text: message)
+  def then_i_shouls_not_be_able_to_submit_the_form
+    expect(page).to have_css('.modal', visible: true)
   end
 end
