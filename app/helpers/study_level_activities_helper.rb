@@ -66,7 +66,7 @@ module StudyLevelActivitiesHelper
     html
   end
 
-  def is_protocol_type_study? protocol
+  def is_protocol_type_study? (protocol)
     protocol.protocol_type == 'Study'
   end
 

@@ -134,6 +134,7 @@ en:
     components: "Components"
     contact: "Contact"
     create: "Create New Study Level Activity"
+    create_project: "Create New Project Level Activity"
     delete_line_item: "Delete line item"
     edit: "Edit Study Level Activity"
     flash_messages:
@@ -153,6 +154,7 @@ en:
     service: "Service"
     started: "Started"
     save_li: "Save Study Level Activity"
+    save_li_project: "Save Project Level Activity"
 
   navbar:
     reports_link: 'All Reports'

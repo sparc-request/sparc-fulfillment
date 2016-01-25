@@ -90,7 +90,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def protocol_type
-    Sparc::Protocol.where(id: sparc_id).first.type
+    sparc_protocol.type
   end
 
   ##### PRIVATE METHODS #####
