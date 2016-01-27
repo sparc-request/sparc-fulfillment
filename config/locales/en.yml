@@ -318,8 +318,8 @@ en:
 
   sub_service_request:
     statuses:
-      administrative_review: 'Administrative Review'
       all: 'All'
+      administrative_review: 'Administrative Review'
       approved: 'Approved'
       awaiting_pi_approval: 'Awaiting Requester Response'
       committee_review: 'In Committee Review'
