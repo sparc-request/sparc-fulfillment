@@ -1,13 +1,11 @@
 require 'rails_helper'
 
-feature 'Create Note', js: true do
+feature 'User sets visit type', js: true do
 
-  context 'User sets the content box' do
-    scenario 'and sees the selection' do
-      given_i_am_viewing_an_appointment
-      when_i_select_from_the_contents_dropdown
-      then_i_should_be_able_to_view_the_selection
-    end
+  scenario 'and sees the selection' do
+    given_i_am_viewing_an_appointment
+    when_i_select_from_the_contents_dropdown
+    then_i_should_be_able_to_view_the_selection
   end
 
   def given_i_am_viewing_an_appointment

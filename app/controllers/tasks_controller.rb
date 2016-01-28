@@ -42,6 +42,11 @@ class TasksController < ApplicationController
         @procedure.update_attributes(status: "follow_up") if @procedure.unstarted?
       end
       if task_params[:notes]
+        if task_params[:notes][:notable_type] == "Procedure"
+          @appointment = @procedure.present? ? @procedure.appointment : Procedure.find(task_params[:notes][:notable_id]).appointment
+          @statuses = @appointment.appointment_statuses.map{|x| x.status}
+        end
+
         create_note
       end
       flash[:success] = t(:task)[:flash_messages][:created]
@@ -65,6 +70,7 @@ class TasksController < ApplicationController
   def create_note
     notes_params = task_params[:notes]
     notes_params[:identity] = current_identity
+
     Note.create(notes_params)
   end
 

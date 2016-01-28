@@ -18,13 +18,19 @@ module StudyLevelActivitiesHelper
     end
   end
 
-  def sla_options_buttons line_item_id
+  def sla_options_buttons line_item
     options = raw(
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt", aria: {hidden: "true"}))+' Notes', type: 'button', class: 'btn btn-default form-control actions-button notes list', data: {notable_id: line_item_id, notable_type: "LineItem"}))
+      (line_item.notes.any? ?
+        content_tag(:li, raw(
+          content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt blue-notes", aria: {hidden: "true"}))+' Notes', type: 'button', class: 'btn btn-default form-control actions-button notes list', data: {notable_id: line_item.id, notable_type: "LineItem"}))
+        )
+        :
+        content_tag(:li, raw(
+          content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt", aria: {hidden: "true"}))+' Notes', type: 'button', class: 'btn btn-default form-control actions-button notes list', data: {notable_id: line_item.id, notable_type: "LineItem"}))
+        )
       )+
       content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: line_item_id, documentable_type: "LineItem"}))
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: line_item.id, documentable_type: "LineItem"}))
       )+
       content_tag(:li, raw(
         content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_edit'))
@@ -66,13 +72,19 @@ module StudyLevelActivitiesHelper
     html
   end
 
-  def fulfillment_options_buttons fulfillment_id
+  def fulfillment_options_buttons fulfillment
     options = raw(
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt", aria: {hidden: "true"}))+' Notes', type: 'button', class: 'btn btn-default form-control actions-button notes list', data: {notable_id: fulfillment_id, notable_type: "Fulfillment"}))
+      (fulfillment.notes.any? ?
+        content_tag(:li, raw(
+          content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt blue-notes", aria: {hidden: "true"}))+' Notes', type: 'button', class: 'btn btn-default form-control actions-button notes list', data: {notable_id: fulfillment.id, notable_type: "Fulfillment"}))
+        )
+        :
+        content_tag(:li, raw(
+          content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt", aria: {hidden: "true"}))+' Notes', type: 'button', class: 'btn btn-default form-control actions-button notes list', data: {notable_id: fulfillment.id, notable_type: "Fulfillment"}))
+        )
       )+
       content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: fulfillment_id, documentable_type: "Fulfillment"}))
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: fulfillment.id, documentable_type: "Fulfillment"}))
       )+
       content_tag(:li, raw(
         content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Fulfillment', type: 'button', class: 'btn btn-default form-control actions-button otf_fulfillment_edit'))

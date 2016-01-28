@@ -49,6 +49,7 @@ en:
     date_of_visit: "Date of Participant Visit"
     edit_header: "Custom Visit"
     name: "Visit Name"
+    notes: "Notes"
     position: "Insert into Position"
     protocol_id: "Protocol ID"
     reason: "Reason"

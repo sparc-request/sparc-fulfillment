@@ -10,5 +10,5 @@ json.contact line_item.contact_name
 json.date_started format_date(line_item.started_at)
 json.service_components sla_components_select(line_item.id, line_item.components.with_deleted)
 json.last_fulfillment format_date(line_item.last_fulfillment)
-json.options sla_options_buttons(line_item.id)
+json.options sla_options_buttons(line_item)
 json.fulfillments_button fulfillments_drop_button(line_item.id)

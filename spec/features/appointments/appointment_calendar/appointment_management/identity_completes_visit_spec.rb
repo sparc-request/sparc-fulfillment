@@ -161,6 +161,7 @@ feature 'Complete Visit', js: true do
           when_i_begin_the_appointment
           when_i_view_the_procedures_in_the_group
           when_i_complete_the_procedure
+          when_i_view_the_procedures_in_the_group
           when_i_incomplete_the_procedure
           then_i_should_not_be_able_to_complete_visit
         end
