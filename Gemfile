@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'omniauth-shibboleth'
 gem 'activerecord-import'
+gem 'activerecord-session_store'
 gem 'acts_as_list'
 gem 'addressable'
 gem 'ar-octopus', '~> 0.8.5'
