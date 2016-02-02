@@ -8,11 +8,11 @@ feature 'Identity creates a document from the documents page', js: true do
     given_i_am_viewing_the_documents_index_page
   end
 
-  context 'of type Billing Report' do
+  context 'of type Invoice Report' do
     scenario 'and sees the report' do
-      given_i_click_the_create_report_button_of_type 'billing_report'
-      when_i_fill_in_the_report_of_type 'billing_report'
-      then_i_will_see_the_new_report_listed 'Billing report'
+      given_i_click_the_create_report_button_of_type 'invoice_report'
+      when_i_fill_in_the_report_of_type 'invoice_report'
+      then_i_will_see_the_new_report_listed 'Invoice report'
     end
   end
 
@@ -41,7 +41,7 @@ feature 'Identity creates a document from the documents page', js: true do
   end
 
   scenario 'and sees the documents counter increment' do
-    given_i_click_the_create_report_button_of_type 'billing_report'
+    given_i_click_the_create_report_button_of_type 'invoice_report'
     when_i_fill_in_the_report_of_type 'auditing_report'
     then_i_should_see_the_documents_counter_increment
     # submit a request for a second report
@@ -51,14 +51,14 @@ feature 'Identity creates a document from the documents page', js: true do
   end
 
   scenario 'and sees protocols assigned to the them' do
-    given_i_click_the_create_report_button_of_type 'billing_report'
+    given_i_click_the_create_report_button_of_type 'invoice_report'
     when_i_open_the_protocol_dropdown
     then_i_should_see_protocols_assigned_to_me
   end
 
   scenario 'and does not see protocols not assigned to them' do
     ClinicalProvider.destroy_all
-    given_i_click_the_create_report_button_of_type 'billing_report'
+    given_i_click_the_create_report_button_of_type 'invoice_report'
     when_i_open_the_protocol_dropdown
     then_i_should_not_see_protocols_not_assigned_to_me
   end
@@ -113,7 +113,7 @@ feature 'Identity creates a document from the documents page', js: true do
   def then_i_should_see_the_documents_counter_increment
     expect(page).to have_css(".notification.identity_report_notifications", text: 1)
   end
-  
+
   def then_i_should_see_the_documents_counter_increment_to_two
     expect(page).to have_css(".notification.identity_report_notifications", text: 2)
   end

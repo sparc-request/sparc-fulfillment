@@ -16,7 +16,7 @@ class ReportJob < ActiveJob::Base
   end
 
   rescue_from(StandardError) do |error|
-    arguments.first.update_attributes state: 'Error'
+    arguments.first.update_attributes state: 'Error', stack_trace: "#{error.message}\n\n#{error.backtrace.join("\n\t")}"
     FayeJob.perform_later arguments.first
   end
 

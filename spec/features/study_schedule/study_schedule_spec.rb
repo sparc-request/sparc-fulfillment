@@ -157,12 +157,15 @@ RSpec.describe 'Study Schedule', js: true do
 
   def given_i_am_viewing_a_protocol
     @protocol       = create_and_assign_blank_protocol_to_me
+    sparc_protocol = @protocol.sparc_protocol
+    sparc_protocol.update_attributes(type: 'Study')
     project_role    = create(:project_role_pi, protocol: @protocol)
     @arm            = create(:arm_with_only_per_patient_line_items, protocol: @protocol, visit_count: 10)
     @line_item      = @arm.line_items.first
     @visit_group    = @arm.visit_groups.first
     @visit          = @line_item.visits.first
     visit protocol_path(@protocol.id)
+    wait_for_ajax
   end
 
   def given_i_am_viewing_the_quantity_billing_tab
@@ -252,6 +255,7 @@ RSpec.describe 'Study Schedule', js: true do
   def when_i_click_the_edit_line_item_button
     first(".change_line_item_service").click
     wait_for_ajax
+    
   end
 
   def when_i_set_the_service_to service

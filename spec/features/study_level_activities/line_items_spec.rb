@@ -64,6 +64,8 @@ feature 'Line Items', js: true do
 
   def given_i_am_viewing_the_study_level_activities_tab_with_fulfillments
     @protocol      = create_and_assign_protocol_to_me
+    sparc_protocol = @protocol.sparc_protocol
+    sparc_protocol.update_attributes(type: 'Study')
     @service1      = @protocol.organization.inclusive_child_services(:per_participant).first
     @service1.update_attributes(name: 'Admiral Tuskface', one_time_fee: true)
     @pricing_map   = create(:pricing_map, service: @service1, quantity_type: 'Case', effective_date: Time.current)
@@ -79,6 +81,8 @@ feature 'Line Items', js: true do
 
   def given_i_am_viewing_the_study_level_activities_tab_without_fulfillments
     @protocol      = create_and_assign_protocol_to_me
+    sparc_protocol = @protocol.sparc_protocol
+    sparc_protocol.update_attributes(type: 'Study')
     @service2      = @protocol.organization.inclusive_child_services(:per_participant).second
     @service2.update_attributes(name: 'Captain Cinnebon', one_time_fee: true)
     @line_item_without_fulfillment = create(:line_item, service: @service2, protocol: @protocol)
