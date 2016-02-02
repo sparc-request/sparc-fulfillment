@@ -6,8 +6,8 @@ class ProjectSummaryReport < Report
   require 'csv'
 
   def generate(document)
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
+    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").in_time_zone(@params[:time_zone])
+    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y").in_time_zone(@params[:time_zone])
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
