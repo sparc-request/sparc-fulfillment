@@ -132,12 +132,17 @@ class Procedure < ActiveRecord::Base
   end
 
   def reset
-    #Reset Status
-    self.update_attributes(status: "unstarted")
     #Remove tasks
     task.destroy if task
+    
     #Remove notes
     notes.destroy_all if notes.any?
+    
+    # reload to reflect deleted associations
+    self.reload
+    
+    #Reset Status
+    self.update_attributes(status: "unstarted")
     self.reload
   end
 
