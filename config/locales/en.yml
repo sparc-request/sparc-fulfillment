@@ -157,6 +157,7 @@ en:
     save_li_project: "Save Project Level Activity"
 
   navbar:
+    logged_in_msg: "Logged in as"
     reports_link: 'All Reports'
     tasks_link: 'All Tasks'
 
