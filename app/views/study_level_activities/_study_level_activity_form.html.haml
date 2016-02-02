@@ -34,4 +34,4 @@
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: t(:line_item)[:save_li]}
+          %input.btn.btn-primary{type: 'submit', value: t(:line_item)[(is_protocol_type_study?(@protocol)) ? :save_li : :save_li_project]}

@@ -89,6 +89,11 @@ class Protocol < ActiveRecord::Base
     line_items.includes(:service).where(:services => {:one_time_fee => true})
   end
 
+  def protocol_type
+    sparc_protocol.type
+  end
+
+  ##### PRIVATE METHODS #####
   private
 
   def update_faye

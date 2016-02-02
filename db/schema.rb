@@ -13,6 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20151207203943) do
 
+
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
     t.datetime "created_at"

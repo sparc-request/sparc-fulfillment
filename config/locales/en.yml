@@ -128,11 +128,13 @@ en:
   line_item:
     object: "Line Item"
     account_number: "Account"
-    add_line_item: "Add Study Level Activity"
+    add_line_item_study: "Add Study Level Activity"
+    add_line_item_project: "Add Project Level Activity"
     change_service: "Change Service"
     components: "Components"
     contact: "Contact"
     create: "Create New Study Level Activity"
+    create_project: "Create New Project Level Activity"
     delete_line_item: "Delete line item"
     edit: "Edit Study Level Activity"
     flash_messages:
@@ -152,6 +154,7 @@ en:
     service: "Service"
     started: "Started"
     save_li: "Save Study Level Activity"
+    save_li_project: "Save Project Level Activity"
 
   navbar:
     reports_link: 'All Reports'
@@ -285,7 +288,9 @@ en:
       participant_tracker: "Participant Tracker"
       reports: "Reports"
       study_level_activities: "Study Level Activities"
+      project_level_activities: "Project Level Activities"
       study_schedule: "Study Schedule"
+      project_schedule: "Project Schedule"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
 
