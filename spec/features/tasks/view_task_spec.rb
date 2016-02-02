@@ -4,6 +4,9 @@ feature "Identity views Task", js: true do
   before :each do
     identity = Identity.first
     create(:protocol_imported_from_sparc)
+    @core = Organization.where(type: "Core").first
+    @program = create(:organization_program)
+    @core.update_attributes(parent_id: @program.id)
     ClinicalProvider.create(organization: Organization.first, identity: identity)
     clinical_providers = ClinicalProvider.where(organization_id: identity.protocols.map{|p| p.sub_service_request.organization_id })
     @assignee = clinical_providers.first.identity
@@ -42,7 +45,7 @@ feature "Identity views Task", js: true do
     identity        = Identity.first
     appointment = Appointment.first
     visit       = Visit.first
-    procedure   = create(:procedure, appointment: appointment, visit: visit)
+    procedure   = create(:procedure, appointment: appointment, visit: visit, sparc_core_id: @core.id)
 
     procedure.tasks.push build(:task, identity: identity, assignee: identity)
   end

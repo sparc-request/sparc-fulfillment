@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015141652) do
+ActiveRecord::Schema.define(version: 20151207203943) do
+
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -287,6 +288,16 @@ ActiveRecord::Schema.define(version: 20151015141652) do
 
   add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
   add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
+
+  create_table "sessions", force: :cascade do |t|
+    t.string   "session_id", limit: 255,   null: false
+    t.text     "data",       limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"

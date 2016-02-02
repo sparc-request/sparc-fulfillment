@@ -32,8 +32,8 @@ class BillingReport < Report
             "Fulfillment Date",
             "Service(s) Completed",
             "Quantity Completed",
-            "",
-            "",
+            "Account #",
+            "Contact",
             "",
             "Research Rate",
             "Total Cost"
@@ -47,8 +47,8 @@ class BillingReport < Report
               format_date(fulfillment.fulfilled_at),
               fulfillment.service_name,
               fulfillment.quantity,
-              "",
-              "",
+              fulfillment.line_item.account_number,
+              fulfillment.line_item.contact_name,
               "",
               display_cost(fulfillment.service_cost),
               display_cost(fulfillment.total_cost)
