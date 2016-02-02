@@ -5,21 +5,24 @@
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only= t(:actions)[:close]
-        %h4.modal-title.text-center= t(:reports)[:billing_report]
+        %h4.modal-title.text-center= t(:reports)[:invoice_report]
       .modal-body
         #modal_errors
         .row
           .col-md-12
-            =hidden_field_tag "report_type", report_type
+            = hidden_field_tag "report_type", report_type
             .form-group
-              =label_tag "title", t(:documents)[:title], class: "col-sm-3 control-label"
-              .col-sm-9= text_field_tag "title", title, class: 'form-control'
+              = label_tag "title", t(:documents)[:title], class: "col-sm-3 control-label"
+              .col-sm-9
+                = text_field_tag "title", title, class: 'form-control'
             .form-group
               = label_tag "start_date", t(:reports)[:start_date], class: "col-sm-3 control-label"
-              .col-sm-9= text_field_tag "start_date", nil, class: "datepicker form-control"
+              .col-sm-9
+                = text_field_tag "start_date", nil, class: "datepicker form-control"
             .form-group
               = label_tag "end_date", t(:reports)[:end_date], class: "col-sm-3 control-label"
-              .col-sm-9= text_field_tag "end_date", nil, class: "datepicker form-control"
+              .col-sm-9
+                = text_field_tag "end_date", nil, class: "datepicker form-control"
             .form-group
               = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
               .col-sm-9

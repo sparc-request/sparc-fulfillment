@@ -1,4 +1,4 @@
-class BillingReport < Report
+class InvoiceReport < Report
 
   VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
