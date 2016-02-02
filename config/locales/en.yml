@@ -295,6 +295,7 @@ en:
     updates: "Updates"
 
   reports:
+    all_protocols: "All Protocols"
     auditing_report: "Auditing Report"
     invoice_report: "Invoice Report"
     end_date: "End Date"
@@ -305,7 +306,6 @@ en:
     participant_report: "Participant Report"
     project_summary_report: "Project Summary Report"
     protocol: "Protocol"
-    protocol_instructions: "Select one or more protocols for the report. If nothing is selected, the report will run for all protocols."
     protocols: "Protocol(s)"
     request_report: "Request Report"
     start_date: "Start Date"
