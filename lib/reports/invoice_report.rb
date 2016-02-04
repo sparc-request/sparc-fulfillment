@@ -6,8 +6,12 @@ class InvoiceReport < Report
   require 'csv'
 
   def generate(document)
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").in_time_zone(@params[:time_zone])
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y").in_time_zone(@params[:time_zone])
+    #We want to filter from 00:00:00 in the local time zone,
+    #then convert to UTC to match database times
+    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").utc
+    #We want to filter from 11:59:59 in the local time zone,
+    #then convert to UTC to match databsae times
+    @end_date   = (Time.strptime(@params[:end_date], "%m-%d-%Y") + 86399).utc
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
