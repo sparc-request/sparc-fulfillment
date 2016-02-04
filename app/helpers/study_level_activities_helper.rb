@@ -66,6 +66,10 @@ module StudyLevelActivitiesHelper
     html
   end
 
+  def is_protocol_type_study? (protocol)
+    protocol.protocol_type == 'Study'
+  end
+
   def fulfillment_options_buttons fulfillment_id
     options = raw(
       content_tag(:li, raw(

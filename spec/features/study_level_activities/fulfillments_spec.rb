@@ -72,6 +72,8 @@ feature 'Fulfillments', js: true do
 
   def given_i_have_study_level_activities
     @protocol = create_and_assign_protocol_to_me
+    sparc_protocol = @protocol.sparc_protocol
+    sparc_protocol.update_attributes(type: 'Study')
     service     = create(:service_with_one_time_fee)
     @line_item  = create(:line_item, protocol: @protocol, service: service)
     @components = @line_item.components

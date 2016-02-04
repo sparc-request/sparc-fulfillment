@@ -5,6 +5,7 @@
 
 (function ($) {
     'use strict';
+    // var sprintf = $.fn.bootstrapTable.utils.sprintf;
 
     var TYPE_NAME = {
         json: 'JSON',
@@ -14,21 +15,29 @@
         txt: 'TXT',
         sql: 'SQL',
         doc: 'MS-Word',
-        excel: 'Ms-Excel',
-        powerpoint: 'Ms-Powerpoint',
+        excel: 'MS-Excel',
+        powerpoint: 'MS-Powerpoint',
         pdf: 'PDF'
     };
 
     $.extend($.fn.bootstrapTable.defaults, {
         showExport: false,
+        exportDataType: 'basic', // basic, all, selected
         // 'json', 'xml', 'png', 'csv', 'txt', 'sql', 'doc', 'excel', 'powerpoint', 'pdf'
-        exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel']
+        exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel'],
+        exportOptions: {}
+    });
+
+    $.extend($.fn.bootstrapTable.defaults.icons, {
+        export: 'glyphicon-export icon-share'
     });
 
     var BootstrapTable = $.fn.bootstrapTable.Constructor,
         _initToolbar = BootstrapTable.prototype.initToolbar;
 
     BootstrapTable.prototype.initToolbar = function () {
+        this.showToolbar = this.options.showExport;
+
         _initToolbar.apply(this, Array.prototype.slice.apply(arguments));
 
         if (this.options.showExport) {
@@ -40,8 +49,12 @@
                 $export = $([
                     '<div class="export btn-group">',
                         '<button class="btn btn-default dropdown-toggle" ' +
-                            'data-toggle="dropdown" type="button", title="Export">',
-                            '<i class="glyphicon glyphicon-export icon-share"></i> ',
+                            'data-toggle="dropdown" type="button">',
+                            '<i class="' +
+                            this.options.iconsPrefix +
+                            ' ' +
+                            this.options.icons.export +
+                            '"></i> ',
                             '<span class="caret"></span>',
                         '</button>',
                         '<ul class="dropdown-menu" role="menu">',
@@ -70,10 +83,30 @@
                 });
 
                 $menu.find('li').click(function () {
-                    that.$el.tableExport({
-                        type: $(this).data('type'),
-                        escape: false
-                    });
+                    var type = $(this).data('type'),
+                        doExport = function () {
+                            that.$el.tableExport($.extend({}, that.options.exportOptions, {
+                                type: type,
+                                escape: false
+                            }));
+                        };
+
+                    if (that.options.exportDataType === 'all' && that.options.pagination) {
+                        that.$el.one('load-success.bs.table page-change.bs.table', function () {
+                            doExport();
+                            that.togglePagination();
+                        });
+                        that.togglePagination();
+                    } else if (that.options.exportDataType === 'selected') {
+                        var data = that.getData(),
+                            selectedData = that.getAllSelections();
+
+                        that.load(selectedData);
+                        doExport();
+                        that.load(data);
+                    } else {
+                        doExport();
+                    }
                 });
             }
         }
