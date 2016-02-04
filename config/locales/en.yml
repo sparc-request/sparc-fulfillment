@@ -360,6 +360,7 @@ en:
 
   visit:
     object: "Visit"
+    add_visit: "Add Visit"
     check_all: "Check All"
     check_column: "Check Column"
     check_row: "Check Row"
@@ -381,7 +382,7 @@ en:
       updated: "Visit Updated"
     name: "Visit Name"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
-    position: "Insert into Position"
+    position: "Insert into Position *"
     window_after: "Window After"
     window_before: "Window Before"
     view_page_next: "View More"

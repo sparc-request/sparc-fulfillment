@@ -162,6 +162,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     bootstrap_select "#visit_group_arm_id", "#{@arm.name}"
     fill_in "visit_group_name", with: "VG"
     fill_in "visit_group_day", with: "4"
+    bootstrap_select "#visit_group_position", "Add as last"
     wait_for_ajax
   end
 
