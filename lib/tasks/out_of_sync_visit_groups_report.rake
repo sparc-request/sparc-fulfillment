@@ -7,7 +7,7 @@ namespace :data do
     out_of_sync_arms = []
 
     Arm.all.each do |arm|
-      next if arm.protocol.status == 'complete'
+      next if arm.protocol.sub_service_request.blank? or arm.protocol.status == 'complete'
 
       begin
         visit_groups = arm.visit_groups
