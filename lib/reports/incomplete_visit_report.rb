@@ -17,7 +17,7 @@ class IncompleteVisitReport < Report
 
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
-    _24_hours_ago = DateTime.now.ago(24*60*60)
+    _24_hours_ago = DateTime.now.ago(24*60*60).utc
 
     CSV.open(document.path, "wb") do |csv|
       csv << REPORT_COLUMNS
