@@ -75,14 +75,8 @@ module ParticipantHelper
   end
 
   def notes_formatter participant
-    if participant.notes.any?
-      content_tag(:button, class: 'btn btn-primary btn-xs participant_notes list notes', 'data-notable-id' => participant.id, 'data-notable-type' => 'Participant') do
-        content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
-      end
-    else
-      content_tag(:button, class: 'btn btn-default btn-xs participant_notes list notes', 'data-notable-id' => participant.id, 'data-notable-type' => 'Participant') do
-        content_tag(:span, '', class: "glyphicon glyphicon-list-alt blue-notes")
-      end
+    content_tag(:button, class: 'btn btn-primary btn-xs participant_notes list notes', 'data-notable-id' => participant.id, 'data-notable-type' => 'Participant') do
+      content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
     end
   end
 
