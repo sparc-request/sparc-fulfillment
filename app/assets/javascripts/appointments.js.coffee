@@ -106,10 +106,9 @@ $ ->
           url: "/appointments/#{appointment_id}.js"
 
   # Procedure buttons
-
   $(document).on 'dp.hide', ".completed_date_field", ->
     procedure_id = $(this).parents(".procedure").data("id")
-    completed_date = $(this).children("input").val()
+    completed_date = $(this).val()
     data = procedure:
             completed_date: completed_date
     $.ajax
@@ -295,7 +294,9 @@ $ ->
       url: "/procedures/#{procedure_id}.js"
 
   window.start_date_init = (date) ->
-    $('#start_date').datetimepicker(defaultDate: date)
+    $('#start_date').datetimepicker
+      defaultDate: date
+      ignoreReadonly: true
     $('#start_date').on 'dp.hide', (e) ->
       appointment_id = $(this).parents('.row.appointment').data('id')
       data = appointment: start_date: e.date.toDate().toUTCString()
@@ -308,7 +309,9 @@ $ ->
             $('#completed_date').data("DateTimePicker").minDate(e.date)
 
   window.completed_date_init = (date) ->
-    $('#completed_date').datetimepicker(defaultDate: date)
+    $('#completed_date').datetimepicker
+      defaultDate: date
+      ignoreReadonly: true
     $('#start_date').data("DateTimePicker").maxDate($('#completed_date').data("DateTimePicker").date())
     $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
     $('#completed_date').on 'dp.hide', (e) ->

@@ -11,5 +11,7 @@ $("#modal_place").modal 'hide'
 $("#follow_up_<%= @procedure.id %>").html("<%= escape_javascript(render(:partial =>'appointments/followup_calendar', locals: {procedure: @procedure})) %>")
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 <% end %>
-$(".followup_procedure_datepicker").datetimepicker(format: 'MM-DD-YYYY')
+$(".followup_procedure_datepicker").datetimepicker
+  format: 'MM-DD-YYYY'
+  ignoreReadonly: true
 <% end %>

@@ -19,11 +19,11 @@
             .form-group
               = label_tag "start_date", t(:reports)[:start_date], class: "col-sm-3 control-label"
               .col-sm-9
-                = text_field_tag "start_date", nil, class: "datepicker form-control"
+                = text_field_tag "start_date", nil, class: "datepicker form-control", readonly: true
             .form-group
               = label_tag "end_date", t(:reports)[:end_date], class: "col-sm-3 control-label"
               .col-sm-9
-                = text_field_tag "end_date", nil, class: "datepicker form-control"
+                = text_field_tag "end_date", nil, class: "datepicker form-control", readonly: true
             .form-group
               = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
               .col-sm-9
