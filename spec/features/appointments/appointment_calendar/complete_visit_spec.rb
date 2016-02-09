@@ -232,7 +232,7 @@ feature 'Complete Visit', js: true do
 
     bootstrap_select '#task_assignee_id', @identity.full_name
 
-    page.execute_script %Q{ $("#follow_up_procedure_datepicker").children(".input-group-addon").trigger("click")}
+    page.execute_script %Q{ $("#follow_up_procedure_datepicker").trigger("focus")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'

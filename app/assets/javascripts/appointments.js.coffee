@@ -117,8 +117,8 @@ $ ->
       data: data
 
   $(document).on 'dp.hide', ".followup_procedure_datepicker", ->
-    task_id = $(this).children("input").data("taskId")
-    due_at = $(this).children("input").val()
+    task_id = $(this).data("taskId")
+    due_at = $(this).val()
     data = task:
             due_at: due_at
     $.ajax

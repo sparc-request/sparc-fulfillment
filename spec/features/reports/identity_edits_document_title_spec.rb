@@ -53,8 +53,10 @@ feature 'Identity edits document title', js: true, enqueue: false do
     wait_for_ajax
 
     fill_in 'Title', with: "A custom title"
-    fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
-    fill_in 'End Date', with: Date.tomorrow.strftime("%m-%d-%Y")
+    page.execute_script %Q{ $("#start_date").trigger("focus")}
+    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
+    page.execute_script %Q{ $("#end_date").trigger("focus")}
+    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
 
     # close calendar thing, so it's not covering protocol dropdown
     first('.modal-header').click
@@ -73,8 +75,10 @@ feature 'Identity edits document title', js: true, enqueue: false do
     find("[data-type='invoice_report']").click
     wait_for_ajax
 
-    fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
-    fill_in 'End Date', with: Date.tomorrow.strftime("%m-%d-%Y")
+    page.execute_script %Q{ $("#start_date").trigger("focus")}
+    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
+    page.execute_script %Q{ $("#end_date").trigger("focus")}
+    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
 
     # close calendar thing, so it's not covering protocol dropdown
     first('.modal-header').click
