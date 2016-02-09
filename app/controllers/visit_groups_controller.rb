@@ -13,11 +13,6 @@ class VisitGroupsController < ApplicationController
   def create
     @visit_group = VisitGroup.new(visit_group_params)
     @arm         =  Arm.find(visit_group_params[:arm_id])
-
-    if visit_group_params[:position] == "-1"
-      @visit_group.update_attributes(position: @arm.visit_groups.sort_by(&:position).last.position + 1)
-    end
-
     @visit_group_visits_importer = VisitGroupVisitsImporter.new(@visit_group)
     @current_page                = params[:current_page]
     @schedule_tab                = params[:schedule_tab]
