@@ -50,7 +50,6 @@ feature "create Task", js: true do
   end
 
   def when_i_click_on_the_all_tasks_button
-    save_and_open_screenshot
     find('#all_tasks').click
     wait_for_ajax
   end
