@@ -72,7 +72,11 @@ module StudyLevelActivitiesHelper
     html
   end
 
-  def fulfillment_options_buttons fulfillment
+  def is_protocol_type_study? (protocol)
+    protocol.protocol_type == 'Study'
+  end
+
+  def fulfillment_options_buttons fulfillment_id
     options = raw(
       (fulfillment.notes.any? ?
         content_tag(:li, raw(

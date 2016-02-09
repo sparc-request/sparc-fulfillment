@@ -94,6 +94,26 @@ RSpec.describe Protocol, type: :model do
       end
     end
 
+    describe 'protocol type' do
+      it 'should return the protocol type Study' do
+        
+        protocol = create(:protocol)
+        sparc_protocol = protocol.sparc_protocol
+        sparc_protocol.update_attributes(type: 'Study')
+
+        expect(protocol.protocol_type).to eq Sparc::Protocol.where(id: protocol.sparc_id).first.type
+      end
+
+       it 'should return the protocol type Project' do
+        
+        protocol = create(:protocol)
+        sparc_protocol = protocol.sparc_protocol
+        sparc_protocol.update_attributes(type: 'Project')
+
+        expect(protocol.protocol_type).to eq Sparc::Protocol.where(id: protocol.sparc_id).first.type
+      end
+    end
+
     describe 'delegated methods' do
 
       let!(:protocol)            { create(:protocol) }
