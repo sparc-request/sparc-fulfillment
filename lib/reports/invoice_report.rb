@@ -6,8 +6,12 @@ class InvoiceReport < Report
   require 'csv'
 
   def generate(document)
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
+    #We want to filter from 00:00:00 in the local time zone,
+    #then convert to UTC to match database times
+    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").utc
+    #We want to filter from 11:59:59 in the local time zone,
+    #then convert to UTC to match databsae times
+    @end_date   = (Time.strptime(@params[:end_date], "%m-%d-%Y") + 86399).utc
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
@@ -28,6 +32,7 @@ class InvoiceReport < Report
           csv << ["Study Level Charges:"]
           csv << [
             "Protocol ID",
+            "Protocol Short Title",
             "Primary PI",
             "Fulfillment Date",
             "Service(s) Completed",
@@ -43,8 +48,9 @@ class InvoiceReport < Report
           protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |fulfillment|
             csv << [
               protocol.sparc_id,
+              protocol.sparc_protocol.short_title,
               protocol.pi ? protocol.pi.full_name : nil,
-              format_date(fulfillment.fulfilled_at),
+              format_date(fulfillment.fulfilled_at.in_time_zone(@params[:time_zone])),
               fulfillment.service_name,
               fulfillment.quantity,
               fulfillment.line_item.account_number,
@@ -65,12 +71,14 @@ class InvoiceReport < Report
           csv << ["Procedures/Per-Patient-Per-Visit:"]
           csv << [
             "Protocol ID",
+            "Protocol Short Title",
             "Primary PI",
             "Patient Name",
             "Patient ID",
             "Visit Name",
             "Visit Date",
             "Service(s) Completed",
+            "Service Completion Date",
             "Quantity Completed",
             "Research Rate",
             "Total Cost"
@@ -84,12 +92,14 @@ class InvoiceReport < Report
 
               csv << [
                 protocol.sparc_id,
+                protocol.sparc_protocol.short_title,
                 protocol.pi ? protocol.pi.full_name : nil,
                 participant.full_name,
                 participant.label,
                 appointment.name,
-                format_date(appointment.start_date),
+                format_date(appointment.start_date.in_time_zone(@params[:time_zone])),
                 procedure.service_name,
+                format_date(procedure.completed_date.in_time_zone(@params[:time_zone])),
                 service_procedures.size,
                 display_cost(procedure.service_cost),
                 display_cost(service_procedures.size * procedure.service_cost.to_f)

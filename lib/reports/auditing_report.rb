@@ -6,8 +6,12 @@ class AuditingReport < Report
   require 'csv'
 
   def generate(document)
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
+    #We want to filter from 00:00:00 in the local time zone,
+    #then convert to UTC to match database times
+    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").utc
+    #We want to filter from 11:59:59 in the local time zone,
+    #then convert to UTC to match databsae times
+    @end_date   = (Time.strptime(@params[:end_date], "%m-%d-%Y") + 86399).utc
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
@@ -51,9 +55,9 @@ class AuditingReport < Report
             participant.label,
             procedure.appointment.arm.name,
             procedure.appointment.name,
-            format_date(procedure.completed_date),
-            format_date(procedure.incompleted_date),
-            format_date(procedure.follow_up? ? procedure.handled_date : nil),
+            format_date(procedure.completed_date.in_time_zone(@params[:time_zone])),
+            format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date.in_time_zone(@params[:time_zone])),
+            format_date(procedure.follow_up? ? procedure.handled_date.in_time_zone(@params[:time_zone]) : nil),
             added_formatter(procedure),
             procedure.service.organization.name,
             procedure.service_name,
@@ -86,7 +90,7 @@ class AuditingReport < Report
 
   def follow_up_formatter(procedure)
     if procedure.follow_up_date
-      "Due Date: #{format_date(procedure.follow_up_date)} | Comment: #{procedure.task.body}"
+      "Due Date: #{format_date(procedure.follow_up_date.in_time_zone(@params[:time_zone]))} | Comment: #{procedure.task.body}"
     end
   end
 end
