@@ -82,8 +82,8 @@ en:
     documents: "Documents"
     date: "Date Requested"
     date_created: "Date Created"
-    date_time_formatter_ruby: "%m/%d/%Y %H:%M:%S"
-    date_time_formatter_js:   "MM/DD/YYYY HH:mm:ss"
+    date_time_formatter_ruby: "%D %r"
+    date_time_formatter_js:   "MM/DD/YYYY HH:mm:ss a"
     edit_header: "Edit Report Title"
     file: "Attached File"
     flash_messages:
@@ -128,11 +128,13 @@ en:
   line_item:
     object: "Line Item"
     account_number: "Account"
-    add_line_item: "Add Study Level Activity"
+    add_line_item_study: "Add Study Level Activity"
+    add_line_item_project: "Add Project Level Activity"
     change_service: "Change Service"
     components: "Components"
     contact: "Contact"
     create: "Create New Study Level Activity"
+    create_project: "Create New Project Level Activity"
     delete_line_item: "Delete line item"
     edit: "Edit Study Level Activity"
     flash_messages:
@@ -152,8 +154,10 @@ en:
     service: "Service"
     started: "Started"
     save_li: "Save Study Level Activity"
+    save_li_project: "Save Project Level Activity"
 
   navbar:
+    logged_in_msg: "Logged in as"
     reports_link: 'All Reports'
     tasks_link: 'All Tasks'
 
@@ -285,13 +289,15 @@ en:
       participant_tracker: "Participant Tracker"
       reports: "Reports"
       study_level_activities: "Study Level Activities"
+      project_level_activities: "Project Level Activities"
       study_schedule: "Study Schedule"
+      project_schedule: "Project Schedule"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
 
   reports:
     auditing_report: "Auditing Report"
-    billing_report: "Billing Report"
+    invoice_report: "Invoice Report"
     end_date: "End Date"
     incomplete_visit_report: "Incomplete Visit Report"
     organization: "Organization(s)"
@@ -318,19 +324,19 @@ en:
 
   sub_service_request:
     statuses:
-      administrative_review: 'Administrative Review'
       all: 'All'
+      ctrc_approved: 'Active'
+      administrative_review: 'Administrative Review'
       approved: 'Approved'
       awaiting_pi_approval: 'Awaiting Requester Response'
-      committee_review: 'In Committee Review'
       complete: 'Complete'
-      ctrc_approved: 'Active'
-      ctrc_review: 'In Admin Review'
       declined: 'Declined'
       draft: 'Draft'
-      fulfillment_queue: 'In Fulfillment Queue'
-      get_a_quote: 'Get a Quote'
+      get_a_quote: 'Get a Cost Estimate'
       invoiced: 'Invoiced'
+      ctrc_review: 'In Admin Review'
+      committee_review: 'In Committee Review'
+      fulfillment_queue: 'In Fulfillment Queue'
       in_process: 'In Process'
       on_hold: 'On Hold'
       submitted: 'Submitted'
