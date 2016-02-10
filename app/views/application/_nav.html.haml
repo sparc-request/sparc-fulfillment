@@ -23,6 +23,8 @@
 
         = yield :nav_buttons
       %ul.nav.navbar-nav.navbar-right
+        %li
+          = logged_in(current_identity)
         - if session[:breadcrumbs] && session[:breadcrumbs].present?
           %li
             = link_to back_link(session[:breadcrumbs].last), id: 'history-back', title: generate_history_text(session[:breadcrumbs].last), aria: {label: "Go Back"}, data: {toggle: "tooltip", animation: 'false'} do

@@ -101,4 +101,8 @@ module ApplicationHelper
   def back_link url
     url.to_s + "?back=true" # handles root url as well (nil)
   end
+
+  def logged_in identity
+    content_tag(:span, "#{t(:navbar)[:logged_in_msg]} #{current_identity.full_name} (#{current_identity.email})", class: "logged-in-as", "aria-hidden" => "true")
+  end
 end
