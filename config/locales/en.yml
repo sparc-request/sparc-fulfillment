@@ -179,7 +179,7 @@ en:
     incomplete_header: "Reason for Incompletion"
     lineitem:
       edit: "Edit Line Item"
-      index_header: "Line Item Notes"
+      index_header: "Study Level Activity Notes"
       none: "This line item has no notes"
     new_header: "Add Note"
     participant:

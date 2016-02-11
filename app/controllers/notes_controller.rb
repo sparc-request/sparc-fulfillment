@@ -17,14 +17,8 @@ class NotesController < ApplicationController
 
   def create
     @note = Note.create(note_params.merge!({ identity: current_identity })) if note_params[:comment].present? # don't create empty notes
-
-    if params[:note][:notable_type] == "Appointment"
-      @appointment = Appointment.find(params[:note][:notable_id])
-      @statuses = @appointment.appointment_statuses.map{|x| x.status}
-    elsif params[:note][:notable_type] == "Procedure"
-      @appointment = Procedure.find(params[:note][:notable_id]).appointment
-      @statuses = @appointment.appointment_statuses.map{|x| x.status}
-    end
+    appointment_note
+    procedure_note
   end
 
   private
@@ -35,5 +29,19 @@ class NotesController < ApplicationController
 
   def find_notable
     @notable = params[:note][:notable_type].constantize.find params[:note][:notable_id]
+  end
+
+  def appointment_note
+    if params[:note][:notable_type] == "Appointment"
+      @appointment = Appointment.find(params[:note][:notable_id])
+      @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    end
+  end
+
+  def procedure_note
+    if params[:note][:notable_type] == "Procedure"
+      @appointment = Procedure.find(params[:note][:notable_id]).appointment
+      @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    end
   end
 end

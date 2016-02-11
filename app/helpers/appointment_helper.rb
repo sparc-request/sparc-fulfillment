@@ -12,26 +12,15 @@ module AppointmentHelper
   end
 
   def appointment_notes_formatter appointment
-    if appointment.notes.any?
-      content_tag(:button, class: "btn btn-primary list notes", title: t(:appointment)[:notes], type: "button", label: "Notes List", 'data-notable-id' => appointment.id, 'data-notable-type' => 'Appointment', toggle: "tooltip", animation: 'false') do
-        content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
-      end
-    else
-      content_tag(:button, class: "btn btn-default list notes", title: t(:appointment)[:notes], type: "button", label: "Notes List", 'data-notable-id' => appointment.id, 'data-notable-type' => 'Appointment', toggle: "tooltip", animation: 'false') do
-        content_tag(:span, '', class: "glyphicon glyphicon-list-alt blue-notes")
-      end
-    end
+    notes_button({object: appointment, 
+                  title: t(:appointment)[:notes], 
+                  has_notes: appointment.notes.any?})
   end
 
   def procedure_notes_formatter procedure
-    if procedure.notes.any?
-      content_tag(:button, class: "btn btn-primary list notes #{procedure.appt_started? ? '' : 'disabled'}", title: t(:procedure)[:notes], type: "button", label: "Notes List", 'data-notable-id' => procedure.id, 'data-notable-type' => 'Procedure', toggle: "tooltip", animation: 'false') do
-        content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
-      end
-    else
-      content_tag(:button, class: "btn btn-default list notes #{procedure.appt_started? ? '' : 'disabled'}", title: t(:procedure)[:notes], type: "button", label: "Notes List", 'data-notable-id' => procedure.id, 'data-notable-type' => 'Procedure', toggle: "tooltip", animation: 'false') do
-        content_tag(:span, '', class: "glyphicon glyphicon-list-alt blue-notes")
-      end
-    end
+    notes_button({object: procedure, 
+                  title: t(:participant)[:notes], 
+                  has_notes: procedure.notes.any?, 
+                  button_class: "#{procedure.appt_started? ? '' : 'disabled'}"})
   end
 end
