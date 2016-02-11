@@ -10,8 +10,8 @@ class InvoiceReport < Report
     #then convert to UTC to match database times
     @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").utc
     #We want to filter from 11:59:59 in the local time zone,
-    #then convert to UTC to match databsae times
-    @end_date   = (Time.strptime(@params[:end_date], "%m-%d-%Y") + 24*60*60 - 1).utc
+    #then convert to UTC to match database times
+    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y").utc + 23.hours + 59.minutes + 59.seconds
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
@@ -50,7 +50,7 @@ class InvoiceReport < Report
               protocol.sparc_id,
               protocol.sparc_protocol.short_title,
               protocol.pi ? protocol.pi.full_name : nil,
-              format_date(fulfillment.fulfilled_at.in_time_zone(@params[:time_zone])),
+              format_date(fulfillment.fulfilled_at),
               fulfillment.service_name,
               fulfillment.quantity,
               fulfillment.line_item.account_number,
@@ -97,9 +97,9 @@ class InvoiceReport < Report
                 participant.full_name,
                 participant.label,
                 appointment.name,
-                format_date(appointment.start_date.in_time_zone(@params[:time_zone])),
+                format_date(appointment.start_date),
                 procedure.service_name,
-                format_date(procedure.completed_date.in_time_zone(@params[:time_zone])),
+                format_date(procedure.completed_date),
                 service_procedures.size,
                 display_cost(procedure.service_cost),
                 display_cost(service_procedures.size * procedure.service_cost.to_f)
