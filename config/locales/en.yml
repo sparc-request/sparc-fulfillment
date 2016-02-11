@@ -49,7 +49,7 @@ en:
     date_of_visit: "Date of Participant Visit"
     edit_header: "Custom Visit"
     name: "Visit Name"
-    position: "Insert into Position"
+    position: "Insert into Position *"
     protocol_id: "Protocol ID"
     reason: "Reason"
     reset_visit: "Reset Visit"

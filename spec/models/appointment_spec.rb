@@ -11,29 +11,20 @@ RSpec.describe Appointment, type: :model do
   it { is_expected.to have_many(:procedures) }
   it { is_expected.to have_many(:appointment_statuses) }
 
+  context 'validations' do
+    it { is_expected.to validate_presence_of :participant_id }
+    it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_presence_of :arm_id }
+    it { is_expected.to validate_presence_of :position }
+  end
+
   context 'instance methods' do
-    describe 'validations' do
-      it 'should validate properly' do
-        protocol = create(:protocol)
-        arm = create(:arm, protocol: protocol)
-        participant = create(:participant, protocol: protocol, arm: arm)
-
-        @appt = build(:appointment)
-        expect(@appt.valid?).to be false
-
-        @appt.participant_id = participant.id
-        @appt.arm_id = arm.id
-        @appt.name = "Visit 1"
-        expect(@appt.valid?).to be true
-      end
-    end
-
     describe 'has_completed_procedures?' do
       before :each do
         protocol = create(:protocol)
         arm = create(:arm, protocol: protocol)
         participant = create(:participant, protocol: protocol, arm: arm)
-        @appt = create(:appointment, arm: arm, name: "Visit 1", participant: participant)
+        @appt = create(:appointment, arm: arm, name: "Visit 1", participant: participant, position: 1)
         @proc1 = create(:procedure, :complete, appointment: @appt)
         @proc2 = create(:procedure, appointment: @appt)
       end
@@ -60,7 +51,7 @@ RSpec.describe Appointment, type: :model do
         visit_group = create(:visit_group, arm: arm)
         @visit_li1 = create(:visit, visit_group: visit_group, line_item: line_item1)
         @visit_li2 = create(:visit, visit_group: visit_group, line_item: line_item2)
-        @appt = create(:appointment, visit_group: visit_group, participant: participant, arm: arm, name: visit_group.name)
+        @appt = create(:appointment, visit_group: visit_group, participant: participant, arm: arm, name: visit_group.name, position: 1)
       end
 
       it 'should not create a procedure if there is no visit for a line_item' do

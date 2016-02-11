@@ -33,15 +33,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
         then_i_should_see_the_position_is 1
       end
     end
-
-    context "and fills the form out incorrectly" do
-      scenario "and sees some errors" do
-        given_i_am_viewing_an_arm_with_multiple_visit_groups
-        when_i_click_the_add_visit_group_button
-        when_i_click_the_add_submit_button
-        then_i_should_see_errors_of_type 'add'
-      end
-    end
   end
 
   context "User edits a visit group on an arm" do
