@@ -33,7 +33,7 @@ module ProtocolHelper
   def formatted_study_schedule_report protocol
     icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
     button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button study_schedule_report dropdown-toggle', id: "study_schedule_report_#{protocol.id.to_s}", 'aria-expanded' => 'false', title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-protocol_id' => protocol.id)
-    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu', id: "document_menu_study_schedule_report_#{protocol.id.to_s}", role: 'menu')
+    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_study_schedule_report_#{protocol.id.to_s}", role: 'menu')
     html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
 

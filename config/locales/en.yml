@@ -82,8 +82,8 @@ en:
     documents: "Documents"
     date: "Date Requested"
     date_created: "Date Created"
-    date_time_formatter_ruby: "%m/%d/%Y %H:%M:%S"
-    date_time_formatter_js:   "MM/DD/YYYY HH:mm:ss"
+    date_time_formatter_ruby: "%D %r"
+    date_time_formatter_js:   "MM/DD/YYYY HH:mm:ss a"
     edit_header: "Edit Report Title"
     file: "Attached File"
     flash_messages:
@@ -157,6 +157,7 @@ en:
     save_li_project: "Save Project Level Activity"
 
   navbar:
+    logged_in_msg: "Logged in as"
     reports_link: 'All Reports'
     tasks_link: 'All Tasks'
 
@@ -323,19 +324,19 @@ en:
 
   sub_service_request:
     statuses:
-      administrative_review: 'Administrative Review'
       all: 'All'
+      ctrc_approved: 'Active'
+      administrative_review: 'Administrative Review'
       approved: 'Approved'
       awaiting_pi_approval: 'Awaiting Requester Response'
-      committee_review: 'In Committee Review'
       complete: 'Complete'
-      ctrc_approved: 'Active'
-      ctrc_review: 'In Admin Review'
       declined: 'Declined'
       draft: 'Draft'
-      fulfillment_queue: 'In Fulfillment Queue'
-      get_a_quote: 'Get a Quote'
+      get_a_quote: 'Get a Cost Estimate'
       invoiced: 'Invoiced'
+      ctrc_review: 'In Admin Review'
+      committee_review: 'In Committee Review'
+      fulfillment_queue: 'In Fulfillment Queue'
       in_process: 'In Process'
       on_hold: 'On Hold'
       submitted: 'Submitted'
