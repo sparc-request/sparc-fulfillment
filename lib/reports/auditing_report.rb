@@ -55,7 +55,7 @@ class AuditingReport < Report
             participant.label,
             procedure.appointment.arm.name,
             procedure.appointment.name,
-            format_date(procedure.completed_date),
+            format_date(procedure.completed_date.nil? ? nil : procedure.completed_date),
             format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date),
             format_date(procedure.follow_up? ? procedure.handled_date : nil),
             added_formatter(procedure),
