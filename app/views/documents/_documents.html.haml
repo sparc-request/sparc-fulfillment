@@ -8,9 +8,9 @@
           = t(:actions)[:edit]
         %th{data: {class: 'title', align: 'center', sortable: "true", field: 'title'}}
           = t(:documents)[:title]
-        %th{data: {class: 'created_at', align: 'center', sortable: "true", field: 'created_at'}}
+        %th{data: {class: 'created_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'created_at'}}
           = t(:documents)[:date_created]
-        %th{data: {class: 'viewed_at', align: 'center', sortable: "true", field: 'viewed_at'}}
+        %th{data: {class: 'viewed_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'viewed_at'}}
           = t(:documents)[:viewed_at]
         %th{data: {class: 'state', align: 'center', field: 'state'}}
           = t(:documents)[:state]
