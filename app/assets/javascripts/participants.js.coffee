@@ -36,6 +36,8 @@ $ ->
   $("#participant-info").bootstrapTable 'refresh', {silent: true}
 
 (exports ? this).visitSorter = (a, b) ->
-  format = (string) -> parseInt string.split('/').reverse().join('')
+  format = (string) -> 
+    mdy_array = string.split('/')
+    parseInt [mdy_array[2], mdy_array[0], mdy_array[1]].join('')
 
   if format(a) > format(b) then -1 else 1
