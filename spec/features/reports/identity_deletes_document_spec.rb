@@ -79,7 +79,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def when_i_create_an_identity_based_document
-    find("[data-type='billing_report']").click
+    find("[data-type='invoice_report']").click
     wait_for_ajax
 
     fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
@@ -87,7 +87,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
 
     # close calendar thing, so it's not covering protocol dropdown
     first('.modal-header').click
-    wait_for_ajax 
+    wait_for_ajax
 
     bootstrap_select ('#protocol_ids'), @protocol.short_title_with_sparc_id
 
@@ -102,7 +102,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
     when_i_create_an_identity_based_document
 
     Document.first.update_attributes(state: "Processing")
-    
+
     visit documents_path
     wait_for_ajax
   end
@@ -115,7 +115,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
 
   def when_a_protocol_document_is_not_completed
     when_i_create_a_protocol_based_document
-    
+
     Document.first.update_attributes(state: "Processing")
 
     visit protocol_path(@protocol)

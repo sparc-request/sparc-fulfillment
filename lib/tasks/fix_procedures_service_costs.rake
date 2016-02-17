@@ -3,7 +3,7 @@ namespace :data do
   task fix_procedure_service_cost: :environment do
     bar = ProgressBar.new(Procedure.complete.count)
 
-    CSV.open("/tmp/fixed_procedure_service_costs.csv", "wb+") do |csv|
+    CSV.open("tmp/fixed_procedure_service_costs.csv", "wb+") do |csv|
       proc = nil
       Procedure.complete.find_each do |procedure|
         begin
@@ -23,7 +23,7 @@ namespace :data do
           end
 
           if calculated_amount != current_amount
-            csv << ["Updating cost for procedure #{procedure.id} from #{current_amount} to #{calculated_amount}"]
+            csv << ["Protocol ID: #{procedure.protocol.sparc_id}", "Service Name: #{procedure.service_name}","Updating cost for procedure #{procedure.id} from #{current_amount} to #{calculated_amount}"]
             procedure.update_attribute(:service_cost, calculated_amount)
           end
 
