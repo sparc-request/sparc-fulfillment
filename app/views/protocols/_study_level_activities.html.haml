@@ -1,2 +1,2 @@
-%h3= t(:protocol)[:tabs][:study_level_activities]
+%h3=  t(:protocol)[:tabs][ (is_protocol_type_study? (protocol)) ? :study_level_activities : :project_level_activities]  
 = render partial: "/study_level_activities/study_level_activities_table", locals: {protocol: protocol}

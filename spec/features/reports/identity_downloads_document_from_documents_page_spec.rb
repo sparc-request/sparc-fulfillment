@@ -3,8 +3,8 @@ require 'rails_helper'
 feature 'Identity downloads a document from the documents page', js: true, enqueue: false do
 
   scenario 'and sees the documents counter decrement and disappear' do
-    given_i_have_created_an_identity_based_report   
-    when_i_download_the_report 
+    given_i_have_created_an_identity_based_report
+    when_i_download_the_report
     then_i_should_see_the_documents_counter_decrement
   end
 
@@ -19,7 +19,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     create(:participant, protocol: @protocol)
 
     visit documents_path
-    
+
     find("[data-type='#{report_type}']").click
     wait_for_ajax
   end
@@ -42,8 +42,8 @@ feature 'Identity downloads a document from the documents page', js: true, enque
   end
 
   def given_i_have_created_an_identity_based_report
-    given_i_click_the_create_report_button_of_type 'billing_report'
-    when_i_fill_in_the_report_of_type 'billing_report'
+    given_i_click_the_create_report_button_of_type 'invoice_report'
+    when_i_fill_in_the_report_of_type 'invoice_report'
 
     expect(page).to have_css(".identity_report_notifications", text: 1)
   end
@@ -60,5 +60,5 @@ feature 'Identity downloads a document from the documents page', js: true, enque
   def then_i_should_see_the_viewed_at_date_has_been_updated
     #Get formatter from en.yml -> documents -> date_time_formatter_ruby
     expect(page).to have_css("td.viewed_at", text: Time.now.strftime("%m/%d/%Y"))
-  end 
+  end
 end

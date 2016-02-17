@@ -6,8 +6,12 @@ class ProjectSummaryReport < Report
   require 'csv'
 
   def generate(document)
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y")
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y")
+    #We want to filter from 00:00:00 in the local time zone,
+    #then convert to UTC to match database times
+    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").utc
+    #We want to filter from 11:59:59 in the local time zone,
+    #then convert to UTC to match database times
+    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y").tomorrow.utc - 1.second
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 

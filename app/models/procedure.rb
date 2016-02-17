@@ -2,10 +2,12 @@ class Procedure < ActiveRecord::Base
 
   STATUS_TYPES = %w(complete incomplete follow_up unstarted).freeze
 
-  NOTABLE_REASONS  = ['Assessment missed', 'Gender-specific assessment', 'Specimen/Assessment could not be obtained',
-                      'Individual assessment completed elsewhere', 'Assessment not yet IRB approved', 'Duplicated assessment',
+  NOTABLE_REASONS  = ['Assessment missed', 'Gender-specific assessment',
+                      'Specimen/Assessment could not be obtained', 'Individual assessment completed elsewhere',
+                      'Assessment not yet IRB approved', 'Duplicated assessment',
                       'Assessment performed by other personnel/study staff', 'Participant refused assessment',
-                      'Assessment not performed due to equipment failure', 'Not collected/not done--unknown reason'].freeze
+                      'Assessment not performed due to equipment failure', 'Not collected/not done--unknown reason',
+                      'Not applicable for this visit'].freeze
 
   has_paper_trail
   acts_as_paranoid
@@ -39,7 +41,7 @@ class Procedure < ActiveRecord::Base
   # select Procedures that belong to an Appointment without a start date
   scope :belonging_to_unbegun_appt, -> { joins(:appointment).where('appointments.start_date IS NULL') }
   scope :completed_r_in_date_range, ->(start_date, end_date) {
-        where("procedures.completed_date is not NULL AND DATE(procedures.completed_date) between ? AND ? AND billing_type = ?", start_date.to_date, end_date.to_date, "research_billing_qty")}
+        where("procedures.completed_date is not NULL AND procedures.completed_date between ? AND ? AND billing_type = ?", start_date, end_date, "research_billing_qty")}
 
   def self.billing_display
     [["R", "research_billing_qty"],
@@ -132,12 +134,17 @@ class Procedure < ActiveRecord::Base
   end
 
   def reset
-    #Reset Status
-    self.update_attributes(status: "unstarted")
     #Remove tasks
     task.destroy if task
+    
     #Remove notes
     notes.destroy_all if notes.any?
+    
+    # reload to reflect deleted associations
+    self.reload
+    
+    #Reset Status
+    self.update_attributes(status: "unstarted")
     self.reload
   end
 
