@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   def push_user_to_gon
     gon.push({current_identity_id: current_identity.id})
   end
-  
+
   private
 
   def breadcrumbs
