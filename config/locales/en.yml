@@ -49,6 +49,7 @@ en:
     date_of_visit: "Date of Participant Visit"
     edit_header: "Custom Visit"
     name: "Visit Name"
+    notes: "Notes"
     position: "Insert into Position *"
     protocol_id: "Protocol ID"
     reason: "Reason"
@@ -178,7 +179,7 @@ en:
     incomplete_header: "Reason for Incompletion"
     lineitem:
       edit: "Edit Line Item"
-      index_header: "Line Item Notes"
+      index_header: "Study Level Activity Notes"
       none: "This line item has no notes"
     new_header: "Add Note"
     participant:
