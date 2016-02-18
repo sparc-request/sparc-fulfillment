@@ -31,7 +31,7 @@ RSpec.describe VisitGroup, type: :model do
   end
 
   context 'class methods' do
-    describe '#per_page' do
+    describe '.per_page' do
       it 'should inherit from Visit' do
         expect(VisitGroup.per_page).to eq(Visit.per_page)
       end
