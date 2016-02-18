@@ -35,6 +35,8 @@ class ProceduresController < ApplicationController
 
   def update
     @procedure.update_attributes(procedure_params)
+    @appointment = @procedure.appointment
+    @statuses = @appointment.appointment_statuses.map{|x| x.status}
   end
 
   def destroy

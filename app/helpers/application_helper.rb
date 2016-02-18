@@ -112,4 +112,14 @@ module ApplicationHelper
       ""
     end
   end
+
+  def logged_in identity
+    content_tag(:span, "#{t(:navbar)[:logged_in_msg]} #{current_identity.full_name} (#{current_identity.email})", class: "logged-in-as", "aria-hidden" => "true")
+  end
+
+  def notes_button params
+    content_tag(:button, class: "btn #{params[:has_notes] ? "btn-primary" : "btn-default"} #{params[:button_class].nil? ? "" : params[:button_class]} list notes", title: params[:title], label: "Notes List", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}, toggle: "tooltip", animation: 'false') do
+      content_tag(:span, '', class: "glyphicon glyphicon-list-alt #{params[:span_class].nil? ? "" : params[:span_class]} #{params[:has_notes] ? "" : "blue-notes"}")
+    end
+  end
 end

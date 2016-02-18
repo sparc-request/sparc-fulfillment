@@ -10,4 +10,17 @@ module AppointmentHelper
 
     old_statuses
   end
+
+  def appointment_notes_formatter appointment
+    notes_button({object: appointment, 
+                  title: t(:appointment)[:notes], 
+                  has_notes: appointment.notes.any?})
+  end
+
+  def procedure_notes_formatter procedure
+    notes_button({object: procedure, 
+                  title: t(:participant)[:notes], 
+                  has_notes: procedure.notes.any?, 
+                  button_class: "#{procedure.appt_started? ? '' : 'disabled'}"})
+  end
 end

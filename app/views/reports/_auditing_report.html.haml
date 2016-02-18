@@ -10,7 +10,7 @@
         #modal_errors
         .row
           .col-md-12
-            =hidden_field_tag "report_type", report_type
+            = hidden_field_tag "report_type", report_type
             .form-group
               =label_tag "title", t(:documents)[:title], class: "col-sm-3 control-label"
               .col-sm-9= text_field_tag "title", title, class: "form-control"

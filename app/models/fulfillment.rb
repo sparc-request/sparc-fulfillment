@@ -20,10 +20,10 @@ class Fulfillment < ActiveRecord::Base
   after_create :update_line_item_name
 
   scope :fulfilled_in_date_range, ->(start_date, end_date) {
-        where("fulfilled_at is not NULL AND DATE(fulfilled_at) between ? AND ?", start_date.to_date, end_date.to_date)}
+        where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
 
-  def fulfilled_at=(date)
-    write_attribute(:fulfilled_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
+  def fulfilled_at=(date_time)
+    write_attribute(:fulfilled_at, Time.strptime(date_time, "%m-%d-%Y")) if date_time.present?
   end
 
   def total_cost

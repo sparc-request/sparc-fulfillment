@@ -75,16 +75,17 @@ module ParticipantHelper
   end
 
   def notes_formatter participant
-    content_tag(:button, class: 'btn btn-primary btn-xs participant_notes list notes', 'data-notable-id' => participant.id, 'data-notable-type' => 'Participant') do
-      content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
-    end
+    notes_button({object: participant, 
+                  title: t(:participant)[:notes], 
+                  has_notes: participant.notes.any?, 
+                  button_class: "participant_notes btn-xs"})
   end
 
   def participant_report_formatter participant
     protocol  = participant.protocol
     icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
     button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button participant_report dropdown-toggle', id: "participant_report_#{participant.id.to_s}", 'aria-expanded' => 'false', title: 'Participant Report', 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-participant_id' => participant.id)
-    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu', id: "document_menu_participant_report_#{participant.id.to_s}", role: 'menu')
+    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_participant_report_#{participant.id.to_s}", role: 'menu')
     html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
 end
