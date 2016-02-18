@@ -75,9 +75,10 @@ module ParticipantHelper
   end
 
   def notes_formatter participant
-    content_tag(:button, class: 'btn btn-primary btn-xs participant_notes list notes', 'data-notable-id' => participant.id, 'data-notable-type' => 'Participant') do
-      content_tag(:span, '', class: "glyphicon glyphicon-list-alt")
-    end
+    notes_button({object: participant, 
+                  title: t(:participant)[:notes], 
+                  has_notes: participant.notes.any?, 
+                  button_class: "participant_notes btn-xs"})
   end
 
   def participant_report_formatter participant

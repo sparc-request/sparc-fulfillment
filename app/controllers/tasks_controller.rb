@@ -41,9 +41,7 @@ class TasksController < ApplicationController
         @procedure = Procedure.find(task_params[:assignable_id])
         @procedure.update_attributes(status: "follow_up") if @procedure.unstarted?
       end
-      if task_params[:notes]
-        create_note
-      end
+      create_note
       flash[:success] = t(:task)[:flash_messages][:created]
     else
       @errors = @task.errors
@@ -62,12 +60,21 @@ class TasksController < ApplicationController
 
   private
 
-  def create_note
-    notes_params = task_params[:notes]
-    notes_params[:identity] = current_identity
-    Note.create(notes_params)
+  def create_procedure_note?
+    task_params[:notes] && task_params[:notes][:notable_type] == "Procedure"
   end
 
+  def create_note
+    if create_procedure_note?
+      @appointment = @procedure.present? ? @procedure.appointment : Procedure.find(task_params[:notes][:notable_id]).appointment
+      @statuses = @appointment.appointment_statuses.map{|x| x.status}
+      
+      notes_params = task_params[:notes]
+      notes_params[:identity] = current_identity
+
+      Note.create(notes_params)
+    end
+  end
 
   def to_boolean string
     if string == 'true'

@@ -3,7 +3,6 @@ require 'rails_helper'
 feature 'Identity incompletes all Procedures', js: true do
 
   context 'and gives a valid reason' do
-
     scenario 'and sees the incomplete procedures' do
       given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
       when_i_click_the_incomplete_all_button
@@ -14,7 +13,6 @@ feature 'Identity incompletes all Procedures', js: true do
   end
 
   context 'and gives an invalid reason' do
-
     scenario 'User gives invalid reason' do
       given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
       when_i_click_the_incomplete_all_button
