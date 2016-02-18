@@ -18,28 +18,34 @@ feature 'Followup note', js: true do
         then_i_should_see_a_text_field_with_the_followup_date
       end
 
-      context 'and creates a followup note' do
-        scenario 'and sees the note in the notes list' do
+      scenario 'and sees the blue button with white glyphicon denoting notes present' do
+        given_i_have_created_a_procedure
+        when_i_begin_an_appointment
+        when_i_click_the_followup_button
+        when_i_fill_out_and_submit_the_followup_form
+        then_i_should_see_the_notes_button
+      end
+
+      scenario 'and sees the note in the notes list' do
+        given_i_have_created_a_procedure
+        given_i_have_created_a_followup_note
+        when_i_view_the_notes_list
+        then_i_should_see_the_note_i_created
+      end
+
+      scenario 'and sees the new respective task on the tasks page' do
+        given_i_have_created_a_procedure
+        given_i_have_created_a_followup_note
+        when_i_visit_the_tasks_index_page
+        then_i_should_see_the_newly_created_task
+      end
+
+      context 'and edits the followup date on the calendar' do
+        scenario 'and sees the followup date change' do
           given_i_have_created_a_procedure
           given_i_have_created_a_followup_note
-          when_i_view_the_notes_list
-          then_i_should_see_the_note_i_created
-        end
-
-        scenario 'and sees the new respective task on the tasks page' do
-          given_i_have_created_a_procedure
-          given_i_have_created_a_followup_note
-          when_i_visit_the_tasks_index_page
-          then_i_should_see_the_newly_created_task
-        end
-
-        context 'and edits the followup date on the calendar' do
-          scenario 'and sees the followup date change' do
-            given_i_have_created_a_procedure
-            given_i_have_created_a_followup_note
-            then_i_should_be_able_to_edit_the_followup_date
-            then_i_should_see_the_date_change
-          end
+          then_i_should_be_able_to_edit_the_followup_date
+          then_i_should_see_the_date_change
         end
       end
     end
@@ -124,6 +130,10 @@ feature 'Followup note', js: true do
     expect(page).to have_css("input#follow_up_datepicker_#{procedure.id}[value='#{Time.new(Time.now.year,Time.now.month,10).strftime("%m/%d/%Y")}']")
   end
 
+  def then_i_should_see_the_notes_button
+    expect(page).to have_selector("td.notes button.btn-primary")
+  end
+  
   def then_i_should_see_the_note_i_created
     expect(page).to have_css('.modal-body .comment', text: 'Test comment')
   end

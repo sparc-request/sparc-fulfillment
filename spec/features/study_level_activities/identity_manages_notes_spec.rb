@@ -3,6 +3,12 @@ require 'rails_helper'
 feature 'Notes', js: true do
 
   context 'User views line item notes' do
+    scenario 'and sees a grey notes icon denoting no notes present' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_the_line_item_actions_dropdown
+      then_i_should_see_the_no_notes_button
+    end
+
     scenario 'and sees the line item notes list' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_click_on_line_item_notes_icon
@@ -11,6 +17,15 @@ feature 'Notes', js: true do
   end
 
   context 'User creates line item note' do
+    scenario 'and sees a blue notes icon denotes notes present' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_click_on_line_item_notes_icon
+      when_i_click_on_the_add_note_button
+      when_i_fill_out_and_save_the_note
+      when_i_open_the_line_item_actions_dropdown
+      then_i_Should_see_the_notes_present_button
+    end
+
     scenario 'and sees the note in the line items notes list' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_click_on_line_item_notes_icon
@@ -22,6 +37,13 @@ feature 'Notes', js: true do
   end
 
   context 'User views fulfillment notes' do
+    scenario 'and sees a grey notes icon denoting no notes present' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_open_the_fulfillment_actions_dropdown
+      then_i_should_see_the_no_notes_button
+    end
+
     scenario 'and sees the fulfillments notes list' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_open_up_a_fulfillment
@@ -31,12 +53,24 @@ feature 'Notes', js: true do
   end
 
   context 'User creates fulfillment note' do
+    scenario 'and sees a blue notes icon denotes notes present' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_open_up_a_fulfillment
+      when_i_click_on_fulfillment_notes_icon
+      when_i_click_on_the_add_note_button
+      when_i_fill_out_and_save_the_note
+      when_i_open_up_a_fulfillment
+      when_i_open_the_fulfillment_actions_dropdown
+      then_i_Should_see_the_notes_present_button
+    end
+
     scenario 'and sees the note in the fulfillments notes list' do
       given_i_am_viewing_the_study_level_activities_tab
       when_i_open_up_a_fulfillment
       when_i_click_on_fulfillment_notes_icon
       when_i_click_on_the_add_note_button
       when_i_fill_out_and_save_the_note
+      when_i_open_up_a_fulfillment
       when_i_click_on_fulfillment_notes_icon
       then_i_should_see_the_note
     end
@@ -52,21 +86,29 @@ feature 'Notes', js: true do
     wait_for_ajax
   end
 
+  def when_i_open_the_line_item_actions_dropdown
+    first("#study-level-activities-table .available-actions-button").click
+    wait_for_ajax
+  end
+
+  def when_i_open_the_fulfillment_actions_dropdown
+    first("#fulfillments-table .available-actions-button").click
+    wait_for_ajax
+  end
+
   def when_i_open_up_a_fulfillment
     first('.otf_fulfillments.list').click
     wait_for_ajax
   end
 
   def when_i_click_on_line_item_notes_icon
-    first("#study-level-activities-table .available-actions-button").click
-    wait_for_ajax
+    when_i_open_the_line_item_actions_dropdown
     first('.notes.list[data-notable-type="LineItem"]').click
     wait_for_ajax
   end
 
   def when_i_click_on_fulfillment_notes_icon
-    first("#fulfillments-table .available-actions-button").click
-    wait_for_ajax
+    when_i_open_the_fulfillment_actions_dropdown
     first('.notes.list[data-notable-type="Fulfillment"]').click
     wait_for_ajax
   end
@@ -81,6 +123,14 @@ feature 'Notes', js: true do
     wait_for_ajax
     click_button 'Save'
     wait_for_ajax
+  end
+
+  def then_i_should_see_the_no_notes_button
+    expect(page).to_not have_selector('button.actions-button.notes.list span.blue-notes', visible: true)
+  end
+
+  def then_i_Should_see_the_notes_present_button
+    expect(page).to have_selector('button.actions-button.notes.list span.blue-notes', visible: true)
   end
 
   def then_i_should_see_the_line_item_notes_list

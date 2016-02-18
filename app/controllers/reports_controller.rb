@@ -5,7 +5,6 @@ class ReportsController < ApplicationController
 
   def new
     @title = @report_type.titleize
-    @time_zone = current_identity.time_zone
   end
 
   def create

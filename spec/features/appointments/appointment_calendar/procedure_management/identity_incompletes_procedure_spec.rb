@@ -4,6 +4,14 @@ feature 'Incomplete Procedure', js: true do
 
   context 'User starts an appointment' do
     context 'and marks a procedure as incomplete once' do
+
+      scenario 'and sees the blue button with white glyphicon denoting notes present' do
+        given_i_am_viewing_an_appointment_with_a_procedure
+        when_i_begin_the_appointment
+        when_i_incomplete_the_procedure
+        then_i_should_see_the_notes_button
+      end
+
       scenario 'and sees a single incomplete note' do
         given_i_am_viewing_an_appointment_with_a_procedure
         when_i_begin_the_appointment
@@ -30,6 +38,7 @@ feature 'Incomplete Procedure', js: true do
         when_i_view_the_notes_list
         then_i_should_see_one_complete_note_and_one_incomplete_note
       end
+      
       scenario 'and sees they are the performer' do
         given_i_am_viewing_a_procedure_marked_as_complete
         when_i_incomplete_the_procedure
@@ -185,6 +194,10 @@ feature 'Incomplete Procedure', js: true do
     expect(page).to have_css('.modal-dialog .alert', text: "Notes reason can't be blank")
   end
 
+  def then_i_should_see_the_notes_button
+    expect(page).to have_selector("td.notes button.btn-primary")
+  end
+  
   def then_i_should_see_one_complete_note_and_one_incomplete_note
     then_i_should_see_one_complete_note
     then_i_should_see_one_incomplete_note
