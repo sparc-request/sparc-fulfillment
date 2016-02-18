@@ -12,7 +12,7 @@ module AppointmentHelper
   end
 
   def app_add_as_last_option appointment
-    content_tag(:option, "Add as last", value: appointment.arm.appointments.where(participant_id: appointment.participant_id).last.position + 1)
+    content_tag(:option, "Add as last", value: Appointment.where(arm_id: appointment.arm_id, participant_id: appointment.participant_id).size + 1)
   end
 
   def appointment_notes_formatter appointment
