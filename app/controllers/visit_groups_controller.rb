@@ -4,15 +4,15 @@ class VisitGroupsController < ApplicationController
 
   def new
     @current_page = params[:current_page] # the current page of the study schedule
-    @protocol = Protocol.find(params[:protocol_id])
-    @visit_group = VisitGroup.new()
+    @protocol     = Protocol.find(params[:protocol_id])
+    @visit_group  = VisitGroup.new()
     @schedule_tab = params[:schedule_tab]
     @arm = params[:arm_id].present? ? Arm.find(params[:arm_id]) : @protocol.arms.first
   end
 
   def create
-    @visit_group = VisitGroup.new(visit_group_params)
-    @arm         =  Arm.find(visit_group_params[:arm_id])
+    @visit_group                 = VisitGroup.new(visit_group_params)
+    @arm                         = Arm.find(visit_group_params[:arm_id])
     @visit_group_visits_importer = VisitGroupVisitsImporter.new(@visit_group)
     @current_page                = params[:current_page]
     @schedule_tab                = params[:schedule_tab]
@@ -37,7 +37,7 @@ class VisitGroupsController < ApplicationController
 
   def destroy
     @current_page = params[:page].to_i == 0 ? 1 : params[:page].to_i # can't be zero
-    @arm = @visit_group.arm
+    @arm          = @visit_group.arm
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     @schedule_tab = params[:schedule_tab]
     if @arm.visit_count == 1

@@ -13,20 +13,20 @@ RSpec.describe VisitGroup, type: :model do
     it { is_expected.to validate_presence_of :position }
 
     context 'if use epic:' do
-      it {
+      it "sets use_epic to true" do
         ClimateControl.modify USE_EPIC: 'true' do
           is_expected.to validate_presence_of :day
           is_expected.to validate_numericality_of :day
         end
-      }
+      end
     end
 
     context 'if not use epic:' do
-      it {
+      it "sets use_epic to false" do
         ClimateControl.modify USE_EPIC: 'false' do
           is_expected.not_to validate_presence_of :day
         end
-      }
+      end
     end
   end
 
