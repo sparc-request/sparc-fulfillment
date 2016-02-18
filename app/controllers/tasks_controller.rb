@@ -61,11 +61,7 @@ class TasksController < ApplicationController
   private
 
   def create_procedure_note?
-    if task_params[:notes] && task_params[:notes][:notable_type] == "Procedure"
-      return true
-    else
-      return false
-    end
+    task_params[:notes] && task_params[:notes][:notable_type] == "Procedure"
   end
 
   def create_note
