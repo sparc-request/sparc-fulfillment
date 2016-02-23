@@ -97,15 +97,14 @@ feature 'Identity changes a Service', js: true do
   end
 
   def when_i_move_all_procedures_out_of_the_group
-    @original_group_id = Procedure.first.group_id
-
-    within "tr.procedure-group[data-group-id='#{@original_group_id}']" do
-      find('button').click
-      wait_for_ajax
-    end
     Procedure.all.each do |procedure|
+      within "tr.procedure-group" do
+        find('button').click
+        wait_for_ajax
+      end
       within "tr.procedure[data-id='#{procedure.id}']" do
         bootstrap_select '.billing_type', 'R'
+        wait_for_ajax
       end
     end
   end
@@ -140,6 +139,10 @@ feature 'Identity changes a Service', js: true do
 
   def then_i_should_see_one_procedure_group
     expect(page).to have_css('tr.procedure-group', count: 1)
+    within "tr.procedure-group" do
+      find('button').click
+      wait_for_ajax
+    end
     expect(page).to have_css('tr.procedure', count: 2)
   end
 

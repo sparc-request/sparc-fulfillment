@@ -17,7 +17,7 @@ class IncompleteVisitReport < Report
 
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
-    _24_hours_ago = DateTime.now.ago(24*60*60)
+    _24_hours_ago = 24.hours.ago.utc
 
     CSV.open(document.path, "wb") do |csv|
       csv << REPORT_COLUMNS
@@ -44,10 +44,6 @@ class IncompleteVisitReport < Report
                   select(:id, :sparc_id, :sub_service_request_id). # cols necessary for SRID
                   where(id: protocol_ids).
                   map { |protocol| [protocol.id, protocol.srid] }]
-  end
-
-  def format_date(dt)
-    dt.strftime('%m/%d/%Y')
   end
 
   def core_list(y)
