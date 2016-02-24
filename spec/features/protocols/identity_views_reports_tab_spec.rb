@@ -47,3 +47,4 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     expect(page).to have_css('table.protocol_reports tbody td.title', count: 1)
   end
 end
+
