@@ -39,14 +39,6 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     click_link 'Reports'
   end
 
-  # def then_i_change_the_title_of_the_report
-  #   find(".edit-document").click
-  #   fill_in "#document_title", with: "test title"
-  #   click "Save"
-  #   wait_for_ajax
-  #   expect(page).to have_content "test title"
-  # end
-
   def then_i_should_see_a_report_in_the_protocol_reports_table
     expect(page).to have_css('table.protocol_reports tbody td.title', count: 1)
   end
