@@ -8,7 +8,7 @@ feature 'Identity views Report tab', js: true, enqueue: false do
 
     click_link 'Reports'
 
-    expect(page).to have_css('table.protocol_reports tbody td.title', count: 1)
+    expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
   end
 
   scenario 'and sees a list of Participant reports' do
@@ -21,7 +21,7 @@ feature 'Identity views Report tab', js: true, enqueue: false do
 
     click_link 'Reports'
 
-    expect(page).to have_css('table.protocol_reports tbody td.title', count: 1)
+    expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
   end
 
   private
