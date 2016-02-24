@@ -1,4 +1,4 @@
-Latest stable release v2.0.0
+Latest stable release v2.1.0
 
 Work Fulfillment
 =========================
