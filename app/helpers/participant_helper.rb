@@ -1,4 +1,5 @@
 module ParticipantHelper
+  
   def appointments_for_select arm, participant
     appointments = []
     participant.appointments.each do |appt|
@@ -91,11 +92,7 @@ module ParticipantHelper
 
   def change_arm_select participant
     arms = participant.protocol.arms
-
-    if arms.length == 1
-      select("participant", "arm_id", options_from_collection_for_select(arms, "id", "name", arms.first.id), {include_blank: true}, class: "form-control selectpicker")
-    else
-      select("participant", "arm_id", options_from_collection_for_select(arms, "id", "name", participant.arm_id), {include_blank: true}, class: "form-control selectpicker")
-    end
+    
+    select("participant", "arm_id", options_from_collection_for_select(arms, "id", "name", participant.arm_id), {include_blank: true}, class: "form-control selectpicker")
   end
 end
