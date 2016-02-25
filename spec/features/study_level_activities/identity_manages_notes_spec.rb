@@ -134,7 +134,7 @@ feature 'Notes', js: true do
   end
 
   def then_i_should_see_the_line_item_notes_list
-    expect(page).to have_content('Line Item Notes')
+    expect(page).to have_content('Study Level Activity Notes')
   end
 
   def then_i_should_see_the_note
