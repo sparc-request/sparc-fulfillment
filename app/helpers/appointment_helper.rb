@@ -11,6 +11,10 @@ module AppointmentHelper
     old_statuses
   end
 
+  def app_add_as_last_option appointment
+    content_tag(:option, "Add as last", value: Appointment.where(arm_id: appointment.arm_id, participant_id: appointment.participant_id).size + 1)
+  end
+
   def appointment_notes_formatter appointment
     notes_button({object: appointment, 
                   title: t(:appointment)[:notes], 
