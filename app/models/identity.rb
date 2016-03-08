@@ -15,15 +15,9 @@ class Identity < ActiveRecord::Base
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
+
   def protocols
-    if clinical_providers.any?
-      clinical_providers.
-        map { |clinical_provider| clinical_provider.organization.protocols }.
-        compact.
-        flatten
-    else
-      Array.new
-    end
+    fulfillment_organizations.any? ? fulfillment_organizations.map(&:protocols).flatten : []
   end
 
   def readonly?
@@ -42,30 +36,22 @@ class Identity < ActiveRecord::Base
   def full_name
     [first_name, last_name].join(' ')
   end
-
-  def clinical_provider_organizations
-    orgs = []
-
-    self.clinical_providers.map(&:organization).each do |org|
-      orgs << org
-      orgs << org.all_child_organizations
-    end
-
-    orgs.flatten.uniq
+  # returns organizations that have a clinical provider on them AND have protocols.  It does not return child organizations.
+  def clinical_provider_organizations_with_protocols
+    Organization.joins(:clinical_providers).where(clinical_providers: { identity_id: id}).joins(:sub_service_requests).uniq
   end
 
+  # returns organizations that have super_user attached AND all the children organizations.
   def super_user_organizations
-    orgs = []
-
-    self.super_users.map(&:organization).each do |org|
-      orgs << org
-      orgs << org.all_child_organizations
+    super_user_orgs = []
+    orgs = Organization.joins(:super_users).where(super_users: { identity_id: id})
+    orgs.each do |org|
+      super_user_orgs << org.all_child_organizations(true) << org
     end
-
-    orgs.flatten.uniq
+    return super_user_orgs.flatten.uniq
   end
 
-  def fulfillment_access_organizations
-    clinical_provider_organizations + super_user_organizations.uniq
+  def fulfillment_organizations
+    (clinical_provider_organizations_with_protocols + super_user_organizations).uniq
   end
 end

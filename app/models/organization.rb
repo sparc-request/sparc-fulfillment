@@ -12,6 +12,10 @@ class Organization < ActiveRecord::Base
             -> { where(process_ssrs: false) },
             class_name: "Organization",
             foreign_key: :parent_id
+  has_many :super_users
+  has_many :clinical_providers
+
+  has_many :children, class_name: "Organization", foreign_key: :parent_id
 
   # Returns this organization's pricing setup that is effective on a given date.
   def effective_pricing_setup_for_date(date=Date.today)
@@ -37,11 +41,18 @@ class Organization < ActiveRecord::Base
       sort_by(&:name)
   end
 
-  def all_child_organizations
-    [
-      non_process_ssrs_children,
-      non_process_ssrs_children.map(&:all_child_organizations)
-    ].flatten
+  def all_child_organizations(orgs_with_protocols = false)
+    if orgs_with_protocols
+      [
+        children,
+        children.map(&:children)
+      ].flatten.uniq
+    else
+      [
+        non_process_ssrs_children,
+        non_process_ssrs_children.map(&:all_child_organizations)
+      ].flatten
+    end
   end
 
   def all_child_services(scope)
@@ -52,6 +63,10 @@ class Organization < ActiveRecord::Base
     Protocol.
       joins(:sub_service_request).
       where(sub_service_requests: { organization_id: id })
+  end
+
+  def has_protocols?
+    protocols.flatten.present?
   end
 end
 

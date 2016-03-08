@@ -18,6 +18,12 @@ Rails.application.routes.draw do
   resources :reports, only: [:new, :create]
   resources :custom_appointments, controller: :appointments
 
+  resources :reports, only: [:new, :create] do
+    collection do
+      get 'update_dropdown'
+    end
+  end
+
   resources :arms, only: [:new, :create, :update, :destroy] do
     collection do
       get 'navigate', to: "arms#navigate_to_arm"
