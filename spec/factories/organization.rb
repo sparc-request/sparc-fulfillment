@@ -49,6 +49,11 @@ FactoryGirl.define do
     factory :organization_program, traits: [:program]
     factory :organization_provider, traits: [:provider]
     factory :organization_with_protocols, traits: [:core, :with_protocols]
+    
+    factory :provider_with_protocols, traits: [:provider, :with_protocols]
+    factory :program_with_protocols, traits: [:program, :with_protocols]
+    factory :core_with_protocols, traits: [:core, :with_protocols]
+
     factory :organization_with_services, traits: [:core, :with_services]
     factory :organization_with_child_organizations, traits: [:with_services, :core, :with_child_organizations]
   end
