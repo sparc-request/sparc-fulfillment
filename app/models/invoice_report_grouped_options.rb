@@ -5,7 +5,7 @@ class InvoiceReportGroupedOptions
   end
 
   def collect_grouped_options
-    group_organizations(@organizations)
+    @grouped_options = group_organizations(@organizations)
   end
 
   def add_array_to_grouped_options(array)
@@ -52,6 +52,8 @@ class InvoiceReportGroupedOptions
     programs = organizations.select{|org| org.type == "Program"}
     programs_with_protocols = collect_organizations_with_protocols(programs)
     organization_to_array(programs_with_protocols, "Program")
+    
+    
 
     cores = organizations.select{|org| org.type == "Core"}
     cores_with_protocols = collect_organizations_with_protocols(cores)

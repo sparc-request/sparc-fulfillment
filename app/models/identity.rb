@@ -38,20 +38,30 @@ class Identity < ActiveRecord::Base
   end
   # returns organizations that have a clinical provider on them AND have protocols.  It does not return child organizations.
   def clinical_provider_organizations_with_protocols
-    Organization.joins(:clinical_providers).where(clinical_providers: { identity_id: id}).joins(:sub_service_requests).uniq
+    orgs_with_protocols = []
+    orgs = Organization.joins(:clinical_providers).where(clinical_providers: { identity_id: id}).joins(:sub_service_requests).uniq
+    orgs.each do |org|
+      if org.has_protocols?
+        orgs_with_protocols << org
+      end
+    end
+    return orgs_with_protocols
   end
 
   # returns organizations that have super_user attached AND all the children organizations.
-  def super_user_organizations
-    super_user_orgs = []
+  def super_user_organizations_with_protocols
+    super_user_orgs_with_protocols = []
     orgs = Organization.joins(:super_users).where(super_users: { identity_id: id})
     orgs.each do |org|
-      super_user_orgs << org.all_child_organizations(true) << org
+      if org.has_protocols?
+        super_user_orgs_with_protocols << org
+      end
+      super_user_orgs_with_protocols << org.orgs_with_protocols
     end
-    return super_user_orgs.flatten.uniq
+    return super_user_orgs_with_protocols.flatten.uniq
   end
 
   def fulfillment_organizations
-    (clinical_provider_organizations_with_protocols + super_user_organizations).uniq
+    (clinical_provider_organizations_with_protocols + super_user_organizations_with_protocols).uniq
   end
 end

@@ -41,22 +41,34 @@ class Organization < ActiveRecord::Base
       sort_by(&:name)
   end
 
-  def all_child_organizations(orgs_with_protocols = false)
-    if orgs_with_protocols
-      [
-        children,
-        children.map(&:children)
-      ].flatten.uniq
-    else
-      [
-        non_process_ssrs_children,
-        non_process_ssrs_children.map(&:all_child_organizations)
-      ].flatten
+  def all_child_organizations
+    organizations = [
+      children,
+      children.map(&:all_child_organizations)
+    ].flatten
+  end
+
+  def orgs_with_protocols
+    organizations = all_child_organizations
+    organizations_with_protocols = []
+    organizations.flatten.uniq.each do |organization|
+      if organization.has_protocols?
+        organizations_with_protocols << organization
+      end
     end
+    return organizations_with_protocols.flatten.uniq
+  end
+
+  # NOT SURE WHAT THIS IS TRYING TO ACCOMPLISH
+  def all_child_organizations_with_non_process_ssrs
+    [
+      non_process_ssrs_children,
+      non_process_ssrs_children.map(&:all_child_organizations)
+    ].flatten
   end
 
   def all_child_services(scope)
-    all_child_organizations.map { |child| child.services.send(scope) }
+    all_child_organizations_with_non_process_ssrs.map { |child| child.services.send(scope) }
   end
 
   def protocols
