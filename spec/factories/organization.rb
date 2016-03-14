@@ -10,6 +10,11 @@ FactoryGirl.define do
       end
     end
 
+    trait :institution do
+      type "Institution"
+      parent_id nil
+    end
+
     trait :core do
       type "Core"
     end
@@ -45,16 +50,20 @@ FactoryGirl.define do
       end
     end
 
+    factory :organization_institution, traits: [:institution]
     factory :organization_core, traits: [:core]
     factory :organization_program, traits: [:program]
     factory :organization_provider, traits: [:provider]
     factory :organization_with_protocols, traits: [:core, :with_protocols]
-    
+
     factory :provider_with_protocols, traits: [:provider, :with_protocols]
     factory :program_with_protocols, traits: [:program, :with_protocols]
     factory :core_with_protocols, traits: [:core, :with_protocols]
 
     factory :organization_with_services, traits: [:core, :with_services]
+    factory :provider_with_child_organizations_and_protocols, traits: [:with_protocols, :provider, :with_child_organizations]
+    factory :provider_with_child_organizations, traits: [:with_services, :provider, :with_child_organizations]
+    factory :program_with_child_organizations, traits: [:with_services, :program, :with_child_organizations]
     factory :organization_with_child_organizations, traits: [:with_services, :core, :with_child_organizations]
   end
 end
