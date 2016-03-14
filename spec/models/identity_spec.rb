@@ -8,9 +8,9 @@ RSpec.describe Identity, type: :model do
   it { is_expected.to have_many(:project_roles) }
   it { is_expected.to have_many(:clinical_providers) }
 
-  describe ".protocols" do
+  describe "#protocols" do
 
-    context "Protocols present" do
+    context "Protocols present for clinical_provider organization" do
 
       it "should return an array of Protocols" do
         identity            = create(:identity)
@@ -21,6 +21,25 @@ RSpec.describe Identity, type: :model do
         create(:clinical_provider, identity: identity, organization: organization)
 
         expect(identity.protocols.length).to eq(1)
+      end
+    end
+
+    context "Protocols present for clinical_provider and super_user organizations" do
+
+      it "should return an array of Protocols" do
+        identity            = create(:identity)
+        cp_organization        = create(:organization)
+        cp_sub_service_request = create(:sub_service_request, organization: cp_organization)
+        cp_protocol            = create(:protocol, sub_service_request: cp_sub_service_request)
+
+        su_organization        = create(:organization)
+        su_sub_service_request = create(:sub_service_request, organization: su_organization)
+        su_protocol            = create(:protocol, sub_service_request: su_sub_service_request)
+
+        create(:clinical_provider, identity: identity, organization: cp_organization)
+        create(:super_user, identity: identity, organization: su_organization)
+  
+        expect(identity.protocols.length).to eq(2)
       end
     end
 
@@ -64,6 +83,21 @@ RSpec.describe Identity, type: :model do
     it "should be delegated to identity_counter" do
       identity = create(:identity)
       expect(identity.tasks_count).to be(0)
+    end
+  end
+
+  describe '#clinical_provider_organizations_with_protocols' do
+
+    it "should return organizations that have a clinical provider on them AND have protocols." do
+      identity            = create(:identity)
+      cp_organization        = create(:organization)
+      cp_sub_service_request = create(:sub_service_request, organization: cp_organization)
+      cp_protocol            = create(:protocol, sub_service_request: cp_sub_service_request)
+
+      create(:clinical_provider, identity: identity, organization: cp_organization)
+
+
+      expect(identity.clinical_provider_organizations_with_protocols.first.id).to eq(cp_organization.id)
     end
   end
 end
