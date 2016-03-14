@@ -5,7 +5,7 @@ class ReportsController < ApplicationController
 
   def new
     @title = @report_type.titleize
-    @organizations = current_identity.fulfillment_organizations
+    @organizations = current_identity.fulfillment_organizations_with_protocols
     @grouped_options = InvoiceReportGroupedOptions.new(@organizations).collect_grouped_options
   end
 

@@ -63,7 +63,7 @@ class Organization < ActiveRecord::Base
   def all_child_organizations_with_non_process_ssrs
     [
       non_process_ssrs_children,
-      non_process_ssrs_children.map(&:all_child_organizations)
+      non_process_ssrs_children.map(&:all_child_organizations_with_non_process_ssrs)
     ].flatten
   end
 

@@ -17,7 +17,7 @@ class Identity < ActiveRecord::Base
 
 
   def protocols
-    fulfillment_organizations.any? ? fulfillment_organizations.map(&:protocols).flatten : []
+    fulfillment_organizations_with_protocols.any? ? fulfillment_organizations_with_protocols.map(&:protocols).flatten : []
   end
 
   def readonly?
@@ -61,7 +61,7 @@ class Identity < ActiveRecord::Base
     return super_user_orgs_with_protocols.flatten.uniq
   end
 
-  def fulfillment_organizations
+  def fulfillment_organizations_with_protocols
     (clinical_provider_organizations_with_protocols + super_user_organizations_with_protocols).uniq
   end
 end
