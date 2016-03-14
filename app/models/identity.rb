@@ -56,7 +56,7 @@ class Identity < ActiveRecord::Base
       if org.has_protocols?
         super_user_orgs_with_protocols << org
       end
-      super_user_orgs_with_protocols << org.orgs_with_protocols
+      super_user_orgs_with_protocols << org.child_orgs_with_protocols
     end
     return super_user_orgs_with_protocols.flatten.uniq
   end

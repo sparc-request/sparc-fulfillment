@@ -48,7 +48,7 @@ class Organization < ActiveRecord::Base
     ].flatten
   end
 
-  def orgs_with_protocols
+  def child_orgs_with_protocols
     organizations = all_child_organizations
     organizations_with_protocols = []
     organizations.flatten.uniq.each do |organization|
