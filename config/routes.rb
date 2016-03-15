@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   resources :reports, only: [:new, :create] do
     collection do
-      get 'update_dropdown'
+      post 'update_dropdown'
     end
   end
 

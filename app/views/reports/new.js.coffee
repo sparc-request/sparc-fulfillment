@@ -12,19 +12,18 @@ multi_select.multiselect({
   enableClickableOptGroups: true,
   buttonWidth: '100%',
   onDropdownShow: (e) ->
-    console.log(multi_select.val())
     if multi_select.val() == null
       @original_selected_values = []
     else
       @original_selected_values = multi_select.val()
   onDropdownHide: (e) ->
-    console.log(multi_select.val())
     selected_values = multi_select.val()
     if !_.isEqual(@original_selected_values,selected_values) 
       $('#protocol_section').empty() 
       $('#protocol_section').closest('.form-group').find('label').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
       $('#protocol_section').closest('.form-group').show()
       $.ajax
+        type: 'POST'
         url: '/reports/update_dropdown'
         data: { org_ids: multi_select.val() }
 })
