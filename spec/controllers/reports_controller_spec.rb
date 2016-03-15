@@ -39,7 +39,7 @@ RSpec.describe ReportsController, type: :controller do
     end
   end
 
-  describe "GET #update_dropdown" do
+  describe 'GET #update_dropdown' do
     
     it 'should return an array of protocols' do
       institution_organization = create(:organization_institution)
@@ -68,7 +68,6 @@ RSpec.describe ReportsController, type: :controller do
       xhr :post, :update_dropdown, org_ids: organization_ids 
 
       expect(assigns(:protocols)).to eq([provider_protocol, program_protocol, core_protocol])
-      
     end
   end
 end

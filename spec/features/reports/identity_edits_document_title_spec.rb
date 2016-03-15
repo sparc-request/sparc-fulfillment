@@ -60,6 +60,13 @@ feature 'Identity edits document title', js: true, enqueue: false do
     first('.modal-header').click
     wait_for_ajax
 
+    find('button.multiselect').click
+    check(@protocol.organization.name)
+
+    # close organization dropdown, so it's not covering protocol dropdown
+    first('.modal-header').click
+    wait_for_ajax
+
     bootstrap_select '#protocol_ids', @protocol.short_title_with_sparc_id
 
     # close protocol dropdown, so it's not covering 'Request Report' button
@@ -77,6 +84,13 @@ feature 'Identity edits document title', js: true, enqueue: false do
     fill_in 'End Date', with: Date.tomorrow.strftime("%m-%d-%Y")
 
     # close calendar thing, so it's not covering protocol dropdown
+    first('.modal-header').click
+    wait_for_ajax
+
+    find('button.multiselect').click
+    check(@protocol.organization.name)
+
+    # close organization dropdown, so it's not covering protocol dropdown
     first('.modal-header').click
     wait_for_ajax
 

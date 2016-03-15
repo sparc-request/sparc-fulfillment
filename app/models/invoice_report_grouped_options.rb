@@ -5,7 +5,7 @@ class InvoiceReportGroupedOptions
   end
 
   def collect_grouped_options
-    @grouped_options = group_organizations(@organizations)
+    @grouped_options = group_organizations(@organizations) || []
   end
 
   def add_array_to_grouped_options(array)
