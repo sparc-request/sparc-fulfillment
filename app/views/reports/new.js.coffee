@@ -18,7 +18,7 @@ multi_select.multiselect({
       @original_selected_values = multi_select.val()
   onDropdownHide: (e) ->
     selected_values = multi_select.val()
-    if !_.isEqual(@original_selected_values,selected_values) 
+    if !_.isEqual(@original_selected_values,selected_values) && selected_values != null
       $('#protocol_section').empty() 
       $('#protocol_section').closest('.form-group').find('label').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
       $('#protocol_section').closest('.form-group').show()
@@ -26,4 +26,6 @@ multi_select.multiselect({
         type: 'POST'
         url: '/reports/update_dropdown'
         data: { org_ids: multi_select.val() }
+    else
+      $('#protocol_section').closest('.form-group').hide()
 })
