@@ -8,6 +8,8 @@ class InvoiceReportGroupedOptions
     @grouped_options = group_organizations(@organizations) || []
   end
 
+  private
+
   def add_array_to_grouped_options(array)
     @grouped_options << array unless array.nil?
   end

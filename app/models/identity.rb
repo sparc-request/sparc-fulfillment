@@ -45,7 +45,7 @@ class Identity < ActiveRecord::Base
         orgs_with_protocols << org
       end
     end
-    return orgs_with_protocols
+    orgs_with_protocols
   end
 
   # returns organizations that have super_user attached AND all the children organizations.
@@ -58,7 +58,7 @@ class Identity < ActiveRecord::Base
       end
       super_user_orgs_with_protocols << org.child_orgs_with_protocols
     end
-    return super_user_orgs_with_protocols.flatten.uniq
+    super_user_orgs_with_protocols.flatten.uniq
   end
 
   def fulfillment_organizations_with_protocols

@@ -46,7 +46,7 @@ class ReportsController < ApplicationController
     orgs.each do |org|
       org_protocols << org.protocols
     end
-    return org_protocols.flatten
+    org_protocols.flatten
   end
 
   def find_documentable
