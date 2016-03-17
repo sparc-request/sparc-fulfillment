@@ -66,13 +66,13 @@ class ProjectSummaryReport < Report
       csv << [""]
       csv << [""]
       csv << ["Study Level Charges"]
-      csv << ["", "Name", "Cost"]
+      csv << ["", "Name", "Service Cost", "Charges"]
       csv << [""]
 
       study_level_charges = 0
       protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |f|
-        csv << ["", f.service_name, display_cost(f.service_cost)]
-        study_level_charges += f.service_cost
+        csv << ["", f.service_name, display_cost(f.service_cost), display_cost(f.total_cost)]
+        study_level_charges += f.total_cost
       end
 
       csv << [""]
