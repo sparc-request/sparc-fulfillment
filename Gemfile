@@ -73,7 +73,6 @@ group :test do
   gem 'climate_control'
   gem 'database_cleaner'
   gem 'launchy'
-  gem 'pry'
   gem 'rspec-activejob', '~> 0.4.0'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
