@@ -34,19 +34,14 @@ class ReportsController < ApplicationController
       @protocols << find_protocols(org_ids)
     end
     @protocols = @protocols.flatten
-
   end
 
   private
 
   def find_protocols(org_ids)
-    orgs = Array.wrap(Organization.find(org_ids))
-    org_protocols =[]
-
-    orgs.each do |org|
-      org_protocols << org.protocols
-    end
-    org_protocols.flatten
+    Protocol.
+      joins(:sub_service_request).
+      where(sub_service_requests: { organization_id: org_ids })
   end
 
   def find_documentable

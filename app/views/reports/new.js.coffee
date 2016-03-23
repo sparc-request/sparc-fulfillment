@@ -26,6 +26,4 @@ multi_select.multiselect({
         type: 'POST'
         url: '/reports/update_dropdown'
         data: { org_ids: multi_select.val() }
-    else
-      $('#protocol_section').closest('.form-group').hide()
 })
