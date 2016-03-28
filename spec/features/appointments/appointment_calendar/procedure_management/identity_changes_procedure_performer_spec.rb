@@ -1,14 +1,18 @@
 require 'rails_helper'
 
-feature 'Performed by dropdown', js: true do
+feature 'User changes performer of a procedure', js: true do
 
-  context 'User changes performeder in a procedure' do
-    scenario 'and sees a note indicating the performer was changed' do
-      given_i_have_added_a_procedure_to_an_appointment
-      when_i_select_another_name_in_the_performed_by_dropdown
-      when_i_view_the_notes
-      then_i_should_see_a_note_indicating_that_the_performer_was_changed
-    end
+  scenario 'and sees the blue button with white glyphicon denoting notes present' do
+    given_i_have_added_a_procedure_to_an_appointment
+    when_i_select_another_name_in_the_performed_by_dropdown
+    then_i_should_see_the_notes_button
+  end
+
+  scenario 'and sees a note indicating the performer was changed' do
+    given_i_have_added_a_procedure_to_an_appointment
+    when_i_select_another_name_in_the_performed_by_dropdown
+    when_i_view_the_notes
+    then_i_should_see_a_note_indicating_that_the_performer_was_changed
   end
 
   def given_i_have_added_a_procedure_to_an_appointment
@@ -39,6 +43,10 @@ feature 'Performed by dropdown', js: true do
 
   def when_i_view_the_notes
     find('.procedure td.notes button.notes.list').click
+  end
+
+  def then_i_should_see_the_notes_button
+    expect(page).to have_selector("td.notes button.btn-primary")
   end
 
   def then_i_should_see_a_note_indicating_that_the_performer_was_changed

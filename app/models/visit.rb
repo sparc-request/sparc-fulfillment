@@ -36,16 +36,19 @@ class Visit < ActiveRecord::Base
     self.visit_group.arm.participants.each do |participant|
       appointment = participant.appointments.where("visit_group_id = ?", self.visit_group.id).first
       next if appointment.nil?
-      procedures_available = self.procedures.where("billing_type = ? AND service_id = ? AND appointment_id = ?", selected_qty_type, service.id, appointment.id)
-      current_qty = procedures_available.count
-      if current_qty > updated_qty and appointment.start_date.nil?    # don't delete procedures from begun appointments
-        procedures_to_delete = procedures_available.untouched.limit(current_qty - updated_qty)
-        if not procedures_to_delete.empty?
-          procedures_to_delete.destroy_all
-        end
-      elsif current_qty < updated_qty
-        (updated_qty - current_qty).times do
-          new_procedure_values << [self.id, service.id, service.name, selected_qty_type, service.sparc_core_id, service.sparc_core_name, appointment.id]
+      
+      unless appointment.procedures.empty?
+        procedures_available = self.procedures.where("billing_type = ? AND service_id = ? AND appointment_id = ?", selected_qty_type, service.id, appointment.id)
+        current_qty = procedures_available.count
+        if current_qty > updated_qty and appointment.start_date.nil?    # don't delete procedures from begun appointments
+          procedures_to_delete = procedures_available.untouched.limit(current_qty - updated_qty)
+          if not procedures_to_delete.empty?
+            procedures_to_delete.destroy_all
+          end
+        elsif current_qty < updated_qty
+          (updated_qty - current_qty).times do
+            new_procedure_values << [self.id, service.id, service.name, selected_qty_type, service.sparc_core_id, service.sparc_core_name, appointment.id]
+          end
         end
       end
     end

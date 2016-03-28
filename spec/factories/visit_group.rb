@@ -4,6 +4,7 @@ FactoryGirl.define do
     arm nil
     sparc_id
     day 1
+    position 1
     sequence(:name) { |n| "Visit Group #{n}" }
 
     trait :with_arm do

@@ -42,23 +42,22 @@ RSpec.describe ProtocolsController, type: :controller do
 
   describe "GET #show" do
 
-    before :each do
-      @protocol = create_and_assign_protocol_to_me
-    end
-
     it "returns http success" do
+      protocol = create_and_assign_protocol_to_me
       get :show, id: @protocol.id
 
       expect(response).to be_success
     end
 
     it "assigns the requested protocol to @protocol" do
+      protocol = create_and_assign_protocol_to_me
       get :show, id: @protocol.id
 
       expect(assigns(:protocol)).to eq(@protocol)
     end
 
     it "renders the #show view" do
+      protocol = create_and_assign_protocol_to_me
       get :show, id: @protocol.id
 
       expect(response).to render_template :show

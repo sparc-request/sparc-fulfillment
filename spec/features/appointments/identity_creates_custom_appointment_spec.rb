@@ -23,15 +23,6 @@ feature 'Custom appointment', js: true do
   end
 
   context 'User creates custom appointment' do
-    context 'and saves without filling in all required fields' do
-      scenario 'and sees an error message' do
-        given_i_am_viewing_the_participant_calendar
-        when_i_click_create_custom_appointment
-        when_i_click_save_appointment
-        then_i_should_see_an_error_message
-      end
-    end
-
     context 'and saves after correctly filling out the form' do
       scenario 'and sees the new appointment' do
         given_i_am_viewing_the_participant_calendar
@@ -77,6 +68,7 @@ feature 'Custom appointment', js: true do
 
   def when_i_fill_in_the_form
     fill_in 'custom_appointment_name', with: 'Test Visit'
+    bootstrap_select "#custom_appointment_position", "Add as last"
   end
 
   def when_i_click_save_appointment
@@ -118,10 +110,6 @@ feature 'Custom appointment', js: true do
 
   def then_i_should_not_see_the_create_custom_visit_modal
     expect(page).to_not have_css("body.participants.modal-open")
-  end
-
-  def then_i_should_see_an_error_message
-    expect(page).to have_content("Name can't be blank")
   end
 
   def then_i_should_see_the_newly_created_appointment

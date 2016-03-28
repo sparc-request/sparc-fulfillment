@@ -6,8 +6,7 @@
           .page-header
             %h3.appointment_header
               = "Visit: #{appointment.name}"
-              %button.btn.btn-primary.notes.list{title: t(:procedure)[:notes], type: "button", aria: {label: "Notes List"}, data: {notable_id: appointment.id, notable_type: "Appointment", toggle: "tooltip", animation: 'false'}}
-                %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+              = appointment_notes_formatter(appointment)
             .row
               .col-md-5
                 = render partial: '/appointments/visit_type_dropdown'
@@ -18,7 +17,7 @@
       .row.calendar
         .col-xs-12
           - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-            = render partial: '/appointments/core', locals: { core_id: core_id, procedures: procedures, appointment: appointment }
+            = render partial: '/appointments/core', locals: {core_id: core_id, procedures: procedures, appointment: appointment}
       .row.services
         .col-xs-4
           = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker'
