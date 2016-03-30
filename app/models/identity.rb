@@ -16,14 +16,7 @@ class Identity < ActiveRecord::Base
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
   def protocols
-    if clinical_providers.any?
-      clinical_providers.
-        map { |clinical_provider| clinical_provider.organization.protocols }.
-        compact.
-        flatten
-    else
-      Array.new
-    end
+    fulfillment_organizations.any? ? fulfillment_organizations.map(&:protocols).flatten : []
   end
 
   def readonly?
@@ -44,14 +37,7 @@ class Identity < ActiveRecord::Base
   end
 
   def clinical_provider_organizations
-    orgs = []
-
-    self.clinical_providers.map(&:organization).each do |org|
-      orgs << org
-      orgs << org.all_child_organizations
-    end
-
-    orgs.flatten.uniq
+    clinical_providers.map(&:organization)
   end
 
   def super_user_organizations
@@ -65,7 +51,7 @@ class Identity < ActiveRecord::Base
     orgs.flatten.uniq
   end
 
-  def fulfillment_access_organizations
-    clinical_provider_organizations + super_user_organizations.uniq
+  def fulfillment_organizations
+    (clinical_provider_organizations + super_user_organizations).uniq
   end
 end

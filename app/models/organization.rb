@@ -12,6 +12,7 @@ class Organization < ActiveRecord::Base
             -> { where(process_ssrs: false) },
             class_name: "Organization",
             foreign_key: :parent_id
+  has_many :children, class_name: "Organization", foreign_key: :parent_id
 
   # Returns this organization's pricing setup that is effective on a given date.
   def effective_pricing_setup_for_date(date=Date.today)
@@ -39,8 +40,8 @@ class Organization < ActiveRecord::Base
 
   def all_child_organizations
     [
-      non_process_ssrs_children,
-      non_process_ssrs_children.map(&:all_child_organizations)
+      children,
+      children.map(&:all_child_organizations)
     ].flatten
   end
 
