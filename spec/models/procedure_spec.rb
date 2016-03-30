@@ -91,7 +91,7 @@ RSpec.describe Procedure, type: :model do
         end
 
         it 'should set the completed date to today' do
-          expect(@procedures.map(&:completed_date)).to be_all { |date| date == Date.today }
+          expect(@procedures.map(&:completed_date)).to be_all { |date| date == Date.today.at_midnight }
         end
 
         it 'should leave status set to complete' do
@@ -111,7 +111,7 @@ RSpec.describe Procedure, type: :model do
         end
 
         it 'should set the incompleted date to today' do
-          expect(@procedures.map(&:incompleted_date)).to be_all { |date| date == Date.today }
+          expect(@procedures.map(&:incompleted_date)).to be_all { |date| date == Date.today.at_midnight }
         end
 
         it 'should remove the completed date' do

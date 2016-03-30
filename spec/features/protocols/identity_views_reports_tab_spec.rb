@@ -1,45 +1,42 @@
 require 'rails_helper'
 
 feature 'Identity views Report tab', js: true, enqueue: false do
-
   scenario 'and sees a list of Protocol reports' do
-    given_i_have_created_a_study_schedule_report
-    when_i_view_the_reports_tab
-    then_i_should_see_a_report_in_the_protocol_reports_table
+    protocol = create_data
+    visit protocol_path(protocol)
+    click_button "study_schedule_report_#{protocol.id}"
+
+    click_link 'Reports'
+
+    expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
   end
 
   scenario 'and sees a list of Participant reports' do
-    given_i_have_created_a_participant_report
-    when_i_view_the_reports_tab
-    then_i_should_see_a_report_in_the_participant_reports_table
-  end
-
-  def given_i_have_created_a_study_schedule_report
-    protocol = create_and_assign_protocol_to_me
-
-    visit protocol_path protocol
-    
-    create(:document_of_protocol_report, documentable_id: protocol.id)
-  end
-
-  def given_i_have_created_a_participant_report
-    protocol = create_and_assign_protocol_to_me
+    protocol = create_data
     participant = protocol.participants.first
+    visit protocol_path(protocol)
+    click_link 'Participant Tracker'
+    click_button "participant_report_#{participant.id}"
+    wait_for_ajax
 
-    visit protocol_path protocol
-
-    create(:document_of_participant_report, documentable_id: protocol.id)
-  end
-
-  def when_i_view_the_reports_tab
     click_link 'Reports'
+
+    expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
   end
 
-  def then_i_should_see_a_report_in_the_protocol_reports_table
-    expect(page).to have_css('table.protocol_reports tbody td.title', count: 1)
-  end
+  private
 
-  def then_i_should_see_a_report_in_the_participant_reports_table
-    expect(page).to have_css('table.protocol_reports tbody td.title', count: 1)
+  def create_data
+    identity = Identity.first
+    sub_service_request = create(:sub_service_request_with_organization)
+    protocol = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+    organization_provider = create(:organization_provider)
+    organization_program = create(:organization_program, parent: organization_provider)
+    organization = sub_service_request.organization
+    organization.update_attributes(parent: organization_program, name: "Core")
+    create(:clinical_provider, identity: identity, organization: organization)
+    create(:project_role_pi, identity: identity, protocol: protocol)
+    protocol
   end
 end
+
