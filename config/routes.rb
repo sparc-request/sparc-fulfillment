@@ -53,7 +53,7 @@ Rails.application.routes.draw do
   resources :multiple_line_items, only: [] do
     collection do
       get 'new_line_items'
-      put 'create_line_items'
+      post 'create_line_items'
       get 'edit_line_items'
       put 'destroy_line_items'
     end
