@@ -2,24 +2,44 @@ require 'rails_helper'
 
 RSpec.describe MultipleLineItemsController, type: :controller do
 
-  login_user
+  # def create_and_assign_protocol_to_me
+  #   identity              = Identity.first
+  #   sub_service_request   = create(:sub_service_request_with_organization)
+  #   protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+  #   organization_provider = create(:organization_provider, name: "Provider")
+  #   organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
+  #   organization          = sub_service_request.organization
+  #   organization.update_attributes(parent: organization_program, name: "Core")
+  #   FactoryGirl.create(:clinical_provider, identity: identity, organization: organization)
+  #   FactoryGirl.create(:project_role_pi, identity: identity, protocol: protocol)
 
-  before do
-    @protocol = create_and_assign_protocol_to_me
-    @service  = @protocol.organization.services.first
-  end
+  #   protocol
+  # end
+
+  login_user
 
   describe "GET #new_line_items" do
 
     it "renders a template to add a service to multiple arms" do
+      identity = create(:identity)
+      sub_service_request   = create(:sub_service_request_with_organization)
+      protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+      organization_provider = create(:organization_provider, name: "Provider")
+      organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
+      organization          = sub_service_request.organization
+      organization.update_attributes(parent: organization_program, name: "Core")
+      create(:clinical_provider, identity: identity, organization: organization)
+      create(:project_role_pi, identity: identity, protocol: protocol)
+
       xhr :get, :new_line_items, {
-        protocol_id: @protocol.id,
+        protocol_id: protocol.id,
         schedule_tab: "template",
         page_hash: ["1 1", "2 1", "3 2"],
         format: :js
       }
-      expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:services)).to eq(@protocol.organization.inclusive_child_services(:per_participant))
+
+      expect(assigns(:protocol)).to eq(protocol)
+      expect(assigns(:services)).to eq(protocol.organization.inclusive_child_services(:per_participant))
       expect(assigns(:page_hash)).to eq(["1 1", "2 1", "3 2"])
       expect(assigns(:schedule_tab)).to eq("template")
     end
@@ -27,10 +47,21 @@ RSpec.describe MultipleLineItemsController, type: :controller do
 
   describe "PUT #create_line_items" do
     it "handles the submission of the add line items form" do
+      identity = create(:identity)
+      sub_service_request   = create(:sub_service_request_with_organization)
+      protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+      organization_provider = create(:organization_provider, name: "Provider")
+      organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
+      organization          = sub_service_request.organization
+      organization.update_attributes(parent: organization_program, name: "Core")
+      create(:clinical_provider, identity: identity, organization: organization)
+      create(:project_role_pi, identity: identity, protocol: protocol)
+      service = protocol.organization.services.first
+
       expect{
         post :create_line_items, {
-          add_service_id: @service.id,
-          add_service_arm_ids_and_pages: ["#{@protocol.arms.first.id} 1", "#{@protocol.arms.second.id} 1"],
+          add_service_id: service.id,
+          add_service_arm_ids_and_pages: ["#{protocol.arms.first.id} 1", "#{protocol.arms.second.id} 1"],
           schedule_tab: "template",
           format: :js
         }
