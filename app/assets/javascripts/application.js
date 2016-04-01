@@ -22,6 +22,7 @@
 //= require underscore
 //= require bootstrap-multiselect
 //= require bootstrap-contextmenu
+//= require bootstrap-table-cookie
 
 //= require global
 //= require protocols

@@ -57,6 +57,7 @@ end
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'faker', '~> 1.4.3'
+  gem 'pry', '~> 0.10.3'
 end
 
 group :development do
@@ -72,7 +73,6 @@ group :test do
   gem 'climate_control'
   gem 'database_cleaner'
   gem 'launchy'
-  gem 'pry', '~> 0.10.3'
   gem 'rspec-activejob', '~> 0.4.0'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'

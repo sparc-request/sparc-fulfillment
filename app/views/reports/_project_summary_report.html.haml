@@ -20,10 +20,10 @@
             .form-group
               = label_tag "end_date", t(:reports)[:end_date], class: "col-sm-3 control-label"
               .col-sm-9= text_field_tag "end_date", nil, class: "datepicker form-control"
-            .form-group
+            .form-group.protocols-group
               = label_tag "protocol", t(:reports)[:protocol], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag "protocol_id", options_from_collection_for_select(current_identity.protocols, "id", "short_title_with_sparc_id"), 'data-live-search' => true, class: "selectpicker form-control"
+                = select_tag "protocol_id", truncated_options_from_collection_for_select(current_identity.protocols, "id", "short_title_with_sparc_id"), 'data-live-search' => true, class: "selectpicker form-control"
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

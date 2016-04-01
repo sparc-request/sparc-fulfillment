@@ -102,7 +102,24 @@ module ApplicationHelper
     url.to_s + "?back=true" # handles root url as well (nil)
   end
 
+  def truncate_string_length(s, max=70, elided = ' ...')
+    #truncates string to max # of characters then adds elipsis
+    if s.present?
+      s.match( /(.{1,#{max}})(?:\s|\z)/ )[1].tap do |res|
+        res << elided unless res.length == s.length
+      end
+    else
+      ""
+    end
+  end
+
   def logged_in identity
     content_tag(:span, "#{t(:navbar)[:logged_in_msg]} #{current_identity.full_name} (#{current_identity.email})", class: "logged-in-as", "aria-hidden" => "true")
+  end
+
+  def notes_button params
+    content_tag(:button, class: "btn #{params[:has_notes] ? "btn-primary" : "btn-default"} #{params[:button_class].nil? ? "" : params[:button_class]} list notes", title: params[:title], label: "Notes List", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}, toggle: "tooltip", animation: 'false') do
+      content_tag(:span, '', class: "glyphicon glyphicon-list-alt #{params[:span_class].nil? ? "" : params[:span_class]} #{params[:has_notes] ? "" : "blue-notes"}")
+    end
   end
 end

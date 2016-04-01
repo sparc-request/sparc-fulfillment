@@ -19,6 +19,7 @@ class VisitGroup < ActiveRecord::Base
 
   validates :arm_id,
             :name,
+            :position,
             presence: true
 
   validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"

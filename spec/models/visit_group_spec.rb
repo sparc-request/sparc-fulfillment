@@ -10,36 +10,34 @@ RSpec.describe VisitGroup, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :arm_id }
     it { is_expected.to validate_presence_of :name }
-  end
+    it { is_expected.to validate_presence_of :position }
 
-  context 'if use epic:' do
-    it "set use_epic to true " do
-      ClimateControl.modify USE_EPIC: 'true' do
-        is_expected.to validate_presence_of :day
-        is_expected.to validate_numericality_of :day
+    context 'if use epic:' do
+      it "sets use_epic to true" do
+        ClimateControl.modify USE_EPIC: 'true' do
+          is_expected.to validate_presence_of :day
+          is_expected.to validate_numericality_of :day
+        end
       end
     end
-  end
 
-  context 'if not use epic:' do
-    it "sets USE_EPIC to false" do
-      ClimateControl.modify USE_EPIC: 'false' do
-        is_expected.not_to validate_presence_of :day
+    context 'if not use epic:' do
+      it "sets use_epic to false" do
+        ClimateControl.modify USE_EPIC: 'false' do
+          is_expected.not_to validate_presence_of :day
+        end
       end
     end
   end
 
   context 'class methods' do
-
     describe '.per_page' do
-
       it 'should inherit from Visit' do
         expect(VisitGroup.per_page).to eq(Visit.per_page)
       end
     end
 
     describe '#delete' do
-
       it 'should not permanently delete the record' do
         visit_group = create(:visit_group_with_arm)
 
@@ -75,7 +73,6 @@ RSpec.describe VisitGroup, type: :model do
     end
 
     describe 'private' do
-
       before :each do
           @protocol = create(:protocol)
           @arm = create(:arm, protocol: @protocol)
@@ -85,21 +82,15 @@ RSpec.describe VisitGroup, type: :model do
           @vg_b        = create(:visit_group, name: 'B', position: 2, arm_id: @arm.id)
           @vg_c        = create(:visit_group, name: 'C', position: 3, arm_id: @arm.id)
           @participant = create(:participant, arm: @arm, protocol: @protocol)
-          @appointment = create(:appointment, visit_group: @vg_a, participant: @participant, name: @vg_a.name, arm_id: @vg_a.arm_id)
+          @appointment = create(:appointment, visit_group: @vg_a, participant: @participant, name: @vg_a.name, arm_id: @vg_a.arm_id, position: 1)
           @procedure   = create(:procedure, :complete, appointment: @appointment)
         end
 
       describe 'reorder' do
-
-        it 'should reorder_visit_groups_up when position is not nil' do
+        it 'should reorder_visit_groups_up' do
           @vg_d = create(:visit_group, name: 'D', position: 3, arm_id: @arm.id)
           @vg_c.reload
           expect(@vg_c.position).to eq(4)
-        end
-
-        it 'should not reorder_visit_groups_up when position is nil' do
-          @vg_d = create(:visit_group, name: 'D', arm_id: @arm.id)
-          expect(@vg_d.position).to eq(4)
         end
 
         it 'should reorder_visit_groups_down' do
@@ -114,7 +105,6 @@ RSpec.describe VisitGroup, type: :model do
       end
 
       describe 'check for completed data' do
-
         it "should allow the appointment to be deleted if it is not completed" do
           @procedure.update_attributes(status: "unstarted")
           @vg_a.destroy

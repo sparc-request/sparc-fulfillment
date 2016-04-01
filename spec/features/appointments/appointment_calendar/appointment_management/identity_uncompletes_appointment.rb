@@ -6,7 +6,7 @@ feature 'Identity uncompletes an appointment', js: true do
     given_i_have_added_a_procedure_to_an_appointment
     when_i_begin_the_appointment
     when_i_complete_the_procedure
-    and_i_complete_the_appointment
+    when_i_complete_the_appointment
     when_i_uncomplete_the_appointment
     then_i_should_see_the_appointment_is_uncomplete
   end
@@ -34,7 +34,7 @@ feature 'Identity uncompletes an appointment', js: true do
     wait_for_ajax
   end
 
-  def and_i_complete_the_appointment
+  def when_i_complete_the_appointment
     find('button.complete_visit').click
     wait_for_ajax
   end
