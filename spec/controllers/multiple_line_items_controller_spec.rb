@@ -57,6 +57,7 @@ RSpec.describe MultipleLineItemsController, type: :controller do
       create(:clinical_provider, identity: identity, organization: organization)
       create(:project_role_pi, identity: identity, protocol: protocol)
       service = protocol.organization.services.first
+      binding.pry
 
       expect{
         post :create_line_items, {
