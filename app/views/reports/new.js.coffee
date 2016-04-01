@@ -24,6 +24,6 @@ multi_select.multiselect({
       $('#protocol_section').closest('.form-group').show()
       $.ajax
         type: 'POST'
-        url: '/reports/update_dropdown'
+        url: "reports/update_dropdown"
         data: { org_ids: multi_select.val() }
 })

@@ -22,27 +22,7 @@ class ReportsController < ApplicationController
     end
   end
 
-  def update_dropdown
-    org_ids = params[:org_ids]
-
-    @protocols = []
-    if org_ids.length > 1 
-      org_ids.each do |org_id|
-        @protocols << find_protocols(org_id)
-      end
-    else
-      @protocols << find_protocols(org_ids)
-    end
-    @protocols = @protocols.flatten
-  end
-
   private
-
-  def find_protocols(org_ids)
-    Protocol.
-      joins(:sub_service_request).
-      where(sub_service_requests: { organization_id: org_ids })
-  end
 
   def find_documentable
     if params[:documentable_id].present? && params[:documentable_type].present?

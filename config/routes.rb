@@ -15,12 +15,11 @@ Rails.application.routes.draw do
   resources :documents
   resources :line_items
   resources :visits, only: [:update]
-  resources :reports, only: [:new, :create]
   resources :custom_appointments, controller: :appointments
 
   resources :reports, only: [:new, :create] do
     collection do
-      post 'update_dropdown'
+      resource :update_dropdown, only: [:create]
     end
   end
 
