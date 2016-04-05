@@ -17,9 +17,7 @@ class Identity < ActiveRecord::Base
 
 
   def protocols
-    if fulfillment_organizations_with_protocols.any? 
-      fulfillment_organizations_with_protocols.map(&:protocols).flatten
-    end
+    fulfillment_organizations_with_protocols.any? ? fulfillment_organizations_with_protocols.map(&:protocols).flatten : []
   end
 
   def readonly?
