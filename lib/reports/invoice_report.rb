@@ -16,7 +16,7 @@ class InvoiceReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
-      csv << ["From", format_date(@start_date), "To", format_date(@end_date)]
+      csv << ["From", format_date(@params[:start_date]), "To", format_date(@params[:end_date])]
       csv << [""]
 
       if @params[:protocol_ids].present?
