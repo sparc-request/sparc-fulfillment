@@ -4,46 +4,19 @@ RSpec.describe MultipleLineItemsController, type: :controller do
 
   login_user
 
-  describe "GET #new_line_items" do
-
-    it "renders a template to add a service to multiple arms" do
-      identity = create(:identity)
-      sub_service_request   = create(:sub_service_request_with_organization)
-      protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-      organization_provider = create(:organization_provider, name: "Provider")
-      organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-      organization          = sub_service_request.organization
-      organization.update_attributes(parent: organization_program, name: "Core")
-      create(:clinical_provider, identity: identity, organization: organization)
-      create(:project_role_pi, identity: identity, protocol: protocol)
-
-      xhr :get, :new_line_items, {
-        protocol_id: protocol.id,
-        schedule_tab: "template",
-        page_hash: ["1 1", "2 1", "3 2"],
-        format: :js
-      }
-
-      expect(assigns(:protocol)).to eq(protocol)
-      expect(assigns(:services)).to eq(protocol.organization.inclusive_child_services(:per_participant))
-      expect(assigns(:page_hash)).to eq(["1 1", "2 1", "3 2"])
-      expect(assigns(:schedule_tab)).to eq("template")
-    end
-  end
-
   describe "PUT #create_line_items" do
     it "handles the submission of the add line items form" do
-      identity = create(:identity)
-      sub_service_request   = create(:sub_service_request_with_organization)
+      identity              = create(:identity)
+      organization          = create(:organization)
+      sub_service_request   = create(:sub_service_request, organization_id: organization.id)
+      service               = create(:service, organization_id: organization.id, one_time_fee: false)
       protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
       organization_provider = create(:organization_provider, name: "Provider")
       organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-      organization          = sub_service_request.organization
       organization.update_attributes(parent: organization_program, name: "Core")
       create(:clinical_provider, identity: identity, organization: organization)
       create(:project_role_pi, identity: identity, protocol: protocol)
-      service = protocol.organization.services.first
-      service.update_attribute(:one_time_fee, false)
+
 
       expect{
         post :create_line_items, {
@@ -60,15 +33,15 @@ RSpec.describe MultipleLineItemsController, type: :controller do
 
     it "renders a template to remove a service from multiple arms" do
       identity = create(:identity)
-      sub_service_request   = create(:sub_service_request_with_organization)
+      organization          = create(:organization)
+      sub_service_request   = create(:sub_service_request, organization_id: organization.id)
+      service               = create(:service, organization_id: organization.id, one_time_fee: false)
       protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
       organization_provider = create(:organization_provider, name: "Provider")
       organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-      organization          = sub_service_request.organization
       organization.update_attributes(parent: organization_program, name: "Core")
       create(:clinical_provider, identity: identity, organization: organization)
       create(:project_role_pi, identity: identity, protocol: protocol)
-      service = protocol.organization.services.first
 
       xhr :get, :edit_line_items, {
         protocol_id: protocol.id,
@@ -86,15 +59,15 @@ RSpec.describe MultipleLineItemsController, type: :controller do
   describe "PUT #destroy_line_items" do
     it "handles the submission of the remove line items form" do
       identity = create(:identity)
-      sub_service_request   = create(:sub_service_request_with_organization)
+      organization          = create(:organization)
+      sub_service_request   = create(:sub_service_request, organization_id: organization.id)
+      service               = create(:service, organization_id: organization.id, one_time_fee: false)
       protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
       organization_provider = create(:organization_provider, name: "Provider")
       organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-      organization          = sub_service_request.organization
       organization.update_attributes(parent: organization_program, name: "Core")
       create(:clinical_provider, identity: identity, organization: organization)
       create(:project_role_pi, identity: identity, protocol: protocol)
-      service = protocol.organization.services.first
       create(:line_item, service: service, arm: protocol.arms.first, protocol: protocol)
       create(:line_item, service: service, arm: protocol.arms.second, protocol: protocol)
 
