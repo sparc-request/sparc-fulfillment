@@ -110,7 +110,7 @@ class InvoiceReport < Report
         end
         if total > 0
           csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
+          csv << ["", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
           csv << [""]
           csv << [""]
         end
