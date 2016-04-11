@@ -42,7 +42,7 @@ class Organization < ActiveRecord::Base
   end
 
   def all_child_organizations
-    organizations = [
+    [
       children,
       children.map(&:all_child_organizations)
     ].flatten
