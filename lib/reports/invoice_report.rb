@@ -40,6 +40,7 @@ class InvoiceReport < Report
             "Account #",
             "Contact",
             "",
+            "",
             "Research Rate",
             "Total Cost"
           ]
