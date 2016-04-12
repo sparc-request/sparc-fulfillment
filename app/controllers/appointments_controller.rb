@@ -25,7 +25,7 @@ class AppointmentsController < ApplicationController
     @appointment = Appointment.find params[:id]
     @statuses = @appointment.appointment_statuses.map{|x| x.status}
 
-    if @appointment.procedures.empty?
+    if @appointment.procedures.with_deleted.empty?
       @appointment.initialize_procedures
     end
   end

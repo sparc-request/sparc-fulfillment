@@ -10,22 +10,6 @@ feature 'Complete Visit', js: true do
         then_i_should_not_be_able_to_complete_visit
       end
     end
-
-    context 'and does not add a procedure' do
-      scenario 'and cant complete the visit' do
-        given_i_am_viewing_an_appointment
-        then_i_should_not_be_able_to_complete_visit
-      end
-    end
-
-    context 'and adds a procedure, then removes it' do
-      scenario 'and cant complete the visit' do
-        given_i_am_viewing_an_appointment
-        when_i_add_a_procedure
-        when_i_remove_the_procedure
-        then_i_should_not_be_able_to_complete_visit
-      end
-    end
   end
 
   context 'User views a started appointment' do
@@ -56,26 +40,6 @@ feature 'Complete Visit', js: true do
       end
     end
 
-    context 'and adds a Procedure, then completes it' do
-      scenario 'and can complete the visit' do
-        given_i_am_viewing_an_appointment
-        when_i_add_a_procedure
-        when_i_begin_the_appointment
-        when_i_complete_the_procedure
-        then_i_should_be_able_to_complete_visit
-      end
-    end
-
-    context 'and adds a Procedure, then incompletes it' do
-      scenario 'and can complete the visit' do
-        given_i_am_viewing_an_appointment
-        when_i_add_a_procedure
-        when_i_begin_the_appointment
-        when_i_incomplete_the_procedure
-        then_i_should_be_able_to_complete_visit
-      end
-    end
-
     context 'and adds a Procedure, completes it, then incompletes it' do
       scenario 'and can complete the visit' do
         given_i_am_viewing_an_appointment
@@ -87,94 +51,12 @@ feature 'Complete Visit', js: true do
       end
     end
 
-    context 'and adds a Procedure, then removes it' do
-      scenario 'and can complete the visit' do
-        given_i_am_viewing_an_appointment
-        when_i_add_a_procedure
-        when_i_begin_the_appointment
-        when_i_remove_the_procedure
-        then_i_should_be_able_to_complete_visit
-      end
-    end
-
     context 'and adds a procedure which will never be completed or incompleted' do
       context 'and does not add a Procedure' do
         scenario 'and cant complete the visit' do
           given_i_am_viewing_an_appointment
           when_i_add_a_procedure #**The extra procedure**#
           when_i_begin_the_appointment
-          then_i_should_not_be_able_to_complete_visit
-        end
-      end
-
-      context 'and adds a Procedure' do
-        scenario 'and cant complete the visit' do
-          given_i_am_viewing_an_appointment
-          when_i_add_a_procedure #**The extra procedure**#
-          when_i_add_a_procedure
-          when_i_begin_the_appointment
-          then_i_should_not_be_able_to_complete_visit
-        end
-      end
-
-      context 'and adds a Procedure, then sets a follow up date for it' do
-        scenario 'and cant complete the visit' do
-          given_i_am_viewing_an_appointment
-          when_i_add_a_procedure #**The extra procedure**#
-          when_i_add_a_procedure
-          when_i_begin_the_appointment
-          when_i_view_the_procedures_in_the_group
-          when_i_add_a_follow_up_date
-          then_i_should_not_be_able_to_complete_visit
-        end
-      end
-
-      context 'and adds a Procedure, then completes it' do
-        scenario 'and cant complete the visit' do
-          given_i_am_viewing_an_appointment
-          when_i_add_a_procedure #**The extra procedure**#
-          when_i_add_a_procedure
-          when_i_begin_the_appointment
-          when_i_view_the_procedures_in_the_group
-          when_i_complete_the_procedure
-          then_i_should_not_be_able_to_complete_visit
-        end
-      end
-
-      context 'and adds a Procedure, then incompletes it' do
-        scenario 'and cant complete the visit' do
-          given_i_am_viewing_an_appointment
-          when_i_add_a_procedure #**The extra procedure**#
-          when_i_add_a_procedure
-          when_i_begin_the_appointment
-          when_i_view_the_procedures_in_the_group
-          when_i_incomplete_the_procedure
-          then_i_should_not_be_able_to_complete_visit
-        end
-      end
-
-      context 'and adds a Procedure, completes it, then incompletes it' do
-        scenario 'and cant complete the visit' do
-          given_i_am_viewing_an_appointment
-          when_i_add_a_procedure #**The extra procedure**#
-          when_i_add_a_procedure
-          when_i_begin_the_appointment
-          when_i_view_the_procedures_in_the_group
-          when_i_complete_the_procedure
-          when_i_view_the_procedures_in_the_group
-          when_i_incomplete_the_procedure
-          then_i_should_not_be_able_to_complete_visit
-        end
-      end
-
-      context 'and adds a Procedure, then removes it' do
-        scenario 'and cant complete the visit' do
-          given_i_am_viewing_an_appointment
-          when_i_add_a_procedure #**The extra procedure**#
-          when_i_add_a_procedure
-          when_i_begin_the_appointment
-          when_i_view_the_procedures_in_the_group
-          when_i_remove_the_procedure
           then_i_should_not_be_able_to_complete_visit
         end
       end
