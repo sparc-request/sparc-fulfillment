@@ -4,32 +4,31 @@ class IdentityOrganizations
   end
 
   def collect_clinical_provider_organizations_with_protocols
-    orgs_with_protocols = []
+    collect_orgs_with_protocols = []
     orgs = Organization.joins(:clinical_providers).where(clinical_providers: { identity_id: @id}).joins(:sub_service_requests).uniq
     orgs.each do |org|
       if org.has_protocols?
-        orgs_with_protocols << org
+        collect_orgs_with_protocols << org
       end
     end
   end
 
   def collect_clinical_provider_organizations
-    orgs_with_protocols = []
+    collect_orgs = []
     orgs = Organization.joins(:clinical_providers).where(clinical_providers: { identity_id: @id})
     orgs.each do |org|
-      orgs_with_protocols << org
+      collect_orgs << org
     end
   end
 
-  # returns organizations that have a clinical provider on them AND have protocols.  It does not return child organizations.
   def clinical_provider_organizations(with_protocols = false)
-    orgs_with_protocols = []
+    cp_orgs = []
     if with_protocols == true
-      orgs_with_protocols << collect_clinical_provider_organizations_with_protocols
+      cp_orgs << collect_clinical_provider_organizations_with_protocols
     else
-      orgs_with_protocols << collect_clinical_provider_organizations
+      cp_orgs << collect_clinical_provider_organizations
     end
-    orgs_with_protocols.flatten
+    cp_orgs.flatten
   end
 
 
@@ -52,12 +51,14 @@ class IdentityOrganizations
     end
     super_user_orgs.flatten.uniq
   end
-
+  
+  # returns organizations that have a clinical provider and super user access AND have protocols.
   def fulfillment_organizations_with_protocols
-    (clinical_provider_organizations(with_protocols = true) + super_user_organizations(with_protocols = true)).uniq
+    (clinical_provider_organizations(true) + super_user_organizations(true)).uniq
   end
 
+  # returns organizations that have a clinical provider and super user access
   def fulfillment_organizations
-    (clinical_provider_organizations(with_protocols = false) + super_user_organizations(with_protocols = false)).uniq
+    (clinical_provider_organizations(false) + super_user_organizations(false)).uniq
   end
 end
