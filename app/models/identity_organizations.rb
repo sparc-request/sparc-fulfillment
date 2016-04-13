@@ -3,6 +3,24 @@ class IdentityOrganizations
     @id = id
   end
 
+  def collect_clinical_provider_organizations_with_protocols
+    collect_orgs_with_protocols = []
+    orgs = Organization.joins(:clinical_providers).where(clinical_providers: { identity_id: @id}).joins(:sub_service_requests).uniq
+    orgs.each do |org|
+      if org.has_protocols?
+        collect_orgs_with_protocols << org
+      end
+    end
+    collect_orgs_with_protocols
+  end
+
+  # returns organizations that have clinical provider attached.
+  def clinical_provider_organizations_with_protocols
+    cp_orgs = []
+    cp_orgs << collect_clinical_provider_organizations_with_protocols
+    cp_orgs.flatten
+  end
+
   # returns organizations that have super_user attached AND all the children organizations.
   def super_user_organizations_with_protocols
     super_user_orgs = []
@@ -24,8 +42,13 @@ class IdentityOrganizations
     Protocol.joins(:clinical_providers).where(clinical_providers: { identity_id: @id }).to_a
   end
   
-  # returns organizations that have a clinical provider and super user access AND have protocols.
+  # returns protocols that clinical provider and super user have access to.
   def fulfillment_access_protocols
     (super_user_protocols + clinical_provider_protocols).flatten.uniq
+  end
+  
+  # returns organizations that have a clinical provider and super user access AND have protocols.
+  def fulfillment_organizations_with_protocols
+    (clinical_provider_organizations_with_protocols + super_user_organizations_with_protocols).uniq
   end
 end
