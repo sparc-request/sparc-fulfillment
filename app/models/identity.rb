@@ -16,8 +16,7 @@ class Identity < ActiveRecord::Base
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
   def protocols
-    fulfillment_access_organizations = IdentityOrganizations.new(id).fulfillment_organizations
-    fulfillment_access_organizations.any? ? fulfillment_access_organizations.map(&:protocols).flatten : []
+    IdentityOrganizations.new(id).fulfillment_access_protocols
   end
 
   def readonly?

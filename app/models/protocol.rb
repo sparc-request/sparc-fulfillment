@@ -7,6 +7,7 @@ class Protocol < ActiveRecord::Base
 
   belongs_to :sub_service_request
   belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
+  has_one :organization, through: :sub_service_request
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
@@ -20,6 +21,8 @@ class Protocol < ActiveRecord::Base
   has_many :appointments,     through: :participants
   has_many :procedures,       through: :appointments
   has_many :documents,        as: :documentable
+  has_many :clinical_providers, through: :organization
+  has_many :super_users, through: :organization
 
   before_save :set_documents_count
 
