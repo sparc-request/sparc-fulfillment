@@ -82,7 +82,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def pi
-    project_roles.where(role: "primary-pi").first.identity
+    project_roles.where(role: "primary-pi").first.try(:identity)
   end
 
   def coordinators

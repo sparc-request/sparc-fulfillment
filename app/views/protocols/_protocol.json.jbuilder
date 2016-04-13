@@ -15,9 +15,7 @@ json.study_cost display_cost(protocol.study_cost)
 json.stored_percent_subsidy protocol.stored_percent_subsidy
 json.subsidy_committed display_cost(protocol.subsidy_committed)
 json.subsidy_expended protocol.subsidy_expended
-if protocol.project_roles.where(role: "primary-pi").any?
-  json.pi protocol.pi.full_name
-end
+json.pi protocol.pi.try(:full_name)
 json.coordinators formatted_coordinators(protocol.coordinators.map(&:full_name))
 json.study_schedule_report formatted_study_schedule_report(protocol)
 json.owner formatted_owner(protocol)
