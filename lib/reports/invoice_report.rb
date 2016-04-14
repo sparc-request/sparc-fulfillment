@@ -16,7 +16,7 @@ class InvoiceReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
-      csv << ["From", format_date(@params[:start_date]), "To", format_date(@params[:end_date])]
+      csv << ["From", format_date(Time.strptime(@params[:start_date], "%m-%d-%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m-%d-%Y"))]
       csv << [""]
 
       if @params[:protocol_ids].present?
@@ -40,6 +40,7 @@ class InvoiceReport < Report
             "Account #",
             "Contact",
             "",
+            "",
             "Research Rate",
             "Total Cost"
           ]
@@ -55,6 +56,7 @@ class InvoiceReport < Report
               fulfillment.quantity,
               fulfillment.line_item.account_number,
               fulfillment.line_item.contact_name,
+              "",
               "",
               display_cost(fulfillment.service_cost),
               display_cost(fulfillment.total_cost)
@@ -110,7 +112,7 @@ class InvoiceReport < Report
         end
         if total > 0
           csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
+          csv << ["", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
           csv << [""]
           csv << [""]
         end
