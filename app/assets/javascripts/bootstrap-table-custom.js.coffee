@@ -1,4 +1,12 @@
+$table = $('#documents_table')
+
+getOrder = ->
+  if $table.bootstrapTable('getOptions').sortOrder == 'asc' then -1 else 1
+
 (exports ? this).dateSorter = (a, b) ->
+  return -1 * getOrder() if !a
+  return 1 * getOrder() if !b
+
   sort_a = new Date(a)
   sort_b = new Date(b)
 
