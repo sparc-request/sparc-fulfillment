@@ -18,7 +18,7 @@ class IdentityOrganizations
   def clinical_provider_organizations_with_protocols
     cp_orgs = []
     cp_orgs << collect_clinical_provider_organizations_with_protocols
-    cp_orgs.flatten
+    cp_orgs.flatten 
   end
 
   # returns organizations that have super_user attached AND all the children organizations.
