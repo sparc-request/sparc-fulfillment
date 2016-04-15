@@ -7,7 +7,6 @@ class Protocol < ActiveRecord::Base
 
   belongs_to :sub_service_request
   belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
-  has_one :organization, through: :sub_service_request
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
@@ -82,7 +81,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def pi
-    project_roles.where(role: "primary-pi").first.try(:identity)
+    project_roles.where(role: "primary-pi").first.identity
   end
 
   def coordinators

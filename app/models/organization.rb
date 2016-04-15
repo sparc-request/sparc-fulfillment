@@ -7,6 +7,7 @@ class Organization < ActiveRecord::Base
   has_many :services,
             -> {where(is_available: true)}
   has_many :sub_service_requests
+  has_many :protocols, through: :sub_service_requests
   has_many :pricing_setups
   has_many :non_process_ssrs_children,
             -> { where(process_ssrs: false) },
@@ -52,11 +53,11 @@ class Organization < ActiveRecord::Base
     organizations = all_child_organizations
     organizations_with_protocols = []
     organizations.flatten.uniq.each do |organization|
-      if organization.has_protocols?
+      if organization.protocols.any?
         organizations_with_protocols << organization
       end
     end
-    return organizations_with_protocols.flatten.uniq
+    organizations_with_protocols.flatten.uniq
   end
 
   # NOT SURE WHAT THIS IS TRYING TO ACCOMPLISH
@@ -69,16 +70,6 @@ class Organization < ActiveRecord::Base
 
   def all_child_services(scope)
     all_child_organizations_with_non_process_ssrs.map { |child| child.services.send(scope) }
-  end
-
-  def protocols
-    Protocol.
-      joins(:sub_service_request).
-      where(sub_service_requests: { organization_id: id })
-  end
-
-  def has_protocols?
-    protocols.flatten.present?
   end
 end
 

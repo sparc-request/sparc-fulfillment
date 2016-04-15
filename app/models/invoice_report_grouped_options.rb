@@ -1,29 +1,20 @@
 class InvoiceReportGroupedOptions
   def initialize(organizations)
     @organizations = organizations
-    @grouped_options = []
   end
 
   def collect_grouped_options
-    group_organizations(@organizations, "Institutions")
-    group_organizations(@organizations, "Providers")
-    group_organizations(@organizations, "Programs")
-    group_organizations(@organizations, "Cores")
+    groups = @organizations.group_by(&:type)
+    options = ["Institution", "Provider", "Program", "Core"].map do |type|
+      next unless groups[type].present?
+      [type.pluralize, extract_name_and_id(groups[type])]
+    end
+    options.compact
   end
 
   private
 
-  def add_array_to_grouped_options(array)
-    @grouped_options << array unless array.nil?
-  end
-
-  def organization_to_array(organizations, type)
-    org_array = [type, organizations.flatten.map { |org| [org.name, org.id] }] unless organizations.flatten.empty?
-    add_array_to_grouped_options(org_array)
-  end
-
-  def group_organizations(organizations, type)
-    organizations = organizations.select{|org| org.type == type.chomp('s')}
-    organization_to_array(organizations, type)
+  def extract_name_and_id(orgs)
+    orgs.map { |org| [org.name, org.id] }
   end
 end

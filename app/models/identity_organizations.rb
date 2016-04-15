@@ -7,7 +7,7 @@ class IdentityOrganizations
     collect_orgs_with_protocols = []
     orgs = Organization.joins(:clinical_providers).where(clinical_providers: { identity_id: @id}).joins(:sub_service_requests).uniq
     orgs.each do |org|
-      if org.has_protocols?
+      if org.protocols.any?
         collect_orgs_with_protocols << org
       end
     end
@@ -26,7 +26,7 @@ class IdentityOrganizations
     super_user_orgs = []
     orgs = Organization.joins(:super_users).where(super_users: { identity_id: @id})
     orgs.each do |org|
-      if org.has_protocols?
+      if org.protocols.any?
         super_user_orgs << org
       end
       super_user_orgs << org.child_orgs_with_protocols

@@ -50,6 +50,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_3_child_orgs do
+      after(:create) do |organization, evaluator|
+        3.times do
+          create(:organization_with_services, parent: organization)
+        end
+      end
+    end
+
     factory :organization_institution, traits: [:institution]
     factory :organization_core, traits: [:core]
     factory :organization_program, traits: [:program]
@@ -65,5 +73,10 @@ FactoryGirl.define do
     factory :provider_with_child_organizations, traits: [:with_services, :provider, :with_child_organizations]
     factory :program_with_child_organizations, traits: [:with_services, :program, :with_child_organizations]
     factory :organization_with_child_organizations, traits: [:with_services, :core, :with_child_organizations]
+
+    factory :provider_with_3_child_orgs, traits: [:with_services, :provider, :with_3_child_orgs]
+    factory :program_with_3_child_orgs, traits: [:with_services, :program, :with_3_child_orgs]
+    factory :core_with_3_child_orgs, traits: [:with_services, :core, :with_3_child_orgs]
+
   end
 end
