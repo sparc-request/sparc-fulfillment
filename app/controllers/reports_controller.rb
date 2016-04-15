@@ -38,13 +38,13 @@ class ReportsController < ApplicationController
 
   def reports_params
     params.require(:report_type) # raises error if report_type not present
-
     params.permit(:format,
               :utf8,
               :report_type,
               :title,
               :start_date,
               :end_date,
+              { :organization => [] },
               :time_zone,
               :protocol_id,
               :participant_id,
