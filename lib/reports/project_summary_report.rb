@@ -20,8 +20,8 @@ class ProjectSummaryReport < Report
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]
       csv << ["PI Name:", "#{protocol.pi ? protocol.pi.full_name : nil}"]
-      csv << ["Appointment Start Date Filter:", "#{format_date(@params[:start_date])}"]
-      csv << ["Appointment End Date Filter:", "#{format_date(@params[:end_date])}"]
+      csv << ["Appointment Start Date Filter:", "#{format_date(@start_date)}"]
+      csv << ["Appointment End Date Filter:", "#{format_date(@end_date)}"]
       csv << [""]
 
       # amount due for whole study
