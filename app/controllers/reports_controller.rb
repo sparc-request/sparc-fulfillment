@@ -11,8 +11,8 @@ class ReportsController < ApplicationController
 
   def create
     @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
+    
     @report = @report_type.classify.constantize.new(reports_params)
-
     @errors = @report.errors
     
     if @report.valid?
@@ -38,13 +38,13 @@ class ReportsController < ApplicationController
 
   def reports_params
     params.require(:report_type) # raises error if report_type not present
+    params.except!(:organization)
     params.permit(:format,
               :utf8,
               :report_type,
               :title,
               :start_date,
               :end_date,
-              { :organization => [] },
               :time_zone,
               :protocol_id,
               :participant_id,
