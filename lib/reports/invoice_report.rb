@@ -32,15 +32,15 @@ class InvoiceReport < Report
           csv << ["Study Level Charges:"]
           csv << [
             "Protocol ID",
-            "Protocol Short Title",
+            "Short Title",
             "Primary PI",
+            "Service",
             "Fulfillment Date",
-            "Service(s) Completed",
-            "Quantity Completed",
-            "Account #",
+            "Performed By",
+            "Fulfillment Components",
             "Contact",
-            "",
-            "",
+            "Account #",
+            "Quantity Completed",
             "Research Rate",
             "Total Cost"
           ]
@@ -51,13 +51,13 @@ class InvoiceReport < Report
               protocol.sparc_id,
               protocol.sparc_protocol.short_title,
               protocol.pi ? protocol.pi.full_name : nil,
-              format_date(fulfillment.fulfilled_at),
               fulfillment.service_name,
-              fulfillment.quantity,
-              fulfillment.line_item.account_number,
+              format_date(fulfillment.fulfilled_at),
+              fulfillment.performer.full_name,
+              fulfillment.components.map(&:component).join(','),
               fulfillment.line_item.contact_name,
-              "",
-              "",
+              fulfillment.line_item.account_number,
+              fulfillment.quantity,
               display_cost(fulfillment.service_cost),
               display_cost(fulfillment.total_cost)
             ]
@@ -73,13 +73,13 @@ class InvoiceReport < Report
           csv << ["Procedures/Per-Patient-Per-Visit:"]
           csv << [
             "Protocol ID",
-            "Protocol Short Title",
+            "Short Title",
             "Primary PI",
             "Patient Name",
             "Patient ID",
             "Visit Name",
             "Visit Date",
-            "Service(s) Completed",
+            "Service",
             "Service Completion Date",
             "Quantity Completed",
             "Research Rate",
