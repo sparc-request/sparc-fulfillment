@@ -5,6 +5,12 @@ class InvoiceReport < Report
 
   require 'csv'
 
+  # A protocol with subsidy, format protocol_id column with an 's' 
+  # A protocol without subsidy, format protcol_id column without an 's'
+  def format_protocol_id_column(protocol)
+    protocol.subsidy.present? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
+  end
+
   def generate(document)
     #We want to filter from 00:00:00 in the local time zone,
     #then convert to UTC to match database times
@@ -48,7 +54,7 @@ class InvoiceReport < Report
 
           protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |fulfillment|
             csv << [
-              protocol.sparc_id,
+              format_protocol_id_column(protocol),
               protocol.sparc_protocol.short_title,
               protocol.pi ? protocol.pi.full_name : nil,
               format_date(fulfillment.fulfilled_at),
@@ -93,7 +99,7 @@ class InvoiceReport < Report
               procedure = service_procedures.first
 
               csv << [
-                protocol.sparc_id,
+                format_protocol_id_column(protocol),
                 protocol.sparc_protocol.short_title,
                 protocol.pi ? protocol.pi.full_name : nil,
                 participant.full_name,
