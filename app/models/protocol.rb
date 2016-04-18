@@ -10,7 +10,7 @@ class Protocol < ActiveRecord::Base
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
-  has_one :subsidy, through: :sub_service_request
+  has_many :subsidies, through: :sub_service_requests
 
   has_many :service_requests
   has_many :sub_service_requests, through: :service_requests

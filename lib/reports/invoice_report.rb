@@ -8,7 +8,7 @@ class InvoiceReport < Report
   # A protocol with subsidy, format protocol_id column with an 's' 
   # A protocol without subsidy, format protcol_id column without an 's'
   def format_protocol_id_column(protocol)
-    protocol.subsidy.present? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
+    protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
   end
 
   def generate(document)
