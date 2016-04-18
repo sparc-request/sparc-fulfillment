@@ -16,7 +16,7 @@ class AuditingReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
-      csv << ["From", format_date(@start_date), "To", format_date(@end_date)]
+      csv << ["From", format_date(Time.strptime(@params[:start_date], "%m-%d-%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m-%d-%Y"))]
       csv << [""]
       csv << [""]
       csv << [
