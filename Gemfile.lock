@@ -146,7 +146,7 @@ GEM
       eventmachine (>= 1.0.0.beta.4)
     equalizer (0.0.11)
     erubis (2.7.0)
-    eventmachine (1.0.7)
+    eventmachine (1.2.0.1)
     execjs (2.5.2)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
