@@ -12,10 +12,8 @@
   %td.followup{id: "follow_up_#{procedure.id}"}
     = render partial: "/appointments/followup_calendar", locals: { procedure: procedure }
   %td.completed-date
-    .input-group.date.completed_date_field
-      %input.datetimepicker{type: "text", class: "form-control", disabled: !(procedure.appt_started? && procedure.complete?), value: format_date(procedure.completed_date)}
-      %span.input-group-addon{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
-        %span.glyphicon.glyphicon-calendar
+    .input-group.date
+      %input.datetimepicker{type: "text", class: "form-control completed_date_field", disabled: !(procedure.appt_started? && procedure.complete?), value: format_date(procedure.completed_date), readonly: true}
   %td.performed-by
     = select_tag "performed-by-#{procedure.id}", options_for_select(procedure.performable_by, procedure.performer_id), include_blank: "N/A", class: "performed-by-dropdown selectpicker", data: { width: '125px' }, 'showIcon' => false
   %td.notes

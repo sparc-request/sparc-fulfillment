@@ -14,15 +14,15 @@ feature "rescheduling a Task", js: true do
     @task = Task.first
 
     visit tasks_path
+    wait_for_ajax
   end
 
   def when_i_reschedule_the_task
-    wait_for_ajax
-    @next_month = (Time.current + 1.month).strftime('%m/%d/%y')
     page.all('.task-reschedule').last.click
     wait_for_ajax
     
-    fill_in "task_due_at", with: @next_month
+    page.execute_script %Q{ $('#reschedule_datepicker').trigger("focus") }
+    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     wait_for_ajax
     
     click_button "Save"
@@ -30,7 +30,7 @@ feature "rescheduling a Task", js: true do
   end
 
   def then_i_should_see_the_task_has_been_rescheduled
-    expect(page).to have_css("table.tasks tbody td.due_at", text: @day)
-    expect(page).to have_css("tr[data-index='0'] td.due_at", text: @day)
+    expect(page).to have_css("table.tasks tbody td.due_at", text: "09/15/2025")
+    expect(page).to have_css("tr[data-index='0'] td.due_at", text: "09/09/2025")
   end
 end
