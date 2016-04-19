@@ -22,7 +22,7 @@
             .form-group
               = form.label "started_at", t(:line_item)[:started], class: "col-sm-4 control-label "
               .col-sm-7
-                = form.text_field "started_at", {class: 'form-control datetimepicker', id: 'date_started_field', value: format_date(line_item.started_at)}
+                = form.text_field "started_at", {class: 'form-control datetimepicker', id: 'date_started_field', value: format_date(line_item.started_at), readonly: true}
             .form-group
               = form.label "account_number", t(:line_item)[:account_number], class: "col-sm-4 control-label"
               .col-sm-7
