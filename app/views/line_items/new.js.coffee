@@ -3,4 +3,5 @@ $("#modal_place").modal 'show'
 $("#date_started_field").datetimepicker
   format: 'MM-DD-YYYY'
   ignoreReadonly: true
+
 $(".selectpicker").selectpicker()
