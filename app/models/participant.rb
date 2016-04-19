@@ -22,8 +22,25 @@ class Participant < ActiveRecord::Base
   after_save :update_faye
   after_destroy :update_faye
 
-  validates :protocol_id, :last_name, :first_name, :mrn, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, presence: true
-  validate :phone_number_format, :middle_initial_format, :zip_code_format
+  validates :protocol_id, presence: true
+  validates :last_name, presence: true
+  validates :first_name, presence: true
+  
+  validate :middle_initial_format
+
+  validates :mrn, presence: true
+  validates :date_of_birth, presence: true
+  validates :gender, presence: true
+  validates :ethnicity, presence: true
+  validates :race, presence: true
+  validates :address, presence: true
+  validates :city, presence: true
+  validates :state, presence: true
+  
+  validates :zipcode, presence: true
+  validate :zip_code_format
+
+  validate :phone_number_format
 
   def self.title id
     participant = Participant.find id
@@ -37,7 +54,7 @@ class Participant < ActiveRecord::Base
   def phone_number_format
     if !phone.blank?
       if not( /^\d{3}-\d{3}-\d{4}$/.match phone.to_s or /^\d{10}$/.match phone.to_s )
-        errors.add(:phone, "is not a phone number in the format XXX-XXX-XXXX or XXXXXXXXXX")
+        errors.add(:phone, "must be in the format XXX-XXX-XXXX or XXXXXXXXXX")
       end
     end
   end
@@ -45,15 +62,15 @@ class Participant < ActiveRecord::Base
   def zip_code_format
     if !zipcode.blank?
       if not( /^\d{5}$/.match zipcode.to_s )
-        errors.add(:zipcode, "is not a zip code in the format XXXXX")
+        errors.add(:zipcode, "must be in the format XXXXX")
       end
     end
   end
 
   def middle_initial_format
     if !middle_initial.blank?
-      if not( /^[A-z]{1}$/.match middle_initial.to_s )
-        errors.add(:middle_initial, "must be only one character")
+      if not( /^[A-Za-z]$/.match middle_initial.to_s )
+        errors.add(:middle_initial, "must be a single letter")
       end
     end
   end

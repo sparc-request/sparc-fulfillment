@@ -41,17 +41,22 @@ en:
   activerecord:
     attributes:
       arm:
-        name: "Arm name"
+        name: "Arm Name"
+        subject_count: "Subject Count"
+        visit_count: "Visit Count"
       visit_group:
-        name: "Visit name"
-        day: "Visit day"
+        name: "Visit Name"
+        day: "Visit Day"
         position: ""
+      participant:
+        mrn: "MRN"
+        zipcode: "Zip Code"
     errors:
       models:
         visit_group:
           attributes:
             position:
-              blank: "You must select a position"
+              blank: "You must select a Position"
 
   appointment:
     object: "Appointment"
