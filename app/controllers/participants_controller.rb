@@ -89,7 +89,6 @@ class ParticipantsController < ApplicationController
 
   def assign_arm_if_only_one_arm
     if @participant.protocol.arms.size == 1
-
       @participant.update_attributes(arm_id: @participant.protocol.arms.first.id)
       @participant.update_appointments_on_arm_change
     end

@@ -3,43 +3,14 @@ require 'rails_helper'
 feature 'User creates Participant', js: true do
 
   scenario 'and sees the new Participants in the list' do
-    given_i_have_a_protocol_with_multiple_arms
-    when_i_view_the_participant_list
+    given_i_am_viewing_the_participant_list
     when_i_create_a_new_participant
     then_i_should_see_the_new_participant_in_the_list
   end
 
-  context 'on a protocol with 1 arm' do
-    scenario 'and sees the participant is assigned to the arm' do
-      given_i_have_a_protocol_with_1_arm 
-      when_i_view_the_participant_list
-      when_i_create_a_new_participant
-      then_they_should_have_an_assigned_arm
-    end
-  end
-
-  context 'on a protocol with multiple arms' do
-    scenario 'and sees the participant is not assigned to an arm' do
-      given_i_have_a_protocol_with_multiple_arms
-      when_i_view_the_participant_list
-      when_i_create_a_new_participant
-      then_they_should_not_have_an_assigned_arm
-    end
-  end
-
-  def given_i_have_a_protocol_with_multiple_arms
+  def given_i_am_viewing_the_participant_list
     @protocol = create_and_assign_protocol_to_me
-  end
 
-  def given_i_have_a_protocol_with_1_arm
-    given_i_have_a_protocol_with_multiple_arms
-    
-    @protocol.arms[1..@protocol.arms.size].each do |arm|
-      arm.destroy
-    end
-  end
-
-  def when_i_view_the_participant_list
     visit protocol_path(@protocol.id)
     wait_for_ajax
 
