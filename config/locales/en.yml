@@ -44,6 +44,9 @@ en:
         name: "Arm Name"
         subject_count: "Subject Count"
         visit_count: "Visit Count"
+      appointment:
+        name: "Visit Name"
+        position: ""
       fulfillment:
         fulfilled_at: "Fulfillment Date"
       line_item:
@@ -51,12 +54,18 @@ en:
       participant:
         mrn: "MRN"
         zipcode: "Zip Code"
+      task:
+        due_at: "Follow Up Date"
       visit_group:
         name: "Visit Name"
         day: "Visit Day"
         position: ""
     errors:
       models:
+        appointment:
+          attributes:
+            position:
+              blank: "You must select a Position"
         visit_group:
           attributes:
             position:
@@ -255,9 +264,9 @@ en:
     object: "Procedure"
     complete: "Complete All"
     completed_date: "Completed Date"
-    edit_header: "Follow up"
+    edit_header: "Follow Up"
     followup: "Follow Up"
-    follow_up_date: "Follow up date"
+    follow_up_date: "Follow Up Date"
     fud: "Due Date"
     incomplete: "Incomplete All"
     notes: "Notes"
