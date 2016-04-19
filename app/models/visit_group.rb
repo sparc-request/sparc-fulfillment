@@ -44,11 +44,24 @@ class VisitGroup < ActiveRecord::Base
   # Used to validate :day, when present. Preceding VisitGroup must have a
   # a smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).
   def day_must_be_in_order
-    # these VisitGroups will be moved up a position after validations/save
-    will_insert_before_days = arm.visit_groups.where(position: position).where.not(id: id).pluck(:day)
+    # determine neighbors that will be after save
+    already_there = arm.visit_groups.find_by(position: position)
+    left_neighbor, right_neighbor =
+      if id.nil? # inserting before
+        [already_there.try(:higher_item), already_there]
+      else
+        if already_there.try(:id) == id # not changing position, get our neighbors
+          [higher_item, lower_item]
+        else # position must be changing
+          if already_there.position < changed_attributes[:position]
+            [already_there.try(:higher_item), already_there]
+          else
+            [already_there, already_there.try(:lower_item)]
+          end
+        end
+      end
 
-    # act_as_list's higher_item returns VisitGroup with the lower position, etc.
-    unless day > (higher_item.try(:day) || day - 1) && day < (lower_item.try(:day) || day + 1) && will_insert_before_days.all? { |d| d > day }
+    unless day > (left_neighbor.try(:day) || day - 1) && day < (right_neighbor.try(:day) || day + 1)
       errors.add(:day, 'must be in order')
     end
   end

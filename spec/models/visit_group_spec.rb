@@ -33,18 +33,18 @@ RSpec.describe VisitGroup, type: :model do
       it "should ensure that day is greater than preceding VisitGroup's day and less than succeeding VisitGroup's day" do
         arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
         [1, 2, 3].permutation.each_with_index do |days, idx|
-          before_visit_group = build(:visit_group, position: 3 * idx, day: days[0], arm: arm)
-          visit_group        = build(:visit_group, position: 3 * idx + 1, day: days[1], arm: arm)
-          after_visit_group  = build(:visit_group, position: 3 * idx + 2, day: days[2], arm: arm)
+          before_visit_group = build(:visit_group, position: 3 * (idx + 1), day: days[0], arm: arm)
+          visit_group        = build(:visit_group, position: 3 * (idx + 1) + 1, day: days[1], arm: arm)
+          after_visit_group  = build(:visit_group, position: 3 * (idx + 1) + 2, day: days[2], arm: arm)
           before_visit_group.save(validate: false)
           visit_group.save(validate: false)
           after_visit_group.save(validate: false)
 
           # if days in order, should be valid
           if days[0] < days[1] && days[1] < days[2]
-            expect(visit_group).to be_valid, "#{before_visit_group}\n#{visit_group}\n#{after_visit_group}\nexpected second VisitGroup to be valid, got invalid"
+            expect(visit_group).to be_valid, "#{before_visit_group.inspect}\n#{visit_group.inspect}\n#{after_visit_group.inspect}\nexpected second VisitGroup to be valid, got invalid"
           else
-            expect(visit_group).not_to be_valid, "#{before_visit_group}\n#{visit_group}\n#{after_visit_group}\nexpected second VisitGroup to be invalid, got valid"
+            expect(visit_group).not_to be_valid, "#{before_visit_group.inspect}\n#{visit_group.inspect}\n#{after_visit_group.inspect}\nexpected second VisitGroup to be invalid, got valid"
           end
         end
       end
