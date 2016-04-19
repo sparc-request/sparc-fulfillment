@@ -8,6 +8,7 @@
         %h4.modal-title.text-center= t(:reports)[:auditing_report]
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         .row
           .col-md-12
             = hidden_field_tag "report_type", report_type

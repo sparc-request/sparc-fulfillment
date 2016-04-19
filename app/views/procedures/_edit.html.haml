@@ -10,6 +10,7 @@
           = t(:procedure)[:edit_header]
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         .form-group
           = form.hidden_field :assignable_type, value: 'Procedure'
           = form.hidden_field :assignable_id, value: procedure.id

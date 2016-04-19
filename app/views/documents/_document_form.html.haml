@@ -8,6 +8,7 @@
         %h4.modal-title.text-center= t(:documents)[:edit_header]
       .modal-body
         #document_modal_errors
+        = render partial: 'required_fields'
         .form-group
           = form.label "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
           .col-sm-8

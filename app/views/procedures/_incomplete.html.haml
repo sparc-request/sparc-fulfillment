@@ -10,6 +10,7 @@
     = form_for procedure, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         = form.hidden_field :status, value: "incomplete"
         = form.hidden_field :completed_date, value: ""
         = form.hidden_field :performer_id, value: current_identity.id
