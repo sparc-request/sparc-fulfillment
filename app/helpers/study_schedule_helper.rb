@@ -41,6 +41,7 @@ module StudyScheduleHelper
     if position % Visit.per_page != 0
       destination_page += 1
     end
+
     destination_page == current_page.to_i
   end
 

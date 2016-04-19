@@ -3,9 +3,9 @@ class VisitGroupsController < ApplicationController
   before_action :find_visit_group, only: [:update, :destroy]
 
   def new
-    @current_page = params[:current_page] # the current page of the study schedule
     @protocol     = Protocol.find(params[:protocol_id])
     @visit_group  = VisitGroup.new()
+    @current_page = params[:current_page] # the current page of the study schedule
     @schedule_tab = params[:schedule_tab]
     @arm = params[:arm_id].present? ? Arm.find(params[:arm_id]) : @protocol.arms.first
   end
@@ -27,8 +27,16 @@ class VisitGroupsController < ApplicationController
   end
 
   def update
-    @arm = @visit_group.arm
+    @arm          = @visit_group.arm
+    @visit_groups = @arm.visit_groups.paginate(page: @current_page)
+    @current_page = params[:current_page]
+    @schedule_tab = params[:schedule_tab]
+
     if @visit_group.update_attributes(visit_group_params)
+      #The position coming in is 1 greater than it should be because we removed
+      #the option for the current visit group in the position dropdown.
+      @visit_group.update_attribute(:position, visit_group_params[:position].to_i - 1)
+
       flash[:success] = t(:visit_groups)[:flash_messages][:updated]
     else
       @errors = @visit_group.errors
@@ -55,8 +63,11 @@ class VisitGroupsController < ApplicationController
 
   def navigate_to_visit_group
     # Used in study schedule management for navigating to a visit group, given an index of them by arm.
-    @protocol = Protocol.find(params[:protocol_id])
+    @protocol        = Protocol.find(params[:protocol_id])
     @intended_action = params[:intended_action]
+    @current_page    = params[:current_page] # the current page of the study schedule
+    @schedule_tab    = params[:schedule_tab]
+
     if params[:visit_group_id]
       @visit_group = VisitGroup.find(params[:visit_group_id])
       @arm = @visit_group.arm
