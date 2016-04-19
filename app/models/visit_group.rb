@@ -11,19 +11,17 @@ class VisitGroup < ActiveRecord::Base
 
   belongs_to :arm
 
-  has_many :visits, :dependent => :destroy
+  has_many :visits, dependent: :destroy
   has_many :line_items, through: :arm
   has_many :appointments
 
   default_scope {order(:position)}
 
-  validates :arm_id,
-            :name,
-            :position,
-            presence: true
-
+  validates :arm_id, presence: true
+  validates :name, presence: true
   validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
   validates :day, numericality: true, if: "self.day.present?"
+  validates :position, presence: true
 
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)

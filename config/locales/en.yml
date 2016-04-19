@@ -38,6 +38,21 @@ en:
     required_message: "Fields marked with an asterisk ( * ) are required to continue."
     save: "Save"
 
+  activerecord:
+    attributes:
+      arm:
+        name: "Arm name"
+      visit_group:
+        name: "Visit name"
+        day: "Visit day"
+        position: ""
+    errors:
+      models:
+        visit_group:
+          attributes:
+            position:
+              blank: "You must select a position"
+
   appointment:
     object: "Appointment"
     add_service: "Add Service"
