@@ -44,13 +44,17 @@ en:
         name: "Arm Name"
         subject_count: "Subject Count"
         visit_count: "Visit Count"
+      fulfillment:
+        fulfilled_at: "Fulfillment Date"
+      line_item:
+        quantity_requested: "Quantity"
+      participant:
+        mrn: "MRN"
+        zipcode: "Zip Code"
       visit_group:
         name: "Visit Name"
         day: "Visit Day"
         position: ""
-      participant:
-        mrn: "MRN"
-        zipcode: "Zip Code"
     errors:
       models:
         visit_group:
