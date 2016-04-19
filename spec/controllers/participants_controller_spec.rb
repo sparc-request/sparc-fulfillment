@@ -65,6 +65,7 @@ RSpec.describe ParticipantsController do
       attributes[:date_of_birth] = "09-10-2015"
 
       create(:arm, protocol_id: @protocol.id)
+      
       xhr :post, :create, {
         protocol_id: @protocol.id,
         participant: attributes,
