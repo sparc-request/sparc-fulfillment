@@ -189,10 +189,8 @@ class Procedure < ActiveRecord::Base
 
     if status_changed?(to: "complete")
       write_attribute(:incompleted_date, nil)
-      write_attribute(:completed_date, Date.today)
     elsif status_changed?(to: "incomplete")
       write_attribute(:completed_date, nil)
-      write_attribute(:incompleted_date, Date.today)
     elsif status_changed?(to: "unstarted") or status_changed?(to: "follow_up")
       write_attribute(:completed_date, nil)
       write_attribute(:incompleted_date, nil)
