@@ -12,7 +12,7 @@
   .form-group
     = a.label "position", t(:visit_groups)[:position], class: "col-sm-4 control-label"
     .col-sm-7
-      = a.select "position", options_from_collection_for_select(arm.visit_groups.where.not(id: visit_group.id), 'position', 'insertion_name', visit_group.position + 1) << vg_add_as_last_option(arm), {include_blank: ''}, class: "form-control selectpicker"
+      = a.select "position", options_for_select(move_to_position_options_for(visit_group), visit_group.position), {}, class: "form-control selectpicker"
   .form-group
     = a.label "window_before", t(:visit_groups)[:window_before], class: "col-sm-4 control-label"
     .col-sm-7

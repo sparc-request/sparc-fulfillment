@@ -33,10 +33,6 @@ class VisitGroupsController < ApplicationController
     @schedule_tab = params[:schedule_tab]
 
     if @visit_group.update_attributes(visit_group_params)
-      #The position coming in is 1 greater than it should be because we removed
-      #the option for the current visit group in the position dropdown.
-      @visit_group.update_attribute(:position, visit_group_params[:position].to_i - 1)
-
       flash[:success] = t(:visit_groups)[:flash_messages][:updated]
     else
       @errors = @visit_group.errors
