@@ -51,6 +51,8 @@ en:
         fulfilled_at: "Fulfillment Date"
       line_item:
         quantity_requested: "Quantity"
+      notes:
+        reason: "Reason"
       participant:
         mrn: "MRN"
         zipcode: "Zip Code"
