@@ -43,8 +43,8 @@ FactoryGirl.define do
 
     trait :with_visit_groups do
       after(:create) do |arm, evaluator|
-        arm.visit_count.times do
-          create(:visit_group, arm: arm)
+        arm.visit_count.times do |n|
+          create(:visit_group, arm: arm, position: n + 1, day: n + 1)
         end
       end
     end
