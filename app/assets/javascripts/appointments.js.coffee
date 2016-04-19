@@ -212,11 +212,11 @@ $ ->
 
     if procedure_ids.length > 0
       $.ajax
-        type: 'PUT'
+        type: 'GET'
         data:
           status: status
           procedure_ids: _.flatten(procedure_ids)
-        url: '/multiple_procedures/update_procedures.js'
+        url: "/multiple_procedures/complete_all.js"
         success: ->
           reset_multiselect_after_update(self)
 

@@ -5,6 +5,9 @@ $('#incomplete_all_modal button.save').removeClass('disabled')
 
 <% else %>
 
+$('#complete_all_modal button.save').removeClass('disabled')
+$("#modal_place").modal('hide')
+
 <% if @procedures.present? %>
 
 update_complete_visit_button(<%= @procedures.first.appointment.can_finish? %>)
@@ -25,7 +28,7 @@ $('#modal_place').modal 'hide'
 
 $("tr.procedure[data-id='<%= procedure.id %>'] td.status .complete").addClass('active')
 $("tr.procedure[data-id='<%= procedure.id %>'] td.status .incomplete").removeClass('active')
-$("tr.procedure[data-id='<%= procedure.id %>'] div.completed_date_field input.datetimepicker").val("<%= @completed_date.strftime('%m-%d-%Y') %>").removeAttr("disabled")
+$("tr.procedure[data-id='<%= procedure.id %>'] div.completed_date_field input.datetimepicker").val("<%= @completed_date %>").removeAttr("disabled")
 
 <% end %>
 <% end %>

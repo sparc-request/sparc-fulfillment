@@ -128,10 +128,11 @@ en:
 
   incomplete_complete_modal:
     incomplete_header: "Incomplete Multiple Services"
+    complete_header: "Complete Multiple Services"
     completed_date: "Completed Date *"
     incompleted_date: "Incomplete Date *"
     performed_by: "Performed By *"
-    notes: "Notes *"
+    reason: "Reason *"
 
   line_item:
     object: "Line Item"

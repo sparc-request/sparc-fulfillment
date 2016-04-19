@@ -1,6 +1,10 @@
 class MultipleProceduresController < ApplicationController
 
-  before_action :find_procedures, only: [:incomplete_all, :update_procedures]
+  before_action :find_procedures, only: [:complete_all, :incomplete_all, :update_procedures]
+
+  def complete_all
+    @procedure_ids = params[:procedure_ids]
+  end
 
   def incomplete_all
     @note = Note.new(kind: 'reason')
@@ -23,8 +27,8 @@ class MultipleProceduresController < ApplicationController
       end
     elsif status == 'complete'
       #Mark all @procedures as complete.
-      @procedures.each{|procedure| procedure.update_attributes(status: 'complete', performer_id: current_identity.id)}
-      @completed_date = @procedures.first.completed_date
+      @procedures.each{|procedure| procedure.update_attributes(status: 'complete', performer_id: params[:performed_by], completed_date: params[:completed_date])}
+      @completed_date = params[:completed_date]
     end
   end
 
