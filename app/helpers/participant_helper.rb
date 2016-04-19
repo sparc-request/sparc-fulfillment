@@ -1,4 +1,5 @@
 module ParticipantHelper
+  
   def appointments_for_select arm, participant
     appointments = []
     participant.appointments.each do |appt|
@@ -87,5 +88,11 @@ module ParticipantHelper
     button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button participant_report dropdown-toggle', id: "participant_report_#{participant.id.to_s}", 'aria-expanded' => 'false', title: 'Participant Report', 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-participant_id' => participant.id)
     ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_participant_report_#{participant.id.to_s}", role: 'menu')
     html      = raw content_tag(:div, button + ul, class: 'btn-group')
+  end
+
+  def change_arm_select participant
+    arms = participant.protocol.arms
+    
+    select("participant", "arm_id", options_from_collection_for_select(arms, "id", "name", participant.arm_id), {include_blank: true}, class: "form-control selectpicker")
   end
 end
