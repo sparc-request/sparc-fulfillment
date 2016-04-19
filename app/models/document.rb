@@ -4,6 +4,8 @@ class Document < ActiveRecord::Base
 
   belongs_to :documentable, polymorphic: true
 
+  validates :title, presence: true
+  
   def path
     [ENV.fetch('DOCUMENTS_FOLDER'), id].join('/')
   end

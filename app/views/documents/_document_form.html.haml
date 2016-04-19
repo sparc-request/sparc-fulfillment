@@ -9,7 +9,7 @@
       .modal-body
         #document_modal_errors
         .form-group
-          = form.label "title", t(:documents)[:title], class: "col-sm-3 control-label"
+          = form.label "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
           .col-sm-8
             = form.text_field :title, {class: 'form-control'}
       .modal-footer

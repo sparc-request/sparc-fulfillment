@@ -57,7 +57,7 @@ en:
         mrn: "MRN"
         zipcode: "Zip Code"
       task:
-        due_at: "Follow Up Date"
+        due_at: "Date"
       visit_group:
         name: "Visit Name"
         day: "Visit Day"
@@ -385,7 +385,7 @@ en:
     assignee_name: "Assigned to"
     completed: "Completed"
     create_task: "Create Task"
-    due_at: "Due date"
+    due_at: "Due Date"
     flash_messages:
       created: "Task Created"
       incompleted: "The selected task(s) have been set to incomplete"
