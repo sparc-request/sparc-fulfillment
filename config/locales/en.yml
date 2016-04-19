@@ -126,6 +126,13 @@ en:
     save_fulfillment: "Save Fulfillment"
     view: "View Fulfillments"
 
+  incomplete_complete_modal:
+    incomplete_header: "Incomplete Multiple Services"
+    completed_date: "Completed Date *"
+    incompleted_date: "Incomplete Date *"
+    performed_by: "Performed By *"
+    notes: "Notes *"
+
   line_item:
     object: "Line Item"
     account_number: "Account"
