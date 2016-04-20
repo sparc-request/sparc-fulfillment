@@ -6,7 +6,10 @@ $(".modal_completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
 
 
 
-$(document).on 'click', "#complete_all_modal button.save", ->
-  $(this).addClass("disabled")
-
+$(document).on 'click', "#complete_all_modal button.save", (e) ->
+  if !$('.modal_completed_date_field  .datetimepicker').val() || !$('#complete_all_modal .performed-by-dropdown').val()
+    e.preventDefault()
+    $('#complete_modal_errors').addClass('alert').addClass('alert-danger').html('Please complete required fields')
+  else
+    $(this).addClass("disabled")
 
