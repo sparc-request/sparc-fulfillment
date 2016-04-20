@@ -30,35 +30,85 @@ RSpec.describe VisitGroup, type: :model do
     end
 
     context 'if day present' do
-      it "should ensure that day is greater than preceding VisitGroup's day and less than succeeding VisitGroup's day" do
-        arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
-        [1, 2, 3].permutation.each_with_index do |days, idx|
-          before_visit_group = build(:visit_group, position: 3 * (idx + 1), day: days[0], arm: arm)
-          visit_group        = build(:visit_group, position: 3 * (idx + 1) + 1, day: days[1], arm: arm)
-          after_visit_group  = build(:visit_group, position: 3 * (idx + 1) + 2, day: days[2], arm: arm)
-          before_visit_group.save(validate: false)
-          visit_group.save(validate: false)
-          after_visit_group.save(validate: false)
+      context "insertion results in in-order days" do
+        it "should be valid" do
+          arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+          create(:visit_group, position: 1, day: 1, arm: arm)
+          create(:visit_group, position: 2, day: 8, arm: arm)
 
-          # if days in order, should be valid
-          if days[0] < days[1] && days[1] < days[2]
-            expect(visit_group).to be_valid, "#{before_visit_group.inspect}\n#{visit_group.inspect}\n#{after_visit_group.inspect}\nexpected second VisitGroup to be valid, got invalid"
-          else
-            expect(visit_group).not_to be_valid, "#{before_visit_group.inspect}\n#{visit_group.inspect}\n#{after_visit_group.inspect}\nexpected second VisitGroup to be invalid, got valid"
+          vg = build(:visit_group, position: 2, day: 2, arm: arm)
+
+          expect(vg).to be_valid
+        end
+      end
+
+      context "insertion results in out-of-order days" do
+        it "should be invalid" do
+          arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+          create(:visit_group, position: 1, day: 1, arm: arm)
+          create(:visit_group, position: 2, day: 8, arm: arm)
+
+          vg = build(:visit_group, position: 2, day: 0, arm: arm)
+
+          expect(vg).not_to be_valid
+        end
+      end
+
+      context "changing position towards the beginning" do
+        context "results in in-order days" do
+          it "should be valid" do
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            create(:visit_group, position: 1, day: 1, arm: arm)
+            create(:visit_group, position: 2, day: 8, arm: arm)
+            vg = build(:visit_group, position: 3, day: 4, arm: arm)
+            vg.save(validate: false)
+
+            vg.position = 2
+
+            expect(vg).to be_valid
+          end
+        end
+
+        context "result in out-of-order days" do
+          it "should be invalid" do
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            create(:visit_group, position: 1, day: 1, arm: arm)
+            create(:visit_group, position: 2, day: 8, arm: arm)
+            vg = create(:visit_group, position: 3, day: 16, arm: arm)
+
+            vg.position = 2
+
+            expect(vg).not_to be_valid
           end
         end
       end
 
-      context "when inserting a VisitGroup" do
-        it "should validate :day correctly" do
-          arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
-          create(:visit_group, position: 1, day: 0, arm: arm)
-          create(:visit_group, position: 2, day: 2, arm: arm)
-          valid_vg = build(:visit_group, position: 2, day: 1, arm: arm)
-          invalid_vg = build(:visit_group, position: 2, day: 2, arm: arm)
+      context "changing position towards the end" do
+        context "results in in-order days" do
+          it "should be valid" do
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            vg = create(:visit_group, position: 1, day: 4, arm: arm)
+            build(:visit_group, position: 2, day: 1, arm: arm).save(validate: false)
+            build(:visit_group, position: 3, day: 8, arm: arm)
+            vg.save(validate: false)
 
-          expect(valid_vg).to be_valid
-          expect(invalid_vg).not_to be_valid
+            vg.position = 2
+
+            expect(vg).to be_valid
+          end
+        end
+
+        context "result in out-of-order days" do
+          it "should be invalid" do
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            vg = create(:visit_group, position: 1, day: 1, arm: arm)
+            create(:visit_group, position: 2, day: 8, arm: arm)
+            create(:visit_group, position: 3, day: 16, arm: arm)
+
+            vg.position = 2
+
+            expect(vg).not_to be_valid
+          end
         end
       end
     end
