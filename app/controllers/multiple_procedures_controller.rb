@@ -17,12 +17,12 @@ class MultipleProceduresController < ApplicationController
     if status == 'incomplete'
       #Create test note for validation.
       @note = Note.new(kind: 'reason', reason: params[:reason], notable_type: 'Procedure')
-      binding.pry
+
       if @note.valid?
         #Now update all @procedures with incomplete status and create notes.
         @procedures.each do |procedure|
           procedure.update_attributes(status: "incomplete", performer_id: params[:performed_by], incompleted_date: Time.strptime(params[:incompleted_date], "%m-%d-%Y").utc)
-          procedure.notes.create(identity_id: current_identity.id, kind: 'reason', reason: params[:reason], comment: params[:comment])
+          procedure.notes.create(identity_id: params[:performed_by], kind: 'reason', reason: params[:reason], comment: params[:comment])
         end
       end
       @performed_by = params[:performed_by]
