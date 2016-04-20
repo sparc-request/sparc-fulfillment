@@ -1,6 +1,4 @@
 = form_for visit_group, {remote: true, html: {class: "form-horizontal new_visit", role: "form"}} do |a|
-  = hidden_field_tag :schedule_tab, schedule_tab
-  = hidden_field_tag :current_page, current_page
   .form-group
     = a.label "name", t(:visit_groups)[:name]+t(:actions)[:required], class: "col-sm-4 control-label"
     .col-sm-7

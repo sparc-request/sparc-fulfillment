@@ -24,7 +24,7 @@
       - if intended_action == "edit"
         %hr
           .edit_visit_area
-            = render partial: '/study_schedule/management/manage_visits/edit_visit_form', locals: {visit_group: visit_group, arm: arm, schedule_tab: schedule_tab, current_page: current_page}
+            = render partial: '/study_schedule/management/manage_visits/edit_visit_form', locals: { visit_group: visit_group }
       -else
         .modal-footer
           .center-block

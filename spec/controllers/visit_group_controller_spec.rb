@@ -108,16 +108,12 @@ RSpec.describe VisitGroupsController, type: :controller do
         visit_group_id: @visit_group.id,
         arm_id: @arm.id,
         intended_action: "edit",
-        schedule_tab: "template",
-        current_page: "1",
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:visit_group)).to eq(@visit_group)
       expect(assigns(:arm)).to eq(@visit_group.arm)
       expect(assigns(:intended_action)).to eq("edit")
-      expect(assigns(:current_page)).to eq("1")
-      expect(assigns(:schedule_tab)).to eq("template")
     end
 
     it "should assign the appropriate vars when there is only an arm id" do
@@ -125,33 +121,24 @@ RSpec.describe VisitGroupsController, type: :controller do
         protocol_id: @protocol.id,
         arm_id: @arm.id,
         intended_action: "edit",
-        schedule_tab: "template",
-        current_page: "1",
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:visit_group)).to eq(@arm.visit_groups.first)
       expect(assigns(:arm)).to eq(@arm)
       expect(assigns(:intended_action)).to eq("edit")
-      expect(assigns(:current_page)).to eq("1")
-      expect(assigns(:schedule_tab)).to eq("template")
     end
 
     it "should assign the appropriate vars without arm_id or visit_group_id" do
       xhr :get, :navigate_to_visit_group, {
         protocol_id: @protocol.id,
         intended_action: "edit",
-        schedule_tab: "template",
-        current_page: "1",
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:visit_group)).to eq(@protocol.arms.first.visit_groups.first)
       expect(assigns(:arm)).to eq(@protocol.arms.first)
       expect(assigns(:intended_action)).to eq("edit")
-      expect(assigns(:current_page)).to eq("1")
-      expect(assigns(:schedule_tab)).to eq("template")
     end
   end
 end
-
