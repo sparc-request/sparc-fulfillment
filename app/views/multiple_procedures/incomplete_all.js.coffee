@@ -2,7 +2,7 @@ $("#modal_area").html("<%= escape_javascript(render(partial: 'incomplete_all_mod
 $("#modal_place").modal 'show'
 
 $(".selectpicker").selectpicker()
-$(".modal_incompleted_date_field").datetimepicker(format: 'MM-DD-YYYY')
+$(".modal_incompleted_date_field").datetimepicker({ format:'MM-DD-YY', defaultDate: new Date() }).val()
 
 
 $(document).on 'click', "#incomplete_all_modal button.save", (e) ->

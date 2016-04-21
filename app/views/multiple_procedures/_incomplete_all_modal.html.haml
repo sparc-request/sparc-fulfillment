@@ -18,7 +18,7 @@
           .col-sm-7
             .input-group.date.modal_incompleted_date_field
               %input.datetimepicker{type: "text", class: "form-control"}
-              = hidden_field_tag "incompleted_date", {class: "form-control datetimepicker", value: format_date(@procedures.first.completed_date)}
+              = hidden_field_tag "incompleted_date", class: "form-control datetimepicker", value: format_date(DateTime.now())
               %span.input-group-addon{ class: "#{ @procedures.first.appt_started? ? '' : 'pre_start_disabled' }" }
                 %span.glyphicon.glyphicon-calendar
         .form-group

@@ -2,7 +2,7 @@ $("#modal_area").html("<%= escape_javascript(render(partial: 'complete_all_modal
 $("#modal_place").modal 'show'
 
 $(".selectpicker").selectpicker()
-$(".modal_completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
+$(".modal_completed_date_field").datetimepicker({ format:'MM-DD-YY', defaultDate: new Date() }).val()
 
 
 
