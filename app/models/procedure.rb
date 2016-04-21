@@ -183,13 +183,14 @@ class Procedure < ActiveRecord::Base
   end
 
   def set_save_dependencies
+
     if status_changed?(from: "unstarted") && service.present?
       write_attribute(:service_name, service.name)
     end
 
-    if status_changed?(to: "complete")
+    if status == "complete"
       write_attribute(:incompleted_date, nil)
-    elsif status_changed?(to: "incomplete")
+    elsif status == "incomplete"
       write_attribute(:completed_date, nil)
     elsif status_changed?(to: "unstarted") or status_changed?(to: "follow_up")
       write_attribute(:completed_date, nil)
@@ -199,11 +200,11 @@ class Procedure < ActiveRecord::Base
       end
     end
 
-    if status_changed?(from: "complete")
+    if status != "complete"
       write_attribute(:service_cost, nil)
     end
 
-    if completed_date_changed? && !completed_date_changed?(to: nil)
+    if status == "complete" && completed_date != nil
       write_attribute(:service_cost, new_cost(protocol.funding_source, completed_date))
     end
   end
