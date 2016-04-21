@@ -5,6 +5,8 @@ feature 'Identity completes all Procedures', js: true do
   scenario 'and sees the complete buttons are active' do
     given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
     when_i_complete_all_the_procedures
+    then_i_should_see_a_complete_all_modal
+    when_i_save_the_modal_with_defaults
     and_i_unroll_the_procedures_accordion
     then_all_the_procedure_complete_buttons_should_be_active
   end
@@ -12,6 +14,8 @@ feature 'Identity completes all Procedures', js: true do
   scenario 'and sees the procedures are completed' do
     given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
     when_i_complete_all_the_procedures
+    then_i_should_see_a_complete_all_modal
+    when_i_save_the_modal_with_defaults
     then_all_procedures_should_be_completed
   end
 
@@ -35,6 +39,14 @@ feature 'Identity completes all Procedures', js: true do
     bootstrap_multiselect('#core_multiselect')
     find('button.complete_all').click
     wait_for_ajax
+  end
+
+  def then_i_should_see_a_complete_all_modal
+    expect(page).to have_text("Complete Multiple Services")
+  end
+
+  def when_i_save_the_modal_with_defaults
+    find('button.save').click
   end
 
   def and_i_unroll_the_procedures_accordion

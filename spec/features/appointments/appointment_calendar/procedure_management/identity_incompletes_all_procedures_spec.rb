@@ -66,6 +66,6 @@ feature 'Identity incompletes all Procedures', js: true do
 
   def then_i_should_see_an_error_message
     expect(page).to have_css('.alert.alert-danger')
-    expect(page).to have_content("Reason can't be blank")
+    expect(page).to have_content("Please complete the required fields:")
   end
 end
