@@ -21,7 +21,6 @@ RSpec.describe MultipleProceduresController, type: :controller do
       context 'Procedures statuses are unstarted' do
 
         context 'User marks Procedures as complete' do
-          #params:  procedure_ids"=>["2838", "2839", "2840"], "status"=>"complete", "completed_date"=>"04-22-2016", "performed_by"=>"12911"
 
           before do
             @procedure1 = create(:procedure, appointment: @appointment, service: @service)
@@ -50,7 +49,6 @@ RSpec.describe MultipleProceduresController, type: :controller do
         end
 
         context 'User marks Procedure as incomplete' do
-          # "procedure_ids"=>["2838", "2839", "2840"], "status"=>"incomplete", "incompleted_date"=>"04-22-2016", "performed_by"=>"12911", "reason"=>"Assessment missed", "comment"=>""}
 
           before do
             @procedure1 = create(:procedure, appointment: @appointment, service: @service)
@@ -137,7 +135,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             expect(@procedure2.reload.completed_date).to eq(nil)
           end
 
-          it 'should update the Procedures completed_dates to: edited_date' do
+          it 'should update the Procedures incompleted_dates to: edited_date' do
             expect(@procedure1.reload.incompleted_date).to eq(Time.strptime(@edited_date, "%m-%d-%Y"))
             expect(@procedure2.reload.incompleted_date).to eq(Time.strptime(@edited_date, "%m-%d-%Y"))
           end
@@ -173,40 +171,57 @@ RSpec.describe MultipleProceduresController, type: :controller do
           end
 
           it 'should update the Procedure statuses' do
-            
+            expect(@procedure1.reload.status).to eq("complete")
+            expect(@procedure2.reload.status).to eq("complete")
           end
 
           it 'should update the Procedure completed_date to: edited_date' do
-            
+            expect(@procedure1.reload.completed_date).to eq(Time.strptime(@edited_date, "%m-%d-%Y"))
+            expect(@procedure2.reload.completed_date).to eq(Time.strptime(@edited_date, "%m-%d-%Y"))
+          end
+
+          it 'should update the Procedures incompleted_dates to: nil' do
+            expect(@procedure1.reload.incompleted_date).to eq(nil)
+            expect(@procedure2.reload.incompleted_date).to eq(nil)
           end
 
           it 'should create a Note' do
-            
+            expect(@procedure1.reload.notes).to be
+            expect(@procedure2.reload.notes).to be
+          end
+        end
+        context 'User marks Procedure as incomplete' do
+
+          before do
+            @procedure1 = create(:procedure, status: "incomplete", appointment: @appointment, service: @service, performer_id: @identity.id, incompleted_date: Date.current.strftime("%m-%d-%Y") )
+            @procedure2 = create(:procedure, status: "incomplete", appointment: @appointment, service: @service, performer_id: @identity.id, incompleted_date: Date.current.strftime("%m-%d-%Y") )
+            @edited_date = Date.current.tomorrow.strftime("%m-%d-%Y")
+            params    = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', incompleted_date: @edited_date, performed_by: Identity.first.id, reason: "Assessment missed", format: :js }
+
+            put :update_procedures, params
+          end
+
+          it 'should update the Procedure statuses' do
+            expect(@procedure1.reload.status).to eq("incomplete")
+            expect(@procedure2.reload.status).to eq("incomplete")
+          end
+
+          it 'should update the Procedure incompleted_date to: edited_date' do
+            expect(@procedure1.reload.incompleted_date).to eq(Time.strptime(@edited_date, "%m-%d-%Y"))
+            expect(@procedure2.reload.incompleted_date).to eq(Time.strptime(@edited_date, "%m-%d-%Y"))
+          end
+
+          it 'should update the Procedures completed_dates to: nil' do
+            expect(@procedure1.reload.completed_date).to eq(nil)
+            expect(@procedure2.reload.completed_date).to eq(nil)
+          end
+
+          it 'should create a Note' do
+            expect(@procedure1.reload.notes).to be
+            expect(@procedure2.reload.notes).to be
           end
         end
       end
-
-      #   context 'User marks Procedure as incomplete' do
-
-      #     before do
-      #       procedure = create(:procedure, appointment: @appointment, service: @service)
-      #       params    = { id: procedure.id, procedure: { status: 'incomplete'}, format: :js }
-
-      #       put :update, params
-      #     end
-
-      #     it 'should update the Procedure status' do
-      #       expect(assigns(:procedure).status).to eq('incomplete')
-      #     end
-
-      #     it 'should create a Note' do
-      #       expect(assigns(:procedure).reload.notes).to be_one
-      #     end
-
-      #     it 'should set the incomplete date to today' do
-      #       expect(assigns(:procedure).incompleted_date.to_date).to eq(Date.today)
-      #     end
-      #   end
     end
   end
 
