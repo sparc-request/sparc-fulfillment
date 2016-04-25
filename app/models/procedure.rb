@@ -165,7 +165,6 @@ class Procedure < ActiveRecord::Base
   end
 
   def cost(funding_source = protocol.funding_source, date = Time.current)
-    binding.pry
     if service_cost
       service_cost.to_i
     else

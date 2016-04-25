@@ -125,7 +125,6 @@ feature 'Identity completes all Procedures', js: true do
   end
 
   def and_when_i_edit_the_default_performer
-    binding.pry
     bootstrap_select ".performed-by-dropdown", @performer.full_name
   end
 
