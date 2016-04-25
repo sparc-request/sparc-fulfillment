@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Identity sets Procedure performer', js: true do
+feature 'User sets Procedure performer', js: true do
 
   scenario 'completing without selecting a Performer from the Performer dropdown' do
     given_i_have_added_a_procedure_to_an_appointment
