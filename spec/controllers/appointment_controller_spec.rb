@@ -8,7 +8,7 @@ RSpec.describe AppointmentsController do
     @service = create(:service)
     @arm = @protocol.arms.first
     @participant = create(:participant, arm: @arm, protocol: @protocol)
-    @custom_appointment = create(:custom_appointment, participant: @participant, arm: @arm, name: "Custom Visit")
+    @custom_appointment = create(:custom_appointment, participant: @participant, arm: @arm, name: "Custom Visit", position: 1)
   end
 
   describe "GET #new" do

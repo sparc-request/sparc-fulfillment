@@ -3,102 +3,64 @@ require 'rails_helper'
 feature 'Start Complete Buttons', js: true do
 
   context 'User visits appointment with no start date or completed_date' do
-    scenario 'and sees the start button is active' do
+    scenario 'and sees the start button is active and the complete button disabled' do
       given_i_am_viewing_an_appointment
       then_i_should_see_the_start_button
-    end
-
-    scenario 'and sees the completed button is disabled' do
-      given_i_am_viewing_an_appointment
       then_i_should_see_the_complete_button_disabled
     end
   end
 
   context 'User visits appointment with start date but no completed date' do
-    scenario 'and sees the start date picker' do
+    scenario 'and sees the start date picker and the completed button active' do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
       when_i_load_the_page
       then_i_should_see_the_start_datepicker
-    end
-
-    scenario 'and sees the completed button is active' do
-      given_i_am_viewing_an_appointment
-      given_there_is_a_start_date
-      when_i_load_the_page
       then_i_should_see_the_complete_button
     end
   end
 
   context 'User visits appointment with start date and completed date' do
-    scenario 'and sees the start date picker' do
+    scenario 'and sees the start date picker and the completed date picker' do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date_and_a_completed_date
       when_i_load_the_page
       then_i_should_see_the_start_datepicker
-    end
-
-    scenario 'and sees the completed date picker' do
-      given_i_am_viewing_an_appointment
-      given_there_is_a_start_date_and_a_completed_date
-      when_i_load_the_page
       then_i_should_see_the_completed_datepicker
     end
   end
 
   context 'User clicks start button' do
-    scenario 'and sees the start datepicker' do
+    scenario 'and sees the start datepicker and the completed button' do
       given_i_am_viewing_an_appointment
       when_i_click_the_start_button
       then_i_should_see_the_start_datepicker
-    end
-
-    scenario 'and sees the completed button is active' do
-      given_i_am_viewing_an_appointment
-      when_i_click_the_start_button
       then_i_should_see_the_complete_button
     end
   end
 
   context 'User clicks complete button' do
-    scenario 'and sees the start date picker' do
+    scenario 'and sees the start date picker and the completed datepicker' do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
       when_i_load_the_page
       when_i_click_the_complete_button
       then_i_should_see_the_start_datepicker
-    end
-
-    scenario 'and sees the completed datepicker' do
-      given_i_am_viewing_an_appointment
-      given_there_is_a_start_date
-      when_i_load_the_page
-      when_i_click_the_complete_button
       then_i_should_see_the_completed_datepicker
     end
   end
 
-  context 'User sets start date' do
-    scenario 'and sees the start date is updated' do
-      now = Time.current
-
-      given_i_am_viewing_an_appointment
-      given_there_is_a_start_date
-      when_i_load_the_page
-      when_i_set_the_start_date_to now
-      then_i_should_see_the_start_date_at now
-    end
-  end
-
-  context 'User sets completed date' do
-    scenario 'and sees the completed date updated' do
+  context 'User sets completed date and start date' do
+    scenario 'and sees the completed and start date updated' do
       now = Time.current
 
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date_and_a_completed_date
       when_i_load_the_page
       when_i_set_the_completed_date_to now
+      when_i_set_the_start_date_to now
       then_i_should_see_the_completed_date_at now
+      then_i_should_see_the_start_date_at now
     end
   end
 

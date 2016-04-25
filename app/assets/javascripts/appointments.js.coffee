@@ -319,6 +319,7 @@ $ ->
         data: data
         url:  "/appointments/#{appointment_id}.js"
         success: ->
+          $('#completed-appointments-table').bootstrapTable('refresh', {silent: "true"})
           $('#start_date').data("DateTimePicker").maxDate(e.date)
 
   # If enable_it true, enable Complete Visit button; otherwise, disable it.

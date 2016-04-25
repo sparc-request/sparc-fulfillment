@@ -42,24 +42,36 @@ RSpec.describe ProtocolsController, type: :controller do
 
   describe "GET #show" do
 
-    before :each do
-      @protocol = create_and_assign_protocol_to_me
-    end
-
     it "returns http success" do
-      get :show, id: @protocol.id
+      identity              = Identity.first
+      organization          = create(:organization)
+      sub_service_request   = create(:sub_service_request, organization_id: organization.id)
+      protocol              = create(:protocol, sub_service_request: sub_service_request)
+      create(:clinical_provider, identity: identity, organization: organization)
+      create(:project_role_pi, identity: identity, protocol: protocol)
 
-      expect(response).to be_success
+      xhr :get, :show, id: protocol.id
+
+      expect(assigns(:protocol)).to eq(protocol)
     end
 
     it "assigns the requested protocol to @protocol" do
-      get :show, id: @protocol.id
+      protocol = create_and_assign_protocol_to_me
+      get :show, id: protocol.id
 
-      expect(assigns(:protocol)).to eq(@protocol)
+      expect(assigns(:protocol)).to eq(protocol)
     end
 
     it "renders the #show view" do
-      get :show, id: @protocol.id
+      identity              = Identity.first
+      sign_in identity
+      organization          = create(:organization)
+      sub_service_request   = create(:sub_service_request, organization_id: organization.id)
+      protocol              = create(:protocol, sub_service_request: sub_service_request)
+      create(:clinical_provider, identity: identity, organization: organization)
+      create(:project_role_pi, identity: identity, protocol: protocol)
+
+      xhr :get, :show, id: protocol.id, format: :js
 
       expect(response).to render_template :show
     end
