@@ -126,7 +126,7 @@ en:
     save_fulfillment: "Save Fulfillment"
     view: "View Fulfillments"
 
-  incomplete_complete_modal:
+  multiple_procedures_modal:
     incomplete_header: "Incomplete Multiple Services"
     complete_header: "Complete Multiple Services"
     completed_date: "Completed Date *"

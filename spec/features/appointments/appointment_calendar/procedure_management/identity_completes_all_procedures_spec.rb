@@ -44,9 +44,9 @@ feature 'Identity completes all Procedures', js: true do
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
     organization.update_attributes(parent: organization_program, name: "Core")
+
     FactoryGirl.create(:clinical_provider, identity: @identity1, organization: organization)
     FactoryGirl.create(:project_role_pi, identity: @identity1, protocol: protocol)
-
     FactoryGirl.create(:clinical_provider, identity: @identity2, organization: organization)
     FactoryGirl.create(:project_role_pi, identity: @identity2, protocol: protocol)
     
@@ -75,7 +75,7 @@ feature 'Identity completes all Procedures', js: true do
   end
 
   def with_a_default_completed_date_of_current_date
-    expected_date = page.evaluate_script %Q{ $(".modal_completed_date_field").data("DateTimePicker").date(); }
+    expected_date = page.evaluate_script %Q{ $(".modal_date_field").data("DateTimePicker").date(); }
     expect(expected_date["_i"]).to eq(Time.current.strftime('%m-%d-%Y'))
   end
 
@@ -105,18 +105,18 @@ feature 'Identity completes all Procedures', js: true do
   end
 
   def and_all_procedures_should_have_performed_by_set_to_default
-    procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val() }
-    procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val() }
+    procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val(); }
+    procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
 
     expect(procedure1_performed_by.to_i).to eq(@identity1.id)
     expect(procedure2_performed_by.to_i).to eq(@identity1.id)
-
   end
 
   def when_i_edit_the_default_date
-    page.execute_script %Q{ $(".datetimepicker").siblings(".input-group-addon").trigger("click")}
-    tomorrow_day = evaluate_script %Q{ parseInt($("td.day.today").html()) + 1 }
-    page.execute_script %Q{ $("td.day:contains(#{tomorrow_day})").trigger("click") }
+    page.execute_script %Q{ $("#complete_all_modal .datetimepicker").siblings(".input-group-addon").trigger("click");}
+
+    tomorrow_day = evaluate_script %Q{ parseInt($("td.day.today").html())+1 }
+    page.execute_script %Q{ $("#complete_all_modal td.day:contains(#{tomorrow_day})").last().trigger('click'); }
     wait_for_ajax
   end
 
@@ -133,8 +133,8 @@ feature 'Identity completes all Procedures', js: true do
   end
 
   def and_all_procedures_should_have_selected_performer
-    procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val() }
-    procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val() }
+    procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val(); }
+    procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
 
     expect(procedure1_performed_by.to_i).to eq(@identity2.id)
     expect(procedure2_performed_by.to_i).to eq(@identity2.id)

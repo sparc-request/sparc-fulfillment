@@ -209,7 +209,7 @@ class Procedure < ActiveRecord::Base
       write_attribute(:service_cost, nil)
     end
 
-    if (completed_date_changed? && !completed_date_changed?(to: nil)) 
+    if completed_date_changed? && !completed_date_changed?(to: nil)
       write_attribute(:service_cost, new_cost(protocol.funding_source, completed_date))
     end
   end

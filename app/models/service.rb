@@ -45,7 +45,6 @@ class Service < ActiveRecord::Base
   end
 
   def current_effective_pricing_map(date = Time.current)
-    #date is not being passed in
     pricing_maps.current(date).first
   end
 

@@ -1,0 +1,7 @@
+= label_tag field_name, date_name, class: "col-sm-4 control-label"
+.col-sm-7
+  .input-group.date.modal_date_field
+    %input.datetimepicker{type: "text", class: "form-control"}
+    = hidden_field_tag field_name, class: "form-control datetimepicker", value: format_date(DateTime.now())
+    %span.input-group-addon{ class: "#{ procedures.first.appt_started? ? '' : 'pre_start_disabled' }" }
+      %span.glyphicon.glyphicon-calendar
