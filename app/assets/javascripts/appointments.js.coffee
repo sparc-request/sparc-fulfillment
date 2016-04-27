@@ -4,6 +4,7 @@ $ ->
     multiselect = $(element).siblings('#core_multiselect')
     $(multiselect).multiselect('deselectAll', false)
     $(multiselect).multiselect('updateButtonText')
+    $(element).closest('.align-select-menu').find('.complete_all, .incomplete_all').toggleClass('disabled')
 
   $(document).on 'click', 'tr.procedure-group button', ->
     core = $(this).closest('tr.core')
