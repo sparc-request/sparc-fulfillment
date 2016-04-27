@@ -1,6 +1,6 @@
 #incomplete_all_modal.modal-dialog
   .modal-content
-    = render partial: 'multiple_procedures/modal_header', locals: { modal_header: t(:multiple_procedures_modal)[:incomplete_header] }
+    = render 'multiple_procedures/modal_header', modal_header: t(:multiple_procedures_modal)[:incomplete_header] 
     = form_tag update_procedures_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
       .modal-body.form-horizontal
         #multiple_procedures_modal_errors
@@ -8,9 +8,9 @@
           = hidden_field_tag 'procedure_ids[]', procedure.id
         = hidden_field_tag :status, "incomplete"
         .form-group
-          = render partial: 'multiple_procedures/modal_date', locals: { field_name: "incompleted_date", date_name: t(:multiple_procedures_modal)[:incompleted_date], procedures: @procedures }
+          = render 'multiple_procedures/modal_date', field_name: "incompleted_date", date_name: t(:multiple_procedures_modal)[:incompleted_date], procedures: @procedures 
         .form-group
-          = render partial: 'multiple_procedures/performed_by', locals: { procedures: @procedures }
+          = render 'multiple_procedures/performed_by', procedures: @procedures 
         .form-group
           = label_tag "reason", t(:multiple_procedures_modal)[:reason], class: "col-sm-4 control-label"
           .col-sm-7
@@ -19,7 +19,7 @@
           = label_tag "comment", t(:notes)[:comment], class: "col-sm-4 control-label"
           .col-sm-7
             = text_area_tag :comment, nil, class: 'form-control', rows: "6"
-      = render partial: 'multiple_procedures/modal_footer'
+      = render 'multiple_procedures/modal_footer'
 
 
 

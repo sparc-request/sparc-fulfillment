@@ -1,6 +1,6 @@
 #complete_all_modal.modal-dialog
   .modal-content
-    = render partial: 'multiple_procedures/modal_header', locals: { modal_header: t(:multiple_procedures_modal)[:complete_header] }
+    = render 'multiple_procedures/modal_header', modal_header: t(:multiple_procedures_modal)[:complete_header] 
     = form_tag update_procedures_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
       .modal-body
         #multiple_procedures_modal_errors
@@ -8,7 +8,7 @@
           = hidden_field_tag 'procedure_ids[]', procedure.id
         = hidden_field_tag :status, "complete"
         .form-group
-          = render partial: 'multiple_procedures/modal_date', locals: { field_name: "completed_date", date_name: t(:multiple_procedures_modal)[:completed_date], procedures: @procedures }
+          = render 'multiple_procedures/modal_date', field_name: "completed_date", date_name: t(:multiple_procedures_modal)[:completed_date], procedures: @procedures
         .form-group
-          = render partial: 'multiple_procedures/performed_by', locals: { procedures: @procedures }
-      = render partial: 'multiple_procedures/modal_footer'
+          = render 'multiple_procedures/performed_by', procedures: @procedures 
+      = render 'multiple_procedures/modal_footer'
