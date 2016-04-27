@@ -190,7 +190,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             expect(@procedure2.reload.notes).to be
           end
         end
-        context 'User marks Procedure as incomplete' do
+        context 'User edits fields for all incomplete Procedures' do
 
           before do
             @procedure1 = create(:procedure, status: "incomplete", appointment: @appointment, service: @service, performer_id: @identity.id, incompleted_date: Date.current.strftime("%m-%d-%Y") )
