@@ -23,4 +23,5 @@
     .center-block
       %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
         = t(:actions)[:close]
+      -# Why not: = a.submit, :save, class: btn btn-primary etc...
       %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}
