@@ -53,11 +53,9 @@ feature 'Identity incompletes all Procedures', js: true do
       given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
       when_i_click_the_incomplete_all_button
       then_i_should_see_a_incomplete_all_modal
-      with_a_default_incompleted_date_of_current_date
       and_with_a_default_performed_by_name_of_current_user
       when_i_give_a_valid_reason_and_save
       and_i_unroll_the_procedures_accordion
-      and_all_procedures_should_have_incompleted_date_set_to_nil
       and_all_procedures_should_have_performed_by_set_to_default
     end
   end
@@ -67,11 +65,9 @@ feature 'Identity incompletes all Procedures', js: true do
       given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
       when_i_click_the_incomplete_all_button
       then_i_should_see_a_incomplete_all_modal
-      when_i_edit_the_default_date
       and_when_i_edit_the_default_performer
       when_i_give_a_valid_reason_and_save
       and_i_unroll_the_procedures_accordion
-      and_all_procedures_should_have_incompleted_date_set_to_nil
       and_all_procedures_should_have_selected_performer
     end
   end
@@ -119,12 +115,6 @@ feature 'Identity incompletes all Procedures', js: true do
     expect(page).to have_text("Incomplete Multiple Services")
   end
 
-  def with_a_default_incompleted_date_of_current_date
-    find('.modal_date_field')
-    expected_date = page.evaluate_script %Q{ $(".modal_date_field").data("DateTimePicker").date(); }
-    expect(expected_date["_i"]).to eq(Date.current.strftime('%m-%d-%Y'))
-  end
-
   def and_with_a_default_performed_by_name_of_current_user
     expect(page).to have_css('.modal-performed-by .performed-by-dropdown', text: "#{@current_identity.full_name}")
   end
@@ -137,17 +127,6 @@ feature 'Identity incompletes all Procedures', js: true do
     find("tr.procedure-group td[colspan='8'] button.btn").click
   end
 
-  def and_all_procedures_should_have_incompleted_date_set_to_nil
-    find("tr.procedure[data-id='1'] div.completed_date_field input.datetimepicker")
-    find("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker")
-
-    procedure1_date = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] div.completed_date_field input.datetimepicker").val(); }
-    procedure2_date = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker").val(); }
-  
-    expect(procedure1_date).to eq("")
-    expect(procedure2_date).to eq("")
-  end
-
   def and_all_procedures_should_have_performed_by_set_to_default
     find("tr.procedure[data-id='1'] td.performed-by .selectpicker")
     find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
@@ -157,19 +136,6 @@ feature 'Identity incompletes all Procedures', js: true do
 
     expect(procedure1_performed_by.to_i).to eq(@current_identity.id)
     expect(procedure2_performed_by.to_i).to eq(@current_identity.id)
-  end
-
-  def when_i_edit_the_default_date
-    find('#incomplete_all_modal .datetimepicker')
-    page.execute_script %Q{ $('#incomplete_all_modal .datetimepicker').siblings(".input-group-addon").trigger("click");}
-    
-    find('td.day.today')
-    tomorrow_day = evaluate_script %Q{ parseInt($('td.day.today').html())+1 }
-
-    find('th.picker-switch')
-    page.execute_script %Q{ $("#incomplete_all_modal td.day:contains(#{tomorrow_day})").last().trigger('click'); }
-    
-    wait_for_ajax
   end
 
   def and_when_i_edit_the_default_performer

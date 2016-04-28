@@ -22,7 +22,7 @@ class MultipleProceduresController < ApplicationController
         #Now update all @procedures with incomplete status and create notes.
         @performed_by = params[:performed_by]
         @procedures.each do |procedure|
-          procedure.update_attributes(status: "incomplete", performer_id: @performed_by, incompleted_date: Time.strptime(params[:incompleted_date], "%m-%d-%Y").utc)
+          procedure.update_attributes(status: "incomplete", performer_id: @performed_by)
           procedure.notes.create(identity_id: @performed_by, kind: 'reason', reason: params[:reason], comment: params[:comment])
         end
       end

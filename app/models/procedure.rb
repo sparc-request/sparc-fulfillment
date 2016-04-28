@@ -187,16 +187,14 @@ class Procedure < ActiveRecord::Base
       write_attribute(:service_name, service.name)
     end
 
-    if status_changed?(to: "complete") 
+    if status_changed?(to: "complete") || complete?
       write_attribute(:incompleted_date, nil)
       if completed_date.nil?
         write_attribute(:completed_date, Date.today)
       end
-    elsif status_changed?(to: "incomplete") 
+    elsif status_changed?(to: "incomplete") || incomplete?
       write_attribute(:completed_date, nil)
-      if incompleted_date.nil?
-        write_attribute(:incompleted_date, Date.today)
-      end
+      write_attribute(:incompleted_date, Date.today)
     elsif status_changed?(to: "unstarted") or status_changed?(to: "follow_up")
       write_attribute(:completed_date, nil)
       write_attribute(:incompleted_date, nil)

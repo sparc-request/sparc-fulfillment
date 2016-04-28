@@ -130,7 +130,6 @@ en:
     incomplete_header: "Incomplete Multiple Services"
     complete_header: "Complete Multiple Services"
     completed_date: "Completed Date *"
-    incompleted_date: "Incomplete Date *"
     performed_by: "Performed By *"
     reason: "Reason *"
 
