@@ -1,4 +1,9 @@
-.col-xs-2.col-xs-offset-1
-  = link_to image_tag("sctr_logo.png"), "http://sctr.musc.edu"
-.col-xs-2.col-xs-offset-6
-  = link_to image_tag("musc_logo.gif"), "http://www.musc.edu"
+.col-md-4
+  = link_to image_tag("sctr_header.jpg", height: '75', class: 'center-block'),
+    "http://sctr.musc.edu"
+.col-md-4
+  = link_to image_tag("sparc_fulfillment_header.jpg", height: '75',
+    class: 'center-block'), root_path
+.col-md-4
+  = link_to image_tag("musc_header.jpg", height: '75', class: 'center-block'),
+    "http://www.musc.edu"
