@@ -21,7 +21,7 @@ multi_select.multiselect({
     if !_.isEqual(@original_selected_values,selected_values) && selected_values != null
       $('#protocol_section').empty() 
       $('#protocol_section').closest('.form-group').find('label').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
-      $('#protocol_section').closest('.form-group').show()
+      $('#protocol_section').closest('.form-group').removeClass("hidden")
       $.ajax
         type: 'POST'
         url: "reports/update_dropdown"

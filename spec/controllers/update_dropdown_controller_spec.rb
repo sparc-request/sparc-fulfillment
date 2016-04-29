@@ -8,15 +8,9 @@ RSpec.describe UpdateDropdownsController, type: :controller do
       
     it 'should return an array of protocols' do
       institution_organization = create(:organization_institution)
-
-      provider_organization = create(:provider_with_child_organizations)
-      provider_organization.update_attribute(:parent_id, institution_organization.id)
-
-      program_organization = create(:program_with_child_organizations)
-      program_organization.update_attribute(:parent_id, provider_organization.id)
-
-      core_organization = create(:organization_with_child_organizations)
-      core_organization.update_attribute(:parent_id, program_organization.id)
+      provider_organization = create(:provider_with_child_organizations, parent_id: institution_organization.id)
+      program_organization = create(:program_with_child_organizations, parent_id: provider_organization.id)
+      core_organization = create(:organization_with_child_organizations, parent_id: program_organization.id)
 
       program_sub_service_request = create(:sub_service_request, organization: program_organization)
       program_protocol            = create(:protocol, sub_service_request: program_sub_service_request)
