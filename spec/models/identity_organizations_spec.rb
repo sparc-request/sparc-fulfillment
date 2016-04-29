@@ -68,54 +68,95 @@ RSpec.describe IdentityOrganizations do
 
   describe '#super_user_organizations_with_protocols' do
 
-    it "should return organizations that have super_user attached AND all the children organizations" do
+    before :each do
+      @identity                 = create(:identity)
+      @institution_organization = create(:organization_institution, has_protocols: true, children_count: 2)
+      @provider_organization    = create(:organization_provider, parent_id: @institution_organization.id, has_protocols: true, children_count: 2)
+      @program_organization     = create(:organization_program, parent_id: @provider_organization.id, has_protocols: true, children_count: 2)
+    end
 
-      institution_organization = create(:organization_institution)
+    context "institution org does not have protocols, but 2/3 provider children do" do
+      context "provider org does not have protocols, but 2/3 program children do" do
+        context "program org does not have protocols, but all core children do" do
 
-      provider_organization = create(:provider_with_child_organizations)
-      provider_organization.update_attribute(:parent_id, institution_organization.id)
+          it "should return all child organizations with protocols attached" do
+            create(:super_user, identity: @identity, organization: @institution_organization)
 
-      program_organization = create(:program_with_child_organizations)
-      program_organization.update_attribute(:parent_id, provider_organization.id)
+            orgs_with_protocols = []
+            @institution_organization.children.map{ |child| orgs_with_protocols << child.id if child.protocols.any? }
+            @provider_organization.children.map{ |child| orgs_with_protocols << child.id if child.protocols.any? }
+            @program_organization.children.map{ |child| orgs_with_protocols << child.id if child.protocols.any? }
+            
+            expect(IdentityOrganizations.new(@identity.id).super_user_organizations_with_protocols.map(&:id)).to eq(orgs_with_protocols.flatten)
+          end
+        end
+      end
+    end
 
-      core_organization = create(:organization_with_child_organizations)
-      core_organization.update_attribute(:parent_id, program_organization.id)
+    context "institution org does not have protocols, but ALL provider children do" do
+      context "program org does not have protocols, but all core children do" do
 
-      identity               = create(:identity)
-      program_sub_service_request = create(:sub_service_request, organization: program_organization)
-      program_protocol            = create(:protocol, sub_service_request: program_sub_service_request)
+        it "should return provider and all child organizations" do
+          # Create protocol attached to provider
+          provider_sub_service_request = create(:sub_service_request, organization: @provider_organization)
+          provider_protocol            = create(:protocol, sub_service_request: provider_sub_service_request)
 
-      provider_sub_service_request = create(:sub_service_request, organization: provider_organization)
-      provider_protocol            = create(:protocol, sub_service_request: provider_sub_service_request)
+          create(:super_user, identity: @identity, organization: @provider_organization)
 
-      create(:super_user, identity: identity, organization: institution_organization)
+          orgs_with_protocols = []
+          orgs_with_protocols << @provider_organization.id
+          @provider_organization.children.map{ |child| orgs_with_protocols << child.id if child.protocols.any? }
+          @program_organization.children.map{ |child| orgs_with_protocols << child.id if child.protocols.any? }
 
-      expect(IdentityOrganizations.new(identity.id).super_user_organizations_with_protocols.map(&:id)).to eq([provider_organization.id, program_organization.id])
+          expect(IdentityOrganizations.new(@identity.id).super_user_organizations_with_protocols.map(&:id)).to eq(orgs_with_protocols.flatten)
+        end
+      end
     end
   end
 
   describe '#clinical_provider_organizations_with_protocols' do
 
-    it "should return organizations that have a clinical provider on them AND have protocols." do
-      identity               = create(:identity)
-      cp_organization        = create(:organization)
-      cp_sub_service_request = create(:sub_service_request, organization: cp_organization)
-      cp_protocol            = create(:protocol, sub_service_request: cp_sub_service_request)
-
-      create(:clinical_provider, identity: identity, organization: cp_organization)
-
-
-      expect(IdentityOrganizations.new(identity.id).clinical_provider_organizations_with_protocols.first.id).to eq(cp_organization.id)
+    before :each do
+      @identity                 = create(:identity)
+      @institution_organization = create(:organization_institution, has_protocols: true, children_count: 2)
+      @provider_organization    = create(:organization_provider, parent_id: @institution_organization.id, has_protocols: true, children_count: 2)
+      @program_organization     = create(:organization_program, parent_id: @provider_organization.id, has_protocols: true, children_count: 2)
     end
+    context "identity is clinical_provider" do
+      context "clinical provider access at institution level" do
+        context "institution org does not have protocols" do
+          it "should return an empty array" do
+            create(:clinical_provider, identity: @identity, organization: @institution_organization)
 
-    it "should return no organizations for clinical_providers attached to organizations with no protocols" do
-      identity               = create(:identity)
-      cp_organization        = create(:organization)
+            expect(IdentityOrganizations.new(@identity.id).clinical_provider_organizations_with_protocols).to eq([])
+          end
+        end
+      end
 
-      create(:clinical_provider, identity: identity, organization: cp_organization)
+      context "clinical provider access at institution level" do
+        context "institution org has protocols" do
+          it "should return the institution id" do
+            institution_sub_service_request = create(:sub_service_request, organization: @institution_organization)
+            institution_protocol            = create(:protocol, sub_service_request: institution_sub_service_request)
+            create(:clinical_provider, identity: @identity, organization: @institution_organization)
 
+            expect(IdentityOrganizations.new(@identity.id).clinical_provider_organizations_with_protocols.map(&:id)).to eq([@institution_organization.id])
+          end
+        end
+      end
+    end
+    context "identity is super_user" do
+      context "super user access at institution level" do
+        context "institution org has protocols" do
+          it "should return an empty array" do
+            institution_sub_service_request = create(:sub_service_request, organization: @institution_organization)
+            institution_protocol            = create(:protocol, sub_service_request: institution_sub_service_request)
+            create(:super_user, identity: @identity, organization: @institution_organization)
 
-      expect(IdentityOrganizations.new(identity.id).clinical_provider_organizations_with_protocols).to eq([])
+            expect(IdentityOrganizations.new(@identity.id).clinical_provider_organizations_with_protocols).to eq([])
+          end
+        end
+      end
     end
   end
 end
