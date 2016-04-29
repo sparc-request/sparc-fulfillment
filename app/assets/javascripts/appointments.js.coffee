@@ -10,9 +10,14 @@ $ ->
     pg = new ProcedureGrouper(core)
     group = $(this).parents('.procedure-group')
     group_id = $(group).data('group-id')
+    groups = $('.procedure-group')
 
     if $(group).find('span.glyphicon').hasClass('glyphicon-chevron-right')
       pg.show_group(group_id)
+      groups.each ->
+        if $(this).find('span.glyphicon').hasClass('glyphicon-chevron-down') && ($(this).data('group-id') != group_id)
+          pg = new ProcedureGrouper($(this).closest('tr.core'))
+          pg.hide_group($(this).data('group-id'))
     else
       pg.hide_group(group_id)
 
