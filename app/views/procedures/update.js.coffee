@@ -30,7 +30,6 @@ $('.appointments').html("<%= escape_javascript(render(partial: '/appointments/ca
 
 pg = new ProcedureGrouper()
 pg.initialize()
-pg.show_group(@procedure.group_id)
 
 if !$('.start_date_input').hasClass('hidden')
   start_date_init("<%= format_datetime(@appointment.start_date) %>")
@@ -55,6 +54,6 @@ $(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
 
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
 
+$("#group-<%= @procedure.group_id %> button").trigger('click')
 $("#modal_place").modal 'hide'
-pg.show_group(@procedure.group_id)
 <% end %>
