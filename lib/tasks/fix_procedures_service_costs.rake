@@ -58,7 +58,7 @@ namespace :data do
       proc = nil
       protocols.map(&:procedures).flatten.each do |procedure|
         # skip over procedures which don't have a service_cost
-        next if procedure.service_cost.blank? or !(start_date..end_date).cover?(procedure.handled_date.to_date)
+        next if procedure.service_cost.blank? or (procedure.handled_date && !(start_date..end_date).cover?(procedure.handled_date.to_date))
 
         begin
           proc = procedure
