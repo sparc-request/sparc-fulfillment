@@ -1,13 +1,11 @@
 class VisitGroup < ActiveRecord::Base
+  include CustomPositioning #custom methods around positioning, acts_as_list
+
   self.per_page = Visit.per_page
 
   has_paper_trail
   acts_as_paranoid
   acts_as_list scope: [:arm_id]
-
-  include CustomPositioning #custom methods around positioning, acts_as_list
-
-  before_destroy :check_for_completed_data
 
   belongs_to :arm
 
@@ -22,6 +20,8 @@ class VisitGroup < ActiveRecord::Base
   validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
   validates :day, numericality: true, if: "self.day.present?"
   validates :position, presence: true
+
+  before_destroy :check_for_completed_data
 
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)
