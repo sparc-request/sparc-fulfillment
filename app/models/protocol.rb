@@ -40,6 +40,7 @@ class Protocol < ActiveRecord::Base
   delegate :short_title,
            :title,
            :funding_source,
+           :potential_funding_source,
            to: :sparc_protocol
 
   def self.title id
@@ -91,6 +92,14 @@ class Protocol < ActiveRecord::Base
 
   def protocol_type
     sparc_protocol.type
+  end
+
+  def sparc_funding_source
+    unless funding_source.blank?
+      return funding_source
+    else
+      return potential_funding_source
+    end
   end
 
   ##### PRIVATE METHODS #####
