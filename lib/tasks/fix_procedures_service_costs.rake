@@ -56,7 +56,7 @@ namespace :data do
           current_amount = procedure.service_cost
           calculated_amount = 0
 
-          funding_source = procedure.protocol.funding_source
+          funding_source = procedure.protocol.sparc_funding_source
           visit = procedure.visit
           service = procedure.service
 
