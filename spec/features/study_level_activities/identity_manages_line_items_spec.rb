@@ -57,6 +57,7 @@ feature 'Line Items', js: true do
 
     scenario 'and does not see the line item' do
       given_i_am_viewing_the_study_level_activities_tab_without_fulfillments
+      save_and_open_screenshot
       when_i_click_on_the_delete_line_item_button
       then_i_should_not_see_the_line_item
     end
@@ -85,6 +86,9 @@ feature 'Line Items', js: true do
     sparc_protocol.update_attributes(type: 'Study')
     @service2      = @protocol.organization.inclusive_child_services(:per_participant).second
     @service2.update_attributes(name: 'Captain Cinnebon', one_time_fee: true)
+    
+    @protocol.line_items.destroy_all
+    
     @line_item_without_fulfillment = create(:line_item, service: @service2, protocol: @protocol)
 
     visit protocol_path(@protocol.id)

@@ -24,17 +24,6 @@ feature 'Fulfillments', js: true do
     end
   end
 
-  context 'User adds a new fulfillment incorrectly' do
-    scenario 'and sees form errors' do
-      given_i_have_study_level_activities
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_the_add_fulfillment_button
-      when_i_save_the_fulfillment_form
-      then_i_should_see_form_errors
-    end
-  end
-
   context 'User edits an existing fulfillment' do
     scenario 'and sees the fulfillment' do
       given_i_have_study_level_activities
@@ -133,12 +122,6 @@ feature 'Fulfillments', js: true do
     expect(first('.dropdown-menu > li').text).to eq @components.first.component
     first('.dropdown-menu > li').click
     wait_for_ajax
-  end
-
-  def then_i_should_see_form_errors
-    expect(page).to have_content("Fulfilled at can't be blank")
-    expect(page).to have_content("Quantity can't be blank")
-    expect(page).to have_content("Quantity is not a number")
   end
 
   def then_i_should_see_the_changes_in_the_notes
