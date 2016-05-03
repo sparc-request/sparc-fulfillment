@@ -107,6 +107,7 @@ en:
   fulfillment:
     object: "Fulfillment"
     add_fulfillment: "Add Fulfillment"
+    list_fulfillments: "List Fulfillments"
     components: "Fulfillment Components"
     edit: "Edit Fulfillment"
     flash_messages:
