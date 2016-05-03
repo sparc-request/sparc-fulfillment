@@ -1,0 +1,8 @@
+.fulfillment-buttons
+  .row
+    .col-md-6
+      %button.btn.btn-success.otf_fulfillment_list{type: "button", "aria-label" => "List Fulfillments", data: {line_item_id: line_item.id}}
+        = t(:fulfillment)[:list_fulfillments]
+    .col-md-6
+      %button.btn.btn-success.otf_fulfillment_new{type: "button", "aria-label" => "Add Fulfillment", data: {line_item_id: line_item.id}}
+        = t(:fulfillment)[:add_fulfillment]

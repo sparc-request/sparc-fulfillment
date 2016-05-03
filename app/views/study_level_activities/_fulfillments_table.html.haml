@@ -1,10 +1,6 @@
 %td{colspan: 11}
   .bootstrap-table-dropdown-overflow
     #fulfillment-custom-toolbar
-      %button.btn.btn-success.otf_fulfillment_list{type: "button", "aria-label" => "List Fulfillments", data: {line_item_id: line_item.id}}
-        = t(:fulfillment)[:list_fulfillments]
-      %button.btn.btn-success.otf_fulfillment_new{type: "button", "aria-label" => "Add Fulfillment", data: {line_item_id: line_item.id}}
-        = t(:fulfillment)[:add_fulfillment]
     %table.fulfillments{id: "fulfillments-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: fulfillments_path(format: :json, line_item_id: line_item.id), "sort-name" => "fulfillment_date", "sort-order" => 'desc', striped: "true", toolbar: "#fulfillment-custom-toolbar", "show-export" => "true", "export-types" => ['excel']}}
       %thead.secondary-header
         %tr
