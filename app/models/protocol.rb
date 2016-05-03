@@ -98,11 +98,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def sparc_funding_source
-    unless funding_source.blank?
-      return funding_source
-    else
-      return potential_funding_source
-    end
+    funding_source.blank? ? potential_funding_source : funding_source
   end
 
   ##### PRIVATE METHODS #####
