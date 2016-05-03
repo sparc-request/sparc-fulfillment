@@ -47,10 +47,10 @@ $ ->
     unless fulfillments_already_displayed
       span.removeClass("glyphicon-chevron-right").addClass("glyphicon-refresh")
       $(this).parents("tr").after("<tr id='fulfillments_row'></tr>")
+      line_item_id = $(this).data('line-item-id')
       $.ajax
         type: 'GET'
-        url: "/fulfillments"
-        data: "line_item_id" : line_item_id
+        url: "/fulfillments/#{line_item_id}"
     else
       $(this).attr('data-original-title', 'View Fulfillments')
       span.removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right")
@@ -64,6 +64,14 @@ $ ->
       type: 'GET'
       url: "/fulfillments/new"
       data: data
+
+  $(document).on 'click', '.otf_fulfillment_list', ->
+    line_item_id = $(this).data('line-item-id')
+    data = line_item_id: line_item_id
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments"
+      data: "line_item_id" : line_item_id
 
   $(document).on 'click', '.otf_fulfillment_edit', ->
     row_index   = $(this).parents("tr").data("index")

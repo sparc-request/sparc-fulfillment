@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :protocols
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
-  resources :fulfillments, only: [:index, :new, :create, :edit, :update]
+  resources :fulfillments
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents
