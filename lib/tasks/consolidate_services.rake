@@ -5,16 +5,22 @@ namespace :data do
 		def main
 			id1, id2 = get_user_input
 
-			if !(id1.nil? || id2.nil?)
+			if !(id1.nil? || id2.nil?) && (id1 > 0 && id2 > 0)
 				puts "This will change the Service ID of Procedures with Service ID = #{id1} to Service ID = #{id2}. Is this correct? Y/N?: "
 				ok_with_values = STDIN.gets.chomp
 
-				if "Yes".casecmp(ok_with_values) || "Y".casecmp(ok_with_values)
+				if "Yes".casecmp(ok_with_values).zero? || "Y".casecmp(ok_with_values).zero?
 					update_procedures(id1, id2)
+				elsif "No".casecmp(ok_with_values).zero? || "N".casecmp(ok_with_values).zero?
+					puts "Service IDs will not be changed."
 				else
-					puts "Exiting rake task."
+					puts "Invalid values were entered."
 				end
+			else
+				puts "Invalid values were entered."
 			end
+
+			puts "Exiting rake task."
 		end
 
 		def get_user_input
