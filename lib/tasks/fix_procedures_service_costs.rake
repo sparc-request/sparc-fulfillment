@@ -58,7 +58,10 @@ namespace :data do
       proc = nil
       protocols.map(&:procedures).flatten.each do |procedure|
         # skip over procedures which don't have a service_cost
-        next if procedure.service_cost.blank? or (procedure.handled_date && !(start_date..end_date).cover?(procedure.handled_date.to_date))
+        if procedure.service_cost.blank? or (!procedure.handled_date.nil? && !(start_date..end_date).cover?(procedure.handled_date.to_date))
+          bar.increment! rescue nil
+          next
+        end
 
         begin
           proc = procedure
@@ -104,7 +107,10 @@ namespace :data do
       bar2 = ProgressBar.new(protocols.map(&:fulfillments).flatten.count)
       fulf = nil
       protocols.map(&:fulfillments).flatten.each do |fulfillment|
-        next if fulfillment.service_cost.blank? or !(start_date..end_date).cover?(fulfillment.fulfilled_at.to_date)
+        if fulfillment.service_cost.blank? or (!fulfillment.fulfilled_at.nil? && !(start_date..end_date).cover?(fulfillment.fulfilled_at.to_date))
+          bar2.increment! rescue nil
+          next
+        end
 
         begin
           fulf = fulfillment
