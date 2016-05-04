@@ -1,6 +1,6 @@
 class InvoiceReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :sort_by, :sort_order].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
@@ -26,9 +26,21 @@ class InvoiceReport < Report
       csv << [""]
 
       if @params[:protocol_ids].present?
-        protocols = Protocol.find(@params[:protocol_ids])
+        if @params[:sort_by] == "Protocol ID"
+          protocols = Protocol.where(id: @params[:protocol_ids]).sort_by(&:sparc_id)
+        else
+          protocols = Protocol.where(id: @params[:protocol_ids]).sort_by{ |protocol| protocol.pi.full_name }
+        end
       else
-        protocols = Identity.find(@params[:identity_id]).protocols
+        if @params[:sort_by] == "Protocol ID"
+          protocols = Identity.find(@params[:identity_id]).protocols.sort_by(&:sparc_id)
+        else
+          protocols = Identity.find(@params[:identity_id]).protocols.sort_by{ |protocol| protocol.pi.full_name }
+        end
+      end
+
+      if @params[:sort_order] == "DESC"
+        protocols.reverse!
       end
 
       protocols.each do |protocol|

@@ -45,6 +45,8 @@ class ReportsController < ApplicationController
               :end_date,
               :time_zone,
               :protocol_id,
+              :sort_by,
+              :sort_order,
               :participant_id,
               :documentable_id,
               :documentable_type,
