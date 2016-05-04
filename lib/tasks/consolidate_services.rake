@@ -3,18 +3,24 @@ namespace :data do
 	task consolidate_services: :environment do
 
 		def main
-			id1, id2 = get_user_input
+			service_1_id, service_2_id = get_user_input
 
-			if !(id1.nil? || id2.nil?) && (id1 > 0 && id2 > 0)
-				puts "This will change the Service ID of Procedures with Service ID = #{id1} to Service ID = #{id2}. Is this correct? Y/N?: "
-				ok_with_values = STDIN.gets.chomp
+			#Make sure that both
+			if !(service_1_id.nil? || service_2_id.nil?) && (service_1_id > 0 && service_2_id > 0)
 
-				if "Yes".casecmp(ok_with_values).zero? || "Y".casecmp(ok_with_values).zero?
-					update_procedures(id1, id2)
-				elsif "No".casecmp(ok_with_values).zero? || "N".casecmp(ok_with_values).zero?
-					puts "Service IDs will not be changed."
+				if services_can_be_swapped?(service_1_id, service_2_id)
+					puts "This will change the Service ID of Procedures with Service ID = #{service_1_id} to Service ID = #{service_2_id}. Is this correct? Y/N?: "
+					ok_with_values = STDIN.gets.chomp
+
+					if "Yes".casecmp(ok_with_values).zero? || "Y".casecmp(ok_with_values).zero?
+						update_procedures(service_1_id, service_2_id)
+					elsif "No".casecmp(ok_with_values).zero? || "N".casecmp(ok_with_values).zero?
+						puts "Service IDs will not be changed."
+					else
+						puts "Invalid values were entered."
+					end
 				else
-					puts "Invalid values were entered."
+					puts "These services are associated with different organizations and can't be swapped."
 				end
 			else
 				puts "Invalid values were entered."
@@ -33,13 +39,26 @@ namespace :data do
 			return service_1_id, service_2_id
 		end
 
+		def services_can_be_swapped?(service_1_id, service_2_id)
+			get_process_ssr_org(service_1_id) == get_process_ssr_org(service_2_id)
+		end
+
+		def get_process_ssr_org(service_id)
+			service 		 = Service.find(service_id)
+			organization = service.organization
+
+			while !organization.process_ssrs
+				organization = organization.parent
+			end
+
+			organization
+		end
+
 		def update_procedures(old_service_id, new_service_id)
 			procs = Procedure.where(service_id: old_service_id)
-			size  = procs.count
-
+			
+			puts "The Service ID of #{procs.count} Procedure(s) is being updated from #{old_service_id} to #{new_service_id}."
 			procs.update_all("service_id = #{new_service_id}")
-
-			puts "The Service ID of #{size} Procedure(s) has been updated from #{old_service_id} to #{new_service_id}."
 		end
 
 		main
