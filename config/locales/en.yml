@@ -106,7 +106,8 @@ en:
 
   fulfillment:
     object: "Fulfillment"
-    add_fulfillment: "Add Fulfillment"
+    add_fulfillment: "Add"
+    list_fulfillments: "List"
     components: "Fulfillment Components"
     edit: "Edit Fulfillment"
     flash_messages:
@@ -124,7 +125,7 @@ en:
     qty_type: "Quantity Type"
     quantity: "Quantity"
     save_fulfillment: "Save Fulfillment"
-    view: "View Fulfillments"
+    view: "View Fulfillment Buttons"
 
   line_item:
     object: "Line Item"

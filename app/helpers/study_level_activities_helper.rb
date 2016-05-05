@@ -40,7 +40,7 @@ module StudyLevelActivitiesHelper
   end
 
   def fulfillments_drop_button line_item_id
-    content_tag(:button, class: 'btn btn-primary btn-sm otf_fulfillments list', title: t(:fulfillment)[:view], type: "button", aria: {label: "Fulfillments List"}, data: {toggle: "tooltip", animation: 'false'}) do
+    content_tag(:button, class: 'btn btn-primary btn-sm otf_fulfillments list', title: t(:fulfillment)[:view], type: "button", aria: {label: "Fulfillments List"}, data: {line_item_id: line_item_id, toggle: "tooltip", animation: 'false'}) do
       content_tag(:span, '', class: "glyphicon glyphicon-chevron-right", aria: {hidden: "true"})
     end
   end
