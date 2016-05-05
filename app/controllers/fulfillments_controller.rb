@@ -14,6 +14,10 @@ class FulfillmentsController < ApplicationController
     end
   end
 
+  def show
+    @line_item = LineItem.find(params[:id])
+  end
+
   def new
     @line_item = LineItem.find(params[:line_item_id])
     @clinical_providers = ClinicalProvider.where(organization_id: @line_item.protocol.sub_service_request.organization_id)
