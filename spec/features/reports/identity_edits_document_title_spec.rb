@@ -59,13 +59,20 @@ feature 'Identity edits document title', js: true, enqueue: false do
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
 
     # close calendar thing, so it's not covering protocol dropdown
-    first('.modal-header').click
+    find(".modal-header", match: :first).click
+    wait_for_ajax
+
+    find('button.multiselect').click
+    check(@protocol.organization.name)
+
+    # close organization dropdown, so it's not covering protocol dropdown
+    find(".modal-header", match: :first).click
     wait_for_ajax
 
     bootstrap_select '#protocol_ids', @protocol.short_title_with_sparc_id
 
     # close protocol dropdown, so it's not covering 'Request Report' button
-    first('.modal-header').click
+    find('.modal-header', match: :first).click
     wait_for_ajax
     find("input[type='submit']").click
     wait_for_ajax
@@ -81,13 +88,20 @@ feature 'Identity edits document title', js: true, enqueue: false do
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
 
     # close calendar thing, so it's not covering protocol dropdown
-    first('.modal-header').click
+    find('.modal-header', match: :first).click
+    wait_for_ajax
+
+    find('button.multiselect').click
+    check(@protocol.organization.name)
+
+    # close organization dropdown, so it's not covering protocol dropdown
+    find('.modal-header', match: :first).click
     wait_for_ajax
 
     bootstrap_select ('#protocol_ids'), @protocol.short_title_with_sparc_id
 
     # close protocol dropdown, so it's not covering 'Request Report' button
-    first('.modal-header').click
+    find('.modal-header', match: :first).click
     wait_for_ajax
     find("input[type='submit']").click
     wait_for_ajax

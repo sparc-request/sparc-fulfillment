@@ -1,9 +1,8 @@
 .col-xs-2
-  .page_change_arrow.btn.btn-info.glyphicon.glyphicon-arrow-left{title: t(:visit_groups)[:view_page_previous], type: "button", id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: "true", role: 'button', aria: {label: "View Previous"}, data: {toggle: "tooltip", animation: 'false'}}
+  .page_change_arrow.btn.btn-info.glyphicon.glyphicon-arrow-left{title: t(:visit_groups)[:view_page_previous], type: "button", id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: page == 1, role: 'button', aria: {label: "View Previous"}, data: {toggle: "tooltip", animation: 'false'}}
 -# The visit jump to drop down
 .col-xs-8
   = build_visits_select(arm, page)
 -# The next page arrow
 .col-xs-2
-  .page_change_arrow.btn.btn-info.btn.btn-info.glyphicon.glyphicon-arrow-right{title: t(:visit_groups)[:view_page_next], type: "button", id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: arm.visit_count <= Visit.per_page, role: 'button', aria: {label: "View Previous"}, data: {toggle: "tooltip", animation: 'false'}}
-  
+  .page_change_arrow.btn.btn-info.btn.btn-info.glyphicon.glyphicon-arrow-right{title: t(:visit_groups)[:view_page_next], type: "button", id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: page * Visit.per_page >= arm.visit_count, role: 'button', aria: {label: "View Previous"}, data: {toggle: "tooltip", animation: 'false'}}

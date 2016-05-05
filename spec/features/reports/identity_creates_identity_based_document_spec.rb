@@ -42,7 +42,7 @@ feature 'Identity creates a document from the documents page', js: true do
 
   scenario 'and sees the documents counter increment' do
     given_i_click_the_create_report_button_of_type 'invoice_report'
-    when_i_fill_in_the_report_of_type 'auditing_report'
+    when_i_fill_in_the_report_of_type 'invoice_report'
     then_i_should_see_the_documents_counter_increment
     # submit a request for a second report
     given_i_click_the_create_report_button_of_type 'project_summary_report'
@@ -52,6 +52,7 @@ feature 'Identity creates a document from the documents page', js: true do
 
   scenario 'and sees protocols assigned to the them' do
     given_i_click_the_create_report_button_of_type 'invoice_report'
+    when_i_open_the_organization_dropdown_and_select_an_organization
     when_i_open_the_protocol_dropdown
     then_i_should_see_protocols_assigned_to_me
   end
@@ -59,8 +60,7 @@ feature 'Identity creates a document from the documents page', js: true do
   scenario 'and does not see protocols not assigned to them' do
     ClinicalProvider.destroy_all
     given_i_click_the_create_report_button_of_type 'invoice_report'
-    when_i_open_the_protocol_dropdown
-    then_i_should_not_see_protocols_not_assigned_to_me
+    then_the_organization_dropdown_should_be_disabled
   end
 
   #Must keep separated or else ClinicalProvider.destroy_all will not work
@@ -90,9 +90,19 @@ feature 'Identity creates a document from the documents page', js: true do
     page.execute_script %Q{ $("#end_date").trigger("focus")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
 
-    # close calendar thing, so it's not covering protocol dropdown
+    # close calendar thing, so it's not covering organization dropdown
     first('.modal-header').click
     wait_for_ajax
+
+    if report_type == 'invoice_report'
+      find('button.multiselect').click
+      check(@protocol.organization.name)
+
+      # close organization dropdown, so it's not covering protocol dropdown
+      first('.modal-header').click
+      wait_for_ajax
+    end
+  
 
     bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'), @protocol.short_title_with_sparc_id
 
@@ -105,6 +115,19 @@ feature 'Identity creates a document from the documents page', js: true do
 
   def when_i_open_the_protocol_dropdown
     first('.dropdown-toggle.selectpicker').click
+    wait_for_ajax
+  end
+
+  def then_the_organization_dropdown_should_be_disabled
+    expect(page).to have_css('button.multiselect.disabled')
+  end
+
+  def when_i_open_the_organization_dropdown_and_select_an_organization
+    find('button.multiselect').click
+    check(@protocol.organization.name)
+
+    # close organization dropdown, so it's not covering protocol dropdown
+    first('.modal-header').click
     wait_for_ajax
   end
 

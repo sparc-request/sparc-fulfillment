@@ -30,9 +30,18 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     page.execute_script %Q{ $("#end_date").trigger("focus")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
 
-    # close calendar thing, so it's not covering protocol dropdown
+    # close calendar thing, so it's not covering organization dropdown
     first('.modal-header').click
     wait_for_ajax
+
+    if report_type == 'invoice_report'
+      find('button.multiselect').click
+      check(@protocol.organization.name)
+
+      # close organization dropdown, so it's not covering protocol dropdown
+      first('.modal-header').click
+      wait_for_ajax
+    end
 
     bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'), @protocol.short_title_with_sparc_id
 

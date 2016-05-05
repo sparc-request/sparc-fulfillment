@@ -453,7 +453,7 @@ DEPENDENCIES
   paper_trail (~> 4.0.0.beta)
   paranoia (~> 2.0)
   progress_bar
-  pry (~> 0.10.3)
+  pry
   puma
   rack-mini-profiler
   rails (= 4.2.2)
