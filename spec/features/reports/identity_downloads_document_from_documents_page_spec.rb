@@ -28,9 +28,18 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     fill_in 'Start Date', with: Date.today.strftime("%m-%d-%Y")
     fill_in 'End Date', with: Date.tomorrow.strftime("%m-%d-%Y")
 
-    # close calendar thing, so it's not covering protocol dropdown
+    # close calendar thing, so it's not covering organization dropdown
     first('.modal-header').click
     wait_for_ajax
+
+    if report_type == 'invoice_report'
+      find('button.multiselect').click
+      check(@protocol.organization.name)
+
+      # close organization dropdown, so it's not covering protocol dropdown
+      first('.modal-header').click
+      wait_for_ajax
+    end
 
     bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'), @protocol.short_title_with_sparc_id
 

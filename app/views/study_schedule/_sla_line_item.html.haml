@@ -1,6 +1,9 @@
-.row.line_item{id: "line_item_#{line_item.id}"}
-  .col-xs-4
-    %span.line_item_service_name= line_item.name
-  .col-xs-6
-  .col-xs-2.text-center
-    = line_item.quantity_requested
+/ .row.line_item{id: "line_item_#{line_item.id}"}
+/   .col-xs-4
+/     %span.line_item_service_name= line_item.name
+/   .col-xs-6
+/   .col-xs-2.text-center
+/     = line_item.quantity_requested
+/ .row.add_fulfillment
+/   %button.btn.btn-success.otf_fulfillment_new{type: "button", "aria-label" => "Add Fulfillment", data: {line_item_id: line_item.id}}
+/     = t(:fulfillment)[:add_fulfillment]

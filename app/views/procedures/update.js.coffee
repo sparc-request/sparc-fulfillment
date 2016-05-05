@@ -54,5 +54,6 @@ $(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
 
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
 
+$("#group-<%= @procedure.group_id %> button").trigger('click')
 $("#modal_place").modal 'hide'
 <% end %>

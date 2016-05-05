@@ -5,7 +5,7 @@ class InvoiceReport < Report
 
   require 'csv'
 
-  # A protocol with subsidy, format protocol_id column with an 's' 
+  # A protocol with subsidy, format protocol_id column with an 's'
   # A protocol without subsidy, format protcol_id column without an 's'
   def format_protocol_id_column(protocol)
     protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
@@ -59,12 +59,13 @@ class InvoiceReport < Report
             "Contact",
             "Account #",
             "Quantity Completed",
+            "Quantity Type",
             "Research Rate",
             "Total Cost"
           ]
           csv << [""]
 
-          protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |fulfillment|
+          protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).joins(:line_item).order("line_items.quantity_type, fulfilled_at").each do |fulfillment|
             csv << [
               format_protocol_id_column(protocol),
               protocol.sparc_protocol.short_title,
@@ -76,6 +77,7 @@ class InvoiceReport < Report
               fulfillment.line_item.contact_name,
               fulfillment.line_item.account_number,
               fulfillment.quantity,
+              fulfillment.line_item.quantity_type,
               display_cost(fulfillment.service_cost),
               display_cost(fulfillment.total_cost)
             ]
@@ -128,12 +130,10 @@ class InvoiceReport < Report
             end
           end
         end
-        if total > 0
-          csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
-          csv << [""]
-          csv << [""]
-        end
+        csv << [""]
+        csv << ["", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
+        csv << [""]
+        csv << [""]
       end
     end
   end
