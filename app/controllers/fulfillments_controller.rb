@@ -14,6 +14,10 @@ class FulfillmentsController < ApplicationController
     end
   end
 
+  def show
+    @line_item = LineItem.find(params[:id])
+  end
+
   def new
     @line_item = LineItem.find(params[:line_item_id])
     @clinical_providers = ClinicalProvider.where(organization_id: @line_item.protocol.sub_service_request.organization_id)
@@ -23,7 +27,7 @@ class FulfillmentsController < ApplicationController
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
     service = @line_item.service
-    funding_source = @line_item.protocol.funding_source
+    funding_source = @line_item.protocol.sparc_funding_source
     @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: service.cost(funding_source) }))
     if @fulfillment.valid?
       @fulfillment.save

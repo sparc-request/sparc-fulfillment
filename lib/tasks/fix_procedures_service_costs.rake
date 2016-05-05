@@ -56,42 +56,46 @@ namespace :data do
       puts "Fixing Procedures..."
       bar = ProgressBar.new(protocols.map(&:procedures).flatten.count)
       proc = nil
-      protocols.map(&:procedures).flatten.each do |procedure|
-        # skip over procedures which don't have a service_cost
-        next if procedure.service_cost.blank? or (procedure.handled_date && !(start_date..end_date).cover?(procedure.handled_date.to_date))
-
-        begin
-          proc = procedure
-          current_amount = procedure.service_cost
-          calculated_amount = 0
-
-          funding_source = procedure.protocol.funding_source
-          visit = procedure.visit
-          service = procedure.service
-
-          if procedure.complete?
-            if visit
-              calculated_amount = visit.line_item.cost(funding_source, procedure.completed_date)
-            else
-              calculated_amount = service.cost(funding_source, procedure.completed_date)
-            end
-
-            if calculated_amount != current_amount
-              csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.full_name, procedure.participant.mrn, procedure.appointment.name, procedure.appointment.start_date.strftime("%D"), procedure.completed_date.strftime("%D")]
-              procedure.update_attribute(:service_cost, calculated_amount)
-            end
-          else
-            #procedure has service cost, but isn't complete, this should never happen, and needs deleted.
-            csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, "Incomplete", "Incomplete", procedure.participant.full_name, procedure.participant.mrn, procedure.appointment.name, "N/A", "N/A"]
-            procedure.update_attribute(:service_cost, nil)
+      protocols.each do |protocol|
+        protocol.procedures.find_each do |procedure|
+          # skip over procedures which don't have a service_cost
+          if procedure.service_cost.blank? or (!procedure.handled_date.nil? && !(start_date..end_date).cover?(procedure.handled_date.to_date))
+            bar.increment! rescue nil
+            next
           end
 
+          begin
+            proc = procedure
+            current_amount = procedure.service_cost
+            calculated_amount = 0
+            funding_source = protocol.funding_source.sparc_funding_source
+            visit = procedure.visit
+            service = procedure.service
+
+            if procedure.complete?
+              if visit
+                calculated_amount = visit.line_item.cost(funding_source, procedure.completed_date)
+              else
+                calculated_amount = service.cost(funding_source, procedure.completed_date)
+              end
+
+              if calculated_amount != current_amount
+                csv << [protocol.sparc_id, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.full_name, procedure.participant.mrn, procedure.appointment.name, procedure.appointment.start_date.strftime("%D"), procedure.completed_date.strftime("%D")]
+                procedure.update_attribute(:service_cost, calculated_amount)
+              end
+            else
+              #procedure has service cost, but isn't complete, this should never happen, and needs deleted.
+              csv << [protocol.sparc_id, procedure.id, procedure.service_name, "Incomplete", "Incomplete", procedure.participant.full_name, procedure.participant.mrn, procedure.appointment.name, "N/A", "N/A"]
+              procedure.update_attribute(:service_cost, nil)
+            end
 
 
-          bar.increment! rescue nil
-        rescue Exception => e
-          puts "Error with #{proc.inspect}, Message: #{e.message}"
-          next
+
+            bar.increment! rescue nil
+          rescue Exception => e
+            puts "Error with #{proc.inspect}, Message: #{e.message}"
+            next
+          end
         end
       end
 
@@ -103,24 +107,29 @@ namespace :data do
       puts "Fixing One Time Fee Fulfillments..."
       bar2 = ProgressBar.new(protocols.map(&:fulfillments).flatten.count)
       fulf = nil
-      protocols.map(&:fulfillments).flatten.each do |fulfillment|
-        next if fulfillment.service_cost.blank? or !(start_date..end_date).cover?(fulfillment.fulfilled_at.to_date)
-
-        begin
-          fulf = fulfillment
-          current_amount = fulfillment.service_cost
-          funding_source = fulfillment.protocol.funding_source
-          calculated_amount = fulfillment.line_item.cost(funding_source, fulfillment.fulfilled_at)
-
-          if calculated_amount != current_amount
-            csv << [fulfillment.protocol.sparc_id, fulfillment.id, fulfillment.service_name, current_amount, calculated_amount, fulfillment.fulfilled_at.strftime("%D")]
-            fulfillment.update_attribute(:service_cost, calculated_amount)
+      protocols.each do |protocol|
+        protocol.fulfillments.find_each do |fulfillment|
+          if fulfillment.service_cost.blank? or (!fulfillment.fulfilled_at.nil? && !(start_date..end_date).cover?(fulfillment.fulfilled_at.to_date))
+            bar2.increment! rescue nil
+            next
           end
 
-          bar2.increment! rescue nil
-        rescue Exception => e
-          puts "Error with #{fulf.inspect}, Message: #{e.message}"
-          next
+          begin
+            fulf = fulfillment
+            current_amount = fulfillment.service_cost
+            funding_source = protocol.funding_source
+            calculated_amount = fulfillment.line_item.cost(funding_source, fulfillment.fulfilled_at)
+
+            if calculated_amount != current_amount
+              csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, current_amount, calculated_amount, fulfillment.fulfilled_at.strftime("%D")]
+              fulfillment.update_attribute(:service_cost, calculated_amount)
+            end
+
+            bar2.increment! rescue nil
+          rescue Exception => e
+            puts "Error with #{fulf.inspect}, Message: #{e.message}"
+            next
+          end
         end
       end
     end
