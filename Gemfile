@@ -57,7 +57,7 @@ end
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'faker', '~> 1.4.3'
-  gem 'pry', '~> 0.10.3'
+  gem 'pry'
 end
 
 group :development do
