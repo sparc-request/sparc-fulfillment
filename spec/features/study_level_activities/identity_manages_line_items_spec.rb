@@ -57,7 +57,6 @@ feature 'Line Items', js: true do
 
     scenario 'and does not see the line item' do
       given_i_am_viewing_the_study_level_activities_tab_without_fulfillments
-      save_and_open_screenshot
       when_i_click_on_the_delete_line_item_button
       then_i_should_not_see_the_line_item
     end
