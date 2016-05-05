@@ -23,10 +23,13 @@
               = label_tag "end_date", t(:reports)[:end_date], class: "col-sm-3 control-label"
               .col-sm-9
                 = text_field_tag "end_date", nil, class: "datepicker form-control"
-            .form-group.protocols-group
-              = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
+            .form-group
+              = label_tag "organization", t(:reports)[:organization], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag "protocol_ids", truncated_options_from_collection_for_select(current_identity.protocols, "id", "short_title_with_sparc_id"), multiple: true, 'data-live-search' => true, 'data-actions-box' => true, title: t(:reports)[:all_protocols], class: "selectpicker form-control"
+                = select_tag 'organization',grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "form-control", id: "organization_select"
+            .form-group.hidden
+              = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
+              .col-sm-9#protocol_section
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

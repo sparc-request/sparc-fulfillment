@@ -10,7 +10,10 @@ class Protocol < ActiveRecord::Base
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
+  has_many :subsidies, through: :sub_service_requests
 
+  has_many :service_requests
+  has_many :sub_service_requests, through: :service_requests
   has_many :project_roles,    primary_key: :sparc_id
   has_many :service_requests, primary_key: :sparc_id
   has_many :arms,             dependent: :destroy
@@ -20,6 +23,8 @@ class Protocol < ActiveRecord::Base
   has_many :appointments,     through: :participants
   has_many :procedures,       through: :appointments
   has_many :documents,        as: :documentable
+  has_many :clinical_providers, through: :organization
+  has_many :super_users, through: :organization
 
   before_save :set_documents_count
 
@@ -44,6 +49,11 @@ class Protocol < ActiveRecord::Base
 
   def self.title id
     ["Protocol", Protocol.find(id).srid].join(' ')
+  end
+
+  def self.find_protocols_by_org_id(org_ids)
+    joins(:sub_service_request).
+    where(sub_service_requests: { organization_id: org_ids })
   end
 
   def sparc_uri

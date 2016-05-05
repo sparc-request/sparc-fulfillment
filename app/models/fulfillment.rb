@@ -7,6 +7,7 @@ class Fulfillment < ActiveRecord::Base
   belongs_to :service
   belongs_to :creator, class_name: "Identity"
   belongs_to :performer, class_name: "Identity"
+  has_one :protocol, through: :line_item
 
   has_many :components, as: :composable
   has_many :notes, as: :notable

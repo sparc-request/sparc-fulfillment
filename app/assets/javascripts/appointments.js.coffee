@@ -10,9 +10,11 @@ $ ->
     pg = new ProcedureGrouper(core)
     group = $(this).parents('.procedure-group')
     group_id = $(group).data('group-id')
+    groups = $('.procedure-group')
 
     if $(group).find('span.glyphicon').hasClass('glyphicon-chevron-right')
       pg.show_group(group_id)
+      close_open_procedure_groups(groups, group_id)
     else
       pg.hide_group(group_id)
 
@@ -348,6 +350,12 @@ $ ->
       find_ids group_id for group_id in group_ids
 
       return procedure_ids
+
+  close_open_procedure_groups = (groups, group_id) ->
+    groups.each ->
+      if $(this).find('span.glyphicon').hasClass('glyphicon-chevron-down') && ($(this).data('group-id') != group_id)
+        pg = new ProcedureGrouper($(this).closest('tr.core'))
+        pg.hide_group($(this).data('group-id'))
 
   # Display a helpful message when user clicks on a disabled UI element
   $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
