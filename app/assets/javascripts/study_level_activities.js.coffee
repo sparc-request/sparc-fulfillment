@@ -42,7 +42,7 @@ $ ->
     line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[selected_row.data("index")].id
     fulfillments_already_displayed = fulfillments_row.attr('data-line_item_id') == "#{line_item_id}"
 
-    fulfillments_row.prev('tr').first().find('.glyphicon-chevron-down').removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right").parents(".otf_fulfillments").attr('data-original-title', 'View Fulfillments')
+    fulfillments_row.prev('tr').first().find('.glyphicon-chevron-down').removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right").parents(".otf_fulfillments").attr('data-original-title', 'View Fulfillment Buttons')
     fulfillments_row.remove()
     unless fulfillments_already_displayed
       span.removeClass("glyphicon-chevron-right").addClass("glyphicon-refresh")
@@ -52,7 +52,7 @@ $ ->
         type: 'GET'
         url: "/fulfillments/#{line_item_id}"
     else
-      $(this).attr('data-original-title', 'View Fulfillments')
+      $(this).attr('data-original-title', 'View Fulfillment Buttons')
       span.removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right")
 
   # Fulfillment Bindings

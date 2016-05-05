@@ -125,7 +125,7 @@ en:
     qty_type: "Quantity Type"
     quantity: "Quantity"
     save_fulfillment: "Save Fulfillment"
-    view: "View Fulfillments"
+    view: "View Fulfillment Buttons"
 
   line_item:
     object: "Line Item"
