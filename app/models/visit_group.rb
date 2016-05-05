@@ -5,8 +5,6 @@ class VisitGroup < ActiveRecord::Base
   acts_as_paranoid
   acts_as_list scope: [:arm_id]
 
-  include CustomPositioning #custom methods around positioning, acts_as_list
-
   before_destroy :check_for_completed_data
 
   belongs_to :arm
