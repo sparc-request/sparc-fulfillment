@@ -3,8 +3,9 @@ require 'rails_helper'
 feature 'Identity completes all Procedures', js: true do
 
   before :each do
-    @tomorrow_date        = Date.current.tomorrow.strftime('%m-%d-%Y')
-    @current_date         = Date.current.strftime('%m-%d-%Y')
+    @current_date            = Date.current.strftime('%m-%d-%Y')
+    next_month               = Time.current.month + 1
+    @the_first_of_next_month = Date.current.strftime("#{next_month}-01-%Y")
 
     @current_identity     = Identity.first
     @other_identity       = create(:identity, first_name: 'Juan', last_name: 'Leonardo')
@@ -142,14 +143,13 @@ feature 'Identity completes all Procedures', js: true do
   end
 
   def when_i_edit_the_default_date
-    find('#complete_all_modal .datetimepicker')
-    page.execute_script %Q{ $("#complete_all_modal .datetimepicker").siblings(".input-group-addon").trigger("click");}
-    
-    find('td.day.today')
-    tomorrow_day = evaluate_script %Q{ parseInt($('td.day.today').html())+1 }
 
-    find('th.picker-switch')
-    page.execute_script %Q{ $("#complete_all_modal td.day:contains(#{tomorrow_day})").last().trigger('click'); }
+    find('#complete_all_modal .datetimepicker')
+    page.execute_script %Q{ $("#complete_all_modal .datetimepicker").siblings(".input-group-addon").trigger("click"); }
+    page.execute_script %Q{ $('span.glyphicon.glyphicon-chevron-right').first().trigger('click'); }
+
+    page.execute_script %Q{ $("td.day:contains('1')").trigger("click") }
+
     wait_for_ajax
   end
 
@@ -159,13 +159,13 @@ feature 'Identity completes all Procedures', js: true do
 
   def and_all_procedures_should_have_selected_completed_date
     find("tr.procedure[data-id='1'] div.completed_date_field input.datetimepicker")
-    find("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker")
-
     procedure1_date = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] div.completed_date_field input.datetimepicker").val(); }
+
+    find("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker")
     procedure2_date = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker").val(); }
   
-    expect(procedure1_date).to eq(@tomorrow_date)
-    expect(procedure2_date).to eq(@tomorrow_date)
+    expect(procedure1_date).to eq(@the_first_of_next_month)
+    expect(procedure2_date).to eq(@the_first_of_next_month)
   end
 
   def and_all_procedures_should_have_selected_performer
