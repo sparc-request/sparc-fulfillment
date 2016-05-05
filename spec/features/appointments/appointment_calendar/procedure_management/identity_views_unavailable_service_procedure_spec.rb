@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'User views procedure which has an unavailable service', js: true do
 
-	scenario 'and sees the inactive tag' do
+	scenario 'and sees the inactive tag.' do
 		given_i_am_viewing_the_appointment_calendar
 		when_the_participant_has_a_procedure_with_an_inactive_service
 		when_i_open_the_appointment_calendar_with_the_bad_procedure
