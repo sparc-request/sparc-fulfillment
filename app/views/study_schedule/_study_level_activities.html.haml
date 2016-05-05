@@ -1,12 +1,14 @@
-.study_schedule.service
-  .row.header.study_schedule_table_name
-    .col-xs-4.text-center
-      = t(:protocol)[:study_schedule][:study_level_activities]
-    .col-xs-6
-    .col-xs-2.text-center
-      = t(:protocol)[:study_schedule][:quantity_requested]
-  .row.check_visit_columns
-  .row
-    .scrolling-div.col-xs-12
-      - consolidated_one_time_fee_line_items(protocol).each do |li|
-        = render partial: 'study_schedule/sla_line_item', locals: {line_item: li}
+/ .study_schedule.service
+/   .row.header.study_schedule_table_name
+/     .col-xs-4.text-center
+/       = t(:protocol)[:study_schedule][:study_level_activities]
+/     .col-xs-6
+/     .col-xs-2.text-center
+/       = t(:protocol)[:study_schedule][:quantity_requested]
+/   .row.check_visit_columns
+/   .row
+/     .scrolling-div.col-xs-12
+/       - consolidated_one_time_fee_line_items(protocol).each do |line_item|
+/         = render partial: 'study_schedule/sla_line_item', locals: {line_item: line_item}
+/         %button.btn.btn-success.otf_fulfillment_new{type: "button", "aria-label" => "Add Fulfillment", data: {line_item_id: line_item.id}}
+/           = t(:fulfillment)[:add_fulfillment]

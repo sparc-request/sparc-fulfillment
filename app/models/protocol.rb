@@ -23,6 +23,8 @@ class Protocol < ActiveRecord::Base
   has_many :appointments,     through: :participants
   has_many :procedures,       through: :appointments
   has_many :documents,        as: :documentable
+  has_many :clinical_providers, through: :organization
+  has_many :super_users, through: :organization
 
   before_save :set_documents_count
 
@@ -43,10 +45,16 @@ class Protocol < ActiveRecord::Base
   delegate :short_title,
            :title,
            :funding_source,
+           :potential_funding_source,
            to: :sparc_protocol
 
   def self.title id
     ["Protocol", Protocol.find(id).srid].join(' ')
+  end
+
+  def self.find_protocols_by_org_id(org_ids)
+    joins(:sub_service_request).
+    where(sub_service_requests: { organization_id: org_ids })
   end
 
   def sparc_uri
@@ -94,6 +102,10 @@ class Protocol < ActiveRecord::Base
 
   def protocol_type
     sparc_protocol.type
+  end
+
+  def sparc_funding_source
+    funding_source.blank? ? potential_funding_source : funding_source
   end
 
   ##### PRIVATE METHODS #####

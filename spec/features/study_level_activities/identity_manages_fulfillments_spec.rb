@@ -2,64 +2,31 @@ require 'rails_helper'
 
 feature 'Fulfillments', js: true do
 
-  context 'User adds a new fulfillment' do
-    scenario 'and sees the fulfillment' do
-      given_i_have_study_level_activities
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_the_add_fulfillment_button
-      when_i_fill_out_the_fulfillment_form
-      when_i_save_the_fulfillment_form
-      then_i_should_see_the_new_fulfillment_in_the_table
-    end
-
-    scenario 'and sees the components' do
-      given_i_have_study_level_activities
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_the_add_fulfillment_button
-      when_i_fill_out_the_fulfillment_form
-      when_i_save_the_fulfillment_form
-      then_i_should_see_the_correct_components
+  describe 'fulfillments list' do
+    it 'should list the fulfillments' do
+      given_i_have_fulfillments
+      and_i_have_opened_up_fulfillments
+      click_button "List"
+      wait_for_ajax
+      expect(page).to have_content('Fulfillments List')
     end
   end
 
-  context 'User edits an existing fulfillment' do
-    scenario 'and sees the fulfillment' do
-      given_i_have_study_level_activities
-      given_i_have_a_fulfillment
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_the_edit_fulfillment_button
+  describe 'fulfillment add' do
+    it 'should be able to add a fulfillment' do
+      given_i_have_fulfillments
+      count = @line_item.fulfillments.count
+      and_i_have_opened_up_fulfillments
+      click_button "Add"
+      wait_for_ajax
       when_i_fill_out_the_fulfillment_form
-      when_i_save_the_fulfillment_form
-      then_i_should_see_the_new_fulfillment_in_the_table
-    end
-
-    scenario 'and sees the components' do
-      given_i_have_study_level_activities
-      given_i_have_a_fulfillment
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_the_edit_fulfillment_button
-      when_i_fill_out_the_fulfillment_form
-      when_i_save_the_fulfillment_form
-      then_i_should_see_the_correct_components
-    end
-
-    scenario 'and sees a note for the changes' do
-      given_i_have_study_level_activities
-      given_i_have_a_fulfillment
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_the_edit_fulfillment_button
-      when_i_fill_out_the_fulfillment_form
-      when_i_save_the_fulfillment_form
-      then_i_should_see_the_changes_in_the_notes
+      expect(page).to have_content('Fulfillment Created')
     end
   end
 
-  def given_i_have_study_level_activities
+    
+
+  def given_i_have_fulfillments
     @protocol = create_and_assign_protocol_to_me
     sparc_protocol = @protocol.sparc_protocol
     sparc_protocol.update_attributes(type: 'Study')
@@ -67,33 +34,16 @@ feature 'Fulfillments', js: true do
     @line_item  = create(:line_item, protocol: @protocol, service: service)
     @components = @line_item.components
     @clinical_providers = Identity.first.clinical_providers
-  end
-
-  def given_i_have_a_fulfillment
     @fulfillment = create(:fulfillment, line_item: @line_item)
   end
 
-  def given_i_am_viewing_the_study_level_activities_tab
+  def and_i_have_opened_up_fulfillments
+    given_i_have_fulfillments
     visit protocol_path(@protocol.id)
     wait_for_ajax
     click_link "Study Level Activities"
     wait_for_ajax
-  end
-
-  def when_i_open_up_a_fulfillment
-    first(".otf_fulfillments.list").click
-    wait_for_ajax
-  end
-
-  def when_i_click_on_the_add_fulfillment_button
-    click_button "Add Fulfillment"
-    wait_for_ajax
-  end
-
-  def when_i_click_on_the_edit_fulfillment_button
-    first("#fulfillments-table .available-actions-button").click
-    wait_for_ajax
-    find(".otf_fulfillment_edit").click
+    first('.otf_fulfillments.list').click
     wait_for_ajax
   end
 
@@ -101,16 +51,12 @@ feature 'Fulfillments', js: true do
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in 'Quantity', with: "45"
-    bootstrap_select '#fulfillment_performer_id', @clinical_providers.first.identity.full_name
-    bootstrap_select '#fulfillment_components', @components.first.component
     find('.modal-header').click
     wait_for_ajax
-  end
-
-  def when_i_save_the_fulfillment_form
     click_button "Save Fulfillment"
     wait_for_ajax
   end
+<<<<<<< HEAD
 
   def then_i_should_see_the_new_fulfillment_in_the_table
     expect(page).to have_css("#fulfillments-table tr[data-index='0']")
@@ -131,4 +77,6 @@ feature 'Fulfillments', js: true do
     wait_for_ajax
     expect(page).to have_content "Quantity changed to 45"
   end
+=======
+>>>>>>> master
 end

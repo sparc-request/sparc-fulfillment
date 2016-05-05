@@ -20,8 +20,8 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:current_page)).to eq("1")
       expect(assigns(:visit_group)).to be_a_new(VisitGroup)
+      expect(assigns(:current_page)).to eq("1")
       expect(assigns(:schedule_tab)).to eq("template")
       expect(assigns(:arm)).to eq(@protocol.arms.first)
     end
@@ -35,8 +35,8 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:current_page)).to eq("1")
       expect(assigns(:visit_group)).to be_a_new(VisitGroup)
+      expect(assigns(:current_page)).to eq("1")
       expect(assigns(:schedule_tab)).to eq("template")
       expect(assigns(:arm)).to eq(@arm)
     end
@@ -111,9 +111,9 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:intended_action)).to eq("edit")
       expect(assigns(:visit_group)).to eq(@visit_group)
       expect(assigns(:arm)).to eq(@visit_group.arm)
+      expect(assigns(:intended_action)).to eq("edit")
     end
 
     it "should assign the appropriate vars when there is only an arm id" do
@@ -124,9 +124,9 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:intended_action)).to eq("edit")
       expect(assigns(:visit_group)).to eq(@arm.visit_groups.first)
       expect(assigns(:arm)).to eq(@arm)
+      expect(assigns(:intended_action)).to eq("edit")
     end
 
     it "should assign the appropriate vars without arm_id or visit_group_id" do
@@ -136,10 +136,9 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:intended_action)).to eq("edit")
       expect(assigns(:visit_group)).to eq(@protocol.arms.first.visit_groups.first)
       expect(assigns(:arm)).to eq(@protocol.arms.first)
+      expect(assigns(:intended_action)).to eq("edit")
     end
   end
 end
-
