@@ -21,7 +21,7 @@ module Features
 
       bootstrap_select.click
       within bootstrap_select do
-        first('a', text: choice).click
+        find('a', match: :first, text: choice).click
       end
       wait_for_ajax
     end
