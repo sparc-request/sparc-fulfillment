@@ -4,21 +4,23 @@ namespace :data do
   task unused_services_report: :environment do
     HEADER = ["Service ID", "Service Name", "Active?", "CPT Code", "Create Date",
         "Parent", "Parent Type", "Grandparent", "Grandparent Type",
-        "Epic Service?"].freeze
+        "Epic Service?"]
     REPORT_PATH = "tmp/unused_services_report.xlsx"
+    TABLES_WITH_SERVICE_FOREIGN_KEY = [Fulfillment, Procedure,
+      Sparc::Procedure, LineItem, Sparc::LineItem, Sparc::Charge,
+      Sparc::ServiceProvider, Sparc::ServiceRelation]
 
     def format_bool(b)
     	b ? "Yes" : "No"
     end
 
-    # Get smallish list of custom added services
-    custom_added_services_ids = Procedure.where.not(service_id: nil).distinct.pluck(:service_id)
+    used_services = TABLES_WITH_SERVICE_FOREIGN_KEY.map do |table|
+      table.where.not(service_id: nil).distinct.pluck(:service_id)
+    end.reduce(&:|)
 
     # Get services not associated with CWF LineItems, not a custom added service
     unused_services = Service.includes(organization: :parent).
-      joins("LEFT OUTER JOIN `fulfillment-development`.line_items ON `fulfillment-development`.line_items.service_id = services.id").
-      where(line_items: { id: nil }).
-      where.not(id: custom_added_services_ids).
+      where.not(id: used_services).
       distinct
 
     # report rows
