@@ -5,7 +5,7 @@ feature 'Identity completes all Procedures', js: true do
   before :each do
     @current_date            = Date.current.strftime('%m-%d-%Y')
     next_month               = Time.current.month + 1
-    @the_first_of_next_month = Date.current.strftime("#{next_month}-01-%Y")
+    @the_middle_of_next_month = Date.current.strftime("0#{next_month}-15-%Y")
 
     @current_identity     = Identity.first
     @other_identity       = create(:identity, first_name: 'Juan', last_name: 'Leonardo')
@@ -26,6 +26,7 @@ feature 'Identity completes all Procedures', js: true do
     @participant = protocol.participants.first
     visit_group  = @participant.appointments.first.visit_group
     service      = protocol.organization.inclusive_child_services(:per_participant).first
+    @pricing_map   = create(:pricing_map, service: service, effective_date: @the_middle_of_next_month)
 
     visit participant_path @participant
 
@@ -146,15 +147,20 @@ feature 'Identity completes all Procedures', js: true do
 
     find('#complete_all_modal .datetimepicker')
     page.execute_script %Q{ $("#complete_all_modal .datetimepicker").siblings(".input-group-addon").trigger("click"); }
-    page.execute_script %Q{ $('span.glyphicon.glyphicon-chevron-right').first().trigger('click'); }
-
-    page.execute_script %Q{ $("td.day:contains('1')").trigger("click") }
+    
+    find('.bootstrap-datetimepicker-widget span.glyphicon.glyphicon-chevron-right')
+    page.execute_script %Q{ $('.bootstrap-datetimepicker-widget span.glyphicon.glyphicon-chevron-right').first().trigger('click'); }
+    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
 
     wait_for_ajax
   end
 
   def and_when_i_edit_the_default_performer
-    bootstrap_select ".performed-by-dropdown", @other_identity.full_name
+    complete_all_modal = page.find("#complete_all_modal")
+    within complete_all_modal do
+      bootstrap_select ".performed-by-dropdown", @other_identity.full_name
+    end
+    wait_for_ajax
   end
 
   def and_all_procedures_should_have_selected_completed_date
@@ -164,8 +170,8 @@ feature 'Identity completes all Procedures', js: true do
     find("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker")
     procedure2_date = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker").val(); }
   
-    expect(procedure1_date).to eq(@the_first_of_next_month)
-    expect(procedure2_date).to eq(@the_first_of_next_month)
+    expect(procedure1_date).to eq(@the_middle_of_next_month)
+    expect(procedure2_date).to eq(@the_middle_of_next_month)
   end
 
   def and_all_procedures_should_have_selected_performer
