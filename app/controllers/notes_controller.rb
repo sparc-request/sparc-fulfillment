@@ -19,6 +19,10 @@ class NotesController < ApplicationController
     @note = Note.create(note_params.merge!({ identity: current_identity })) if note_params[:comment].present? # don't create empty notes
     appointment_note
     procedure_note
+    if @note.notable_type == 'Fulfillment'
+      fulfillment = Fulfillment.find(@note.notable_id)
+      @line_item = LineItem.find(fulfillment.line_item_id)
+    end
   end
 
   private

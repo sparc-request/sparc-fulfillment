@@ -11,7 +11,7 @@ namespace :data do
           current_amount = fulfillment.service_cost
           calculated_amount = 0
 
-          funding_source = fulfillment.line_item.protocol.funding_source
+          funding_source = fulfillment.line_item.protocol.sparc_funding_source
           service = fulfillment.service
           date = fulfillment.fulfilled_at
 

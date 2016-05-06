@@ -106,7 +106,8 @@ en:
 
   fulfillment:
     object: "Fulfillment"
-    add_fulfillment: "Add Fulfillment"
+    add_fulfillment: "Add"
+    list_fulfillments: "List"
     components: "Fulfillment Components"
     edit: "Edit Fulfillment"
     flash_messages:
@@ -124,7 +125,7 @@ en:
     qty_type: "Quantity Type"
     quantity: "Quantity"
     save_fulfillment: "Save Fulfillment"
-    view: "View Fulfillments"
+    view: "View Fulfillment Buttons"
 
   multiple_procedures_modal:
     incomplete_header: "Incomplete Multiple Services"
@@ -304,8 +305,12 @@ en:
     updates: "Updates"
 
   reports:
+    asc: "ASC"
+    ascending: "Ascending"
     all_protocols: "All Protocols"
     auditing_report: "Auditing Report"
+    desc: "DESC"
+    descending: "Descending"
     invoice_report: "Invoice Report"
     end_date: "End Date"
     incomplete_visit_report: "Incomplete Visit Report"
@@ -313,10 +318,14 @@ en:
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"
+    primary_pi: "Primary PI"
     project_summary_report: "Project Summary Report"
     protocol: "Protocol"
     protocols: "Protocol(s)"
+    protocol_id: "Protocol ID"
     request_report: "Request Report"
+    sort_by: "Sort By"
+    sort_order: "Sort Order"
     start_date: "Start Date"
 
   services:

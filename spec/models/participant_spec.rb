@@ -62,8 +62,8 @@ RSpec.describe Participant, type: :model do
 
     let!(:protocol)     { create(:protocol) }
     let!(:arm)          { create(:arm, protocol_id: protocol.id) }
-    let!(:visit_group1) { create(:visit_group, arm: arm, name: 'Turd', position: 1) }
-    let!(:visit_group2) { create(:visit_group, arm: arm, name: 'Ferguson', position: 2) }
+    let!(:visit_group1) { create(:visit_group, arm: arm, name: 'Turd') }
+    let!(:visit_group2) { create(:visit_group, arm: arm, name: 'Ferguson') }
     let!(:participant)  { create(:participant, arm: arm, protocol_id: protocol.id) }
 
     describe "date_of_birth formatting" do
@@ -135,7 +135,7 @@ RSpec.describe Participant, type: :model do
 
       it 'should create additional appointments if a visit group is added to the arm' do
         participant.build_appointments
-        create(:visit_group, arm: participant.arm, name: "Dirk", position: 3)
+        create(:visit_group, arm: participant.arm, name: "Dirk")
         arm.reload
         participant.build_appointments
         expect(participant.appointments.count).to eq(3)
