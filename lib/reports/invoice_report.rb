@@ -46,7 +46,10 @@ class InvoiceReport < Report
       protocols.each do |protocol|
         total = 0
 
-        if protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).any?
+        fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date)
+        procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date)
+
+        if fulfillments.any?
           csv << ["Study Level Charges:"]
           csv << [
             "Protocol ID",
@@ -65,7 +68,7 @@ class InvoiceReport < Report
           ]
           csv << [""]
 
-          protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).joins(:line_item).order("line_items.quantity_type, fulfilled_at").each do |fulfillment|
+          fulfillments.joins(:line_item).order("line_items.quantity_type, fulfilled_at").each do |fulfillment|
             csv << [
               format_protocol_id_column(protocol),
               protocol.sparc_protocol.short_title,
@@ -86,7 +89,7 @@ class InvoiceReport < Report
           end
         end
 
-        if protocol.procedures.completed_r_in_date_range(@start_date, @end_date).any?
+        if procedures.any?
           csv << [""]
           csv << [""]
 
@@ -106,7 +109,7 @@ class InvoiceReport < Report
             "Total Cost"
           ]
           csv << [""]
-          protocol.procedures.completed_r_in_date_range(@start_date, @end_date).group_by(&:appointment).each do |appointment, appointment_procedures|
+          procedures.group_by(&:appointment).each do |appointment, appointment_procedures|
             participant = appointment.participant
 
             appointment_procedures.group_by(&:service_name).each do |service_name, service_procedures|
@@ -130,10 +133,12 @@ class InvoiceReport < Report
             end
           end
         end
-        csv << [""]
-        csv << ["", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
-        csv << [""]
-        csv << [""]
+        if fulfillments.any? or procedures.any?
+          csv << [""]
+          csv << ["", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
+          csv << [""]
+          csv << [""]
+        end
       end
     end
   end
