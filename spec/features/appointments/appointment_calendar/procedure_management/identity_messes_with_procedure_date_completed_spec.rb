@@ -104,7 +104,7 @@ feature 'User messes with a procedures date completed', js: true do
 
   def then_i_should_see_an_enabled_datepicker_with_the_current_date
     expected_date = page.evaluate_script %Q{ $('.completed_date_field .datetimepicker').first().val(); }
-    expect(expected_date).to eq(Time.current.strftime('%m-%d-%Y'))
+    expect(expected_date).to eq(DateTime.current.strftime('%m-%d-%Y'))
   end
 
   def then_i_should_see_the_completed_date_has_been_updated
