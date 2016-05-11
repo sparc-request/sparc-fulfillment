@@ -122,9 +122,9 @@ feature 'Identity completes all Procedures', js: true do
 
   def and_all_procedures_should_have_completed_date_set_to_default
     find("tr.procedure[data-id='1'] div.completed_date_field input.datetimepicker")
-    find("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker")
-
     procedure1_date = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] div.completed_date_field input.datetimepicker").val(); }
+
+    find("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker")
     procedure2_date = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] div.completed_date_field input.datetimepicker").val(); }
   
     expect(procedure1_date).to eq(@current_date)
@@ -134,9 +134,9 @@ feature 'Identity completes all Procedures', js: true do
   def and_all_procedures_should_have_performed_by_set_to_default
 
     find("tr.procedure[data-id='1'] td.performed-by .selectpicker")
-    find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
-
     procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val(); }
+
+    find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
     procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
 
     expect(procedure1_performed_by.to_i).to eq(@current_identity.id)
@@ -176,9 +176,9 @@ feature 'Identity completes all Procedures', js: true do
 
   def and_all_procedures_should_have_selected_performer
     find("tr.procedure[data-id='1'] td.performed-by .selectpicker")
-    find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
-
     procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val(); }
+
+    find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
     procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
 
     expect(procedure1_performed_by.to_i).to eq(@other_identity.id)
