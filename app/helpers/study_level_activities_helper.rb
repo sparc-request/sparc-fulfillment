@@ -39,10 +39,9 @@ module StudyLevelActivitiesHelper
     raw content_tag(:div, button + ul, class: 'btn-group overflow_webkit_button')
   end
 
-  def fulfillments_drop_button line_item_id
-    content_tag(:button, class: 'btn btn-primary btn-sm otf_fulfillments list', title: t(:fulfillment)[:view], type: "button", aria: {label: "Fulfillments List"}, data: {line_item_id: line_item_id, toggle: "tooltip", animation: 'false'}) do
-      content_tag(:span, '', class: "glyphicon glyphicon-chevron-right", aria: {hidden: "true"})
-    end
+  def fulfillments_drop_button line_item
+    button = content_tag(:button, id: "list-#{line_item.id}", type: 'button', class: 'btn btn-success otf_fulfillments_list', title: t(:fulfillment)[:list_fulfillments], type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id, toggle: "tooltip", animation: 'false'})
+    raw content_tag(:div, button, class: 'btn-group')
   end
 
   def fulfillment_components_dropdown components=Array.new
