@@ -68,7 +68,7 @@ namespace :data do
             proc = procedure
             current_amount = procedure.service_cost
             calculated_amount = 0
-            funding_source = protocol.funding_source.sparc_funding_source
+            funding_source = protocol.sparc_funding_source
             visit = procedure.visit
             service = procedure.service
 
@@ -117,7 +117,7 @@ namespace :data do
           begin
             fulf = fulfillment
             current_amount = fulfillment.service_cost
-            funding_source = protocol.funding_source
+            funding_source = protocol.sparc_funding_source
             calculated_amount = fulfillment.line_item.cost(funding_source, fulfillment.fulfilled_at)
 
             if calculated_amount != current_amount
