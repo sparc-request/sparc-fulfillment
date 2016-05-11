@@ -29,6 +29,8 @@ class Participant < ActiveRecord::Base
   validate :middle_initial_format
 
   validates :mrn, presence: true
+  validates_length_of :mrn, maximum: 255
+  
   validates :date_of_birth, presence: true
   validates :gender, presence: true
   validates :ethnicity, presence: true
