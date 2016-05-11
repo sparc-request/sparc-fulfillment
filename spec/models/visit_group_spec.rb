@@ -111,6 +111,19 @@ RSpec.describe VisitGroup, type: :model do
           end
         end
       end
+
+      context "adding visit as last" do
+        context "result in out-of-order days" do
+          it "should be invalid" do
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            create(:visit_group, position: 1, day: 1, arm: arm)
+            create(:visit_group, position: 2, day: 8, arm: arm)
+            vg = build(:visit_group, position: 3, day: 7, arm: arm)
+
+            expect(vg).not_to be_valid
+          end
+        end
+      end
     end
   end
 
@@ -145,14 +158,6 @@ RSpec.describe VisitGroup, type: :model do
         expect(groups.first).to eq(sorted_groups.last)
         expect(groups.second).to eq(sorted_groups.second)
         expect(groups.third).to eq(sorted_groups.first)
-      end
-    end
-
-    describe 'public' do
-
-      it 'should return correct insertion_name' do
-        vg = create(:visit_group_with_arm, name: 'some_name')
-        expect(vg.insertion_name).to eq("insert before " + vg.name)
       end
     end
 
