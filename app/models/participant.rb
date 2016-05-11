@@ -22,7 +22,19 @@ class Participant < ActiveRecord::Base
   after_save :update_faye
   after_destroy :update_faye
 
-  validates :protocol_id, :last_name, :first_name, :mrn, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, presence: true
+  validates :protocol_id, presence: true
+  validates :last_name, presence: true
+  validates :first_name, presence: true
+  validates :mrn, presence: true
+  validates_length_of :mrn, maximum: 255
+  validates :date_of_birth, presence: true
+  validates :gender, presence: true
+  validates :ethnicity, presence: true
+  validates :race, presence: true
+  validates :address, presence: true
+  validates :city, presence: true
+  validates :state, presence: true
+  validates :zipcode, presence: true
   validate :phone_number_format, :middle_initial_format, :zip_code_format
 
   def self.title id
