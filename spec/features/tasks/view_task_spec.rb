@@ -61,7 +61,7 @@ feature "Identity views Task", js: true do
     expect(page).to have_css(".modal dt", text: "Assigned to")
     expect(page).to have_css(".modal dt", text: "Type")
     expect(page).to have_css(".modal dt", text: "Task")
-    expect(page).to have_css(".modal dt", text: "Due date")
+    expect(page).to have_css(".modal dt", text: "Due Date")
     expect(page).to have_css(".modal dt", text: "Completed")
   end
 

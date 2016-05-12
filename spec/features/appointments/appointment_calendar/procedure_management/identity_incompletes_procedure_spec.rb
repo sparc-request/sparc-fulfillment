@@ -191,7 +191,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def then_i_should_see_errors
-    expect(page).to have_css('.modal-dialog .alert', text: "Notes reason can't be blank")
+    expect(page).to have_css('.modal-dialog .alert', text: "Reason can't be blank")
   end
 
   def then_i_should_see_the_notes_button
