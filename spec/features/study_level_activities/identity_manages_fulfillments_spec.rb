@@ -7,8 +7,6 @@ feature 'Fulfillments', js: true do
     it 'should list the fulfillments' do
       given_i_have_fulfillments
       and_i_have_opened_up_fulfillments
-      click_button "List"
-      wait_for_ajax
       expect(page).to have_content('Fulfillments List')
     end
   end
@@ -19,7 +17,7 @@ feature 'Fulfillments', js: true do
       given_i_have_fulfillments
       count = @line_item.fulfillments.count
       and_i_have_opened_up_fulfillments
-      click_button "Add"
+      click_button "Add Fulfillment"
       wait_for_ajax
       when_i_fill_out_the_fulfillment_form
       expect(page).to have_content('Fulfillment Created')
@@ -45,7 +43,7 @@ feature 'Fulfillments', js: true do
     wait_for_ajax
     click_link "Study Level Activities"
     wait_for_ajax
-    first('.otf_fulfillments.list').click
+    first('.otf-fulfillment-list').click
     wait_for_ajax
   end
 
