@@ -32,7 +32,7 @@ feature "create Task", js: true do
   def when_i_create_a_task_assigned_to_myself
     find(".new-task").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
+    page.execute_script %Q{ $('#follow_up_datepicker').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
     click_button 'Save'
@@ -42,7 +42,7 @@ feature "create Task", js: true do
   def when_i_create_a_task_assigned_to_another_identity
     find(".new-task").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
+    page.execute_script %Q{ $('#follow_up_datepicker').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
     click_button 'Save'

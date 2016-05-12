@@ -1,8 +1,6 @@
 - if procedure.task.present?
-  .input-group.date.followup_procedure_datepicker
-    %input{type: "text", class: "form-control", value: format_date(procedure.task.due_at), id: "follow_up_datepicker_#{procedure.id}", data:{task_id: procedure.task.id}}
-    %span.input-group-addon
-      %span.glyphicon.glyphicon-calendar
+  .input-group.date
+    %input{type: "text", class: "form-control followup_procedure_datepicker", value: format_date(procedure.task.due_at), id: "follow_up_datepicker_#{procedure.id}", readonly: true, data:{task_id: procedure.task.id}}
 - else
   -# div used for capturing click events when button is disabled
   .btn-group{class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }"}
