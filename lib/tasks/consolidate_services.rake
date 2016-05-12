@@ -9,7 +9,7 @@ namespace :data do
 			if !(service_1_id.nil? || service_2_id.nil?) && (service_1_id > 0 && service_2_id > 0)
 
 				if services_can_be_swapped?(service_1_id, service_2_id)
-					puts "This will change the Service ID of Procedures with Service ID = #{service_1_id} to Service ID = #{service_2_id}. Is this correct? Y/N?: "
+					puts "This will change the Service ID of Incomplete and Unstarted Procedures with Service ID = #{service_1_id} to Service ID = #{service_2_id}. Is this correct? Y/N?"
 					ok_with_values = STDIN.gets.chomp
 
 					if "Yes".casecmp(ok_with_values).zero? || "Y".casecmp(ok_with_values).zero?
@@ -30,10 +30,10 @@ namespace :data do
 		end
 
 		def get_user_input
-			puts "What is the ID of the service to be replaced?: "
+			puts "What is the ID of the service to be replaced?"
 			service_1_id = Integer( STDIN.gets.chomp ) rescue nil
 
-			puts "What is the ID of the new service?: "
+			puts "What is the ID of the new service?"
 			service_2_id = Integer( STDIN.gets.chomp ) rescue nil
 
 			return service_1_id, service_2_id
@@ -55,10 +55,10 @@ namespace :data do
 		end
 
 		def update_procedures(old_service_id, new_service_id)
-			procs = Procedure.where(service_id: old_service_id)
+			procs = Procedure.where(service_id: old_service_id, status: ["unstarted", "incomplete"])
 			
 			puts "The Service ID of #{procs.count} Procedure(s) is being updated from #{old_service_id} to #{new_service_id}."
-			procs.update_all("service_id = #{new_service_id}")
+			procs.update_all(service_id: new_service_id)
 		end
 
 		main
