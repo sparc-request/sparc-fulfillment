@@ -1,6 +1,4 @@
 class VisitGroup < ActiveRecord::Base
-  include CustomPositioning #custom methods around positioning, acts_as_list
-
   self.per_page = Visit.per_page
 
   has_paper_trail
