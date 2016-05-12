@@ -7,8 +7,10 @@ namespace :data do
 
     bar = ProgressBar.new(unused_services.count)
     unused_services.map do |service|
-      service.destroy
-      service.pricing_maps.each(&:destroy)
+      if service.line_items.empty?
+        service.destroy
+        service.pricing_maps.each(&:destroy)
+      end
       bar.increment!
     end
   end

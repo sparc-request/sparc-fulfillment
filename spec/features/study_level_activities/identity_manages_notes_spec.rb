@@ -46,9 +46,7 @@ feature 'Notes', js: true do
   end
 
   def when_i_open_up_a_new_fulfillment_note
-    first('.otf_fulfillments.list').click
-    wait_for_ajax
-    click_button 'List'
+    first('.otf-fulfillment-list').click
     wait_for_ajax
     first("#fulfillments-table .available-actions-button").click
     wait_for_ajax

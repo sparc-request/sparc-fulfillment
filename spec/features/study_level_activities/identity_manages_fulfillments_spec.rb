@@ -17,7 +17,7 @@ feature 'Fulfillments', js: true do
       given_i_have_fulfillments
       count = @line_item.fulfillments.count
       and_i_have_opened_up_fulfillments
-      click_button "Add"
+      click_button "Add Fulfillment"
       wait_for_ajax
       when_i_fill_out_the_fulfillment_form
       expect(page).to have_content('Fulfillment Created')
