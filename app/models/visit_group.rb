@@ -41,12 +41,18 @@ class VisitGroup < ActiveRecord::Base
   # Used to validate :day, when present. Preceding VisitGroup must have a
   # a smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).
   def day_must_be_in_order
-    # determine neighbors that will be after save
     already_there = arm.visit_groups.find_by(position: position)
+    last_persisted_pos = arm.visit_groups.last.try(:position) || 0
+
+    # determine neighbors that will be after save
     left_neighbor, right_neighbor =
-      if id.nil? # inserting before
-        [already_there.try(:higher_item), already_there]
-      else
+      if id.nil? # inserting new record
+        if position <= last_persisted_pos # inserting before
+          [already_there.try(:higher_item), already_there]
+        else # insert as last
+          [arm.visit_groups.last, nil]
+        end
+      else # moving present record
         if already_there.try(:id) == id # not changing position, get our neighbors
           [higher_item, lower_item]
         else # position must be changing
