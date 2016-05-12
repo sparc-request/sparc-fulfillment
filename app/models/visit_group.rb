@@ -22,6 +22,7 @@ class VisitGroup < ActiveRecord::Base
   validate :day_must_be_in_order, unless: "day.blank? || arm_id.blank?"
   validates :day, numericality: { only_integer: true }, unless: "day.blank?"
 
+  validates :position, presence: true
   before_destroy :check_for_completed_data
 
   def r_quantities_grouped_by_service
