@@ -13,7 +13,7 @@ feature 'User views Participant list', js: true do
     then_i_should_see_the_participant_i_searched_for
   end
 
-  scenario 'and searches for an non-existing Participant' do
+  scenario 'and searches for a non-existing Participant' do
     given_i_am_viewing_the_participant_list
     when_i_search_for_a_nonexistent_participant
     then_i_should_not_see_the_participant_i_searched_for

@@ -5,8 +5,6 @@ class VisitGroup < ActiveRecord::Base
   acts_as_paranoid
   acts_as_list scope: [:arm_id]
 
-  before_destroy :check_for_completed_data
-
   belongs_to :arm
 
   has_many :visits, dependent: :destroy
@@ -15,15 +13,16 @@ class VisitGroup < ActiveRecord::Base
 
   default_scope { order(:position) }
 
-  validates :arm_id,
-            :name,
-            :position,
-            presence: true
+  validates :arm_id, presence: true
+  validates :name, presence: true
 
   validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
-
   validate :day_must_be_in_order, unless: "day.blank? || arm_id.blank?"
   validates :day, numericality: { only_integer: true }, unless: "day.blank?"
+
+  validates :position, presence: true
+  
+  before_destroy :check_for_completed_data
 
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)

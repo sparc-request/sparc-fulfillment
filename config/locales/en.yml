@@ -38,6 +38,41 @@ en:
     required_message: "Fields marked with an asterisk ( * ) are required to continue."
     save: "Save"
 
+  activerecord:
+    attributes:
+      arm:
+        name: "Arm Name"
+        subject_count: "Subject Count"
+        visit_count: "Visit Count"
+      appointment:
+        name: "Visit Name"
+        position: ""
+      fulfillment:
+        fulfilled_at: "Fulfillment Date"
+      line_item:
+        quantity_requested: "Quantity"
+      notes:
+        reason: "Reason"
+      participant:
+        mrn: "MRN"
+        zipcode: "Zip Code"
+      task:
+        due_at: "Date"
+      visit_group:
+        name: "Visit Name"
+        day: "Visit Day"
+        position: ""
+    errors:
+      models:
+        appointment:
+          attributes:
+            position:
+              blank: "You must select a Position"
+        visit_group:
+          attributes:
+            position:
+              blank: "You must select a Position"
+
   appointment:
     object: "Appointment"
     add_service: "Add Service"
@@ -232,9 +267,9 @@ en:
     object: "Procedure"
     complete: "Complete All"
     completed_date: "Completed Date"
-    edit_header: "Follow up"
+    edit_header: "Follow Up"
     followup: "Follow Up"
-    follow_up_date: "Follow up date"
+    follow_up_date: "Follow Up Date"
     fud: "Due Date"
     incomplete: "Incomplete All"
     notes: "Notes"
@@ -359,7 +394,7 @@ en:
     assignee_name: "Assigned to"
     completed: "Completed"
     create_task: "Create Task"
-    due_at: "Due date"
+    due_at: "Due Date"
     flash_messages:
       created: "Task Created"
       incompleted: "The selected task(s) have been set to incomplete"

@@ -3,65 +3,50 @@ require 'rails_helper'
 feature 'Identity edits visit groups for a particular protocol', js: true do
 
   context "User adds a visit group to an arm" do
-    context "and fills the form out correctly" do
-      scenario "and sees the visit group on the arm" do
-        given_i_am_viewing_an_arm_with_multiple_visit_groups
-        when_i_click_the_add_visit_group_button
-        when_i_fill_in_the_form(day: 10000)
-        when_i_click_the_add_submit_button
-        then_i_should_see_the_visit_group
-      end
+    scenario "and sees the visit group on the arm" do
+      given_i_am_viewing_an_arm_with_multiple_visit_groups
+      when_i_click_the_add_visit_group_button
+      when_i_fill_in_the_form(day: 10000)
+      when_i_click_the_add_submit_button
+      then_i_should_see_the_visit_group
+    end
 
-      scenario "and sees a flash notification" do
-        given_i_am_viewing_an_arm_with_multiple_visit_groups
-        when_i_click_the_add_visit_group_button
-        when_i_fill_in_the_form(day: 1000)
-        when_i_click_the_add_submit_button
-        then_i_should_see_a_flash_message_of_type 'add'
-      end
+    scenario "and sees a flash notification" do
+      given_i_am_viewing_an_arm_with_multiple_visit_groups
+      when_i_click_the_add_visit_group_button
+      when_i_fill_in_the_form(day: 1000)
+      when_i_click_the_add_submit_button
+      then_i_should_see_a_flash_message_of_type 'add'
+    end
 
-      scenario "and sees it in the correct position" do
-        given_i_am_viewing_an_arm_with_multiple_visit_groups
+    scenario "and sees it in the correct position" do
+      given_i_am_viewing_an_arm_with_multiple_visit_groups
 
-        @original_visit_group_1 = @arm.visit_groups.first
-        @original_visit_group_2 = @arm.visit_groups.second
+      @original_visit_group_1 = @arm.visit_groups.first
+      @original_visit_group_2 = @arm.visit_groups.second
 
-        when_i_click_the_add_visit_group_button
-        when_i_fill_in_the_form(position: "before #{@arm.visit_groups.second.name}")
-        when_i_click_the_add_submit_button
-        then_i_should_see_the_position_is 1
-      end
+      when_i_click_the_add_visit_group_button
+      when_i_fill_in_the_form(position: "before #{@arm.visit_groups.second.name}")
+      when_i_click_the_add_submit_button
+      then_i_should_see_the_position_is 1
     end
   end
 
   context "User edits a visit group on an arm" do
-    context "and fills the form out correctly" do
-      scenario "and sees the updated arm" do
-        given_i_am_viewing_an_arm_with_multiple_visit_groups
-        when_i_click_the_edit_visit_group_button
-        when_i_set_the_name_to 'VG 2'
-        when_i_set_the_day_to 2
-        when_i_click_the_save_submit_button
-        then_i_should_see_the_updated_visit_group
-      end
-
-      scenario "and sees a flash message" do
-        given_i_am_viewing_an_arm_with_multiple_visit_groups
-        when_i_click_the_edit_visit_group_button
-        when_i_click_the_save_submit_button
-        then_i_should_see_a_flash_message_of_type 'edit'
-      end
+    scenario "and sees the updated arm" do
+      given_i_am_viewing_an_arm_with_multiple_visit_groups
+      when_i_click_the_edit_visit_group_button
+      when_i_set_the_name_to 'VG 2'
+      when_i_set_the_day_to 2
+      when_i_click_the_save_submit_button
+      then_i_should_see_the_updated_visit_group
     end
 
-    context "and fills the form out incorrectly" do
-      scenario "and sees some errors" do
-        given_i_am_viewing_an_arm_with_multiple_visit_groups
-        when_i_click_the_edit_visit_group_button
-        when_i_set_the_name_to nil
-        when_i_set_the_day_to nil
-        when_i_click_the_save_submit_button
-        then_i_should_see_errors_of_type 'edit'
-      end
+    scenario "and sees a flash message" do
+      given_i_am_viewing_an_arm_with_multiple_visit_groups
+      when_i_click_the_edit_visit_group_button
+      when_i_click_the_save_submit_button
+      then_i_should_see_a_flash_message_of_type 'edit'
     end
   end
 
@@ -98,15 +83,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       when_i_click_the_remove_visit_group_button
       when_i_click_the_remove_submit_button
       then_i_should_see_a_flash_message_of_type 'remove'
-    end
-  end
-
-  context "User tries to delete the last visit group on an arm" do
-    scenario "and sees some errors" do
-      given_i_am_viewing_an_arm_with_one_visit_group
-      when_i_click_the_remove_visit_group_button
-      when_i_click_the_remove_submit_button
-      then_i_should_see_errors_of_type 'last vg'
     end
   end
 
@@ -220,19 +196,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
 
   def then_i_should_see_the_original_name
     expect(find("#visit_group_#{@arm.visit_groups.first.id}").value).to eq(@original_name)
-  end
-
-  def then_i_should_see_errors_of_type action_type
-    case action_type
-      when 'add'
-        expect(page).to have_content("Name can't be blank")
-        expect(page).to have_content("Day can't be blank") unless ENV.fetch('USE_EPIC'){nil} == 'false'
-      when 'edit'
-        expect(page).to have_content("Name can't be blank")
-        expect(page).to have_content("Day can't be blank") unless ENV.fetch('USE_EPIC'){nil} == 'false'
-      when 'last vg'
-        expect(page).to have_content("Arm must have at least one visit. Add another visit before deleting this one")
-    end
   end
 
   def then_i_should_see_a_flash_message_of_type action_type
