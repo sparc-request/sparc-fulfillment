@@ -5,8 +5,6 @@ class VisitGroup < ActiveRecord::Base
   acts_as_paranoid
   acts_as_list scope: [:arm_id]
 
-  before_destroy :check_for_completed_data
-
   belongs_to :arm
 
   has_many :visits, dependent: :destroy
@@ -15,15 +13,16 @@ class VisitGroup < ActiveRecord::Base
 
   default_scope { order(:position) }
 
-  validates :arm_id,
-            :name,
-            :position,
-            presence: true
+  validates :arm_id, presence: true
+  validates :name, presence: true
 
   validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
-
   validate :day_must_be_in_order, unless: "day.blank? || arm_id.blank?"
   validates :day, numericality: { only_integer: true }, unless: "day.blank?"
+
+  validates :position, presence: true
+  
+  before_destroy :check_for_completed_data
 
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)
@@ -42,12 +41,18 @@ class VisitGroup < ActiveRecord::Base
   # Used to validate :day, when present. Preceding VisitGroup must have a
   # a smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).
   def day_must_be_in_order
-    # determine neighbors that will be after save
     already_there = arm.visit_groups.find_by(position: position)
+    last_persisted_pos = arm.visit_groups.last.try(:position) || 0
+
+    # determine neighbors that will be after save
     left_neighbor, right_neighbor =
-      if id.nil? # inserting before
-        [already_there.try(:higher_item), already_there]
-      else
+      if id.nil? # inserting new record
+        if position <= last_persisted_pos # inserting before
+          [already_there.try(:higher_item), already_there]
+        else # insert as last
+          [arm.visit_groups.last, nil]
+        end
+      else # moving present record
         if already_there.try(:id) == id # not changing position, get our neighbors
           [higher_item, lower_item]
         else # position must be changing

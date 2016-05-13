@@ -27,7 +27,7 @@ feature 'User creates Participant', js: true do
     bootstrap_select '#participant_state', participant.state
     fill_in 'Zip Code', with: participant.zipcode
     bootstrap_select '#participant_status', participant.status
-    page.execute_script %Q{ $("#participant_date_of_birth").siblings(".input-group-addon").trigger("click") }
+    page.execute_script %Q{ $("#dob_time_picker").trigger("focus") }
     page.execute_script %Q{ $("td.year:contains('0')").trigger("click") }
     page.execute_script %Q{ $("td.month:contains('Mar')").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }

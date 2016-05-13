@@ -1,8 +1,16 @@
 $("#modal_area").html("<%= escape_javascript(render(partial: @report_type, locals: { title: @title, report_type: @report_type })) %>")
 $("#modal_place").modal('show')
-$('#start_date').datetimepicker(format: 'MM-DD-YYYY')
-$('#end_date').datetimepicker(format: 'MM-DD-YYYY')
+
+$('#start_date').datetimepicker
+  format: 'MM-DD-YYYY'
+  ignoreReadonly: true
+
+$('#end_date').datetimepicker
+  format: 'MM-DD-YYYY'
+  ignoreReadonly: true
+
 $(".modal-content .selectpicker").selectpicker()
+
 multi_select = $("#organization_select")
 multi_select.multiselect({
   numberDisplayed: 2,
@@ -27,3 +35,4 @@ multi_select.multiselect({
         url: "reports/update_dropdown"
         data: { org_ids: multi_select.val() }
 })
+>>>>>>> master
