@@ -54,27 +54,4 @@ feature 'Fulfillments', js: true do
     click_button "Save Fulfillment"
     wait_for_ajax
   end
-<<<<<<< HEAD
-
-  def then_i_should_see_the_new_fulfillment_in_the_table
-    expect(page).to have_css("#fulfillments-table tr[data-index='0']")
-  end
-
-  def then_i_should_see_the_correct_components
-    click_button "Display Components"
-    wait_for_ajax
-    expect(first('.dropdown-menu > li').text).to eq @components.first.component
-    first('.dropdown-menu > li').click
-    wait_for_ajax
-  end
-
-  def then_i_should_see_the_changes_in_the_notes
-    first("#fulfillments-table .available-actions-button").click
-    wait_for_ajax
-    first('.notes.list[data-notable-type="Fulfillment"]').click
-    wait_for_ajax
-    expect(page).to have_content "Quantity changed to 45"
-  end
-=======
->>>>>>> master
 end
