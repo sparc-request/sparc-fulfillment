@@ -1,6 +1,7 @@
 FactoryGirl.define do
 
-  factory :document do
+  factory :document do |n|
+    title "MyDocument"
 
     trait :with_csv_file do
       original_filename "file.csv"

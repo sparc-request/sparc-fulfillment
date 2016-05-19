@@ -20,6 +20,7 @@ class LineItemsController < ApplicationController
 
   def create
     @line_item = LineItem.new(line_item_params)
+    
     if @line_item.valid?
       @line_item.quantity_type = @line_item.service.current_effective_pricing_map.quantity_type
       @line_item.save
