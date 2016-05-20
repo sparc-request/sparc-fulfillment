@@ -22,7 +22,7 @@ feature 'Fulfillments', js: true do
     end
   end
 
-    
+
 
   def given_i_have_fulfillments
     @protocol = create_and_assign_protocol_to_me
