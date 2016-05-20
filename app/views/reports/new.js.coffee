@@ -35,4 +35,3 @@ multi_select.multiselect({
         url: "reports/update_dropdown"
         data: { org_ids: multi_select.val() }
 })
->>>>>>> master
