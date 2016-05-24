@@ -15,6 +15,7 @@ multi_select = $("#organization_select")
 multi_select.multiselect({
   numberDisplayed: 2,
   includeSelectAllOption: true,
+  nonSelectedText: 'All',
   enableFiltering: true,
   disableIfEmpty: true,
   enableClickableOptGroups: true,
