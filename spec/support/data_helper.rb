@@ -31,6 +31,7 @@ module DataHelpers
   def create_and_assign_protocol_to_me
     identity              = Identity.first
     sub_service_request   = create(:sub_service_request_with_organization)
+    subsidy               = create(:subsidy, sub_service_request: sub_service_request)
     protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
