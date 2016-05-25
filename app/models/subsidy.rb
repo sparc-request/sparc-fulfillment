@@ -7,7 +7,7 @@ class Subsidy < ActiveRecord::Base
 
   def subsidy_committed 
     # Calculates cost of subsidy (amount subsidized)
-    # stored total - pi_contribution then convert from cents to dollars
+    # stored total - pi_contribution returning cents
     total_at_approval - pi_contribution
   end
 end
