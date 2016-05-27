@@ -33,7 +33,7 @@ $ ->
       $('#protocol-list').bootstrapTable('showColumn', 'start_date')
       $('#protocol-list').bootstrapTable('showColumn', 'end_date')
       $('#protocol-list').bootstrapTable('showColumn', 'study_cost')
-      $('#protocol-list').bootstrapTable('showColumn', 'stored_percent_subsidy')
+      $('#protocol-list').bootstrapTable('showColumn', 'percent_subsidy')
       $('#protocol-list').bootstrapTable('showColumn', 'subsidy_committed')
       $('#protocol-list').bootstrapTable('showColumn', 'subsidy_expended')
 
@@ -48,7 +48,7 @@ $ ->
       $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
       $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
       $('#protocol-list').bootstrapTable('hideColumn', 'study_cost')
-      $('#protocol-list').bootstrapTable('hideColumn', 'stored_percent_subsidy')
+      $('#protocol-list').bootstrapTable('hideColumn', 'percent_subsidy')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
 

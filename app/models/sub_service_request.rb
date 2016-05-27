@@ -11,5 +11,3 @@ class SubServiceRequest < ActiveRecord::Base
 
   delegate :service_requester, to: :service_request
 end
-
-
