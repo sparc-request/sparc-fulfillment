@@ -23,16 +23,17 @@ namespace :data do
 
     file = get_file
     input_file = Rails.root.join('db', 'imports', file)
-
-    bar = ProgressBar.new(unused_services.count)
+    count = 0
     CSV.foreach(input_file, :headers => true, :encoding => 'windows-1251:utf-8') do |row|
       id = row["Service ID"]
-      service = Service.where(id: id)
+      service = Service.where(id: id).first
       if service.line_items.empty?
         service.destroy
         service.pricing_maps.each(&:destroy)
+        count += 1
+        puts count
       end
-      bar.increment!
     end
+    puts "#{count} services destroyed."
   end
 end
