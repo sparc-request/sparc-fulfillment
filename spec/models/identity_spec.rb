@@ -100,27 +100,20 @@ RSpec.describe Identity, type: :model do
 
         identity                  = create(:identity)
         institution_organization  = create(:organization_institution, children_count: 2, has_protocols: true)
-        
         provider_organization     = create(:organization_provider, parent_id: institution_organization.id, children_count: 2, has_protocols: true)
-        provider_sub_service_request = create(:sub_service_request, organization: provider_organization)
-        provider_protocol            = create(:protocol, sub_service_request: provider_sub_service_request)
-
         program_organization      = create(:organization_program, parent_id: provider_organization.id, children_count: 2, has_protocols: true)
-        program_sub_service_request = create(:sub_service_request, organization: program_organization)
-        program_protocol            = create(:protocol, sub_service_request: program_sub_service_request)
 
         create(:clinical_provider, identity: identity, organization: provider_organization)
         create(:super_user, identity: identity, organization: program_organization)
 
         protocol_ids = []
         # clinical_provider is attached at provider level, provider organization has a protocol attached
-        protocol_ids << provider_organization.protocols.first.id
+        protocol_ids << provider_organization.protocols.map(&:id)
         # super user is attached at program level, include protocol attached to program
-        protocol_ids << program_organization.protocols.first.id
+        protocol_ids << program_organization.protocols.map(&:id)
         # super user is attached at program level, include all the core orgs (children) protocols
         program_organization.children.map{ |child| protocol_ids << child.protocols.map(&:id) }
         
-
         expect(identity.protocols.map(&:id).flatten.sort).to eq(protocol_ids.flatten.sort)
       end
     end
