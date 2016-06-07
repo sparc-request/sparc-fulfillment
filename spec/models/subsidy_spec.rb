@@ -27,7 +27,7 @@ RSpec.describe Subsidy, type: :model do
       end
 
       it 'should return 35 if total_at_approval is nil' do
-        subsidy = create(:subsidy, pi_contribution: 32200, total_at_approval: 49538, status: 'Approved')
+        subsidy = build(:subsidy, pi_contribution: 32200, total_at_approval: 49538, status: 'Approved')
         expect(subsidy.percent_subsidy).to eq('35.0')
       end
     end
