@@ -9,7 +9,7 @@ RSpec.describe Subsidy, type: :model do
     describe 'subsidy_committed' do
 
       it 'should return the correct amount in cents' do
-        subsidy = create(:subsidy, pi_contribution: 450000, total_at_approval: 500000, status: 'Approved')
+        subsidy = build(:subsidy, pi_contribution: 450000, total_at_approval: 500000, status: 'Approved')
         expect(subsidy.subsidy_committed).to eq(50000)
       end
     end
@@ -17,12 +17,12 @@ RSpec.describe Subsidy, type: :model do
     describe 'percent_subsidy' do
 
       it 'should return 0 if total_at_approval is blank' do
-        subsidy = create(:subsidy, pi_contribution: 450000, total_at_approval: 0, status: 'Approved')
+        subsidy = build(:subsidy, pi_contribution: 450000, total_at_approval: 0, status: 'Approved')
         expect(subsidy.percent_subsidy).to eq('0')
       end
 
       it 'should return 0 if total_at_approval is nil' do
-        subsidy = create(:subsidy, pi_contribution: 450000, total_at_approval: nil, status: 'Approved')
+        subsidy = build(:subsidy, pi_contribution: 450000, total_at_approval: nil, status: 'Approved')
         expect(subsidy.percent_subsidy).to eq('0')
       end
 
