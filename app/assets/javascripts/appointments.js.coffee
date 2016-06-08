@@ -95,7 +95,7 @@ $ ->
 
   $(document).on 'click', '.uncomplete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
-    data = appointment: completed_date: null
+    data = field: "reset_completed_date", appointment: completed_date: null
     $.ajax
       type: 'PUT'
       data: data
