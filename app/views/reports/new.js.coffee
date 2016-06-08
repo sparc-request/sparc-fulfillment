@@ -2,11 +2,11 @@ $("#modal_area").html("<%= escape_javascript(render(partial: @report_type, local
 $("#modal_place").modal('show')
 
 $('#start_date').datetimepicker
-  format: 'MM-DD-YYYY'
+  format: 'MM/DD/YYYY'
   ignoreReadonly: true
 
 $('#end_date').datetimepicker
-  format: 'MM-DD-YYYY'
+  format: 'MM/DD/YYYY'
   ignoreReadonly: true
 
 $(".modal-content .selectpicker").selectpicker()
@@ -28,7 +28,7 @@ multi_select.multiselect({
   onDropdownHide: (e) ->
     selected_values = multi_select.val()
     if !_.isEqual(@original_selected_values,selected_values) && selected_values != null
-      $('#protocol_section').empty() 
+      $('#protocol_section').empty()
       $('#protocol_section').closest('.form-group').find('label').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
       $('#protocol_section').closest('.form-group').removeClass("hidden")
       $.ajax
