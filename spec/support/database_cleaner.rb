@@ -1,8 +1,7 @@
 RSpec.configure do |config|
+  MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
 
   config.before(:suite) do
-    MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
-
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.strategy = :transaction
     MODELS.
