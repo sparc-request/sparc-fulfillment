@@ -8,7 +8,7 @@ else
 $(".selectpicker").selectpicker()
 
 $(".completed_date_field").datetimepicker
-  format: 'MM-DD-YYYY'
+  format: 'MM/DD/YYYY'
   ignoreReadonly: true
   
 update_complete_visit_button(<%= @appointment.can_finish? %>)
