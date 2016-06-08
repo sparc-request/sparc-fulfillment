@@ -50,6 +50,7 @@ class Protocol < ActiveRecord::Base
            to: :sparc_protocol
 
   delegate :subsidy_committed,
+           :percent_subsidy,
            to: :subsidy,
            allow_nil: true
 

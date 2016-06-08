@@ -23,8 +23,15 @@ namespace :data do
       where.not(id: used_services).
       distinct
 
+    inactive_unused_services = []
+    unused_services.each do |unused_service|
+      if !unused_service.is_available?
+        inactive_unused_services << unused_service
+      end
+    end
+
     # report rows
-    report_data = unused_services.map do |service|
+    report_data = inactive_unused_services.map do |service|
       [service.id, service.name, format_bool(service.is_available?),
         service.cpt_code, service.created_at, service.organization.name,
         service.organization.type, service.organization.parent.name,

@@ -4,7 +4,7 @@ lock '3.4.0'
 set :application, 'fulfillment'
 set :repo_url, 'git@github.com:sparc-request/sparc-fulfillment.git'
 
-set :delayed_job_workers, 4
+set :delayed_job_workers, 2
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
