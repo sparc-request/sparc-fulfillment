@@ -26,7 +26,7 @@ RSpec.describe UpdateDropdownsController, type: :controller do
       
       xhr :post, :create, org_ids: organization_ids
 
-      expect(assigns(:protocols)).to eq([provider_protocol, program_protocol, core_protocol])
+      expect(assigns(:protocols)).to contain_exactly(provider_protocol, program_protocol, core_protocol)
     end
   end
 end

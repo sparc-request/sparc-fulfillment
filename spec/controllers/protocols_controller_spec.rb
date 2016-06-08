@@ -71,7 +71,7 @@ RSpec.describe ProtocolsController, type: :controller do
       create(:clinical_provider, identity: identity, organization: organization)
       create(:project_role_pi, identity: identity, protocol: protocol)
 
-      xhr :get, :show, id: protocol.id, format: :js
+      xhr :get, :show, id: protocol.id
 
       expect(response).to render_template :show
     end
