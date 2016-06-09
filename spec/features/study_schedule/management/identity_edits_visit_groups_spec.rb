@@ -26,7 +26,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       @original_visit_group_2 = @arm.visit_groups.second
 
       when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: 117)
+      when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: @arm.visit_groups.second.day-1)
       when_i_click_the_add_submit_button
       then_i_should_see_the_position_is 1
     end
@@ -89,8 +89,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   def given_i_am_viewing_an_arm_with_multiple_visit_groups
     @protocol = create_and_assign_protocol_to_me
     @protocol.arms.each do |arm|
-      arm.delete
+      arm.destroy
     end
+
     @arm      = create(:arm_with_visit_groups, visit_count: 2, protocol: @protocol, subject_count: 3)
     @visit_groups = @arm.visit_groups
 
