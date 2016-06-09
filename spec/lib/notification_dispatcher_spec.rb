@@ -15,7 +15,7 @@ RSpec.describe NotificationDispatcher, type: :request do
         end
 
         it "should create a ProtocolImporterJob delayed job" do
-          expect(Delayed::Job.where("handler LIKE '%struct:ProtocolImporterJob%'").one?).to be
+          expect(ProtocolImporterJob).to have_been_enqueued
         end
       end
     end

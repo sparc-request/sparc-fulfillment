@@ -3,7 +3,6 @@ RSpec.configure do |config|
   config.include(RSpec::ActiveJob)
 
   config.before(:each, enqueue: false) do
-
     ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
   end
 

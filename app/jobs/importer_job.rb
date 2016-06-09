@@ -1,15 +1,10 @@
-class ImporterJob < Struct.new(:sparc_id, :callback_url, :action)
+class ImporterJob < ActiveJob::Base
+  queue_as :sparc_api_requests
 
   class SparcApiError < StandardError
   end
 
-  def self.enqueue(sparc_id, callback_url, action)
-    job = new(sparc_id, callback_url, action)
-
-    Delayed::Job.enqueue job, queue: 'sparc_api_requests'
-  end
-
-  def perform
+  def perform sparc_id, callback_url, action
     skip_faye_callbacks
     yield
     set_faye_callbacks

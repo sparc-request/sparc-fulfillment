@@ -40,7 +40,7 @@ RSpec.describe ArmsController do
     end
   end
 
-  describe "DELETE #destroy", delay: false do
+  describe "DELETE #destroy", enqueue: false do
     it "should delete the arm" do
       @new_arm = create(:arm, protocol_id: @protocol.id) #more than one arm
       expect{
