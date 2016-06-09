@@ -150,7 +150,7 @@ class Procedure < ActiveRecord::Base
 
   def completed_date=(completed_date)
     if completed_date.present?
-      write_attribute(:completed_date, Time.strptime(completed_date, "%m-%d-%Y"))
+      write_attribute(:completed_date, Time.strptime(completed_date, "%m/%d/%Y"))
     else
       write_attribute(:completed_date, nil)
     end

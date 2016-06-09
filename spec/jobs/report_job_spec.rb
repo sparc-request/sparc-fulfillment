@@ -35,8 +35,8 @@ RSpec.describe ReportJob, type: :job do
     2.times { create(:protocol) }
     {
       title: 'auditing_report',
-      start_date: '01-01-2015',
-      end_date: '02-01-2015',
+      start_date: '01/01/2015',
+      end_date: '02/01/2015',
       identity_id: create(:identity).id,
       protocol_ids: Protocol.all.map(&:id).map(&:to_s)
     }

@@ -26,7 +26,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       @original_visit_group_2 = @arm.visit_groups.second
 
       when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(position: "before #{@arm.visit_groups.second.name}")
+      when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: 117)
       when_i_click_the_add_submit_button
       then_i_should_see_the_position_is 1
     end
@@ -128,7 +128,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     bootstrap_select "#visit_group_arm_id", "#{@arm.name}"
     fill_in "visit_group_name", with: opts[:name] || "VG"
     fill_in "visit_group_day", with: opts[:day] || "13"
-    bootstrap_select "#visit_group_position", opts[:position] || "as last"
+    bootstrap_select "#visit_group_position", opts[:position] || "Add as last"
     wait_for_ajax
   end
 

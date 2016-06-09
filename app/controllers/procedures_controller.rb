@@ -77,7 +77,7 @@ class ProceduresController < ApplicationController
 
   def change_in_completed_date_detected?
     if procedure_params[:completed_date]
-      Time.strptime(procedure_params[:completed_date], "%m-%d-%Y") != @procedure.completed_date
+      Time.strptime(procedure_params[:completed_date], "%m/%d/%Y") != @procedure.completed_date
     else
       return false
     end
