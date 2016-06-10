@@ -29,10 +29,11 @@ RSpec.describe ReportsController, type: :controller do
       end
 
       it 'should create a ReportJob ActiveJob' do
-        expect { do_post }.to enqueue_a(ReportJob)
+        expect(ReportJob).to receive(:perform_later).once
+        do_post
       end
 
-      def do_post params = { report_type: "invoice_report", title: "Invoice Report 1", start_date: (Time.now - 1.day).to_s, end_date: Time.now.to_s, protocol_ids: [1], sort_by: 'Protocol ID', sort_order: 'ASC' }
+      def do_post params={report_type: "invoice_report", title: "Invoice Report 1", start_date: "06/01/2016", end_date: "06/02/2016", protocol_ids: [1], sort_by: 'Protocol ID', sort_order: 'ASC'}
         xhr :post, :create, params, format: :js
       end
 

@@ -7,12 +7,10 @@ FactoryGirl.define do
 
     trait :pi do
       role "primary-pi"
-      identity
     end
 
     trait :coordinator do
       role "research-assistant-coordinator"
-      identity
     end
 
     factory :project_role_pi, traits:[:pi]

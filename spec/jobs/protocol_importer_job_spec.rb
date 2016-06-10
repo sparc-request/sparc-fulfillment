@@ -24,10 +24,6 @@ RSpec.describe ProtocolImporterJob, type: :job do
 #
 #      callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
 #      protocol_job = ProtocolImporterJob.perform_later(6213, callback_url, 'update')
-#      puts "#"*50
-#      puts ActiveJob::Base.queue_adapter.enqueued_jobs
-#      puts @sub
-#      puts "#"*50
 #    end
 #
 #    it 'should make requests to the objects callback_url' do
