@@ -72,17 +72,17 @@ RSpec.describe ProtocolImporterJob, type: :job do
 #      expect(Visit.where('line_item_id IS NULL').any?).to_not be
 #    end
 #
-#    it "should POST once to the Faye server on the 'protocols' channel", delay: false do
+#    it "should POST once to the Faye server on the 'protocols' channel", enqueue: false do
 #      expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/).with{ |request| request.body.match(/protocols/) }).to have_been_made.once
 #    end
 #
-#    it "should POST once to the Faye server on the 'protocol_id' channel", delay: false do
+#    it "should POST once to the Faye server on the 'protocol_id' channel", enqueue: false do
 #      protocol = Protocol.find_by(sparc_id: 7564)
 #
 #      expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/).with { |request| request.body.match(/protocol_#{protocol.id}/) }).to have_been_made.once
 #    end
 #
-#    it "should NOT utilize PaperTrail on import", delay: false do
+#    it "should NOT utilize PaperTrail on import", enqueue: false do
 #      protocol = Protocol.find_by(sparc_id: 7564)
 #
 #      expect(protocol.versions.count).to eq(0)

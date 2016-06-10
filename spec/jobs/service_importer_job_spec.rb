@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ServiceImporterJob, type: :job do
 
-  describe '#enqueue', delay: true do
+  describe '#enqueue' do
 
     it 'should create a Delayed::Job' do
       callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/services/1.json"

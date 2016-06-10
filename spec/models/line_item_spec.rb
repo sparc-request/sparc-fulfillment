@@ -151,7 +151,7 @@ RSpec.describe LineItem, type: :model do
 
   context 'class methods' do
 
-    describe "after create", delay: true do
+    describe "after create" do
 
       it "should increment service line_item_count" do
         service = create(:service)
@@ -159,7 +159,7 @@ RSpec.describe LineItem, type: :model do
       end
     end
 
-    describe "after destroy", delay: true do
+    describe "after destroy" do
 
       it "should decrement service line_item_count" do
         service = create(:service)

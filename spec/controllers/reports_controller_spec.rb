@@ -17,12 +17,12 @@ RSpec.describe ReportsController, type: :controller do
         expect(response).to be_success
       end
 
-      it 'should create a document', delay: true do
+      it 'should create a document' do
         do_post
         expect(assigns(:document)).to be_an_instance_of Document
       end
 
-      it "should not create a document without a title", delay: true do
+      it "should not create a document without a title" do
         params = {report_type: "invoice_report", title: ""}
         do_post params
         expect(assigns(:errors).messages[:title]).to be

@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe NotificationDispatcher, type: :request do
 
-  describe "#dispatch", delay: true do
+  describe "#dispatch" do
 
     context "SubServiceRequest" do
 
@@ -14,7 +14,7 @@ RSpec.describe NotificationDispatcher, type: :request do
           sparc_sends_notification_post(params)
         end
 
-        it "should create a ProtocolImporterJob delayed job" do
+        it "should create a ProtocolImporterJob" do
           expect(ProtocolImporterJob).to have_been_enqueued
         end
       end

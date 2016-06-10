@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
 
-  describe 'authentication', delay: true do
+  describe 'authentication' do
 
     context 'success' do
 
