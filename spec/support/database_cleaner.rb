@@ -1,5 +1,4 @@
 RSpec.configure do |config|
-  Rails.application.eager_load!
   MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
 
   config.before(:suite) do
