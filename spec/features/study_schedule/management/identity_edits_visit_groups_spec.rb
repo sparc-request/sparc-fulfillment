@@ -6,7 +6,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     scenario "and sees the visit group on the arm" do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
       when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(day: 10000)
+      when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
       when_i_click_the_add_submit_button
       then_i_should_see_the_visit_group
     end
@@ -14,7 +14,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     scenario "and sees a flash notification" do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
       when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(day: 1000)
+      when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
       when_i_click_the_add_submit_button
       then_i_should_see_a_flash_message_of_type 'add'
     end
