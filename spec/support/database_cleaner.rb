@@ -1,31 +1,40 @@
 RSpec.configure do |config|
+  MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
 
   config.before(:suite) do
+
     DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.strategy = :transaction
+    MODELS.
+      each do |model|
+        DatabaseCleaner[:active_record, model: model].clean_with(:truncation)
+        DatabaseCleaner[:active_record, model: model].strategy = :transaction
+      end
   end
 
   config.before(:each, type: :feature) do |example|
-    # :rack_test driver's Rack app under test shares database connection
-    # with the specs, so we can use transaction strategy for speed.
-    driver_shares_db_connection_with_specs = Capybara.current_driver == :rack_test
-
-    if driver_shares_db_connection_with_specs
-      DatabaseCleaner.strategy = :transaction
-    else
-      # Non-:rack_test driver is probably a driver for a JavaScript browser
-      # with a Rack app under test that does *not* share a database
-      # connection with the specs, so we must use truncation strategy.
-      DatabaseCleaner.strategy = :truncation
-    end
+    DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+    MODELS.
+      each do |model|
+        DatabaseCleaner[:active_record, model: model].start
+        DatabaseCleaner[:active_record, model: model].strategy = example.metadata[:js] ? :truncation : :transaction
+      end
   end
 
   config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
+    MODELS.
+      each do |model|
+        DatabaseCleaner[:active_record, model: model].start
+      end
   end
 
   config.after(:each) do
     DatabaseCleaner.clean
+    MODELS.
+      each do |model|
+        DatabaseCleaner[:active_record, model: model].clean
+      end
     OctopusHelper.clean_all_shards
   end
 end
