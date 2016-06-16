@@ -110,10 +110,5 @@ feature 'User messes with a procedures date completed', js: true do
   def then_i_should_see_the_completed_date_has_been_updated
     expected_date = page.evaluate_script %Q{ $('.completed_date_field .datetimepicker').first().val(); }
     expect(expected_date).to eq(@the_middle_of_next_month)
-# =======
-#     expected_date = page.evaluate_script %Q{ $('table.procedures tbody input.datetimepicker').val(); }
-
-#     expect(expected_date).to eq(Time.current.strftime('%m/%d/%Y'))
-# >>>>>>> master
   end
 end

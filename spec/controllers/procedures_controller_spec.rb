@@ -66,25 +66,15 @@ RSpec.describe ProceduresController, type: :controller do
       context 'Procedure status is: complete' do
 
         context 'User edits completed_date' do
-<<<<<<< HEAD
+
           before do
             @procedure = create(:procedure_complete, appointment: @appointment, service: @service)
             params    = { id: @procedure.id, procedure: { completed_date: DateTime.current.tomorrow.strftime("%m-%d-%Y")}, format: :js }
-=======
-           before do
-            procedure = create(:procedure_complete, appointment: @appointment, service: @service)
-            params    = { id: procedure.id, procedure: { completed_date: Date.current.tomorrow.strftime("%m/%d/%Y")}, format: :js }
->>>>>>> master
-
             put :update, params
           end
 
           it "should update the completed date" do
-<<<<<<< HEAD
             expect(@procedure.reload.completed_date.strftime("%m-%d-%Y")).to eq DateTime.current.tomorrow.strftime("%m-%d-%Y")
-=======
-            expect(assigns(:procedure).reload.completed_date.strftime("%m/%d/%Y")).to eq Time.current.tomorrow.strftime("%m/%d/%Y")
->>>>>>> master
           end
 
           it "should create a note" do
