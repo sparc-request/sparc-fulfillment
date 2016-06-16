@@ -5,6 +5,12 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   context "User adds a visit group to an arm" do
     scenario "and sees the visit group on the arm" do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
+
+      @original_visit_group_1 = @arm.visit_groups.first
+      @original_visit_group_2 = @arm.visit_groups.second
+      @original_visit_group_1.day = 1
+      @original_visit_group_2.day = 3
+
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
       when_i_click_the_add_submit_button
@@ -13,6 +19,12 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
 
     scenario "and sees a flash notification" do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
+      
+      @original_visit_group_1 = @arm.visit_groups.first
+      @original_visit_group_2 = @arm.visit_groups.second
+      @original_visit_group_1.day = 1
+      @original_visit_group_2.day = 3
+
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
       when_i_click_the_add_submit_button
@@ -24,11 +36,12 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
 
       @original_visit_group_1 = @arm.visit_groups.first
       @original_visit_group_2 = @arm.visit_groups.second
-
+      @original_visit_group_1.day = 1
+      @original_visit_group_2.day = 3
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: @arm.visit_groups.second.day-1)
       when_i_click_the_add_submit_button
-      then_i_should_see_the_position_is 1
+      then_i_should_see_the_position_is 2
     end
   end
 
@@ -185,7 +198,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   def then_i_should_see_the_position_is position
     wait_for_ajax
     @new_visit_group = @arm.visit_groups.find_by_name("VG")
-
     within(".visit_groups_for_#{@arm.id}") do
       expect(page.all(".visit_name")[0].value).to eq(@original_visit_group_1.name)
       expect(page.all(".visit_name")[1].value).to eq(@new_visit_group.name)
