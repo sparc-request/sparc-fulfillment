@@ -52,6 +52,7 @@ feature 'Custom appointment', js: true do
     @participant = @protocol.participants.first
 
     visit participant_path @participant
+    wait_for_ajax
   end
 
   def given_a_participant_has_an_arm
