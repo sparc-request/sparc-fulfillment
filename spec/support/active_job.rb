@@ -7,6 +7,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
+    ActiveJob::Base.queue_adapter.perform_enqueued_jobs = false
     ActiveJob::Base.queue_adapter.enqueued_jobs = []
     ActiveJob::Base.queue_adapter.performed_jobs = []
   end
