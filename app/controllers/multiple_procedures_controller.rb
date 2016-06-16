@@ -46,6 +46,8 @@ class MultipleProceduresController < ApplicationController
     #Reset all procedures under appointment
     @appointment.procedures.each{|procedure| procedure.reset}
 
+    @refresh_dashboard = true
+
     render 'appointments/show'
   end
 

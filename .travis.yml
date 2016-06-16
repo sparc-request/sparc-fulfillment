@@ -2,8 +2,8 @@ sudo: false
 language: ruby
 cache: bundler
 before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
   - export TZ=America/New_York
 before_script:
   - cp config/database.yml.example config/database.yml
@@ -25,6 +25,7 @@ before_script:
   - RAILS_ENV=test bundle exec rake db:migrate
   - cd ../sparc-fulfillment
   - pwd
+  - mkdir -p public/system/documents
   - rvm use $(< .ruby-version) --install --binary --fuzzy
   - export BUNDLE_GEMFILE=$PWD/Gemfile
 script:

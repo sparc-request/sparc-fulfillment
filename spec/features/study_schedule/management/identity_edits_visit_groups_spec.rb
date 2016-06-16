@@ -6,7 +6,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     scenario "and sees the visit group on the arm" do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
       when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(day: 10000)
+      when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
       when_i_click_the_add_submit_button
       then_i_should_see_the_visit_group
     end
@@ -14,7 +14,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     scenario "and sees a flash notification" do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
       when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(day: 1000)
+      when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
       when_i_click_the_add_submit_button
       then_i_should_see_a_flash_message_of_type 'add'
     end
@@ -26,7 +26,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       @original_visit_group_2 = @arm.visit_groups.second
 
       when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(position: "before #{@arm.visit_groups.second.name}")
+      when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: @arm.visit_groups.second.day-1)
       when_i_click_the_add_submit_button
       then_i_should_see_the_position_is 1
     end
@@ -89,8 +89,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   def given_i_am_viewing_an_arm_with_multiple_visit_groups
     @protocol = create_and_assign_protocol_to_me
     @protocol.arms.each do |arm|
-      arm.delete
+      arm.destroy
     end
+
     @arm      = create(:arm_with_visit_groups, visit_count: 2, protocol: @protocol, subject_count: 3)
     @visit_groups = @arm.visit_groups
 
@@ -128,7 +129,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     bootstrap_select "#visit_group_arm_id", "#{@arm.name}"
     fill_in "visit_group_name", with: opts[:name] || "VG"
     fill_in "visit_group_day", with: opts[:day] || "13"
-    bootstrap_select "#visit_group_position", opts[:position] || "as last"
+    bootstrap_select "#visit_group_position", opts[:position] || "Add as last"
     wait_for_ajax
   end
 
@@ -168,6 +169,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_visit_group
+    find("input[value='VG']")
     expect(page).to have_css("input[value='VG']")
   end
 
@@ -181,6 +183,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_position_is position
+    wait_for_ajax
     @new_visit_group = @arm.visit_groups.find_by_name("VG")
 
     within(".visit_groups_for_#{@arm.id}") do
@@ -201,10 +204,13 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   def then_i_should_see_a_flash_message_of_type action_type
     case action_type
       when 'add'
+        find('.alert.alert-dismissable')
         expect(page).to have_content("Visit Created")
       when 'edit'
+        find('.alert.alert-dismissable')
         expect(page).to have_content("Visit Updated")
       when 'remove'
+        find('.alert.alert-dismissable')
         expect(page).to have_content("Visit Destroyed")
     end
   end

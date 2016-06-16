@@ -30,6 +30,7 @@ $("tr.procedure[data-id='<%= procedure.id %>'] td.status .incomplete").removeCla
 $("tr.procedure[data-id='<%= procedure.id %>'] div.completed_date_field input.datetimepicker").val("<%= @completed_date %>").removeAttr("disabled")
 $("tr.procedure[data-id='<%= procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= @performed_by %>")
 $("#modal_place").modal('hide')
+
 <% end %>
 <% end %>
 <% end %>

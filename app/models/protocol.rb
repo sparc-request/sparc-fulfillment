@@ -6,13 +6,14 @@ class Protocol < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :sub_service_request
+  has_one  :subsidy, through: :sub_service_request
+
   belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
   has_many :subsidies, through: :sub_service_requests
 
-  has_many :service_requests
   has_many :sub_service_requests, through: :service_requests
   has_many :project_roles,    primary_key: :sparc_id
   has_many :service_requests, primary_key: :sparc_id
@@ -48,13 +49,13 @@ class Protocol < ActiveRecord::Base
            :potential_funding_source,
            to: :sparc_protocol
 
+  delegate :subsidy_committed,
+           :percent_subsidy,
+           to: :subsidy,
+           allow_nil: true
+
   def self.title id
     ["Protocol", Protocol.find(id).srid].join(' ')
-  end
-
-  def self.find_protocols_by_org_id(org_ids)
-    joins(:sub_service_request).
-    where(sub_service_requests: { organization_id: org_ids })
   end
 
   def sparc_uri
@@ -69,14 +70,6 @@ class Protocol < ActiveRecord::Base
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id
     "#{sparc_id} - #{sub_service_request.ssr_id}"
-  end
-
-  #For displaying the subsidy committed on the index page
-  def subsidy_committed
-    study_cost  = self.study_cost / 100.00
-    subsidy     = self.stored_percent_subsidy / 100.00
-
-    ((study_cost * subsidy) * 100).to_i
   end
 
   #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.

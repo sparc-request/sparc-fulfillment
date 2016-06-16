@@ -12,8 +12,8 @@ json.irb_number protocol.irb_number
 json.start_date format_date(protocol.start_date)
 json.end_date format_date(protocol.end_date)
 json.study_cost display_cost(protocol.study_cost)
-json.stored_percent_subsidy protocol.stored_percent_subsidy
-json.subsidy_committed display_cost(protocol.subsidy_committed)
+json.percent_subsidy (protocol.percent_subsidy || '0')
+json.subsidy_committed display_cost(protocol.subsidy_committed || 0.0)
 json.subsidy_expended protocol.subsidy_expended
 json.pi protocol.pi.full_name
 json.coordinators formatted_coordinators(protocol.coordinators.map(&:full_name))

@@ -98,7 +98,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def given_there_is_an_arm_with_completed_procedures
     participant  = create(:participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first)
-    procedure    = create(:procedure_complete, appointment: participant.appointments.first, arm: @protocol.arms.first, status: "complete", completed_date: "10-09-2010")
+    procedure    = create(:procedure_complete, appointment: participant.appointments.first, arm: @protocol.arms.first, status: "complete", completed_date: "10/09/2010")
     visit protocol_path @protocol
   end
 

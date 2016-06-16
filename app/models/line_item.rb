@@ -62,7 +62,7 @@ class LineItem < ActiveRecord::Base
   end
 
   def started_at=(date)
-    write_attribute(:started_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
+    write_attribute(:started_at, Time.strptime(date, "%m/%d/%Y")) if date.present?
   end
 
   def quantity_remaining

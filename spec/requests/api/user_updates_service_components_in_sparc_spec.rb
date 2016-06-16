@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'User updates Service Components in SPARC', type: :request, delay: false do
+RSpec.describe 'User updates Service Components in SPARC', type: :request, enqueue: false do
 
   describe 'full lifecycle' do
 

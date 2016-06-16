@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe TasksController, type: :controller do
 
   before :each do
-    @task = create(:task, due_at: "09-09-2009")
+    @task = create(:task, due_at: "09/09/2009")
 
     sign_in
   end
@@ -47,7 +47,7 @@ RSpec.describe TasksController, type: :controller do
     it "should update a task" do
       expected_body = "New body"
       attributes = attributes_for(:task)
-      attributes[:due_at] = "09-09-2009"
+      attributes[:due_at] = "09/09/2009"
       attributes[:body] = expected_body
       put :update, {
         id: @task.id,
@@ -85,7 +85,7 @@ RSpec.describe TasksController, type: :controller do
     it "should create a new task without a note" do
       assignee = create(:identity)
       attributes = attributes_for(:task)
-      attributes[:due_at] = "09-09-2009"
+      attributes[:due_at] = "09/09/2009"
       expect{
         post :create, {
           id: @task.id,
@@ -100,7 +100,7 @@ RSpec.describe TasksController, type: :controller do
       appointment = create(:appointment, name: 'Sandy Bottoms', arm_id: 1, participant_id: 1)
       procedure = create(:procedure, appointment_id: appointment.id)
       attributes = attributes_for(:task)
-      attributes[:due_at] = "09-09-2009"
+      attributes[:due_at] = "09/09/2009"
       attributes[:notes] = {comment: "comment", notable_type: 'Procedure'}
       attributes[:assignable_type] = "Procedure"
       attributes[:assignable_id] = procedure.id
