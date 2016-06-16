@@ -157,6 +157,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   def when_i_click_the_add_submit_button
     click_button 'Add'
     wait_for_ajax
+    save_and_open_screenshot
   end
 
   def when_i_click_the_remove_submit_button
