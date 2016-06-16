@@ -65,7 +65,7 @@ class FulfillmentsController < ApplicationController
       unless new_field.blank?
         unless current_field.blank?
           current_field = (field == :fulfilled_at ? current_field.to_date.to_s : current_field.to_s)
-          new_field = (field == :fulfilled_at ? Time.strptime(new_field, "%m-%d-%Y").to_date.to_s : new_field.to_s)
+          new_field = (field == :fulfilled_at ? Time.strptime(new_field, "%m/%d/%Y").to_date.to_s : new_field.to_s)
         end
         if current_field != new_field
           comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : new_field.to_s)

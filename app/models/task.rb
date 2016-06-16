@@ -20,7 +20,7 @@ class Task < ActiveRecord::Base
   scope :mine, -> (identity) { incomplete.where(assignee: identity) }
 
   def due_at=(due_date)
-    write_attribute(:due_at, Time.strptime(due_date, "%m-%d-%Y")) if due_date.present?
+    write_attribute(:due_at, Time.strptime(due_date, "%m/%d/%Y")) if due_date.present?
   end
 
   private

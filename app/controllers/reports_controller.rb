@@ -14,7 +14,7 @@ class ReportsController < ApplicationController
     
     @report = @report_type.classify.constantize.new(reports_params)
     @errors = @report.errors
-    
+
     if @report.valid?
       @reports_params = reports_params
       @documentable.documents.push @document

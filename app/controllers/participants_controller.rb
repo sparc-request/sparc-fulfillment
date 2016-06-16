@@ -74,6 +74,7 @@ class ParticipantsController < ApplicationController
   def find_participant
     participant_id = params[:id] || params[:participant_id]
     @participant = Participant.where(id: participant_id).first
+
     if @participant.present?
       @protocol = @participant.protocol
     else

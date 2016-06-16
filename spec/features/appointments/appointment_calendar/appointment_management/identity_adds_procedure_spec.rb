@@ -2,6 +2,11 @@ require 'rails_helper'
 
 feature 'Identity adds Procedure', js: true do
 
+  before(:each) do
+    @protocol = nil
+    @participant = nil
+  end
+
   scenario 'and sees it in the appointment calendar' do
     given_i_am_viewing_a_participants_calendar
     when_i_add_a_procedure
@@ -19,6 +24,7 @@ feature 'Identity adds Procedure', js: true do
     @participant  = @protocol.participants.first
 
     visit participant_path(@participant)
+    wait_for_ajax
   end
 
   def when_i_add_a_procedure

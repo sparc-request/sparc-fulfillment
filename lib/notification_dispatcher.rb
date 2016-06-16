@@ -7,9 +7,9 @@ class NotificationDispatcher
   def dispatch
     case notification_object_class
     when "Service"
-      ServiceImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
+      ServiceImporterJob.perform_later(@notification.sparc_id, @notification.callback_url, @notification.action)
     when "SubServiceRequest"
-      ProtocolImporterJob.enqueue(@notification.sparc_id, @notification.callback_url, @notification.action)
+      ProtocolImporterJob.perform_later(@notification.sparc_id, @notification.callback_url, @notification.action)
     else
       import_directly
     end

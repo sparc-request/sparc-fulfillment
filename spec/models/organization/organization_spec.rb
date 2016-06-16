@@ -1,11 +1,15 @@
 require "rails_helper"
 
 RSpec.describe Organization, type: :model do
-
   it { is_expected.to belong_to(:parent) }
   it { is_expected.to have_many(:services) }
   it { is_expected.to have_many(:sub_service_requests) }
-
+  it { is_expected.to have_many(:protocols) }
+  it { is_expected.to have_many(:pricing_setups) }
+  it { is_expected.to have_many(:non_process_ssrs_children) }
+  it { is_expected.to have_many(:super_users) }
+  it { is_expected.to have_many(:clinical_providers) }
+  it { is_expected.to have_many(:children) }
 
   describe '#all_child_organizations' do
     context "organizations with children" do

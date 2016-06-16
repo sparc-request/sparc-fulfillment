@@ -14,15 +14,15 @@ class InvoiceReport < Report
   def generate(document)
     #We want to filter from 00:00:00 in the local time zone,
     #then convert to UTC to match database times
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").utc
+    @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc
     #We want to filter from 11:59:59 in the local time zone,
     #then convert to UTC to match database times
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y").tomorrow.utc - 1.second
+    @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
-      csv << ["From", format_date(Time.strptime(@params[:start_date], "%m-%d-%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m-%d-%Y"))]
+      csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
       csv << [""]
 
       if @params[:protocol_ids].present?

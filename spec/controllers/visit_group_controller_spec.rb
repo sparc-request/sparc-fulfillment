@@ -44,11 +44,13 @@ RSpec.describe VisitGroupsController, type: :controller do
 
   describe "POST #create" do
     it "should create a new visit_group" do
+      next_day = @arm.visit_groups.maximum(:day)+1
+      next_position = @arm.visit_groups.maximum(:position)+1
       expect{
         post :create, {
           protocol_id: @protocol.id,
           arm_id: @arm.id,
-          visit_group: attributes_for(:visit_group, arm_id: @arm.id),
+          visit_group: attributes_for(:visit_group, arm_id: @arm.id, position: next_position, day: next_day).except(:sparc_id),
           format: :js
         }
       }.to change(VisitGroup, :count).by(1)
@@ -90,7 +92,7 @@ RSpec.describe VisitGroupsController, type: :controller do
     end
 
     it "should create an error when the visit_group has completed procedures under it" do
-      create(:procedure_complete, appointment: @visit_group.appointments.first, arm: @arm, completed_date: "10-09-2010")
+      create(:procedure_complete, appointment: @visit_group.appointments.first, arm: @arm, completed_date: "10/09/2010")
       delete :destroy, {
         id: @visit_group.id,
         page: "1",

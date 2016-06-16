@@ -44,7 +44,7 @@ class ArmsController < ApplicationController
       @arm.errors.add(:arm, "'#{@arm.name}' has completed procedures and cannot be deleted")
       @errors = @arm.errors
     else
-      @arm.delay.destroy
+      @arm.destroy_later
       flash.now[:alert] = t(:arm)[:deleted]
     end
   end

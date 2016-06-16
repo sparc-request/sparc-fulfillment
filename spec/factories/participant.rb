@@ -8,7 +8,7 @@ FactoryGirl.define do
     middle_initial { Faker::Base.letterify('?') }
     mrn { Faker::Number.number(8) }
     status { Participant::STATUS_OPTIONS.sample }
-    date_of_birth "08-16-1996"
+    date_of_birth "08/16/1996"
     gender { Participant::GENDER_OPTIONS.sample }
     ethnicity { Participant::ETHNICITY_OPTIONS.sample }
     race { Participant::RACE_OPTIONS.sample }

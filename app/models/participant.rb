@@ -50,7 +50,7 @@ class Participant < ActiveRecord::Base
   end
 
   def date_of_birth=(dob)
-    write_attribute(:date_of_birth, Time.strptime(dob, "%m-%d-%Y")) if dob.present?
+    write_attribute(:date_of_birth, Time.strptime(dob, "%m/%d/%Y")) if dob.present?
   end
 
   def phone_number_format
