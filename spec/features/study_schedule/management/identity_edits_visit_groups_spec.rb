@@ -28,6 +28,8 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       @original_visit_group_2 = @arm.visit_groups.second
       @original_visit_group_1.day = 1
       @original_visit_group_2.day = 3
+      @original_visit_group_1.save
+      @original_visit_group_2.save
 
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
@@ -42,6 +44,8 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       @original_visit_group_2 = @arm.visit_groups.second
       @original_visit_group_1.day = 1
       @original_visit_group_2.day = 3
+      @original_visit_group_1.save
+      @original_visit_group_2.save
 
 
       when_i_click_the_add_visit_group_button
@@ -195,11 +199,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_visit_group
-    if find('.alert-danger')
-      puts "TRUE"
-      expect(page).to have_css(".alert-danger", text: "ahhhhh")
-    end
-
     puts "*"*50
     puts @arm.visit_groups.inspect
     puts @arm.visit_groups.count
@@ -236,6 +235,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_a_flash_message_of_type action_type
+    puts "%"*50
+    puts @arm.visit_groups.inspect
+    puts @arm.visit_groups.count
     case action_type
       when 'add'
         find('.alert.alert-dismissable')
