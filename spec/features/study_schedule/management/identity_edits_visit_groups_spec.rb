@@ -10,9 +10,13 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       @original_visit_group_2 = @arm.visit_groups.second
       @original_visit_group_1.day = 1
       @original_visit_group_2.day = 3
+      @original_visit_group_1.save
+      @original_visit_group_2.save
 
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
+      puts "form day value:"
+      puts @arm.visit_groups.last.day + 100
       when_i_click_the_add_submit_button
       then_i_should_see_the_visit_group
     end
@@ -143,7 +147,11 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   def when_i_fill_in_the_form(opts = {})
     bootstrap_select "#visit_group_arm_id", "#{@arm.name}"
     fill_in "visit_group_name", with: opts[:name] || "VG"
+    puts "visit_group_name val"
+    puts opts[:name]
     fill_in "visit_group_day", with: opts[:day] || "13"
+    puts "visit_group_day val"
+    puts opts[:day]
     bootstrap_select "#visit_group_position", opts[:position] || "Add as last"
     wait_for_ajax
   end
@@ -189,9 +197,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   def then_i_should_see_the_visit_group
     if find('.alert-danger')
       puts "TRUE"
+      expect(page).to have_css(".alert-danger", text: "ahhhhh")
     end
-    
-    expect(page).to have_css(".alert-danger", text: "ahhhhh")
+
     puts "*"*50
     puts @arm.visit_groups.inspect
     puts @arm.visit_groups.count
