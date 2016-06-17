@@ -100,10 +100,11 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def given_i_am_viewing_an_arm_with_multiple_visit_groups
+    Protocol.destroy_all
+    Arm.destroy_all
+    VisitGroup.destroy_all
+
     @protocol = create_and_assign_protocol_to_me
-    @protocol.arms.each do |arm|
-      arm.destroy
-    end
 
     @arm      = create(:arm_with_visit_groups, visit_count: 2, protocol: @protocol, subject_count: 3)
     @visit_groups = @arm.visit_groups
@@ -188,7 +189,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
 
   def then_i_should_see_the_updated_visit_group
     vg_id = @arm.visit_groups.first.id
-    expect(find("#visit_group_#{vg_id}").value).to eq("VG 2")
+    expect(find("#visit_group_#{vg_id}").value).to eq(@arm.visit_groups.first.name)
   end
 
   def then_i_should_not_see_the_visit_group
