@@ -156,6 +156,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def when_i_click_the_add_submit_button
+    puts "*"*50
+    puts @arm.visit_groups.inspect
+    puts @arm.visit_groups.count
     click_button 'Add'
     wait_for_ajax
   end
@@ -183,6 +186,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_visit_group
+    puts "^"*50
+    puts @arm.visit_groups.inspect
+    puts @arm.visit_groups.count
     find("input[value='VG']")
     expect(page).to have_css("input[value='VG']")
   end
