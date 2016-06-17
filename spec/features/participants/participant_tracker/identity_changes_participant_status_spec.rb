@@ -8,12 +8,6 @@ feature 'User changes the status of a participant on the participant tracker', j
     then_i_should_see_the_updated_status
   end
 
-  scenario 'and sees the blue button with white glyphicon denoting notes present' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_update_the_participant_status
-    then_i_should_see_the_notes_button
-  end
-
   scenario 'and sees the status updated note' do
     given_i_am_viewing_the_participant_tracker
     when_i_update_the_participant_status
@@ -39,10 +33,6 @@ feature 'User changes the status of a participant on the participant tracker', j
 
   def then_i_should_see_the_updated_status
     expect(bootstrap_selected?("participant_status_#{@participant.id}", "Screening")).to be
-  end
-
-  def then_i_should_see_the_notes_button
-    expect(page).to have_selector("td.notes button.btn-primary")
   end
   
   def then_i_should_see_an_associated_note

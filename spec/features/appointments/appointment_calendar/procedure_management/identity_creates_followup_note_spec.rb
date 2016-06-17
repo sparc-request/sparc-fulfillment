@@ -18,14 +18,6 @@ feature 'Followup note', js: true do
         then_i_should_see_a_text_field_with_the_followup_date
       end
 
-      scenario 'and sees the blue button with white glyphicon denoting notes present' do
-        given_i_have_created_a_procedure
-        when_i_begin_an_appointment
-        when_i_click_the_followup_button
-        when_i_fill_out_and_submit_the_followup_form
-        then_i_should_see_the_notes_button
-      end
-
       scenario 'and sees the note in the notes list' do
         given_i_have_created_a_procedure
         given_i_have_created_a_followup_note
@@ -128,10 +120,6 @@ feature 'Followup note', js: true do
   def then_i_should_see_a_text_field_with_the_followup_date
     procedure = Procedure.first
     expect(page).to have_css("input#follow_up_datepicker_#{procedure.id}[value='#{Time.new(Time.now.year,Time.now.month,10).strftime("%m/%d/%Y")}']")
-  end
-
-  def then_i_should_see_the_notes_button
-    expect(page).to have_selector("td.notes button.btn-primary")
   end
   
   def then_i_should_see_the_note_i_created
