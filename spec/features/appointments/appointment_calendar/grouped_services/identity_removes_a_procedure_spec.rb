@@ -2,16 +2,19 @@ require 'rails_helper'
 
 feature 'Identity removes a Procedure', js: true do
 
-  let!(:protocol)    { create_and_assign_protocol_to_me }
-  let!(:participant) { protocol.participants.first }
-  let!(:appointment) { participant.appointments.first }
-  let!(:services)    { protocol.organization.inclusive_child_services(:per_participant) }
+  before :each do
+    @protocol    = create_and_assign_protocol_to_me
+    @participant = @protocol.participants.first
+    @appointment = @participant.appointments.first
+    @services    = @protocol.organization.inclusive_child_services(:per_participant)
+  end
 
   context 'when group has more than 3 members' do
-    before do
+    before :each do
       given_i_am_viewing_a_visit
       when_i_add_3_procedures_to_same_group
     end
+
     scenario 'and no longer sees the Procedure' do
       when_i_remove_the_first_procedure
       then_i_should_no_longer_see_that_procedure
@@ -29,10 +32,11 @@ feature 'Identity removes a Procedure', js: true do
   end
 
   context 'when group has 2 members' do
-    before do
+    before :each do
       given_i_am_viewing_a_visit
       when_i_add_2_procedures_to_same_group
     end
+
     scenario 'and no longer sees the group' do
       when_i_remove_the_first_procedure
       then_i_should_no_longer_see_the_group
@@ -41,11 +45,11 @@ feature 'Identity removes a Procedure', js: true do
 
 
   def when_i_add_3_procedures_to_same_group
-    add_a_procedure services.first, 3
+    add_a_procedure @services.first, 3
   end
 
   def when_i_add_2_procedures_to_same_group
-    add_a_procedure services.first, 2
+    add_a_procedure @services.first, 2
   end
 
   def when_i_remove_the_first_procedure

@@ -2,10 +2,12 @@ require 'rails_helper'
 
 feature 'Identity adds a Procedure', js: true do
 
-  let!(:protocol)     { create_and_assign_protocol_to_me }
-  let!(:participant)  { protocol.participants.first }
-  let!(:appointment)  { participant.appointments.first }
-  let!(:services)     { protocol.organization.inclusive_child_services(:per_participant) }
+  before :each do
+    @protocol     = create_and_assign_protocol_to_me
+    @participant  = @protocol.participants.first
+    @appointment  = @participant.appointments.first
+    @services     = @protocol.organization.inclusive_child_services(:per_participant)
+  end
 
   scenario 'and sees the procedure in the correct Core' do
     given_i_am_viewing_a_visit
@@ -76,11 +78,11 @@ feature 'Identity adds a Procedure', js: true do
   end
 
   def when_i_add_a_procedure
-    add_a_procedure services.first
+    add_a_procedure @services.first
   end
 
   def when_i_add_a_different_procedure
-    add_a_procedure services.last
+    add_a_procedure @services.last
   end
 
   def then_i_should_see_the_group_counter_is_correct
@@ -95,7 +97,7 @@ feature 'Identity adds a Procedure', js: true do
   end
 
   def and_select_a_procedure_from_multiselect
-    bootstrap_multiselect '#core_multiselect', [services.first.name]
+    bootstrap_multiselect '#core_multiselect', [@services.first.name]
   end
 
   def and_select_all_procedures_from_multiselect
