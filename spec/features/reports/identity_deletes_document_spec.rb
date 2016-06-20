@@ -1,63 +1,60 @@
 require 'rails_helper'
 
-feature 'Identity edits document title', js: true, enqueue: false do
+feature 'Identity deletes a document', js: true, enqueue: false do
 
-  context "User deletes a document" do
-    context "from the All Reports page" do
-      context "except they don't because the document is still processing" do
-        scenario "and they see the delete icon is greyed out" do
-          given_i_am_viewing_the_all_reports_page
-          when_an_identity_document_is_not_completed
-          then_i_should_see_the_delete_icon_is_greyed_out
-        end
-      end
-
-      scenario "and does not see the report" do
+  context "from the All Reports page" do
+    context "except they don't because the document is still processing" do
+      scenario "and they see the delete icon is greyed out" do
         given_i_am_viewing_the_all_reports_page
-        when_i_create_an_identity_based_document
-        when_i_click_the_delete_icon
-        then_i_should_not_see_the_document
-      end
-
-      context "which has not been accessed" do
-        scenario "and sees the documents counter decrement" do
-          given_i_am_viewing_the_all_reports_page
-          when_i_create_an_identity_based_document
-          when_i_create_an_identity_based_document
-          when_i_click_the_delete_icon
-          then_i_should_see_the_identity_docs_counter_was_decremented
-        end
+        when_an_identity_document_is_not_completed
+        then_i_should_see_the_delete_icon_is_greyed_out
       end
     end
 
-    context "from the Reports Tab" do
-      context "except they don't because the document is still processing" do
-        scenario "and they see the delete icon is greyed out" do
-          given_i_am_viewing_the_reports_tab
-          when_a_protocol_document_is_not_completed
-          then_i_should_see_the_delete_icon_is_greyed_out
-        end
-      end
+    scenario "and does not see the report" do
+      given_i_am_viewing_the_all_reports_page
+      when_i_create_an_identity_based_document
+      when_i_click_the_delete_icon
+      then_i_should_not_see_the_document
+    end
 
-      scenario "and does not see the report" do
-        given_i_am_viewing_the_reports_tab
-        when_i_create_a_protocol_based_document
+    context "which has not been accessed" do
+      scenario "and sees the documents counter decrement" do
+        given_i_am_viewing_the_all_reports_page
+        when_i_create_an_identity_based_document
+        when_i_create_an_identity_based_document
         when_i_click_the_delete_icon
-        then_i_should_not_see_the_document
-      end
-
-      context "which has not been accessed" do
-        scenario "and sees the documents counter decrement" do
-          given_i_am_viewing_the_reports_tab
-          when_i_create_a_protocol_based_document
-          when_i_create_a_protocol_based_document
-          when_i_click_the_delete_icon
-          then_i_should_see_the_protocol_docs_counter_was_decremented
-        end
+        then_i_should_see_the_identity_docs_counter_was_decremented
       end
     end
   end
 
+  context "from the Reports Tab" do
+    context "except they don't because the document is still processing" do
+      scenario "and they see the delete icon is greyed out" do
+        given_i_am_viewing_the_reports_tab
+        when_a_protocol_document_is_not_completed
+        then_i_should_see_the_delete_icon_is_greyed_out
+      end
+    end
+
+    scenario "and does not see the report" do
+      given_i_am_viewing_the_reports_tab
+      when_i_create_a_protocol_based_document
+      when_i_click_the_delete_icon
+      then_i_should_not_see_the_document
+    end
+
+    context "which has not been accessed" do
+      scenario "and sees the documents counter decrement" do
+        given_i_am_viewing_the_reports_tab
+        when_i_create_a_protocol_based_document
+        when_i_create_a_protocol_based_document
+        when_i_click_the_delete_icon
+        then_i_should_see_the_protocol_docs_counter_was_decremented
+      end
+    end
+  end
 
   def given_i_am_viewing_the_all_reports_page
     @protocol = create_and_assign_protocol_to_me

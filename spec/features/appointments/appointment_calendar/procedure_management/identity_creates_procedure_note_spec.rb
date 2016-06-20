@@ -1,11 +1,6 @@
 require 'rails_helper'
 
 feature 'User creates a procedure note', js: true do
-  
-  scenario 'and sees the white button with blue glyphicon denoting no notes present before creating' do
-    given_i_have_added_a_procedure_to_the_appointment_calendar
-    then_i_should_see_the_no_notes_button
-  end
 
   context 'and views the Notes list before create' do
     scenario 'and sees a notification that there are no notes' do
@@ -14,13 +9,6 @@ feature 'User creates a procedure note', js: true do
       when_i_view_the_notes_list
       then_i_should_see_a_notice_that_there_are_no_notes
     end
-  end
-
-  scenario 'and sees the blue button with white glyphicon denoting notes present after creating' do
-    given_i_have_added_a_procedure_to_the_appointment_calendar
-    when_i_begin_an_appointment
-    when_i_add_a_note_to_the_procedure
-    then_i_should_see_the_notes_button
   end
 
   scenario 'and sees the note in the notes list' do
@@ -59,14 +47,6 @@ feature 'User creates a procedure note', js: true do
 
   def when_i_view_the_notes_list
     find('.procedure td.notes button.notes.list').click
-  end
-
-  def then_i_should_see_the_notes_button
-    expect(page).to have_selector("td.notes button.btn-primary")
-  end
-
-  def then_i_should_see_the_no_notes_button
-    expect(page).to have_selector("td.notes button.btn-default")
   end
   
   def then_i_should_see_a_notice_that_there_are_no_notes
