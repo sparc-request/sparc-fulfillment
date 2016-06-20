@@ -38,9 +38,9 @@ feature 'User changes the status of a participant on the participant tracker', j
   end
   
   def then_i_should_see_an_associated_note
-    expect(bootstrap_selected?("participant_status_#{@participant.id}", "Screening")).to be
+    expect(page).to have_selector("button.btn-primary.participant_notes[data-notable-id='#{@participant.id}']")
     
-    find(".btn-primary.participant_notes[data-notable-id='#{@participant.id}']").click
+    find("button.btn-primary.participant_notes[data-notable-id='#{@participant.id}']").click
     wait_for_ajax
     expect(page).to have_content('Status changed')
   end
