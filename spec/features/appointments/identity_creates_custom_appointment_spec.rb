@@ -5,8 +5,7 @@ feature 'Custom appointment', js: true do
   context 'User tries to create a custom appointment' do
     context 'and the participant has an arm' do
       scenario 'and sees the create custom visit modal' do
-        given_i_am_viewing_the_participant_calendar
-        given_a_participant_has_an_arm
+        given_i_am_viewing_the_participant_calendar(:with_arm)
         when_i_click_create_custom_appointment
         then_i_should_see_the_create_custom_visit_modal
       end
@@ -14,8 +13,7 @@ feature 'Custom appointment', js: true do
 
     context 'and the participant does not have an arm' do
       scenario 'and does not see the create custom visit modal' do
-        given_i_am_viewing_the_participant_calendar
-        given_a_participant_does_not_have_an_arm
+        given_i_am_viewing_the_participant_calendar(:without_arm)
         when_i_click_create_custom_appointment
         then_i_should_not_see_the_create_custom_visit_modal
       end
@@ -47,20 +45,19 @@ feature 'Custom appointment', js: true do
     end
   end
 
-  def given_i_am_viewing_the_participant_calendar
-    @protocol   = create_and_assign_protocol_to_me
-    @participant = @protocol.participants.first
+  def given_i_am_viewing_the_participant_calendar(has_arm=:with_arm)
+    @protocol     = create_and_assign_protocol_to_me
+    @participant  = @protocol.participants.first
+
+    @participant.arm  = case has_arm
+                        when :with_arm
+                          Arm.first
+                        when :without_arm
+                          nil
+                        end
 
     visit participant_path @participant
     wait_for_ajax
-  end
-
-  def given_a_participant_has_an_arm
-    @participant.arm = Arm.first
-  end
-
-  def given_a_participant_does_not_have_an_arm
-    @participant.arm = nil
   end
 
   def when_i_click_create_custom_appointment
