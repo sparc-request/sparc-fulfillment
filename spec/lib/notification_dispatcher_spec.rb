@@ -2,10 +2,6 @@ require "rails_helper"
 
 RSpec.describe NotificationDispatcher, type: :request do
 
-  before(:each) do
-    ActiveJob::Base.queue_adapter.perform_enqueued_jobs = false
-  end
-
   describe "#dispatch" do
 
     context "SubServiceRequest" do

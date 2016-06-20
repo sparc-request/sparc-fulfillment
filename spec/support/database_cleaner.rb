@@ -19,8 +19,17 @@ RSpec.configure do |config|
       end
   end
 
-  # For feature tests with js: true, we should use the truncation strategy
-  config.before(:each, type: :feature, js: true) do |example|
+  # For js: true tests use the truncation strategy
+  config.before(:each, js: true) do |example|
+    DatabaseCleaner.strategy = :truncation
+    MODELS.
+      each do |model|
+        DatabaseCleaner[:active_record, model: model].strategy = :truncation
+      end
+  end
+
+  # For enqueue: false tests use the truncation strategy
+  config.before(:each, enqueue: false) do |example|
     DatabaseCleaner.strategy = :truncation
     MODELS.
       each do |model|

@@ -8,13 +8,7 @@ RSpec.describe 'User updates Service Components in SPARC', type: :request, enque
       line_item = create(:line_item, sparc_id: 1, service: create(:service_with_one_time_fee), protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
 
       user_updates_service_components_in_sparc
-      puts "^"*50
-      puts "line_item.components.map(&:component)"
-      puts line_item.components.map(&:component)
-      puts "-"*50
-      puts "line_item.service.components"
-      puts line_item.service.components
-      puts "^"*50
+
       expect(line_item.components.map(&:component)).to eq ['a','b','c','o']
     end
   end
@@ -23,14 +17,6 @@ RSpec.describe 'User updates Service Components in SPARC', type: :request, enque
 
   def user_updates_service_components_in_sparc
     notification  = build(:notification_service_update, sparc_id: 1)
-    
-    puts "*"*50
-    puts notification.kind
-    puts "-"*50
-    puts notification.action
-    puts "-"*50
-    puts notification.sparc_id
-    puts "*"*50
     params        = {
       notification: {
         sparc_id: notification.sparc_id,
