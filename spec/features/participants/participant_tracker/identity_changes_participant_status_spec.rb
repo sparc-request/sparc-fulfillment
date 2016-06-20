@@ -19,8 +19,10 @@ feature 'User changes the status of a participant on the participant tracker', j
     @participant = @protocol.participants.first
 
     visit protocol_path @protocol.id
-    
+    wait_for_ajax
+
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def when_i_update_the_participant_status
