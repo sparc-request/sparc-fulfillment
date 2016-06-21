@@ -1,8 +1,5 @@
 class Protocol < ActiveRecord::Base
-  def self.table_name_prefix
-    config = Rails.configuration.database_configuration
-    "#{config[Rails.env]["database"]}."
-  end
+  include LocalDb
 
   attr_accessor :document_counter_updated
 
