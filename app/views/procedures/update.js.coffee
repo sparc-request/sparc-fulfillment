@@ -49,8 +49,13 @@ statuses[statuses.length] =  "<%= status %>"
 $('#appointment_indications').selectpicker()
 $('#appointment_indications').selectpicker('val', statuses)
 
-$(".followup_procedure_datepicker").datetimepicker(format: 'MM/DD/YYYY')
-$(".completed_date_field").datetimepicker(format: 'MM/DD/YYYY')
+$(".followup_procedure_datepicker").datetimepicker
+  format: 'MM/DD/YYYY'
+  ignoreReadonly: true
+
+$(".completed_date_field").datetimepicker
+  format: 'MM/DD/YYYY'
+  ignoreReadonly: true
 
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
 

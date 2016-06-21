@@ -289,7 +289,7 @@ en:
 
   protocol:
     object: "Protocol"
-    admin_portal_link: "Admin Portal"
+    admin_portal_link: "SPARCDashboard"
     coordinators: "Coordinators"
     end_date: "Study End Date"
     flash_messages:
