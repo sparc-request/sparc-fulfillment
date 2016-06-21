@@ -35,10 +35,12 @@ feature 'Identity completes all Services', js: true do
 
   def and_i_select_the_procedure_in_the_core_dropdown
     bootstrap_multiselect '#core_multiselect', [@services.last.name]
+    wait_for_ajax
   end
 
   def and_i_click_complete_all
     find('button.complete_all').click
+    wait_for_ajax
   end
 
   def then_i_should_see_all_selected_procedures_completed
