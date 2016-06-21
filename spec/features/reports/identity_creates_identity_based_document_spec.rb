@@ -73,7 +73,7 @@ feature 'Identity creates a document from the documents page', js: true, enqueue
 
   #Must keep separated or else ClinicalProvider.destroy_all will not work
   def given_i_am_viewing_the_documents_index_page
-    @protocol = create_and_assign_protocol_to_me
+    @protocol = setup_protocol
 
     visit documents_path
     wait_for_ajax
@@ -156,5 +156,18 @@ feature 'Identity creates a document from the documents page', js: true, enqueue
 
   def then_i_should_not_see_protocols_not_assigned_to_me
     expect(page).to_not have_css("ul.dropdown-menu.inner.selectpicker li")
+  end
+
+  private 
+
+  def setup_protocol
+    identity              = Identity.first
+    organization          = create(:organization)
+    sub_service_request   = create(:sub_service_request, organization: organization)
+    subsidy               = create(:subsidy, sub_service_request: sub_service_request)
+    protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+                            create(:clinical_provider, identity: identity, organization: organization)
+                            create(:project_role_pi, identity: identity, protocol: protocol)
+    protocol
   end
 end
