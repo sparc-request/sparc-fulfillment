@@ -24,6 +24,7 @@ feature 'User creates an appointment note', js: true do
     @identity     = create(:identity)
 
     visit participant_path @participant
+    wait_for_ajax
 
     bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax

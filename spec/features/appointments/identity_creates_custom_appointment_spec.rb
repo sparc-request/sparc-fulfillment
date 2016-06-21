@@ -92,11 +92,9 @@ feature 'Custom appointment', js: true do
     find('button.start_visit').click
     find('label.status.complete').click
     wait_for_ajax
+    
     click_button 'Complete Visit'
-  end
-
-  def then_i_should_see_the_create_custom_visit_button_is_active
-
+    wait_for_ajax
   end
 
   def then_i_should_see_the_create_custom_visit_modal

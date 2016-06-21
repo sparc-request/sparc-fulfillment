@@ -73,6 +73,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
     find(".modal-header", match: :first).click
     wait_for_ajax
 
+    expect(page).to have_selector('.modal-body .bootstrap-select button.selectpicker', visible: true)
     bootstrap_select '#protocol_ids', @protocol.short_title_with_sparc_id
 
     # close protocol dropdown, so it's not covering 'Request Report' button

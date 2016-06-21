@@ -23,7 +23,10 @@ feature 'User views Participant Tracker', js: true do
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
+
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def when_i_search_for_an_existing_participant

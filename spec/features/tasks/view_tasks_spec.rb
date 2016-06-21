@@ -80,6 +80,7 @@ feature "View Tasks", js: true do
 
   def when_i_visit_the_tasks_page
     visit tasks_path
+    wait_for_ajax
   end
 
   def when_click_on_the_view_all_tasks_button
