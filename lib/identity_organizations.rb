@@ -13,7 +13,7 @@ class IdentityOrganizations
     super_user_orgs = Organization.includes(:super_users).where(super_users: {identity_id: @id}).references(:super_users).uniq(:organizations)
     clinical_provider_orgs = Organization.includes(:clinical_providers).where(clinical_providers: {identity_id: @id}).references(:clinical_providers).uniq(:organizations)
 
-    Organization.joins(:protocols).where(id: super_user_orgs + authorized_child_organizations(super_user_orgs) + clinical_provider_orgs)
+    Organization.joins(:protocols).where(id: super_user_orgs + authorized_child_organizations(super_user_orgs) + clinical_provider_orgs).distinct
   end
 
   private
