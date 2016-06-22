@@ -44,6 +44,8 @@ feature 'User changes the status of a participant on the participant tracker', j
     refresh_bootstrap_table 'table.participants'
     wait_for_ajax
     
+    expect(page).to have_css("button.btn-primary.participant_notes[data-notable-id='#{@participant.id}']")
+    
     find("button.btn-primary.participant_notes[data-notable-id='#{@participant.id}']").click
     wait_for_ajax
     expect(page).to have_content('Status changed')
