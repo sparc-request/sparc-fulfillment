@@ -2,8 +2,11 @@ $("#modal_area").html("<%= escape_javascript(render(partial: 'complete_all_modal
 $("#modal_place").modal 'show'
 
 $(".selectpicker").selectpicker()
-$(".modal_date_field").datetimepicker({ format:'MM-DD-YYYY', defaultDate: new Date() }).val()
 
+$(".modal_date_field").datetimepicker
+  defaultDate: date
+  format: 'MM/DD/YYYY'
+  ignoreReadonly: true
 
 
 $(document).on 'click', "#complete_all_modal button.save", (e) ->
