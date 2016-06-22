@@ -20,9 +20,9 @@ feature 'User views Participant list', js: true do
   end
 
   def given_i_am_viewing_the_participant_list
-    protocol = create_and_assign_protocol_to_me
+    @protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.id)
+    visit protocol_path(@protocol.id)
     wait_for_ajax
 
     click_link 'Participant List'
@@ -30,7 +30,7 @@ feature 'User views Participant list', js: true do
   end
 
   def when_i_search_for_an_existing_participant
-    @participant = Participant.first
+    @participant = @protocol.participants.first
 
     search_bootstrap_table @participant.first_name
   end
@@ -40,7 +40,7 @@ feature 'User views Participant list', js: true do
   end
 
   def then_i_should_see_participants
-    participant_first_names = Participant.all.map(&:first_name)
+    participant_first_names = @protocol.participants.map(&:first_name)
 
     participant_first_names.each do |first_name|
       expect(page).to have_css('table.participants tbody td.first_name', text: first_name)
