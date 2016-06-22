@@ -29,6 +29,7 @@ module Features
       wait_for_ajax
       
       find('button.start_visit').click
+      wait_for_ajax
     end
   end
 end
