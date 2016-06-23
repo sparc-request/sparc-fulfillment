@@ -38,6 +38,7 @@ feature 'User views the participant tracker page', js: true do
     wait_for_ajax
     
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def when_i_click_on_the_notes_button

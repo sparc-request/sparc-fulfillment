@@ -26,8 +26,7 @@ feature 'User changes the status of a participant on the participant tracker', j
   end
 
   def when_i_update_the_participant_status
-    find("select.participant_#{@participant.id}.bootstrap-select").click
-    first("select.participant_#{@participant.id}.bootstrap-select a", text: "Screening").click
+    bootstrap_select "#participant_status_#{@participant.id}", "Screening"
     wait_for_ajax
   end
 
