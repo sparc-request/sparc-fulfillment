@@ -35,7 +35,10 @@ feature "Task notifications", js: true do
 
   def when_i_visit_the_home_page
     visit tasks_path
+    wait_for_ajax
+
     visit root_path
+    wait_for_ajax
   end
 
   def when_i_click_on_the_task_notification

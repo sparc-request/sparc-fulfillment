@@ -2,10 +2,12 @@ require 'rails_helper'
 
 feature 'Identity adds multiple Procedures', js: true do
 
-  let!(:protocol)    { create_and_assign_protocol_to_me }
-  let!(:participant) { protocol.participants.first }
-  let!(:appointment) { participant.appointments.first }
-  let!(:services)    { protocol.organization.inclusive_child_services(:per_participant) }
+  before :each do
+    @protocol    = create_and_assign_protocol_to_me
+    @participant = @protocol.participants.first
+    @appointment = @participant.appointments.first
+    @services    = @protocol.organization.inclusive_child_services(:per_participant)
+  end
 
   scenario 'which are not part of an existing group' do
     given_i_am_viewing_a_visit
@@ -28,15 +30,15 @@ feature 'Identity adds multiple Procedures', js: true do
   end
 
   def when_i_add_two_similar_procedures
-    add_a_procedure services.first, 2
+    add_a_procedure @services.first, 2
   end
 
   def when_i_add_two_different_procedures
-    add_a_procedure services.last, 2
+    add_a_procedure @services.last, 2
   end
 
   def when_i_add_5_procedures
-    add_a_procedure services.first, 5
+    add_a_procedure @services.first, 5
   end
 
   def then_i_should_see_the_multiselect_instantiated_with_2_options

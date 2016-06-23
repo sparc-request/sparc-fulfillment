@@ -180,6 +180,7 @@ RSpec.describe 'Study Schedule', js: true do
 
   def when_i_refresh_the_page
     visit protocol_path(@protocol.id)
+    wait_for_ajax
   end
 
   def when_i_fill_in_a_visit_group_name_with name

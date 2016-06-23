@@ -86,24 +86,31 @@ feature 'Identity edits arms on protocol study schedule', js: true do
         arm.delete
       end
     end
+    
     visit protocol_path @protocol
+    wait_for_ajax
   end
 
   def given_i_am_viewing_a_protocol_with_multiple_arms
     @protocol = create_and_assign_protocol_to_me
     arm       = create(:arm, protocol: @protocol)
+    
     visit protocol_path @protocol
+    wait_for_ajax
   end
 
 
   def given_there_is_an_arm_with_completed_procedures
     participant  = create(:participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first)
     procedure    = create(:procedure_complete, appointment: participant.appointments.first, arm: @protocol.arms.first, status: "complete", completed_date: "10/09/2010")
+    
     visit protocol_path @protocol
+    wait_for_ajax
   end
 
   def when_i_click_the_add_arm_button
     find("#add_arm_button").click
+    wait_for_ajax
   end
 
   def when_i_click_the_remove_arm_button
@@ -113,6 +120,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def when_i_click_the_edit_arm_button
     find("#edit_arm_button").click
+    wait_for_ajax
   end
 
   def when_i_fill_in_the_form
@@ -131,18 +139,22 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def when_i_click_the_add_submit_button
     click_button 'Add'
+    wait_for_ajax
   end
 
   def when_i_click_the_remove_submit_button
     click_button 'Remove'
+    wait_for_ajax
   end
 
   def when_i_click_the_save_submit_button
     click_button "Save"
+    wait_for_ajax
   end
 
   def when_i_click_the_close_submit_button
     click_button "Close"
+    wait_for_ajax
   end
 
   def when_i_select_the_arm_with_completed_procedures

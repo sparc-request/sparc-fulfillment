@@ -2,13 +2,6 @@ require 'rails_helper'
 
 feature 'User completes Procedure', js: true do
 
-  scenario 'and sees the blue button with white glyphicon denoting notes present' do
-    given_i_have_added_a_procedure_to_an_appointment
-    when_i_start_the_appointment
-    when_i_complete_the_procedure
-    then_i_should_see_the_notes_button
-  end
-
   scenario 'and sees a completed Note' do
     given_i_have_added_a_procedure_to_an_appointment
     when_i_start_the_appointment
@@ -52,7 +45,11 @@ feature 'User completes Procedure', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path participant
+    wait_for_ajax
+
     bootstrap_select '#appointment_select', visit_group.name
+    wait_for_ajax
+    
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: qty
     find('button.add_service').click
@@ -94,10 +91,6 @@ feature 'User completes Procedure', js: true do
 
   def when_i_view_the_notes_list
     find('.procedure td.notes button.notes.list').click
-  end
-
-  def then_i_should_see_the_notes_button
-    expect(page).to have_selector("td.notes button.btn-primary")
   end
 
   def then_i_should_see_complete_notes count=1
