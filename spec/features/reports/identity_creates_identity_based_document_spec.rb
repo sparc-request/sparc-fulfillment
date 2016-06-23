@@ -110,8 +110,9 @@ feature 'Identity creates a document from the documents page', js: true, enqueue
       wait_for_ajax
     end
 
-    expect(page).to have_selector('.modal-body .bootstrap-select button.selectpicker', visible: true)
-    bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'), @protocol.short_title_with_sparc_id
+    protocol_select_id = report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'
+    page.find("select#{protocol_select_id} + .bootstrap-select button").click
+    first('.dropdown-menu.open span.text', text: @protocol.short_title_with_sparc_id).click
 
     # close protocol dropdown, so it's not covering 'Request Report' button
     first('.modal-header').click
