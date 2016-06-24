@@ -44,6 +44,8 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     scenario 'and does not see the arm' do
       given_i_am_viewing_a_protocol_with_multiple_arms
       when_i_click_the_remove_arm_button
+      # Ensure that the selected arm is the correct one being deleted
+      bootstrap_select "#arm_form_select", @protocol.arms.first.name
       when_i_click_the_remove_submit_button
       then_i_should_not_see_the_arm
     end
@@ -51,6 +53,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     scenario 'and sees a flash message' do
       given_i_am_viewing_a_protocol_with_multiple_arms
       when_i_click_the_remove_arm_button
+      # Ensure that the selected arm is the correct one being deleted
       when_i_click_the_remove_submit_button
       then_i_should_see_a_flash_message_of_type 'remove'
     end
