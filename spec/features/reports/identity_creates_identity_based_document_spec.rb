@@ -111,7 +111,8 @@ feature 'Identity creates a document from the documents page', js: true, enqueue
     end
 
     protocol_select_id = report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'
-    page.find("select#{protocol_select_id} + .bootstrap-select button").click
+    find("select#{protocol_select_id} + .bootstrap-select button").click
+    wait_for_ajax
     first('.dropdown-menu.open span.text', text: @protocol.short_title_with_sparc_id).click
 
     # close protocol dropdown, so it's not covering 'Request Report' button
