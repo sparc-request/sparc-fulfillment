@@ -37,7 +37,7 @@ feature 'User messes with a procedures date completed', js: true do
 
   def given_i_am_viewing_an_appointment
     next_month               = Time.current.month + 1
-    @the_middle_of_next_month = Date.current.strftime("0#{next_month}-15-%Y")
+    @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
 
     @protocol     = create_and_assign_protocol_to_me
     @participant  = @protocol.participants.first
@@ -89,12 +89,11 @@ feature 'User messes with a procedures date completed', js: true do
 
   def when_i_edit_the_completed_date
 
-    find('.procedures .completed_date_field .input-group-addon')
-    page.execute_script %Q{ $('.procedures .completed_date_field .input-group-addon').trigger('click'); }
-
-    find('.bootstrap-datetimepicker-widget th.next', match: :first)
-    page.execute_script %Q{ $('.bootstrap-datetimepicker-widget th.next').first().trigger('click'); }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    find('.procedures .completed_date_field')
+    page.execute_script %Q{ $('.procedures .completed_date_field').trigger('click'); }
+    next_month               = Time.current.month + 1
+    edited_completed_date = Date.current.strftime("0#{next_month}/15/%Y")
+    page.execute_script %Q{ $(".completed-date .completed_date_field").val('#{edited_completed_date}') }
     wait_for_ajax
   end
 
@@ -103,12 +102,12 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def then_i_should_see_an_enabled_datepicker_with_the_current_date
-    expected_date = page.evaluate_script %Q{ $('.completed_date_field .datetimepicker').first().val(); }
-    expect(expected_date).to eq(DateTime.current.strftime('%m-%d-%Y'))
+    expected_date = page.evaluate_script %Q{ $('.completed_date_field').first().val(); }
+    expect(expected_date).to eq(DateTime.current.strftime('%m/%d/%Y'))
   end
 
   def then_i_should_see_the_completed_date_has_been_updated
-    expected_date = page.evaluate_script %Q{ $('.completed_date_field .datetimepicker').first().val(); }
+    expected_date = page.evaluate_script %Q{ $('.completed_date_field').first().val(); }
     expect(expected_date).to eq(@the_middle_of_next_month)
   end
 end

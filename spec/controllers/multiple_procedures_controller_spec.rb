@@ -26,7 +26,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @procedure1 = create(:procedure, appointment: @appointment, service: @service)
             @procedure2 = create(:procedure, appointment: @appointment, service: @service)
             @current_date = DateTime.current
-            params = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @current_date.strftime("%m-%d-%Y"), performed_by: @identity.id, format: :js }
+            params = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @current_date.strftime("%m/%d/%Y"), performed_by: @identity.id, format: :js }
 
             put :update_procedures, params
           end
@@ -97,7 +97,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @procedure1 = create(:procedure_complete, appointment: @appointment, service: @service, performer_id: @identity.id)
             @procedure2 = create(:procedure_complete, appointment: @appointment, service: @service, performer_id: @identity.id)
             @edited_date = DateTime.current.tomorrow
-            params = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m-%d-%Y"), performed_by: Identity.last.id, format: :js }
+            params = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m/%d/%Y"), performed_by: Identity.last.id, format: :js }
 
             put :update_procedures, params
           end
@@ -169,7 +169,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @procedure1 = create(:procedure, status: "incomplete", appointment: @appointment, service: @service, performer_id: @identity.id)
             @procedure2 = create(:procedure, status: "incomplete", appointment: @appointment, service: @service, performer_id: @identity.id)
             @edited_date = DateTime.current.tomorrow
-            params    = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m-%d-%Y"), performed_by: Identity.first.id, format: :js }
+            params    = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m/%d/%Y"), performed_by: Identity.first.id, format: :js }
 
             put :update_procedures, params
           end

@@ -8,7 +8,10 @@
           = hidden_field_tag 'procedure_ids[]', procedure.id
         = hidden_field_tag :status, "complete"
         .form-group
-          = render 'multiple_procedures/modal_date', field_name: "completed_date", date_name: t(:multiple_procedures_modal)[:completed_date], procedures: @procedures
+          = label_tag "completed_date", t(:multiple_procedures_modal)[:completed_date], class: "col-sm-4 control-label"
+          .col-sm-7
+            .input-group.date
+              = text_field_tag 'completed_date', '', class: 'form-control date_field', value: format_date(DateTime.current), readonly: true
         .form-group
           = render 'multiple_procedures/performed_by', procedures: @procedures 
       = render 'multiple_procedures/modal_footer'

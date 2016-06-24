@@ -1,3 +1,11 @@
+$(document).on 'click', "#incomplete_all_modal button.save", (e) ->
+  if !$('#incomplete_all_modal .performed-by-dropdown').val() || $('.reason-select .selectpicker .selected').index() == 0
+    console.log("ERROR")
+    e.preventDefault()
+    $('#multiple_procedures_modal_errors').addClass('alert').addClass('alert-danger').html('Please complete the required fields:')
+  else
+    $(this).addClass("disabled")
+
 <% if @procedure.errors.present? %>
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
 <% else %>
