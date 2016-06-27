@@ -45,6 +45,7 @@ feature 'User messes with a procedures date completed', js: true do
     @pricing_map   = create(:pricing_map, service: service, effective_date: @the_middle_of_next_month)
 
     visit participant_path(@participant)
+    wait_for_ajax
   end
 
   def given_i_am_viewing_a_procedure

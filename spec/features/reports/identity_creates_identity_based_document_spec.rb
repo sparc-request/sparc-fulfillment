@@ -2,7 +2,7 @@ require 'rails_helper'
 
 # For reports where:
 # documentable_type = 'Identity'
-feature 'Identity creates a document from the documents page', js: true do
+feature 'Identity creates a document from the documents page', js: true, enqueue: false do
 
   before :each do
     given_i_am_viewing_the_documents_index_page
@@ -40,14 +40,22 @@ feature 'Identity creates a document from the documents page', js: true do
     end
   end
 
-  scenario 'and sees the documents counter increment' do
-    given_i_click_the_create_report_button_of_type 'invoice_report'
-    when_i_fill_in_the_report_of_type 'invoice_report'
-    then_i_should_see_the_documents_counter_increment
-    # submit a request for a second report
-    given_i_click_the_create_report_button_of_type 'project_summary_report'
-    when_i_fill_in_the_report_of_type 'project_summary_report'
-    then_i_should_see_the_documents_counter_increment_to_two
+  context 'with no documents present' do
+    scenario 'and does not see the counter' do
+      then_i_should_not_see_the_documents_counter
+    end
+  end
+
+  context 'with documents present' do
+    scenario 'and sees the documents counter increment' do
+      given_i_click_the_create_report_button_of_type 'invoice_report'
+      when_i_fill_in_the_report_of_type 'invoice_report'
+      then_i_should_see_the_documents_counter_increment_to(1)
+      # submit a request for a second report
+      given_i_click_the_create_report_button_of_type 'project_summary_report'
+      when_i_fill_in_the_report_of_type 'project_summary_report'
+      then_i_should_see_the_documents_counter_increment_to(2)
+    end
   end
 
   scenario 'and sees protocols assigned to the them' do
@@ -66,7 +74,6 @@ feature 'Identity creates a document from the documents page', js: true do
   #Must keep separated or else ClinicalProvider.destroy_all will not work
   def given_i_am_viewing_the_documents_index_page
     @protocol = create_and_assign_protocol_to_me
-    create(:participant, protocol: @protocol)
 
     visit documents_path
     wait_for_ajax
@@ -102,9 +109,11 @@ feature 'Identity creates a document from the documents page', js: true do
       first('.modal-header').click
       wait_for_ajax
     end
-  
 
-    bootstrap_select (report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'), @protocol.short_title_with_sparc_id
+    protocol_select_id = report_type == 'project_summary_report' ? '#protocol_id' : '#protocol_ids'
+    find("select#{protocol_select_id} + .bootstrap-select button").click
+    wait_for_ajax
+    first('.dropdown-menu.open span.text', text: @protocol.short_title_with_sparc_id).click
 
     # close protocol dropdown, so it's not covering 'Request Report' button
     first('.modal-header').click
@@ -135,12 +144,12 @@ feature 'Identity creates a document from the documents page', js: true do
     expect(page).to have_css('table.documents tbody tr td', text: "#{report_type}")
   end
 
-  def then_i_should_see_the_documents_counter_increment
-    expect(page).to have_css(".notification.identity_report_notifications", text: 1)
+  def then_i_should_not_see_the_documents_counter
+    expect(page).to_not have_css(".notiication.identity_report_notifications")
   end
 
-  def then_i_should_see_the_documents_counter_increment_to_two
-    expect(page).to have_css(".notification.identity_report_notifications", text: 2)
+  def then_i_should_see_the_documents_counter_increment_to(value)
+    expect(page).to have_css(".notification.identity_report_notifications", text: value)
   end
 
   def then_i_should_see_protocols_assigned_to_me

@@ -3,9 +3,9 @@ require 'rails_helper'
 feature 'Identity completes all Procedures', js: true do
 
   before :each do
-    @current_date            = DateTime.current.strftime('%m-%d-%Y')
+    @current_date            = DateTime.current.strftime('%m/%d/%Y')
     next_month               = Time.current.month + 1
-    @the_middle_of_next_month = Date.current.strftime("0#{next_month}-15-%Y")
+    @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
 
     @current_identity     = Identity.first
     @other_identity       = create(:identity, first_name: 'Juan', last_name: 'Leonardo')
@@ -101,7 +101,7 @@ feature 'Identity completes all Procedures', js: true do
 
   def with_a_default_completed_date_of_current_date
     expected_date = page.evaluate_script %Q{ $(".modal_date_field").data("DateTimePicker").date(); }
-    expect(expected_date["_i"]).to eq(DateTime.current.strftime('%m-%d-%Y'))
+    expect(expected_date["_i"]).to eq(DateTime.current.strftime('%m/%d/%Y'))
   end
 
   def and_with_a_default_performed_by_name_of_current_user

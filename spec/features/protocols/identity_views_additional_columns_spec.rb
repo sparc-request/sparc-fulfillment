@@ -14,6 +14,7 @@ feature 'Identity views additional columns', js: true do
 
   def as_a_user_who_visits_the_protocols_index_page
     visit protocols_path
+    wait_for_ajax
   end
 
   def when_i_select_organizations_from_the_dropdown
