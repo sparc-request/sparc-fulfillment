@@ -6,9 +6,9 @@ feature 'Identity completes all Procedures', js: true do
     @current_date            = DateTime.current.strftime('%m/%d/%Y')
     next_month               = Time.current.month + 1
     @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
-
     @current_identity     = Identity.first
-    @other_identity       = create(:identity, first_name: 'Juan', last_name: 'Leonardo')
+    @current_identity.update_attributes(id: 1)
+    @other_identity       = create(:identity, id: 2, first_name: 'Juan', last_name: 'Leonardo')
     sub_service_request   = create(:sub_service_request_with_organization)
     protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
     organization_provider = create(:organization_provider, name: "Provider")
@@ -131,7 +131,11 @@ feature 'Identity completes all Procedures', js: true do
 
     find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
     procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
-
+    puts "*"*100
+    puts procedure1_performed_by.to_i
+    puts procedure2_performed_by.to_i
+    puts @other_identity.id
+    puts "*"*100
     expect(procedure1_performed_by.to_i).to eq(@current_identity.id)
     expect(procedure2_performed_by.to_i).to eq(@current_identity.id)
   end
@@ -170,7 +174,11 @@ feature 'Identity completes all Procedures', js: true do
 
     find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
     procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
-
+    puts "*"*100
+    puts procedure1_performed_by.to_i
+    puts procedure2_performed_by.to_i
+    puts @other_identity.id
+    puts "*"*100
     expect(procedure1_performed_by.to_i).to eq(@other_identity.id)
     expect(procedure2_performed_by.to_i).to eq(@other_identity.id)
   end
