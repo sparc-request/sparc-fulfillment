@@ -15,6 +15,7 @@ multi_select = $("#organization_select")
 multi_select.multiselect({
   numberDisplayed: 2,
   includeSelectAllOption: true,
+  allSelectedText: "All Organizations"
   nonSelectedText: 'All',
   enableFiltering: true,
   disableIfEmpty: true,
@@ -31,8 +32,11 @@ multi_select.multiselect({
       $('#protocol_section').empty()
       $('#protocol_section').closest('.form-group').find('label').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
       $('#protocol_section').closest('.form-group').removeClass("hidden")
+
       $.ajax
         type: 'POST'
         url: "reports/update_dropdown"
         data: { org_ids: multi_select.val() }
 })
+multi_select.multiselect('selectAll', false)
+multi_select.multiselect('updateButtonText')
