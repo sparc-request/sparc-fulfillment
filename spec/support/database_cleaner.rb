@@ -12,24 +12,6 @@ RSpec.configure do |config|
 
   # Set default strategy to transaction
   config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
-    MODELS.
-      each do |model|
-        DatabaseCleaner[:active_record, model: model].strategy = :transaction
-      end
-  end
-
-  # For js: true tests use the truncation strategy
-  config.before(:each, js: true) do |example|
-    DatabaseCleaner.strategy = :truncation
-    MODELS.
-      each do |model|
-        DatabaseCleaner[:active_record, model: model].strategy = :truncation
-      end
-  end
-
-  # For enqueue: false tests use the truncation strategy
-  config.before(:each, enqueue: false) do |example|
     DatabaseCleaner.strategy = :truncation
     MODELS.
       each do |model|
