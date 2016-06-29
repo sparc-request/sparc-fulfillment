@@ -8,7 +8,7 @@ RSpec.describe Protocol, type: :model do
     let(:sub_service_request) { protocol.sub_service_request }
 
     it 'should return a valid URI' do
-      expect(protocol.sparc_uri).to eq("http://localhost:5000/portal/admin/sub_service_requests/#{sub_service_request.id}")
+      expect(protocol.sparc_uri).to eq("http://localhost:5000/dashboard/sub_service_requests/#{sub_service_request.id}")
     end
   end
 end

@@ -20,9 +20,7 @@ module Features
       bootstrap_select = page.find("select#{class_or_id} + .bootstrap-select")
 
       bootstrap_select.click
-      within bootstrap_select do
-        first('a', text: choice).click
-      end
+      first('.dropdown-menu.open span.text', text: choice).click
       wait_for_ajax
     end
 

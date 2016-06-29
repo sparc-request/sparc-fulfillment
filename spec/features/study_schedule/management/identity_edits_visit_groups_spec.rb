@@ -5,6 +5,14 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   context "User adds a visit group to an arm" do
     scenario "and sees the visit group on the arm" do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
+
+      @original_visit_group_1 = @arm.visit_groups.first
+      @original_visit_group_2 = @arm.visit_groups.second
+      @original_visit_group_1.day = 1
+      @original_visit_group_2.day = 3
+      @original_visit_group_1.save
+      @original_visit_group_2.save
+
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
       when_i_click_the_add_submit_button
@@ -13,6 +21,14 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
 
     scenario "and sees a flash notification" do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
+
+      @original_visit_group_1 = @arm.visit_groups.first
+      @original_visit_group_2 = @arm.visit_groups.second
+      @original_visit_group_1.day = 1
+      @original_visit_group_2.day = 3
+      @original_visit_group_1.save
+      @original_visit_group_2.save
+
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
       when_i_click_the_add_submit_button
@@ -24,6 +40,11 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
 
       @original_visit_group_1 = @arm.visit_groups.first
       @original_visit_group_2 = @arm.visit_groups.second
+      @original_visit_group_1.day = 1
+      @original_visit_group_2.day = 3
+      @original_visit_group_1.save
+      @original_visit_group_2.save
+
 
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: @arm.visit_groups.second.day-1)

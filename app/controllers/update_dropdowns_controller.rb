@@ -1,8 +1,6 @@
 class UpdateDropdownsController < ApplicationController
 
   def create
-    org_ids = params[:org_ids]
-    ssrs = SubServiceRequest.where(organization_id: org_ids)
-    @protocols = ssrs.map(&:protocol)
+    @protocols = Protocol.where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
   end
 end

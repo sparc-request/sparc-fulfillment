@@ -12,7 +12,10 @@ feature 'User creates Participant', js: true do
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
+
     click_link 'Participant List'
+    wait_for_ajax
   end
 
   def when_i_create_a_new_participant

@@ -2,11 +2,12 @@ require 'rails_helper'
 
 feature 'Identity incompletes all Services', js: true do
 
-  let!(:protocol)    { create_and_assign_protocol_to_me }
-  let!(:participant) { protocol.participants.first }
-  let!(:appointment) { participant.appointments.first }
-  let!(:services)    { protocol.organization.inclusive_child_services(:per_participant) }
-
+  before :each do
+    @protocol     = create_and_assign_protocol_to_me
+    @participant  = @protocol.participants.first
+    @appointment  = @participant.appointments.first
+    @services     = @protocol.organization.inclusive_child_services(:per_participant)
+  end
 
   context 'after visit has begun' do
     before :each do
@@ -56,37 +57,37 @@ feature 'Identity incompletes all Services', js: true do
   end
 
   def when_i_add_some_ungrouped_procedures
-    services[0..2].each do |service|
+    @services[0..2].each do |service|
       add_a_procedure service, 1
     end
   end
 
   def and_i_add_some_grouped_procedures
-    add_a_procedure services.fourth, 2
+    add_a_procedure @services.fourth, 2
   end
 
   def when_i_select_an_ungrouped_procedure_in_the_core_dropdown
-    @selected = [services.first]
+    @selected = [@services.first]
     bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
   end
 
   def when_i_select_multiple_but_not_all_ungrouped_procedures_in_the_core_dropdown
-    @selected = services[0..1]
+    @selected = @services[0..1]
     bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
   end
 
   def when_i_select_all_ungrouped_procedures_in_the_core_dropdown
-    @selected = services[0..2]
+    @selected = @services[0..2]
     bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
   end
 
   def when_i_select_all_grouped_procedures_in_the_core_dropdown
-    @selected = [services.fourth]
+    @selected = [@services.fourth]
     bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
   end
 
   def when_i_select_all_procedures_in_the_core_dropdown
-    @selected = services
+    @selected = @services
     bootstrap_multiselect '#core_multiselect'
   end
 
