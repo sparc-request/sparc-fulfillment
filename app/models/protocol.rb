@@ -1,5 +1,7 @@
 class Protocol < ActiveRecord::Base
 
+  include LocalDb
+
   attr_accessor :document_counter_updated
 
   has_paper_trail
