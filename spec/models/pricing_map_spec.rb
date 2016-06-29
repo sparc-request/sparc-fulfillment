@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe PricingMap, type: :model do
+  before(:each) do
+    # TODO - this is just to get the specs to run, for some reason data is persisting between tests
+    PricingMap.destroy_all
+  end
 
   describe ".current" do
 
@@ -45,7 +49,7 @@ RSpec.describe PricingMap, type: :model do
         context "multiple PricingMaps present in the past" do
 
           it 'should return the PricingMap with the most recent effective_date' do
-            expected_pricing_map = create(:pricing_map_past)
+            expected_pricing_map = create(:pricing_map, effective_date: Time.current)
             create(:pricing_map_past, effective_date: Time.current - 2.days)
             expect(PricingMap.current(Time.current)).to eq([expected_pricing_map])
           end

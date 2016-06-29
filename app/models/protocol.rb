@@ -58,17 +58,12 @@ class Protocol < ActiveRecord::Base
     ["Protocol", Protocol.find(id).srid].join(' ')
   end
 
-  def self.find_protocols_by_org_id(org_ids)
-    joins(:sub_service_request).
-    where(sub_service_requests: { organization_id: org_ids })
-  end
-
   def sparc_uri
     [
       ENV.fetch('GLOBAL_SCHEME'),
       '://',
       ENV.fetch('SPARC_API_HOST'),
-      '/portal/admin/sub_service_requests/',
+      '/dashboard/sub_service_requests/',
       sub_service_request_id
     ].join
   end

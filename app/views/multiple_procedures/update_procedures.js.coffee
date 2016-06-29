@@ -25,7 +25,7 @@ $('#modal_place').modal 'hide'
 
 $("tr.procedure[data-id='<%= procedure.id %>'] td.status .complete").addClass('active')
 $("tr.procedure[data-id='<%= procedure.id %>'] td.status .incomplete").removeClass('active')
-$("tr.procedure[data-id='<%= procedure.id %>'] div.completed_date_field input.datetimepicker").val("<%= @completed_date.strftime('%m-%d-%Y') %>").removeAttr("disabled")
+$("tr.procedure[data-id='<%= procedure.id %>'] div.completed_date_field input.datetimepicker").val("<%= @completed_date.strftime('%m/%d/%Y') %>").removeAttr("disabled")
 
 <% end %>
 <% end %>

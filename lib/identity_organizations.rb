@@ -39,7 +39,8 @@ class IdentityOrganizations
   end
 
   def clinical_provider_protocols
-    Protocol.joins(:clinical_providers).where(clinical_providers: { identity_id: @id }).to_a
+    org_ids = ClinicalProvider.where(identity_id: @id).select(:organization_id).map(&:organization_id)
+    Protocol.joins(:sub_service_request).where(sub_service_requests: { organization_id: org_ids }).to_a
   end
   
   # returns protocols that clinical provider and super user have access to.

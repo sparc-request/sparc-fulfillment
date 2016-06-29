@@ -10,10 +10,7 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
 
     context 'Protocol update', sparc_api: :get_protocol_1 do
 
-      before do
-        Protocol.skip_callback :save, :after, :update_faye
-        Notification.skip_callback :create, :after, :create_or_update_object
-
+      before :each do
         @protocol                 = create( :protocol,
                                             sparc_id: 1,
                                             sponsor_name: "protocol",

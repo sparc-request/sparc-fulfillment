@@ -19,6 +19,7 @@ feature 'Identity adds Procedure', js: true do
     @participant  = @protocol.participants.first
 
     visit participant_path(@participant)
+    wait_for_ajax
   end
 
   def when_i_add_a_procedure

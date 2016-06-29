@@ -27,7 +27,7 @@ class Fulfillment < ActiveRecord::Base
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
 
   def fulfilled_at=(date_time)
-    write_attribute(:fulfilled_at, Time.strptime(date_time, "%m-%d-%Y")) if date_time.present?
+    write_attribute(:fulfilled_at, Time.strptime(date_time, "%m/%d/%Y")) if date_time.present?
   end
 
   def total_cost

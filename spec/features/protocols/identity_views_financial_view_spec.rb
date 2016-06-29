@@ -12,6 +12,7 @@ feature 'Identity views financial view', js: true do
     create_and_assign_protocol_to_me
 
     visit protocols_path
+    wait_for_ajax
   end
 
   def when_i_select_the_financial_view

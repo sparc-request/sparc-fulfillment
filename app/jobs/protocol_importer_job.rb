@@ -1,6 +1,6 @@
 class ProtocolImporterJob < ImporterJob
 
-  def perform
+  def perform sparc_id, callback_url, action
     super {
       case action
       when 'create'

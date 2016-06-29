@@ -12,16 +12,18 @@ module ApplicationHelper
         url
       end
     rescue Exception => e
-      puts "#"*20
-      puts e.message
-      puts "#"*20
+      #TODO do we want the message in test, this is just breadcrumbs
+      unless Rails.env.test?
+        puts "#"*20
+        puts e.message
+        puts "#"*20
+      end
       return url
     end
   end
 
   def format_date date
     if date.present?
-      # date.strftime('%F')
       date.strftime('%m/%d/%Y')
     else
       ''

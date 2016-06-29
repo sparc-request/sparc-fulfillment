@@ -14,13 +14,13 @@ FactoryGirl.define do
 
     trait :complete do
       status 'complete'
-      completed_date Date.today.strftime('%m-%d-%Y')
+      completed_date Date.today.strftime('%m/%d/%Y')
     end
 
     trait :incomplete do
       status 'incomplete'
       completed_date nil
-      incompleted_date Date.today.strftime('%m-%d-%Y')
+      incompleted_date Date.today.strftime('%m/%d/%Y')
     end
 
     trait :follow_up do

@@ -51,6 +51,7 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
     @line_item = create(:line_item, arm: @arm, service: @services.first, protocol: @protocol)
 
     visit protocol_path @protocol
+    wait_for_ajax
   end
 
   def given_an_arm_has_services
@@ -61,11 +62,12 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
 
   def given_a_service_has_completed_procedures
     participant  = create(:participant_with_appointments, protocol: @protocol, arm: @arm)
-    procedure    = create(:procedure_complete, service: @services.first, appointment: participant.appointments.first, arm: @arm, status: "complete", completed_date: "10-09-2010")
+    procedure    = create(:procedure_complete, service: @services.first, appointment: participant.appointments.first, arm: @arm, status: "complete", completed_date: "10/09/2010")
   end
 
   def when_i_click_the_add_services_button
     find("#add_service_button").click
+    wait_for_ajax
   end
 
   def when_i_click_the_remove_services_button
@@ -90,10 +92,12 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
 
   def when_i_click_the_add_submit_button
     click_button "Add"
+    wait_for_ajax
   end
 
   def when_i_click_the_remove_submit_button
     click_button "Remove"
+    wait_for_ajax
   end
 
   def then_i_should_see_it_on_that_arm
