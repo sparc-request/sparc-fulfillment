@@ -17,15 +17,20 @@ feature "Change Participant Arm", js: :true do
     @original_arm = @protocol.arms.first
     @participant  = @protocol.participants.first
     @participant.update_attribute(:arm_id, @original_arm.id)
-    @procedure = create(:procedure, visit_group: @original_arm.visit_groups.first, completed_date: "08-08-2013")
+    @procedure = create(:procedure, visit_group: @original_arm.visit_groups.first, completed_date: "08/08/2013")
     @service   = @protocol.organization.inclusive_child_services(:per_participant).first
+    
     visit participant_path @participant
+    wait_for_ajax
+
   end
 
   def then_i_change_the_arm_of_the_participant
     @new_arm = create(:arm, protocol_id: @protocol.id)
     @participant.update_attribute(:arm_id, @new_arm.id)
+    
     visit participant_path @participant
+    wait_for_ajax
   end
 
   def and_the_visit_group_of_completed_procedure_should_still_appear

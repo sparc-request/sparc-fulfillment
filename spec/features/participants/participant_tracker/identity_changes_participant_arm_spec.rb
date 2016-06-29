@@ -13,8 +13,10 @@ feature 'User changes Participant Arm', js: true do
     @second_arm  = protocol.arms.second
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
 
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def when_i_change_a_participants_arm
@@ -23,6 +25,7 @@ feature 'User changes Participant Arm', js: true do
     bootstrap_select "#participant_arm_id", @second_arm.name
 
     click_button 'Save'
+    wait_for_ajax
   end
 
   def then_i_should_see_the_arm_is_updated

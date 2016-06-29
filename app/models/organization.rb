@@ -72,15 +72,3 @@ class Organization < ActiveRecord::Base
     all_child_organizations_with_non_process_ssrs.map { |child| child.services.send(scope) }
   end
 end
-
-class Program < Organization
-end
-
-class Core < Organization
-end
-
-class Provider < Organization
-end
-
-class Institution < Organization
-end

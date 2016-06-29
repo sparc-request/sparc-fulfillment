@@ -37,8 +37,8 @@ module DataHelpers
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
     organization.update_attributes(parent: organization_program, name: "Core")
-    FactoryGirl.create(:clinical_provider, identity: identity, organization: organization)
-    FactoryGirl.create(:project_role_pi, identity: identity, protocol: protocol)
+    create(:clinical_provider, identity: identity, organization: organization)
+    create(:project_role_pi, identity: identity, protocol: protocol)
 
     protocol
   end
@@ -51,8 +51,8 @@ module DataHelpers
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
     organization.update_attributes(parent: organization_program, name: "Core")
-    FactoryGirl.create(:clinical_provider, identity: identity, organization: organization)
-    FactoryGirl.create(:project_role_pi, identity: identity, protocol: protocol)
+    create(:clinical_provider, identity: identity, organization: organization)
+    create(:project_role_pi, identity: identity, protocol: protocol)
 
     protocol
   end

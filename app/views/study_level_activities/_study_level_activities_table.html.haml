@@ -4,7 +4,7 @@
   %table.study_level_activities{id: "study-level-activities-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: line_items_path(format: :json, protocol_id: protocol.id), striped: "true", toolbar: "#sla-custom-toolbar", "show-export" => "true", "export-types" => ['excel']}}
     %thead.primary-header
       %tr
-        %th{data: {class: 'fulfillments_button', align: "left", field: "fulfillments_button"}}
+        %th{data: {class: 'fulfillments_button', align: "left", switchable: "false", field: "fulfillments_button"}}
         %th{data: {class: 'service', align: "left", field: "service"}}
           = t(:line_item)[:service]
         %th{data: {class: 'act_num wrap', align: "left", sortable: "true", field: "account_number"}}

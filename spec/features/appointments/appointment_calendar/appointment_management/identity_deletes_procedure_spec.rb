@@ -25,8 +25,11 @@ feature 'Delete Procedure', js: true do
     service       = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path participant
+    wait_for_ajax
 
     bootstrap_select('#appointment_select', visit_group.name)
+    wait_for_ajax
+    
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: number_of_procedures
     find('button.add_service').trigger('click')

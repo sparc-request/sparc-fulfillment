@@ -84,6 +84,7 @@ feature 'Start Complete Buttons', js: true do
     @visit_group = @appointment.visit_group
 
     visit participant_path(@participant)
+    wait_for_ajax
     bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
   end
@@ -107,12 +108,16 @@ feature 'Start Complete Buttons', js: true do
 
   def when_i_load_the_page
     visit current_path
+    wait_for_ajax
+    
     find('#completed-appointments-table tr', text: @visit_group.name).click
     wait_for_ajax
   end
 
   def when_i_load_the_page_and_select_a_visit
     visit current_path
+    wait_for_ajax
+    
     bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
   end

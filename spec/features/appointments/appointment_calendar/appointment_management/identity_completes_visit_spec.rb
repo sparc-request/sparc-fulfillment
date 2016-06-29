@@ -71,6 +71,8 @@ feature 'Complete Visit', js: true do
     @service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path participant
+    wait_for_ajax
+    
     bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
   end

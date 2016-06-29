@@ -40,6 +40,7 @@ feature 'User messes with a procedures date completed', js: true do
     @participant  = @protocol.participants.first
 
     visit participant_path(@participant)
+    wait_for_ajax
   end
 
   def given_i_am_viewing_a_procedure
@@ -101,6 +102,6 @@ feature 'User messes with a procedures date completed', js: true do
   def then_i_should_see_the_completed_date_has_been_updated
     expected_date = page.evaluate_script %Q{ $('table.procedures tbody input.datetimepicker').val(); }
 
-    expect(expected_date).to eq(Time.current.strftime('%m-%d-%Y'))
+    expect(expected_date).to eq(Time.current.strftime('%m/%d/%Y'))
   end
 end

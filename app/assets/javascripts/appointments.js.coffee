@@ -71,7 +71,7 @@ $ ->
           url: "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.complete_visit', ->
-    start_date = new Date($('#start_date').data("date"))
+    start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
     end_date = new Date($.now())
 
     if start_date > end_date
@@ -95,7 +95,7 @@ $ ->
 
   $(document).on 'click', '.uncomplete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
-    data = appointment: completed_date: null
+    data = field: "reset_completed_date", appointment: completed_date: null
     $.ajax
       type: 'PUT'
       data: data
@@ -297,6 +297,7 @@ $ ->
 
   window.start_date_init = (date) ->
     $('#start_date').datetimepicker
+      format: 'MM/DD/YYYY h:mm a'
       defaultDate: date
       ignoreReadonly: true
     $('#start_date').on 'dp.hide', (e) ->
@@ -312,6 +313,7 @@ $ ->
 
   window.completed_date_init = (date) ->
     $('#completed_date').datetimepicker
+      format: 'MM/DD/YYYY h:mm a'
       defaultDate: date
       ignoreReadonly: true
     $('#start_date').data("DateTimePicker").maxDate($('#completed_date').data("DateTimePicker").date())

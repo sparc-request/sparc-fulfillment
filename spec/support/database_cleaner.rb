@@ -1,26 +1,25 @@
 RSpec.configure do |config|
+  MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
 
+  # Clean data before running the suite
   config.before(:suite) do
-    MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
-
     DatabaseCleaner.clean_with(:truncation)
-    DatabaseCleaner.strategy = :transaction
     MODELS.
       each do |model|
         DatabaseCleaner[:active_record, model: model].clean_with(:truncation)
-        DatabaseCleaner[:active_record, model: model].strategy = :transaction
       end
   end
 
-  config.before(:each, type: :feature) do |example|
-    DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+  # Set default strategy to transaction
+  config.before(:each) do
+    DatabaseCleaner.strategy = :truncation
     MODELS.
       each do |model|
-        DatabaseCleaner[:active_record, model: model].start
-        DatabaseCleaner[:active_record, model: model].strategy = example.metadata[:js] ? :truncation : :transaction
+        DatabaseCleaner[:active_record, model: model].strategy = :truncation
       end
   end
 
+  # Start the cleaner to catch deletions in tests
   config.before(:each) do
     DatabaseCleaner.start
     MODELS.
@@ -29,7 +28,8 @@ RSpec.configure do |config|
       end
   end
 
-  config.after(:each) do
+  # Clean data post-test
+  config.append_after(:each) do
     DatabaseCleaner.clean
     MODELS.
       each do |model|
