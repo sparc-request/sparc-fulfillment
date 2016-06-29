@@ -18,15 +18,6 @@ RSpec.configure do |config|
         DatabaseCleaner[:active_record, model: model].strategy = :truncation
       end
   end
-  
-  # Force the use of the truncation strategy
-  config.before(:each, truncation: true) do |example|
-    DatabaseCleaner.strategy = :truncation
-    MODELS.
-      each do |model|
-        DatabaseCleaner[:active_record, model: model].strategy = :truncation
-      end
-  end
 
   # Start the cleaner to catch deletions in tests
   config.before(:each) do
