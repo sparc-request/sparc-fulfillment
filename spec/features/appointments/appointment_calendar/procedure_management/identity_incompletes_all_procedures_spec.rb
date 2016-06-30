@@ -128,14 +128,8 @@ feature 'Identity incompletes all Procedures', js: true do
   end
 
   def and_all_procedures_should_have_performed_by_set_to_default
-    find("tr.procedure[data-id='1'] td.performed-by .selectpicker")
-    procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val(); }
-
-    find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
-    procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
-
-    expect(procedure1_performed_by.to_i).to eq(@current_identity.id)
-    expect(procedure2_performed_by.to_i).to eq(@current_identity.id)
+    expect(page).to have_css("tr.procedure[data-id='1'] td.performed-by .performed-by-dropdown button", text: "#{@current_identity.full_name}")
+    expect(page).to have_css("tr.procedure[data-id='2'] td.performed-by .performed-by-dropdown button", text: "#{@current_identity.full_name}")
   end
 
   def and_when_i_edit_the_default_performer
@@ -143,13 +137,7 @@ feature 'Identity incompletes all Procedures', js: true do
   end
 
   def and_all_procedures_should_have_selected_performer
-    find("tr.procedure[data-id='1'] td.performed-by .selectpicker")
-    procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val(); }
-
-    find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
-    procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
-
-    expect(procedure1_performed_by.to_i).to eq(@other_identity.id)
-    expect(procedure2_performed_by.to_i).to eq(@other_identity.id)
+    expect(page).to have_css("tr.procedure[data-id='1'] td.performed-by .performed-by-dropdown button", text: "#{@other_identity.full_name}")
+    expect(page).to have_css("tr.procedure[data-id='2'] td.performed-by .performed-by-dropdown button", text: "#{@other_identity.full_name}")
   end
 end
