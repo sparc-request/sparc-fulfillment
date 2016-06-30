@@ -24,11 +24,11 @@ class ProceduresController < ApplicationController
 
   def edit
     @task = Task.new
-    @clinical_providers = ClinicalProvider.where(organization_id: current_identity.protocols.map{|p| p.sub_service_request.organization_id })
     if params[:partial].present?
       @note = @procedure.notes.new(kind: 'reason')
       render params[:partial]
     else
+      @clinical_providers = ClinicalProvider.where(organization_id: current_identity.protocols.map{|p| p.sub_service_request.organization_id })
       render
     end
   end
