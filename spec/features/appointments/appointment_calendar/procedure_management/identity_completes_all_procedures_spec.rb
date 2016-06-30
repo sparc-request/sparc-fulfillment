@@ -7,7 +7,6 @@ feature 'Identity completes all Procedures', js: true do
     next_month               = Time.current.month + 1
     @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
     @current_identity     = Identity.first
-    @current_identity.update_attributes(id: 1)
     @other_identity       = create(:identity, id: 2, first_name: 'Juan', last_name: 'Leonardo')
     sub_service_request   = create(:sub_service_request_with_organization)
     protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
@@ -126,18 +125,19 @@ feature 'Identity completes all Procedures', js: true do
 
   def and_all_procedures_should_have_performed_by_set_to_default
 
-    find("tr.procedure[data-id='1'] td.performed-by .selectpicker")
-    procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .selectpicker").val(); }
-
-    find("tr.procedure[data-id='2'] td.performed-by .selectpicker")
-    procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .selectpicker").val(); }
+    procedure1_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='1'] td.performed-by .performed-by-dropdown button").attr('title'); }
+    procedure2_performed_by = page.evaluate_script %Q{ $("tr.procedure[data-id='2'] td.performed-by .performed-by-dropdown button").attr('title'); }
     puts "*"*100
-    puts procedure1_performed_by.to_i
-    puts procedure2_performed_by.to_i
-    puts @other_identity.id
+    puts "performed by"
+    puts procedure1_performed_by
+    puts procedure2_performed_by
+    puts "other_identity"
+    puts @other_identity.full_name
+    puts "current_identity"
+    puts @current_identity.full_name
     puts "*"*100
-    expect(procedure1_performed_by.to_i).to eq(@current_identity.id)
-    expect(procedure2_performed_by.to_i).to eq(@current_identity.id)
+    expect(procedure1_performed_by).to eq(@current_identity.full_name)
+    expect(procedure2_performed_by).to eq(@current_identity.full_name)
   end
 
   def when_i_edit_the_default_date
