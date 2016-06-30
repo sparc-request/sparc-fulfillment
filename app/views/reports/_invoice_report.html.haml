@@ -29,7 +29,7 @@
             .form-group
               = label_tag "organization", t(:reports)[:organization], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag 'organization',grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "form-control", id: "organization_select"
+                = select_tag 'organizations',grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "form-control", id: "organization_select"
             .form-group.hidden
               = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
               .col-sm-9#protocol_section

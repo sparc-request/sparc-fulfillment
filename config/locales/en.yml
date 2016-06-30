@@ -342,7 +342,7 @@ en:
     invoice_report: "Invoice Report"
     end_date: "End Date"
     incomplete_visit_report: "Incomplete Visit Report"
-    organization: "Organization(s)"
+    organization: "Organization(s)*"
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"

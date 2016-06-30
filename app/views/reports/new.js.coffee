@@ -38,5 +38,3 @@ multi_select.multiselect({
         url: "reports/update_dropdown"
         data: { org_ids: multi_select.val() }
 })
-multi_select.multiselect('selectAll', false)
-multi_select.multiselect('updateButtonText')
