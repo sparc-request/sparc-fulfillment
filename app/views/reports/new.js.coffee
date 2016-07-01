@@ -45,4 +45,4 @@ multi_select.multiselect({
 $(document).on 'change', "#organization_select", ->
   if $(this).val() == null
     $('#protocol_section').closest('.form-group').addClass("hidden")
- 
+    $('#protocol_section').empty()
