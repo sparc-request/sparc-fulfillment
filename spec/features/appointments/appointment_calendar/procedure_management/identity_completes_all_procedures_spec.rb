@@ -2,68 +2,42 @@ require 'rails_helper'
 
 feature 'Identity completes all Procedures', js: true do
 
-  context "and completes all" do
-    before :each do
-      @current_date            = DateTime.current.strftime('%m/%d/%Y')
-      next_month               = Time.current.month + 1
-      @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
-      @current_identity     = Identity.first
-      @other_identity       = create(:identity, id: 2, first_name: 'Juan', last_name: 'Leonardo')
-      sub_service_request   = create(:sub_service_request_with_organization)
-      protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-      organization_provider = create(:organization_provider, name: "Provider")
-      organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-      organization          = sub_service_request.organization
+  before :each do
+    @current_date            = DateTime.current.strftime('%m/%d/%Y')
+    next_month               = Time.current.month + 1
+    @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
+    @current_identity     = Identity.first
+    @other_identity       = create(:identity, id: 2, first_name: 'Juan', last_name: 'Leonardo')
+    sub_service_request   = create(:sub_service_request_with_organization)
+    protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+    organization_provider = create(:organization_provider, name: "Provider")
+    organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
+    organization          = sub_service_request.organization
 
-      organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update_attributes(parent: organization_program, name: "Core")
 
-      FactoryGirl.create(:clinical_provider, identity: @current_identity, organization: organization)
-      FactoryGirl.create(:project_role_pi, identity: @current_identity, protocol: protocol)
+    create(:clinical_provider, identity: @current_identity, organization: organization)
+    create(:project_role_pi, identity: @current_identity, protocol: protocol)
 
-      FactoryGirl.create(:clinical_provider, identity: @other_identity, organization: organization)
-      FactoryGirl.create(:project_role_pi, identity: @other_identity, protocol: protocol)
-      
-      @participant = protocol.participants.first
-      @visit_group  = @participant.appointments.first.visit_group
-      @service      = protocol.organization.inclusive_child_services(:per_participant).first
-      @pricing_map   = create(:pricing_map, service: @service, effective_date: @the_middle_of_next_month)
-    end
-    scenario 'and sees the complete buttons are active' do
-      given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
-      when_i_complete_all_the_procedures
-      then_i_should_see_a_complete_all_modal
-      when_i_save_the_modal
-      and_i_unroll_the_procedures_accordion
-      then_all_the_procedure_complete_buttons_should_be_active
-    end
+    create(:clinical_provider, identity: @other_identity, organization: organization)
+    create(:project_role_pi, identity: @other_identity, protocol: protocol)
+    
+    @participant = protocol.participants.first
+    @visit_group  = @participant.appointments.first.visit_group
+    @service      = protocol.organization.inclusive_child_services(:per_participant).first
+    @pricing_map   = create(:pricing_map, service: @service, effective_date: @the_middle_of_next_month)
+  end
+
+  scenario 'and sees the complete buttons are active' do
+    given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
+    when_i_complete_all_the_procedures
+    then_i_should_see_a_complete_all_modal
+    when_i_save_the_modal
+    and_i_unroll_the_procedures_accordion
+    then_all_the_procedure_complete_buttons_should_be_active
   end
 
   context 'and leaves modal defaults' do
-    before :each do
-      @current_date            = DateTime.current.strftime('%m/%d/%Y')
-      next_month               = Time.current.month + 1
-      @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
-      @current_identity     = Identity.first
-      @other_identity       = create(:identity, id: 2, first_name: 'Juan', last_name: 'Leonardo')
-      sub_service_request   = create(:sub_service_request_with_organization)
-      protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-      organization_provider = create(:organization_provider, name: "Provider")
-      organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-      organization          = sub_service_request.organization
-
-      organization.update_attributes(parent: organization_program, name: "Core")
-
-      FactoryGirl.create(:clinical_provider, identity: @current_identity, organization: organization)
-      FactoryGirl.create(:project_role_pi, identity: @current_identity, protocol: protocol)
-
-      FactoryGirl.create(:clinical_provider, identity: @other_identity, organization: organization)
-      FactoryGirl.create(:project_role_pi, identity: @other_identity, protocol: protocol)
-      
-      @participant = protocol.participants.first
-      @visit_group  = @participant.appointments.first.visit_group
-      @service      = protocol.organization.inclusive_child_services(:per_participant).first
-      @pricing_map   = create(:pricing_map, service: @service, effective_date: @the_middle_of_next_month)
-    end
     scenario 'sees the procedures are completed and updated with defaults' do
       given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
       when_i_complete_all_the_procedures
@@ -78,31 +52,6 @@ feature 'Identity completes all Procedures', js: true do
   end
 
   context 'edits modal defaults' do
-    before :each do
-      @current_date            = DateTime.current.strftime('%m/%d/%Y')
-      next_month               = Time.current.month + 1
-      @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
-      @current_identity     = Identity.first
-      @other_identity       = create(:identity, id: 2, first_name: 'Juan', last_name: 'Leonardo')
-      sub_service_request   = create(:sub_service_request_with_organization)
-      protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-      organization_provider = create(:organization_provider, name: "Provider")
-      organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-      organization          = sub_service_request.organization
-
-      organization.update_attributes(parent: organization_program, name: "Core")
-
-      FactoryGirl.create(:clinical_provider, identity: @current_identity, organization: organization)
-      FactoryGirl.create(:project_role_pi, identity: @current_identity, protocol: protocol)
-
-      FactoryGirl.create(:clinical_provider, identity: @other_identity, organization: organization)
-      FactoryGirl.create(:project_role_pi, identity: @other_identity, protocol: protocol)
-      
-      @participant = protocol.participants.first
-      @visit_group  = @participant.appointments.first.visit_group
-      @service      = protocol.organization.inclusive_child_services(:per_participant).first
-      @pricing_map   = create(:pricing_map, service: @service, effective_date: @the_middle_of_next_month)
-    end
     scenario 'and sees the procedures are completed with updated data' do
       given_i_have_added_n_procedures_to_an_appointment_such_that_n_is 2
       when_i_complete_all_the_procedures

@@ -13,11 +13,11 @@ feature 'Identity incompletes all Procedures', js: true do
 
     organization.update_attributes(parent: organization_program, name: "Core")
 
-    FactoryGirl.create(:clinical_provider, identity: @current_identity, organization: organization)
-    FactoryGirl.create(:project_role_pi, identity: @current_identity, protocol: protocol)
+    create(:clinical_provider, identity: @current_identity, organization: organization)
+    create(:project_role_pi, identity: @current_identity, protocol: protocol)
 
-    FactoryGirl.create(:clinical_provider, identity: @other_identity, organization: organization)
-    FactoryGirl.create(:project_role_pi, identity: @other_identity, protocol: protocol)
+    create(:clinical_provider, identity: @other_identity, organization: organization)
+    create(:project_role_pi, identity: @other_identity, protocol: protocol)
     
     @participant = protocol.participants.first
     visit_group  = @participant.appointments.first.visit_group
