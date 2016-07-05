@@ -1,4 +1,5 @@
 $('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
+$(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {participant: @appointment.participant})) %>")
 
 pg = new ProcedureGrouper()
 pg.initialize()
