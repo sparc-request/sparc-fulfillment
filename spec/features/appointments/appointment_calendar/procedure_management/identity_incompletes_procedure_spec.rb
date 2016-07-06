@@ -5,13 +5,6 @@ feature 'Incomplete Procedure', js: true do
   context 'User starts an appointment' do
     context 'and marks a procedure as incomplete once' do
 
-      scenario 'and sees the blue button with white glyphicon denoting notes present' do
-        given_i_am_viewing_an_appointment_with_a_procedure
-        when_i_begin_the_appointment
-        when_i_incomplete_the_procedure
-        then_i_should_see_the_notes_button
-      end
-
       scenario 'and sees a single incomplete note' do
         given_i_am_viewing_an_appointment_with_a_procedure
         when_i_begin_the_appointment
@@ -113,7 +106,11 @@ feature 'Incomplete Procedure', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path participant
+    wait_for_ajax
+
     bootstrap_select '#appointment_select', visit_group.name
+    wait_for_ajax
+    
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
@@ -191,11 +188,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def then_i_should_see_errors
-    expect(page).to have_css('.modal-dialog .alert', text: "Notes reason can't be blank")
-  end
-
-  def then_i_should_see_the_notes_button
-    expect(page).to have_selector("td.notes button.btn-primary")
+    expect(page).to have_css('.modal-dialog .alert', text: "Reason can't be blank")
   end
   
   def then_i_should_see_one_complete_note_and_one_incomplete_note

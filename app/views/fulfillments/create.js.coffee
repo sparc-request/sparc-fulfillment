@@ -5,3 +5,5 @@ if $("#modal_errors > .alert.alert-danger > p").length == 0
   $("#fulfillments_row").prev('tr').find('.qty_rem').text("<%= @line_item.quantity_remaining %>")
   $("#fulfillments_row").prev('tr').find('.last_fulfillment').text("<%= format_date(@line_item.last_fulfillment) %>")
   $("#modal_place").modal 'hide'
+  $("#list-<%= @line_item.id %>").trigger('click')
+  $('#study-level-activities-table').bootstrapTable('refresh')

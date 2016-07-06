@@ -2,83 +2,33 @@ require 'rails_helper'
 
 feature 'Notes', js: true do
 
-  context 'User views line item notes' do
-    scenario 'and sees a grey notes icon denoting no notes present' do
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_the_line_item_actions_dropdown
-      then_i_should_see_the_no_notes_button
-    end
+  describe 'managing line item notes' do
 
-    scenario 'and sees the line item notes list' do
+    it 'should be able to create a line item note' do
       given_i_am_viewing_the_study_level_activities_tab
-      when_i_click_on_line_item_notes_icon
-      then_i_should_see_the_line_item_notes_list
+      count = @line_item.notes.count
+      when_i_open_up_a_new_line_item_note
+      then_i_fill_out_and_save_the_note
+      expect(@line_item.notes.count).to eq(count + 1)
     end
   end
 
-  context 'User creates line item note' do
-    scenario 'and sees a blue notes icon denotes notes present' do
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_click_on_line_item_notes_icon
-      when_i_click_on_the_add_note_button
-      when_i_fill_out_and_save_the_note
-      when_i_open_the_line_item_actions_dropdown
-      then_i_Should_see_the_notes_present_button
-    end
+  describe 'managing fulfillment notes' do
 
-    scenario 'and sees the note in the line items notes list' do
+    it 'should be able to create a fulfillment note' do
       given_i_am_viewing_the_study_level_activities_tab
-      when_i_click_on_line_item_notes_icon
-      when_i_click_on_the_add_note_button
-      when_i_fill_out_and_save_the_note
-      when_i_click_on_line_item_notes_icon
-      then_i_should_see_the_note
-    end
-  end
-
-  context 'User views fulfillment notes' do
-    scenario 'and sees a grey notes icon denoting no notes present' do
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_open_the_fulfillment_actions_dropdown
-      then_i_should_see_the_no_notes_button
-    end
-
-    scenario 'and sees the fulfillments notes list' do
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_fulfillment_notes_icon
-      then_i_should_see_the_fulfillment_notes_list
-    end
-  end
-
-  context 'User creates fulfillment note' do
-    scenario 'and sees a blue notes icon denotes notes present' do
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_fulfillment_notes_icon
-      when_i_click_on_the_add_note_button
-      when_i_fill_out_and_save_the_note
-      when_i_open_up_a_fulfillment
-      when_i_open_the_fulfillment_actions_dropdown
-      then_i_Should_see_the_notes_present_button
-    end
-
-    scenario 'and sees the note in the fulfillments notes list' do
-      given_i_am_viewing_the_study_level_activities_tab
-      when_i_open_up_a_fulfillment
-      when_i_click_on_fulfillment_notes_icon
-      when_i_click_on_the_add_note_button
-      when_i_fill_out_and_save_the_note
-      when_i_open_up_a_fulfillment
-      when_i_click_on_fulfillment_notes_icon
-      then_i_should_see_the_note
+      count = @fulfillment.notes.count
+      when_i_open_up_a_new_fulfillment_note
+      then_i_fill_out_and_save_the_note
+      expect(@fulfillment.notes.count).to eq(count + 1)
     end
   end
 
   def given_i_am_viewing_the_study_level_activities_tab
     protocol = create_and_assign_protocol_to_me
     sparc_protocol = protocol.sparc_protocol
+    @line_item = protocol.line_items.first
+    @fulfillment=  @line_item.fulfillments.first
     sparc_protocol.update_attributes(type: 'Study')
     visit protocol_path(protocol.id)
     wait_for_ajax
@@ -86,62 +36,30 @@ feature 'Notes', js: true do
     wait_for_ajax
   end
 
-  def when_i_open_the_line_item_actions_dropdown
+  def when_i_open_up_a_new_line_item_note
     first("#study-level-activities-table .available-actions-button").click
     wait_for_ajax
-  end
-
-  def when_i_open_the_fulfillment_actions_dropdown
-    first("#fulfillments-table .available-actions-button").click
-    wait_for_ajax
-  end
-
-  def when_i_open_up_a_fulfillment
-    first('.otf_fulfillments.list').click
-    wait_for_ajax
-  end
-
-  def when_i_click_on_line_item_notes_icon
-    when_i_open_the_line_item_actions_dropdown
     first('.notes.list[data-notable-type="LineItem"]').click
     wait_for_ajax
-  end
-
-  def when_i_click_on_fulfillment_notes_icon
-    when_i_open_the_fulfillment_actions_dropdown
-    first('.notes.list[data-notable-type="Fulfillment"]').click
-    wait_for_ajax
-  end
-
-  def when_i_click_on_the_add_note_button
     find('.note.new').click
     wait_for_ajax
   end
 
-  def when_i_fill_out_and_save_the_note
+  def when_i_open_up_a_new_fulfillment_note
+    first('.otf-fulfillment-list').click
+    wait_for_ajax
+    first("#fulfillments-table .available-actions-button").click
+    wait_for_ajax
+    first('.notes.list[data-notable-type="Fulfillment"]').click
+    wait_for_ajax
+    find('.note.new').click
+    wait_for_ajax
+  end
+
+  def then_i_fill_out_and_save_the_note
     fill_in 'note_comment', with: "Test Comment"
     wait_for_ajax
     click_button 'Save'
     wait_for_ajax
-  end
-
-  def then_i_should_see_the_no_notes_button
-    expect(page).to_not have_selector('button.actions-button.notes.list span.blue-notes', visible: true)
-  end
-
-  def then_i_Should_see_the_notes_present_button
-    expect(page).to have_selector('button.actions-button.notes.list span.blue-notes', visible: true)
-  end
-
-  def then_i_should_see_the_line_item_notes_list
-    expect(page).to have_content('Study Level Activity Notes')
-  end
-
-  def then_i_should_see_the_note
-    expect(page).to have_content("Test Comment")
-  end
-
-  def then_i_should_see_the_fulfillment_notes_list
-    expect(page).to have_content('Fulfillment Notes')
   end
 end

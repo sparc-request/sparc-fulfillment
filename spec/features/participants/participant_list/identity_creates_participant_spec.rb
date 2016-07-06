@@ -20,15 +20,18 @@ feature 'User creates Participant', js: true do
 
   def when_i_create_a_new_participant
     find('.new-participant').click
-    wait_for_ajax
 
-    fill_in 'Last Name', with: "Dole"
-    fill_in 'First Name', with: "Bob"
-    fill_in 'MRN', with: "ASD123"
-    fill_in 'City', with: "Town"
-    bootstrap_select '#participant_state', "South Carolina"
-    fill_in 'Zip Code', with: "12345"
-    page.execute_script %Q{ $("#participant_date_of_birth").siblings(".input-group-addon").trigger("click") }
+    participant = build(:participant_with_protocol)
+
+    fill_in 'First Name', with: participant.first_name
+    fill_in 'Last Name', with: participant.last_name
+    fill_in 'MRN', with: participant.mrn
+    fill_in 'City', with: participant.city
+    bootstrap_select '#participant_state', participant.state
+    fill_in 'Zip Code', with: participant.zipcode
+    bootstrap_select '#participant_status', participant.status
+    page.execute_script %Q{ $("#dob_time_picker").trigger("focus") }
+
     page.execute_script %Q{ $("td.year:contains('0')").trigger("click") }
     page.execute_script %Q{ $("td.month:contains('Mar')").trigger("click") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }

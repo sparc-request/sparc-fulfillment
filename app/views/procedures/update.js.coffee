@@ -4,7 +4,7 @@ $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', l
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 
-date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").find(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY').data("DateTimePicker")
+date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").find(".completed_date_field").datetimepicker(format: 'MM/DD/YYYY').data("DateTimePicker")
 
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('billing-type', "<%= @procedure.billing_type %>").attr('data-billing-type', "<%= @procedure.billing_type %>")
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('group-id', "<%= @procedure.group_id %>").attr('data-group-id', "<%= @procedure.group_id %>")
@@ -49,10 +49,16 @@ statuses[statuses.length] =  "<%= status %>"
 $('#appointment_indications').selectpicker()
 $('#appointment_indications').selectpicker('val', statuses)
 
-$(".followup_procedure_datepicker").datetimepicker(format: 'MM-DD-YYYY')
-$(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
+$(".followup_procedure_datepicker").datetimepicker
+  format: 'MM/DD/YYYY'
+  ignoreReadonly: true
+
+$(".completed_date_field").datetimepicker
+  format: 'MM/DD/YYYY'
+  ignoreReadonly: true
 
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
 
+$("#group-<%= @procedure.group_id %> button").trigger('click')
 $("#modal_place").modal 'hide'
 <% end %>

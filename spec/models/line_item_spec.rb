@@ -130,9 +130,9 @@ RSpec.describe LineItem, type: :model do
       it 'should return the fulfilled_at date of the latest fulfillment' do
         service   = create(:service_with_one_time_fee)
         line_item = create(:line_item, service: service, protocol: create(:protocol))
-        fill_1 = create(:fulfillment, line_item: line_item, fulfilled_at: "08-10-2015")
-        fill_2 = create(:fulfillment, line_item: line_item, fulfilled_at: "09-10-2015")
-        fill_3 = create(:fulfillment, line_item: line_item, fulfilled_at: "10-10-2015")
+        fill_1 = create(:fulfillment, line_item: line_item, fulfilled_at: "08/10/2015")
+        fill_2 = create(:fulfillment, line_item: line_item, fulfilled_at: "09/10/2015")
+        fill_3 = create(:fulfillment, line_item: line_item, fulfilled_at: "10/10/2015")
 
         expect(line_item.last_fulfillment).to eq(fill_3.fulfilled_at)
       end
@@ -151,7 +151,7 @@ RSpec.describe LineItem, type: :model do
 
   context 'class methods' do
 
-    describe "after create", delay: true do
+    describe "after create" do
 
       it "should increment service line_item_count" do
         service = create(:service)
@@ -159,7 +159,7 @@ RSpec.describe LineItem, type: :model do
       end
     end
 
-    describe "after destroy", delay: true do
+    describe "after destroy" do
 
       it "should decrement service line_item_count" do
         service = create(:service)

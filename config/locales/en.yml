@@ -38,6 +38,41 @@ en:
     required_message: "Fields marked with an asterisk ( * ) are required to continue."
     save: "Save"
 
+  activerecord:
+    attributes:
+      arm:
+        name: "Arm Name"
+        subject_count: "Subject Count"
+        visit_count: "Visit Count"
+      appointment:
+        name: "Visit Name"
+        position: ""
+      fulfillment:
+        fulfilled_at: "Fulfillment Date"
+      line_item:
+        quantity_requested: "Quantity"
+      notes:
+        reason: "Reason"
+      participant:
+        mrn: "MRN"
+        zipcode: "Zip Code"
+      task:
+        due_at: "Date"
+      visit_group:
+        name: "Visit Name"
+        day: "Visit Day"
+        position: ""
+    errors:
+      models:
+        appointment:
+          attributes:
+            position:
+              blank: "You must select a Position"
+        visit_group:
+          attributes:
+            position:
+              blank: "You must select a Position"
+
   appointment:
     object: "Appointment"
     add_service: "Add Service"
@@ -107,6 +142,7 @@ en:
   fulfillment:
     object: "Fulfillment"
     add_fulfillment: "Add Fulfillment"
+    list_fulfillments: "List"
     components: "Fulfillment Components"
     edit: "Edit Fulfillment"
     flash_messages:
@@ -124,7 +160,7 @@ en:
     qty_type: "Quantity Type"
     quantity: "Quantity"
     save_fulfillment: "Save Fulfillment"
-    view: "View Fulfillments"
+    view: "View Fulfillment Buttons"
 
   line_item:
     object: "Line Item"
@@ -231,9 +267,9 @@ en:
     object: "Procedure"
     complete: "Complete All"
     completed_date: "Completed Date"
-    edit_header: "Follow up"
+    edit_header: "Follow Up"
     followup: "Follow Up"
-    follow_up_date: "Follow up date"
+    follow_up_date: "Follow Up Date"
     fud: "Due Date"
     incomplete: "Incomplete All"
     notes: "Notes"
@@ -246,7 +282,7 @@ en:
 
   protocol:
     object: "Protocol"
-    admin_portal_link: "Admin Portal"
+    admin_portal_link: "SPARCDashboard"
     coordinators: "Coordinators"
     end_date: "Study End Date"
     flash_messages:
@@ -297,8 +333,12 @@ en:
     updates: "Updates"
 
   reports:
+    asc: "ASC"
+    ascending: "Ascending"
     all_protocols: "All Protocols"
     auditing_report: "Auditing Report"
+    desc: "DESC"
+    descending: "Descending"
     invoice_report: "Invoice Report"
     end_date: "End Date"
     incomplete_visit_report: "Incomplete Visit Report"
@@ -306,10 +346,14 @@ en:
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"
+    primary_pi: "Primary PI"
     project_summary_report: "Project Summary Report"
     protocol: "Protocol"
     protocols: "Protocol(s)"
+    protocol_id: "Protocol ID"
     request_report: "Request Report"
+    sort_by: "Sort By"
+    sort_order: "Sort Order"
     start_date: "Start Date"
 
   services:
@@ -350,7 +394,7 @@ en:
     assignee_name: "Assigned to"
     completed: "Completed"
     create_task: "Create Task"
-    due_at: "Due date"
+    due_at: "Due Date"
     flash_messages:
       created: "Task Created"
       incompleted: "The selected task(s) have been set to incomplete"

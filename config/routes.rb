@@ -9,14 +9,19 @@ Rails.application.routes.draw do
   resources :protocols
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
-  resources :fulfillments, only: [:index, :new, :create, :edit, :update]
+  resources :fulfillments
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents
   resources :line_items
   resources :visits, only: [:update]
-  resources :reports, only: [:new, :create]
   resources :custom_appointments, controller: :appointments
+
+  resources :reports, only: [:new, :create] do
+    collection do
+      resource :update_dropdown, only: [:create]
+    end
+  end
 
   resources :arms, only: [:new, :create, :update, :destroy] do
     collection do

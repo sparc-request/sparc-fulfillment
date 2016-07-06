@@ -7,6 +7,7 @@ class Fulfillment < ActiveRecord::Base
   belongs_to :service
   belongs_to :creator, class_name: "Identity"
   belongs_to :performer, class_name: "Identity"
+  has_one :protocol, through: :line_item
 
   has_many :components, as: :composable
   has_many :notes, as: :notable
@@ -14,7 +15,10 @@ class Fulfillment < ActiveRecord::Base
 
   delegate :quantity_type, to: :line_item
 
-  validates :line_item_id, :performer_id, :fulfilled_at, :quantity, presence: true
+  validates :line_item_id, presence: true
+  validates :performer_id, presence: true
+  validates :fulfilled_at, presence: true
+  validates :quantity, presence: true
   validates_numericality_of :quantity
 
   after_create :update_line_item_name
@@ -23,7 +27,7 @@ class Fulfillment < ActiveRecord::Base
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
 
   def fulfilled_at=(date_time)
-    write_attribute(:fulfilled_at, Time.strptime(date_time, "%m-%d-%Y")) if date_time.present?
+    write_attribute(:fulfilled_at, Time.strptime(date_time, "%m/%d/%Y")) if date_time.present?
   end
 
   def total_cost

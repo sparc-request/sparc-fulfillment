@@ -10,6 +10,7 @@
     = form_for procedure, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         = form.hidden_field :status, value: "incomplete"
         = form.hidden_field :completed_date, value: ""
         = form.hidden_field :performer_id, value: current_identity.id
@@ -17,7 +18,7 @@
           = note_form.hidden_field :identity_id, value: current_identity.id
           = note_form.hidden_field :kind
           .form-group
-            = note_form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
+            = note_form.label "reason", t(:notes)[:reason]+t(:actions)[:required], class: "col-sm-3 control-label"
             .col-sm-8
               = note_form.select :reason, Procedure::NOTABLE_REASONS, { prompt: "Select a reason" }, class: "selectpicker form-control reason-select"
           .form-group

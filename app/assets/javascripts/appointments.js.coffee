@@ -10,9 +10,11 @@ $ ->
     pg = new ProcedureGrouper(core)
     group = $(this).parents('.procedure-group')
     group_id = $(group).data('group-id')
+    groups = $('.procedure-group')
 
     if $(group).find('span.glyphicon').hasClass('glyphicon-chevron-right')
       pg.show_group(group_id)
+      close_open_procedure_groups(groups, group_id)
     else
       pg.hide_group(group_id)
 
@@ -69,7 +71,7 @@ $ ->
           url: "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.complete_visit', ->
-    start_date = new Date($('#start_date').data("date"))
+    start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
     end_date = new Date($.now())
 
     if start_date > end_date
@@ -93,7 +95,7 @@ $ ->
 
   $(document).on 'click', '.uncomplete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
-    data = appointment: completed_date: null
+    data = field: "reset_completed_date", appointment: completed_date: null
     $.ajax
       type: 'PUT'
       data: data
@@ -106,10 +108,9 @@ $ ->
           url: "/appointments/#{appointment_id}.js"
 
   # Procedure buttons
-
   $(document).on 'dp.hide', ".completed_date_field", ->
     procedure_id = $(this).parents(".procedure").data("id")
-    completed_date = $(this).children("input").val()
+    completed_date = $(this).val()
     data = procedure:
             completed_date: completed_date
     $.ajax
@@ -118,8 +119,8 @@ $ ->
       data: data
 
   $(document).on 'dp.hide', ".followup_procedure_datepicker", ->
-    task_id = $(this).children("input").data("taskId")
-    due_at = $(this).children("input").val()
+    task_id = $(this).data("taskId")
+    due_at = $(this).val()
     data = task:
             due_at: due_at
     $.ajax
@@ -295,7 +296,10 @@ $ ->
       url: "/procedures/#{procedure_id}.js"
 
   window.start_date_init = (date) ->
-    $('#start_date').datetimepicker(defaultDate: date)
+    $('#start_date').datetimepicker
+      format: 'MM/DD/YYYY h:mm a'
+      defaultDate: date
+      ignoreReadonly: true
     $('#start_date').on 'dp.hide', (e) ->
       appointment_id = $(this).parents('.row.appointment').data('id')
       data = appointment: start_date: e.date.toDate().toUTCString()
@@ -308,7 +312,10 @@ $ ->
             $('#completed_date').data("DateTimePicker").minDate(e.date)
 
   window.completed_date_init = (date) ->
-    $('#completed_date').datetimepicker(defaultDate: date)
+    $('#completed_date').datetimepicker
+      format: 'MM/DD/YYYY h:mm a'
+      defaultDate: date
+      ignoreReadonly: true
     $('#start_date').data("DateTimePicker").maxDate($('#completed_date').data("DateTimePicker").date())
     $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
     $('#completed_date').on 'dp.hide', (e) ->
@@ -348,6 +355,12 @@ $ ->
       find_ids group_id for group_id in group_ids
 
       return procedure_ids
+
+  close_open_procedure_groups = (groups, group_id) ->
+    groups.each ->
+      if $(this).find('span.glyphicon').hasClass('glyphicon-chevron-down') && ($(this).data('group-id') != group_id)
+        pg = new ProcedureGrouper($(this).closest('tr.core'))
+        pg.hide_group($(this).data('group-id'))
 
   # Display a helpful message when user clicks on a disabled UI element
   $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->

@@ -10,18 +10,16 @@
           = t(:procedure)[:edit_header]
       .modal-body
         #modal_errors
+        = render partial: 'required_fields'
         .form-group
           = form.hidden_field :assignable_type, value: 'Procedure'
           = form.hidden_field :assignable_id, value: procedure.id
-          = form.label "task_assignee_id", t(:task)[:assignee_name], class: "col-sm-3 control-label"
+          = form.label "task_assignee_id", t(:task)[:assignee_name]+t(:actions)[:required], class: "col-sm-3 control-label"
           .col-sm-8= form.select :assignee_id, options_from_collection_for_select(clinical_providers.map(&:identity), 'id', 'full_name'), { include_blank: true }, { class: "form-control selectpicker" }
         .form-group
-          = form.label "due_at", t(:procedure)[:follow_up_date], class: "col-sm-3 control-label"
+          = form.label "due_at", t(:procedure)[:follow_up_date]+t(:actions)[:required], class: "col-sm-3 control-label"
           .col-sm-8
-            .input-group.date#follow_up_procedure_datepicker
-              = form.text_field :due_at, {class: 'form-control'}
-              %span.input-group-addon
-                %span.glyphicon.glyphicon-calendar
+            = form.text_field :due_at, {class: 'form-control datetimepicker', id: "follow_up_procedure_datepicker", readonly: true}
         .form-group
           = form.fields_for :notes, Note.new do |notes_form|
             = notes_form.hidden_field :notable_type, value: 'Procedure'
@@ -36,4 +34,5 @@
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
-          %button.btn.btn-primary{type: 'submit'}=t(:actions)[:save]
+          %button.btn.btn-primary{type: 'submit'}
+            =t(:actions)[:save]

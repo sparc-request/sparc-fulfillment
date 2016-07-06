@@ -20,6 +20,7 @@ class LineItemsController < ApplicationController
 
   def create
     @line_item = LineItem.new(line_item_params)
+    
     if @line_item.valid?
       @line_item.quantity_type = @line_item.service.current_effective_pricing_map.quantity_type
       @line_item.save
@@ -74,7 +75,7 @@ class LineItemsController < ApplicationController
       unless new_field.blank?
         unless current_field.blank?
           current_field = (field == "started_at" ? current_field.to_date.to_s : current_field.to_s)
-          new_field = (field == "started_at" ? Time.strptime(new_field, "%m-%d-%Y").to_date.to_s : new_field)
+          new_field = (field == "started_at" ? Time.strptime(new_field, "%m/%d/%Y").to_date.to_s : new_field)
         end
         if current_field != new_field
           comment = t(:line_item)[:log_notes][field.to_sym] + (field == "service_id" ? Service.find(new_field).name : new_field.to_s)

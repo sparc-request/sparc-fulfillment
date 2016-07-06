@@ -8,10 +8,10 @@ class ProjectSummaryReport < Report
   def generate(document)
     #We want to filter from 00:00:00 in the local time zone,
     #then convert to UTC to match database times
-    @start_date = Time.strptime(@params[:start_date], "%m-%d-%Y").utc
+    @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc
     #We want to filter from 11:59:59 in the local time zone,
     #then convert to UTC to match database times
-    @end_date   = Time.strptime(@params[:end_date], "%m-%d-%Y").tomorrow.utc - 1.second
+    @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
@@ -20,8 +20,8 @@ class ProjectSummaryReport < Report
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]
       csv << ["PI Name:", "#{protocol.pi ? protocol.pi.full_name : nil}"]
-      csv << ["Appointment Start Date Filter:", "#{format_date(Time.strptime(@params[:start_date], "%m-%d-%Y"))}"]
-      csv << ["Appointment End Date Filter:", "#{format_date(Time.strptime(@params[:end_date], "%m-%d-%Y"))}"]
+      csv << ["Appointment Start Date Filter:", "#{format_date(Time.strptime(@params[:start_date], "%m/%d/%Y"))}"]
+      csv << ["Appointment End Date Filter:", "#{format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))}"]
       csv << [""]
 
       # amount due for whole study

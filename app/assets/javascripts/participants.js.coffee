@@ -1,5 +1,10 @@
 $ ->
 
+  $('#completed-appointments-table').on 'click-row.bs.table', (row, $element) ->
+    $.ajax
+      type: 'GET'
+      url: "/appointments/#{$element.id}.js"
+
   $(document).on 'click', '.new-participant', ->
     data =
       'protocol_id' : $(this).data('protocol-id')

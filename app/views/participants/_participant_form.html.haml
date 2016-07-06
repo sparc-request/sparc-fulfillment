@@ -34,10 +34,7 @@
             .form-group
               = p.label "date_of_birth", t(:participant)[:dob]+t(:actions)[:required], class: "col-sm-4 control-label "
               .col-sm-7
-                .input-group#dob_time_picker
-                  = p.text_field "date_of_birth", {class: 'form-control datetimepicker', value: format_date(participant.date_of_birth)}
-                  %span.input-group-addon
-                    %span.glyphicon.glyphicon-calendar
+                = p.text_field "date_of_birth", {id: 'dob_time_picker', class: 'form-control datetimepicker', value: format_date(participant.date_of_birth), readonly: true}
             .form-group
               = p.label "gender", t(:participant)[:gender]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= p.select "gender", Participant::GENDER_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"

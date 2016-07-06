@@ -2,7 +2,7 @@ module ParticipantHelper
   
   def appointments_for_select arm, participant
     appointments = []
-    participant.appointments.each do |appt|
+    participant.appointments.incompleted.each do |appt|
       if appt.arm.name == arm.name
         appointments << appt
       end

@@ -128,7 +128,7 @@ class SparcFulfillmentImporter
     quantity = sparc_quantity * sparc_unit_quantity
 
     fulfillment_line_item_fulfillment = fulfillment_line_item.fulfillments.new(sparc_id: sparc_line_item_fulfillment.id,
-                                                                               fulfilled_at: sparc_line_item_fulfillment.date.strftime("%m-%d-%Y"),
+                                                                               fulfilled_at: sparc_line_item_fulfillment.date.strftime("%m/%d/%Y"),
                                                                                quantity:     quantity,
                                                                                performer_id: sparc_line_item_fulfillment_audit.user_id,
                                                                                service_id:   fulfillment_line_item.service_id,
@@ -168,7 +168,7 @@ class SparcFulfillmentImporter
                                                                      mrn:            sparc_subject.mrn,
                                                                      external_id:    sparc_subject.external_subject_id,
                                                                      status:         STATUS_OPTIONS[sparc_subject.status],
-                                                                     date_of_birth:  (sparc_subject.dob.present? ? sparc_subject.dob.strftime("%m-%d-%Y") : nil),
+                                                                     date_of_birth:  (sparc_subject.dob.present? ? sparc_subject.dob.strftime("%m/%d/%Y") : nil),
                                                                      gender:         sparc_subject.gender.capitalize,
                                                                      ethnicity:      'Unknown/Other/Unreported', 
                                                                      race:           RACE_OPTIONS[sparc_subject.ethnicity],
@@ -276,8 +276,8 @@ class SparcFulfillmentImporter
           sparc_procedure_completed_by = sparc_procedure_completed_audit.user_id
 
           fulfillment_procedure.status = 'complete'
-          fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m-%d-%Y")
-          fulfillment_procedure.service_cost = fulfillment_service.cost(fulfillment_procedure.protocol.funding_source, sparc_procedure_completed_date)
+          fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m/%d/%Y")
+          fulfillment_procedure.service_cost = fulfillment_service.cost(fulfillment_procedure.protocol.sparc_funding_source, sparc_procedure_completed_date)
           fulfillment_procedure.performer_id = sparc_procedure_completed_by
         end
 

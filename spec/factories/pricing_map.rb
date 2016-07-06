@@ -6,11 +6,11 @@ FactoryGirl.define do
     quantity_type "Each"
 
     trait :future do
-      effective_date Time.current + 1.day
+      effective_date Time.current + 25.days
     end
 
     trait :past do
-      effective_date Time.current - 1.day
+      effective_date Time.current - 25.days
     end
 
     factory :pricing_map_future, traits: [:future]

@@ -20,8 +20,8 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:current_page)).to eq("1")
       expect(assigns(:visit_group)).to be_a_new(VisitGroup)
+      expect(assigns(:current_page)).to eq("1")
       expect(assigns(:schedule_tab)).to eq("template")
       expect(assigns(:arm)).to eq(@protocol.arms.first)
     end
@@ -35,8 +35,8 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:current_page)).to eq("1")
       expect(assigns(:visit_group)).to be_a_new(VisitGroup)
+      expect(assigns(:current_page)).to eq("1")
       expect(assigns(:schedule_tab)).to eq("template")
       expect(assigns(:arm)).to eq(@arm)
     end
@@ -44,11 +44,13 @@ RSpec.describe VisitGroupsController, type: :controller do
 
   describe "POST #create" do
     it "should create a new visit_group" do
+      next_day = @arm.visit_groups.maximum(:day)+1
+      next_position = @arm.visit_groups.maximum(:position)+1
       expect{
         post :create, {
           protocol_id: @protocol.id,
           arm_id: @arm.id,
-          visit_group: attributes_for(:visit_group, arm_id: @arm.id),
+          visit_group: attributes_for(:visit_group, arm_id: @arm.id, position: next_position, day: next_day).except(:sparc_id),
           format: :js
         }
       }.to change(VisitGroup, :count).by(1)
@@ -90,7 +92,7 @@ RSpec.describe VisitGroupsController, type: :controller do
     end
 
     it "should create an error when the visit_group has completed procedures under it" do
-      create(:procedure_complete, appointment: @visit_group.appointments.first, arm: @arm, completed_date: "10-09-2010")
+      create(:procedure_complete, appointment: @visit_group.appointments.first, arm: @arm, completed_date: "10/09/2010")
       delete :destroy, {
         id: @visit_group.id,
         page: "1",
@@ -111,9 +113,9 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:intended_action)).to eq("edit")
       expect(assigns(:visit_group)).to eq(@visit_group)
       expect(assigns(:arm)).to eq(@visit_group.arm)
+      expect(assigns(:intended_action)).to eq("edit")
     end
 
     it "should assign the appropriate vars when there is only an arm id" do
@@ -124,9 +126,9 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:intended_action)).to eq("edit")
       expect(assigns(:visit_group)).to eq(@arm.visit_groups.first)
       expect(assigns(:arm)).to eq(@arm)
+      expect(assigns(:intended_action)).to eq("edit")
     end
 
     it "should assign the appropriate vars without arm_id or visit_group_id" do
@@ -136,10 +138,9 @@ RSpec.describe VisitGroupsController, type: :controller do
         format: :js
       }
       expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:intended_action)).to eq("edit")
       expect(assigns(:visit_group)).to eq(@protocol.arms.first.visit_groups.first)
       expect(assigns(:arm)).to eq(@protocol.arms.first)
+      expect(assigns(:intended_action)).to eq("edit")
     end
   end
 end
-

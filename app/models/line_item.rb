@@ -23,7 +23,7 @@ class LineItem < ActiveRecord::Base
             allow_nil: true
 
   validates :protocol_id, :service_id, presence: true
-  validates :quantity_requested, presence: true, numericality: { greater_than: 0 }, :if => Proc.new { |li| li.one_time_fee }
+  validates :quantity_requested, presence: true, numericality: { greater_than: 0 }, if: Proc.new { |li| li.one_time_fee }
 
   after_create :create_line_item_components
   after_create :increment_sparc_service_counter
@@ -41,7 +41,7 @@ class LineItem < ActiveRecord::Base
     end
   end
 
-  def cost(funding_source = protocol.funding_source, date = Time.current)
+  def cost(funding_source = protocol.sparc_funding_source, date = Time.current)
     if admin_rates.any?
       admin_rates.last.admin_cost
     else
@@ -62,7 +62,7 @@ class LineItem < ActiveRecord::Base
   end
 
   def started_at=(date)
-    write_attribute(:started_at, Time.strptime(date, "%m-%d-%Y")) if date.present?
+    write_attribute(:started_at, Time.strptime(date, "%m/%d/%Y")) if date.present?
   end
 
   def quantity_remaining

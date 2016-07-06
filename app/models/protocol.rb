@@ -1,16 +1,22 @@
 class Protocol < ActiveRecord::Base
 
+  include LocalDb
+
   attr_accessor :document_counter_updated
 
   has_paper_trail
   acts_as_paranoid
 
   belongs_to :sub_service_request
+  has_one  :subsidy, through: :sub_service_request
+
   belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
+  has_many :subsidies, through: :sub_service_requests
 
+  has_many :sub_service_requests, through: :service_requests
   has_many :project_roles,    primary_key: :sparc_id
   has_many :service_requests, primary_key: :sparc_id
   has_many :arms,             dependent: :destroy
@@ -20,6 +26,8 @@ class Protocol < ActiveRecord::Base
   has_many :appointments,     through: :participants
   has_many :procedures,       through: :appointments
   has_many :documents,        as: :documentable
+  has_many :clinical_providers, through: :organization
+  has_many :super_users, through: :organization
 
   before_save :set_documents_count
 
@@ -40,7 +48,13 @@ class Protocol < ActiveRecord::Base
   delegate :short_title,
            :title,
            :funding_source,
+           :potential_funding_source,
            to: :sparc_protocol
+
+  delegate :subsidy_committed,
+           :percent_subsidy,
+           to: :subsidy,
+           allow_nil: true
 
   def self.title id
     ["Protocol", Protocol.find(id).srid].join(' ')
@@ -51,21 +65,13 @@ class Protocol < ActiveRecord::Base
       ENV.fetch('GLOBAL_SCHEME'),
       '://',
       ENV.fetch('SPARC_API_HOST'),
-      '/portal/admin/sub_service_requests/',
+      '/dashboard/sub_service_requests/',
       sub_service_request_id
     ].join
   end
 
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id
     "#{sparc_id} - #{sub_service_request.ssr_id}"
-  end
-
-  #For displaying the subsidy committed on the index page
-  def subsidy_committed
-    study_cost  = self.study_cost / 100.00
-    subsidy     = self.stored_percent_subsidy / 100.00
-
-    ((study_cost * subsidy) * 100).to_i
   end
 
   #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.
@@ -91,6 +97,10 @@ class Protocol < ActiveRecord::Base
 
   def protocol_type
     sparc_protocol.type
+  end
+
+  def sparc_funding_source
+    funding_source.blank? ? potential_funding_source : funding_source
   end
 
   ##### PRIVATE METHODS #####
