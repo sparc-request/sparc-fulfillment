@@ -13,7 +13,8 @@
           .col-md-12
             .form-group
               = p.label "arm_id", t(:participant)[:arm], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "arm_id", options_from_collection_for_select(participant.protocol.arms, "id", "name", participant.arm_id), {include_blank: true}, :class => "form-control selectpicker"
+              .col-sm-7
+                = p.select "arm_id", options_from_collection_for_select(participant.protocol.arms, "id", "name", participant.arm_id), {include_blank: true}, class: "form-control selectpicker"
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
