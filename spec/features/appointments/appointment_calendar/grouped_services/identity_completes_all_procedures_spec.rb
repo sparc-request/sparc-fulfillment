@@ -19,6 +19,7 @@ feature 'Identity completes all Services', js: true do
       and_i_select_the_procedure_in_the_core_dropdown
       and_i_click_complete_all
       then_i_should_see_a_complete_all_modal
+      with_a_default_completed_date_of_current_date
       when_i_save_the_modal
       then_i_should_see_all_selected_procedures_completed
     end
@@ -55,6 +56,11 @@ feature 'Identity completes all Services', js: true do
 
   def then_i_should_see_a_complete_all_modal
     expect(page).to have_text("Complete Multiple Services")
+  end
+
+  def with_a_default_completed_date_of_current_date
+    expected_date = page.evaluate_script %Q{ $('.date_field').first().val(); }
+    expect(expected_date).to eq(DateTime.current.strftime('%m/%d/%Y'))
   end
 
   def when_i_save_the_modal
