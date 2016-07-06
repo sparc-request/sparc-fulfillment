@@ -47,7 +47,7 @@ RSpec.describe ParticipantsController do
       attributes = @participant.attributes
       bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
       attributes.delete_if {|key| bad_attributes.include?(key)}
-      attributes[:date_of_birth] = "09-10-2015"
+      attributes[:date_of_birth] = "09/10/2015"
 
       xhr :post, :create, {
         protocol_id: @protocol.id,
@@ -62,7 +62,7 @@ RSpec.describe ParticipantsController do
       attributes = @participant.attributes
       bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
       attributes.delete_if {|key| bad_attributes.include?(key)}
-      attributes[:date_of_birth] = "09-10-2015"
+      attributes[:date_of_birth] = "09/10/2015"
 
       create(:arm, protocol_id: @protocol.id)
       
