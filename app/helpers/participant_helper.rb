@@ -89,10 +89,4 @@ module ParticipantHelper
     ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_participant_report_#{participant.id.to_s}", role: 'menu')
     html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
-
-  def change_arm_select(participant)
-    arms = participant.protocol.arms
-    
-    select("participant", "arm_id", options_from_collection_for_select(arms, "id", "name", participant.arm_id), {include_blank: true}, class: "form-control selectpicker")
-  end
 end
