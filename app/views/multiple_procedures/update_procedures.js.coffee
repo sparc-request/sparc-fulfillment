@@ -19,7 +19,7 @@ $(".core[data-core-id='<%= @core_id %>'] .selectpicker.performed-by-dropdown").s
 
 $("tr.procedure[data-id='<%= procedure.id %>'] td.status .incomplete").addClass('active')
 $("tr.procedure[data-id='<%= procedure.id %>'] td.status .complete").removeClass('active')
-$("tr.procedure[data-id='<%= procedure.id %>'] div.completed_date_field input.datetimepicker").val("").prop('disabled', true)
+$("tr.procedure[data-id='<%= procedure.id %>'] .completed_date_field").val("").prop('disabled', true)
 $("tr.procedure[data-id='<%= procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= @performed_by %>")
 <% if procedure.notes.any? %>
 $("tr.procedure[data-id='<%= procedure.id %>'] td.notes .btn").removeClass('btn-default')
