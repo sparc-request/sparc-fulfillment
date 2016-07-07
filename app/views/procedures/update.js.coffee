@@ -1,6 +1,5 @@
 $(document).on 'click', "#incomplete_all_modal button.save", (e) ->
   if !$('#incomplete_all_modal .performed-by-dropdown').val() || $('.reason-select .selectpicker .selected').index() == 0
-    console.log("ERROR")
     e.preventDefault()
     $('#multiple_procedures_modal_errors').addClass('alert').addClass('alert-danger').html('Please complete the required fields:')
   else

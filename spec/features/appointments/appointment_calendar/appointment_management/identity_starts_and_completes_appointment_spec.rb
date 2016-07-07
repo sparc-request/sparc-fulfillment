@@ -176,6 +176,6 @@ feature 'Start Complete Buttons', js: true do
   def then_i_should_see_the_completed_date_at date
     find('#completed_date')
     expected_date = page.evaluate_script %Q{ $('#completed_date').first().val(); }
-    expect(expected_date.split().first).to eq(DateTime.tomorrow.strftime('%m/%d/%Y'))
+    expect(expected_date.split().first).to eq(date.strftime('%m/%d/%Y'))
   end
 end
