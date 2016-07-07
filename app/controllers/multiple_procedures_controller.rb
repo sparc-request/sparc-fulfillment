@@ -14,18 +14,10 @@ class MultipleProceduresController < ApplicationController
   def update_procedures
     @core_id = @procedures.first.sparc_core_id
     status = params[:status]
-
     if status == 'incomplete'
-      #Create test note for validation.
-      @note = Note.new(kind: 'reason', reason: params[:reason], notable_type: 'Procedure')
-
-      if @note.valid?
-        #Now update all @procedures with incomplete status and create notes.
-        @performed_by = params[:performed_by]
-        @procedures.each do |procedure|
-          procedure.update_attributes(status: "incomplete", performer_id: @performed_by)
-          procedure.notes.create(identity_id: @performed_by, kind: 'reason', reason: params[:reason], comment: params[:comment])
-        end
+      @performed_by = params[:performed_by]
+      @procedures.each do |procedure|
+        procedure.update_attributes(status: "incomplete", performer_id: @performed_by)
       end
     elsif status == 'complete'
       #Mark all @procedures as complete.
@@ -68,8 +60,9 @@ class MultipleProceduresController < ApplicationController
     elsif incomplete_status_detected?
       @procedures.each do |procedure|
         procedure.notes.create(identity: current_identity,
-                                comment: 'Status set to incomplete',
-                                kind: 'log')
+                                comment: params[:comment],
+                                kind: 'reason', 
+                                reason: params[:reason])
       end
     elsif change_in_completed_date_detected?
       @procedures.each do |procedure|
