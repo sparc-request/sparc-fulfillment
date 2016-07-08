@@ -19,7 +19,9 @@ class Service < ActiveRecord::Base
   end
 
   def cost(funding_source = nil, date = Time.current)
+
     pricing_map = current_effective_pricing_map(date)
+
     raise ArgumentError, "Service #{self.id} has no pricing maps" if pricing_map.blank?
     if funding_source.blank?
 
@@ -42,11 +44,11 @@ class Service < ActiveRecord::Base
     organization.name
   end
 
-  def current_effective_pricing_map date=Time.current
+  def current_effective_pricing_map(date = Time.current)
     pricing_maps.current(date).first
   end
 
-  def current_effective_pricing_setup date=Time.current
+  def current_effective_pricing_setup(date = Time.current)
     organization.effective_pricing_setup_for_date(date)
   end
 end

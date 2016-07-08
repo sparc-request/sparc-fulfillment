@@ -18,12 +18,17 @@ feature 'Identity completes all Services', js: true do
     scenario 'and sees that all selected Procedures are completed' do
       and_i_select_the_procedure_in_the_core_dropdown
       and_i_click_complete_all
+      then_i_should_see_a_complete_all_modal
+      with_a_default_completed_date_of_current_date
+      when_i_save_the_modal
       then_i_should_see_all_selected_procedures_completed
     end
 
     scenario 'and sees that all selected Procedures are completed' do
       and_i_select_all_in_the_core_dropdown
       and_i_click_complete_all
+      then_i_should_see_a_complete_all_modal
+      when_i_save_the_modal
       then_i_should_see_all_procedures_completed
     end 
   end
@@ -47,6 +52,19 @@ feature 'Identity completes all Services', js: true do
     expect(page).to have_css('label.status.complete.active', count: 2)
     expect(Procedure.where(service_id: @services.last.id).first.status).to eq("complete")
     expect(Procedure.where(service_id: @services.last.id).last.status).to eq("complete")
+  end
+
+  def then_i_should_see_a_complete_all_modal
+    expect(page).to have_text("Complete Multiple Services")
+  end
+
+  def with_a_default_completed_date_of_current_date
+    expected_date = page.evaluate_script %Q{ $('.date_field').first().val(); }
+    expect(expected_date).to eq(DateTime.current.strftime('%m/%d/%Y'))
+  end
+
+  def when_i_save_the_modal
+    find('button.save').click
   end
 
   def and_i_select_all_in_the_core_dropdown

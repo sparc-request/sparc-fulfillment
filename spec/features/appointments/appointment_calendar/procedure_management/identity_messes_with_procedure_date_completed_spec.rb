@@ -36,8 +36,13 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def given_i_am_viewing_an_appointment
+    next_month               = Time.current.month + 1
+    @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
+
     @protocol     = create_and_assign_protocol_to_me
     @participant  = @protocol.participants.first
+    service      = @protocol.organization.inclusive_child_services(:per_participant).first
+    @pricing_map   = create(:pricing_map, service: service, effective_date: @the_middle_of_next_month)
 
     visit participant_path(@participant)
     wait_for_ajax
@@ -60,6 +65,7 @@ feature 'User messes with a procedures date completed', js: true do
 
   def when_i_complete_the_procedure
     find('label.status.complete').click
+    wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
@@ -83,8 +89,12 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def when_i_edit_the_completed_date
-    page.execute_script %Q{ $(".datetimepicker").siblings(".input-group-addon").trigger("click")}
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+
+    find('.procedures .completed_date_field')
+    page.execute_script %Q{ $('.procedures .completed_date_field').trigger('click'); }
+    next_month               = Time.current.month + 1
+    edited_completed_date = Date.current.strftime("0#{next_month}/15/%Y")
+    page.execute_script %Q{ $(".completed-date .completed_date_field").val('#{edited_completed_date}') }
     wait_for_ajax
   end
 
@@ -93,15 +103,12 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def then_i_should_see_an_enabled_datepicker_with_the_current_date
-    wait_for_ajax
-
-    expected_date = page.evaluate_script %Q{ $(".completed_date_field").first().data("DateTimePicker").date(); }
-    expect(expected_date["_i"]).to eq(Time.current.strftime('%m/%d/%Y'))
+    expected_date = page.evaluate_script %Q{ $('.completed_date_field').first().val(); }
+    expect(expected_date).to eq(DateTime.current.strftime('%m/%d/%Y'))
   end
 
   def then_i_should_see_the_completed_date_has_been_updated
-    expected_date = page.evaluate_script %Q{ $('table.procedures tbody input.datetimepicker').val(); }
-
-    expect(expected_date).to eq(Time.current.strftime('%m/%d/%Y'))
+    expected_date = page.evaluate_script %Q{ $('.completed_date_field').first().val(); }
+    expect(expected_date).to eq(@the_middle_of_next_month)
   end
 end

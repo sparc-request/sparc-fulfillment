@@ -162,6 +162,13 @@ en:
     save_fulfillment: "Save Fulfillment"
     view: "View Fulfillment Buttons"
 
+  multiple_procedures_modal:
+    incomplete_header: "Incomplete Multiple Services"
+    complete_header: "Complete Multiple Services"
+    completed_date: "Completed Date *"
+    performed_by: "Performed By *"
+    reason: "Reason *"
+
   line_item:
     object: "Line Item"
     account_number: "Account"
