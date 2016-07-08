@@ -60,6 +60,9 @@ class MultipleProceduresController < ApplicationController
     elsif incomplete_status_detected?
       @procedures.each do |procedure|
         procedure.notes.create(identity: current_identity,
+                              comment: 'Status set to incomplete',
+                              kind: 'log')
+        procedure.notes.create(identity: current_identity,
                                 comment: params[:comment],
                                 kind: 'reason', 
                                 reason: params[:reason])
