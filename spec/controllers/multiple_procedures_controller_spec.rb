@@ -79,13 +79,18 @@ RSpec.describe MultipleProceduresController, type: :controller do
           end
 
           it 'should update the Procedures reasons' do
-            expect(@procedure1.reload.notes.first.reason).to eq('Assessment missed')
-            expect(@procedure2.reload.notes.first.reason).to eq('Assessment missed')
+            expect(@procedure1.reload.notes.last.reason).to eq('Assessment missed')
+            expect(@procedure2.reload.notes.last.reason).to eq('Assessment missed')
           end
 
-           it 'should update the Procedures comments' do
-            expect(@procedure1.reload.notes.first.comment).to eq('Assessment missed: Hello Beautiful')
-            expect(@procedure2.reload.notes.first.comment).to eq('Assessment missed: Hello Beautiful')
+          it 'should update the Procedures comments for the second note' do
+            expect(@procedure1.reload.notes.last.comment).to eq('Assessment missed: Hello Beautiful')
+            expect(@procedure2.reload.notes.last.comment).to eq('Assessment missed: Hello Beautiful')
+          end
+
+          it 'should update the Procedures comments for the first note' do
+            expect(@procedure1.reload.notes.first.comment).to eq('Status set to incomplete')
+            expect(@procedure2.reload.notes.first.comment).to eq('Status set to incomplete')
           end
         end
       end
@@ -150,13 +155,18 @@ RSpec.describe MultipleProceduresController, type: :controller do
           end
 
           it 'should update the Procedures reasons' do
-            expect(@procedure1.reload.notes.first.reason).to eq('Assessment missed')
-            expect(@procedure2.reload.notes.first.reason).to eq('Assessment missed')
+            expect(@procedure1.reload.notes.last.reason).to eq('Assessment missed')
+            expect(@procedure2.reload.notes.last.reason).to eq('Assessment missed')
           end
 
-          it 'should update the Procedures comments' do
-            expect(@procedure1.reload.notes.first.comment).to eq('Assessment missed: Hello Beautiful')
-            expect(@procedure2.reload.notes.first.comment).to eq('Assessment missed: Hello Beautiful')
+          it 'should update the Procedures comments for the second note' do
+            expect(@procedure1.reload.notes.last.comment).to eq('Assessment missed: Hello Beautiful')
+            expect(@procedure2.reload.notes.last.comment).to eq('Assessment missed: Hello Beautiful')
+          end
+
+          it 'should update the Procedures comments for the first note' do
+            expect(@procedure1.reload.notes.first.comment).to eq('Status set to incomplete')
+            expect(@procedure2.reload.notes.first.comment).to eq('Status set to incomplete')
           end
         end
       end
