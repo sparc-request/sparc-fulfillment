@@ -1,5 +1,6 @@
 desc 'Import Klok data'
 task import_klok: :environment do
+
   # entries
   # projects
   # people
@@ -8,8 +9,8 @@ task import_klok: :environment do
     print(*args)
     STDIN.gets.strip
   end
- 
-  if prompt("Would you like to refresh the KlokShard with data found in tmp/klok.xml? (Y/N) ") == 'Y' 
+
+  if prompt("Would you like to refresh the KlokShard with data found in tmp/klok.xml? (Y/N) ") == 'Y'
     begin
       Klok::Entry.destroy_all
       Klok::Project.destroy_all
@@ -24,13 +25,13 @@ task import_klok: :environment do
         d.attributes = person.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
         d.save
       end
-      
+
       h['report']['projects']['project'].each do |project|
         d = Klok::Project.new
         d.attributes = project.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
         d.save
       end
-      
+
       h['report']['entries']['entry'].each do |entry|
         next if entry['enabled'] == 'false'  # only solution for duplicate entries with same entry_id
 
@@ -45,13 +46,13 @@ task import_klok: :environment do
   end
 
   ####### now that we have populated the KlokShard we can bring the same data in as line items ########
-  
+
   CSV.open("tmp/klok_import_#{Time.now.strftime('%m%d%Y')}.csv", "wb") do |csv|
-    csv << ["reason", "created_at", "project_id", "code", "resource_id", "rate", "date", "start_time_stamp_formatted", 
-            "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted", 
+    csv << ["reason", "created_at", "project_id", "code", "resource_id", "rate", "date", "start_time_stamp_formatted",
+            "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
             "end_time_stamp", "rollup_to"
            ]
-    
+
     Klok::Entry.all.each do |entry|
       if entry.valid?
 
@@ -67,7 +68,7 @@ task import_klok: :environment do
         fulfillment.assign_attributes(fulfilled_at: entry.date.strftime('%m/%d/%Y').to_s, quantity: entry.decimal_duration, creator_id: local_identity.id, performer_id: local_identity.id,
                                       service: service, service_name: service.name, service_cost: service.cost(local_protocol.sparc_funding_source, entry.created_at))
 
-        fulfillment.components.build(component: entry.comments) if entry.comments && fulfillment.components.select{|x| x.component == entry.comments}.empty?
+        fulfillment.components.build(component: entry.name) if entry.name && fulfillment.components.select{|x| x.component == entry.name}.empty?
 
         if fulfillment.valid?
           fulfillment.save
