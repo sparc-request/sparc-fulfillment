@@ -1,5 +1,6 @@
 desc 'Import Klok data'
 task import_klok: :environment do
+
   # entries
   # projects
   # people
