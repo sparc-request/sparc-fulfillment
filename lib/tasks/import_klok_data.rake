@@ -40,7 +40,7 @@ task import_klok: :environment do
         d.save
       end
     rescue Exception => e
-      puts e.messages.inspect
+      puts e.inspect
       puts e.backtrace.inspect
     end
   end
@@ -54,7 +54,7 @@ task import_klok: :environment do
            ]
 
     Klok::Entry.all.each do |entry|
-      if entry.valid?
+      if entry.is_valid?
 
         local_protocol = entry.local_protocol
         local_identity = entry.local_identity
@@ -68,7 +68,7 @@ task import_klok: :environment do
         fulfillment.assign_attributes(fulfilled_at: entry.date.strftime('%m/%d/%Y').to_s, quantity: entry.decimal_duration, creator_id: local_identity.id, performer_id: local_identity.id,
                                       service: service, service_name: service.name, service_cost: service.cost(local_protocol.sparc_funding_source, entry.created_at))
 
-        fulfillment.components.build(component: entry.name) if entry.name && fulfillment.components.select{|x| x.component == entry.name}.empty?
+        fulfillment.components.build(component: entry.klok_project.name) if entry.klok_project.name && fulfillment.components.select{|x| x.component == entry.klok_project.name}.empty?
 
         if fulfillment.valid?
           fulfillment.save

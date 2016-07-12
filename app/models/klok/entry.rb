@@ -32,7 +32,7 @@ class Klok::Entry < ActiveRecord::Base
     rounded_duration/60.0
   end
 
-  def valid?
+  def is_valid?
     self.klok_project.present? &&
     self.klok_project.ssr_id &&
     self.klok_project.ssr_id.match(/\d\d\d\d-\d\d\d\d/) &&
