@@ -53,6 +53,7 @@ class Protocol < ActiveRecord::Base
 
   delegate :subsidy_committed,
            :percent_subsidy,
+           :total_at_approval,
            to: :subsidy,
            allow_nil: true
 
