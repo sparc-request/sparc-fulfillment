@@ -1,0 +1,3 @@
+= label_tag "performed_by", t(:multiple_procedures_modal)[:performed_by], class: "col-sm-4 control-label"
+.col-sm-7.modal-performed-by
+  = select_tag "performed_by", options_for_select(procedures.first.performable_by, current_identity.id), class: "performed-by-dropdown selectpicker", data: { width: '125px' }, 'showIcon' => false

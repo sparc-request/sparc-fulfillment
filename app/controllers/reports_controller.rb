@@ -38,7 +38,7 @@ class ReportsController < ApplicationController
 
   def reports_params
     params.require(:report_type) # raises error if report_type not present
-    params.except!(:organization)
+    params.except!(:organizations)
     params.permit(:format,
               :utf8,
               :report_type,

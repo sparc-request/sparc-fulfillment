@@ -1,29 +1,23 @@
 #incomplete_all_modal.modal-dialog
   .modal-content
-    .modal-header
-      %button.close.close_modal{type: 'button', data: {dismiss: 'modal'}}
-        %span{aria: {hidden:'true'}} &times;
-        %span.sr-only
-          = t(:actions)[:close]
-      %h4.modal-title.text-center
-        = t(:notes)[:new_header]
+    = render 'multiple_procedures/modal_header', modal_header: t(:multiple_procedures_modal)[:incomplete_header] 
     = form_tag update_procedures_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
-      .modal-body
-        #modal_errors
+      .modal-body.form-horizontal
+        #multiple_procedures_modal_errors
         - @procedures.each do |procedure|
           = hidden_field_tag 'procedure_ids[]', procedure.id
         = hidden_field_tag :status, "incomplete"
         .form-group
-          = label_tag "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
-          .col-sm-8
+          = render 'multiple_procedures/performed_by', procedures: @procedures 
+        .form-group
+          = label_tag "reason", t(:multiple_procedures_modal)[:reason], class: "col-sm-4 control-label"
+          .col-sm-7
             = select_tag "reason", options_for_select(Procedure::NOTABLE_REASONS), prompt: "Select a reason", class: "selectpicker form-control reason-select"
         .form-group
-          = label_tag "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
-          .col-sm-8
+          = label_tag "comment", t(:notes)[:comment], class: "col-sm-4 control-label"
+          .col-sm-7
             = text_area_tag :comment, nil, class: 'form-control', rows: "6"
-      .modal-footer
-        .center-block
-          %button.btn.btn-default.cancel.close_modal{type: 'button', data: {dismiss: 'modal'}}
-            = t(:actions)[:close]
-          %button.btn.btn-primary.save{type: 'submit'}
-            = t(:actions)[:save]
+      = render 'multiple_procedures/modal_footer'
+
+
+
