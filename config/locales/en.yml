@@ -161,6 +161,7 @@ en:
     quantity: "Quantity"
     save_fulfillment: "Save Fulfillment"
     view: "View Fulfillment Buttons"
+    klok_description: "Imported via Klok"
 
   multiple_procedures_modal:
     incomplete_header: "Incomplete Multiple Services"

@@ -48,7 +48,7 @@ task import_klok: :environment do
   ####### now that we have populated the KlokShard we can bring the same data in as line items ########
 
   CSV.open("tmp/klok_import_#{Time.now.strftime('%m%d%Y')}.csv", "wb") do |csv|
-    csv << ["reason", "created_at", "project_id", "code", "resource_id", "rate", "date", "start_time_stamp_formatted",
+    csv << ["reason", "created_at", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
             "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
             "end_time_stamp", "rollup_to"
            ]
