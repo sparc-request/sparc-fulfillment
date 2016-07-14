@@ -1,7 +1,8 @@
 class Sparc::SubServiceRequest < ActiveRecord::Base
   
   include SparcShard
-
+  
+  belongs_to :service_requester, class_name: "Identity", foreign_key: "service_requester_id"
   belongs_to :owner, :class_name => 'Identity', :foreign_key => "owner_id"
   belongs_to :service_request
   belongs_to :organization

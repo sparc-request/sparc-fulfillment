@@ -26,8 +26,7 @@ RSpec.describe ProtocolHelper do
       identity = create(:identity)
       protocol = create(:protocol_imported_from_sparc)
       service_request = create(:service_request, protocol: protocol)
-      protocol.sub_service_request.update_attributes(service_request_id: service_request.id)
-      protocol.sub_service_request.service_request.update_attributes(service_requester_id: identity.id)
+      protocol.sub_service_request.update_attributes(service_request_id: service_request.id, service_requester_id: identity.id)
       requester = protocol.service_requester.full_name
       expect(helper.formatted_requester(protocol)).to eq(requester)
     end
