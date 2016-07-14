@@ -14,6 +14,6 @@ class Subsidy < ActiveRecord::Base
   def pi_contribution
     # This ensures that if pi_contribution is null (new record),
     # then it will reflect the full cost of the request.
-    total_at_approval - (total_at_approval * percent_subsidy) || total_at_approval
+    total_at_approval.to_f - (total_at_approval.to_f * percent_subsidy) || total_at_approval.to_f
   end
 end
