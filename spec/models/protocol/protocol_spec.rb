@@ -132,8 +132,8 @@ RSpec.describe Protocol, type: :model do
       context 'service requester' do
 
         it 'should get the correct requester from the sub service request' do
-          sub_service_request.service_request.update_attributes(service_requester_id: user.id)
-          expect(protocol.service_requester.id).to eq(sub_service_request.service_request.service_requester_id)
+          sub_service_request.update_attributes(service_requester_id: user.id)
+          expect(protocol.service_requester.id).to eq(sub_service_request.service_requester_id)
         end
       end
     end
