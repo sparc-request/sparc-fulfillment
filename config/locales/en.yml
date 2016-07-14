@@ -162,6 +162,13 @@ en:
     save_fulfillment: "Save Fulfillment"
     view: "View Fulfillment Buttons"
 
+  multiple_procedures_modal:
+    incomplete_header: "Incomplete Multiple Services"
+    complete_header: "Complete Multiple Services"
+    completed_date: "Completed Date *"
+    performed_by: "Performed By *"
+    reason: "Reason *"
+
   line_item:
     object: "Line Item"
     account_number: "Account"
@@ -342,14 +349,14 @@ en:
     invoice_report: "Invoice Report"
     end_date: "End Date"
     incomplete_visit_report: "Incomplete Visit Report"
-    organization: "Organization(s)"
+    organization: "Organization(s)*"
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"
     primary_pi: "Primary PI"
     project_summary_report: "Project Summary Report"
     protocol: "Protocol"
-    protocols: "Protocol(s)"
+    protocols: "Protocol(s)*"
     protocol_id: "Protocol ID"
     request_report: "Request Report"
     sort_by: "Sort By"

@@ -1,0 +1,7 @@
+.modal-header
+  %button.close.close_modal{type: 'button', data: {dismiss: 'modal'}}
+    %span{aria: {hidden:'true'}} &times;
+    %span.sr-only
+      = t(:actions)[:close]
+  %h4.modal-title.text-center
+    = modal_header

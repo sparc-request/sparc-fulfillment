@@ -13,9 +13,18 @@ class Report
   end
 
   def valid?
-    self.class::VALIDATES_PRESENCE_OF.each{ |validates| errors.add(validates, "must not be blank") if @params[validates].blank? }
     self.class::VALIDATES_NUMERICALITY_OF.each{ |validates| errors.add(validates, "must be a number") unless @params[validates].is_a?(Numeric) }
 
+    self.class::VALIDATES_PRESENCE_OF.each do |validates| 
+      if @params[validates].blank?
+        if validates == :protocol_ids
+          validates = "organizations"
+          errors.add(validates, "and Protocols must not be blank")
+        else
+          errors.add(validates, "must not be blank")
+        end
+      end
+    end
     errors.empty?
   end
 

@@ -174,7 +174,8 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def then_i_should_see_the_completed_date_at date
-    find('input#completed_date').click
-    expect(page).to have_css('td.day.active', text: "#{date.day}")
+    find('#completed_date')
+    expected_date = page.evaluate_script %Q{ $('#completed_date').first().val(); }
+    expect(expected_date.split().first).to eq(date.strftime('%m/%d/%Y'))
   end
 end

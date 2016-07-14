@@ -1,6 +1,6 @@
 class InvoiceReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :sort_by, :sort_order].freeze
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :sort_by, :sort_order, :protocol_ids].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'

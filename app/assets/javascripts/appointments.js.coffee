@@ -4,6 +4,7 @@ $ ->
     multiselect = $(element).siblings('#core_multiselect')
     $(multiselect).multiselect('deselectAll', false)
     $(multiselect).multiselect('updateButtonText')
+    $(element).closest('.align-select-menu').find('.complete_all, .incomplete_all').toggleClass('disabled')
 
   $(document).on 'click', 'tr.procedure-group button', ->
     core = $(this).closest('tr.core')
@@ -213,11 +214,11 @@ $ ->
 
     if procedure_ids.length > 0
       $.ajax
-        type: 'PUT'
+        type: 'GET'
         data:
           status: status
           procedure_ids: _.flatten(procedure_ids)
-        url: '/multiple_procedures/update_procedures.js'
+        url: "/multiple_procedures/complete_all.js"
         success: ->
           reset_multiselect_after_update(self)
 

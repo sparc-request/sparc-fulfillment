@@ -1,3 +1,4 @@
+$(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {participant: @appointment.participant})) %>")
 if "<%= @field %>" == "start_date"
   start_input_div = $('.start_date_input')
   if start_input_div.hasClass('hidden')
