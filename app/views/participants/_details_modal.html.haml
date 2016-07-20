@@ -20,7 +20,7 @@
           .col-xs-8= participant.status
         .detail
           .field.col-xs-4= t(:participant)[:dob]
-          .col-xs-8= participant.date_of_birth
+          .col-xs-8= format_date(participant.date_of_birth)
         .detail
           .field.col-xs-4= t(:participant)[:gender]
           .col-xs-8= participant.gender
