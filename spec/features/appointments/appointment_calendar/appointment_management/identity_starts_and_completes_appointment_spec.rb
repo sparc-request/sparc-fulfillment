@@ -66,8 +66,8 @@ feature 'Start Complete Buttons', js: true do
 
   context 'User sets start date to future then clicks complete button' do
     scenario 'and sees the completed date updated' do
-      future = Time.current + 1.day
-
+      future = Time.current + 1.month
+      
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
       when_i_load_the_page_and_select_a_visit
@@ -133,19 +133,17 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def when_i_set_the_start_date_to date
-    find('input#start_date').click
-    within '.bootstrap-datetimepicker-widget' do
-      first("td.day:not(.old)", text: "#{date.day}").click
-    end
-    find(".control-label", text: "Start Date:").click
+    page.execute_script %Q{ $("#start_date").trigger("focus")}
+    page.execute_script %Q{ $("td.day:contains('#{date.day}')").trigger("click") }
+
+    find('h3.appointment_header').click
   end
 
   def when_i_set_the_completed_date_to date
-    find('input#completed_date').click
-    within '.bootstrap-datetimepicker-widget' do
-      first("td.day:not(.old)", text: "#{date.day}").click
-    end
-    find(".control-label", text: "Completed Date:").click
+    page.execute_script %Q{ $("#completed_date").trigger("focus")}
+    page.execute_script %Q{ $("td.day:contains('#{date.day}')").trigger("click") }
+
+    find('h3.appointment_header').click
   end
 
   def then_i_should_see_the_start_button

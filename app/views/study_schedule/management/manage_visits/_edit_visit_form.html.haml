@@ -4,7 +4,7 @@
     .col-sm-7
       = a.text_field "name", {class: 'form-control'}
   .form-group
-    = a.label "day", t(:visit_groups)[:day]+t(:actions)[:required], class: "col-sm-4 control-label"
+    = a.label "day", t(:visit_groups)[:day]+(ENV.fetch('USE_EPIC'){nil} == 'false' ? '' : t(:actions)[:required]), class: "col-sm-4 control-label"
     .col-sm-7
       = a.text_field "day", {class: 'form-control', maxlength: 4}
   .form-group

@@ -25,12 +25,12 @@ class Participant < ActiveRecord::Base
   validates :protocol_id, presence: true
   validates :last_name, presence: true
   validates :first_name, presence: true
-  
+
   validate :middle_initial_format
 
   validates :mrn, presence: true
   validates_length_of :mrn, maximum: 255
-  
+
   validates :date_of_birth, presence: true
   validates :gender, presence: true
   validates :ethnicity, presence: true
@@ -38,7 +38,7 @@ class Participant < ActiveRecord::Base
   validates :address, presence: true
   validates :city, presence: true
   validates :state, presence: true
-  
+
   validates :zipcode, presence: true
   validate :zip_code_format
 
