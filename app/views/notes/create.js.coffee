@@ -23,11 +23,12 @@ statuses[statuses.length] =  "<%= status %>"
 $('#appointment_indications').selectpicker()
 $('#appointment_indications').selectpicker('val', statuses)
 
-$(".followup_procedure_datepicker").datetimepicker(format: 'MM-DD-YYYY')
-$(".completed_date_field").datetimepicker(format: 'MM-DD-YYYY')
+$(".followup_procedure_datepicker").datetimepicker(format: 'MM/DD/YYYY')
+$(".completed_date_field").datetimepicker(format: 'MM/DD/YYYY')
 
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
+<% elsif @line_item.present? %>
+$("#list-<%= @line_item.id %>").trigger('click')
 <% else %>
 $('table#participants-tracker-table').bootstrapTable('refresh', {silent: true})
-$('table#study-level-activities-table').bootstrapTable('refresh', {silent: true})
 <% end %>

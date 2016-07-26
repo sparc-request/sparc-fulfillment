@@ -9,7 +9,6 @@ FactoryGirl.define do
     end_date Time.current
     recruitment_start_date { Faker::Date.between(10.years.ago, 3.days.ago) }
     recruitment_end_date Time.current
-    stored_percent_subsidy 0.0
     study_cost { Faker::Number.number(8) }
 
     after(:create) do |protocol, evaluator|

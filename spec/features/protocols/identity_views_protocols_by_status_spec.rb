@@ -20,6 +20,7 @@ feature "Identity views Protocols by status", js: true do
 
   def when_i_visit_the_protocols_page
     visit protocols_path
+    wait_for_ajax
   end
 
   def and_i_filter_protocols_by_complete_status

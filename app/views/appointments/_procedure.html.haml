@@ -1,6 +1,6 @@
 %tr.procedure.new_service{ data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id } }
   %td.name
-    %span= procedure.service_name
+    = procedure_service_name_display(procedure.service)
   %td.billing
     = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control billing_type selectpicker"
   %td.status
@@ -12,10 +12,8 @@
   %td.followup{id: "follow_up_#{procedure.id}"}
     = render partial: "/appointments/followup_calendar", locals: { procedure: procedure }
   %td.completed-date
-    .input-group.date.completed_date_field
-      %input.datetimepicker{type: "text", class: "form-control", disabled: !(procedure.appt_started? && procedure.complete?), value: format_date(procedure.completed_date)}
-      %span.input-group-addon{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
-        %span.glyphicon.glyphicon-calendar
+    .input-group.date
+      %input.datetimepicker{type: "text", class: "form-control completed_date_field", disabled: !(procedure.appt_started? && procedure.complete?), value: format_date(procedure.completed_date), readonly: true}
   %td.performed-by
     = select_tag "performed-by-#{procedure.id}", options_for_select(procedure.performable_by, procedure.performer_id), include_blank: "N/A", class: "performed-by-dropdown selectpicker", data: { width: '125px' }, 'showIcon' => false
   %td.notes

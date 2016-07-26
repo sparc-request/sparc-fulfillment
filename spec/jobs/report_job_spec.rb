@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ReportJob, type: :job do
 
-  describe '#perform', delay: true do
+  describe '#perform' do
 
     before :each do
       @document = create(:document, report_type: 'auditing_report')
@@ -19,7 +19,7 @@ RSpec.describe ReportJob, type: :job do
     end
 
     it 'should enqueue a FayeJob worker' do
-      expect(Delayed::Job.where(queue: 'faye').count).to eq(1)
+      expect(FayeJob).to have_been_enqueued.with(global_id(@document)) 
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe ReportJob, type: :job do
     let(:document) { create(:document, report_type: 'auditing_report') }
 
     it 'should update the Report state' do
-      expect { ReportJob.perform_now(document, nil) }.to change { document.state }.from('Pending').to('Error')
+      expect { ReportJob.perform_now(document, nil) }.to change { document.state }.from('Processing').to('Error')
     end
   end
 
@@ -35,8 +35,8 @@ RSpec.describe ReportJob, type: :job do
     2.times { create(:protocol) }
     {
       title: 'auditing_report',
-      start_date: '01-01-2015',
-      end_date: '02-01-2015',
+      start_date: '01/01/2015',
+      end_date: '02/01/2015',
       identity_id: create(:identity).id,
       protocol_ids: Protocol.all.map(&:id).map(&:to_s)
     }

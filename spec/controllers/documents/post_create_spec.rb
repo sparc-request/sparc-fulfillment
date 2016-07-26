@@ -11,7 +11,7 @@ RSpec.describe DocumentsController, type: :controller do
       before do
         identity  = Identity.first
         document  = Rack::Test::UploadedFile.new(File.join('db', 'fixtures', 'test_document.txt'),'txt/plain')
-        params    = { document: { documentable_id: identity.id, documentable_type: 'Identity', document: document } }
+        params    = { document: { title: 'test_document', documentable_id: identity.id, documentable_type: 'Identity', document: document } }
 
         xhr :post, :create, params, format: :js
       end

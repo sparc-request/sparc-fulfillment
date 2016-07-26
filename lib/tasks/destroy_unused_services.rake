@@ -31,8 +31,9 @@ namespace :data do
         service.destroy
         service.pricing_maps.each(&:destroy)
         count += 1
+        puts count
       end
     end
-    puts "#{count} services destroyed"
+    puts "#{count} services destroyed."
   end
 end

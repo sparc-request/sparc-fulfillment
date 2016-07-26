@@ -22,14 +22,14 @@ class Appointment < ActiveRecord::Base
   has_many :notes, as: :notable
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
+  scope :incompleted, -> { where('appointments.completed_date IS NULL') }
   scope :unstarted, -> { where('appointments.start_date IS NULL AND appointments.completed_date IS NULL') }
   scope :with_completed_procedures, -> { joins(:procedures).where("procedures.completed_date IS NOT NULL") }
 
-  validates :participant_id, 
-            :name, 
-            :arm_id, 
-            :position,
-            presence: true
+  validates :participant_id, presence: true
+  validates :name, presence: true
+  validates :arm_id, presence: true
+  validates :position, presence: true
 
   accepts_nested_attributes_for :notes
 

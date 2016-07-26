@@ -10,7 +10,7 @@ gem 'autoprefixer-rails'
 gem 'axlsx_rails'
 gem 'bootstrap-sass'
 gem 'bootstrap-select-rails'
-gem 'bootstrap3-datetimepicker-rails', '~> 4.0.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.37'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'daemons'
 gem 'delayed_job_active_record'
@@ -23,7 +23,7 @@ gem 'haml-rails'
 gem 'hashie-forbidden_attributes'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
-gem 'momentjs-rails', '>= 2.8.1'
+gem 'momentjs-rails', '>= 2.9.0'
 gem 'mysql2'
 gem 'net-ldap'
 gem 'omniauth'
@@ -57,7 +57,7 @@ end
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'faker', '~> 1.4.3'
-  gem 'pry', '~> 0.10.3'
+  gem 'pry'
 end
 
 group :development do

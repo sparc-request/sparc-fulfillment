@@ -14,7 +14,7 @@ feature 'Start Complete Buttons', js: true do
     scenario 'and sees the start date picker and the completed button active' do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
-      when_i_load_the_page
+      when_i_load_the_page_and_select_a_visit
       then_i_should_see_the_start_datepicker
       then_i_should_see_the_complete_button
     end
@@ -43,7 +43,7 @@ feature 'Start Complete Buttons', js: true do
     scenario 'and sees the start date picker and the completed datepicker' do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
-      when_i_load_the_page
+      when_i_load_the_page_and_select_a_visit
       when_i_click_the_complete_button
       then_i_should_see_the_start_datepicker
       then_i_should_see_the_completed_datepicker
@@ -70,7 +70,7 @@ feature 'Start Complete Buttons', js: true do
 
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
-      when_i_load_the_page
+      when_i_load_the_page_and_select_a_visit
       when_i_set_the_start_date_to future
       when_i_click_the_complete_button
       then_i_should_see_the_completed_date_at future
@@ -84,6 +84,7 @@ feature 'Start Complete Buttons', js: true do
     @visit_group = @appointment.visit_group
 
     visit participant_path(@participant)
+    wait_for_ajax
     bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
   end
@@ -107,6 +108,16 @@ feature 'Start Complete Buttons', js: true do
 
   def when_i_load_the_page
     visit current_path
+    wait_for_ajax
+    
+    find('#completed-appointments-table tr', text: @visit_group.name).click
+    wait_for_ajax
+  end
+
+  def when_i_load_the_page_and_select_a_visit
+    visit current_path
+    wait_for_ajax
+    
     bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
   end
@@ -163,7 +174,8 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def then_i_should_see_the_completed_date_at date
-    find('input#completed_date').click
-    expect(page).to have_css('td.day.active', text: "#{date.day}")
+    find('#completed_date')
+    expected_date = page.evaluate_script %Q{ $('#completed_date').first().val(); }
+    expect(expected_date.split().first).to eq(date.strftime('%m/%d/%Y'))
   end
 end

@@ -8,12 +8,6 @@ feature 'User changes the status of a participant on the participant tracker', j
     then_i_should_see_the_updated_status
   end
 
-  scenario 'and sees the blue button with white glyphicon denoting notes present' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_update_the_participant_status
-    then_i_should_see_the_notes_button
-  end
-
   scenario 'and sees the status updated note' do
     given_i_am_viewing_the_participant_tracker
     when_i_update_the_participant_status
@@ -25,29 +19,31 @@ feature 'User changes the status of a participant on the participant tracker', j
     @participant = @protocol.participants.first
 
     visit protocol_path @protocol.id
-    
+    wait_for_ajax
+
     click_link 'Participant Tracker'
+    wait_for_ajax
   end
 
   def when_i_update_the_participant_status
-    bootstrap_select = page.find("select.participant_#{@participant.id} + .bootstrap-select")
-    bootstrap_select.click
-    
-    first(".participant_#{@participant.id}.bootstrap-select a", text: "Screening").click
+    bootstrap_select "#participant_status_#{@participant.id}", "Screening"
+    wait_for_ajax
+
+    refresh_bootstrap_table 'table.participants'
     wait_for_ajax
   end
 
   def then_i_should_see_the_updated_status
     expect(bootstrap_selected?("participant_status_#{@participant.id}", "Screening")).to be
   end
-
-  def then_i_should_see_the_notes_button
-    expect(page).to have_selector("td.notes button.btn-primary")
-  end
   
   def then_i_should_see_an_associated_note
-    find(".participant_notes[data-notable-id='#{@participant.id}']").click
+    expect(bootstrap_selected?("participant_status_#{@participant.id}", "Screening")).to be
     wait_for_ajax
+    expect(page).to have_css("button.btn-primary.participant_notes")
+    find("button.btn-primary.participant_notes[data-notable-id='#{@participant.id}']").click
+    wait_for_ajax
+
     expect(page).to have_content('Status changed')
   end
 end

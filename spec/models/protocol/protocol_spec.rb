@@ -56,17 +56,6 @@ RSpec.describe Protocol, type: :model do
 
   context 'instance methods' do
 
-    describe 'subsidy_committed' do
-
-      it 'should return the correct amount in cents' do
-        protocol = create_and_assign_protocol_to_me
-
-        protocol.update_attributes(study_cost: 5000, stored_percent_subsidy: 10.00)
-
-        expect(protocol.subsidy_committed).to eq(500)
-      end
-    end
-
     describe 'pi' do
 
       it 'should return the primary investigator of the protocol' do
@@ -143,8 +132,8 @@ RSpec.describe Protocol, type: :model do
       context 'service requester' do
 
         it 'should get the correct requester from the sub service request' do
-          sub_service_request.service_request.update_attributes(service_requester_id: user.id)
-          expect(protocol.service_requester.id).to eq(sub_service_request.service_request.service_requester_id)
+          sub_service_request.update_attributes(service_requester_id: user.id)
+          expect(protocol.service_requester.id).to eq(sub_service_request.service_requester_id)
         end
       end
     end

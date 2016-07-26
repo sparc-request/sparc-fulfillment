@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120150958) do
+ActiveRecord::Schema.define(version: 20160527165249) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -188,7 +188,7 @@ ActiveRecord::Schema.define(version: 20160120150958) do
     t.integer  "arm_id",             limit: 4
     t.string   "first_name",         limit: 255
     t.string   "last_name",          limit: 255
-    t.integer  "mrn",                limit: 4
+    t.string   "mrn",                limit: 255
     t.string   "status",             limit: 255
     t.datetime "date_of_birth"
     t.string   "gender",             limit: 255
@@ -263,7 +263,6 @@ ActiveRecord::Schema.define(version: 20160120150958) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.float    "stored_percent_subsidy",     limit: 24
     t.integer  "study_cost",                 limit: 4
     t.integer  "sub_service_request_id",     limit: 4
     t.integer  "unaccessed_documents_count", limit: 4,   default: 0

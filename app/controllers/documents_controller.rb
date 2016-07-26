@@ -48,6 +48,7 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.js {
         @document = Document.create(document_params.merge!(original_filename: params[:document][:document].original_filename,
+                                                           title: params[:document][:document].original_filename,
                                                            content_type: params[:document][:document].content_type,
                                                            state: "Completed"))
 

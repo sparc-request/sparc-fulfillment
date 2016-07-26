@@ -18,14 +18,6 @@ feature 'Followup note', js: true do
         then_i_should_see_a_text_field_with_the_followup_date
       end
 
-      scenario 'and sees the blue button with white glyphicon denoting notes present' do
-        given_i_have_created_a_procedure
-        when_i_begin_an_appointment
-        when_i_click_the_followup_button
-        when_i_fill_out_and_submit_the_followup_form
-        then_i_should_see_the_notes_button
-      end
-
       scenario 'and sees the note in the notes list' do
         given_i_have_created_a_procedure
         given_i_have_created_a_followup_note
@@ -74,7 +66,11 @@ feature 'Followup note', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit participant_path participant
+    wait_for_ajax
+
     bootstrap_select '#appointment_select', visit_group.name
+    wait_for_ajax
+    
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: '1'
     find('button.add_service').click
@@ -100,7 +96,7 @@ feature 'Followup note', js: true do
 
   def when_i_fill_out_and_submit_the_followup_form
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    page.execute_script %Q{ $("#follow_up_procedure_datepicker").children(".input-group-addon").trigger("click")}
+    page.execute_script %Q{ $("#follow_up_procedure_datepicker").trigger("focus")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'
@@ -113,6 +109,7 @@ feature 'Followup note', js: true do
 
   def when_i_visit_the_tasks_index_page
     visit tasks_path
+    wait_for_ajax
   end
 
   def when_i_try_to_add_a_follow_up_note
@@ -129,10 +126,6 @@ feature 'Followup note', js: true do
     procedure = Procedure.first
     expect(page).to have_css("input#follow_up_datepicker_#{procedure.id}[value='#{Time.new(Time.now.year,Time.now.month,10).strftime("%m/%d/%Y")}']")
   end
-
-  def then_i_should_see_the_notes_button
-    expect(page).to have_selector("td.notes button.btn-primary")
-  end
   
   def then_i_should_see_the_note_i_created
     expect(page).to have_css('.modal-body .comment', text: 'Test comment')
@@ -143,7 +136,7 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_be_able_to_edit_the_followup_date
-    page.execute_script %Q{ $(".followup_procedure_datepicker").children(".input-group-addon").trigger("click")}
+    page.execute_script %Q{ $(".followup_procedure_datepicker").trigger("focus")}
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     wait_for_ajax
   end

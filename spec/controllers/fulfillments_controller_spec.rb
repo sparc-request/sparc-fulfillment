@@ -49,7 +49,7 @@ RSpec.describe FulfillmentsController do
     it "should create a new fulfillment" do
       attributes = @fulfillment.attributes
       attributes.delete_if{ |key| ["fulfilled_at", "created_at", "updated_at"].include?(key) }
-      attributes[:fulfilled_at] = "09-10-2015"
+      attributes[:fulfilled_at] = "09/10/2015"
       attributes[:components] = @line_item.components.map{ |c| c.id.to_s }
       expect{
         post :create, {

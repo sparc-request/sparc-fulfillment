@@ -27,7 +27,7 @@ FactoryGirl.define do
       after(:create) do |arm, evaluator|
         x = 3
         x.times do
-          create(:line_item_with_fulfillments, protocol: arm.protocol, service: create(:service_with_one_time_fee)) # one time fee
+          create(:line_item_with_fulfillments, protocol: arm.protocol, service: create(:service_with_one_time_fee), quantity_requested: 10) # one time fee
           create(:line_item, protocol: arm.protocol, arm: arm, service: create(:service)) # pppv
         end
       end
@@ -43,8 +43,8 @@ FactoryGirl.define do
 
     trait :with_visit_groups do
       after(:create) do |arm, evaluator|
-        arm.visit_count.times do
-          create(:visit_group, arm: arm)
+        arm.visit_count.times do |n|
+          create(:visit_group, arm: arm, position: n + 1)
         end
       end
     end

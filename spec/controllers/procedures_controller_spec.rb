@@ -21,44 +21,44 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as complete' do
 
           before do
-            procedure = create(:procedure, appointment: @appointment, service: @service)
-            params = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+            @procedure = create(:procedure, appointment: @appointment, service: @service)
+            params = { id: @procedure.id, procedure: { status: 'complete' }, format: :js }
 
             put :update, params
           end
 
           it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('complete')
+            expect(@procedure.reload.status).to eq('complete')
           end
 
           it 'should update the Procedure completed_date to: Time.current' do
-            expect(assigns(:procedure).completed_date).to be
+            expect(@procedure.reload.completed_date).to be
           end
 
           it 'should create a Note' do
-            expect(assigns(:procedure).reload.notes).to be_one
+            expect(@procedure.reload.notes).to be_one
           end
         end
 
         context 'User marks Procedure as incomplete' do
 
           before do
-            procedure = create(:procedure, appointment: @appointment, service: @service)
-            params    = { id: procedure.id, procedure: { status: 'incomplete' }, format: :js }
+            @procedure = create(:procedure, appointment: @appointment, service: @service)
+            params    = { id: @procedure.id, procedure: { status: 'incomplete' }, format: :js }
 
             put :update, params
           end
 
           it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('incomplete')
+            expect(@procedure.reload.status).to eq('incomplete')
           end
 
           it 'should update the Procedure completed_date to: nil' do
-            expect(assigns(:procedure).completed_date).to_not be
+            expect(@procedure.reload.completed_date).to_not be
           end
 
           it 'should create a Note' do
-            expect(assigns(:procedure).reload.notes).to be_one
+            expect(@procedure.reload.notes).to be_one
           end
         end
       end
@@ -66,62 +66,62 @@ RSpec.describe ProceduresController, type: :controller do
       context 'Procedure status is: complete' do
 
         context 'User edits completed_date' do
-           before do
-            procedure = create(:procedure_complete, appointment: @appointment, service: @service)
-            params    = { id: procedure.id, procedure: { completed_date: Date.current.tomorrow.strftime("%m-%d-%Y")}, format: :js }
 
+          before do
+            @procedure = create(:procedure_complete, appointment: @appointment, service: @service)
+            params    = { id: @procedure.id, procedure: { completed_date: DateTime.current.tomorrow.strftime("%m/%d/%Y")}, format: :js }
             put :update, params
           end
 
           it "should update the completed date" do
-            expect(assigns(:procedure).reload.completed_date.strftime("%m-%d-%Y")).to eq Time.current.tomorrow.strftime("%m-%d-%Y")
+            expect(@procedure.reload.completed_date.strftime("%m/%d/%Y")).to eq DateTime.current.tomorrow.strftime("%m/%d/%Y")
           end
 
           it "should create a note" do
-            expect(assigns(:procedure).reload.notes).to be_one
+            expect(@procedure.reload.notes).to be_one
           end
         end
 
         context 'User marks the procedure as complete' do #if the procedure is already complete, a user setting it to complete again will render the status void
           before do
-            procedure = create(:procedure_complete, appointment: @appointment, service: @service)
-            params = { id: procedure.id, procedure: { status: 'unstarted' }, format: :js }
+            @procedure = create(:procedure_complete, appointment: @appointment, service: @service)
+            params = { id: @procedure.id, procedure: { status: 'unstarted' }, format: :js }
 
             put :update, params
           end
 
           it "should update the completed_date to be nil" do
-            expect(assigns(:procedure).completed_date).to_not be
+            expect(@procedure.reload.completed_date).to_not be
           end
 
           it "should update the status to be unstarted" do
-            expect(assigns(:procedure).status).to eq 'unstarted'
+            expect(@procedure.reload.status).to eq 'unstarted'
           end
 
           it "should create a note" do
-            expect(assigns(:procedure).reload.notes).to be_one
+            expect(@procedure.reload.notes).to be_one
           end
         end
 
         context 'User marks Procedure as incomplete' do
 
           before do
-            procedure = create(:procedure_complete, appointment: @appointment, service: @service)
-            params    = { id: procedure.id, procedure: { status: 'incomplete', completed_date: "" }, format: :js }
+            @procedure = create(:procedure_complete, appointment: @appointment, service: @service)
+            params    = { id: @procedure.id, procedure: { status: 'incomplete', completed_date: "" }, format: :js }
 
             put :update, params
           end
 
           it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('incomplete')
+            expect(@procedure.reload.status).to eq('incomplete')
           end
 
           it 'should update the Procedure completed_date to: nil' do
-            expect(assigns(:procedure).reload.completed_date).to_not be
+            expect(@procedure.reload.completed_date).to_not be
           end
 
           it 'should create a Note' do
-            expect(assigns(:procedure).reload.notes).to be_one
+            expect(@procedure.reload.notes).to be_one
           end
         end
       end
@@ -131,44 +131,44 @@ RSpec.describe ProceduresController, type: :controller do
         context 'User marks Procedure as complete' do
 
           before do
-            procedure = create(:procedure, appointment: @appointment, service: @service)
-            params    = { id: procedure.id, procedure: { status: 'complete' }, format: :js }
+            @procedure = create(:procedure, appointment: @appointment, service: @service)
+            params    = { id: @procedure.id, procedure: { status: 'complete' }, format: :js }
 
             put :update, params
           end
 
           it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('complete')
+            expect(@procedure.reload.status).to eq('complete')
           end
 
           it 'should update the Procedure completed_date to: Time.current' do
-            expect(assigns(:procedure).completed_date).to be
+            expect(@procedure.reload.completed_date).to be
           end
 
           it 'should create a Note' do
-            expect(assigns(:procedure).reload.notes).to be_one
+            expect(@procedure.reload.notes).to be_one
           end
         end
 
         context 'User marks Procedure as incomplete' do
 
           before do
-            procedure = create(:procedure, appointment: @appointment, service: @service)
-            params    = { id: procedure.id, procedure: { status: 'incomplete'}, format: :js }
+            @procedure = create(:procedure, appointment: @appointment, service: @service)
+            params    = { id: @procedure.id, procedure: { status: 'incomplete'}, format: :js }
 
             put :update, params
           end
 
           it 'should update the Procedure status' do
-            expect(assigns(:procedure).status).to eq('incomplete')
+            expect(@procedure.reload.status).to eq('incomplete')
           end
 
           it 'should create a Note' do
-            expect(assigns(:procedure).reload.notes).to be_one
+            expect(@procedure.reload.notes).to be_one
           end
 
           it 'should set the incomplete date to today' do
-            expect(assigns(:procedure).incompleted_date.to_date).to eq(Date.today)
+            expect(@procedure.reload.incompleted_date.to_date).to eq(Date.today)
           end
         end
       end

@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe 'User updates Service Components in SPARC', type: :request, delay: false do
+RSpec.describe 'User updates Service Components in SPARC', type: :request, enqueue: false do
 
   describe 'full lifecycle' do
 
     it 'should update the Protocol', sparc_api: :get_service_components_1 do
-      line_item = create(:line_item, service: create(:service_with_one_time_fee), protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
+      line_item = create(:line_item, sparc_id: 1, service: create(:service_with_one_time_fee), protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
 
       user_updates_service_components_in_sparc
 

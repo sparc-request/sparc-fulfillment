@@ -15,6 +15,7 @@ feature 'Identity adds Procedure', js: true do
     @participant  = @protocol.participants.first
 
     visit participant_path(@participant)
+    wait_for_ajax
   end
 
   def when_i_add_two_procedures
@@ -22,9 +23,11 @@ feature 'Identity adds Procedure', js: true do
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
     bootstrap_select('#appointment_select', visit_group.name)
+    wait_for_ajax
     bootstrap_select('#service_list', service.name)
     fill_in 'service_quantity', with: '2'
     page.find('button.add_service').click
+    wait_for_ajax
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar
