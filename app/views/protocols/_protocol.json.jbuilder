@@ -12,7 +12,8 @@ json.irb_number protocol.irb_number
 json.start_date format_date(protocol.start_date)
 json.end_date format_date(protocol.end_date)
 json.study_cost display_cost(protocol.study_cost)
-json.percent_subsidy (protocol.percent_subsidy || '0')
+json.total_at_approval display_cost(protocol.total_at_approval.to_i)
+json.percent_subsidy (protocol.percent_subsidy.to_f * 100.0).round(2)
 json.subsidy_committed display_cost(protocol.subsidy_committed || 0.0)
 json.subsidy_expended protocol.subsidy_expended
 json.pi protocol.pi.full_name

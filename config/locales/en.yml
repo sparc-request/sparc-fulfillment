@@ -309,6 +309,7 @@ en:
     start_date: "Study Start Date"
     status: "Status"
     study_cost: "Total Study Costs"
+    total_at_approval: "Cost at Approval"
     study_schedule_report: "Export"
     subsidy_amount: "Percent Subsidy"
     subsidy_committed: "Subsidy Amount"
