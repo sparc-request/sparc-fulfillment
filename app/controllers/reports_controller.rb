@@ -5,14 +5,16 @@ class ReportsController < ApplicationController
 
   def new
     @title = @report_type.titleize
+    @organizations = IdentityOrganizations.new(current_identity.id).fulfillment_organizations_with_protocols
+    @grouped_options = InvoiceReportGroupedOptions.new(@organizations).collect_grouped_options
   end
 
   def create
     @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
-    @report = @report_type.classify.constantize.new(reports_params)
-
-    @errors = @report.errors
     
+    @report = @report_type.classify.constantize.new(reports_params)
+    @errors = @report.errors
+
     if @report.valid?
       @reports_params = reports_params
       @documentable.documents.push @document
@@ -36,7 +38,7 @@ class ReportsController < ApplicationController
 
   def reports_params
     params.require(:report_type) # raises error if report_type not present
-
+    params.except!(:organizations)
     params.permit(:format,
               :utf8,
               :report_type,
@@ -45,6 +47,8 @@ class ReportsController < ApplicationController
               :end_date,
               :time_zone,
               :protocol_id,
+              :sort_by,
+              :sort_order,
               :participant_id,
               :documentable_id,
               :documentable_type,

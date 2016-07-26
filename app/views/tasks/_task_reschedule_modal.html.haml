@@ -10,10 +10,7 @@
         .form-group
           = t.label "due_at", t(:task)[:due_at], class: "col-sm-4 control-label"
           .col-sm-7
-            .input-group.date#reschedule_datepicker
-              = t.text_field "due_at", {class: 'form-control datetimepicker', value: format_date(task.due_at)}
-              %span.input-group-addon
-                %span.glyphicon.glyphicon-calendar
+            = t.text_field "due_at", {id: 'reschedule_datepicker', class: 'form-control datetimepicker', value: format_date(task.due_at), readonly: true}
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]

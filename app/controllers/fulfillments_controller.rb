@@ -23,7 +23,7 @@ class FulfillmentsController < ApplicationController
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
     service = @line_item.service
-    funding_source = @line_item.protocol.funding_source
+    funding_source = @line_item.protocol.sparc_funding_source
     @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: service.cost(funding_source) }))
     if @fulfillment.valid?
       @fulfillment.save
@@ -65,7 +65,7 @@ class FulfillmentsController < ApplicationController
       unless new_field.blank?
         unless current_field.blank?
           current_field = (field == :fulfilled_at ? current_field.to_date.to_s : current_field.to_s)
-          new_field = (field == :fulfilled_at ? Time.strptime(new_field, "%m-%d-%Y").to_date.to_s : new_field.to_s)
+          new_field = (field == :fulfilled_at ? Time.strptime(new_field, "%m/%d/%Y").to_date.to_s : new_field.to_s)
         end
         if current_field != new_field
           comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : new_field.to_s)

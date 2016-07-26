@@ -17,7 +17,10 @@ feature "Indicating a Status", js: true do
     visit_group   = @appointment.visit_group
 
     visit participant_path participant
+    wait_for_ajax
+
     bootstrap_select '#appointment_select', visit_group.name
+    wait_for_ajax
   end
 
   def when_i_indicate_an_appointment_status

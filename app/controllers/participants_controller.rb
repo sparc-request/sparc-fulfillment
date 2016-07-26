@@ -31,8 +31,12 @@ class ParticipantsController < ApplicationController
 
   def create
     @participant = Participant.new(participant_params)
+
     if @participant.valid?
       @participant.save
+
+      assign_arm_if_only_one_arm
+      
       flash[:success] = t(:participant)[:flash_messages][:created]
     else
       @errors = @participant.errors
@@ -58,6 +62,7 @@ class ParticipantsController < ApplicationController
     @participant.update_attributes(arm_id: participant_params[:arm_id])
     @participant.update_appointments_on_arm_change
     note_successful_changes
+
     flash[:success] = t(:participant)[:flash_messages][:arm_change]
   end
 
@@ -74,11 +79,19 @@ class ParticipantsController < ApplicationController
   def find_participant
     participant_id = params[:id] || params[:participant_id]
     @participant = Participant.where(id: participant_id).first
+
     if @participant.present?
       @protocol = @participant.protocol
     else
       flash[:alert] = t(:participant)[:flash_messages][:not_found]
       redirect_to root_path
+    end
+  end
+
+  def assign_arm_if_only_one_arm
+    if @participant.protocol.arms.size == 1
+      @participant.update_attributes(arm_id: @participant.protocol.arms.first.id)
+      @participant.update_appointments_on_arm_change
     end
   end
 

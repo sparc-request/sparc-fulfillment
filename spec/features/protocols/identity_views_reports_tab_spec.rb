@@ -4,9 +4,13 @@ feature 'Identity views Report tab', js: true, enqueue: false do
   scenario 'and sees a list of Protocol reports' do
     protocol = create_data
     visit protocol_path(protocol)
+    wait_for_ajax
+
     click_button "study_schedule_report_#{protocol.id}"
+    wait_for_ajax
 
     click_link 'Reports'
+    wait_for_ajax
 
     expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
   end
@@ -15,11 +19,16 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     protocol = create_data
     participant = protocol.participants.first
     visit protocol_path(protocol)
+    wait_for_ajax
+
     click_link 'Participant Tracker'
+    wait_for_ajax
+
     click_button "participant_report_#{participant.id}"
     wait_for_ajax
 
     click_link 'Reports'
+    wait_for_ajax
 
     expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
   end

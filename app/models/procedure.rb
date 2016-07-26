@@ -150,7 +150,7 @@ class Procedure < ActiveRecord::Base
 
   def completed_date=(completed_date)
     if completed_date.present?
-      write_attribute(:completed_date, Time.strptime(completed_date, "%m-%d-%Y"))
+      write_attribute(:completed_date, Time.strptime(completed_date, "%m/%d/%Y"))
     else
       write_attribute(:completed_date, nil)
     end
@@ -164,7 +164,7 @@ class Procedure < ActiveRecord::Base
     end
   end
 
-  def cost(funding_source = protocol.funding_source, date = Time.current)
+  def cost(funding_source = protocol.sparc_funding_source, date = Time.current)
     if service_cost
       service_cost.to_i
     else
@@ -187,10 +187,12 @@ class Procedure < ActiveRecord::Base
       write_attribute(:service_name, service.name)
     end
 
-    if status_changed?(to: "complete")
+    if status_changed?(to: "complete") || complete?
       write_attribute(:incompleted_date, nil)
-      write_attribute(:completed_date, Date.today)
-    elsif status_changed?(to: "incomplete")
+      if completed_date.nil?
+        write_attribute(:completed_date, Date.today)
+      end
+    elsif status_changed?(to: "incomplete") || incomplete?
       write_attribute(:completed_date, nil)
       write_attribute(:incompleted_date, Date.today)
     elsif status_changed?(to: "unstarted") or status_changed?(to: "follow_up")
@@ -201,12 +203,12 @@ class Procedure < ActiveRecord::Base
       end
     end
 
-    if status_changed?(from: "complete")
+    if status_changed?(from: "complete") 
       write_attribute(:service_cost, nil)
     end
 
     if completed_date_changed? && !completed_date_changed?(to: nil)
-      write_attribute(:service_cost, new_cost(protocol.funding_source, completed_date))
+      write_attribute(:service_cost, new_cost(protocol.sparc_funding_source, completed_date))
     end
   end
 end

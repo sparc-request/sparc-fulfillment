@@ -26,6 +26,7 @@ feature "Identity views Task", js: true do
 
   def given_i_am_on_the_tasks_page
     visit tasks_path
+    wait_for_ajax
   end
 
   def when_i_view_a_identity_task_assigned_to_myself
@@ -33,11 +34,13 @@ feature "Identity views Task", js: true do
 
     find(".new-task").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    page.execute_script %Q{ $('#task_due_at').siblings(".input-group-addon").trigger("click") }
+    page.execute_script %Q{ $('#follow_up_datepicker').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
     click_button 'Save'
+    wait_for_ajax
     find("table.tasks tbody tr:first-child").click
+    wait_for_ajax
   end
 
   def given_i_have_been_assigned_a_procedure_task
@@ -60,7 +63,7 @@ feature "Identity views Task", js: true do
     expect(page).to have_css(".modal dt", text: "Assigned to")
     expect(page).to have_css(".modal dt", text: "Type")
     expect(page).to have_css(".modal dt", text: "Task")
-    expect(page).to have_css(".modal dt", text: "Due date")
+    expect(page).to have_css(".modal dt", text: "Due Date")
     expect(page).to have_css(".modal dt", text: "Completed")
   end
 

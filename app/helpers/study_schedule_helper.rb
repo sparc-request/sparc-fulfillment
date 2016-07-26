@@ -1,5 +1,5 @@
 module StudyScheduleHelper
-  
+
   def glyph_class obj
     count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
     count == 0 ? 'glyphicon-remove' : 'glyphicon-ok'
@@ -41,6 +41,7 @@ module StudyScheduleHelper
     if position % Visit.per_page != 0
       destination_page += 1
     end
+
     destination_page == current_page.to_i
   end
 

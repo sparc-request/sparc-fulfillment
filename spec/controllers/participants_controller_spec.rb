@@ -5,6 +5,7 @@ RSpec.describe ParticipantsController do
   before :each do
     sign_in
     @protocol = create(:protocol)
+    @arm = create(:arm, protocol_id: @protocol.id)
     @participant = create(:participant, protocol_id: @protocol.id)
   end
 
@@ -33,13 +34,45 @@ RSpec.describe ParticipantsController do
       attributes = @participant.attributes
       bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
       attributes.delete_if {|key| bad_attributes.include?(key)}
-      attributes[:date_of_birth] = "09-10-2015"
+      attributes[:date_of_birth] = "09/10/2015"
       expect{
         post :create, {
           participant: attributes,
           format: :js
         }
       }.to change(Participant, :count).by(1)
+    end
+
+    it "should assign the arm if there is only one arm on a protocol" do
+      attributes = @participant.attributes
+      bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
+      attributes.delete_if {|key| bad_attributes.include?(key)}
+      attributes[:date_of_birth] = "09/10/2015"
+
+      xhr :post, :create, {
+        protocol_id: @protocol.id,
+        participant: attributes,
+        format: :js
+      }
+
+      expect(assigns(:participant).arm).to eq(@arm)
+    end
+
+    it "should not assign the arm if there are multiple arms on a protocol" do
+      attributes = @participant.attributes
+      bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
+      attributes.delete_if {|key| bad_attributes.include?(key)}
+      attributes[:date_of_birth] = "09/10/2015"
+
+      create(:arm, protocol_id: @protocol.id)
+      
+      xhr :post, :create, {
+        protocol_id: @protocol.id,
+        participant: attributes,
+        format: :js
+      }
+
+      expect(assigns(:participant).arm.nil?).to eq(true)
     end
   end
 

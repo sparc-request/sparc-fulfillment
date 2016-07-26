@@ -43,7 +43,7 @@ $ ->
       row_count         = rows.length
       procedures_table  = $(rows).first().parents('.procedures tbody')
 
-      $(procedures_table).prepend("<tr class='procedure-group' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{row_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
+      $(procedures_table).prepend("<tr class='procedure-group' id='group-#{group_id}' data-group-id='#{group_id}'><td colspan='8'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{row_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
 
       return this.find_group(group_id)
 

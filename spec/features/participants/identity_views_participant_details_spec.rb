@@ -12,7 +12,10 @@ feature 'User views Participant details', js: true do
     protocol    = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
+    wait_for_ajax
+
     click_link 'Participant List'
+    wait_for_ajax
   end
 
   def when_i_click_the_participant_details_icon
