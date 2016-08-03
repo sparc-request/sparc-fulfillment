@@ -57,17 +57,17 @@ feature 'Start Complete Buttons', js: true do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date_and_a_completed_date
       when_i_load_the_page
-      when_i_set_the_completed_date_to now
       when_i_set_the_start_date_to now
-      then_i_should_see_the_completed_date_at now
+      when_i_set_the_completed_date_to now
       then_i_should_see_the_start_date_at now
+      then_i_should_see_the_completed_date_at now
     end
   end
 
   context 'User sets start date to future then clicks complete button' do
     scenario 'and sees the completed date updated' do
       future = Time.current + 1.month
-      
+
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
       when_i_load_the_page_and_select_a_visit
@@ -109,7 +109,7 @@ feature 'Start Complete Buttons', js: true do
   def when_i_load_the_page
     visit current_path
     wait_for_ajax
-    
+
     find('#completed-appointments-table tr', text: @visit_group.name).click
     wait_for_ajax
   end
@@ -117,7 +117,7 @@ feature 'Start Complete Buttons', js: true do
   def when_i_load_the_page_and_select_a_visit
     visit current_path
     wait_for_ajax
-    
+
     bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
   end
@@ -133,17 +133,15 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def when_i_set_the_start_date_to date
-    page.execute_script %Q{ $("#start_date").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('#{date.day}')").trigger("click") }
-
-    find('h3.appointment_header').click
+    page.execute_script %Q{ $('#start_date').data("DateTimePicker").date("#{date.strftime('%m/%d/%Y %l:%M %P')}") }
+    page.execute_script %Q{ $('#start_date').data("DateTimePicker").show() }
+    page.execute_script %Q{ $('#start_date').data("DateTimePicker").hide() }
   end
 
   def when_i_set_the_completed_date_to date
-    page.execute_script %Q{ $("#completed_date").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('#{date.day}')").trigger("click") }
-
-    find('h3.appointment_header').click
+    page.execute_script %Q{ $('#completed_date').data("DateTimePicker").date("#{date.strftime('%m/%d/%Y %l:%M %P')}") }
+    page.execute_script %Q{ $('#completed_date').data("DateTimePicker").show() }
+    page.execute_script %Q{ $('#completed_date').data("DateTimePicker").hide() }
   end
 
   def then_i_should_see_the_start_button
