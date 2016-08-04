@@ -117,7 +117,7 @@ RSpec.describe VisitGroup, type: :model do
             arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
             create(:visit_group, position: 1, day: 1, arm: arm)
             create(:visit_group, position: 2, day: 8, arm: arm)
-            vg = build(:visit_group, position: 3, day: 7, arm: arm)
+            vg = build(:visit_group, position: nil, day: 7, arm: arm)
 
             expect(vg).not_to be_valid
           end
