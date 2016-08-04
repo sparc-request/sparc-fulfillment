@@ -10,12 +10,10 @@ class AppointmentsController < ApplicationController
   end
 
   def create
-    ##### TODO, figure out a way to not have to use base model
-    @appointment = Appointment.new(custom_appointment_params)
+    @appointment = CustomAppointment.new(custom_appointment_params)
 
     if @appointment.valid?
       @appointment.save
-      @appointment.update_attribute(:type, "CustomAppointment")
     end
   end
 
