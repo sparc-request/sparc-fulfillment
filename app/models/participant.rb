@@ -128,7 +128,7 @@ class Participant < ActiveRecord::Base
   end
 
   def has_new_visit_groups?
-    self.arm.visit_groups.map(&:id).sort != self.appointments.where(arm_id: self.arm_id).where.not(visit_group_id: nil).map(&:visit_group_id).sort
+    self.arm.visit_groups.order(:id).pluck(:id) != self.appointments.where(arm_id: self.arm_id).where.not(visit_group_id: nil).order(:visit_group_id).pluck(:visit_group_id)
   end
 
   def new_visit_groups

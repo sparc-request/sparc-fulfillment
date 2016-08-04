@@ -10,7 +10,6 @@ RSpec.describe VisitGroup, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :arm_id }
     it { is_expected.to validate_presence_of :name }
-    it { is_expected.to validate_presence_of :position }
 
     context 'if use epic:' do
       it "sets use_epic to true" do

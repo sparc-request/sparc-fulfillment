@@ -45,7 +45,7 @@ class VisitGroup < ActiveRecord::Base
     # determine neighbors that will be after save
     left_neighbor, right_neighbor =
       if id.nil? # inserting new record
-        if position.nil? # insert as last
+        if position.nil? || position > last_persisted_pos # insert as last
           [arm.visit_groups.last, nil]
         elsif position <= last_persisted_pos # inserting before
           [already_there.try(:higher_item), already_there]
@@ -61,6 +61,7 @@ class VisitGroup < ActiveRecord::Base
           end
         end
       end
+
     unless day > (left_neighbor.try(:day) || day - 1) && day < (right_neighbor.try(:day) || day + 1)
       errors.add(:day, 'must be in order')
     end
