@@ -15,7 +15,6 @@ RSpec.describe Appointment, type: :model do
     it { is_expected.to validate_presence_of :participant_id }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :arm_id }
-    it { is_expected.to validate_presence_of :position }
   end
 
   context 'instance methods' do

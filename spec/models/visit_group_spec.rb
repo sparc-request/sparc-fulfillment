@@ -10,7 +10,6 @@ RSpec.describe VisitGroup, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :arm_id }
     it { is_expected.to validate_presence_of :name }
-    it { is_expected.to validate_presence_of :position }
 
     context 'if use epic:' do
       it "sets use_epic to true" do
@@ -118,7 +117,7 @@ RSpec.describe VisitGroup, type: :model do
             arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
             create(:visit_group, position: 1, day: 1, arm: arm)
             create(:visit_group, position: 2, day: 8, arm: arm)
-            vg = build(:visit_group, position: 3, day: 7, arm: arm)
+            vg = build(:visit_group, position: nil, day: 7, arm: arm)
 
             expect(vg).not_to be_valid
           end

@@ -20,8 +20,6 @@ class VisitGroup < ActiveRecord::Base
   validate :day_must_be_in_order, unless: "day.blank? || arm_id.blank?"
   validates :day, numericality: { only_integer: true }, unless: "day.blank?"
 
-  validates :position, presence: true
-  
   before_destroy :check_for_completed_data
 
   def r_quantities_grouped_by_service
@@ -47,10 +45,10 @@ class VisitGroup < ActiveRecord::Base
     # determine neighbors that will be after save
     left_neighbor, right_neighbor =
       if id.nil? # inserting new record
-        if position <= last_persisted_pos # inserting before
-          [already_there.try(:higher_item), already_there]
-        else # insert as last
+        if position.nil? # insert as last
           [arm.visit_groups.last, nil]
+        elsif position <= last_persisted_pos # inserting before
+          [already_there.try(:higher_item), already_there]
         end
       else # moving present record
         if already_there.try(:id) == id # not changing position, get our neighbors

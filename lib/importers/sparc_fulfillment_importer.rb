@@ -1,12 +1,12 @@
 class SparcFulfillmentImporter
-  RACE_OPTIONS = {'native_american/alaskan' => 'American Indian/Alaska Native', 
-                  'asian' => 'Asian', 
-                  'pacific_islander' => 'Native Hawaiian or other Pacific Islander', 
-                  'black' => 'Black or African American', 
-                  'caucasian' => 'White', 
+  RACE_OPTIONS = {'native_american/alaskan' => 'American Indian/Alaska Native',
+                  'asian' => 'Asian',
+                  'pacific_islander' => 'Native Hawaiian or other Pacific Islander',
+                  'black' => 'Black or African American',
+                  'caucasian' => 'White',
                   'middle_eastern' => 'Middle Eastern',
                   'other' => 'Unknown/Other/Unreported'}.freeze
-  
+
   STATUS_OPTIONS = {'Active' => 'Enrolled - Receiving Treatment',
                     'Completed' => 'Completed',
                     'Early Term' => 'Completed',
@@ -51,7 +51,7 @@ class SparcFulfillmentImporter
 
   def create
     ActiveRecord::Base.transaction do
-      Time.use_zone 'Eastern Time (US & Canada)' do   
+      Time.use_zone 'Eastern Time (US & Canada)' do
         @fulfillment_protocol = ProtocolImporter.new(@callback_url).create
 
         disable_paper_trail
@@ -85,7 +85,7 @@ class SparcFulfillmentImporter
 
             if name_parts = NameParser.new(sparc_subject.name).parse # add this subject if we have name attributes
               fulfillment_participant = create_fulfillment_participant(name_parts, sparc_subject, fulfillment_arm)
-              
+
               # grab the subjects calendar and start looping over appointments
               sparc_calendar = sparc_subject.calendar
 
@@ -93,11 +93,11 @@ class SparcFulfillmentImporter
                 fulfillment_visit_group = VisitGroup.where(sparc_id: sparc_appointment.visit_group_id, arm_id: fulfillment_arm.id).first
                 next unless fulfillment_visit_group.present?
                 fulfillment_appointment = nil
-      		
+
                 unless fulfillment_appointment = Appointment.where(participant_id: fulfillment_participant.id, visit_group_id: fulfillment_visit_group.id, arm_id: fulfillment_arm.id).first
-                  fulfillment_appointment = create_fulfillment_appointment(fulfillment_participant, fulfillment_visit_group, fulfillment_arm, sparc_appointment)                                                                             
+                  fulfillment_appointment = create_fulfillment_appointment(fulfillment_participant, fulfillment_visit_group, fulfillment_arm, sparc_appointment)
                 end
-                
+
                 create_fulfillment_notes(sparc_appointment, fulfillment_appointment)
                 create_fulfillment_procedures(sparc_appointment, fulfillment_appointment)
               end
@@ -116,13 +116,13 @@ class SparcFulfillmentImporter
   def enable_paper_trail
     PaperTrail.enabled = true
   end
-  
+
   def disable_paper_trail
     PaperTrail.enabled = false
   end
 
   def create_line_item_fulfillment(sparc_line_item_fulfillment, fulfillment_line_item)
-    sparc_line_item_fulfillment_audit = sparc_line_item_fulfillment.audits.where(action: 'create').first 
+    sparc_line_item_fulfillment_audit = sparc_line_item_fulfillment.audits.where(action: 'create').first
     sparc_unit_quantity = sparc_line_item_fulfillment.unit_quantity || 1
     sparc_quantity = sparc_line_item_fulfillment.quantity || 0
     quantity = sparc_quantity * sparc_unit_quantity
@@ -170,7 +170,7 @@ class SparcFulfillmentImporter
                                                                      status:         STATUS_OPTIONS[sparc_subject.status],
                                                                      date_of_birth:  (sparc_subject.dob.present? ? sparc_subject.dob.strftime("%m/%d/%Y") : nil),
                                                                      gender:         sparc_subject.gender.capitalize,
-                                                                     ethnicity:      'Unknown/Other/Unreported', 
+                                                                     ethnicity:      'Unknown/Other/Unreported',
                                                                      race:           RACE_OPTIONS[sparc_subject.ethnicity],
                                                                      arm:            fulfillment_arm)
 
@@ -186,7 +186,7 @@ class SparcFulfillmentImporter
                                                                        arm_id:                fulfillment_arm.id,
                                                                        start_date:            sparc_appointment.completed_at,
                                                                        completed_date:        sparc_appointment.completed_at)
-    
+
     validate_and_save fulfillment_appointment
   end
 
@@ -242,7 +242,7 @@ class SparcFulfillmentImporter
     sparc_line_item_id = sparc_procedure.line_item_id
     sparc_service_id = sparc_procedure.service_id
     line_item = LineItem.where(sparc_id: sparc_line_item_id, protocol_id: @fulfillment_protocol.id).first
-    
+
     if sparc_line_item_id.present? && line_item.present? # this is a needed check for bad data
       fulfillment_service = line_item.service
     else
@@ -260,9 +260,9 @@ class SparcFulfillmentImporter
 
     sparc_organization = sparc_procedure.appointment.organization
     quantity.times do
-      if fulfillment_service.present? # this is a needed check for bad data. 
+      if fulfillment_service.present? # this is a needed check for bad data.
         fulfillment_procedure = fulfillment_appointment.procedures.new(sparc_id:       sparc_procedure.id,
-                                                                      service_id:      fulfillment_service.id, 
+                                                                      service_id:      fulfillment_service.id,
                                                                       appointment_id:  fulfillment_appointment.id,
                                                                       service_name:    fulfillment_service.name,
                                                                       billing_type:    billing_type,
@@ -296,7 +296,7 @@ class SparcFulfillmentImporter
       puts "#"*50
       puts "Invalid object #{object.errors.inspect}"
       puts "#"*50
-      raise ActiveRecord::Rollback 
+      raise ActiveRecord::Rollback
     end
 
     object

@@ -29,7 +29,6 @@ class Appointment < ActiveRecord::Base
   validates :participant_id, presence: true
   validates :name, presence: true
   validates :arm_id, presence: true
-  validates :position, presence: true
 
   accepts_nested_attributes_for :notes
 
