@@ -55,10 +55,14 @@ namespace :data do
 		end
 
 		def update_procedures(old_service_id, new_service_id)
-			procs = Procedure.where(service_id: old_service_id, status: ["unstarted", "incomplete"])
+			new_service = Service.find(new_service_id)
+			procs 			= Procedure.where(service_id: old_service_id, status: ["unstarted", "incomplete"])
+			line_items 	= LineItem.where(service_id: old_service_id)
 			
 			puts "The Service ID of #{procs.count} Procedure(s) is being updated from #{old_service_id} to #{new_service_id}."
-			procs.update_all(service_id: new_service_id)
+			procs.update_all(service_id: new_service_id, service_name: new_service.name)
+			puts "The Service ID of #{line_items.count} Line Item(s) is being updated from #{old_service_id} to #{new_service_id}."
+			line_items.update_all(service_id: new_service_id)
 		end
 
 		main
