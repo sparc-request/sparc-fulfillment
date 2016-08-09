@@ -84,11 +84,20 @@ module StudyLevelActivitiesHelper
     raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
+  def fulfillment_date_formatter fulfillment
+    if fulfillment.klok_entry_id.present? # this was imported from klok
+      content_tag(:span, format_date(fulfillment.fulfilled_at), class: 'fulfillment-date-for-klok-entry') +
+      content_tag(:i, '', class: 'glyphicon glyphicon-time')
+    else
+      format_date(fulfillment.fulfilled_at)
+    end
+  end
+
   private
 
   def note_list_item params
     content_tag(:li, raw(
-      content_tag(:button, 
+      content_tag(:button,
         raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt #{params[:span_class].nil? ? "" : params[:span_class]} #{params[:has_notes] ? "blue-notes" : ""}", aria: {hidden: "true"}))+
         ' Notes', type: 'button', class: 'btn btn-default #{params[:button_class].nil? ? "" : params[:button_class]} form-control actions-button notes list', data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
     )
