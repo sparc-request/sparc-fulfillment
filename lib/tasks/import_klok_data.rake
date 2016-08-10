@@ -67,7 +67,11 @@ task import_klok: :environment do
         fulfillment.assign_attributes(fulfilled_at: entry.date.strftime('%m/%d/%Y').to_s, quantity: entry.decimal_duration, creator_id: local_identity.id, performer_id: local_identity.id,
                                       service: service, service_name: service.name, service_cost: service.cost(local_protocol.sparc_funding_source, entry.created_at))
 
+        ### build out components
         fulfillment.components.build(component: entry.klok_project.name) if entry.klok_project.name && fulfillment.components.select{|x| x.component == entry.klok_project.name}.empty?
+
+        ### build out notes
+        fulfillment.notes.build(comment: entry.comments, identity: local_identity) if entry.comments.present? && fulfillment.notes.select{|x| (x.comment == entry.comments) && (x.identity == local_identity)}.empty?
 
         if fulfillment.valid?
           fulfillment.save
