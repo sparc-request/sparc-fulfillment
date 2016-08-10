@@ -1,6 +1,6 @@
 %tr.procedure.new_service{ data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id } }
   %td.name
-    = procedure_service_name_display(procedure.service)
+    = service_name_display(procedure.service)
   %td.billing
     = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control billing_type selectpicker"
   %td.status

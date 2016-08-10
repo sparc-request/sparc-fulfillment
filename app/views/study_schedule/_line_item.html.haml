@@ -1,5 +1,6 @@
 .row.line_item{id: "line_item_#{line_item.id}"}
-  .col-xs-2.line_item_service_name= line_item.name
+  .col-xs-2.line_item_service_name
+    = service_name_display(line_item.service)
   - if tab == 'template'
     .col-xs-1
       .btn.glyphicon.glyphicon-edit.change_line_item_service{title: t(:protocol)[:study_schedule][:change_service], type: 'button', line_item_id: line_item.id, data: {toggle: "tooltip", animation: 'false'}}

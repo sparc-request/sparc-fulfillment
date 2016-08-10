@@ -27,8 +27,4 @@ module AppointmentHelper
                   has_notes: procedure.notes.any?,
                   button_class: "#{procedure.appt_started? ? '' : 'disabled'}"})
   end
-
-  def procedure_service_name_display(service)
-    content_tag(:span, service.name) + (service.is_available ? "" : content_tag(:span, " (Inactive)", class: 'inactive-service'))
-  end
 end

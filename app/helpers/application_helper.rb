@@ -124,4 +124,8 @@ module ApplicationHelper
       content_tag(:span, '', class: "glyphicon glyphicon-list-alt #{params[:span_class].nil? ? "" : params[:span_class]} #{params[:has_notes] ? "" : "blue-notes"}")
     end
   end
+
+  def service_name_display(service)
+    content_tag(:span, service.name) + (service.is_available ? "" : content_tag(:span, " (Inactive)", class: 'inactive-service'))
+  end
 end
