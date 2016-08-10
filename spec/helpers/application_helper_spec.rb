@@ -74,4 +74,22 @@ RSpec.describe ApplicationHelper do
       end
     end
   end
+
+  describe "#service_name_display" do
+    context "active service" do
+      it "should display just the service name" do
+        service = create(:service, is_available: true)
+        expect(helper.service_name_display(service)).to_not have_selector(".inactive-service")
+        expect(helper.service_name_display(service)).to have_content(service.name)
+      end
+    end
+
+    context "inactive service" do
+      it "should display service name and (Inactive) label" do
+        service = create(:service, is_available: false)
+        expect(helper.service_name_display(service)).to have_selector(".inactive-service")
+        expect(helper.service_name_display(service)).to have_content(service.name)
+      end
+    end
+  end
 end
