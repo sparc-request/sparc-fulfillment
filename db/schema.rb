@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(version: 20160707010804) do
   end
 
   add_index "fulfillments", ["creator_id"], name: "index_fulfillments_on_creator_id", using: :btree
+  add_index "fulfillments", ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id", using: :btree
   add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
   add_index "fulfillments", ["performer_id"], name: "index_fulfillments_on_performer_id", using: :btree
   add_index "fulfillments", ["service_id"], name: "index_fulfillments_on_service_id", using: :btree

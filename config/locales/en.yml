@@ -149,6 +149,7 @@ en:
       created: "Fulfillment Created"
       updated: "Fulfillment Updated"
     fulfillments: "Fulfillments"
+    fulfillment_grouper: "Month Year"
     fulfillment_date: "Fulfillment Date"
     log_notes:
       account_number: "Account Number changed to "

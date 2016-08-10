@@ -84,6 +84,14 @@ module StudyLevelActivitiesHelper
     raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
+  def fulfillment_grouper_formatter fulfillment
+    fulfillment.fulfilled_at.strftime('%b %Y')
+  end
+
+  def fulfillment_components_formatter components
+    components.map(&:component).join(', ')
+  end
+
   def fulfillment_date_formatter fulfillment
     if fulfillment.klok_entry_id.present? # this was imported from klok
       content_tag(:span, format_date(fulfillment.fulfilled_at), class: 'fulfillment-date-for-klok-entry') +
