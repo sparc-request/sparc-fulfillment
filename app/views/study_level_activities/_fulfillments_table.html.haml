@@ -1,4 +1,4 @@
-.modal-dialog.modal-lg
+.modal-dialog.fulfillments-list
   .modal-content
     .modal-header
       %button.close{type: 'button', data: {dismiss: 'modal'}}
@@ -12,6 +12,8 @@
           %table.fulfillments{id: "fulfillments-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: fulfillments_path(format: :json, line_item_id: line_item.id), striped: "true", toolbar: "#fulfillment-custom-toolbar", "show-export" => "true", "export-types" => ['excel']}}
             %thead.secondary-header
               %tr
+                %th{data: {class: 'fulfillment_grouper', align: "left", sortable: 'true', sorter: 'dateSorter', field: "fulfillment_grouper"}}
+                  = t(:fulfillment)[:fulfillment_grouper]
                 %th{data: {class: 'fulfillment_date', align: "left", sortable: 'true', sorter: "fulfillmentDateSorter", field: "fulfillment_date"}}
                   = t(:fulfillment)[:fulfillment_date]
                 %th{data: {class: 'quantity', align: "left", sortable: 'true', field: "quantity"}}

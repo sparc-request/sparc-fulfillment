@@ -60,15 +60,18 @@ task import_klok: :environment do
         local_identity = entry.local_identity
 
         service = entry.service
-        date_grouping = entry.date.strftime("%m/%Y")
 
-        line_item = LineItem.where(protocol: local_protocol, service: service, account_number: date_grouping, quantity_requested: 1, quantity_type: 'Hour').first_or_create
+        line_item = LineItem.where(protocol: local_protocol, service: service).first_or_create(quantity_requested: 1, quantity_type: 'Hour')
         fulfillment = Fulfillment.where(klok_entry_id: entry.entry_id, line_item: line_item).first_or_initialize
 
         fulfillment.assign_attributes(fulfilled_at: entry.date.strftime('%m/%d/%Y').to_s, quantity: entry.decimal_duration, creator_id: local_identity.id, performer_id: local_identity.id,
                                       service: service, service_name: service.name, service_cost: service.cost(local_protocol.sparc_funding_source, entry.created_at))
 
+        ### build out components
         fulfillment.components.build(component: entry.klok_project.name) if entry.klok_project.name && fulfillment.components.select{|x| x.component == entry.klok_project.name}.empty?
+
+        ### build out notes
+        fulfillment.notes.build(comment: entry.comments, identity: local_identity) if entry.comments.present? && fulfillment.notes.select{|x| (x.comment == entry.comments) && (x.identity == local_identity)}.empty?
 
         if fulfillment.valid?
           fulfillment.save
