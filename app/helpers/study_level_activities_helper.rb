@@ -43,25 +43,6 @@ module StudyLevelActivitiesHelper
     button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", type: 'button', class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
   end
 
-  def fulfillment_components_dropdown components=Array.new
-    html = '-'
-
-    if components.any?
-      li = Array.new
-
-      span = raw content_tag(:span, '', class: 'caret')
-      button = raw content_tag(:button, raw('Display Components  ' + span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
-      components.each do |c|
-        li.push raw(content_tag(:li, raw(content_tag(:a, c.component, href: 'javascript:;'))))
-      end
-      ul = raw content_tag(:ul, raw(li.join), class: 'dropdown-menu', role: 'menu')
-
-      html = raw content_tag(:div, button + ul, class: 'btn-group')
-    end
-
-    html
-  end
-
   def is_protocol_type_study? (protocol)
     protocol.protocol_type == 'Study'
   end
