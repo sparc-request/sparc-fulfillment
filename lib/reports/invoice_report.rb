@@ -120,7 +120,7 @@ class InvoiceReport < Report
               vg_group.group_by(&:appointment).each do |appointment, appointment_group|
                 participant = appointment.participant
 
-                appointment_group.group_by(&:service_name).each do |service, service_group|
+                appointment_group.group_by(&:service_name).each do |service_name, service_group|
                   procedure = service_group.first
 
                   csv << [
@@ -132,7 +132,7 @@ class InvoiceReport < Report
                     appointment.name,
                     format_date(appointment.start_date),
                     org.name,
-                    service.name,
+                    service_name,
                     format_date(procedure.completed_date),
                     service_group.size,
                     display_cost(procedure.service_cost),
