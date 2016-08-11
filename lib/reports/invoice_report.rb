@@ -118,10 +118,9 @@ class InvoiceReport < Report
             org_group.group_by{|procedure| procedure.appointment.visit_group}.each do |visit_group, vg_group|
 
               vg_group.group_by(&:appointment).each do |appointment, appointment_group|
+                participant = appointment.participant
 
-                appointment_group.group_by(&:service).each do |service, service_group|
-
-                  participant = appointment.participant
+                appointment_group.group_by(&:service_name).each do |service, service_group|
                   procedure = service_group.first
 
                   csv << [
@@ -130,7 +129,7 @@ class InvoiceReport < Report
                     protocol.pi ? protocol.pi.full_name : nil,
                     participant.full_name,
                     participant.label,
-                    "#{appointment.name} (#{visit_group ? visit_group.id : 'N/A'})",
+                    appointment.name,
                     format_date(appointment.start_date),
                     org.name,
                     service.name,
