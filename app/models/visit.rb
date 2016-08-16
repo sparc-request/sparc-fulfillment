@@ -35,7 +35,7 @@ class Visit < ActiveRecord::Base
     new_procedure_columns = [:visit_id, :service_id, :service_name, :billing_type, :sparc_core_id, :sparc_core_name, :appointment_id]
     self.visit_group.arm.participants.each do |participant|
       appointment = participant.appointments.where("visit_group_id = ?", self.visit_group.id).first
-      next if appointment.nil?
+      next if (appointment.nil? || appointment.completed_date?)
       
       unless appointment.procedures.empty?
         procedures_available = self.procedures.where("billing_type = ? AND service_id = ? AND appointment_id = ?", selected_qty_type, service.id, appointment.id)
