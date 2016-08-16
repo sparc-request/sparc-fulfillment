@@ -67,6 +67,7 @@ feature 'Custom appointment', js: true do
   def when_i_fill_in_the_form
     fill_in 'custom_appointment_name', with: 'Test Visit'
     bootstrap_select "#custom_appointment_position", "Add as last"
+    bootstrap_select "#custom_appointment_notes_attributes_0_reason", "Assessment not performed"
   end
 
   def when_i_click_save_appointment
