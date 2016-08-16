@@ -109,6 +109,7 @@ class InvoiceReport < Report
             "Service Completion Date",
             "Quantity Completed",
             "Research Rate",
+            "",
             "Total Cost"
           ]
           csv << [""]
@@ -136,6 +137,7 @@ class InvoiceReport < Report
                     format_date(procedure.completed_date),
                     service_group.size,
                     display_cost(procedure.service_cost),
+                    "",
                     display_cost(service_group.size * procedure.service_cost.to_f)
                   ]
                   total += service_group.size * procedure.service_cost.to_f
@@ -146,7 +148,7 @@ class InvoiceReport < Report
         end
         if fulfillments.any? or procedures.any?
           csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
+          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
           csv << [""]
           csv << [""]
         end

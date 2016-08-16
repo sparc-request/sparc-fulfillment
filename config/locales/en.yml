@@ -233,7 +233,7 @@ en:
     procedure:
       index_header: "Procedure Notes"
       none: "This procedure has no notes."
-    reason: "Reason"
+    reason: "Reason *"
 
   participant:
     object: "Participant"
