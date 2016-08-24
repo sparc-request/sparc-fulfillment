@@ -13,7 +13,10 @@ class NotesController < ApplicationController
   end
 
   def create
-    @note = Note.create(note_params.merge!({ identity: current_identity })) if note_params[:comment].present? # don't create empty notes
+    if note_params[:comment].present? # don't create empty notes
+      @note = Note.create(note_params.merge!({ identity: current_identity }))
+      @selector = "#{@note.unique_selector}_notes"
+    end
     @notes = @notable.notes
   end
 

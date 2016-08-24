@@ -22,9 +22,6 @@ $("tr.procedure[data-id='<%= procedure.id %>'] td.status .complete").removeClass
 $("tr.procedure[data-id='<%= procedure.id %>'] .completed_date_field").val("").prop('disabled', true)
 $("tr.procedure[data-id='<%= procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= @performed_by %>")
 <% if procedure.notes.any? %>
-$("tr.procedure[data-id='<%= procedure.id %>'] td.notes .btn").removeClass('btn-default')
-$("tr.procedure[data-id='<%= procedure.id %>'] td.notes .btn").addClass('btn-primary')
-$("tr.procedure[data-id='<%= procedure.id %>'] td.notes .btn .glyphicon").removeClass('blue-notes')
 $('#modal_place').modal 'hide'
 <% end %>
 
@@ -34,10 +31,6 @@ $("tr.procedure[data-id='<%= procedure.id %>'] td.status .incomplete").removeCla
 $("tr.procedure[data-id='<%= procedure.id %>'] .completed-date .completed_date_field.datetimepicker").val("<%= @completed_date %>").removeAttr("disabled")
 $("tr.procedure[data-id='<%= procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= @performed_by %>")
 <% if procedure.notes.any? %>
-$("tr.procedure[data-id='<%= procedure.id %>'] td.notes .btn").removeClass('btn-default')
-$("tr.procedure[data-id='<%= procedure.id %>'] td.notes .btn").addClass('btn-primary')
-$("tr.procedure[data-id='<%= procedure.id %>'] td.notes .btn .glyphicon").removeClass('blue-notes')
-
 $("#modal_place").modal('hide')
 <% end %>
 <% end %>
