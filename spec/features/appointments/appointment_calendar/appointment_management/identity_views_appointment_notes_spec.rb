@@ -9,11 +9,10 @@ feature 'User creates an appointment note', js: true do
       then_i_should_see_a_notice_that_there_are_no_notes
     end
   end
-  
-  scenario 'and sees a the notes' do
+
+  scenario 'and sees a note' do
     given_i_am_viewing_an_appointment
     when_i_create_a_note
-    when_i_view_the_notes_list
     then_i_should_see_the_note
   end
 
@@ -32,8 +31,9 @@ feature 'User creates an appointment note', js: true do
 
   def when_i_view_the_notes_list
     find('h3.appointment_header button.notes.list').click
+    wait_for_ajax
   end
-  
+
   def when_i_create_a_note
     when_i_view_the_notes_list
     wait_for_ajax
@@ -45,9 +45,9 @@ feature 'User creates an appointment note', js: true do
   end
 
   def then_i_should_see_a_notice_that_there_are_no_notes
-    expect(page).to have_css('.modal-body', text: 'This appointment has no notes.')
+    expect(page).to have_css('.modal-body', text: 'This Appointment currently has no notes')
   end
-  
+
   def then_i_should_see_the_note
     expect(page).to have_css('.modal-body', text: "I'm a note. Fear me.")
   end
