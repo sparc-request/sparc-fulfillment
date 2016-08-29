@@ -10,7 +10,7 @@ class Note < ActiveRecord::Base
 
   validates_inclusion_of :kind, in: KIND_TYPES
   
-  validates :reason, presence: true, if: Proc.new { |note| note.notable_type == 'Procedure' && note.kind == 'reason' }
+  validates :reason, presence: true, if: Proc.new { |note| ((note.notable_type == 'Procedure') || (note.notable_type == 'Appointment')) && note.kind == 'reason' }
   validates_inclusion_of :reason, in: Proc.new { |note| note.notable_type.constantize::NOTABLE_REASONS },
                                   if: Proc.new { |note| note.reason.present? }
 

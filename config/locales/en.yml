@@ -149,6 +149,7 @@ en:
       created: "Fulfillment Created"
       updated: "Fulfillment Updated"
     fulfillments: "Fulfillments"
+    fulfillment_grouper: "Month Year"
     fulfillment_date: "Fulfillment Date"
     log_notes:
       account_number: "Account Number changed to "
@@ -161,6 +162,7 @@ en:
     quantity: "Quantity"
     save_fulfillment: "Save Fulfillment"
     view: "View Fulfillment Buttons"
+    klok_description: "Imported via Klok"
 
   multiple_procedures_modal:
     incomplete_header: "Incomplete Multiple Services"
@@ -231,7 +233,7 @@ en:
     procedure:
       index_header: "Procedure Notes"
       none: "This procedure has no notes."
-    reason: "Reason"
+    reason: "Reason *"
 
   participant:
     object: "Participant"
@@ -309,6 +311,7 @@ en:
     start_date: "Study Start Date"
     status: "Status"
     study_cost: "Total Study Costs"
+    total_at_approval: "Cost at Approval"
     study_schedule_report: "Export"
     subsidy_amount: "Percent Subsidy"
     subsidy_committed: "Subsidy Amount"

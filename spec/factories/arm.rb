@@ -3,7 +3,7 @@ FactoryGirl.define do
   factory :arm do
     protocol nil
     sparc_id
-    sequence(:name) { Faker::App.name }
+    sequence(:name) { |n| "#{Faker::App.name} #{n}" }
     visit_count 5
     subject_count 5
 

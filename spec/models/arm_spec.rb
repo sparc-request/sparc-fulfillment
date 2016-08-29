@@ -10,6 +10,7 @@ RSpec.describe Arm, type: :model do
   it { is_expected.to have_many(:participants) }
 
   it { is_expected.to validate_presence_of(:name) }
+  it { is_expected.to validate_uniqueness_of(:name) }
   it { is_expected.to validate_numericality_of(:subject_count).is_greater_than_or_equal_to(1) }
   it { is_expected.to validate_numericality_of(:visit_count).is_greater_than_or_equal_to(1) }
 

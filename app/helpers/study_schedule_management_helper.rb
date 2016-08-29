@@ -8,7 +8,7 @@ module StudyScheduleManagementHelper
   def insert_to_position_options(visit_groups)
     visit_groups.map do |visit_group|
       ["Before " + visit_name_with_day(visit_group), visit_group.position]
-    end << ["Add as last", visit_groups.size + 1]
+    end << ["Add as last", nil]
   end
 
   def edit_visit_options(visit_groups)
