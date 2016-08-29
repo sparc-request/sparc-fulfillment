@@ -128,7 +128,7 @@ class Participant < ActiveRecord::Base
   end
 
   def has_new_visit_groups?
-    self.arm.visit_groups.count > self.appointments.where(arm_id: self.arm_id).count
+    self.arm.visit_groups.order(:id).pluck(:id) != self.appointments.where(arm_id: self.arm_id).where.not(visit_group_id: nil).order(:visit_group_id).pluck(:visit_group_id)
   end
 
   def new_visit_groups
@@ -139,7 +139,7 @@ class Participant < ActiveRecord::Base
 
   def appointments_for_visit_groups visit_groups
     visit_groups.each do |vg|
-      self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: self.appointments.count + 1, name: vg.name, arm_id: vg.arm_id)
+      self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
     end
   end
 end

@@ -55,6 +55,7 @@ class InvoiceReport < Report
             "Protocol ID",
             "Short Title",
             "Primary PI",
+            "Core/Program",
             "Service",
             "Fulfillment Date",
             "Performed By",
@@ -68,11 +69,12 @@ class InvoiceReport < Report
           ]
           csv << [""]
 
-          fulfillments.joins(:line_item).order("line_items.quantity_type, fulfilled_at").each do |fulfillment|
+          fulfillments.includes(:line_item, service: [:organization]).order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
             csv << [
               format_protocol_id_column(protocol),
               protocol.sparc_protocol.short_title,
               protocol.pi ? protocol.pi.full_name : nil,
+              fulfillment.service.organization.name,
               fulfillment.service_name,
               format_date(fulfillment.fulfilled_at),
               fulfillment.performer.full_name,
@@ -102,40 +104,51 @@ class InvoiceReport < Report
             "Patient ID",
             "Visit Name",
             "Visit Date",
+            "Core/Program",
             "Service",
             "Service Completion Date",
             "Quantity Completed",
             "Research Rate",
+            "",
             "Total Cost"
           ]
           csv << [""]
-          procedures.group_by(&:appointment).each do |appointment, appointment_procedures|
-            participant = appointment.participant
 
-            appointment_procedures.group_by(&:service_name).each do |service_name, service_procedures|
-              procedure = service_procedures.first
+          procedures.group_by{|procedure| procedure.service.organization}.each do |org, org_group|
 
-              csv << [
-                format_protocol_id_column(protocol),
-                protocol.sparc_protocol.short_title,
-                protocol.pi ? protocol.pi.full_name : nil,
-                participant.full_name,
-                participant.label,
-                appointment.name,
-                format_date(appointment.start_date),
-                procedure.service_name,
-                format_date(procedure.completed_date),
-                service_procedures.size,
-                display_cost(procedure.service_cost),
-                display_cost(service_procedures.size * procedure.service_cost.to_f)
-              ]
-              total += service_procedures.size * procedure.service_cost.to_f
+            org_group.group_by{|procedure| procedure.appointment.visit_group}.each do |visit_group, vg_group|
+
+              vg_group.group_by(&:appointment).each do |appointment, appointment_group|
+                participant = appointment.participant
+
+                appointment_group.group_by(&:service_name).each do |service_name, service_group|
+                  procedure = service_group.first
+
+                  csv << [
+                    format_protocol_id_column(protocol),
+                    protocol.sparc_protocol.short_title,
+                    protocol.pi ? protocol.pi.full_name : nil,
+                    participant.full_name,
+                    participant.label,
+                    appointment.name,
+                    format_date(appointment.start_date),
+                    org.name,
+                    service_name,
+                    format_date(procedure.completed_date),
+                    service_group.size,
+                    display_cost(procedure.service_cost),
+                    "",
+                    display_cost(service_group.size * procedure.service_cost.to_f)
+                  ]
+                  total += service_group.size * procedure.service_cost.to_f
+                end
+              end
             end
           end
         end
         if fulfillments.any? or procedures.any?
           csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
+          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
           csv << [""]
           csv << [""]
         end

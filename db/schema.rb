@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160527165249) do
+ActiveRecord::Schema.define(version: 20160707010804) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -104,21 +104,23 @@ ActiveRecord::Schema.define(version: 20160527165249) do
   add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
 
   create_table "fulfillments", force: :cascade do |t|
-    t.integer  "sparc_id",     limit: 4
-    t.integer  "line_item_id", limit: 4
+    t.integer  "sparc_id",      limit: 4
+    t.integer  "line_item_id",  limit: 4
     t.datetime "fulfilled_at"
-    t.decimal  "quantity",                 precision: 10, scale: 2
+    t.decimal  "quantity",                  precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.integer  "creator_id",   limit: 4
-    t.integer  "performer_id", limit: 4
-    t.integer  "service_id",   limit: 4
-    t.string   "service_name", limit: 255
-    t.integer  "service_cost", limit: 4
+    t.integer  "creator_id",    limit: 4
+    t.integer  "performer_id",  limit: 4
+    t.integer  "service_id",    limit: 4
+    t.string   "service_name",  limit: 255
+    t.integer  "service_cost",  limit: 4
+    t.integer  "klok_entry_id", limit: 4
   end
 
   add_index "fulfillments", ["creator_id"], name: "index_fulfillments_on_creator_id", using: :btree
+  add_index "fulfillments", ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id", using: :btree
   add_index "fulfillments", ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
   add_index "fulfillments", ["performer_id"], name: "index_fulfillments_on_performer_id", using: :btree
   add_index "fulfillments", ["service_id"], name: "index_fulfillments_on_service_id", using: :btree

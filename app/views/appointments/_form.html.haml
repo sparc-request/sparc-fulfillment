@@ -26,7 +26,7 @@
           .form-group
             = note_form.label "reason", t(:notes)[:reason], class: "col-sm-3 control-label"
             .col-sm-8
-              = note_form.select :reason, Appointment::NOTABLE_REASONS, {}, class: "form-control selectpicker"
+              = note_form.select :reason, Appointment::NOTABLE_REASONS, {include_blank: ''}, class: "form-control selectpicker"
           .form-group
             = note_form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
             .col-sm-8
