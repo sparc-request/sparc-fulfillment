@@ -7,7 +7,7 @@ class Klok::Entry < ActiveRecord::Base
   belongs_to :klok_project, class_name: 'Klok::Project', foreign_key: :project_id
   has_one :service, through: :klok_project
 
-  delegate :local_protocol, 
+  delegate :local_protocol,
            to: :klok_project,
            allow_nil: true
 
@@ -23,13 +23,9 @@ class Klok::Entry < ActiveRecord::Base
     super(DateTime.strptime(value,'%Q'))
   end
 
-  def rounded_duration
-    minutes = duration/60000.0
-    (minutes/15.0).ceil * 15.0
-  end
-
   def decimal_duration
-    rounded_duration/60.0
+    minutes = duration/60000
+    minutes/60.0
   end
 
   def is_valid?
