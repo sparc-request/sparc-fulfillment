@@ -11,7 +11,7 @@
             %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
             = t(:navbar)[:tasks_link]
             - if current_identity.tasks_count > 0
-              %span.notification.task-notifications
+              %span.cation.task-notifications
                 = current_identity.tasks_count
         %li
           = link_to documents_path, class: 'documents' do
