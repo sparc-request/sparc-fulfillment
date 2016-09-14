@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707010804) do
+ActiveRecord::Schema.define(version: 20160914120153) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -240,20 +240,6 @@ ActiveRecord::Schema.define(version: 20160707010804) do
   add_index "procedures", ["sparc_id"], name: "index_procedures_on_sparc_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
 
-  create_table "project_roles", force: :cascade do |t|
-    t.integer  "identity_id", limit: 4
-    t.integer  "protocol_id", limit: 4
-    t.string   "rights",      limit: 255
-    t.string   "role",        limit: 255
-    t.string   "role_other",  limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "project_roles", ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
-  add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
-
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",                   limit: 4
     t.string   "sponsor_name",               limit: 255
@@ -316,20 +302,6 @@ ActiveRecord::Schema.define(version: 20160707010804) do
   add_index "tasks", ["assignable_id", "assignable_type"], name: "index_tasks_on_assignable_id_and_assignable_type", using: :btree
   add_index "tasks", ["assignee_id"], name: "index_tasks_on_assignee_id", using: :btree
   add_index "tasks", ["identity_id"], name: "index_tasks_on_identity_id", using: :btree
-
-  create_table "user_roles", force: :cascade do |t|
-    t.integer  "user_id",     limit: 4
-    t.integer  "protocol_id", limit: 4
-    t.string   "rights",      limit: 255
-    t.string   "role",        limit: 255
-    t.string   "role_other",  limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "user_roles", ["protocol_id"], name: "index_user_roles_on_protocol_id", using: :btree
-  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "",                           null: false
