@@ -6,7 +6,7 @@ class IncompleteVisitReport < Report
 
   # db columns of interest; qualified because of ambiguities
   START_DATE  = '`appointments`.`start_date`'
-  END_DATE    = '`appointments`.`end_date`'
+  END_DATE    = '`appointments`.`completed_date`'
   STATUS      = '`procedures`.`status`'
   PROTOCOL_ID = '`participants`.`protocol_id`'
   LAST_NAME   = '`participants`.`last_name`'
@@ -19,19 +19,15 @@ class IncompleteVisitReport < Report
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
     _24_hours_ago = 24.hours.ago.utc
-
     CSV.open(document.path, "wb") do |csv|
       csv << REPORT_COLUMNS
-
       result_set = Appointment.all.joins(:procedures).joins(:participant).joins(:visit_group).
                    where("#{START_DATE} < ? AND #{STATUS} = ?", _24_hours_ago, "unstarted").
                    uniq.
-                   pluck(PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :end_date, :sparc_core_name)
-
+                   pluck(PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, :sparc_core_name)
       get_protocol_srids(result_set)
-
       result_set.group_by { |x| x[0..3] }.
-        map      { |x, y| [ @srid[x[0]] ] + x[1..3] << format_date(y[0][4]) << core_list(y) }.
+        map      { |x, y| [ @srid[x[0]] ] + x[1..3] << format_date(y[0][4]) << (y[0][5].nil? ? "N/A" : format_date(y[0][5])) << core_list(y) }.
         sort     { |x, y| x <=> y || 1 }. # by default, sort won't handle nils
         each     { |x|    csv << x }
     end
