@@ -1,5 +1,11 @@
 class Klok::Entry < ActiveRecord::Base
   include KlokShard
+  validates :klok_project, presence: true
+  validates :local_protocol, presence: true
+  validates :service, presence: true
+  validates :klok_person, presence: true
+  validates :local_identity, presence: true
+
 
   self.primary_key = 'entry_id'
 

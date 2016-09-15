@@ -75,12 +75,12 @@ task import_klok: :environment do
 
         if fulfillment.valid?
           fulfillment.save
-          csv << ["Success (SRID: #{fulfillment.protocol.srid}, fulfillment ID: #{fulfillment.id}"] + entry.attributes.values
+          csv << ["Success (SRID: #{fulfillment.protocol.srid}, fulfillment ID: #{fulfillment.id})"] + entry.attributes.values
         else
           csv << [fulfillment.errors.messages.to_s] + entry.attributes.values
         end
       else
-        csv << ['Entry not valid'] + entry.attributes.values
+        csv << ["Entry not valid (SRID: #{fulfillment.try(:protocol).try(:srid)})"] + entry.attributes.values
       end
     end
   end
