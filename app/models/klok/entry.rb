@@ -1,11 +1,5 @@
 class Klok::Entry < ActiveRecord::Base
   include KlokShard
-  validates :klok_project, presence: true
-  validates :local_protocol, presence: true
-  validates :service, presence: true
-  validates :klok_person, presence: true
-  validates :local_identity, presence: true
-
 
   self.primary_key = 'entry_id'
 
@@ -32,6 +26,59 @@ class Klok::Entry < ActiveRecord::Base
   def decimal_duration
     minutes = duration/60000
     minutes/60.0
+  end
+
+  def klok_project_present
+    unless self.klok_project.present?
+      self.errors[:base] << 'Klok Project not present'
+    end
+  end
+
+  def klok_project_ssr_id
+    unless self.klok_project.ssr_id
+      self.errors[:base] << 'Doesnt have SSR ID'
+    end
+  end
+
+  def klok_project_ssr_id_regex_error
+    unless self.klok_project.ssr_id.match(/\d\d\d\d-\d\d\d\d/)
+      self.errors[:base] << 'no match'
+    end
+  end
+
+  def local_project_error
+    unless self.local_protocol.present?
+      self.errors[:base] << 'no local project'
+    end
+  end
+
+  def service_error
+    unless self.service.present?
+      self.errors[:base] << 'no service'
+    end
+  end
+
+  def klok_person_error
+    unless self.klok_person.present?
+      self.errors[:base] << 'no klok person'
+    end
+  end
+
+  def local_identity_error
+    unless self.local_identity.present?
+      self.errors[:base] << 'no local identity'
+    end
+  end
+
+  def error_messages
+    klok_project_present
+    klok_project_ssr_id
+    klok_project_ssr_id_regex_error
+    local_project_error
+    service_error
+    klok_person_error
+    local_identity_error
+    return self.errors[:base]
   end
 
   def is_valid?
