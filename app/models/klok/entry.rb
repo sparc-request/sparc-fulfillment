@@ -30,43 +30,43 @@ class Klok::Entry < ActiveRecord::Base
 
   def klok_project_present
     unless self.klok_project.present?
-      self.errors[:base] << 'Klok Project not present'
+      self.errors[:base] << 'klok project not present'
     end
   end
 
   def klok_project_ssr_id
     unless self.klok_project.ssr_id
-      self.errors[:base] << 'Doesnt have SSR ID'
+      self.errors[:base] << 'doesnt have SSR ID'
     end
   end
 
   def klok_project_ssr_id_regex_error
     unless self.klok_project.ssr_id.match(/\d\d\d\d-\d\d\d\d/)
-      self.errors[:base] << 'no match'
+      self.errors[:base] << 'improper format - correct format is 1234-0001'
     end
   end
 
   def local_project_error
     unless self.local_protocol.present?
-      self.errors[:base] << 'no local project'
+      self.errors[:base] << 'no local project present'
     end
   end
 
   def service_error
     unless self.service.present?
-      self.errors[:base] << 'no service'
+      self.errors[:base] << 'no service present'
     end
   end
 
   def klok_person_error
     unless self.klok_person.present?
-      self.errors[:base] << 'no klok person'
+      self.errors[:base] << 'no klok person present'
     end
   end
 
   def local_identity_error
     unless self.local_identity.present?
-      self.errors[:base] << 'no local identity'
+      self.errors[:base] << 'no local identity present'
     end
   end
 
