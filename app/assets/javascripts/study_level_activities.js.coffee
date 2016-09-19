@@ -55,6 +55,15 @@ $ ->
         type: "DELETE"
         url: "/line_items/#{line_item_id}"
 
+  # This binding is also used in fulfillment notes
+  $(document).on 'click', 'button#fulfillments_back', ->
+    line_item_id = $(this).data('line-item-id')
+    data = line_item_id: line_item_id
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments"
+      data: "line_item_id" : line_item_id
+
   # Fulfillment Bindings
 
   $(document).on 'click', '.otf_fulfillment_new', ->

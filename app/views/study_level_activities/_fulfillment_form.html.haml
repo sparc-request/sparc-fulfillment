@@ -52,6 +52,6 @@
                 = form.select "components", options_from_collection_for_select(fulfillment.line_item.components, 'component', 'component', fulfillment.components.map(&:component)), {include_blank: false}, {class: 'form-control selectpicker', multiple: "", title: "Please Select", 'data-width' => '150px', 'data-selected-text-format' => 'count>2'}
       .modal-footer
         .center-block
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+          %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: fulfillment.line_item_id}}
             = t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: t(:fulfillment)[:save_fulfillment]}
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

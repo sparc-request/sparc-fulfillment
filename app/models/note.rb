@@ -29,7 +29,7 @@ class Note < ActiveRecord::Base
   belongs_to :identity
 
   validates_inclusion_of :kind, in: KIND_TYPES
-  
+
   validates :reason, presence: true, if: Proc.new { |note| ((note.notable_type == 'Procedure') || (note.notable_type == 'Appointment')) && note.kind == 'reason' }
   validates_inclusion_of :reason, in: Proc.new { |note| note.notable_type.constantize::NOTABLE_REASONS },
                                   if: Proc.new { |note| note.reason.present? }
@@ -66,5 +66,9 @@ class Note < ActiveRecord::Base
 
   def note?
     kind == 'note'
+  end
+
+  def unique_selector
+    "#{notable_type.downcase}_#{notable_id}"
   end
 end

@@ -50,6 +50,6 @@
             = form.text_area :comment, {class: 'form-control', rows: "6"}
       .modal-footer
         .center-block
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
-            = t(:actions)[:close]
+          %button.btn.btn-default.note.cancel{type: 'button', data: {notable_id: note.notable_id, notable_type: note.notable_type}}
+            = t(:actions)[:cancel]
           %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

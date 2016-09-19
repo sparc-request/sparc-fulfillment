@@ -33,7 +33,6 @@ feature 'Fulfillments', js: true do
   describe 'fulfillment add' do
     it 'should be able to add a fulfillment' do
       given_i_have_fulfillments
-      count = @line_item.fulfillments.count
       and_i_have_opened_up_fulfillments
       click_button "Add Fulfillment"
       wait_for_ajax
@@ -71,7 +70,7 @@ feature 'Fulfillments', js: true do
     fill_in 'Quantity', with: "45"
     find('.modal-header').click
     wait_for_ajax
-    click_button "Save Fulfillment"
+    click_button "Save"
     wait_for_ajax
   end
 end

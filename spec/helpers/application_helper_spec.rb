@@ -21,7 +21,7 @@
 require 'rails_helper'
 
 RSpec.describe ApplicationHelper do
-  
+
   describe "#format_date" do
     it "should return a formatted date" do
       expect(helper.format_date(Date.new(2015, 8, 4))).to eq("08/04/2015")
@@ -90,7 +90,7 @@ RSpec.describe ApplicationHelper do
                 button_class: ''}
 
       it "should return a blue button with white text" do
-        expect(helper.notes_button(params)).to have_selector(".btn-primary")
+        expect(helper.notes_button(params)).to have_selector(".blue-notes")
       end
     end
   end

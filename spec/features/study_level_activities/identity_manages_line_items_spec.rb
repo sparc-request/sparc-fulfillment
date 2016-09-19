@@ -105,9 +105,9 @@ feature 'Line Items', js: true do
     sparc_protocol.update_attributes(type: 'Study')
     @service2      = @protocol.organization.inclusive_child_services(:per_participant).second
     @service2.update_attributes(name: 'Captain Cinnebon', one_time_fee: true)
-    
+
     @protocol.line_items.destroy_all
-    
+
     @line_item_without_fulfillment = create(:line_item, service: @service2, protocol: @protocol)
 
     visit protocol_path(@protocol.id)
@@ -134,13 +134,13 @@ feature 'Line Items', js: true do
     fill_in 'Quantity', with: 50
     page.execute_script %Q{ $('#date_started_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    click_button 'Save Study Level Activity'
+    click_button 'Save'
     wait_for_ajax
   end
 
   def when_i_fill_in_the_edit_line_item_form
     bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
-    click_button 'Save Study Level Activity'
+    click_button 'Save'
     wait_for_ajax
   end
 

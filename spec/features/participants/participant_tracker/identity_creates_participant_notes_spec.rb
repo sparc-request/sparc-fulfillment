@@ -34,7 +34,6 @@ feature 'User views the participant tracker page', js: true do
         given_i_am_viewing_the_participant_tracker
         when_i_click_on_the_notes_button
         when_i_add_a_comment_and_save
-        when_i_click_on_the_notes_button
         then_i_should_see_the_note_in_the_index
       end
     end
@@ -56,7 +55,7 @@ feature 'User views the participant tracker page', js: true do
 
     visit protocol_path @protocol
     wait_for_ajax
-    
+
     click_link 'Participant Tracker'
     wait_for_ajax
   end
@@ -79,7 +78,7 @@ feature 'User views the participant tracker page', js: true do
     wait_for_ajax
 
     bootstrap_select "#participant_arm_id", @protocol.arms.second.name
-    
+
     click_button 'Save'
     wait_for_ajax
   end
