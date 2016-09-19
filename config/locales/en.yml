@@ -26,6 +26,7 @@ en:
     actions: "Actions"
     add: "Add"
     close: "Close"
+    cancel: "Cancel"
     delete: "Delete"
     details: "Details"
     edit: "Edit"
@@ -160,7 +161,6 @@ en:
     performed_by: "Performed By"
     qty_type: "Quantity Type"
     quantity: "Quantity"
-    save_fulfillment: "Save Fulfillment"
     view: "View Fulfillment Buttons"
     klok_description: "Imported via Klok"
 
@@ -199,8 +199,6 @@ en:
     quantity: "Quantity"
     service: "Service"
     started: "Started"
-    save_li: "Save Study Level Activity"
-    save_li_project: "Save Project Level Activity"
 
   navbar:
     logged_in_msg: "Logged in as"
@@ -211,28 +209,19 @@ en:
     object: "Note"
     action: "Action"
     add_button: "Add Note"
-    appointment:
-      index_header: "Appointment Notes"
-      none: "This appointment has no notes."
+    header:
+      title: " Notes"
+    index:
+      none_message1: "This "
+      none_message2: " currently has no notes"
     comment: "Comment"
     date: "Date"
     followup: "Follow up"
-    fulfillment:
-      index_header: "Fulfillment Notes"
-      none: "This fulfillment has no notes."
     identity: "User"
     incomplete_header: "Reason for Incompletion"
     lineitem:
       edit: "Edit Line Item"
-      index_header: "Study Level Activity Notes"
-      none: "This line item has no notes"
     new_header: "Add Note"
-    participant:
-      index_header: "Participant Notes"
-      none: "This participant has no notes."
-    procedure:
-      index_header: "Procedure Notes"
-      none: "This procedure has no notes."
     reason: "Reason *"
 
   participant:

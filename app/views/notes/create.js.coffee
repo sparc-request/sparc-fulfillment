@@ -1,34 +1,23 @@
-$("#modal_place").modal 'hide'
-<% if @appointment.present? %>
-$('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
+# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# All rights reserved.~
 
-pg = new ProcedureGrouper()
-pg.initialize()
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
 
-if !$('.start_date_input').hasClass('hidden')
-  start_date_init("<%= format_datetime(@appointment.start_date) %>")
+# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
 
-if !$('.completed_date_input').hasClass('hidden')
-  completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
+# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+# disclaimer in the documentation and/or other materials provided with the distribution.~
 
-$('#appointment_content_indications').selectpicker()
-$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
-$(".selectpicker").selectpicker()
+# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+# derived from this software without specific prior written permission.~
 
-statuses = []
-<% @statuses.each do |status| %>
-statuses[statuses.length] =  "<%= status %>"
-<% end %>
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$('#appointment_indications').selectpicker()
-$('#appointment_indications').selectpicker('val', statuses)
-
-$(".followup_procedure_datepicker").datetimepicker(format: 'MM/DD/YYYY')
-$(".completed_date_field").datetimepicker(format: 'MM/DD/YYYY')
-
-$('.row.appointment [data-toggle="tooltip"]').tooltip()
-<% elsif @line_item.present? %>
-$("#list-<%= @line_item.id %>").trigger('click')
-<% else %>
-$('table#participants-tracker-table').bootstrapTable('refresh', {silent: true})
-<% end %>
+$("#modal_area").html("<%= escape_javascript(render(partial: 'index', locals: { notable: @notable, notes: @notes, notable_id: @notable_id, notable_type: @notable_type })) %>")
+unless $("span#<%= @selector %>.glyphicon").hasClass("blue-notes")
+  $("span#<%= @selector %>.glyphicon").addClass("blue-notes")
