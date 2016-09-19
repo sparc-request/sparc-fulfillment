@@ -87,8 +87,8 @@ module StudyLevelActivitiesHelper
   def note_list_item params
     content_tag(:li, raw(
       content_tag(:button,
-        raw(content_tag(:span, '', class: "glyphicon glyphicon-list-alt #{params[:span_class].nil? ? "" : params[:span_class]} #{params[:has_notes] ? "blue-notes" : ""}", aria: {hidden: "true"}))+
-        ' Notes', type: 'button', class: 'btn btn-default #{params[:button_class].nil? ? "" : params[:button_class]} form-control actions-button notes list', data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
+        raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:span_class].nil? ? '' : params[:span_class]} #{params[:has_notes] ? 'blue-notes' : ''}", aria: {hidden: "true"}))+
+        ' Notes', type: 'button', class: "btn btn-default #{params[:button_class].nil? ? '' : params[:button_class]} form-control actions-button notes list", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
     )
   end
 end

@@ -15,7 +15,6 @@ feature 'User creates a procedure note', js: true do
     given_i_have_added_a_procedure_to_the_appointment_calendar
     when_i_begin_an_appointment
     when_i_add_a_note_to_the_procedure
-    when_i_view_the_notes_list
     then_i_should_see_the_note
   end
 
@@ -30,7 +29,7 @@ feature 'User creates a procedure note', js: true do
 
     bootstrap_select '#appointment_select', visit_group.name
     wait_for_ajax
-    
+
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: '1'
     find('button.add_service').click
@@ -52,9 +51,9 @@ feature 'User creates a procedure note', js: true do
   def when_i_view_the_notes_list
     find('.procedure td.notes button.notes.list').click
   end
-  
+
   def then_i_should_see_a_notice_that_there_are_no_notes
-    expect(page).to have_css('.modal-body', text: 'This procedure has no notes.')
+    expect(page).to have_css('.modal-body', text: 'This Procedure currently has no notes')
   end
 
   def then_i_should_see_the_note

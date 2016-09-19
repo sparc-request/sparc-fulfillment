@@ -1,5 +1,5 @@
 module ParticipantHelper
-  
+
   def appointments_for_select(arm, participant)
     appointments = []
     participant.appointments.incompleted.each do |appt|
@@ -76,10 +76,10 @@ module ParticipantHelper
   end
 
   def notes_formatter(participant)
-    notes_button({object: participant, 
-                  title: t(:participant)[:notes], 
-                  has_notes: participant.notes.any?, 
-                  button_class: "participant_notes btn-xs"})
+    notes_button({object: participant,
+                  title: t(:participant)[:notes],
+                  has_notes: participant.notes.any?,
+                  button_class: 'participant_notes'})
   end
 
   def participant_report_formatter(participant)
