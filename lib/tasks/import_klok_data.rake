@@ -48,7 +48,7 @@ task import_klok: :environment do
   ####### now that we have populated the KlokShard we can bring the same data in as line items ########
 
   CSV.open("tmp/klok_import_#{Time.now.strftime('%m%d%Y')}.csv", "wb") do |csv|
-    csv << ["reason", "created_at", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
+    csv << ["ssr_id", "reason", "created_at", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
             "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
             "end_time_stamp", "rollup_to"
            ]
@@ -75,12 +75,12 @@ task import_klok: :environment do
 
         if fulfillment.valid?
           fulfillment.save
-          csv << ["Success (SRID: #{fulfillment.protocol.srid}, fulfillment ID: #{fulfillment.id}"] + entry.attributes.values
+          csv << ["SRID: #{fulfillment.protocol.srid}"] + ["Success (Fulfillment ID: #{fulfillment.id})"] + entry.attributes.values
         else
           csv << [fulfillment.errors.messages.to_s] + entry.attributes.values
         end
       else
-        csv << ["Entry not valid - Reasoning: #{entry.error_messages.to_sentence}"]
+        csv << ["N/A"] + ["Entry not valid - Reasoning: #{entry.error_messages.to_sentence}"] + entry.attributes.values
       end
     end
   end
