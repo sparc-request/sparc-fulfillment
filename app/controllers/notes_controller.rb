@@ -1,14 +1,31 @@
+# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# All rights reserved.~
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+# derived from this software without specific prior written permission.~
+
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
 class NotesController < ApplicationController
 
   respond_to :json, :html
 
-  before_action :find_notable, only: [:index]
+  before_action :find_notable, only: [:index, :create]
 
   def index
     @notes = @notable.notes
-    @notable_id = params[:note][:notable_id]
-    @notable_type = params[:note][:notable_type]
-    @notable_sym = @notable_type.downcase.to_sym
   end
 
   def new
@@ -16,13 +33,11 @@ class NotesController < ApplicationController
   end
 
   def create
-    @note = Note.create(note_params.merge!({ identity: current_identity })) if note_params[:comment].present? # don't create empty notes
-    appointment_note
-    procedure_note
-    if @note.notable_type == 'Fulfillment'
-      fulfillment = Fulfillment.find(@note.notable_id)
-      @line_item = LineItem.find(fulfillment.line_item_id)
+    if note_params[:comment].present? # don't create empty notes
+      @note = Note.create(note_params.merge!({ identity: current_identity }))
+      @selector = "#{@note.unique_selector}_notes"
     end
+    @notes = @notable.notes
   end
 
   private
@@ -32,20 +47,8 @@ class NotesController < ApplicationController
   end
 
   def find_notable
-    @notable = params[:note][:notable_type].constantize.find params[:note][:notable_id]
-  end
-
-  def appointment_note
-    if params[:note][:notable_type] == "Appointment"
-      @appointment = Appointment.find(params[:note][:notable_id])
-      @statuses = @appointment.appointment_statuses.map{|x| x.status}
-    end
-  end
-
-  def procedure_note
-    if params[:note][:notable_type] == "Procedure"
-      @appointment = Procedure.find(params[:note][:notable_id]).appointment
-      @statuses = @appointment.appointment_statuses.map{|x| x.status}
-    end
+    @notable_id = params[:note][:notable_id]
+    @notable_type = params[:note][:notable_type]
+    @notable = params[:note][:notable_type].constantize.find(@notable_id)
   end
 end
