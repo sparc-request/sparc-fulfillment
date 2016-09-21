@@ -27,7 +27,7 @@ class Klok::Entry < ActiveRecord::Base
   belongs_to :klok_project, class_name: 'Klok::Project', foreign_key: :project_id
   has_one :service, through: :klok_project
 
-  delegate :local_protocol, 
+  delegate :local_protocol,
            to: :klok_project,
            allow_nil: true
 
@@ -43,13 +43,62 @@ class Klok::Entry < ActiveRecord::Base
     super(DateTime.strptime(value,'%Q'))
   end
 
-  def rounded_duration
-    minutes = duration/60000.0
-    (minutes/15.0).ceil * 15.0
+  def decimal_duration
+    minutes = duration/60000
+    minutes/60.0
   end
 
-  def decimal_duration
-    rounded_duration/60.0
+  def klok_project_present
+    unless self.klok_project.present?
+      self.errors[:base] << 'klok project not present'
+    end
+  end
+
+  def klok_project_ssr_id
+    unless self.klok_project.ssr_id
+      self.errors[:base] << 'doesnt have SSR ID'
+    end
+  end
+
+  def klok_project_ssr_id_regex_error
+    unless self.klok_project.ssr_id.match(/\d\d\d\d-\d\d\d\d/)
+      self.errors[:base] << 'improper format - correct format is 1234-0001'
+    end
+  end
+
+  def local_project_error
+    unless self.local_protocol.present?
+      self.errors[:base] << 'no local project present'
+    end
+  end
+
+  def service_error
+    unless self.service.present?
+      self.errors[:base] << 'no service present'
+    end
+  end
+
+  def klok_person_error
+    unless self.klok_person.present?
+      self.errors[:base] << 'no klok person present'
+    end
+  end
+
+  def local_identity_error
+    unless self.local_identity.present?
+      self.errors[:base] << 'no local identity present'
+    end
+  end
+
+  def error_messages
+    klok_project_present
+    klok_project_ssr_id
+    klok_project_ssr_id_regex_error
+    local_project_error
+    service_error
+    klok_person_error
+    local_identity_error
+    return self.errors[:base]
   end
 
   def is_valid?
