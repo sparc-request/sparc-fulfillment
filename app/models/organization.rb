@@ -24,8 +24,7 @@ class Organization < ActiveRecord::Base
 
   belongs_to :parent, class_name: "Organization"
 
-  has_many :services,
-            -> {where(is_available: true)}
+  has_many :services
   has_many :sub_service_requests
   has_many :protocols, through: :sub_service_requests
   has_many :pricing_setups
