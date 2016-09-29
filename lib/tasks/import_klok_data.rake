@@ -30,48 +30,50 @@ task import_klok: :environment do
     STDIN.gets.strip
   end
 
-  if prompt("Would you like to refresh the KlokShard with data found in tmp/klok.xml? (Y/N) ") == 'Y'
-    begin
-      Klok::Entry.destroy_all
-      Klok::Project.destroy_all
-      Klok::Person.destroy_all
-
-      d = File.read(Rails.root.join('tmp/klok.xml'))
-
-      h = Hash.from_xml(d)
-
-      h['report']['people']['person'].each do |person|
-        d = Klok::Person.new
-        d.attributes = person.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
-        d.save
-      end
-
-      h['report']['projects']['project'].each do |project|
-        d = Klok::Project.new
-        d.attributes = project.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
-        d.save
-      end
-
-      h['report']['entries']['entry'].each do |entry|
-        next if entry['enabled'] == 'false'  # only solution for duplicate entries with same entry_id
-
-        d = Klok::Entry.new
-        d.attributes = entry.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
-        d.save
-      end
-    rescue Exception => e
-      puts e.inspect
-      puts e.backtrace.inspect
-    end
-  end
-
-  ####### now that we have populated the KlokShard we can bring the same data in as line items ########
-
   CSV.open("tmp/klok_import_#{Time.now.strftime('%m%d%Y')}.csv", "wb") do |csv|
     csv << ["ssr_id", "reason", "created_at", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
             "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
             "end_time_stamp", "rollup_to"
            ]
+
+    if prompt("Would you like to refresh the KlokShard with data found in tmp/klok.xml? (Y/N) ") == 'Y'
+      begin
+        Klok::Entry.destroy_all
+        Klok::Project.destroy_all
+        Klok::Person.destroy_all
+
+        d = File.read(Rails.root.join('tmp/klok.xml'))
+
+        h = Hash.from_xml(d)
+
+        h['report']['people']['person'].each do |person|
+          d = Klok::Person.new
+          d.attributes = person.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
+          d.save
+        end
+
+        h['report']['projects']['project'].each do |project|
+          d = Klok::Project.new
+          d.attributes = project.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
+          d.save
+        end
+
+        h['report']['entries']['entry'].each do |entry|
+          if entry['enabled'] == 'false'  # only solution for duplicate entries with same entry_id
+            csv << entry??
+            next
+          end
+          d = Klok::Entry.new
+          d.attributes = entry.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
+          d.save
+        end
+      rescue Exception => e
+        puts e.inspect
+        puts e.backtrace.inspect
+      end
+    end
+
+    ####### now that we have populated the KlokShard we can bring the same data in as line items ########
 
     Klok::Entry.all.each do |entry|
       if entry.is_valid?
