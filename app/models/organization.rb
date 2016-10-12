@@ -38,19 +38,11 @@ class Organization < ActiveRecord::Base
   end
 
   def inclusive_child_services(scope, is_available=true)
-    if is_available
-      services.
-        send(scope).
-        push(all_child_services(scope)).
-        flatten.
-        sort_by(&:name)
-    else
-      all_services.
-        send(scope).
-        push(all_child_services(scope, false)).
-        flatten.
-        sort_by(&:name)
-    end
+    (is_available ? services : all_services).
+      send(scope).
+      push(all_child_services(scope, is_available)).
+      flatten.
+      sort_by(&:name)
   end
 
   def all_child_organizations
@@ -80,10 +72,6 @@ class Organization < ActiveRecord::Base
   end
 
   def all_child_services(scope, is_available=true)
-    if is_available
-      all_child_organizations_with_non_process_ssrs.map { |child| child.services.send(scope) }
-    else
-      all_child_organizations_with_non_process_ssrs.map { |child| child.all_services.send(scope) }
-    end
+    all_child_organizations_with_non_process_ssrs.map { |child| child.send(is_available ? :services : :all_services).send(scope) }
   end
 end
