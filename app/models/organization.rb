@@ -26,6 +26,9 @@ class Organization < ActiveRecord::Base
 
   has_many :services,
             -> {where(is_available: true)}
+
+  has_many :all_services, class_name: "Service" # include services regardless of is_available
+
   has_many :sub_service_requests
   has_many :protocols, through: :sub_service_requests
   has_many :pricing_setups
@@ -54,10 +57,10 @@ class Organization < ActiveRecord::Base
     return pricing_setup
   end
 
-  def inclusive_child_services(scope)
-    services.
+  def inclusive_child_services(scope, is_available=true)
+    (is_available ? services : all_services).
       send(scope).
-      push(all_child_services(scope)).
+      push(all_child_services(scope, is_available)).
       flatten.
       sort_by(&:name)
   end
@@ -88,7 +91,7 @@ class Organization < ActiveRecord::Base
     ].flatten
   end
 
-  def all_child_services(scope)
-    all_child_organizations_with_non_process_ssrs.map { |child| child.services.send(scope) }
+  def all_child_services(scope, is_available=true)
+    all_child_organizations_with_non_process_ssrs.map { |child| child.send(is_available ? :services : :all_services).send(scope) }
   end
 end

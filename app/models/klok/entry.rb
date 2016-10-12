@@ -44,8 +44,12 @@ class Klok::Entry < ActiveRecord::Base
   end
 
   def decimal_duration
-    minutes = duration/60000
+    minutes = duration/60000.0
     minutes/60.0
+  end
+
+  def local_protocol_includes_service service
+    local_protocol.organization.inclusive_child_services(:one_time_fee, false).include? service
   end
 
   def klok_project_present
@@ -104,9 +108,11 @@ class Klok::Entry < ActiveRecord::Base
   def is_valid?
     self.klok_project.present? &&
     self.klok_project.ssr_id &&
-    self.klok_project.ssr_id.match(/\d\d\d\d-\d\d\d\d/) &&
+    ( /\d\d\d\d-\d\d\d\d/ === self.klok_project.ssr_id ) &&  #### validate we have a valid SSR id (comes from parent project)
     self.local_protocol.present? &&
+    ( /\A\d+\z/ === self.klok_project.code ) &&  #### validate we actually have a service id and not a SSR id
     self.service.present? &&
+    self.local_protocol_includes_service(self.service) &&
     self.klok_person.present? &&
     self.local_identity.present?
   end
