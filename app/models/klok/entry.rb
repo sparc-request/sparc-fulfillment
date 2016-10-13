@@ -81,6 +81,8 @@ class Klok::Entry < ActiveRecord::Base
   def service_id_not_ssr_id
     unless ( /\A\d+\z/ === self.klok_project.code )
       self.errors[:base] << 'must have service id, not ssr id'
+    end
+  end
 
   def service_error
     unless self.service.present?
