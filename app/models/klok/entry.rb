@@ -52,6 +52,8 @@ class Klok::Entry < ActiveRecord::Base
     local_protocol.organization.inclusive_child_services(:one_time_fee, false).include? service
   end
 
+  #### Error Msgs
+
   def klok_project_present
     unless self.klok_project.present?
       self.errors[:base] << 'klok project not present'
@@ -65,7 +67,7 @@ class Klok::Entry < ActiveRecord::Base
   end
 
   def klok_project_ssr_id_regex_error
-    unless self.klok_project.ssr_id.match(/\d\d\d\d-\d\d\d\d/)
+    unless ( /\d\d\d\d-\d\d\d\d/ === self.klok_project.ssr_id )
       self.errors[:base] << 'improper format - correct format is 1234-0001'
     end
   end
@@ -75,6 +77,10 @@ class Klok::Entry < ActiveRecord::Base
       self.errors[:base] << 'no local project present'
     end
   end
+
+  def service_id_not_ssr_id
+    unless ( /\A\d+\z/ === self.klok_project.code )
+      self.errors[:base] << 'must have service id, not ssr id'
 
   def service_error
     unless self.service.present?
@@ -99,6 +105,7 @@ class Klok::Entry < ActiveRecord::Base
     klok_project_ssr_id
     klok_project_ssr_id_regex_error
     local_project_error
+    service_id_not_ssr_id
     service_error
     klok_person_error
     local_identity_error
