@@ -44,9 +44,15 @@ class Klok::Entry < ActiveRecord::Base
   end
 
   def decimal_duration
-    minutes = duration/60000
+    minutes = duration/60000.0
     minutes/60.0
   end
+
+  def local_protocol_includes_service service
+    local_protocol.organization.inclusive_child_services(:one_time_fee, false).include? service
+  end
+
+  #### Error Msgs
 
   def klok_project_present
     unless self.klok_project.present?
@@ -61,7 +67,7 @@ class Klok::Entry < ActiveRecord::Base
   end
 
   def klok_project_ssr_id_regex_error
-    unless self.klok_project.ssr_id.match(/\d\d\d\d-\d\d\d\d/)
+    unless ( /\d\d\d\d-\d\d\d\d/ === self.klok_project.ssr_id )
       self.errors[:base] << 'improper format - correct format is 1234-0001'
     end
   end
@@ -72,9 +78,23 @@ class Klok::Entry < ActiveRecord::Base
     end
   end
 
+  def service_id_not_ssr_id
+    unless ( /\A\d+\z/ === self.klok_project.code )
+      self.errors[:base] << 'must have service id, not ssr id'
+    end
+  end
+
   def service_error
     unless self.service.present?
       self.errors[:base] << 'no service present'
+    end
+  end
+
+  def service_not_available_to_protocol_error
+    if self.local_protocol && self.service
+      unless self.local_protocol_includes_service(self.service)
+        self.errors[:base] << 'service not available to protocol'
+      end
     end
   end
 
@@ -95,7 +115,9 @@ class Klok::Entry < ActiveRecord::Base
     klok_project_ssr_id
     klok_project_ssr_id_regex_error
     local_project_error
+    service_id_not_ssr_id
     service_error
+    service_not_available_to_protocol_error
     klok_person_error
     local_identity_error
     return self.errors[:base]
@@ -104,9 +126,11 @@ class Klok::Entry < ActiveRecord::Base
   def is_valid?
     self.klok_project.present? &&
     self.klok_project.ssr_id &&
-    self.klok_project.ssr_id.match(/\d\d\d\d-\d\d\d\d/) &&
+    ( /\d\d\d\d-\d\d\d\d/ === self.klok_project.ssr_id ) &&  #### validate we have a valid SSR id (comes from parent project)
     self.local_protocol.present? &&
+    ( /\A\d+\z/ === self.klok_project.code ) &&  #### validate we actually have a service id and not a SSR id
     self.service.present? &&
+    self.local_protocol_includes_service(self.service) &&
     self.klok_person.present? &&
     self.local_identity.present?
   end
