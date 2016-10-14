@@ -90,6 +90,14 @@ class Klok::Entry < ActiveRecord::Base
     end
   end
 
+  def service_not_available_to_protocol_error
+    if self.local_protocol && self.service
+      unless self.local_protocol_includes_service(self.service)
+        self.errors[:base] << 'service not available to protocol'
+      end
+    end
+  end
+
   def klok_person_error
     unless self.klok_person.present?
       self.errors[:base] << 'no klok person present'
@@ -109,6 +117,7 @@ class Klok::Entry < ActiveRecord::Base
     local_project_error
     service_id_not_ssr_id
     service_error
+    service_not_available_to_protocol_error
     klok_person_error
     local_identity_error
     return self.errors[:base]
