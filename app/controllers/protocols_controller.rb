@@ -43,7 +43,7 @@ class ProtocolsController < ApplicationController
   def show
     @page_details = @protocol.srid
     @services = @protocol.organization.inclusive_child_services(:per_participant)
-    @services_present = @services.present?
+    @services_present = @protocol.line_items.map{ |line_item| !line_item.one_time_fee }.any?
     @current_protocol_tab = get_current_protocol_tab
 
     @page = 1
