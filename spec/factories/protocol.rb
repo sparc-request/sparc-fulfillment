@@ -80,6 +80,7 @@ FactoryGirl.define do
     trait :without_services do
       after(:create) do |protocol, evaluator|
         Service.delete_all
+        protocol.line_items.delete_all
       end
     end
 
