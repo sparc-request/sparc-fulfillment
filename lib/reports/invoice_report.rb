@@ -130,6 +130,7 @@ class InvoiceReport < Report
             "Quantity Completed",
             "Research Rate",
             "",
+            "Percent Subsidy",
             "Total Cost"
           ]
           csv << [""]
@@ -158,6 +159,7 @@ class InvoiceReport < Report
                     service_group.size,
                     display_cost(procedure.service_cost),
                     "",
+                    protocol.sub_service_request.subsidy || 0,
                     display_cost(service_group.size * procedure.service_cost.to_f)
                   ]
                   total += service_group.size * procedure.service_cost.to_f
