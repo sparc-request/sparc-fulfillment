@@ -34,7 +34,7 @@ class IncompleteVisitReport < Report
   VISIT_NAME  = :name
 
   # report columns
-  REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Start Date", "End Date", "List of Cores which have incomplete visits"]
+  REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Start Date", "Completed Date", "List of Cores which have incomplete visits"]
 
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
