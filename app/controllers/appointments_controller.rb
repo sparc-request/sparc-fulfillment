@@ -34,7 +34,7 @@ class AppointmentsController < ApplicationController
     @appointment = CustomAppointment.new(custom_appointment_params)
 
     if @appointment.valid?
-      @appointment.name.concat(" - Custom Visit")
+      @appointment.name.concat(" - (Custom Visit)")
       @appointment.save
     end
   end
