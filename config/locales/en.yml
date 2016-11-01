@@ -340,7 +340,7 @@ en:
     descending: "Descending"
     invoice_report: "Invoice Report"
     end_date: "End Date"
-    incomplete_visit_report: "Incomplete Visit Report"
+    visit_report: "Visit Report"
     organization: "Organization(s)*"
     page_title: "All Reports"
     participant: "Participant"

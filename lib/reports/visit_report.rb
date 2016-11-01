@@ -20,7 +20,7 @@
 
 require 'csv'
 
-class IncompleteVisitReport < Report
+class VisitReport < Report
   VALIDATES_PRESENCE_OF     = [:title].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
@@ -57,7 +57,7 @@ class IncompleteVisitReport < Report
     protocol_ids = result_set.map(&:first).uniq
 
     # SRID's indexed by protocol id
-    @srid = Hash[Protocol.includes(:sub_service_request).
+    @srid = Hash[ Protocol.includes(:sub_service_request).
                   select(:id, :sparc_id, :sub_service_request_id). # cols necessary for SRID
                   where(id: protocol_ids).
                   map { |protocol| [protocol.id, protocol.srid] }]
