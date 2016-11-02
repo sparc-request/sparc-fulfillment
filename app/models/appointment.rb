@@ -83,7 +83,7 @@ class Appointment < ActiveRecord::Base
   end
 
   def formatted_name
-    self.type == 'CustomAppointment' ? "#{self.name} - Custom Visit" : self.name
+    self.type == 'CustomAppointment' ? "#{self.name} (Custom Visit)" : self.name
   end
 
   def initialize_procedures
