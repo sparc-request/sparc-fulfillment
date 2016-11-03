@@ -40,15 +40,15 @@ class VisitReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
     _24_hours_ago = 24.hours.ago.utc
 
-    start_date = @params[:start_date].empty? ? Appointment.first.created_at.utc : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
-    end_date   = @params[:end_date].empty? ? Appointment.last.created_at.utc : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
+    from_start_date = @params[:start_date].empty? ? Appointment.first.created_at.utc : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
+    to_start_date   = @params[:end_date].empty? ? Appointment.last.created_at.utc : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
     CSV.open(document.path, "wb") do |csv|
-      csv << ["Visit Start Date From", format_date( start_date ), "To", format_date( end_date )]
+      csv << ["Visit Start Date From", format_date( from_start_date ), "To", format_date( to_start_date )]
       csv << [""]
       csv << REPORT_COLUMNS
       result_set = Appointment.all.joins(:procedures).joins(:participant).joins(:visit_group).
-                   where("#{START_DATE} < ? AND #{START_DATE} < ? AND #{START_DATE} > ? AND #{STATUS} != ?", _24_hours_ago, end_date, start_date, "unstarted").
+                   where("#{START_DATE} < ? AND #{START_DATE} > ? AND #{START_DATE} < ? AND #{STATUS} != ?", _24_hours_ago, from_start_date, to_start_date, "unstarted").
                    uniq.
                    pluck(PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, :sparc_core_name)
       get_protocol_srids(result_set)
