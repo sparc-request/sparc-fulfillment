@@ -32,15 +32,15 @@
           .col-md-12
             = hidden_field_tag "report_type", report_type
             .form-group
-              =label_tag "title", t(:documents)[:title], class: "col-sm-3 control-label"
-              .col-sm-9= text_field_tag "title", title, class: "form-control"
+              =label_tag "title", t(:documents)[:title], class: "col-sm-4 control-label"
+              .col-sm-8= text_field_tag "title", title, class: "form-control"
             .form-group
-              = label_tag "start_date", t(:reports)[:visit_start_date_from], class: "col-sm-3 control-label"
-              .col-sm-9
+              = label_tag "start_date", t(:reports)[:visit_start_date_from], class: "col-sm-4 control-label visit_report_date_picker"
+              .col-sm-8
                 = text_field_tag "start_date", nil, class: "datepicker form-control", readonly: true
             .form-group
-              = label_tag "end_date", t(:reports)[:visit_start_date_to], class: "col-sm-3 control-label"
-              .col-sm-9
+              = label_tag "end_date", t(:reports)[:visit_start_date_to], class: "col-sm-4 control-label visit_report_date_picker"
+              .col-sm-8
                 = text_field_tag "end_date", nil, class: "datepicker form-control", readonly: true
       .modal-footer
         .center-block
