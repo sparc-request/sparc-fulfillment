@@ -34,15 +34,14 @@ class VisitReport < Report
   VISIT_NAME  = :name
 
   # report columns
-  REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Start Date", "Completed Date", "List of Cores which have incomplete visits"]
+  REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Custom Visit", "Start Date", "Completed Date", "List of Cores which have incomplete visits"]
 
   def generate(document)
+    @params = {start_date: "", end_date: "" }
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
     _24_hours_ago = 24.hours.ago.utc
-
     from_start_date = @params[:start_date].empty? ? Appointment.first.created_at.utc : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
     to_start_date   = @params[:end_date].empty? ? Appointment.last.created_at.utc : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
-
     CSV.open(document.path, "wb") do |csv|
       csv << ["Visit Start Date From", format_date( from_start_date ), "To", format_date( to_start_date )]
       csv << [""]
@@ -52,11 +51,24 @@ class VisitReport < Report
                    uniq.
                    pluck(PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, :sparc_core_name)
       get_protocol_srids(result_set)
-      result_set.group_by { |x| x[0..3] }.
-        map      { |x, y| [ @srid[x[0]] ] + x[1..3] << format_date(y[0][4]) << (y[0][5].nil? ? "N/A" : format_date(y[0][5])) << core_list(y) }.
+      result_set.group_by { |appointment_info| appointment_info[0..3] }.
+        map      { |grouping, appointments| get_appointment_info(grouping) << is_custom_visit(grouping) << get_date(appointments[0][4]) << get_date(appointments[0][5]) << core_list(appointments) }.
         sort     { |x, y| x <=> y || 1 }. # by default, sort won't handle nils
-        each     { |x|    csv << x }
+        each     { |line|    csv << line }
     end
+  end
+
+  def get_appointment_info(grouping)
+    [ @srid[grouping[0]] ] + grouping[1..3]
+  end
+
+  def is_custom_visit(grouping)
+    appointment = Appointment.where(grouping[0])
+    (appointment.nil? || appointment.visit_group.nil?) ? "Yes" : "No"
+  end
+
+  def get_date(appointment)
+    appointment.nil? ? "N/A" : format_date(appointment)
   end
 
   def get_protocol_srids(result_set)
