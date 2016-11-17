@@ -35,10 +35,6 @@ module KlokShard
       super
     end
 
-    def readonly?
-      Rails.env.production?
-    end
-
     def self.klok_record?
       true
     end
