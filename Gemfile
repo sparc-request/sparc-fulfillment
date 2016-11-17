@@ -66,6 +66,7 @@ group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'simplecov', :require => false, :group => :testend
+  gem 'rails-erd'
 end
 
 group :test do
