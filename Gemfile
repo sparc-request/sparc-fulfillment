@@ -16,6 +16,7 @@ gem 'daemons'
 gem 'delayed_job_active_record'
 gem 'devise'
 gem 'dotenv-rails'
+gem 'rails-erd'
 gem 'faye'
 gem 'gon', '~> 5.2.3'
 gem 'grape', '~> 0.9.0'
@@ -66,7 +67,6 @@ group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'simplecov', :require => false, :group => :testend
-  gem 'rails-erd'
 end
 
 group :test do
