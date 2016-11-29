@@ -57,7 +57,7 @@ class VisitReport < Report
     _24_hours_ago = 24.hours.ago.utc
     @params = {start_date: "", end_date: "" }
     from_start_date = @params[:start_date].empty? ? Appointment.order(start_date: :asc).detect{|appointment| appointment.start_date }.start_date : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
-    to_start_date   = @params[:end_date].empty? ? Appointment.order(start_date: :desc).detect{|appointment| appointment.start_date }.start_date : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
+    to_start_date   = @params[:end_date].empty? ? Appointment.order(start_date: :desc).first.start_date : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
     CSV.open(document.path, "wb") do |csv|
       csv << ["Visit Start Date From", format_date( from_start_date ), "To", format_date( to_start_date )]
