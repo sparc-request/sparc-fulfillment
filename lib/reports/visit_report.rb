@@ -28,7 +28,6 @@ class VisitReport < Report
   APPT_ID     = '`appointments`.`id`'
   START_DATE  = '`appointments`.`start_date`'
   VISIT_GROUP = '`appointments`.`visit_group_id`'
-  #END_DATE    = '`appointments`.`completed_date`'
   TYPE        = '`appointments`.`type`'
   STATUS      = '`appointment_statuses`.`status`'
   COMPLETION  = '`procedures`.`status`'
@@ -55,7 +54,6 @@ class VisitReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     _24_hours_ago = 24.hours.ago.utc
-    @params = {start_date: "", end_date: "" }
     from_start_date = @params[:start_date].empty? ? Appointment.order(start_date: :asc).detect{|appointment| appointment.start_date }.start_date : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
     to_start_date   = @params[:end_date].empty? ? Appointment.order(start_date: :desc).first.start_date : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
