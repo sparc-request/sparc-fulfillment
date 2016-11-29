@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2016 MUSC Foundation for Research Development~P
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -25,35 +25,60 @@ class VisitReport < Report
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   # db columns of interest; qualified because of ambiguities
+  APPT_ID     = '`appointments`.`id`'
   START_DATE  = '`appointments`.`start_date`'
+  VISIT_GROUP = '`appointments`.`visit_group_id`'
   #END_DATE    = '`appointments`.`completed_date`'
-  STATUS      = '`procedures`.`status`'
+  TYPE        = '`appointments`.`type`'
+  STATUS      = '`appointment_statuses`.`status`'
+  COMPLETION  = '`procedures`.`status`'
   PROTOCOL_ID = '`participants`.`protocol_id`'
   LAST_NAME   = '`participants`.`last_name`'
   FIRST_NAME  = '`participants`.`first_name`'
   VISIT_NAME  = :name
 
   # report columns
-  REPORT_COLUMNS = ["Protocol ID (SRID)", "Patient Last Name", "Patient First Name", "Visit Name", "Custom Visit", "Start Date", "Completed Date", "List of Cores which have incomplete visits"]
+  REPORT_COLUMNS = ["Protocol ID (SRID)", 
+                    "Patient Last Name", 
+                    "Patient First Name", 
+                    "Visit Name", 
+                    "Custom Visit", 
+                    "Start Date", 
+                    "Completed Date", 
+                    "Visit Duration (minutes)", 
+                    "Type of Visit", 
+                    "Visit Indications", 
+                    "Incomplete Visit", 
+                    "List of Cores which have incomplete visits"]
 
   def generate(document)
-    @params = {start_date: "", end_date: "" }
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+
     _24_hours_ago = 24.hours.ago.utc
-    from_start_date = @params[:start_date].empty? ? Appointment.first.created_at.utc : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
-    to_start_date   = @params[:end_date].empty? ? Appointment.last.created_at.utc : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
+    @params = {start_date: "", end_date: "" }
+    from_start_date = @params[:start_date].empty? ? Appointment.order(start_date: :asc).detect{|appointment| appointment.start_date }.start_date : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
+    to_start_date   = @params[:end_date].empty? ? Appointment.order(start_date: :desc).detect{|appointment| appointment.start_date }.start_date : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
+
     CSV.open(document.path, "wb") do |csv|
       csv << ["Visit Start Date From", format_date( from_start_date ), "To", format_date( to_start_date )]
       csv << [""]
       csv << REPORT_COLUMNS
-      result_set = Appointment.all.joins(:procedures).joins(:participant).joins(:visit_group).
-                   where("#{START_DATE} < ? AND #{START_DATE} > ? AND #{START_DATE} < ? AND #{STATUS} != ?", _24_hours_ago, from_start_date, to_start_date, "unstarted").
+      result_set = Appointment.all.joins(:procedures).joins(:participant).
+                   where("#{START_DATE} < ? AND #{START_DATE} > ? AND #{START_DATE} < ? AND #{COMPLETION} != ?", _24_hours_ago, from_start_date, to_start_date, "unstarted").
                    uniq.
-                   pluck(PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, :sparc_core_name)
+                   pluck(  PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, VISIT_GROUP, TYPE, APPT_ID, COMPLETION, :sparc_core_name)
       get_protocol_srids(result_set)
-      result_set.group_by { |appointment_info| appointment_info[0..3] }.
-        map      { |grouping, appointments| get_appointment_info(grouping) << is_custom_visit(grouping) << get_date(appointments[0][4]) << get_date(appointments[0][5]) << core_list(appointments) }.
-        sort     { |x, y| x <=> y || 1 }. # by default, sort won't handle nils
+      result_set.group_by { |protocol, last_name, first_name, visit_name| [protocol, last_name, first_name, visit_name] }.
+        map      { |grouping, appointments| get_appointment_info(grouping) << 
+                                            is_custom_visit(appointments) << 
+                                            get_date(appointments[0][4]) << 
+                                            get_date(appointments[0][5]) << 
+                                            get_duration(appointments[0]) << 
+                                            appointments[0][7] <<
+                                            get_statuses(appointments[0][8]) <<
+                                            has_incomplete(appointments) <<
+                                            core_list(appointments) }.
+        sort     { |x, y| x <=> y || 1 }.
         each     { |line|    csv << line }
     end
   end
@@ -62,9 +87,12 @@ class VisitReport < Report
     [ @srid[grouping[0]] ] + grouping[1..3]
   end
 
-  def is_custom_visit(grouping)
-    appointment = Appointment.where(grouping[0])
-    (appointment.nil? || appointment.visit_group.nil?) ? "Yes" : "No"
+  def is_custom_visit(appointments)
+    appointments.detect{ |appointment| appointment[6].nil? } ? "Yes" : "No"
+  end
+
+  def get_duration(appointment)
+    appointment[5].nil? ? "N/A" : ((appointment[5] - appointment[4])/60).round
   end
 
   def get_date(appointment)
@@ -73,7 +101,6 @@ class VisitReport < Report
 
   def get_protocol_srids(result_set)
     protocol_ids = result_set.map(&:first).uniq
-
     # SRID's indexed by protocol id
     @srid = Hash[ Protocol.includes(:sub_service_request).
                   select(:id, :sparc_id, :sub_service_request_id). # cols necessary for SRID
@@ -81,7 +108,16 @@ class VisitReport < Report
                   map { |protocol| [protocol.id, protocol.srid] }]
   end
 
-  def core_list(y)
-    y.map(&:last).join(', ')
+  def has_incomplete(appointments)
+    appointments.detect{|appointment| appointment[9] == 'incomplete'}.nil? ? 'No' : 'Yes'
+  end
+
+  def get_statuses(appointment_id)
+    appt_status = AppointmentStatus.find_by(appointment_id: appointment_id)
+    (appt_status.blank? ? "" : appt_status.status)
+  end
+
+  def core_list(appointments)
+    appointments.select{ |appointment| appointment[9] == "incomplete" }.map{ |appointment| appointment[10] }.uniq.join(', ')
   end
 end
