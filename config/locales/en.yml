@@ -340,7 +340,7 @@ en:
     descending: "Descending"
     invoice_report: "Invoice Report"
     end_date: "End Date"
-    incomplete_visit_report: "Incomplete Visit Report"
+    visit_report: "Visit Report"
     organization: "Organization(s)*"
     page_title: "All Reports"
     participant: "Participant"
@@ -354,6 +354,8 @@ en:
     sort_by: "Sort By"
     sort_order: "Sort Order"
     start_date: "Start Date"
+    visit_start_date_from: "Visit Start Date From"
+    visit_start_date_to: "Visit Start Date To"
 
   services:
     object: "Service"
