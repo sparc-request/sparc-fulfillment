@@ -18,12 +18,11 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.fulfillment-header
-  margin-top: 15px
+// Push Fulfillment header down with differing amounts at different screen sizes
+@media (min-width: $screen-md-min)
+  .fulfillment-header
+    margin-top: 40px
 
-.sctr-header
-  margin-left: 50px
-
-.musc-header
-  margin-top: 15px
-  margin-left: 25px
+@media (max-width: $screen-sm-max) and (min-width: $screen-sm-min)
+  .fulfillment-header
+    margin-top: 15px
