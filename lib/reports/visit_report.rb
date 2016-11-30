@@ -20,13 +20,13 @@
 
 require 'csv'
 
-class IncompleteVisitReport < Report
+class VisitReport < Report
   VALIDATES_PRESENCE_OF     = [:title].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   # db columns of interest; qualified because of ambiguities
   START_DATE  = '`appointments`.`start_date`'
-  END_DATE    = '`appointments`.`completed_date`'
+  #END_DATE    = '`appointments`.`completed_date`'
   STATUS      = '`procedures`.`status`'
   PROTOCOL_ID = '`participants`.`protocol_id`'
   LAST_NAME   = '`participants`.`last_name`'
@@ -39,10 +39,14 @@ class IncompleteVisitReport < Report
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
     _24_hours_ago = 24.hours.ago.utc
+
+    from_start_date = @params[:start_date].empty? ? Appointment.first.created_at.utc : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
+    to_start_date   = @params[:end_date].empty? ? Appointment.last.created_at.utc : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
+
     CSV.open(document.path, "wb") do |csv|
       csv << REPORT_COLUMNS
       result_set = Appointment.all.joins(:procedures).joins(:participant).joins(:visit_group).
-                   where("#{START_DATE} < ? AND #{STATUS} = ?", _24_hours_ago, "unstarted").
+                   where("#{START_DATE} < ? AND #{START_DATE} > ? AND #{START_DATE} < ? AND #{STATUS} = ?", _24_hours_ago, from_start_date, to_start_date, "unstarted").
                    uniq.
                    pluck(PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, :sparc_core_name)
       get_protocol_srids(result_set)
@@ -57,7 +61,7 @@ class IncompleteVisitReport < Report
     protocol_ids = result_set.map(&:first).uniq
 
     # SRID's indexed by protocol id
-    @srid = Hash[Protocol.includes(:sub_service_request).
+    @srid = Hash[ Protocol.includes(:sub_service_request).
                   select(:id, :sparc_id, :sub_service_request_id). # cols necessary for SRID
                   where(id: protocol_ids).
                   map { |protocol| [protocol.id, protocol.srid] }]
