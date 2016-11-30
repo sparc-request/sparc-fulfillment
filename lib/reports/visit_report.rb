@@ -29,7 +29,6 @@ class VisitReport < Report
   START_DATE  = '`appointments`.`start_date`'
   VISIT_GROUP = '`appointments`.`visit_group_id`'
   TYPE        = '`appointments`.`type`'
-  STATUS      = '`appointment_statuses`.`status`'
   COMPLETION  = '`procedures`.`status`'
   PROTOCOL_ID = '`participants`.`protocol_id`'
   LAST_NAME   = '`participants`.`last_name`'
