@@ -82,6 +82,10 @@ class Appointment < ActiveRecord::Base
     end
   end
 
+  def formatted_name
+    self.type == 'CustomAppointment' ? "#{self.name} (Custom Visit)" : self.name
+  end
+
   def initialize_procedures
     unless self.is_a? CustomAppointment # custom appointments don't inherit from the study schedule so there is nothing to build out
       ActiveRecord::Base.transaction do

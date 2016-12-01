@@ -25,7 +25,7 @@
       %option{value: -1} Please Select
       - arms_for_appointments(participant.appointments).each do |arm|
         %option{:disabled => true, :style => 'font-weight:bold;'}= arm.name.humanize + ':'
-        = options_from_collection_for_select(appointments_for_select(arm, participant), 'id', 'name')
+        = options_from_collection_for_select(appointments_for_select(arm, participant), 'id', 'formatted_name')
         %option{'data-divider' => true, :disabled => true}
     %span.custom-visit-container{title: participant.arm_id.nil? ? t(:visit)[:no_arm] : t(:visit)[:custom], data: {toggle: "tooltip", animation: 'false'}}
       %button.btn.btn-primary.appointment.new{type: "button", disabled: participant.arm_id.nil? ? true : false, data: {participant_id: participant.id, arm_id: participant.arm_id}}
