@@ -109,7 +109,8 @@ class InvoiceReport < Report
             ]
 
             total += fulfillment.total_cost
-            total_with_subsidy += protocol.sub_service_request.subsidy ? fulfillment.total_cost * (1 - protocol.sub_service_request.subsidy.pi_contribution) : fulfillment.total_cost
+            total_with_subsidy += protocol.sub_service_request.subsidy ? fulfillment.total_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : fulfillment.total_cost
+            binding.pry if total_with_subsidy < 0
           end
         end
 
