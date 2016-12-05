@@ -65,6 +65,7 @@ class InvoiceReport < Report
 
       protocols.each do |protocol|
         total = 0
+        total_with_subsidy = 0
 
         fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date)
         procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date)
@@ -108,6 +109,7 @@ class InvoiceReport < Report
             ]
 
             total += fulfillment.total_cost
+            total_with_subsidy += protocol.sub_service_request.subsidy ? fulfillment.total_cost * (1 - protocol.sub_service_request.subsidy.pi_contribution) : fulfillment.total_cost
           end
         end
 
@@ -130,6 +132,7 @@ class InvoiceReport < Report
             "Quantity Completed",
             "Research Rate",
             "",
+            protocol.sub_service_request.subsidy ? "Percent Subsidy" : "",
             "Total Cost"
           ]
           csv << [""]
@@ -158,9 +161,12 @@ class InvoiceReport < Report
                     service_group.size,
                     display_cost(procedure.service_cost),
                     "",
+                    "#{protocol.sub_service_request.subsidy ? protocol.sub_service_request.subsidy.percent_subsidy * 100 : 0}%",
                     display_cost(service_group.size * procedure.service_cost.to_f)
                   ]
-                  total += service_group.size * procedure.service_cost.to_f
+                  service_cost = service_group.size * procedure.service_cost.to_f
+                  total += service_cost
+                  total_with_subsidy += protocol.sub_service_request.subsidy ? service_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : service_cost
                 end
               end
             end
@@ -169,6 +175,7 @@ class InvoiceReport < Report
         if fulfillments.any? or procedures.any?
           csv << [""]
           csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
+          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy:", display_cost(total_with_subsidy)] if protocol.sub_service_request.subsidy
           csv << [""]
           csv << [""]
         end
