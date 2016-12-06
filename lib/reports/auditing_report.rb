@@ -19,8 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class AuditingReport < Report
-
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :service_type].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'

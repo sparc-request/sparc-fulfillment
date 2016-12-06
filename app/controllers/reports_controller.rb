@@ -65,6 +65,7 @@ class ReportsController < ApplicationController
               :title,
               :start_date,
               :end_date,
+              :service_type,
               :time_zone,
               :protocol_id,
               :sort_by,
