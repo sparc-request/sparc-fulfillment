@@ -38,7 +38,7 @@ CREATE TABLE `entries` (
   `end_time_stamp_formatted` varchar(255) DEFAULT NULL,
   `end_time_stamp` timestamp NULL DEFAULT NULL,
   `rollup_to` int(11) DEFAULT NULL,
-  `enabled` tinyint(1) DEFAULT 0,
+  `enabled` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
