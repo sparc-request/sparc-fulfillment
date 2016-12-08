@@ -57,7 +57,7 @@ class VisitGroup < ActiveRecord::Base
   end
 
   # Used to validate :day, when present. Preceding VisitGroup must have a
-  # a smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).
+  # smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).
   def day_must_be_in_order
     already_there = arm.visit_groups.find_by(position: position)
     last_persisted_pos = arm.visit_groups.last.try(:position) || 0
