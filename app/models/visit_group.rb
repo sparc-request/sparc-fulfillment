@@ -82,6 +82,10 @@ class VisitGroup < ActiveRecord::Base
         end
       end
 
+    if left_neighbor.try(:id) == id
+      left_neighbor = nil
+    end
+
     unless day > (left_neighbor.try(:day) || day - 1) && day < (right_neighbor.try(:day) || day + 1)
       errors.add(:day, 'must be in order')
     end
