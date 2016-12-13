@@ -29,6 +29,7 @@ class VisitReport < Report
   START_DATE  = '`appointments`.`start_date`'
   VISIT_GROUP = '`appointments`.`visit_group_id`'
   TYPE        = '`appointments`.`type`'
+  CONTENTS    = '`appointments`.`contents`'
   COMPLETION  = '`procedures`.`status`'
   PROTOCOL_ID = '`participants`.`protocol_id`'
   LAST_NAME   = '`participants`.`last_name`'
@@ -57,11 +58,13 @@ class VisitReport < Report
     to_start_date   = @params[:end_date].empty? ? Appointment.order(start_date: :desc).first.start_date : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
     CSV.open(document.path, "wb") do |csv|
+      csv << ["Visit Start Date From #{@params[:start_date]} To #{@params[:end_date]}"]
+      csv << [""]
       csv << REPORT_COLUMNS
       result_set = Appointment.all.joins(:procedures).joins(:participant).
                    where("#{START_DATE} < ? AND #{START_DATE} > ? AND #{START_DATE} < ? AND #{COMPLETION} != ?", _24_hours_ago, from_start_date, to_start_date, "unstarted").
                    uniq.
-                   pluck(  PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, VISIT_GROUP, TYPE, APPT_ID, COMPLETION, :sparc_core_name)
+                   pluck(  PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, VISIT_GROUP, TYPE, APPT_ID, COMPLETION, :sparc_core_name, CONTENTS)
       get_protocol_srids(result_set)
       result_set.group_by { |protocol, last_name, first_name, visit_name| [protocol, last_name, first_name, visit_name] }.
         map      { |grouping, appointments| get_appointment_info(grouping) << 
@@ -69,7 +72,7 @@ class VisitReport < Report
                                             get_date(appointments[0][4]) << 
                                             get_date(appointments[0][5]) << 
                                             get_duration(appointments[0]) << 
-                                            appointments[0][7] <<
+                                            get_content(appointments[0]) <<
                                             get_statuses(appointments[0][8]) <<
                                             has_incomplete(appointments) <<
                                             core_list(appointments) }.
@@ -105,6 +108,10 @@ class VisitReport < Report
 
   def has_incomplete(appointments)
     appointments.detect{|appointment| appointment[9] == 'incomplete'}.nil? ? 'No' : 'Yes'
+  end
+
+  def get_content(appointments)
+    appointments[11].nil? ? nil : appointments[11]
   end
 
   def get_statuses(appointment_id)
