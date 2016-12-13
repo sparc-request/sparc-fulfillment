@@ -30,6 +30,7 @@ class ProtocolsController < ApplicationController
       format.html { render }
       format.json do
         @protocols = current_identity.protocols
+
         if params[:status].present? && params[:status] != 'all'
           @protocols = @protocols.select { |protocol| protocol.status == params[:status] }
         end
