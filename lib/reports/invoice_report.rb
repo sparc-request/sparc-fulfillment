@@ -31,6 +31,14 @@ class InvoiceReport < Report
     protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
   end
 
+  def display_subsidy_percent(protocol)
+    if protocol.sub_service_request.subsidy
+      "#{protocol.sub_service_request.subsidy.percent_subsidy * 100}%"
+    else
+      ""
+    end
+  end
+
   def generate(document)
     #We want to filter from 00:00:00 in the local time zone,
     #then convert to UTC to match database times
@@ -132,8 +140,8 @@ class InvoiceReport < Report
             "Quantity Completed",
             "Research Rate",
             "",
-            protocol.sub_service_request.subsidy ? "Percent Subsidy" : "",
-            "Total Cost"
+            "Total Cost",
+            protocol.sub_service_request.subsidy ? "Percent Subsidy" : ""
           ]
           csv << [""]
 
@@ -161,8 +169,8 @@ class InvoiceReport < Report
                     service_group.size,
                     display_cost(procedure.service_cost),
                     "",
-                    "#{protocol.sub_service_request.subsidy ? protocol.sub_service_request.subsidy.percent_subsidy * 100 : 0}%",
-                    display_cost(service_group.size * procedure.service_cost.to_f)
+                    display_cost(service_group.size * procedure.service_cost.to_f),
+                    display_subsidy_percent(protocol)   
                   ]
                   service_cost = service_group.size * procedure.service_cost.to_f
                   total += service_cost
