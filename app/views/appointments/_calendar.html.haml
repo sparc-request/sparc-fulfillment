@@ -25,7 +25,7 @@
         .col-xs-12
           .page-header
             %h3.appointment_header
-              = "Visit: #{appointment.name}"
+              = "Visit: #{appointment.formatted_name}"
               = appointment_notes_formatter(appointment)
             .row
               .col-md-5
