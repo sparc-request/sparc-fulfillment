@@ -57,16 +57,6 @@ task import_klok: :environment do
 
         h['report']['entries']['entry'].each do |entry|
 
-          if entry['enabled'] == 'false'  # only solution for duplicate entries with same entry_id
-            if dup_entry_header
-              csv << ['', 'Duplicate entries'] + entry.keys
-              dup_entry_header = false
-            end
-
-            csv << ["N/A", "Duplicate entry"] + entry.values
-            next
-          end
-
           d = Klok::Entry.new
           d.attributes = entry.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
           d.save
@@ -85,7 +75,7 @@ task import_klok: :environment do
     csv << ['']
     csv << ["ssr_id", "reason", "created_at", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
             "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
-            "end_time_stamp", "rollup_to"
+            "end_time_stamp", "rollup_to", "enabled"
            ]
 
     puts "Populating data from KlokShard"
@@ -118,7 +108,8 @@ task import_klok: :environment do
           csv << [fulfillment.errors.messages.to_s] + entry.attributes.values
         end
       else
-        csv << ["N/A", "Entry not valid - Reasoning: #{entry.error_messages.to_sentence}"] + entry.attributes.values
+        srid = entry.local_protocol.present? ? entry.local_protocol.srid : 'N/A'
+        csv << ["SRID: #{srid}", "Entry not valid - Reasoning: #{entry.error_messages.to_sentence}"] + entry.attributes.values
       end
     end
   end

@@ -35,6 +35,6 @@ class Klok::Project < ActiveRecord::Base
 
   def local_protocol
     sparc_id, ssr_version = ssr_id.split('-')
-    Protocol.where(sparc_id: sparc_id).select{|p| p.sub_service_request.ssr_id == ssr_version}.first
+    Protocol.where(sparc_id: sparc_id).where.not(sub_service_request_id: nil).select{|p| p.sub_service_request.try(:ssr_id) == ssr_version}.first
   end
 end
