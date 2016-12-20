@@ -35,6 +35,13 @@ class AuditingReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
+
+      if @params[:protocol_ids].present?
+        protocols = Protocol.find(@params[:protocol_ids])
+      else
+        protocols = Identity.find(@params[:identity_id]).protocols
+      end
+
       if @params[:service_type] == "Per Patient Per Visit"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
         csv << [""]
@@ -58,12 +65,6 @@ class AuditingReport < Report
           "Follow-Up date and comment",
           "Cost"
         ]
-
-        if @params[:protocol_ids].present?
-          protocols = Protocol.find(@params[:protocol_ids])
-        else
-          protocols = Identity.find(@params[:identity_id]).protocols
-        end
 
         protocols.each do |protocol|
           protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
@@ -91,6 +92,57 @@ class AuditingReport < Report
         end
       elsif @params[:service_type] == "One Time Fees"
         ##Part II Goes Here
+        csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
+        csv << [""]
+        csv << [""]
+        csv << [
+          "Protocol ID",
+          "Short Title",
+          "Principal Investigator",
+          "Organization",
+          "Service Name",
+          "Account",
+          "Contact",
+          "Quantity Type",
+          "Unit Cost",
+          "Requested",
+          "Remaining",
+          "Service Started Date",
+          "Components",
+          "Last Fulfillment Date",
+          "Notes",
+          "Documents",
+          "Fields Modified",
+          "Date"
+        ]
+
+        protocols.each do |protocol|
+          protocol.line_items.each do |line_item|
+            next unless line_item.versions.where(event: "update", created_at: @start_date..@end_date).any?
+            line_item.versions.where(event: "update").each do |version|
+              csv << [
+                protocol.sparc_id,
+                protocol.short_title,
+                protocol.pi.full_name,
+                protocol.organization.abbreviation,
+                line_item.service.name,
+                line_item.account_number,
+                line_item.contact_name,
+                line_item.quantity_type,
+                display_cost(line_item.cost),
+                line_item.quantity_requested,
+                line_item.quantity_remaining,
+                format_date(line_item.started_at),
+                line_item.components.map(&:component).join(' | '),
+                format_date(line_item.last_fulfillment),
+                line_item.notes.map(&:comment).join(' | '),
+                line_item.documents.map(&:title).join(' | '),
+                changeset_formatter(version.changeset),
+                format_date(version.created_at)
+              ]
+            end
+          end
+        end
       end
     end
   end
@@ -115,5 +167,13 @@ class AuditingReport < Report
     if procedure.follow_up_date
       "Due Date: #{format_date(procedure.follow_up_date)} | Comment: #{procedure.task.body}"
     end
+  end
+
+  def changeset_formatter(changeset)
+    formatted = []
+    changeset.select{|k, v| k != "updated_at"}.each do |field, changes|
+      formatted << "#{field.humanize}: #{changes.first} => #{changes.last}"
+    end
+    formatted.join(' | ')
   end
 end

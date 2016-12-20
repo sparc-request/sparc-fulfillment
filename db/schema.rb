@@ -1,23 +1,3 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
-# All rights reserved.~
-
-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
-
-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
-
-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
-# disclaimer in the documentation and/or other materials provided with the distribution.~
-
-# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
-# derived from this software without specific prior written permission.~
-
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
-# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
-# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
-
 # encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
@@ -31,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707010804) do
+ActiveRecord::Schema.define(version: 20161220161903) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -260,20 +240,6 @@ ActiveRecord::Schema.define(version: 20160707010804) do
   add_index "procedures", ["sparc_id"], name: "index_procedures_on_sparc_id", using: :btree
   add_index "procedures", ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
 
-  create_table "project_roles", force: :cascade do |t|
-    t.integer  "identity_id", limit: 4
-    t.integer  "protocol_id", limit: 4
-    t.string   "rights",      limit: 255
-    t.string   "role",        limit: 255
-    t.string   "role_other",  limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "project_roles", ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
-  add_index "project_roles", ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
-
   create_table "protocols", force: :cascade do |t|
     t.integer  "sparc_id",                   limit: 4
     t.string   "sponsor_name",               limit: 255
@@ -337,20 +303,6 @@ ActiveRecord::Schema.define(version: 20160707010804) do
   add_index "tasks", ["assignee_id"], name: "index_tasks_on_assignee_id", using: :btree
   add_index "tasks", ["identity_id"], name: "index_tasks_on_identity_id", using: :btree
 
-  create_table "user_roles", force: :cascade do |t|
-    t.integer  "user_id",     limit: 4
-    t.integer  "protocol_id", limit: 4
-    t.string   "rights",      limit: 255
-    t.string   "role",        limit: 255
-    t.string   "role_other",  limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "user_roles", ["protocol_id"], name: "index_user_roles_on_protocol_id", using: :btree
-  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
-
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "",                           null: false
     t.string   "encrypted_password",     limit: 255, default: "",                           null: false
@@ -374,12 +326,13 @@ ActiveRecord::Schema.define(version: 20160707010804) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "versions", force: :cascade do |t|
-    t.string   "item_type",  limit: 255,   null: false
-    t.integer  "item_id",    limit: 4,     null: false
-    t.string   "event",      limit: 255,   null: false
-    t.string   "whodunnit",  limit: 255
-    t.text     "object",     limit: 65535
+    t.string   "item_type",      limit: 255,   null: false
+    t.integer  "item_id",        limit: 4,     null: false
+    t.string   "event",          limit: 255,   null: false
+    t.string   "whodunnit",      limit: 255
+    t.text     "object",         limit: 65535
     t.datetime "created_at"
+    t.text     "object_changes", limit: 65535
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
