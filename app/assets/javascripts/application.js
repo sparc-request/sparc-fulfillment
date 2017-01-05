@@ -60,3 +60,4 @@
 //= require ajax_progress_bar
 //= require procedure_grouper
 //= require faye
+//= require visit_group_form
