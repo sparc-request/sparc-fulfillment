@@ -63,4 +63,5 @@
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
-          %input.btn.btn-primary.add-visit{type: 'submit', value: t(:actions)[:add]}
+          %span.add-visit-wrapper{ title: 'You must select a position', data: { toggle: 'tooltip', animate: 'false' } }
+            %input.btn.btn-primary.add-visit{type: 'submit', value: t(:actions)[:add]}
