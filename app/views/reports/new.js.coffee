@@ -42,7 +42,7 @@ multi_select.multiselect({
   enableClickableOptGroups: true,
   buttonWidth: '100%',
   onDropdownShow: (e) ->
-    # If user does not select an organization, 
+    # If user does not select an organization,
     # set @original_selected_values to an empty array
     # else set to selected organizations
     if multi_select.val() == null
@@ -66,3 +66,10 @@ $(document).on 'change', "#organization_select", ->
   if $(this).val() == null
     $('#protocol_section').closest('.form-group').addClass("hidden")
     $('#protocol_section').empty()
+
+# Change title based on service type selection
+$(document).on 'change', '#service_type_select', ->
+  if $(this).val() == "One Time Fees"
+    $('input#title').val("Auditing Report (One Time Fee Services)")
+  else
+    $('input#title').val("Auditing Report (Per Patient Per Visit Services)")
