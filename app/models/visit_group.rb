@@ -36,6 +36,7 @@ class VisitGroup < ActiveRecord::Base
   validates :arm_id, presence: true
   validates :name, presence: true
 
+
   validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
   validate :day_must_be_in_order, unless: "day.blank? || arm_id.blank?"
   validates :day, numericality: { only_integer: true }, unless: "day.blank?"
