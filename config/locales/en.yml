@@ -330,6 +330,7 @@ en:
       project_schedule: "Project Schedule"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
+    back_to_top: 'Back to Top'
 
   reports:
     asc: "ASC"
