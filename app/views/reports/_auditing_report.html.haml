@@ -51,8 +51,8 @@
                 = text_field_tag "end_date", nil, class: "datepicker form-control", readonly: true
             .form-group.protocols-group
               = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
-              .col-sm-9
-                = select_tag "protocol_ids", truncated_options_from_collection_for_select(current_identity.protocols, "id", "short_title_with_sparc_id"), multiple: true, 'data-live-search' => true, 'data-actions-box' => true, title: t(:reports)[:all_protocols], class: "selectpicker form-control"
+              .col-sm-9#protocol_section
+                %i.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}

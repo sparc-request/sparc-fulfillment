@@ -31,7 +31,7 @@ class ReportsController < ApplicationController
 
   def create
     @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
-    
+
     @report = @report_type.classify.constantize.new(reports_params)
     @errors = @report.errors
 
@@ -39,6 +39,14 @@ class ReportsController < ApplicationController
       @reports_params = reports_params
       @documentable.documents.push @document
       ReportJob.perform_later(@document, reports_params)
+    end
+  end
+
+  def update_protocols_dropdown
+    if params[:org_ids]
+      @protocols = Protocol.where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
+    else
+      @protocols = current_identity.protocols
     end
   end
 
