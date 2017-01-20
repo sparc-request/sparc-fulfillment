@@ -18,20 +18,14 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$('#protocol_section').html('<%= escape_javascript(select_tag "protocol_ids", truncated_options_from_collection_for_select(@protocols, "id", "short_title_with_sparc_id"), multiple: true, "data-live-search" => true, "data-actions-box" => true, title: t(:reports)[:all_protocols], class: "selectpicker form-control") %>')
-# $('#protocol_select').multiselect({
-#   includeSelectAllOption: true,
-#   allSelectedText: "All Protocols",
-#   enableFiltering: true
-# })
+$('#protocol_section').html('<%= escape_javascript(select_tag (@single_protocol ? "protocol" : "protocols"), truncated_options_from_collection_for_select(@protocols, "id", "short_title_with_sparc_id"), multiple: (@single_protocol ? false : true), id: "protocol_select", title: t(:reports)[:select_protocols], class: "selectpicker form-control") %>')
 
-$(".modal-content .selectpicker").selectpicker()
+$(".modal-content #protocol_select").selectpicker({
+  selectedTextFormat: 'count',
+  countSelectedText: (selected, total) -> if (selected == total) then "All Protocols" else "#{selected} Protocols selected"
+  actionsBox: true,
+  liveSearch: true
+})
 
-# $("#protocol_select").multiselect('selectAll', false)
-# $("#protocol_select").multiselect('updateButtonText')
 
 $('.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin').remove()
-
-
-# = select_tag "protocol_ids", truncated_options_from_collection_for_select(current_identity.protocols, "id", "short_title_with_sparc_id"), multiple: true, 'data-live-search' => true, 'data-actions-box' => true, title: t(:reports)[:all_protocols], class: "selectpicker form-control"
-# = select_tag "protocol_ids", truncated_options_from_collection_for_select(                @protocols, "id", "short_title_with_sparc_id"), multiple: true, selectAll: true, id: "protocol_select", "data-live-search" => true, "data-actions-box" => true, title: t(:reports)[:all_protocols], class: "form-control"

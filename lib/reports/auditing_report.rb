@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class AuditingReport < Report
-  VALIDATES_PRESENCE_OF = [:service_type, :title, :start_date, :end_date].freeze
+  VALIDATES_PRESENCE_OF = [:service_type, :title, :start_date, :end_date, :protocols].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
@@ -36,11 +36,7 @@ class AuditingReport < Report
 
     CSV.open(document.path, "wb") do |csv|
 
-      if @params[:protocol_ids].present?
-        protocols = Protocol.find(@params[:protocol_ids])
-      else
-        protocols = Identity.find(@params[:identity_id]).protocols
-      end
+      protocols = Protocol.find(@params[:protocols])
 
       if @params[:service_type] == "Per Patient Per Visit"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]

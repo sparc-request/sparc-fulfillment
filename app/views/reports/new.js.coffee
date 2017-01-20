@@ -29,11 +29,11 @@ $('#end_date').datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
 
-if "<%= escape_javascript(@report_type) %>" == "auditing_report"
+if $("#protocol_section.background_load").length
   $.ajax
     type: 'GET'
     url: "reports/update_protocols_dropdown"
-
+    data: { report_type: "<%= escape_javascript(@report_type) %>"}
 
 $(".modal-content .selectpicker").selectpicker()
 

@@ -43,6 +43,8 @@ class ReportsController < ApplicationController
   end
 
   def update_protocols_dropdown
+    @single_protocol = (params[:report_type] == "project_summary_report")
+
     if params[:org_ids]
       @protocols = Protocol.where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
     else
@@ -66,7 +68,6 @@ class ReportsController < ApplicationController
 
   def reports_params
     params.require(:report_type) # raises error if report_type not present
-    params.except!(:organizations)
     params.permit(:format,
               :utf8,
               :report_type,
@@ -75,12 +76,13 @@ class ReportsController < ApplicationController
               :end_date,
               :service_type,
               :time_zone,
-              :protocol_id,
+              :protocol,
               :sort_by,
               :sort_order,
               :participant_id,
               :documentable_id,
               :documentable_type,
-              :protocol_ids => []).merge(identity_id: current_identity.id)
+              :organizations => [],
+              :protocols => []).merge(identity_id: current_identity.id)
   end
 end
