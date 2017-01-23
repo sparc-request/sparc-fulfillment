@@ -18,9 +18,14 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class UpdateDropdownsController < ApplicationController
+$('#protocol_section').html('<%= escape_javascript(select_tag (@single_protocol ? "protocol" : "protocols"), truncated_options_from_collection_for_select(@protocols, "id", "short_title_with_sparc_id"), multiple: (@single_protocol ? false : true), id: "protocol_select", title: t(:reports)[:select_protocols], class: "selectpicker form-control") %>')
 
-  def create
-    @protocols = Protocol.where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
-  end
-end
+$(".modal-content #protocol_select").selectpicker({
+  selectedTextFormat: 'count',
+  countSelectedText: (selected, total) -> if (selected == total) then "All Protocols" else "#{selected} Protocols selected"
+  actionsBox: true,
+  liveSearch: true
+})
+
+
+$('.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin').remove()

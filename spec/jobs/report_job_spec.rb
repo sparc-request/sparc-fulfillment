@@ -39,7 +39,7 @@ RSpec.describe ReportJob, type: :job do
     end
 
     it 'should enqueue a FayeJob worker' do
-      expect(FayeJob).to have_been_enqueued.with(global_id(@document)) 
+      expect(FayeJob).to have_been_enqueued.with(global_id(@document))
     end
   end
 
@@ -58,7 +58,7 @@ RSpec.describe ReportJob, type: :job do
       start_date: '01/01/2015',
       end_date: '02/01/2015',
       identity_id: create(:identity).id,
-      protocol_ids: Protocol.all.map(&:id).map(&:to_s)
+      protocols: Protocol.all.map(&:id).map(&:to_s)
     }
   end
 end
