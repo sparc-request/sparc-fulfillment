@@ -39,7 +39,7 @@ Rails.application.routes.draw do
 
   resources :reports, only: [:new, :create] do
     collection do
-      resource :update_dropdown, only: [:create]
+      get 'update_protocols_dropdown'
     end
   end
 
