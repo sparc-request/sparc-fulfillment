@@ -77,6 +77,7 @@ class ReportsController < ApplicationController
               :service_type,
               :time_zone,
               :protocol,
+              :protocol_id,
               :sort_by,
               :sort_order,
               :participant_id,
