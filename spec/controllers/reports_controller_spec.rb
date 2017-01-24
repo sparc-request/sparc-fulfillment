@@ -53,7 +53,7 @@ RSpec.describe ReportsController, type: :controller do
         do_post
       end
 
-      def do_post params={report_type: "invoice_report", title: "Invoice Report 1", start_date: "06/01/2016", end_date: "06/02/2016", protocol_ids: [1], sort_by: 'Protocol ID', sort_order: 'ASC'}
+      def do_post params={report_type: "invoice_report", title: "Invoice Report 1", start_date: "06/01/2016", end_date: "06/02/2016", organizations: [1], protocols: [1], sort_by: 'Protocol ID', sort_order: 'ASC'}
         xhr :post, :create, params, format: :js
       end
 

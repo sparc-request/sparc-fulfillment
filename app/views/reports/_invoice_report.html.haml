@@ -53,7 +53,6 @@
             .form-group.hidden
               = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
               .col-sm-9#protocol_section
-                = select_tag "protocol_ids", truncated_options_from_collection_for_select(current_identity.protocols, "id", "short_title_with_sparc_id"), multiple: true, 'data-live-search' => true, 'data-actions-box' => true, title: t(:reports)[:all_protocols], class: "selectpicker form-control"
             .form-group
               = label_tag "sort_by", t(:reports)[:sort_by], class: "col-sm-3 control-label"
               .col-sm-3
@@ -73,7 +72,7 @@
               .col-sm-3
                 %label.radio-inline
                   = radio_button_tag "sort_order", t(:reports)[:desc]
-                  = t(:reports)[:descending]                
+                  = t(:reports)[:descending]
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}

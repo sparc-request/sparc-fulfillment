@@ -29,6 +29,12 @@ $('#end_date').datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
 
+if $("#protocol_section.background_load").length
+  $.ajax
+    type: 'GET'
+    url: "reports/update_protocols_dropdown"
+    data: { report_type: "<%= escape_javascript(@report_type) %>"}
+
 $(".modal-content .selectpicker").selectpicker()
 
 multi_select = $("#organization_select")
@@ -53,11 +59,11 @@ multi_select.multiselect({
     selected_values = multi_select.val()
     if !_.isEqual(@original_selected_values,selected_values) && selected_values != null
       $('#protocol_section').empty()
-      $('#protocol_section').closest('.form-group').find('label').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
+      $('#protocol_section').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
       $('#protocol_section').closest('.form-group').removeClass("hidden")
       $.ajax
-        type: 'POST'
-        url: "reports/update_dropdown"
+        type: 'GET'
+        url: "reports/update_protocols_dropdown"
         data: { org_ids: multi_select.val() }
 })
 
