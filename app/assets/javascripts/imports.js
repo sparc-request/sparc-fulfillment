@@ -18,48 +18,54 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-// This is a manifest file that'll be compiled into application.js, which will include all the files
-// listed below.
-//
-// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
-// or vendor/assets/javascripts of plugins, if any, can be referenced here using a relative path.
-//
-// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
-// compiled file.
-//
-// Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
-// about supported directives.
+function validateFiles(inputFile) {
+  var allowedExtension = ["xml"];
 
-//= require bootstrap-table-export
-//= require bootstrap-table-custom
-//= require tableExport
-//= require jquery.base64
-//= require moment
-//= require moment/en-gb
-//= require bootstrap-datetimepicker
-//= require jquery.remotipart
-//= require nprogress
-//= require underscore
-//= require bootstrap-multiselect
-//= require bootstrap-contextmenu
-//= require bootstrap-table-cookie
-//= require sweetalert.min
+  var extName;
+  var extError = false;
 
-//= require global
-//= require protocols
-//= require protocols_show
-//= require study_schedule
-//= require study_schedule_management
-//= require participants
-//= require participant_tracker
-//= require appointments
-//= require autoload_appointment
-//= require tasks
-//= require documents
-//= require study_level_activities
-//= require remote_document_handler
-//= require ajax_progress_bar
-//= require procedure_grouper
-//= require faye
-//= require visit_group_form
-//= require imports
+  $.each(inputFile.files, function() {
+    extName = this.name.split('.').pop();
+    if ($.inArray(extName, allowedExtension) == -1) {extError=true;};
+  });
+
+  if (extError) {
+    $('.klok-submit-button').each(function(key, value) {
+      if ($(value).hasClass('disabled')) {
+      } else {
+        $(value).addClass('disabled');
+      }
+    })
+    swal("Oops", "Only .xml files are allowed", "error");
+    $(inputFile).val('');
+  } else {
+    $('.klok-submit-button').each(function(key, value) {
+      $(value).removeClass('disabled');
+    })
+  }
+}
+$(function() {
+  $('.spinner').hide();
+  // We can attach the `fileselect` event to all file inputs on the page
+  $(document).on('change', ':file', function() {
+    $('#file-display').val($(this).val().replace(/^.*[\\\/]/, ''));
+  });
+
+  $(document).on('click', '.proof-report', function(){
+    $('.proof-report').button('loading')
+  });
+
+  $(document).on('click', '.import-klok-data', function(){
+    $('.import-klok-data').button('loading')
+  });
+
+  $(document).ajaxStart(function(){
+    $('.spinner').show();
+  });
+
+  $(document).ajaxStop(function(){
+    $('.spinner').hide();
+    $('.import-klok-data').button('complete')
+    $('.proof-report').button('complete')
+  });
+});

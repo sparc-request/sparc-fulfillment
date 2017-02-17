@@ -18,12 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# Be sure to restart your server when you modify this file.
+require 'rails_helper'
 
-# Version of your assets, change this if you want to expire all your assets.
-Rails.application.config.assets.version = '1.0'
+RSpec.describe Import, type: :model do
+  it { is_expected.to have_attached_file(:file) }
 
-Rails.application.config.assets.precompile += %w( libraries.js imports.js )
-# Precompile additional assets.
-# application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
-# Rails.application.config.assets.precompile += %w( search.js )
+  it { is_expected.to validate_attachment_content_type(:file).
+       allowing('text/plain') }
+
+  it { is_expected.to have_attached_file(:xml_file) }
+
+  it { is_expected.to validate_attachment_content_type(:xml_file).
+       allowing('text/xml') }
+end

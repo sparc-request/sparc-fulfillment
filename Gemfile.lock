@@ -100,6 +100,8 @@ GEM
     choice (0.2.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
+    cocaine (0.5.8)
+      climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -226,6 +228,7 @@ GEM
       mime-types (>= 1.16, < 3)
     method_source (0.8.2)
     mime-types (2.6.2)
+    mimemagic (0.3.0)
     mini_portile2 (2.1.0)
     minitest (5.10.1)
     momentjs-rails (2.10.2)
@@ -251,6 +254,12 @@ GEM
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1.0)
+    paperclip (4.3.7)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      cocaine (~> 0.5.5)
+      mime-types
+      mimemagic (= 0.3.0)
     paranoia (2.1.2)
       activerecord (~> 4.0)
     progress_bar (1.0.3)
@@ -458,6 +467,7 @@ DEPENDENCIES
   omniauth
   omniauth-shibboleth
   paper_trail (~> 4.0.0.beta)
+  paperclip (~> 4.3, >= 4.3.6)
   paranoia (~> 2.0)
   progress_bar
   pry
@@ -488,3 +498,6 @@ DEPENDENCIES
   webmock (~> 1.20.4)
   will_paginate
   yajl-ruby (~> 1.2.1)
+
+BUNDLED WITH
+   1.14.3
