@@ -33,7 +33,7 @@ class ArmVisitGroupsImporter < DependentObjectImporter
     object.visit_count.times do |index|
       name = "Visit #{index}"
 
-      new_visit_group_values.push [name, index, index, object.id]
+      new_visit_group_values.push [name, index, (index + 1), object.id]
     end
 
     VisitGroup.import new_visit_group_columns, new_visit_group_values, { validate: true }
