@@ -46,7 +46,7 @@ feature 'Custom appointment', js: true do
         given_i_am_viewing_the_participant_calendar
         when_i_click_create_custom_appointment
         when_i_fill_in_the_form
-        when_i_click_save_appointment
+        when_i_click_add_appointment
         then_i_should_see_the_newly_created_appointment
       end
     end
@@ -56,7 +56,7 @@ feature 'Custom appointment', js: true do
         given_i_am_viewing_the_participant_calendar
         when_i_click_create_custom_appointment
         when_i_fill_in_the_form
-        when_i_click_save_appointment
+        when_i_click_add_appointment
         when_i_select_the_appointment
         when_i_add_a_procedure
         when_i_complete_the_procedure
@@ -90,8 +90,8 @@ feature 'Custom appointment', js: true do
     bootstrap_select "#custom_appointment_notes_attributes_0_reason", "Assessment not performed"
   end
 
-  def when_i_click_save_appointment
-    click_button 'Save'
+  def when_i_click_add_appointment
+    click_button 'Add'
     wait_for_ajax
   end
 
@@ -108,12 +108,12 @@ feature 'Custom appointment', js: true do
     find('button.add_service').click
     wait_for_ajax
   end
-  
+
   def when_i_complete_the_procedure
     find('button.start_visit').click
     find('label.status.complete').click
     wait_for_ajax
-    
+
     click_button 'Complete Visit'
     wait_for_ajax
   end
