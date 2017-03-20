@@ -50,7 +50,7 @@ namespace :data do
             protocol = procedure.protocol
             service = procedure.service
             #Check name accuracy first, before anything else
-            if procedure.service_name != service.name
+            if !procedure.handled_date.nil? && (start_date..end_date).cover?(procedure.handled_date.to_date) && procedure.service_name != service.name
               csv << [protocol.sparc_id, procedure.id, "#{procedure.service_name} => #{service.name}", "N/A", "N/A", procedure.participant.full_name, procedure.participant.mrn, procedure.appointment.name, "N/A", "N/A"]
               procedure.update_attribute(:service_name, service.name)
             end
@@ -107,7 +107,7 @@ namespace :data do
             protocol = fulfillment.protocol
             service = fulfillment.service
             #Check name accuracy first, before anything else
-            if fulfillment.service_name != service.name
+            if !fulfillment.fulfilled_at.nil? && (start_date..end_date).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
               csv << [protocol.sparc_id, fulfillment.id, "#{fulfillment.service_name} => #{service.name}", "N/A", "N/A", "N/A"]
               fulfillment.update_attribute(:service_name, service.name)
             end
