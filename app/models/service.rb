@@ -28,6 +28,7 @@ class Service < ActiveRecord::Base
   has_many :pricing_maps
   has_many :pricing_setups, through: :organization
   has_many :procedures
+  has_many :fulfillments
 
   default_scope { order(name: :asc) }
 
