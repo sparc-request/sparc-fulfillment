@@ -51,7 +51,7 @@ namespace :data do
             service = procedure.service
             #Check name accuracy first, before anything else
             if !procedure.handled_date.nil? && (start_date..end_date).cover?(procedure.handled_date.to_date) && procedure.service_name != service.name
-              csv << [protocol.sparc_id, procedure.id, "#{procedure.service_name} => #{service.name}", "N/A", "N/A", procedure.participant.full_name, procedure.participant.mrn, procedure.appointment.name, "N/A", "N/A"]
+              csv << [protocol.sparc_id, procedure.id, "#{procedure.service_name} => #{service.name}", "N/A", "N/A", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
               procedure.update_attribute(:service_name, service.name)
             end
 
@@ -74,12 +74,12 @@ namespace :data do
                 end
 
                 if calculated_amount != current_amount
-                  csv << [protocol.sparc_id, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.full_name, procedure.participant.mrn, procedure.appointment.name, procedure.appointment.start_date.strftime("%D"), procedure.completed_date.strftime("%D")]
+                  csv << [protocol.sparc_id, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
                   procedure.update_attribute(:service_cost, calculated_amount)
                 end
               else
                 ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                csv << [protocol.sparc_id, procedure.id, procedure.service_name, "Incomplete", "Incomplete", procedure.participant.full_name, procedure.participant.mrn, procedure.appointment.name, "N/A", "N/A"]
+                csv << [protocol.sparc_id, procedure.id, procedure.service_name, "Incomplete", "Incomplete", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
                 procedure.update_attribute(:service_cost, nil)
               end
 
