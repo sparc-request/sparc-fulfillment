@@ -20,7 +20,7 @@
 
 class InvoiceReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :sort_by, :sort_order, :protocol_ids].freeze
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :sort_by, :sort_order, :organizations, :protocols].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
@@ -53,18 +53,10 @@ class InvoiceReport < Report
       csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
       csv << [""]
 
-      if @params[:protocol_ids].present?
-        if @params[:sort_by] == "Protocol ID"
-          protocols = Protocol.where(id: @params[:protocol_ids]).sort_by(&:sparc_id)
-        else
-          protocols = Protocol.where(id: @params[:protocol_ids]).sort_by{ |protocol| protocol.pi.full_name }
-        end
+      if @params[:sort_by] == "Protocol ID"
+        protocols = Protocol.where(id: @params[:protocols]).sort_by(&:sparc_id)
       else
-        if @params[:sort_by] == "Protocol ID"
-          protocols = Identity.find(@params[:identity_id]).protocols.sort_by(&:sparc_id)
-        else
-          protocols = Identity.find(@params[:identity_id]).protocols.sort_by{ |protocol| protocol.pi.full_name }
-        end
+        protocols = Protocol.where(id: @params[:protocols]).sort_by{ |protocol| protocol.pi.full_name }
       end
 
       if @params[:sort_order] == "DESC"
@@ -170,7 +162,7 @@ class InvoiceReport < Report
                     display_cost(procedure.service_cost),
                     "",
                     display_cost(service_group.size * procedure.service_cost.to_f),
-                    display_subsidy_percent(protocol)   
+                    display_subsidy_percent(protocol)
                   ]
                   service_cost = service_group.size * procedure.service_cost.to_f
                   total += service_cost

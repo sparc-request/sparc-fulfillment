@@ -93,6 +93,10 @@ feature 'Identity edits document title', js: true, enqueue: false do
     find(".modal-header", match: :first).click
     wait_for_ajax
 
+    #Actually choose protocol
+    find('.bootstrap-select').click
+    find('button.bs-select-all').click
+
     # close protocol dropdown, so it's not covering 'Request Report' button
     find('.modal-header', match: :first).click
     wait_for_ajax

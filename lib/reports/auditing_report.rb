@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class AuditingReport < Report
-  VALIDATES_PRESENCE_OF = [:service_type, :title, :start_date, :end_date].freeze
+  VALIDATES_PRESENCE_OF = [:service_type, :title, :start_date, :end_date, :protocols].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
@@ -36,11 +36,7 @@ class AuditingReport < Report
 
     CSV.open(document.path, "wb") do |csv|
 
-      if @params[:protocol_ids].present?
-        protocols = Protocol.find(@params[:protocol_ids])
-      else
-        protocols = Identity.find(@params[:identity_id]).protocols
-      end
+      protocols = Protocol.find(@params[:protocols])
 
       if @params[:service_type] == "Per Patient Per Visit"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
@@ -71,7 +67,7 @@ class AuditingReport < Report
             participant = procedure.appointment.participant
 
             csv << [
-              protocol.sparc_id,
+              protocol.srid,
               participant.full_name,
               participant.label,
               procedure.appointment.arm.name,
@@ -91,7 +87,6 @@ class AuditingReport < Report
           end
         end
       elsif @params[:service_type] == "One Time Fees"
-        ##Part II Goes Here
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
         csv << [""]
         csv << [""]
@@ -121,7 +116,7 @@ class AuditingReport < Report
             next unless line_item.versions.where(event: "update", created_at: @start_date..@end_date).any?
             line_item.versions.where(event: "update").each do |version|
               csv << [
-                protocol.sparc_id,
+                protocol.srid,
                 protocol.short_title,
                 protocol.pi.full_name,
                 protocol.organization.abbreviation,
@@ -133,7 +128,7 @@ class AuditingReport < Report
                 line_item.quantity_requested,
                 line_item.quantity_remaining,
                 format_date(line_item.started_at),
-                line_item.components.map(&:component).join(' | '),
+                line_item.components.where(selected: true).map(&:component).join(' | '),
                 format_date(line_item.last_fulfillment),
                 line_item.notes.map(&:comment).join(' | '),
                 line_item.documents.map(&:title).join(' | '),
@@ -172,7 +167,11 @@ class AuditingReport < Report
   def changeset_formatter(changeset)
     formatted = []
     changeset.select{|k, v| k != "updated_at"}.each do |field, changes|
-      formatted << "#{field.humanize}: #{changes.first} => #{changes.last}"
+      if field == "service_id"
+        formatted << "#{field.humanize}: #{Service.find(changes.first).name} => #{Service.find(changes.last).name}"
+      else
+        formatted << "#{field.humanize}: #{changes.first} => #{changes.last}"
+      end
     end
     formatted.join(' | ')
   end
