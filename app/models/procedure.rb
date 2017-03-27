@@ -223,7 +223,9 @@ class Procedure < ActiveRecord::Base
       end
     end
 
-    if status_changed?(from: "complete")
+    if status_changed?(to: "complete")
+      write_attribute(:service_cost, new_cost(protocol.sparc_funding_source, completed_date))
+    else
       write_attribute(:service_cost, nil)
     end
 
