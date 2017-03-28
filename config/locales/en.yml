@@ -299,7 +299,7 @@ en:
     srid: "SRID"
     start_date: "Study Start Date"
     status: "Status"
-    study_cost: "Total Study Costs"
+    study_cost: "Total Cost"
     total_at_approval: "Cost at Approval"
     study_schedule_report: "Export"
     subsidy_amount: "Percent Subsidy"

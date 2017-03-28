@@ -38,3 +38,7 @@
           = t(:protocol)[:study_schedule_report]
         %th{ data: { class: 'admin_portal_link', align: 'center', field: 'admin_portal_link' } }
           = t(:protocol)[:admin_portal_link]
+        %th{ data: { align: 'center', field: 'organization_cost' } }
+          = format_organization_name(protocol.sub_service_request)
+        %th{ data: { align: 'center', field: 'study_cost' } }
+          = t(:protocol)[:study_cost]
