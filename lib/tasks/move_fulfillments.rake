@@ -14,6 +14,5 @@ task move_fulfillments: :environment do
     fulfillment.update_attributes(line_item_id: line_item.id)
   end
 
-  dup_line_item.destroy
   dup_protocol.destroy
 end
