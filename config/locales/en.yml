@@ -178,8 +178,8 @@ en:
     title: "Title"
     date_created: "Date Created"
     file: "Attached File"
-    proof_report_submit: 'Run Proof Report'
-    klok_report_submit: 'Klok Report Submit'
+    proof_report_submit: 'Proof Report'
+    klok_report_submit: 'Klok Report'
 
   multiple_procedures_modal:
     incomplete_header: "Incomplete Multiple Services"
