@@ -47,6 +47,7 @@ class ImportsController < ApplicationController
           format.js
           format.html { redirect_to imports_path }
         else
+          import.destroy
           format.js
         end
       else
