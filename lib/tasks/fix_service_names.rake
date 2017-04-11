@@ -42,7 +42,7 @@ namespace :data do
         complete_bar = ProgressBar.new(service.procedures.where(status: "complete").count)
         service.procedures.where(status: "complete").find_each do |procedure|
           ##Check date range. We only want to update completed procedures if they are in the date range
-          if procedure.completed_date && (start_date..end_date).cover?(procedure.completed_date.to_date) && procedure.service_name != service.name
+          if (start_date..end_date).cover?(procedure.completed_date.to_date) && procedure.service_name != service.name
             csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name)]
             procedure.update_attribute(:service_name, service.name)
             complete_bar.increment!
@@ -70,22 +70,31 @@ namespace :data do
       csv << []
       csv << ["One Time Fee (Fulfillments)"]
       csv << ["Protocol ID:", "fulfillment ID:", "Original Service Name", "New Service Name"]
-      puts "Fixing One Time Fee Fulfillments..."
 
-      if items.map(&:fulfillments).flatten.count >= 1
-        bar2 = ProgressBar.new(items.map(&:fulfillments).flatten.count)
-        items.each do |item|
-          item.fulfillments.find_each do |fulfillment|
-            protocol = fulfillment.protocol
-            service = fulfillment.service
-            #Check name accuracy first, before anything else
-            if !fulfillment.fulfilled_at.nil? && (start_date..end_date).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
-              csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
-              fulfillment.update_attribute(:service_name, service.name)
+      csv << ["Finished Fulfillments"]
+      puts "Fixing fulfilled fulfillments"
+      finished_bar = ProgressBar.new(service.fulfillments.where.not(fulfilled_at: nil).count)
+      ##CHeck date range for fulfilled(finished) fulfillments
+      service.fulfillments.where.not(fulfilled_at: nil).find_each do |fulfillment|
+        if (start_date..end_date_).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
+          csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
+          fulfillment.update_attribute(:service_name, service.name)
+          finished_bar.increment!
+        else
+          finished_bar.increment!
+        end
+      end
 
-              bar2.increment!
-            end
-          end
+      csv << ["Un-Finished Fulfillments"]
+      puts "Fixing un-finished fulfillments"
+      unfinished_bar = ProgressBar.new(service.fulfillments.where(fulfilled_at: nil).count)
+      service.fulfillments.where(fulfilled_at: nil).find_each do |fulfillment|
+        if fulfillment.service_name != service.name
+          csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
+          fulfillment.update_attribute(:service_name, service.name)
+          unfinished_bar.increment!
+        else
+          unfinished_bar.increment!
         end
       end
     end
