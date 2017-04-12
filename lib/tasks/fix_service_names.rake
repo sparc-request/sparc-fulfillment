@@ -33,7 +33,7 @@ namespace :data do
 
       ##Procedures Section
       csv << ["Per Patient Per Visit (Procedures)"]
-      csv << ["Protocol ID:", "Procedure ID:", "Original Service Name", "New Service Name", "Patient Name:", "Patient ID (MRN)", "Visit Name:"]
+      csv << ["Protocol ID:", "Procedure ID:", "Original Service Name", "New Service Name", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Procedure Completed Date"]
 
       services.each do |service|
         ##Change names for completed procedures
@@ -44,7 +44,7 @@ namespace :data do
           service.procedures.where(status: "complete").find_each do |procedure|
             ##Check date range. We only want to update completed procedures if they are in the date range
             if (start_date..end_date).cover?(procedure.completed_date.to_date) && procedure.service_name != service.name
-              csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name)]
+              csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), procedure.completed_date.strftime('%D')]
               procedure.update_attribute(:service_name, service.name)
               complete_bar.increment!
             else
@@ -59,7 +59,7 @@ namespace :data do
           non_complete_bar = ProgressBar.new(service.procedures.where.not(status: "complete").count)
           service.procedures.where.not(status: "complete").find_each do |procedure|
             if procedure.service_name != service.name
-              csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name)]
+              csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A"]
               procedure.update_attribute(:service_name, service.name)
               non_complete_bar.increment!
             else
@@ -73,7 +73,7 @@ namespace :data do
       csv << []
       csv << []
       csv << ["One Time Fee (Fulfillments)"]
-      csv << ["Protocol ID:", "fulfillment ID:", "Original Service Name", "New Service Name"]
+      csv << ["Protocol ID:", "fulfillment ID:", "Original Service Name", "New Service Name", "Fulfillment Date"]
 
       services.each do |service|
         csv << ["Finished Fulfillments"]
@@ -83,7 +83,7 @@ namespace :data do
           ##CHeck date range for fulfilled(finished) fulfillments
           service.fulfillments.where.not(fulfilled_at: nil).find_each do |fulfillment|
             if (start_date..end_date_).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
-              csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
+              csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name, fulfillment.fulfilled_at.strftime('%D')]
               fulfillment.update_attribute(:service_name, service.name)
               finished_bar.increment!
             else
@@ -98,7 +98,7 @@ namespace :data do
           unfinished_bar = ProgressBar.new(service.fulfillments.where(fulfilled_at: nil).count)
           service.fulfillments.where(fulfilled_at: nil).find_each do |fulfillment|
             if fulfillment.service_name != service.name
-              csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
+              csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name, "N/A"]
               fulfillment.update_attribute(:service_name, service.name)
               unfinished_bar.increment!
             else
