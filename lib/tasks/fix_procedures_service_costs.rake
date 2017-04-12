@@ -49,11 +49,6 @@ namespace :data do
           item.procedures.find_each do |procedure|
             protocol = procedure.protocol
             service = procedure.service
-            #Check name accuracy first, before anything else
-            if !procedure.handled_date.nil? && (start_date..end_date).cover?(procedure.handled_date.to_date) && procedure.service_name != service.name
-              csv << [protocol.sparc_id, procedure.id, "#{procedure.service_name} => #{service.name}", "N/A", "N/A", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
-              procedure.update_attribute(:service_name, service.name)
-            end
 
             #Skip over procedures which don't have a service_cost
             if procedure.service_cost.blank? or (!procedure.handled_date.nil? && !(start_date..end_date).cover?(procedure.handled_date.to_date))
@@ -105,12 +100,7 @@ namespace :data do
         items.each do |item|
           item.fulfillments.find_each do |fulfillment|
             protocol = fulfillment.protocol
-            service = fulfillment.service
-            #Check name accuracy first, before anything else
-            if !fulfillment.fulfilled_at.nil? && (start_date..end_date).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
-              csv << [protocol.sparc_id, fulfillment.id, "#{fulfillment.service_name} => #{service.name}", "N/A", "N/A", "N/A"]
-              fulfillment.update_attribute(:service_name, service.name)
-            end
+
             #Skip over fulfillments which don't have a service_cost
             if fulfillment.service_cost.blank? or (!fulfillment.fulfilled_at.nil? && !(start_date..end_date).cover?(fulfillment.fulfilled_at.to_date))
               bar2.increment! rescue nil

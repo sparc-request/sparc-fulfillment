@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161220161903) do
+ActiveRecord::Schema.define(version: 20170405140625) do
 
   create_table "appointment_statuses", force: :cascade do |t|
     t.string   "status",         limit: 255
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 20161220161903) do
     t.integer  "position",        limit: 4
     t.integer  "composable_id",   limit: 4
     t.string   "composable_type", limit: 255
-    t.boolean  "selected",        limit: 1,   default: false
+    t.boolean  "selected",                    default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
@@ -135,6 +135,23 @@ ActiveRecord::Schema.define(version: 20161220161903) do
   end
 
   add_index "identity_counters", ["identity_id"], name: "index_identity_counters_on_identity_id", using: :btree
+
+  create_table "imports", force: :cascade do |t|
+    t.string   "file",                  limit: 255
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.string   "title",                 limit: 255
+    t.string   "uploaded_file",         limit: 255
+    t.string   "xml_file",              limit: 255
+    t.string   "file_file_name",        limit: 255
+    t.string   "file_content_type",     limit: 255
+    t.integer  "file_file_size",        limit: 4
+    t.datetime "file_updated_at"
+    t.string   "xml_file_file_name",    limit: 255
+    t.string   "xml_file_content_type", limit: 255
+    t.integer  "xml_file_file_size",    limit: 4
+    t.datetime "xml_file_updated_at"
+  end
 
   create_table "line_items", force: :cascade do |t|
     t.integer  "sparc_id",           limit: 4
@@ -260,22 +277,6 @@ ActiveRecord::Schema.define(version: 20161220161903) do
   add_index "protocols", ["sparc_id"], name: "index_protocols_on_sparc_id", using: :btree
   add_index "protocols", ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id", using: :btree
 
-  create_table "services", force: :cascade do |t|
-    t.integer  "sparc_id",        limit: 4
-    t.decimal  "cost",                          precision: 10
-    t.string   "name",            limit: 255
-    t.string   "abbreviation",    limit: 255
-    t.text     "description",     limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-    t.integer  "sparc_core_id",   limit: 4
-    t.string   "sparc_core_name", limit: 255
-  end
-
-  add_index "services", ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
-  add_index "services", ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
-
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
@@ -288,7 +289,7 @@ ActiveRecord::Schema.define(version: 20161220161903) do
 
   create_table "tasks", force: :cascade do |t|
     t.date     "due_at"
-    t.boolean  "complete",        limit: 1,     default: false
+    t.boolean  "complete",                      default: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"

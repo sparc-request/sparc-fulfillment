@@ -25,4 +25,14 @@ class Sparc::Protocol < ActiveRecord::Base
 
   has_many :service_requests
   has_many :arms
+
+  def funding_source_based_on_status
+    funding_source = case self.funding_status
+      when 'pending_funding' then self.potential_funding_source
+      when 'funded' then self.funding_source
+      else raise ArgumentError, "Invalid funding status: #{self.funding_status.inspect}"
+      end
+
+    return funding_source
+  end
 end

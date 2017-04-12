@@ -41,6 +41,11 @@
               %span.notification.identity_report_notifications
                 = current_identity.unaccessed_documents_count
 
+        %li
+          = link_to imports_path, class: 'imports' do
+            %span.glyphicon.glyphicon-import{aria: {hidden: "true"}}
+            = t(:navbar)[:imports_link]
+
         = yield :nav_buttons
       %ul.nav.navbar-nav.navbar-right
         %li

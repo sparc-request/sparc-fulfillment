@@ -18,83 +18,54 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-/************Study Schedule Styling************/
+function validateFiles(inputFile) {
+  var allowedExtension = ["xml"];
 
-.arms_container
-  .row
-    margin-left: -15px
-    margin-right: -15px
+  var extName;
+  var extError = false;
 
-.study_schedule
+  $.each(inputFile.files, function() {
+    extName = this.name.split('.').pop();
+    if ($.inArray(extName, allowedExtension) == -1) {extError=true;};
+  });
 
-  .header
-    background: #113967
-    padding: 0px
-    height: auto
-    color: white
-    input,
-    select
-      color: black
+  if (extError) {
+    $('.klok-submit-button').each(function(key, value) {
+      if ($(value).hasClass('disabled')) {
+      } else {
+        $(value).addClass('disabled');
+      }
+    })
+    swal("Oops", "Only .xml files are allowed", "error");
+    $(inputFile).val('');
+  } else {
+    $('.klok-submit-button').each(function(key, value) {
+      $(value).removeClass('disabled');
+    })
+  }
+}
+$(function() {
+  $('.spinner').hide();
+  // We can attach the `fileselect` event to all file inputs on the page
+  $(document).on('change', ':file', function() {
+    $('#file-display').val($(this).val().replace(/^.*[\\\/]/, ''));
+  });
 
-  .visit_group_select
-    padding: 15px 0px
-    border-bottom: 1px solid white
-    border-left: 1px solid white
+  $(document).on('click', '.proof-report', function(){
+    $('.proof-report').button('loading')
+  });
 
-  .study_schedule_table_name
-    font-size: 150%
-    vertical-align: bottom
+  $(document).on('click', '.import-klok-data', function(){
+    $('.import-klok-data').button('loading')
+  });
 
-  .row.visit_groups
-    background: #113967
-    color: white
+  $(document).ajaxStart(function(){
+    $('.spinner').show();
+  });
 
-  .visit_group_box
-    border-left: 1px solid white
-    padding-bottom: 3px
-
-  .visit_group_day_windows .day_window
-    padding: 0px
-
-  .visit_group_day_windows:first-child
-    padding-left: 3px
-    
-  .visit_name_display span input
-    width: 85%
-    display: inline
-    padding: 6px 4px
-
-  .row.check_visit_columns
-    background-color: #416185
-    color: white
-    padding: 5px 0px
-
-  .row.line_item
-    border-top: 1px solid #ababab
-    padding: 4px 0px
-
-  .line_item_service_name
-    padding: 5px 0px 0px 10px
-
-  .core
-    background-color: #ababab
-    padding: 3px 0px 3px 0px
-    font:
-      weight: bold
-
-  .scrolling-div
-    overflow: auto
-    max-height: 250px !important
-
-  .shorter_text
-    width: 65px
-
-  .even_shorter_text
-    width: 25px
-    padding: 0px 2px
-
-  .visit
-    margin-top: 6px
-
-  a.title
-    font-weight: bold
+  $(document).ajaxStop(function(){
+    $('.spinner').hide();
+    $('.import-klok-data').button('complete')
+    $('.proof-report').button('complete')
+  });
+});

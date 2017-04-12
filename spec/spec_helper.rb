@@ -38,6 +38,7 @@
 require 'shoulda-matchers'
 require 'simplecov'
 require 'rspec/active_job'
+require 'paperclip/matchers'
 
 SimpleCov.start do
   add_group "Models", "app/models"

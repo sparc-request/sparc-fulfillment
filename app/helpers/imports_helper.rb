@@ -18,27 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::PricingMap < ActiveRecord::Base
+module ImportsHelper
 
-  include SparcShard
-
-  belongs_to :service
-
-  def applicable_rate(rate_type, default_percentage)
-    rate = rate_override(rate_type)
-    rate ||= calculate_rate(default_percentage)
-    return rate
-  end
-
-  def rate_override(rate_type)
-    return case rate_type
-      when 'federal'    then self.federal_rate
-      when 'corporate'  then self.corporate_rate
-      when 'member'     then self.member_rate
-      when 'other'      then self.other_rate
-      when 'full'       then self.full_rate
-      else raise ArgumentError, "Could not find rate for #{rate_type}"
-      end
+  def attached_file(url)
+    content_tag(:a, class: 'attached_file', href: url) do
+      content_tag(:span, '', class: 'glyphicon glyphicon-file')
+    end
   end
 end
-

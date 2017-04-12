@@ -18,27 +18,35 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::PricingMap < ActiveRecord::Base
+require 'rails_helper'
 
-  include SparcShard
+RSpec.describe ImportsController, type: :controller do
 
-  belongs_to :service
+  login_user
 
-  def applicable_rate(rate_type, default_percentage)
-    rate = rate_override(rate_type)
-    rate ||= calculate_rate(default_percentage)
-    return rate
+  describe 'GET #index' do
+    it 'should return all imports' do
+      create(:import)
+
+      get :index
+
+      expect(response).to be_success
+    end
+
+    it 'should return all imports' do
+      import = create(:import)
+
+      get :index
+
+      expect(assigns(:imports)).to eq [import]
+    end
   end
 
-  def rate_override(rate_type)
-    return case rate_type
-      when 'federal'    then self.federal_rate
-      when 'corporate'  then self.corporate_rate
-      when 'member'     then self.member_rate
-      when 'other'      then self.other_rate
-      when 'full'       then self.full_rate
-      else raise ArgumentError, "Could not find rate for #{rate_type}"
-      end
+  describe 'GET #new' do
+    it 'should instantiate a new Import class' do
+      xhr :get, :new
+
+      expect(assigns(:import)).to be_a_new Import
+    end
   end
 end
-

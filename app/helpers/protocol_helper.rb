@@ -34,6 +34,19 @@ module ProtocolHelper
     end
   end
 
+  def format_organization_name(ssr)
+    "#{ssr.organization.abbreviation} Cost"
+  end
+
+  def effective_current_total sub_service_request
+    ssr = Sparc::SubServiceRequest.find(sub_service_request.id)
+    ssr.set_effective_date_for_cost_calculations
+    total = (ssr.direct_cost_total / 100.0)
+    ssr.unset_effective_date_for_cost_calculations
+
+    return total
+  end
+
   def formatted_owner protocol
     if protocol.owner.present?
       protocol.owner.full_name

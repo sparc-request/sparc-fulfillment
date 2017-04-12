@@ -18,27 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::PricingMap < ActiveRecord::Base
+require 'rails_helper'
 
-  include SparcShard
+RSpec.describe Import, type: :model do
+  it { is_expected.to have_attached_file(:file) }
 
-  belongs_to :service
+  it { is_expected.to validate_attachment_content_type(:file).
+       allowing('text/plain') }
 
-  def applicable_rate(rate_type, default_percentage)
-    rate = rate_override(rate_type)
-    rate ||= calculate_rate(default_percentage)
-    return rate
-  end
+  it { is_expected.to have_attached_file(:xml_file) }
 
-  def rate_override(rate_type)
-    return case rate_type
-      when 'federal'    then self.federal_rate
-      when 'corporate'  then self.corporate_rate
-      when 'member'     then self.member_rate
-      when 'other'      then self.other_rate
-      when 'full'       then self.full_rate
-      else raise ArgumentError, "Could not find rate for #{rate_type}"
-      end
-  end
+  it { is_expected.to validate_attachment_content_type(:xml_file).
+       allowing('text/xml') }
 end
-
