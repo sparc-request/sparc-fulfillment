@@ -39,28 +39,32 @@ namespace :data do
         ##Change names for completed procedures
         csv << ["Completed Procedures:"]
         puts "Fixing Complete Procedures..."
-        complete_bar = ProgressBar.new(service.procedures.where(status: "complete").count)
-        service.procedures.where(status: "complete").find_each do |procedure|
-          ##Check date range. We only want to update completed procedures if they are in the date range
-          if (start_date..end_date).cover?(procedure.completed_date.to_date) && procedure.service_name != service.name
-            csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name)]
-            procedure.update_attribute(:service_name, service.name)
-            complete_bar.increment!
-          else
-            complete_bar.increment!
+        if service.procedures.where(status: "complete").count >= 1
+          complete_bar = ProgressBar.new(service.procedures.where(status: "complete").count)
+          service.procedures.where(status: "complete").find_each do |procedure|
+            ##Check date range. We only want to update completed procedures if they are in the date range
+            if (start_date..end_date).cover?(procedure.completed_date.to_date) && procedure.service_name != service.name
+              csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name)]
+              procedure.update_attribute(:service_name, service.name)
+              complete_bar.increment!
+            else
+              complete_bar.increment!
+            end
           end
         end
 
         csv << ["Non Complete Procedures"]
         puts "Fixing non-completed procedures"
-        non_complete_bar = ProgressBar.new(service.procedures.where.not(status: "complete").count)
-        service.procedures.where.not(status: "complete").find_each do |procedure|
-          if procedure.service_name != service.name
-            csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name)]
-            procedure.update_attribute(:service_name, service.name)
-            non_complete_bar.increment!
-          else
-            non_complete_bar.increment!
+        if service.procedures.where.not(status: "complete").count >= 1
+          non_complete_bar = ProgressBar.new(service.procedures.where.not(status: "complete").count)
+          service.procedures.where.not(status: "complete").find_each do |procedure|
+            if procedure.service_name != service.name
+              csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name)]
+              procedure.update_attribute(:service_name, service.name)
+              non_complete_bar.increment!
+            else
+              non_complete_bar.increment!
+            end
           end
         end
       end
@@ -71,30 +75,36 @@ namespace :data do
       csv << ["One Time Fee (Fulfillments)"]
       csv << ["Protocol ID:", "fulfillment ID:", "Original Service Name", "New Service Name"]
 
-      csv << ["Finished Fulfillments"]
-      puts "Fixing fulfilled fulfillments"
-      finished_bar = ProgressBar.new(service.fulfillments.where.not(fulfilled_at: nil).count)
-      ##CHeck date range for fulfilled(finished) fulfillments
-      service.fulfillments.where.not(fulfilled_at: nil).find_each do |fulfillment|
-        if (start_date..end_date_).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
-          csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
-          fulfillment.update_attribute(:service_name, service.name)
-          finished_bar.increment!
-        else
-          finished_bar.increment!
+      services.each do |service|
+        csv << ["Finished Fulfillments"]
+        puts "Fixing fulfilled fulfillments"
+        if service.fulfillments.where.not(fulfilled_at: nil).count >= 1
+          finished_bar = ProgressBar.new(service.fulfillments.where.not(fulfilled_at: nil).count)
+          ##CHeck date range for fulfilled(finished) fulfillments
+          service.fulfillments.where.not(fulfilled_at: nil).find_each do |fulfillment|
+            if (start_date..end_date_).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
+              csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
+              fulfillment.update_attribute(:service_name, service.name)
+              finished_bar.increment!
+            else
+              finished_bar.increment!
+            end
+          end
         end
-      end
 
-      csv << ["Un-Finished Fulfillments"]
-      puts "Fixing un-finished fulfillments"
-      unfinished_bar = ProgressBar.new(service.fulfillments.where(fulfilled_at: nil).count)
-      service.fulfillments.where(fulfilled_at: nil).find_each do |fulfillment|
-        if fulfillment.service_name != service.name
-          csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
-          fulfillment.update_attribute(:service_name, service.name)
-          unfinished_bar.increment!
-        else
-          unfinished_bar.increment!
+        csv << ["Un-Finished Fulfillments"]
+        puts "Fixing un-finished fulfillments"
+        if service.fulfillments.where(fulfilled_at: nil).count >= 1
+          unfinished_bar = ProgressBar.new(service.fulfillments.where(fulfilled_at: nil).count)
+          service.fulfillments.where(fulfilled_at: nil).find_each do |fulfillment|
+            if fulfillment.service_name != service.name
+              csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name]
+              fulfillment.update_attribute(:service_name, service.name)
+              unfinished_bar.increment!
+            else
+              unfinished_bar.increment!
+            end
+          end
         end
       end
     end
