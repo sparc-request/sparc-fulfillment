@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   resources :line_items
   resources :visits, only: [:update]
   resources :custom_appointments, controller: :appointments
+  resources :imports
 
   resources :reports, only: [:new, :create] do
     collection do
