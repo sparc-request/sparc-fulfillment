@@ -22,3 +22,4 @@ json.owner formatted_owner(protocol)
 json.requester formatted_requester(protocol)
 json.organizations protocol.sub_service_request.org_tree_display
 json.admin_portal_link admin_portal_link(protocol)
+json.organization_cost number_to_currency(effective_current_total(protocol.sub_service_request))
