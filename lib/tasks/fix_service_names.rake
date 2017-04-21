@@ -58,7 +58,7 @@ namespace :data do
         if service.procedures.where.not(status: "complete").count >= 1
           non_complete_bar = ProgressBar.new(service.procedures.where.not(status: "complete").count)
           service.procedures.where.not(status: "complete").find_each do |procedure|
-            if procedure.service_name != service.name
+            if procedure.read_attribute(:service_name) != service.name
               csv << [procedure.protocol.sparc_id, procedure.id, procedure.service_name, service.name, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A"]
               procedure.update_attribute(:service_name, service.name)
               non_complete_bar.increment!
