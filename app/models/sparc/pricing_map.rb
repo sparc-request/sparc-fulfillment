@@ -40,5 +40,9 @@ class Sparc::PricingMap < ActiveRecord::Base
       else raise ArgumentError, "Could not find rate for #{rate_type}"
       end
   end
+
+  def calculate_rate(default_percentage)
+    self.full_rate.to_f * default_percentage
+  end
 end
 
