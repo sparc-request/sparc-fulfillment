@@ -23,5 +23,5 @@ json.organizations protocol.sub_service_request.org_tree_display
 json.admin_portal_link admin_portal_link(protocol)
 if action_name == 'show'
   json.organization_cost number_to_currency(effective_current_total(protocol.sub_service_request))
-  json.study_cost display_cost(protocol.study_cost)
+  json.study_cost number_to_currency(effective_study_cost(protocol))
 end
