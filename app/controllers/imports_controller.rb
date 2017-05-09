@@ -40,7 +40,7 @@ class ImportsController < ApplicationController
     respond_to do |format|
       if import.save
         import.update_attribute(:title, determine_if_proof_report ? I18n.t('imports.proof_report_submit') : I18n.t('imports.klok_report_submit'))
-        log_file, valid = import.generate(import.xml_file, import.title)
+        log_file, valid = import.generate(import.xml_file, determine_if_proof_report)
         import.update_attribute(:file, File.open(log_file))
         @valid = valid
         if @valid
