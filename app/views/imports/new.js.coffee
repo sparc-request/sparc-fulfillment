@@ -18,21 +18,5 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::Protocol < ActiveRecord::Base
-  self.inheritance_column = nil # ignore STI
-  
-  include SparcShard
-
-  has_many :service_requests
-  has_many :arms
-
-  def funding_source_based_on_status
-    funding_source = case self.funding_status
-      when 'pending_funding' then self.potential_funding_source
-      when 'funded' then self.funding_source
-      else raise ArgumentError, "Invalid funding status: #{self.funding_status.inspect}"
-      end
-
-    return funding_source
-  end
-end
+$("#modal_area").html("<%= escape_javascript render 'new_import' %>")
+$("#modal_place").modal('show')

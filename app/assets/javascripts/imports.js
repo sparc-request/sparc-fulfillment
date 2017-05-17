@@ -18,52 +18,54 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.fixed-table-container thead th .th-inner
-  white-space: normal
+function validateFiles(inputFile) {
+  var allowedExtension = ["xml"];
 
-body.protocols
+  var extName;
+  var extError = false;
 
-  &.protocols-index
+  $.each(inputFile.files, function() {
+    extName = this.name.split('.').pop();
+    if ($.inArray(extName, allowedExtension) == -1) {extError=true;};
+  });
 
-    .fixed-table-container.protocol-management-and-financial-view
-      overflow-x: auto
+  if (extError) {
+    $('.klok-submit-button').each(function(key, value) {
+      if ($(value).hasClass('disabled')) {
+      } else {
+        $(value).addClass('disabled');
+      }
+    })
+    swal("Oops", "Only .xml files are allowed", "error");
+    $(inputFile).val('');
+  } else {
+    $('.klok-submit-button').each(function(key, value) {
+      $(value).removeClass('disabled');
+    })
+  }
+}
+$(function() {
+  $('.spinner').hide();
+  // We can attach the `fileselect` event to all file inputs on the page
+  $(document).on('change', ':file', function() {
+    $('#file-display').val($(this).val().replace(/^.*[\\\/]/, ''));
+  });
 
-    .fixed-table-toolbar .columns label
-      padding: 6px 12px
-      clear: right
+  $(document).on('click', '.proof-report', function(){
+    $('.proof-report').button('loading')
+  });
 
-    .srid
-      width: 200px
+  $(document).on('click', '.import-klok-data', function(){
+    $('.import-klok-data').button('loading')
+  });
 
-    .back-to-top
-      position: fixed
-      right: 20px
-      bottom: 20px
+  $(document).ajaxStart(function(){
+    $('.spinner').show();
+  });
 
-  &.protocols-show
-
-    span.r-label, span.t-label
-      display: inline-block
-
-    .bootstrap-table-dropdown-overflow
-      margin-bottom: 20px
-
-    .nav-tabs
-      li.active a
-        background-color: #337ab7
-        color: #fff
-      li.custom-tab a
-        border-color: #2e6da4
-
-    #study_schedule_buttons
-      .row
-        margin-top: 20px
-      .col-md-4
-        font-size: 20px
-        div
-          margin-top: 5px
-
-    .modal-dialog
-      .scrolling_div
-        overflow: auto
-        max-height: 250px
+  $(document).ajaxStop(function(){
+    $('.spinner').hide();
+    $('.import-klok-data').button('complete')
+    $('.proof-report').button('complete')
+  });
+});

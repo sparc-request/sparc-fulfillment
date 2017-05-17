@@ -43,6 +43,7 @@
 //= require bootstrap-multiselect
 //= require bootstrap-contextmenu
 //= require bootstrap-table-cookie
+//= require sweetalert.min
 
 //= require global
 //= require protocols
@@ -61,3 +62,4 @@
 //= require procedure_grouper
 //= require faye
 //= require visit_group_form
+//= require imports

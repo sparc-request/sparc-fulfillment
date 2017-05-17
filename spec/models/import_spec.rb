@@ -18,21 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::Protocol < ActiveRecord::Base
-  self.inheritance_column = nil # ignore STI
-  
-  include SparcShard
+require 'rails_helper'
 
-  has_many :service_requests
-  has_many :arms
+RSpec.describe Import, type: :model do
+  it { is_expected.to have_attached_file(:file) }
 
-  def funding_source_based_on_status
-    funding_source = case self.funding_status
-      when 'pending_funding' then self.potential_funding_source
-      when 'funded' then self.funding_source
-      else raise ArgumentError, "Invalid funding status: #{self.funding_status.inspect}"
-      end
+  it { is_expected.to validate_attachment_content_type(:file).
+       allowing('text/plain') }
 
-    return funding_source
-  end
+  it { is_expected.to have_attached_file(:xml_file) }
+
+  it { is_expected.to validate_attachment_content_type(:xml_file).
+       allowing('text/xml') }
 end

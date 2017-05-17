@@ -164,6 +164,23 @@ en:
     view: "View Fulfillment Buttons"
     klok_description: "Imported via Klok"
 
+  imports:
+    klok_import: "Klok Import"
+    klok_import_info: "Click here to learn more about Klok"
+    file_select: "File Select:"
+    file_select_info: "requires *.xml file format"
+    proof_report: "Proof Report:"
+    import_klok_data: "Import Klok Data:"
+    browse: "Browse..."
+    proof_report_info: "Perform this first for data checking purposes"
+    import_klok_data_info: "This will run the Klok import which is IRREVERSIBLE"
+    date_time_formatter_ruby: "%m/%d/%Y %I:%M:%S %p"
+    title: "Title"
+    date_created: "Date Created"
+    file: "Attached File"
+    proof_report_submit: 'Proof Report'
+    klok_report_submit: 'Klok Report'
+
   multiple_procedures_modal:
     incomplete_header: "Incomplete Multiple Services"
     complete_header: "Complete Multiple Services"
@@ -204,6 +221,7 @@ en:
     logged_in_msg: "Logged in as"
     reports_link: 'All Reports'
     tasks_link: 'All Tasks'
+    imports_link: 'Imports'
 
   notes:
     object: "Note"
@@ -299,7 +317,7 @@ en:
     srid: "SRID"
     start_date: "Study Start Date"
     status: "Status"
-    study_cost: "Total Study Costs"
+    study_cost: "Total Cost"
     total_at_approval: "Cost at Approval"
     study_schedule_report: "Export"
     subsidy_amount: "Percent Subsidy"

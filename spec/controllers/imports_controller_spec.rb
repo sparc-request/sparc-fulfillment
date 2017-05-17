@@ -18,21 +18,35 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::Protocol < ActiveRecord::Base
-  self.inheritance_column = nil # ignore STI
-  
-  include SparcShard
+require 'rails_helper'
 
-  has_many :service_requests
-  has_many :arms
+RSpec.describe ImportsController, type: :controller do
 
-  def funding_source_based_on_status
-    funding_source = case self.funding_status
-      when 'pending_funding' then self.potential_funding_source
-      when 'funded' then self.funding_source
-      else raise ArgumentError, "Invalid funding status: #{self.funding_status.inspect}"
-      end
+  login_user
 
-    return funding_source
+  describe 'GET #index' do
+    it 'should return all imports' do
+      create(:import)
+
+      get :index
+
+      expect(response).to be_success
+    end
+
+    it 'should return all imports' do
+      import = create(:import)
+
+      get :index
+
+      expect(assigns(:imports)).to eq [import]
+    end
+  end
+
+  describe 'GET #new' do
+    it 'should instantiate a new Import class' do
+      xhr :get, :new
+
+      expect(assigns(:import)).to be_a_new Import
+    end
   end
 end

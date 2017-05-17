@@ -34,5 +34,26 @@ class Sparc::SubServiceRequest < ActiveRecord::Base
 
   has_one :protocol, :through => :service_request
 
+  def direct_cost_total
+    total = 0.0
 
+    self.line_items.each do |li|
+      if li.service.one_time_fee
+        total += li.direct_costs_for_one_time_fee
+      else
+        total += li.direct_costs_for_visit_based_service
+      end
+    end
+
+    return total
+  end
+
+  def set_effective_date_for_cost_calculations
+    self.line_items.each{|li| li.pricing_scheme = 'effective'}
+  end
+
+  def unset_effective_date_for_cost_calculations
+    self.line_items.each{|li| li.pricing_scheme = 'displayed'}
+  end
 end
+

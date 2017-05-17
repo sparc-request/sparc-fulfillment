@@ -18,27 +18,16 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.fixed-table-container.bootstrap-table-dropdown-overflow
-  %table.protocol.details.custom_striped{ id: dom_id(protocol), data: { toggle: 'table', url: protocol_path(protocol, format: :json) } }
+.page-header
+%h3 Imported Klok Reports
+.bootstrap-table-dropdown-overflow
+  %table.imports.custom_striped#documents_table{data: {pagination: 'true', 'page-size' => 20, toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: imports_path(format: :json), striped: "true", show: {columns: "true", refresh: "true", toggle: "true"}, "sort-name" => "created_at", "sort-order" => 'desc'}}
     %thead
       %tr
-        %th{ data: { class: 'srid', align: 'left', field: 'srid' } }
-          = t(:protocol)[:srid]
-        %th{ data: { class: 'pi', align: 'left', field: 'pi' } }
-          = t(:protocol)[:principal_investigator]
-        %th{ data: { class: 'coordinators', align: 'center', field: 'coordinators' } }
-          = t(:protocol)[:coordinators]
-        %th{ data: { class: 'short_title', align: 'left', field: 'short_title' } }
-          = t(:protocol)[:short_title]
-        %th{ data: { class: 'irb_number', align: 'left', field: 'irb_number' } }
-          = t(:protocol)[:irb_number]
-        %th{ data: { class: 'irb_expiration_date', align: 'center', field: 'irb_expiration_date' } }
-          = t(:protocol)[:irb_expiration_date]
-        %th{ data: { class: 'study_schedule_report', align: 'center', field: 'study_schedule_report' } }
-          = t(:protocol)[:study_schedule_report]
-        %th{ data: { class: 'admin_portal_link', align: 'center', field: 'admin_portal_link' } }
-          = t(:protocol)[:admin_portal_link]
-        %th{ data: { align: 'center', field: 'organization_cost' } }
-          = format_organization_name(protocol.sub_service_request)
-        %th{ data: { align: 'center', field: 'study_cost' } }
-          = t(:protocol)[:study_cost]
+        %th{data: {class: 'title', align: 'center', sortable: "true", field: 'title'}}
+          = t(:imports)[:title]
+        %th{data: {class: 'created_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'created_at'}}
+          = t(:imports)[:date_created]
+        %th{data: {class: 'file', align: 'center', field: 'file'}}
+          = t(:imports)[:file]
+
