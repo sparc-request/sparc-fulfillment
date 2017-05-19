@@ -33,9 +33,9 @@ RSpec.describe AppointmentsController do
 
   describe "GET #new" do
     it "should instantiate a new custom appointment" do
-      xhr :get, :new, {
+      get :new, params: {
         custom_appointment: { participant_id: @participant.id, arm_id: @arm.id },
-        format: :js
+        format: :js, xhr: true
       }
       expect(assigns(:appointment)).to be_a_new(CustomAppointment)
       expect(assigns(:note)).to be_a_new(Note)
@@ -48,10 +48,9 @@ RSpec.describe AppointmentsController do
       bad_attributes = ["id", "deleted_at", "created_at", "updated_at"]
       attributes.delete_if {|key| bad_attributes.include?(key)}
       expect{
-        post :create, {
-          custom_appointment: attributes,
+        post :create, params: {
+          custom_appointment: attributes },
           format: :js
-        }
       }.to change(CustomAppointment, :count).by(1)
     end
   end
@@ -65,17 +64,16 @@ RSpec.describe AppointmentsController do
     end
 
     it "should initialize procedures when there aren't any" do
-      expect {
-        xhr :get, :show, {
-          id: @appointment.id,
-          format: :js
-        }
+      expect{
+        get :show, params: {
+          id: @appointment.id },
+          format: :js, xhr: true
       }.to change(Procedure, :count).by(1)
       expect(assigns(:appointment)).to eq(@appointment)
     end
 
     it "renders the #show view" do
-      xhr :get, :show, id: @appointment.id, format: :js
+      get :show, params: { id: @appointment.id }, format: :js, xhr: true
       expect(response).to render_template :show
     end
   end
@@ -89,11 +87,10 @@ RSpec.describe AppointmentsController do
     it "should save the start date" do
       tomorrow = Time.now.tomorrow
       appointment = create(:appointment, start_date: Time.now, arm: @arm, name: "Visit 1", participant: @participant)
-      patch :update, {
+      patch :update, params: {
         id: appointment.id,
         field: 'start_date',
         appointment: attributes_for(:appointment, start_date: tomorrow.strftime("%F")),
-        format: :js
       }
       expect(assigns(:appointment).start_date.strftime("%F")).to eq(tomorrow.strftime("%F"))
     end
@@ -101,12 +98,11 @@ RSpec.describe AppointmentsController do
     it "should save the completed date" do
       tomorrow = Time.now.tomorrow
       appointment = create(:appointment, start_date: Time.current, completed_date: Time.now, arm: @arm, name: "Visit 1", participant: @participant)
-      put :update, {
+      put :update, params: {
         id: appointment.id,
         field: 'completed_date',
-        appointment: attributes_for(:appointment, completed_date: tomorrow.strftime("%F")),
-        format: :js
-      }
+        appointment: attributes_for(:appointment, completed_date: tomorrow.strftime("%F"))
+      }, format: :js
       expect(assigns(:appointment).completed_date.strftime("%F")).to eq(tomorrow.strftime("%F"))
     end
   end

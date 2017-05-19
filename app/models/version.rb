@@ -1,3 +1,3 @@
-class Version < ActiveRecord::Base
+class Version < ApplicationRecord
   include PaperTrail::VersionConcern
 end
