@@ -34,7 +34,7 @@ class NotesController < ApplicationController
 
   def create
     if note_params[:comment].present? # don't create empty notes
-      @note = Note.create(note_params.merge!({ identity: current_identity }))
+      @note = Note.create(note_params.to_h.merge!({ identity: current_identity }))
       @selector = "#{@note.unique_selector}_notes"
     end
     @notes = @notable.notes

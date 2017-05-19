@@ -38,7 +38,7 @@ class ReportsController < ApplicationController
     if @report.valid?
       @reports_params = reports_params
       @documentable.documents.push @document
-      ReportJob.perform_later(@document, reports_params)
+      ReportJob.perform_later(@document, reports_params.to_h)
     end
   end
 

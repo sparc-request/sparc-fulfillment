@@ -75,12 +75,13 @@ group :test do
   gem 'climate_control'
   gem 'database_cleaner'
   gem 'launchy'
+  gem 'rails-controller-testing'
   gem 'rspec-activejob', '~> 0.4.0'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', "~> 2.8.0", require: false
   gem 'timecop'
-  gem 'webmock', '~> 1.20.4'
+  gem 'webmock', '~> 2.3.2'
   gem 'vcr', '~> 2.9.3'
 end

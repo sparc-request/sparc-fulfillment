@@ -58,7 +58,7 @@ RSpec.describe ProtocolsController, type: :controller do
                             create(:clinical_provider, identity: identity, organization: organization)
                             create(:project_role_pi, identity: identity, protocol: @protocol)
 
-      get :show, id: @protocol.id
+      get :show, params: { id: @protocol.id }
     end
 
     it "assigns the requested protocol to @protocol" do

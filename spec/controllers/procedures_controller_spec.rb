@@ -44,7 +44,7 @@ RSpec.describe ProceduresController, type: :controller do
             @procedure = create(:procedure, appointment: @appointment, service: @service)
             params = { id: @procedure.id, procedure: { status: 'complete' }, format: :js }
 
-            put :update, params
+            put :update, params: params
           end
 
           it 'should update the Procedure status' do
@@ -66,7 +66,7 @@ RSpec.describe ProceduresController, type: :controller do
             @procedure = create(:procedure, appointment: @appointment, service: @service)
             params    = { id: @procedure.id, procedure: { status: 'incomplete' }, format: :js }
 
-            put :update, params
+            put :update, params: params
           end
 
           it 'should update the Procedure status' do
@@ -90,7 +90,7 @@ RSpec.describe ProceduresController, type: :controller do
           before do
             @procedure = create(:procedure_complete, appointment: @appointment, service: @service)
             params    = { id: @procedure.id, procedure: { completed_date: DateTime.current.tomorrow.strftime("%m/%d/%Y")}, format: :js }
-            put :update, params
+            put :update, params: params
           end
 
           it "should update the completed date" do
@@ -107,7 +107,7 @@ RSpec.describe ProceduresController, type: :controller do
             @procedure = create(:procedure_complete, appointment: @appointment, service: @service)
             params = { id: @procedure.id, procedure: { status: 'unstarted' }, format: :js }
 
-            put :update, params
+            put :update, params: params
           end
 
           it "should update the completed_date to be nil" do
@@ -129,7 +129,7 @@ RSpec.describe ProceduresController, type: :controller do
             @procedure = create(:procedure_complete, appointment: @appointment, service: @service)
             params    = { id: @procedure.id, procedure: { status: 'incomplete', completed_date: "" }, format: :js }
 
-            put :update, params
+            put :update, params: params
           end
 
           it 'should update the Procedure status' do
@@ -154,7 +154,7 @@ RSpec.describe ProceduresController, type: :controller do
             @procedure = create(:procedure, appointment: @appointment, service: @service)
             params    = { id: @procedure.id, procedure: { status: 'complete' }, format: :js }
 
-            put :update, params
+            put :update, params: params
           end
 
           it 'should update the Procedure status' do
@@ -176,7 +176,7 @@ RSpec.describe ProceduresController, type: :controller do
             @procedure = create(:procedure, appointment: @appointment, service: @service)
             params    = { id: @procedure.id, procedure: { status: 'incomplete'}, format: :js }
 
-            put :update, params
+            put :update, params: params
           end
 
           it 'should update the Procedure status' do
@@ -199,12 +199,11 @@ RSpec.describe ProceduresController, type: :controller do
     it "should create the indicated number of procedures" do
       qty = 5
       expect{
-        post :create, {
+        post :create, params: {
           appointment_id: @appointment.id,
           qty: qty,
-          service_id: @service.id,
-          format: :js
-          }
+          service_id: @service.id
+          }, format: :js
         }.to change(Procedure, :count).by(qty)
     end
   end
@@ -213,30 +212,27 @@ RSpec.describe ProceduresController, type: :controller do
     it "should remove the procedure if unmarked" do
       @procedure = create(:procedure, appointment: @appointment, service: @service)
       expect{
-        delete :destroy, {
-          id: @procedure.id,
-          format: :js
-          }
+        delete :destroy, params: {
+          id: @procedure.id
+          }, format: :js
         }.to change(Procedure, :count).by(-1)
     end
 
     it "should not remove the procedure if marked as completed" do
       @procedure = create(:procedure, appointment: @appointment, service: @service, status: 'complete')
       expect{
-        delete :destroy, {
-          id: @procedure.id,
-          format: :js
-          }
+        delete :destroy, params: {
+          id: @procedure.id
+          }, format: :js
         }.to raise_error(ActiveRecord::ActiveRecordError)
     end
 
     it "should not remove the procedure if marked as incomplete" do
       @procedure = create(:procedure, appointment: @appointment, service: @service, status: 'incomplete')
       expect{
-        delete :destroy, {
-          id: @procedure.id,
-          format: :js
-          }
+        delete :destroy, params: {
+          id: @procedure.id
+          }, format: :js
         }.to raise_error(ActiveRecord::ActiveRecordError)
     end
   end

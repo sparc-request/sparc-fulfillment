@@ -29,11 +29,10 @@ RSpec.describe VisitsController, type: :controller do
 
   describe "PUT #update" do
     it "should update the quantity" do
-      put :update, {
+      put :update, params: {
         id: @visit.id,
-        visit: {research_billing_qty: 5},
-        format: :js
-      }
+        visit: {research_billing_qty: 5}
+      }, format: :js
       @visit.reload
       expect(@visit.research_billing_qty).to eq 5
     end

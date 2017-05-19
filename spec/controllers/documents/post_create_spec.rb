@@ -33,7 +33,7 @@ RSpec.describe DocumentsController, type: :controller do
         document  = Rack::Test::UploadedFile.new(File.join('db', 'fixtures', 'test_document.txt'),'txt/plain')
         params    = { document: { title: 'test_document', documentable_id: identity.id, documentable_type: 'Identity', document: document } }
 
-        xhr :post, :create, params, format: :js
+        post :create, params: params, format: :js, xhr: true
       end
 
       it 'should render with status: :success' do
@@ -55,7 +55,7 @@ RSpec.describe DocumentsController, type: :controller do
         identity  = Identity.first
         params    = { document: { documentable_id: identity.id, documentable_type: 'Identity', document: nil } }
 
-        xhr :post, :create, params, format: :js
+        post :create, params: params, format: :js, xhr: true
 
         expect(assigns(:error)).to be
       end

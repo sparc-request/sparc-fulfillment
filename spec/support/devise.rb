@@ -41,7 +41,8 @@ module ControllerMacros
 end
 
 RSpec.configure do |config|
-
+  
+  config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Warden::Test::Helpers
   config.include DeviseHelpers, type: :feature
   config.include DeviseHelpers, type: :model

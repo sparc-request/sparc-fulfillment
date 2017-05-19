@@ -35,8 +35,7 @@ RSpec.describe AppointmentsController do
     it "should instantiate a new custom appointment" do
       get :new, params: {
         custom_appointment: { participant_id: @participant.id, arm_id: @arm.id },
-        format: :js, xhr: true
-      }
+      }, format: :js, xhr: true
       expect(assigns(:appointment)).to be_a_new(CustomAppointment)
       expect(assigns(:note)).to be_a_new(Note)
     end
@@ -91,7 +90,7 @@ RSpec.describe AppointmentsController do
         id: appointment.id,
         field: 'start_date',
         appointment: attributes_for(:appointment, start_date: tomorrow.strftime("%F")),
-      }
+      }, format: :js
       expect(assigns(:appointment).start_date.strftime("%F")).to eq(tomorrow.strftime("%F"))
     end
 

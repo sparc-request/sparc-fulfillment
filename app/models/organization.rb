@@ -60,6 +60,7 @@ class Organization < ApplicationRecord
   def inclusive_child_services(scope, is_available=true)
     (is_available ? services : all_services).
       send(scope).
+      to_a.
       push(all_child_services(scope, is_available)).
       flatten.
       sort_by(&:name)

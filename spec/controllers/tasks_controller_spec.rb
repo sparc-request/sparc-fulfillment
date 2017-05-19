@@ -69,11 +69,10 @@ RSpec.describe TasksController, type: :controller do
       attributes = attributes_for(:task)
       attributes[:due_at] = "09/09/2009"
       attributes[:body] = expected_body
-      put :update, {
+      put :update, params: {
         id: @task.id,
-        task: attributes,
-        format: :js
-      }
+        task: attributes
+      }, format: :js
       @task.reload
       expect(@task.body).to eq expected_body
     end
@@ -82,9 +81,7 @@ RSpec.describe TasksController, type: :controller do
   describe "GET #task_reschedule" do
 
     it "renders the reschedule modal" do
-      xhr :get, :task_reschedule, {
-      id: @task.id,
-      format: :js }
+      get :task_reschedule, params: { id: @task.id }, format: :js, xhr: true
 
       expect(response).to be_success
     end
@@ -92,10 +89,7 @@ RSpec.describe TasksController, type: :controller do
 
   describe "GET #new" do
     it "should instantiate a new task" do
-      xhr :get, :new, {
-        id: @task.id,
-        format: :js
-      }
+      get :new, params: { id: @task.id }, format: :js, xhr: true
       expect(assigns(:task)).to be_a_new(Task)
     end
   end
@@ -107,11 +101,10 @@ RSpec.describe TasksController, type: :controller do
       attributes = attributes_for(:task)
       attributes[:due_at] = "09/09/2009"
       expect{
-        post :create, {
+        post :create, params:{
           id: @task.id,
-          task: attributes.merge!(assignee_id: assignee.id),
-          format: :js
-        }
+          task: attributes.merge!(assignee_id: assignee.id)
+        }, format: :js
       }.to change(Task, :count).by(1)
     end
 
@@ -125,11 +118,10 @@ RSpec.describe TasksController, type: :controller do
       attributes[:assignable_type] = "Procedure"
       attributes[:assignable_id] = procedure.id
       expect{
-        post :create, {
+        post :create, params: {
           id: @task.id,
-          task: attributes.merge!(assignee_id: assignee.id),
-          format: :js
-        }
+          task: attributes.merge!(assignee_id: assignee.id)
+        }, format: :js
       }.to change(Note, :count).by(1)
     end
   end
