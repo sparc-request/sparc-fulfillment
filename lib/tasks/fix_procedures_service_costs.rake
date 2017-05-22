@@ -50,8 +50,8 @@ namespace :data do
             protocol = procedure.protocol
             service = procedure.service
 
-            #Skip over procedures which don't have a service_cost
-            if procedure.service_cost.blank? or (!procedure.handled_date.nil? && !(start_date..end_date).cover?(procedure.handled_date.to_date))
+            #Skip over procedures that don't match time frame
+            if !procedure.handled_date.nil? && !(start_date..end_date).cover?(procedure.handled_date.to_date)
               bar.increment! rescue nil
               next
             end
@@ -101,8 +101,8 @@ namespace :data do
           item.fulfillments.find_each do |fulfillment|
             protocol = fulfillment.protocol
 
-            #Skip over fulfillments which don't have a service_cost
-            if fulfillment.service_cost.blank? or (!fulfillment.fulfilled_at.nil? && !(start_date..end_date).cover?(fulfillment.fulfilled_at.to_date))
+            #Skip over fulfillments which don't match the time frame
+            if !fulfillment.fulfilled_at.nil? && !(start_date..end_date).cover?(fulfillment.fulfilled_at.to_date)
               bar2.increment! rescue nil
               next
             end
