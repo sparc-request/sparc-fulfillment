@@ -41,7 +41,7 @@ class IdentityOrganizations
   end
   
   def authorized_child_organizations(org_ids)
-    org_ids = org_ids.to_h.flatten.compact
+    org_ids = org_ids.compact
     if org_ids.empty?
       []
     else

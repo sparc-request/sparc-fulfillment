@@ -24,6 +24,7 @@ feature 'Identity adds Procedure', js: true do
 
   scenario 'and sees it in the appointment calendar' do
     given_i_am_viewing_a_participants_calendar
+    save_and_open_screenshot
     when_i_add_a_procedure
     then_i_should_see_the_procedure_in_the_appointment_calendar
   end

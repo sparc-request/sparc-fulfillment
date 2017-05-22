@@ -36,7 +36,7 @@ RSpec.describe StudyScheduleController do
         arm_id: @arm.id,
         tab: tab
       }, format: :js, xhr: true
-      expect(assigns(:page).to_i).to eq(page + 1)
+      expect(assigns(:page)).to eq(page + 1)
     end
 
   end
