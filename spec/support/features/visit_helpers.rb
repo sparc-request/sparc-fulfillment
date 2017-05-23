@@ -27,7 +27,7 @@ module Features
     end
 
     def add_a_procedure(service, count = 1)
-      bootstrap_select '#service_list', service.name
+      bootstrap_select 'service_list', service.name
       fill_in 'service_quantity', with: count
       find('button.add_service').click
       wait_for_ajax
@@ -37,7 +37,7 @@ module Features
       visit participant_path @participant
       wait_for_ajax
 
-      bootstrap_select '#appointment_select', @appointment.name
+      bootstrap_select 'appointment_select', @appointment.name
       wait_for_ajax
     end
 
@@ -45,7 +45,7 @@ module Features
       visit participant_path @participant
       wait_for_ajax
 
-      bootstrap_select '#appointment_select', @appointment.name
+      bootstrap_select 'appointment_select', @appointment.name
       wait_for_ajax
       
       find('button.start_visit').click

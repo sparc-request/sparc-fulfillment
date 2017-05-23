@@ -93,12 +93,12 @@ feature 'Complete Visit', js: true do
     visit participant_path participant
     wait_for_ajax
     
-    bootstrap_select '#appointment_select', @visit_group.name
+    bootstrap_select 'appointment_select', @visit_group.name
     wait_for_ajax
   end
 
   def when_i_add_a_procedure
-    bootstrap_select '#service_list', @service.name
+    bootstrap_select 'service_list', @service.name
     fill_in 'service_quantity', with: 1
     click_button 'Add Service'
     wait_for_ajax
@@ -126,7 +126,7 @@ feature 'Complete Visit', js: true do
 
   def when_i_incomplete_the_procedure
     find("tr.procedure[data-id='#{@procedure.id}'] label.status.incomplete").click
-    bootstrap_select '.reason-select', 'Assessment missed'
+    bootstrap_select 'procedure_notes_attributes_0_reason', 'Assessment missed'
     click_button 'Save'
     wait_for_ajax
   end
@@ -135,7 +135,7 @@ feature 'Complete Visit', js: true do
     find("tr.procedure[data-id='#{@procedure.id}'] button.followup.new").click
     wait_for_ajax
 
-    bootstrap_select '#task_assignee_id', @identity.full_name
+    bootstrap_select 'task_assignee_id', @identity.full_name
 
     page.execute_script %Q{ $("#follow_up_procedure_datepicker").trigger("focus")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }

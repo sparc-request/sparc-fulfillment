@@ -54,6 +54,7 @@ class ProceduresController < ApplicationController
   end
 
   def update
+    puts(("Test" * 100) + "1")
     @procedure.update_attributes(procedure_params)
     @appointment = @procedure.appointment
     @statuses = @appointment.appointment_statuses.map{|x| x.status}
