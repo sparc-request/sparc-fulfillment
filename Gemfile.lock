@@ -499,6 +499,3 @@ DEPENDENCIES
   webmock (~> 1.20.4)
   will_paginate
   yajl-ruby (~> 1.2.1)
-
-BUNDLED WITH
-   1.14.3
