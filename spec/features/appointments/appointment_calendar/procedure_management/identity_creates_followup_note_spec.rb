@@ -88,10 +88,10 @@ feature 'Followup note', js: true do
     visit participant_path participant
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', visit_group.name
+    bootstrap_select 'appointment_select', visit_group.name
     wait_for_ajax
     
-    bootstrap_select '#service_list', service.name
+    bootstrap_select 'service_list', service.name
     fill_in 'service_quantity', with: '1'
     find('button.add_service').click
     wait_for_ajax
@@ -115,7 +115,7 @@ feature 'Followup note', js: true do
   end
 
   def when_i_fill_out_and_submit_the_followup_form
-    bootstrap_select '#task_assignee_id', @assignee.full_name
+    bootstrap_select 'task_assignee_id', @assignee.full_name
     page.execute_script %Q{ $("#follow_up_procedure_datepicker").trigger("focus")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
     fill_in 'Comment', with: 'Test comment'

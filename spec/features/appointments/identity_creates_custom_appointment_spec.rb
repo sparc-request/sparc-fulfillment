@@ -86,8 +86,8 @@ feature 'Custom appointment', js: true do
 
   def when_i_fill_in_the_form
     fill_in 'custom_appointment_name', with: 'Test Visit'
-    bootstrap_select "#custom_appointment_position", "Add as last"
-    bootstrap_select "#custom_appointment_notes_attributes_0_reason", "Assessment not performed"
+    bootstrap_select "custom_appointment_position", "Add as last"
+    bootstrap_select "custom_appointment_notes_attributes_0_reason", "Assessment not performed"
   end
 
   def when_i_click_add_appointment
@@ -98,12 +98,12 @@ feature 'Custom appointment', js: true do
   def when_i_select_the_appointment
     @service = @protocol.organization.inclusive_child_services(:per_participant).first
     @service.update_attributes(name: 'Test Service')
-    bootstrap_select '#appointment_select', "Test Visit"
+    bootstrap_select 'appointment_select', "Test Visit"
     wait_for_ajax
   end
 
   def when_i_add_a_procedure
-    bootstrap_select '#service_list', 'Test Service'
+    bootstrap_select 'service_list', 'Test Service'
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
     wait_for_ajax

@@ -167,10 +167,10 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def when_i_fill_in_the_form(opts = {})
-    bootstrap_select "#visit_group_arm_id", "#{@arm.name}"
+    bootstrap_select "visit_group_arm_id", "#{@arm.name}"
     fill_in "visit_group_name", with: opts[:name] || "VG"
     fill_in "visit_group_day", with: opts[:day] || "13"
-    bootstrap_select "#visit_group_position", opts[:position] || "Add as last"
+    bootstrap_select "visit_group_position", opts[:position] || "Add as last"
     wait_for_ajax
   end
 
@@ -198,7 +198,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def when_i_set_the_position_to position_identifier
-    bootstrap_select "#visit_group_position", position_identifier
+    bootstrap_select "visit_group_position", position_identifier
   end
 
   def when_i_enter_the_name name
@@ -210,7 +210,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_visit_group
-    find("input[value='VG']")
     expect(page).to have_css("input[value='VG']")
   end
 

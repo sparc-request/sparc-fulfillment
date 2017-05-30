@@ -67,10 +67,10 @@ class DocumentsController < ApplicationController
   def create
     respond_to do |format|
       format.js {
-        @document = Document.create(document_params.to_h.merge!(original_filename: params[:document][:document].original_filename,
-                                              title: params[:document][:document].original_filename,
-                                              content_type: params[:document][:document].content_type,
-                                              state: "Completed"))
+        @document = Document.create(document_params.merge!(original_filename: params[:document][:document].original_filename,
+                                                          title: params[:document][:document].original_filename,
+                                                          content_type: params[:document][:document].content_type,
+                                                          state: "Completed"))
 
         create_document_file
 

@@ -94,7 +94,7 @@ feature 'User tries to view the participant calendar', js: true do
     visit participant_path @participant
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', @visit_group.name
+    bootstrap_select 'appointment_select', @visit_group.name
 
     wait_for_ajax
     click_button 'Start Visit'
@@ -109,7 +109,7 @@ feature 'User tries to view the participant calendar', js: true do
   end
 
   def given_a_participant_does_not_have_completed_appointments
-    @participant.appointments.completed.clear
+    @participant.appointments.completed.destroy_all
   end
 
   def when_i_click_the_participant_calendar_icon

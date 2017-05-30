@@ -39,12 +39,12 @@ feature "Indicating a Status", js: true do
     visit participant_path participant
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', visit_group.name
+    bootstrap_select 'appointment_select', visit_group.name
     wait_for_ajax
   end
 
   def when_i_indicate_an_appointment_status
-    bootstrap_select '#appointment_indications', "Skipped Visit"
+    bootstrap_select 'appointment_indications', "Skipped Visit"
     wait_for_ajax
   end
 

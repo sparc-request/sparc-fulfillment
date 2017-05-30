@@ -92,7 +92,7 @@ feature 'User messes with a procedures date completed', js: true do
     reason = Procedure::NOTABLE_REASONS.first
 
     find('label.status.incomplete').click
-    bootstrap_select '.reason-select', reason
+    bootstrap_select 'procedure_notes_attributes_0_reason', reason
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
     click_button 'Save'
   end
@@ -101,9 +101,9 @@ feature 'User messes with a procedures date completed', js: true do
     visit_group = @participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    bootstrap_select('#appointment_select', visit_group.name)
+    bootstrap_select('appointment_select', visit_group.name)
     wait_for_ajax
-    bootstrap_select '#service_list', service.name
+    bootstrap_select 'service_list', service.name
     fill_in 'service_quantity', with: '1'
     page.find('button.add_service').click
   end

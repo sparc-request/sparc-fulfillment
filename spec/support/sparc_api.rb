@@ -22,8 +22,8 @@ module SparcHelper
 
   def sparc_sends_notification_post(params=valid_params)
     http_login(ENV['SPARC_API_USERNAME'], ENV['SPARC_API_PASSWORD'])
-
-    post '/v1/notifications.json', params, @env
+    binding.pry
+    post '/v1/notifications.json', params: params, headers: @env
   end
 
   def load_protocol_1_json

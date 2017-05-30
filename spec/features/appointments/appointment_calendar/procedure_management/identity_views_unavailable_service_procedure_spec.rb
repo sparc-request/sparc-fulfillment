@@ -49,7 +49,7 @@ feature 'User views procedure which has an unavailable service', js: true do
 	def when_i_open_the_appointment_calendar_with_the_bad_procedure
 		visit_group_name = @appointment.visit_group.name
 
-		bootstrap_select '#appointment_select', visit_group_name
+		bootstrap_select 'appointment_select', visit_group_name
 	end
 
 	def then_i_should_see_the_inactive_tag

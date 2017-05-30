@@ -59,7 +59,7 @@ feature 'Identity completes all Services', js: true do
   end
 
   def and_i_select_the_procedure_in_the_core_dropdown
-    bootstrap_multiselect '#core_multiselect', [@services.last.name]
+    bootstrap_multiselect '.multiselect-selected-text', [@services.last.name]
     wait_for_ajax
   end
 
@@ -88,7 +88,7 @@ feature 'Identity completes all Services', js: true do
   end
 
   def and_i_select_all_in_the_core_dropdown
-    bootstrap_multiselect '#core_multiselect'
+    bootstrap_multiselect '.multiselect-selected-text'
   end
 
   def then_i_should_see_all_procedures_completed

@@ -23,7 +23,7 @@ module Features
   module BootstrapHelpers
 
     def bootstrap_multiselect(class_or_id, selections = ['all'])
-      bootstrap_multiselect = find("select#{class_or_id} + .btn-group")
+      bootstrap_multiselect = find("#{class_or_id}")
 
       bootstrap_multiselect.click
       if selections.first == 'all'
@@ -43,7 +43,7 @@ module Features
     end
 
     def bootstrap_selected?(element, choice)
-      page.find("button.selectpicker[data-id='#{element}'][title='#{choice}']")
+      page.find("[data-id='#{element}'][title='#{choice}']")
     end
   end
 end

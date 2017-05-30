@@ -46,7 +46,7 @@ feature 'User changes the status of a participant on the participant tracker', j
   end
 
   def when_i_update_the_participant_status
-    bootstrap_select "#participant_status_#{@participant.id}", "Screening"
+    bootstrap_select "participant_status_#{@participant.id}", "Screening"
     wait_for_ajax
 
     refresh_bootstrap_table 'table.participants'

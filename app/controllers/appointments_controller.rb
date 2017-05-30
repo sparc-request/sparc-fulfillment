@@ -73,7 +73,7 @@ class AppointmentsController < ApplicationController
       end
     end
 
-    render nothing: true
+    render body: nil
   end
 
   private

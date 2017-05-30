@@ -20,7 +20,7 @@
 
 class StudyScheduleController < ApplicationController
   def change_page
-    @page = params[:page]
+    @page = params[:page].to_i
     @arm = Arm.find params[:arm_id]
     @protocol = @arm.protocol
     @tab = params[:tab]

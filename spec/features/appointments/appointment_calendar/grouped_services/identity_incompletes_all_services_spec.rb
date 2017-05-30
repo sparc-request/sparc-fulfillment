@@ -88,33 +88,33 @@ feature 'Identity incompletes all Services', js: true do
 
   def when_i_select_an_ungrouped_procedure_in_the_core_dropdown
     @selected = [@services.first]
-    bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
+    bootstrap_multiselect '.multiselect-selected-text', @selected.map(&:name)
   end
 
   def when_i_select_multiple_but_not_all_ungrouped_procedures_in_the_core_dropdown
     @selected = @services[0..1]
-    bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
+    bootstrap_multiselect '.multiselect-selected-text', @selected.map(&:name)
   end
 
   def when_i_select_all_ungrouped_procedures_in_the_core_dropdown
     @selected = @services[0..2]
-    bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
+    bootstrap_multiselect '.multiselect-selected-text', @selected.map(&:name)
   end
 
   def when_i_select_all_grouped_procedures_in_the_core_dropdown
     @selected = [@services.fourth]
-    bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
+    bootstrap_multiselect '.multiselect-selected-text', @selected.map(&:name)
   end
 
   def when_i_select_all_procedures_in_the_core_dropdown
     @selected = @services
-    bootstrap_multiselect '#core_multiselect'
+    bootstrap_multiselect '.multiselect-selected-text'
   end
 
   def and_i_click_incomplete_all_and_give_a_reason
     find('button.incomplete_all').click
     reason = Procedure::NOTABLE_REASONS.first
-    bootstrap_select '.reason-select', reason
+    bootstrap_select 'reason', reason
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'
     wait_for_ajax

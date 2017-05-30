@@ -77,7 +77,7 @@ feature 'User views the participant tracker page', js: true do
     find(".change-arm[participant_id='#{@participant.id}']").click
     wait_for_ajax
 
-    bootstrap_select "#participant_arm_id", @protocol.arms.second.name
+    bootstrap_select "participant_arm_id", @protocol.arms.second.name
 
     click_button 'Save'
     wait_for_ajax

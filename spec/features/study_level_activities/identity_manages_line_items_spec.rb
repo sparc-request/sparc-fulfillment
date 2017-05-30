@@ -130,7 +130,7 @@ feature 'Line Items', js: true do
   end
 
   def when_i_fill_in_new_line_item_form
-    bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
+    bootstrap_select 'line_item_service_id', 'Admiral Tuskface'
     fill_in 'Quantity', with: 50
     page.execute_script %Q{ $('#date_started_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
@@ -139,7 +139,7 @@ feature 'Line Items', js: true do
   end
 
   def when_i_fill_in_the_edit_line_item_form
-    bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
+    bootstrap_select 'line_item_service_id', 'Admiral Tuskface'
     click_button 'Save'
     wait_for_ajax
   end

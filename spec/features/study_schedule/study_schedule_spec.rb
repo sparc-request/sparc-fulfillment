@@ -280,7 +280,7 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_set_the_service_to service
-    bootstrap_select "#line_item_service_id", service.name
+    bootstrap_select "line_item_service_id", service.name
     wait_for_ajax
   end
 

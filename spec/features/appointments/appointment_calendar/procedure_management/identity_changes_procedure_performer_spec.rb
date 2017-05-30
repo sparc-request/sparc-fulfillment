@@ -40,10 +40,10 @@ feature 'User changes performer of a procedure', js: true do
     visit participant_path participant
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', visit_group.name
+    bootstrap_select 'appointment_select', visit_group.name
     wait_for_ajax
     
-    bootstrap_select '#service_list', service.name
+    bootstrap_select 'service_list', service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
     wait_for_ajax
@@ -56,7 +56,7 @@ feature 'User changes performer of a procedure', js: true do
   end
 
   def when_i_select_another_name_in_the_performed_by_dropdown
-    bootstrap_select "#performed-by-#{@procedure.id}", @performer.full_name
+    bootstrap_select "performed-by-#{@procedure.id}", @performer.full_name
   end
 
   def when_i_view_the_notes

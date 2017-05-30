@@ -1,0 +1,9 @@
+[Cassette: 'reusable/sparc_api/get_service_components_1'] Initialized with options: {:record=>:once, :match_requests_on=>[:method, :uri], :allow_unused_http_interactions=>true, :serialize_with=>:yaml, :persist_with=>:file_system, :allow_playback_repeats=>true}
+[webmock] Handling request: [post http://localhost:9292/faye] (disabled: false)
+[webmock] Identified request type (externally_stubbed) for [post http://localhost:9292/faye]
+[webmock] Handling request: [post http://localhost:9292/faye] (disabled: false)
+[webmock] Identified request type (externally_stubbed) for [post http://localhost:9292/faye]
+[webmock] Handling request: [post http://localhost:9292/faye] (disabled: false)
+[webmock] Identified request type (externally_stubbed) for [post http://localhost:9292/faye]
+[webmock] Handling request: [post http://localhost:9292/faye] (disabled: false)
+[webmock] Identified request type (externally_stubbed) for [post http://localhost:9292/faye]
