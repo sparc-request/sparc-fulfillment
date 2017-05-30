@@ -21,9 +21,8 @@
 module ApiAuthenticationHelper
 
   def http_login(username, password)
-
     @env ||= {}
-    @env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials("#{username}:#{password}")
-    binding.pry
+
+    @env['authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(username, password)
   end
 end

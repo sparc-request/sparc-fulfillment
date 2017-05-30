@@ -97,7 +97,6 @@ feature 'User completes Procedure', js: true do
   def when_i_incomplete_the_procedure
     find('label.status.incomplete').click
     wait_for_ajax
-    #binding.pry
     bootstrap_select 'procedure_notes_attributes_0_reason', "Assessment missed"
     click_button 'Save'
     wait_for_ajax
