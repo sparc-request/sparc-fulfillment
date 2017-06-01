@@ -1,0 +1,13 @@
+[Cassette: 'reusable/sparc_api/get_service_components_1'] Initialized with options: {:record=>:once, :match_requests_on=>[:method, :uri], :allow_unused_http_interactions=>true, :serialize_with=>:yaml, :persist_with=>:file_system, :allow_playback_repeats=>true}
+[webmock] Handling request: [post http://localhost:9292/faye] (disabled: false)
+[webmock] Identified request type (externally_stubbed) for [post http://localhost:9292/faye]
+[webmock] Handling request: [post http://localhost:9292/faye] (disabled: false)
+[webmock] Identified request type (externally_stubbed) for [post http://localhost:9292/faye]
+[webmock] Handling request: [post http://localhost:9292/faye] (disabled: false)
+[webmock] Identified request type (externally_stubbed) for [post http://localhost:9292/faye]
+[webmock] Handling request: [post http://localhost:9292/faye] (disabled: false)
+[webmock] Identified request type (externally_stubbed) for [post http://localhost:9292/faye]
+[webmock] Handling request: [get http://localhost:5000/v1/services/1.json?depth=full] (disabled: false)
+  [Cassette: 'reusable/sparc_api/get_service_components_1'] Initialized HTTPInteractionList with request matchers [:method, :uri] and 0 interaction(s): {  }
+[webmock] Identified request type (recordable) for [get http://localhost:5000/v1/services/1.json?depth=full]
+[Cassette: 'reusable/sparc_api/get_service_components_1'] Recorded HTTP interaction [get http://localhost:5000/v1/services/1.json?depth=full] => [200 "{\"service\":{\"sparc_id\":1,\"callback_url\":\"http://127.0.0.1:5000/v1/services/1.jso"]
