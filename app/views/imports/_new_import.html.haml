@@ -35,8 +35,8 @@
       .modal-body
         .form-group
           = f.label :title, t(:imports)[:file_select],
-            class: 'col-sm-2 control-label'
-          .col-md-10
+            class: 'col-sm-3 control-label'
+          .col-md-9
             .input-group
               %label.input-group-btn
                 %span.btn.btn-primary
@@ -48,20 +48,20 @@
         .form-group
           = label_tag "proof_report",
             t(:imports)[:proof_report],
-            class: "col-sm-2 control-label",
+            class: "col-sm-3 control-label",
             data:{toggle: "tooltip", animation: 'false'},
             title: t(:imports)[:proof_report_info]
-          .col-sm-10
+          .col-sm-9
             = f.submit t(:imports)[:proof_report_submit],
               class: 'btn btn-block btn-primary proof-report disabled klok-submit-button',
               data: { loading_text: 'Running Proof Report...', complete_text: t(:imports)[:proof_report_submit]}
         .form-group
           = label_tag "import_klok_data",
             t(:imports)[:import_klok_data],
-            class: "col-sm-2 control-label",
+            class: "col-sm-3 control-label",
             data:{toggle: "tooltip", animation: 'false'},
             title: t(:imports)[:import_klok_data_info]
-          .col-sm-10
+          .col-sm-9
             = f.submit t(:imports)[:klok_report_submit],
               class: 'btn btn-block btn-primary import-klok-data disabled klok-submit-button',
               data: { confirm: 'Klok Import - This action is irreversible. Are you sure?', loading_text: 'Running Klok Report...', complete_text: t(:imports)[:klok_report_submit] }

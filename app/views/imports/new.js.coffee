@@ -19,4 +19,4 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modal_area").html("<%= escape_javascript render 'new_import' %>")
-$("#modal_place").modal('show')
+$("#modal_place").modal({ backdrop: 'static', keyboard: false })
