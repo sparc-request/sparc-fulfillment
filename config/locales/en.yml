@@ -90,6 +90,7 @@ en:
     protocol_id: "Protocol ID"
     reason: "Reason"
     reset_visit: "Reset Visit"
+    service_error: 'Please choose the service that is desired to be added'
     srid: "SRID"
     start_date: "Start Date:"
     start_time: "Start Time:"
