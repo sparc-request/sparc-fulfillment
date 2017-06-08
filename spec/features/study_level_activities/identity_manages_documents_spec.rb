@@ -48,7 +48,7 @@ feature 'Identity manages Doucuments', js: true do
     sparc_protocol.update_attributes(type: 'Study')
     visit protocol_path(protocol.id)
     wait_for_ajax
-    click_link "Study Level Activities"
+    click_link "Non-clinical Services"
     wait_for_ajax
   end
 
