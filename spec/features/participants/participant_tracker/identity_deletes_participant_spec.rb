@@ -28,7 +28,7 @@ feature 'User deletes Participant', js: true do
     then_i_should_not_see_the_participant
   end
 
-  def given_i_am_viewing_the_participant_list
+  def given_i_am_viewing_the_participant_tracker
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)

@@ -28,7 +28,7 @@ feature 'User creates Participant', js: true do
     then_i_should_see_the_new_participant_in_the_list
   end
 
-  def given_i_am_viewing_the_participant_list
+  def given_i_am_viewing_the_participant_tracker
     @protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(@protocol.id)
