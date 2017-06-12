@@ -28,9 +28,8 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-
+        
         @tasks = scoped_tasks
-        binding.pry
         render
       end
     end
