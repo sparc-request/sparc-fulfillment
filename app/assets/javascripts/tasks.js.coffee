@@ -58,26 +58,16 @@ $ ->
     $("table.tasks").bootstrapTable('hideColumn', 'id')
 
 
-    $(document).on "click", "#complete", ->
-      scope = $(this).prop('value')
+    $(document).on "change", "#complete", ->
+      status = if $(this).prop('checked') then "incomplete" else "complete"
+      scope = if $("#all_tasks").prop("checked") then "mine" else "all"
     
-      if scope == 'complete'
-        $(this).text("Show Incomplete")
-        $(this).prop('value', 'incomplete')
-      else
-        $(this).text("Show Complete")
-        $(this).prop('value', 'complete')
-      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope, silent: "true"})
+      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
 
-    $(document).on 'click', "#all_tasks", ->
-      scope = $(this).prop('value')
+    $(document).on 'change', "#all_tasks", ->
+      scope = if $(this).prop("checked") then "mine" else "all"
+      status = if $("#complete").prop("checked") then "incomplete" else "complete"
 
-      if scope == 'all'
-        $(this).text('Show My Tasks')
-        $(this).prop('value', 'mine')
-      else
-        $(this).text('Show All Tasks')
-        $(this).prop('value', 'all')
-      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope, silent: "true"})
+      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
 
 

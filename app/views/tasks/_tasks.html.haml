@@ -22,8 +22,8 @@
 .bootstrap-table-dropdown-overflow
   #custom_tool_buttons
     %button.btn.btn-primary.new-task{type: "button", aria: {label: "Create Task"}}=t(:task)[:new_task]
-    %button{class: "btn btn-default btn-primary", id: 'complete', value: 'complete'}= t(:task)[:show_complete]
-    %button{class: "btn btn-default btn-primary", id: 'all_tasks', value: 'all'}= t(:task)[:all_tasks]
+    %input{ type: "checkbox", id: "complete", data: { toggle: "toggle", on: "Incomplete ", off: "Complete ", onstyle: "success" } }
+    %input{ type: "checkbox", id: "all_tasks", data: { toggle: "toggle", on: "My Tasks ", off: "All Tasks ", onstyle: "success" } }
 %table.tasks.custom_striped{style: "padding: 0px 0px;",id: "task-list", data: {"idField" => "id", toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: tasks_path(scope: 'mine', format: :json), "sort-name" => "due_at", "sort-order" => 'asc', striped: "true", toolbar: "#custom_tool_buttons", "show-export" => "true", "export-types" => ['excel']}}
   %thead
     %tr
