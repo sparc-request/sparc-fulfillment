@@ -60,12 +60,12 @@ $ ->
 
     $(document).on "change", "#complete", ->
       status = if $(this).prop('checked') then "incomplete" else "complete"
-      scope = if $("#all_tasks").prop("checked") then "mine" else "all"
+      scope = if $("#all_tasks").prop("checked") then "all" else "mine"
     
       $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
 
     $(document).on 'change', "#all_tasks", ->
-      scope = if $(this).prop("checked") then "mine" else "all"
+      scope = if $(this).prop("checked") then "all" else "mine"
       status = if $("#complete").prop("checked") then "incomplete" else "complete"
 
       $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
