@@ -117,7 +117,7 @@ class TasksController < ApplicationController
       if params[:status]
         Task.json_info.mine(current_identity).send(params[:status])
       else
-        Task.json_info.mine(current_identity).complete
+        Task.json_info.mine(current_identity).incomplete
       end
     else
       if params[:status]
