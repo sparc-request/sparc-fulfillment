@@ -29,6 +29,12 @@ $('#end_date').datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
 
+if $("#protocol_section.background_load").length
+  $.ajax
+    type: 'GET'
+    url: "reports/update_protocols_dropdown"
+    data: { report_type: "<%= escape_javascript(@report_type) %>"}
+
 $(".modal-content .selectpicker").selectpicker()
 
 multi_select = $("#organization_select")
@@ -42,7 +48,7 @@ multi_select.multiselect({
   enableClickableOptGroups: true,
   buttonWidth: '100%',
   onDropdownShow: (e) ->
-    # If user does not select an organization, 
+    # If user does not select an organization,
     # set @original_selected_values to an empty array
     # else set to selected organizations
     if multi_select.val() == null
@@ -53,11 +59,11 @@ multi_select.multiselect({
     selected_values = multi_select.val()
     if !_.isEqual(@original_selected_values,selected_values) && selected_values != null
       $('#protocol_section').empty()
-      $('#protocol_section').closest('.form-group').find('label').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
+      $('#protocol_section').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
       $('#protocol_section').closest('.form-group').removeClass("hidden")
       $.ajax
-        type: 'POST'
-        url: "reports/update_dropdown"
+        type: 'GET'
+        url: "reports/update_protocols_dropdown"
         data: { org_ids: multi_select.val() }
 })
 
@@ -66,3 +72,10 @@ $(document).on 'change', "#organization_select", ->
   if $(this).val() == null
     $('#protocol_section').closest('.form-group').addClass("hidden")
     $('#protocol_section').empty()
+
+# Change title based on service type selection
+$(document).on 'change', '#service_type_select', ->
+  if $(this).val() == "One Time Fees"
+    $('input#title').val("Auditing Report (One Time Fee Services)")
+  else
+    $('input#title').val("Auditing Report (Per Patient Per Visit Services)")

@@ -48,4 +48,19 @@ class PricingSetup < ActiveRecord::Base
     else 1.0
     end
   end
+
+  def applied_percentage(rate_type)
+    applied_percentage = case rate_type
+    when 'federal' then self.federal
+    when 'corporate' then self.corporate
+    when 'other' then self.other
+    when 'member' then self.member
+    when 'full' then 100
+    else raise ArgumentError, "Could not find applied percentage for rate type #{rate_type}"
+    end
+
+    applied_percentage = applied_percentage / 100.0 rescue nil
+
+    return applied_percentage || 1.0
+  end
 end

@@ -18,9 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class UpdateDropdownsController < ApplicationController
+require 'rails_helper'
 
-  def create
-    @protocols = Protocol.where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
-  end
+RSpec.describe Import, type: :model do
+  it { is_expected.to have_attached_file(:file) }
+
+  it { is_expected.to validate_attachment_content_type(:file).
+       allowing('text/plain') }
+
+  it { is_expected.to have_attached_file(:xml_file) }
+
+  it { is_expected.to validate_attachment_content_type(:xml_file).
+       allowing('text/xml') }
 end

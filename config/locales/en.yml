@@ -164,6 +164,23 @@ en:
     view: "View Fulfillment Buttons"
     klok_description: "Imported via Klok"
 
+  imports:
+    klok_import: "Klok Import"
+    klok_import_info: "Click here to learn more about Klok"
+    file_select: "File Select:"
+    file_select_info: "requires *.xml file format"
+    proof_report: "Proof Report:"
+    import_klok_data: "Import Klok Data:"
+    browse: "Browse..."
+    proof_report_info: "Perform this first for data checking purposes"
+    import_klok_data_info: "This will run the Klok import which is IRREVERSIBLE"
+    date_time_formatter_ruby: "%m/%d/%Y %I:%M:%S %p"
+    title: "Title"
+    date_created: "Date Created"
+    file: "Attached File"
+    proof_report_submit: 'Proof Report'
+    klok_report_submit: 'Klok Report'
+
   multiple_procedures_modal:
     incomplete_header: "Incomplete Multiple Services"
     complete_header: "Complete Multiple Services"
@@ -204,6 +221,7 @@ en:
     logged_in_msg: "Logged in as"
     reports_link: 'All Reports'
     tasks_link: 'All Tasks'
+    imports_link: 'Imports'
 
   notes:
     object: "Note"
@@ -299,7 +317,7 @@ en:
     srid: "SRID"
     start_date: "Study Start Date"
     status: "Status"
-    study_cost: "Total Study Costs"
+    study_cost: "Total Cost"
     total_at_approval: "Cost at Approval"
     study_schedule_report: "Export"
     subsidy_amount: "Percent Subsidy"
@@ -330,30 +348,34 @@ en:
       project_schedule: "Project Schedule"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
+    back_to_top: 'Back to Top'
 
   reports:
     asc: "ASC"
     ascending: "Ascending"
-    all_protocols: "All Protocols"
     auditing_report: "Auditing Report"
     desc: "DESC"
     descending: "Descending"
     invoice_report: "Invoice Report"
     end_date: "End Date"
-    incomplete_visit_report: "Incomplete Visit Report"
     organization: "Organization(s)*"
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"
     primary_pi: "Primary PI"
     project_summary_report: "Project Summary Report"
-    protocol: "Protocol"
     protocols: "Protocol(s)*"
     protocol_id: "Protocol ID"
     request_report: "Request Report"
+    select_service: "Select a Service"
+    select_protocols: "Select Protocol(s)"
+    service_type: "Service Type"
     sort_by: "Sort By"
     sort_order: "Sort Order"
     start_date: "Start Date"
+    visit_report: "Visit Report"
+    visit_start_date_from: "Visit Start Date From"
+    visit_start_date_to: "Visit Start Date To"
 
   services:
     object: "Service"
@@ -428,7 +450,7 @@ en:
     name: "Visit Name"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
     position: "Insert into Position *"
-    window_after: "Window After"
-    window_before: "Window Before"
+    window_after: "Window After *"
+    window_before: "Window Before *"
     view_page_next: "View More"
     view_page_previous: "View Previous"

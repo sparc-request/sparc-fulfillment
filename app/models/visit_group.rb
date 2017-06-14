@@ -35,7 +35,9 @@ class VisitGroup < ActiveRecord::Base
 
   validates :arm_id, presence: true
   validates :name, presence: true
-
+  validates :window_before,
+            :window_after,
+            presence: true, numericality: { only_integer: true }
   validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
   validate :day_must_be_in_order, unless: "day.blank? || arm_id.blank?"
   validates :day, numericality: { only_integer: true }, unless: "day.blank?"
@@ -57,9 +59,9 @@ class VisitGroup < ActiveRecord::Base
   end
 
   # Used to validate :day, when present. Preceding VisitGroup must have a
-  # a smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).
+  # smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).
   def day_must_be_in_order
-    already_there = arm.visit_groups.find_by(position: position)
+    already_there = arm.visit_groups.find_by(position: position) || arm.visit_groups.find_by(id: id)
     last_persisted_pos = arm.visit_groups.last.try(:position) || 0
 
     # determine neighbors that will be after save
@@ -81,6 +83,10 @@ class VisitGroup < ActiveRecord::Base
           end
         end
       end
+
+    if left_neighbor.try(:id) == id
+      left_neighbor = nil
+    end
 
     unless day > (left_neighbor.try(:day) || day - 1) && day < (right_neighbor.try(:day) || day + 1)
       errors.add(:day, 'must be in order')

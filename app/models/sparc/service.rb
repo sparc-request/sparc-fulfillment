@@ -42,4 +42,36 @@ class Sparc::Service < ActiveRecord::Base
 
     return pricing_map
   end
+
+  def displayed_pricing_map date=Date.today
+    unless self.verify_display_dates
+      raise TypeError, "One of service's pricing maps has no display date!"
+    end
+    if pricing_maps && !pricing_maps.empty?
+      current_date = (date || Date.today).to_date
+      current_maps = pricing_maps.select {|x| x.display_date <= current_date}
+      if current_maps.empty?
+        raise ArgumentError, "Service has no current pricing maps!"
+      else
+        # If two pricing maps have the same display_date, prefer the most
+        # recently created pricing_map.
+        pricing_map = current_maps.sort {|a,b| [b.display_date, b.id] <=> [a.display_date, a.id]}.first
+      end
+
+      return pricing_map
+    else
+      raise ArgumentError, "Service has no pricing maps!"
+    end
+  end
+
+  def verify_display_dates
+    is_valid = true
+    self.pricing_maps.each do |map|
+      unless map.display_date
+        is_valid = false
+      end
+    end
+
+    is_valid
+  end
 end

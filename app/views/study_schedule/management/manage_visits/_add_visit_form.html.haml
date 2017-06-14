@@ -50,7 +50,7 @@
             .form-group
               = a.label "position", t(:visit_groups)[:position], class: "col-sm-4 control-label"
               .col-sm-7
-                = a.select "position", options_for_select(insert_to_position_options(arm.visit_groups)), { include_blank: '' }, class: "form-control selectpicker"
+                = a.select "position", options_for_select(insert_to_position_options(arm.visit_groups)), { include_blank: '' }, class: "form-control selectpicker visit-group-position"
             .form-group
               = a.label "window_before", t(:visit_groups)[:window_before], class: "col-sm-4 control-label"
               .col-sm-7
@@ -63,4 +63,5 @@
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:add]}
+          %span.add-visit-wrapper{ title: 'You must select a position', data: { toggle: 'tooltip', animate: 'false' } }
+            %input.btn.btn-primary.add-visit{type: 'submit', value: t(:actions)[:add]}

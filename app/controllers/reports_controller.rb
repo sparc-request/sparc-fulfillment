@@ -31,7 +31,7 @@ class ReportsController < ApplicationController
 
   def create
     @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
-    
+
     @report = @report_type.classify.constantize.new(reports_params)
     @errors = @report.errors
 
@@ -39,6 +39,16 @@ class ReportsController < ApplicationController
       @reports_params = reports_params
       @documentable.documents.push @document
       ReportJob.perform_later(@document, reports_params)
+    end
+  end
+
+  def update_protocols_dropdown
+    @single_protocol = (params[:report_type] == "project_summary_report")
+
+    if params[:org_ids]
+      @protocols = Protocol.where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
+    else
+      @protocols = current_identity.protocols
     end
   end
 
@@ -58,20 +68,22 @@ class ReportsController < ApplicationController
 
   def reports_params
     params.require(:report_type) # raises error if report_type not present
-    params.except!(:organizations)
     params.permit(:format,
               :utf8,
               :report_type,
               :title,
               :start_date,
               :end_date,
+              :service_type,
               :time_zone,
+              :protocol,
               :protocol_id,
               :sort_by,
               :sort_order,
               :participant_id,
               :documentable_id,
               :documentable_type,
-              :protocol_ids => []).merge(identity_id: current_identity.id)
+              :organizations => [],
+              :protocols => []).merge(identity_id: current_identity.id)
   end
 end

@@ -39,7 +39,7 @@
             = form.text_field :name, {class: 'form-control'}
         .form-group
           = form.label "position", t(:appointment)[:position], class: "col-sm-3 control-label"
-          .col-sm-8= form.select "position", options_from_collection_for_select(appointment.arm.appointments.where(participant_id: appointment.participant_id), 'position', 'insertion_name') << app_add_as_last_option(appointment), {include_blank: ''}, class: "form-control selectpicker"
+          .col-sm-8= form.select "position", options_from_collection_for_select(appointment.arm.appointments.where(participant_id: appointment.participant_id), 'position', 'insertion_name') << app_add_as_last_option(appointment), {include_blank: ''}, class: "form-control selectpicker visit-group-position"
         = form.fields_for :notes, note do |note_form|
           = note_form.hidden_field :kind
           = note_form.hidden_field :identity_id, value: current_identity.id
@@ -55,4 +55,5 @@
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
-          %button.btn.btn-primary{type: 'submit'}=t(:actions)[:save]
+          %span.add-visit-wrapper{ title: 'You must select a position', data: { toggle: 'tooltip', animate: 'false' } }
+            %input.btn.btn-primary.add-visit{type: 'submit', value: t(:actions)[:add]}

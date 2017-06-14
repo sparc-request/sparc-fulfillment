@@ -35,6 +35,10 @@
           .col-md-12
             = hidden_field_tag "report_type", report_type
             .form-group
+              = label_tag "service_type", t(:reports)[:service_type]+t(:actions)[:required], class: "col-sm-3 control-label"
+              .col-sm-9
+                = select_tag "service_type", options_for_select(["One Time Fees", "Per Patient Per Visit"]), include_blank: true, class: "selectpicker form-control", id: "service_type_select", title: "Select a Service Type"
+            .form-group
               =label_tag "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9= text_field_tag "title", title, class: "form-control"
             .form-group
@@ -47,8 +51,8 @@
                 = text_field_tag "end_date", nil, class: "datepicker form-control", readonly: true
             .form-group.protocols-group
               = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
-              .col-sm-9
-                = select_tag "protocol_ids", truncated_options_from_collection_for_select(current_identity.protocols, "id", "short_title_with_sparc_id"), multiple: true, 'data-live-search' => true, 'data-actions-box' => true, title: t(:reports)[:all_protocols], class: "selectpicker form-control"
+              .col-sm-9#protocol_section.background_load
+                %i.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}

@@ -19,8 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class AuditingReport < Report
-
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
+  VALIDATES_PRESENCE_OF = [:service_type, :title, :start_date, :end_date, :protocols].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
@@ -36,57 +35,108 @@ class AuditingReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
-      csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
-      csv << [""]
-      csv << [""]
-      csv << [
-        "Protocol ID",
-        "Patient Name",
-        "Patient ID",
-        "Arm Name",
-        "Visit Name",
-        "Service Completion Date",
-        "Marked as Incomplete Date",
-        "Marked with Follow-Up Date",
-        "Added?",
-        "Nexus Core",
-        "Service Name",
-        "Completed?",
-        "Billing Type (R/T/O)",
-        "If not completed,
-        reason and comment",
-        "Follow-Up date and comment",
-        "Cost"
-      ]
 
-      if @params[:protocol_ids].present?
-        protocols = Protocol.find(@params[:protocol_ids])
-      else
-        protocols = Identity.find(@params[:identity_id]).protocols
-      end
+      protocols = Protocol.find(@params[:protocols])
 
-      protocols.each do |protocol|
-        protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
-          participant = procedure.appointment.participant
+      if @params[:service_type] == "Per Patient Per Visit"
+        csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
+        csv << [""]
+        csv << [""]
+        csv << [
+          "Protocol ID",
+          "Patient Name",
+          "Patient ID",
+          "Arm Name",
+          "Visit Name",
+          "Service Completion Date",
+          "Marked as Incomplete Date",
+          "Marked with Follow-Up Date",
+          "Added?",
+          "Nexus Core",
+          "Service Name",
+          "Completed?",
+          "Billing Type (R/T/O)",
+          "If not completed,
+          reason and comment",
+          "Follow-Up date and comment",
+          "Cost"
+        ]
 
-          csv << [
-            protocol.sparc_id,
-            participant.full_name,
-            participant.label,
-            procedure.appointment.arm.name,
-            procedure.appointment.name,
-            format_date(procedure.completed_date.nil? ? nil : procedure.completed_date),
-            format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date),
-            format_date(procedure.follow_up? ? procedure.handled_date : nil),
-            added_formatter(procedure),
-            procedure.service.organization.name,
-            procedure.service_name,
-            complete_formatter(procedure),
-            procedure.formatted_billing_type,
-            reason_formatter(procedure),
-            follow_up_formatter(procedure),
-            display_cost(procedure.service_cost)
-          ]
+        protocols.each do |protocol|
+          protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
+            participant = procedure.appointment.participant
+
+            csv << [
+              protocol.srid,
+              participant.full_name,
+              participant.label,
+              procedure.appointment.arm.name,
+              procedure.appointment.name,
+              format_date(procedure.completed_date.nil? ? nil : procedure.completed_date),
+              format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date),
+              format_date(procedure.follow_up? ? procedure.handled_date : nil),
+              added_formatter(procedure),
+              procedure.service.organization.name,
+              procedure.service_name,
+              complete_formatter(procedure),
+              procedure.formatted_billing_type,
+              reason_formatter(procedure),
+              follow_up_formatter(procedure),
+              display_cost(procedure.service_cost)
+            ]
+          end
+        end
+      elsif @params[:service_type] == "One Time Fees"
+        csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
+        csv << [""]
+        csv << [""]
+        csv << [
+          "Protocol ID",
+          "Short Title",
+          "Principal Investigator",
+          "Organization",
+          "Service Name",
+          "Account",
+          "Contact",
+          "Quantity Type",
+          "Unit Cost",
+          "Requested",
+          "Remaining",
+          "Service Started Date",
+          "Components",
+          "Last Fulfillment Date",
+          "Notes",
+          "Documents",
+          "Fields Modified",
+          "Date"
+        ]
+
+        protocols.each do |protocol|
+          protocol.line_items.each do |line_item|
+            next unless line_item.versions.where(event: "update", created_at: @start_date..@end_date).any?
+            line_item.versions.where(event: "update").each do |version|
+              csv << [
+                protocol.srid,
+                protocol.short_title,
+                protocol.pi.full_name,
+                protocol.organization.abbreviation,
+                line_item.service.name,
+                line_item.account_number,
+                line_item.contact_name,
+                line_item.quantity_type,
+                display_cost(line_item.cost),
+                line_item.quantity_requested,
+                line_item.quantity_remaining,
+                format_date(line_item.started_at),
+                line_item.components.where(selected: true).map(&:component).join(' | '),
+                format_date(line_item.last_fulfillment),
+                line_item.notes.map(&:comment).join(' | '),
+                line_item.documents.map(&:title).join(' | '),
+                changeset_formatter(version.changeset),
+                format_date(version.created_at)
+              ]
+            end
+          end
         end
       end
     end
@@ -112,5 +162,17 @@ class AuditingReport < Report
     if procedure.follow_up_date
       "Due Date: #{format_date(procedure.follow_up_date)} | Comment: #{procedure.task.body}"
     end
+  end
+
+  def changeset_formatter(changeset)
+    formatted = []
+    changeset.select{|k, v| k != "updated_at"}.each do |field, changes|
+      if field == "service_id"
+        formatted << "#{field.humanize}: #{Service.find(changes.first).name} => #{Service.find(changes.last).name}"
+      else
+        formatted << "#{field.humanize}: #{changes.first} => #{changes.last}"
+      end
+    end
+    formatted.join(' | ')
   end
 end

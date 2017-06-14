@@ -30,6 +30,7 @@
 @import "nprogress"
 @import "animation"
 @import "bootstrap-multiselect"
+@import "sweetalert"
 
 @import "nav"
 @import "protocols"
@@ -42,6 +43,7 @@
 @import "customize"
 @import 'reports'
 @import 'header'
+@import 'imports'
 
 .overflow_webkit_button
   -ms-overflow-style: none
@@ -74,15 +76,12 @@
 
 /************Main Layout Styling************/
 .header
+  max-width: $container-lg
   background-color: #ffffff
-  padding: 13px 0
   vertical-align: center
-
-  > div:first-child
-    padding-top: 15px
-
-  #logo_left
-    margin-top: 17px
+  margin: auto
+  padding-top: 20px
+  padding-bottom: 20px
 
 /************Table Styling************/
 table.custom_striped

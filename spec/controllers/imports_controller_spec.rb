@@ -18,15 +18,35 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$('#protocol_section').html('<%= escape_javascript(select_tag "protocol_ids", truncated_options_from_collection_for_select(@protocols, "id", "short_title_with_sparc_id"), multiple: true, selectAll: true, id: "protocol_select", "data-live-search" => true, "data-actions-box" => true, title: t(:reports)[:all_protocols], class: "form-control") %>')
-$('#protocol_select').multiselect({
-  includeSelectAllOption: true,
-  allSelectedText: "All Protocols",
-  enableFiltering: true
-})
+require 'rails_helper'
 
-$("#protocol_select").multiselect('selectAll', false)
-$("#protocol_select").multiselect('updateButtonText')
+RSpec.describe ImportsController, type: :controller do
 
-$('.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin').remove()
+  login_user
 
+  describe 'GET #index' do
+    it 'should return all imports' do
+      create(:import)
+
+      get :index
+
+      expect(response).to be_success
+    end
+
+    it 'should return all imports' do
+      import = create(:import)
+
+      get :index
+
+      expect(assigns(:imports)).to eq [import]
+    end
+  end
+
+  describe 'GET #new' do
+    it 'should instantiate a new Import class' do
+      xhr :get, :new
+
+      expect(assigns(:import)).to be_a_new Import
+    end
+  end
+end

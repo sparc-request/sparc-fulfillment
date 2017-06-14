@@ -20,7 +20,7 @@
 
 class ProjectSummaryReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocol_id].freeze
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocol].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
@@ -35,7 +35,7 @@ class ProjectSummaryReport < Report
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
-    protocol = Protocol.find(@params[:protocol_id])
+    protocol = Protocol.find(@params[:protocol])
 
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]

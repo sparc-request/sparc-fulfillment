@@ -54,6 +54,12 @@ class Klok::Entry < ActiveRecord::Base
 
   #### Error Msgs
 
+  def duplicate
+    unless self.enabled?
+      self.errors[:base] << 'duplicate entry'
+    end
+  end
+
   def klok_project_present
     unless self.klok_project.present?
       self.errors[:base] << 'klok project not present'
@@ -111,6 +117,7 @@ class Klok::Entry < ActiveRecord::Base
   end
 
   def error_messages
+    duplicate
     klok_project_present
     klok_project_ssr_id
     klok_project_ssr_id_regex_error
@@ -124,6 +131,7 @@ class Klok::Entry < ActiveRecord::Base
   end
 
   def is_valid?
+    self.enabled? &&
     self.klok_project.present? &&
     self.klok_project.ssr_id &&
     ( /\d\d\d\d-\d\d\d\d/ === self.klok_project.ssr_id ) &&  #### validate we have a valid SSR id (comes from parent project)

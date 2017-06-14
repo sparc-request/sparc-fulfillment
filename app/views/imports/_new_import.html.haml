@@ -1,0 +1,76 @@
+-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+-# All rights reserved.~
+
+-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+-# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+-# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+-# derived from this software without specific prior written permission.~
+
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+-# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+-# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
+.modal-dialog
+  = form_for @import, multipart: true, remote: true, html: { class: 'form-horizontal' } do |f|
+    .modal-content
+      .modal-header
+        %button.close{ type: 'button', data: { dismiss: 'modal' } }
+          %span{ aria: { hidden: 'true' } } &times;
+          %span.sr-only
+            = t(:actions)[:close]
+        %h3.modal-title.text-center
+          = link_to 'http://www.getklok.com',
+            data: { toggle: "tooltip", animation: 'false' },
+            title: t(:imports)[:klok_import_info], target: '_blank' do
+            %i.glyphicon.glyphicon-time
+            = t(:imports)[:klok_import]
+      .modal-body
+        .form-group
+          = f.label :title, t(:imports)[:file_select],
+            class: 'col-sm-3 control-label'
+          .col-md-9
+            .input-group
+              %label.input-group-btn
+                %span.btn.btn-primary
+                  = t(:imports)[:browse]
+                  = f.file_field :xml_file, onchange: 'validateFiles(this);',
+                    style: 'display: none;', class: 'file-input'
+              = text_field_tag 'file-display', t(:imports)[:file_select_info],
+                class: 'form-control'
+        .form-group
+          = label_tag "proof_report",
+            t(:imports)[:proof_report],
+            class: "col-sm-3 control-label",
+            data:{toggle: "tooltip", animation: 'false'},
+            title: t(:imports)[:proof_report_info]
+          .col-sm-9
+            = f.submit t(:imports)[:proof_report_submit],
+              class: 'btn btn-block btn-primary proof-report disabled klok-submit-button',
+              data: { loading_text: 'Running Proof Report...', complete_text: t(:imports)[:proof_report_submit]}
+        .form-group
+          = label_tag "import_klok_data",
+            t(:imports)[:import_klok_data],
+            class: "col-sm-3 control-label",
+            data:{toggle: "tooltip", animation: 'false'},
+            title: t(:imports)[:import_klok_data_info]
+          .col-sm-9
+            = f.submit t(:imports)[:klok_report_submit],
+              class: 'btn btn-block btn-primary import-klok-data disabled klok-submit-button',
+              data: { confirm: 'Klok Import - This action is irreversible. Are you sure?', loading_text: 'Running Klok Report...', complete_text: t(:imports)[:klok_report_submit] }
+        .form-group
+          .col-sm-offset-2.col-sm-8
+            .spinner
+              .bounce1
+              .bounce2
+              .bounce3
+      .modal-footer
+        %button.btn.btn-default{ type: 'button', data: { dismiss: 'modal' } }
+          = t(:actions)[:close]

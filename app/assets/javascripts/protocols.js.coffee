@@ -72,5 +72,11 @@ $ ->
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
 
+    $(window).scroll ->
+      if $(this).scrollTop() > 50
+        $('.back-to-top').removeClass('hidden')
+      else
+        $('.back-to-top').addClass('hidden')
+
 (exports ? this).number_to_percent = (value) ->
   value + '%'
