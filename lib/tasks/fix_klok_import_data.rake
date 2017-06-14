@@ -35,7 +35,7 @@ namespace :data do
 			fulfillments = Fulfillment.where("klok_entry_id IS NOT NULL AND performer_id = ?", old_performer_id)
 			no_of_fulfillments = fulfillments.count
 			puts "There are " + no_of_fulfillments.to_s + " fulfillments with performer id " + old_performer_id
-			
+
 			if no_of_fulfillments > 0
 				new_performer_id = prompt "Enter new performer id: "
 				new_creator_id = prompt "Enter new creator id: "
@@ -45,7 +45,7 @@ namespace :data do
 				end
 
 				puts "The performer id and creator id are changed for all the " + no_of_fulfillments.to_s + " fulfillments"
-			end	
+			end
 
 		else
 			puts "Exiting task...."
