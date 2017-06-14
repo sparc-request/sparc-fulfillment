@@ -85,7 +85,6 @@ $ ->
       'current_page': $("select.visit_dropdown").first().attr('page')
       'schedule_tab': $('#current_tab').attr('value')
       'protocol_id' : $('#study_schedule_buttons').data('protocol-id')
-    console.log(data)
     $.ajax
       type: 'GET'
       url: "/visit_groups/new"

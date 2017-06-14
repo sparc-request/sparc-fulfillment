@@ -132,7 +132,6 @@ $ ->
   $(document).on 'dp.hide', ".completed_date_field", ->
     procedure_id = $(this).parents(".procedure").data("id")
     completed_date = $(this).val()
-    console.log("Test1")
     data = procedure:
             completed_date: completed_date
     $.ajax
@@ -185,7 +184,6 @@ $ ->
       data = procedure:
               status: "complete"
               performer_id: gon.current_identity_id
-      console.log("Test3")
 
     $.ajax
       type: 'PUT'
@@ -196,7 +194,6 @@ $ ->
     active        = $(this).hasClass('active')
     procedure_id  = $(this).parents('.procedure').data('id')
     # undo incomplete status
-    console.log("Test4")
     if active
       data = procedure:
               status: "unstarted"
@@ -312,7 +309,6 @@ $ ->
   $(document).on 'change', 'td.performed-by .selectpicker', ->
     procedure_id = $(this).parents(".procedure").data("id")
     selected = $(this).find("option:selected").val()
-    console.log("Test5")
     data = procedure:
               performer_id: selected
     $.ajax
