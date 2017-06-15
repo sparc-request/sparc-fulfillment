@@ -11,7 +11,7 @@ before_script:
   - cp config/faye.yml.example config/faye.yml
   - cp dotenv.example .env
   - mysql -e 'create database test_sparc_request;'
-  - mysql -e 'create database cwf_test;'  
+  - mysql -e 'create database cwf_test;'
   - cd ..
   - git clone https://github.com/sparc-request/sparc-request.git
   - cd sparc-request
@@ -28,6 +28,14 @@ before_script:
   - mkdir -p public/system/documents
   - rvm use $(< .ruby-version) --install --binary --fuzzy
   - export BUNDLE_GEMFILE=$PWD/Gemfile
-script:
-  - RAILS_ENV=test bundle exec rake db:migrate 
-  - bundle exec rspec
+  - RAILS_ENV=test bundle exec rake db:migrate
+jobs:
+  include:
+    - script: bundle exec rspec spec/api
+    - script: bundle exec rspec spec/controllers
+    - script: bundle exec rspec spec/features
+    - script: bundle exec rspec spec/helpers
+    - script: bundle exec rspec spec/jobs
+    - script: bundle exec rspec spec/lib
+    - script: bundle exec rspec spec/models
+    - script: bundle exec rspec spec/requests
