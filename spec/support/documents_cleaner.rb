@@ -21,7 +21,7 @@
 RSpec.configure do |config|
 
   config.before(:suite) do
-    Dir.mkdir(ENV.fetch('DOCUMENTS_FOLDER')) unless Dir.exists?(ENV.fetch('DOCUMENTS_FOLDER'))
+    FileUtils.mkdir_p(ENV.fetch('DOCUMENTS_FOLDER')) unless File.exists?(ENV.fetch('DOCUMENTS_FOLDER'))
   end
 
   config.after(:suite) do
