@@ -58,7 +58,7 @@ feature 'Fulfillments', js: true do
     given_i_have_fulfillments
     visit protocol_path(@protocol.id)
     wait_for_ajax
-    click_link "Study Level Activities"
+    click_link "Non-clinical Services"
     wait_for_ajax
     first('.otf-fulfillment-list').click
     wait_for_ajax
