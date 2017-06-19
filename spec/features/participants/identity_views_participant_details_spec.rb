@@ -23,18 +23,18 @@ require 'rails_helper'
 feature 'User views Participant details', js: true do
 
   scenario 'and sees the Participants attributes' do
-    given_i_am_viewing_the_participant_list
+    given_i_am_viewing_the_participant_tracker
     when_i_click_the_participant_details_icon
     then_i_should_see_the_participant_details
   end
 
-  def given_i_am_viewing_the_participant_list
+  def given_i_am_viewing_the_participant_tracker
     protocol    = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
     wait_for_ajax
 
-    click_link 'Participant List'
+    click_link 'Participant Tracker'
     wait_for_ajax
   end
 
