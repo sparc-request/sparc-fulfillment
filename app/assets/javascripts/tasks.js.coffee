@@ -58,14 +58,8 @@ $ ->
     $("table.tasks").bootstrapTable('hideColumn', 'id')
 
 
-    $(document).on "change", "#complete", ->
-      status = if $(this).prop('checked') then "complete" else "incomplete"
+    $(document).on "change", "#complete, #all_tasks", ->
       scope = if $("#all_tasks").prop("checked") then "all" else "mine"
-    
-      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
-
-    $(document).on 'change', "#all_tasks", ->
-      scope = if $(this).prop("checked") then "all" else "mine"
       status = if $("#complete").prop("checked") then "complete" else "incomplete"
 
       $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
