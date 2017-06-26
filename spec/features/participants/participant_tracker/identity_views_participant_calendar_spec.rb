@@ -94,7 +94,7 @@ feature 'User tries to view the participant calendar', js: true do
     visit participant_path @participant
     wait_for_ajax
 
-    bootstrap_select 'appointment_select', @visit_group.name
+    bootstrap_select '#appointment_select', @visit_group.name
 
     wait_for_ajax
     click_button 'Start Visit'

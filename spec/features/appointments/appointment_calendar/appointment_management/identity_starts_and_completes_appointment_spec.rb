@@ -105,7 +105,7 @@ feature 'Start Complete Buttons', js: true do
 
     visit participant_path(@participant)
     wait_for_ajax
-    bootstrap_select 'appointment_select', @visit_group.name
+    bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
   end
 
@@ -138,7 +138,7 @@ feature 'Start Complete Buttons', js: true do
     visit current_path
     wait_for_ajax
 
-    bootstrap_select 'appointment_select', @visit_group.name
+    bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
   end
 

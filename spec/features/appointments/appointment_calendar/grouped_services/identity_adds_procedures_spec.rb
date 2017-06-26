@@ -42,9 +42,9 @@ feature 'Identity adds Procedure', js: true do
     visit_group = @participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    bootstrap_select('appointment_select', visit_group.name)
+    bootstrap_select('#appointment_select', visit_group.name)
     wait_for_ajax
-    bootstrap_select('service_list', service.name)
+    bootstrap_select('#service_list', service.name)
     fill_in 'service_quantity', with: '2'
     page.find('button.add_service').click
     wait_for_ajax

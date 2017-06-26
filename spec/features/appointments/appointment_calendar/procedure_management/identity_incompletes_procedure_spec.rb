@@ -128,10 +128,10 @@ feature 'Incomplete Procedure', js: true do
     visit participant_path participant
     wait_for_ajax
 
-    bootstrap_select 'appointment_select', visit_group.name
+    bootstrap_select '#appointment_select', visit_group.name
     wait_for_ajax
     
-    bootstrap_select 'service_list', service.name
+    bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
     wait_for_ajax
@@ -166,7 +166,7 @@ feature 'Incomplete Procedure', js: true do
 
   def when_i_provide_a_reason
     reason = Procedure::NOTABLE_REASONS.first
-    bootstrap_select 'procedure_notes_attributes_0_reason', reason
+    bootstrap_select '.reason-select', reason
     fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
   end
 

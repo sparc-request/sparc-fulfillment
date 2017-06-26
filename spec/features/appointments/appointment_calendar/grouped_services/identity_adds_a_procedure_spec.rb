@@ -117,11 +117,11 @@ feature 'Identity adds a Procedure', js: true do
   end
 
   def and_select_a_procedure_from_multiselect
-    bootstrap_multiselect '.multiselect-selected-text', [@services.first.name]
+    bootstrap_multiselect '#core_multiselect', [@services.first.name]
   end
 
   def and_select_all_procedures_from_multiselect
-    bootstrap_multiselect '.multiselect-selected-text'
+    bootstrap_multiselect '#core_multiselect'
   end
 
   def then_i_should_see_a_enabled_complete_and_incomplete_button

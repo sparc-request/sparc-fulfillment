@@ -54,7 +54,7 @@ feature "Change Participant Arm", js: :true do
   end
 
   def and_the_visit_group_of_completed_procedure_should_still_appear
-    bootstrap_select("appointment_select", @procedure.visit_group.name)
+    bootstrap_select("#appointment_select", @procedure.visit_group.name)
     wait_for_ajax
   end
 
@@ -64,7 +64,7 @@ feature "Change Participant Arm", js: :true do
 
   def and_all_the_visits_should_appear
     #only tests for one to save time since if last one appears the others should also be there
-    bootstrap_select("appointment_select", @original_arm.visit_groups.last.name)
+    bootstrap_select("#appointment_select", @original_arm.visit_groups.last.name)
     wait_for_ajax
   end
 end

@@ -36,7 +36,7 @@ feature 'Identity changes a Service', js: true do
     procedure = Procedure.last
 
     within "tr.procedure[data-id='#{procedure.id}']" do
-      bootstrap_select "quantity_type_#{procedure.id}", 'T'
+      bootstrap_select "#quantity_type_#{procedure.id}", 'T'
     end
     then_i_should_see_the_procedure_in_the_group
   end
@@ -119,7 +119,7 @@ feature 'Identity changes a Service', js: true do
     procedure = Procedure.first
 
     within "tr.procedure[data-id='#{procedure.id}']" do
-      bootstrap_select "quantity_type_#{procedure.id}", 'R'
+      bootstrap_select '.billing_type', 'R'
     end
   end
 
@@ -130,7 +130,7 @@ feature 'Identity changes a Service', js: true do
         wait_for_ajax
       end
       within "tr.procedure[data-id='#{procedure.id}']" do
-        bootstrap_select "quantity_type_#{procedure.id}", 'R'
+        bootstrap_select '.billing_type', 'R'
         wait_for_ajax
       end
     end
@@ -144,7 +144,7 @@ feature 'Identity changes a Service', js: true do
       wait_for_ajax
     end
     within "tr.procedure[data-id='#{procedure.id}']" do
-      bootstrap_select "quantity_type_#{procedure.id}", 'R'
+      bootstrap_select '.billing_type', 'R'
     end
   end
 
@@ -152,7 +152,7 @@ feature 'Identity changes a Service', js: true do
     procedure = Procedure.last
 
     within "tr.procedure[data-id='#{procedure.id}']" do
-      bootstrap_select "quantity_type_#{procedure.id}", 'T'
+      bootstrap_select '.billing_type', 'T'
     end
   end
 

@@ -23,7 +23,7 @@ module Features
   module BootstrapHelpers
 
     def bootstrap_multiselect(class_or_id, selections = ['all'])
-      bootstrap_multiselect = find("#{class_or_id}")
+      bootstrap_multiselect = page.find("select#{class_or_id}", visible: false).first(:xpath, ".//..")
 
       bootstrap_multiselect.click
       if selections.first == 'all'
@@ -37,13 +37,13 @@ module Features
     end
 
     def bootstrap_select(class_or_id, choice)
-      page.find("[data-id='#{class_or_id}']").click
+      page.find("select#{class_or_id}").first(:xpath, ".//..").click
       first('.dropdown-menu.open span.text', text: choice).click
       wait_for_ajax
     end
 
     def bootstrap_selected?(element, choice)
-      page.find("[data-id='#{element}'][title='#{choice}']")
+      page.find("button.selectpicker[data-id='#{element}'][title='#{choice}']")
     end
   end
 end

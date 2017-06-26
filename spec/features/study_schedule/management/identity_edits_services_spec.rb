@@ -96,17 +96,17 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
   end
 
   def when_i_fill_in_the_form
-    bootstrap_select "add_service_id", "#{@services.last.name}"
+    bootstrap_select "#add_service_id", "#{@services.last.name}"
     
-    bootstrap_select "add_service_arm_ids_and_pages_", @arm.name
+    bootstrap_select "#add_service_arm_ids_and_pages_", @arm.name
     find("h4#line_item").click # click out of bootstrap multiple select
   end
 
   def when_i_select_a_service_and_arm
-    bootstrap_select "remove_service_id", "#{@services.first.name}"
+    bootstrap_select "#remove_service_id", "#{@services.first.name}"
     find("h4#line_item").click # click out of bootstrap multiple select
 
-    bootstrap_select "remove_service_arm_ids_", "#{@arm.name}"
+    bootstrap_select "#remove_service_arm_ids_", "#{@arm.name}"
     find("h4#line_item").click # click out of bootstrap multiple select
   end
 

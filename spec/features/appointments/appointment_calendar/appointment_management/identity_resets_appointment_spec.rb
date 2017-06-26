@@ -48,7 +48,7 @@ feature 'User tries to reset appointment', js: true do
     #Select the visit
     visit participant_path(Participant.first.id)
     wait_for_ajax
-    bootstrap_select('appointment_select', VisitGroup.first.name)
+    bootstrap_select('#appointment_select', VisitGroup.first.name)
     wait_for_ajax
   end
 

@@ -65,7 +65,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
       given_i_am_viewing_a_protocol_with_multiple_arms
       when_i_click_the_remove_arm_button
       # Ensure that the selected arm is the correct one being deleted
-      bootstrap_select "arm_form_select", @protocol.arms.first.name
+      bootstrap_select "#arm_form_select", @protocol.arms.first.name
       when_i_click_the_remove_submit_button
       then_i_should_not_see_the_arm
     end
@@ -181,7 +181,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def when_i_select_the_arm_with_completed_procedures
-    bootstrap_select "arm_form_select", @protocol.arms.first.name
+    bootstrap_select "#arm_form_select", @protocol.arms.first.name
   end
 
   def when_i_accept_the_confirmation_alert

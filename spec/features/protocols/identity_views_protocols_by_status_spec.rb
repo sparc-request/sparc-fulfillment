@@ -44,7 +44,7 @@ feature "Identity views Protocols by status", js: true do
   end
 
   def and_i_filter_protocols_by_complete_status
-    bootstrap_select 'index_selectpicker', 'Complete'
+    bootstrap_select '#index_selectpicker', 'Complete'
     wait_for_ajax
   end
 
