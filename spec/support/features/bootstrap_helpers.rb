@@ -43,7 +43,7 @@ module Features
     end
 
     def bootstrap_selected?(element, choice)
-      page.find("button.selectpicker[data-id='#{element}'][title='#{choice}']")
+      page.find("button[data-id='#{element}'][title='#{choice}']")
     end
   end
 end

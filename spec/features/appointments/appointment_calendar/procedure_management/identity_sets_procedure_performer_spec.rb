@@ -96,7 +96,7 @@ feature 'User sets Procedure performer', js: true do
     wait_for_ajax
     find('label.status.incomplete').click
     wait_for_ajax
-    bootstrap_select '#core_multiselect', "Assessment missed"
+    bootstrap_select '.reason-select', "Assessment missed"
     click_button 'Save'
     wait_for_ajax
   end
