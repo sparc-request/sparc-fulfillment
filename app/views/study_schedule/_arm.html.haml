@@ -23,7 +23,10 @@
   .study_schedule.service{class: "arm_#{arm.id}"}
     .row.header
       .col-xs-4.text-center.study_schedule_table_name
-        %span{id: "arm-name-display-#{arm.id}"}= arm.name
+        %span{id: "arm-name-display-#{arm.id}"}
+          = t(:arm)[:header]
+          %br
+          = t('arm.name_with_arm_name_interpolated', arm_name: arm.name)
       .col-xs-8.text-center.visit_group_select{id: "select_for_arm_#{arm.id}"}
         = render partial: '/study_schedule/visit_group_page_select', locals: {arm: arm, page: page}
     .row.visit_groups

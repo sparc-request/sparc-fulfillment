@@ -37,7 +37,12 @@
             .form-group
               = label_tag "service_type", t(:reports)[:service_type]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag "service_type", options_for_select(["One Time Fees", "Per Patient Per Visit"]), include_blank: true, class: "selectpicker form-control", id: "service_type_select", title: "Select a Service Type"
+                = select_tag "service_type",
+                  options_for_select(Constants::AUDITING_REPORT_SERVICE_TYPES),
+                  include_blank: true,
+                  class: "selectpicker form-control",
+                  id: "service_type_select",
+                  title: "Select a Service Type"
             .form-group
               =label_tag "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9= text_field_tag "title", title, class: "form-control"
