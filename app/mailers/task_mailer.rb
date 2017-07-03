@@ -5,9 +5,9 @@ class TaskMailer < ApplicationMailer
   #
   #   en.task_mailer.task_confirmation.subject
   #
-  def task_confirmation
-    @greeting = "Hi"
+  def task_confirmation(identity)
+    @identity = identity
 
-    mail to: "to@example.org"
+    mail to: identity.email, subject: "New Task Confirmation"
   end
 end

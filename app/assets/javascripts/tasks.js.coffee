@@ -60,7 +60,7 @@ $ ->
 
     $(document).on "click", "#complete", ->
       scope = $(this).prop('value')
-    
+
       if scope == 'complete'
         $(this).text("Show Incomplete")
         $(this).prop('value', 'incomplete')
