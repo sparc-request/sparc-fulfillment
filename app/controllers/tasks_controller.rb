@@ -38,6 +38,10 @@ class TasksController < ApplicationController
 
   def show
     @partial = ["show", @task.assignable_type.downcase, "task"].join("_")
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def new
@@ -64,7 +68,7 @@ class TasksController < ApplicationController
       create_note
       flash[:success] = t(:task)[:flash_messages][:created]
       email_identity = Identity.find(task_params[:assignee_id])
-      TaskMailer.task_confirmation(email_identity).deliver_now
+      TaskMailer.task_confirmation(email_identity, @task).deliver_now
     else
       @errors = @task.errors
     end
