@@ -1,7 +1,5 @@
-= "#{@identity.first_name},"
+%p= "Hello #{@identity.first_name},"
+%p= "You have been assigned a new task!  Please review it at the link below:"
 
-You have been assigned a new task!  Please review it here:
+= link_to 'Your new task', task_url(@task)
 
-= link_to 'View your dope task', task_url(@task)
-
-= @task.body
