@@ -75,7 +75,7 @@ $(document).on 'change', "#organization_select", ->
 
 # Change title based on service type selection
 $(document).on 'change', '#service_type_select', ->
-  if $(this).val() == "One Time Fees"
-    $('input#title').val("Auditing Report (One Time Fee Services)")
+  if $(this).val() == "Clinical Services"
+    $('input#title').val("Auditing Report (Clinical Services)")
   else
-    $('input#title').val("Auditing Report (Per Patient Per Visit Services)")
+    $('input#title').val("Auditing Report (Non-clinical Services)")
