@@ -142,7 +142,7 @@ class Participant < ActiveRecord::Base
   end
 
   def can_be_destroyed?
-    appointments.map{|appointment| appointment.procedures}.flatten.detect{|procedure| !procedure.unstarted?}.nil?
+    procedures.where.not(status: 'unstarted').empty?
   end
 
   private

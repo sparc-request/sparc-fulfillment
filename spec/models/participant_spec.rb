@@ -121,6 +121,21 @@ RSpec.describe Participant, type: :model do
       end
     end
 
+    describe 'can_be_destroyed?' do
+
+      it 'should return true if all procedures are unstarted' do
+        participant = create(:participant_with_protocol)
+        expect(participant.can_be_destroyed?).to eq(true)
+      end
+
+      it 'should return false if any procedures are not unstarted' do
+        protocol = create(:protocol_imported_from_sparc)
+        participant = create(:participant_with_appointments, protocol: protocol, arm: protocol.arms.first)
+        create(:procedure_complete, appointment: participant.appointments.first)
+        expect(participant.can_be_destroyed?).to eq(false)
+      end
+    end
+
     describe 'callbacks' do
 
       it 'should callback :update_via_faye after save' do
