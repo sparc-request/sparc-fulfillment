@@ -18,6 +18,10 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+- if @task_id
+  = hidden_field_tag 'task_id', @task_id
+  = javascript_include_tag 'show_task'
+
 %h1 Task List
 .bootstrap-table-dropdown-overflow
   #custom_tool_buttons
@@ -45,4 +49,3 @@
         = t(:task)[:reschedule]
       %th{data: {class: 'org', align: 'left', field: 'organization', visible: "false", sortable: "true"}}
         = t(:procedure)[:prog_core]
-

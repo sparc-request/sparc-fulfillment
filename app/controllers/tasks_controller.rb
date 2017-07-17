@@ -25,6 +25,8 @@ class TasksController < ApplicationController
   respond_to :json, :html
 
   def index
+    @task_id = params[:id]
+
     respond_to do |format|
       format.html { render }
       format.json do
