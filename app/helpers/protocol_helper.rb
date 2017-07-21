@@ -55,6 +55,10 @@ module ProtocolHelper
       end
     end
 
+    if(ENV.fetch('USE_INDIRECT_COST') == 'true')
+      total = total * (1 + protocol.sparc_protocol.indirect_cost_rate.to_f/100)
+    end
+
     total
   end
 

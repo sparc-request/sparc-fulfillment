@@ -27,7 +27,7 @@ FactoryGirl.define do
     last_name { Faker::Name.last_name }
     middle_initial { Faker::Base.letterify('?') }
     mrn { Faker::Number.number(8) }
-    status { Participant::STATUS_OPTIONS.sample }
+    status { Participant::STATUS_OPTIONS.select{|stat| stat != 'Screening'}.sample }
     date_of_birth "08/16/1996"
     gender { Participant::GENDER_OPTIONS.sample }
     ethnicity { Participant::ETHNICITY_OPTIONS.sample }
