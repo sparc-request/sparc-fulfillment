@@ -1,4 +1,7 @@
 %p= "Hello #{@identity.first_name},"
-%p= "You have been assigned a new task!  Please review it at the link below:"
+%p= "You have been assigned a new task!"
+= link_to 'Please review it at this link.', tasks_url(id: @task.id)
 
-= link_to 'Your new task', tasks_url(id: @task.id)
+%p= "Task Creator: #{@task.identity.full_name}"
+%p= "Due Date: #{@task.due_at}"
+%p= "Task Content: #{@task.body}"

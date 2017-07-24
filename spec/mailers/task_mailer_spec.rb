@@ -8,7 +8,7 @@ RSpec.describe TaskMailer, type: :mailer do
 
     #ensure that the subject is correct
     it 'should render the subject' do
-      expect(mail.subject).to eq("New Task Confirmation")
+      expect(mail.subject).to eq("(SPARCFulfillment) New Task Assigned")
     end
 
     #ensure that the receiver is correct

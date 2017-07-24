@@ -8,6 +8,6 @@ class TaskMailer < ApplicationMailer
   def task_confirmation(identity, task)
     @identity = identity
     @task = task
-    mail to: identity.email, subject: "New Task Confirmation"
+    mail to: identity.email, subject: "(SPARCFulfillment) New Task Assigned"
   end
 end
