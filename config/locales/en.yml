@@ -419,6 +419,14 @@ en:
     completed: "Completed"
     create_task: "Create Task"
     due_at: "Due Date"
+    emails:
+      assigned_new_task: "You have been assigned a new task"
+      content: "Task Content: "
+      creator: "Task Creator: "
+      date: "Due Date: "
+      details: "Details:"
+      greeting: "Hello "
+      new_task_link: "which can be viewed here."
     flash_messages:
       created: "Task Created"
       incompleted: "The selected task(s) have been set to incomplete"
