@@ -141,6 +141,10 @@ class Participant < ActiveRecord::Base
     [first_name, middle_initial].join(' ')
   end
 
+  def can_be_destroyed?
+    procedures.where.not(status: 'unstarted').empty?
+  end
+
   private
 
   def update_faye
@@ -162,4 +166,5 @@ class Participant < ActiveRecord::Base
       self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
     end
   end
+
 end

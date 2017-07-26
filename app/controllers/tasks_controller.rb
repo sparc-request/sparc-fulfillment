@@ -30,9 +30,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-
         @tasks = scoped_tasks
-
         render
       end
     end
@@ -123,14 +121,23 @@ class TasksController < ApplicationController
   end
 
   def scoped_tasks
-    if params[:scope].present?
-      if (params[:scope] == 'mine') || (params[:scope] == 'incomplete')
-        return Task.mine(current_identity)
+    if !params[:scope] || params[:scope] == 'mine'
+      if params[:status]
+        Task.json_info.mine(current_identity).send(params[:status])
       else
-        return Task.send(params[:scope])
+        Task.json_info.mine(current_identity).incomplete
       end
     else
-      return Task.mine(current_identity)
+      if params[:status]
+        Task.json_info.send(params[:status])
+      else
+        Task.json_info
+      end
     end
   end
 end
+
+
+
+
+
