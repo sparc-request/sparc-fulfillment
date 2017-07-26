@@ -38,7 +38,7 @@ class AuditingReport < Report
 
       protocols = Protocol.find(@params[:protocols])
 
-      if @params[:service_type] == "Per Patient Per Visit"
+      if @params[:service_type] == "Clinical Services"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
         csv << [""]
         csv << [""]
@@ -86,7 +86,7 @@ class AuditingReport < Report
             ]
           end
         end
-      elsif @params[:service_type] == "One Time Fees"
+      else
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
         csv << [""]
         csv << [""]
