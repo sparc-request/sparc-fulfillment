@@ -35,7 +35,7 @@ feature "View Tasks", js: true do
   end
 
   scenario "Identity views only their Tasks" do
-    given_i_have_assigned_tasks
+    given_other_users_have_assigned_tasks
     when_i_visit_the_tasks_page
     then_i_should_only_see_tasks_assigned_to_me
   end
@@ -46,8 +46,8 @@ feature "View Tasks", js: true do
     then_i_should_see_only_incomplete_tasks
   end
 
-  scenario "Identity views tasks they assigned to someone else" do
-    given_i_have_assigned_tasks_to_another_identity
+  scenario "Identity views tasks assigned to someone else" do
+    given_other_tasks_have_been_assigned_to_a_different_identity
     when_i_visit_the_tasks_page
     when_click_on_the_view_all_tasks_button
     then_i_should_see_all_tasks
@@ -65,17 +65,17 @@ feature "View Tasks", js: true do
     create_list(:task_complete, 2, identity: @identity)
   end
 
-  def given_i_have_assigned_tasks
+  def given_other_users_have_assigned_tasks
     given_i_have_incomplete_tasks
-
-    create_list(:task, 2, identity: @identity, assignee: @identity)
+    other_user = create(:identity)
+    create_list(:task, 2, identity: other_user, assignee: other_user)
   end
 
-  def given_i_have_assigned_tasks_to_another_identity
+  def given_other_tasks_have_been_assigned_to_a_different_identity
     given_i_have_incomplete_tasks
 
     other_user = create(:identity)
-    create_list(:task, 2, identity: @identity, assignee: other_user)
+    create_list(:task, 2, identity: other_user, assignee: other_user)
   end
 
   def given_i_have_complete_and_incomplete_tasks
@@ -95,7 +95,7 @@ feature "View Tasks", js: true do
 
   def when_i_view_complete_tasks
     when_i_visit_the_tasks_page
-    find("#complete").click
+    find("#complete", visible: false).find(:xpath, "..").click
   end
 
   def when_i_visit_the_tasks_page
@@ -104,7 +104,7 @@ feature "View Tasks", js: true do
   end
 
   def when_click_on_the_view_all_tasks_button
-    find('#all_tasks').click
+    find("#all_tasks", visible: false).find(:xpath, "..").click
   end
 
   def then_i_should_see_that_i_have_no_tasks
