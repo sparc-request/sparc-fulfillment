@@ -26,10 +26,10 @@ namespace :data do
       type = STDIN.gets.chomp
       if type == "protocol"
         puts 'Please enter a list of protocol IDs, separated by comma, for example: 5 or 5, 4, 3'
-        items = Protocol.find(STDIN.gets.chomp.split(",").map(&:to_i))
+        items = Protocol.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
       elsif type == "service"
         puts 'Please enter a list of service IDs, separated by comma, for example: 5, or 3, 4, 5'
-        items = Service.find(STDIN.gets.chomp.split(",").map(&:to_i))
+        items = Service.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
       end
       puts "Please enter a start date, dd/mm/yyyy :"
       start_date = (STDIN.gets.chomp).to_date
@@ -42,10 +42,10 @@ namespace :data do
       csv << ["Protocol ID:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
       puts "Fixing Procedures..."
 
-      if items.map(&:procedures).flatten.count >= 1
-        bar = ProgressBar.new(items.map(&:procedures).flatten.count)
-        proc = nil
-        items.each do |item|
+      items.each do |item|
+        if item.procedures.count >= 1
+          bar = ProgressBar.new(item.procedures.count)
+          proc = nil
           item.procedures.find_each do |procedure|
             protocol = procedure.protocol
             service = procedure.service
