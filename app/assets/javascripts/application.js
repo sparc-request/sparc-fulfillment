@@ -30,6 +30,7 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 
+//= require bootstrap-toggle
 //= require bootstrap-table-export
 //= require bootstrap-table-custom
 //= require tableExport
