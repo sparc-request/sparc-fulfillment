@@ -40,7 +40,10 @@
             = render partial: '/appointments/core', locals: {core_id: core_id, procedures: procedures, appointment: appointment}
       .row.services
         .col-xs-4
-          = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker'
+          = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker', include_blank: 'Nothing Selected'
+          %span.help-block.service-error.hidden
+            %p.text-danger
+              = t(:appointment)[:service_error]
         .col-xs-2
           = text_field_tag "service_quantity", 1, class: "form-control"
         .col-xs-2

@@ -25,12 +25,12 @@ class TasksController < ApplicationController
   respond_to :json, :html
 
   def index
+    @task_id = params[:id]
+
     respond_to do |format|
       format.html { render }
       format.json do
-
         @tasks = scoped_tasks
-
         render
       end
     end
@@ -38,6 +38,10 @@ class TasksController < ApplicationController
 
   def show
     @partial = ["show", @task.assignable_type.downcase, "task"].join("_")
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def new
@@ -63,6 +67,8 @@ class TasksController < ApplicationController
       end
       create_note
       flash[:success] = t(:task)[:flash_messages][:created]
+      email_identity = Identity.find(task_params[:assignee_id])
+      TaskMailer.task_confirmation(email_identity, @task).deliver_now
     else
       @errors = @task.errors
     end
@@ -88,7 +94,7 @@ class TasksController < ApplicationController
     if create_procedure_note?
       @appointment = @procedure.present? ? @procedure.appointment : Procedure.find(task_params[:notes][:notable_id]).appointment
       @statuses = @appointment.appointment_statuses.map{|x| x.status}
-      
+
       notes_params = task_params[:notes]
       notes_params[:identity] = current_identity
 
@@ -115,14 +121,23 @@ class TasksController < ApplicationController
   end
 
   def scoped_tasks
-    if params[:scope].present?
-      if (params[:scope] == 'mine') || (params[:scope] == 'incomplete')
-        return Task.mine(current_identity)
+    if !params[:scope] || params[:scope] == 'mine'
+      if params[:status]
+        Task.json_info.mine(current_identity).send(params[:status])
       else
-        return Task.send(params[:scope])
+        Task.json_info.mine(current_identity).incomplete
       end
     else
-      return Task.mine(current_identity)
+      if params[:status]
+        Task.json_info.send(params[:status])
+      else
+        Task.json_info
+      end
     end
   end
 end
+
+
+
+
+

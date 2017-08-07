@@ -37,7 +37,7 @@ module TaskHelper
 
   def format_task_type task
     task_type = task.assignable_type
-    task_type += " (#{task.assignable.service_name})" if task_type == "Procedure"
+    task_type += " (#{task.procedure.service_name})" if task_type == "Procedure"
 
     task_type
   end
@@ -45,7 +45,7 @@ module TaskHelper
   def format_task_protocol_id task
     case task.assignable_type
     when 'Procedure'
-      Procedure.find(task.assignable_id).protocol.srid
+      task.procedure.protocol.srid
     else
       '-'
     end
@@ -65,7 +65,7 @@ module TaskHelper
   def format_org task
     case task.assignable_type
     when 'Procedure'
-      core = Procedure.find(task.assignable_id).core
+      core = task.procedure.core
       program = core.parent
 
       "#{program.name} / #{core.name}"

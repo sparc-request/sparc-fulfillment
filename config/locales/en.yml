@@ -90,6 +90,7 @@ en:
     protocol_id: "Protocol ID"
     reason: "Reason"
     reset_visit: "Reset Visit"
+    service_error: 'Please choose the service that is desired to be added'
     srid: "SRID"
     start_date: "Start Date:"
     start_time: "Start Time:"
@@ -107,7 +108,9 @@ en:
     edit_arm: Edit Arm
     flash_messages:
       updated: "Arm Updated"
+    header: 'Clinical Services'
     name: "Arm Name"
+    name_with_arm_name_interpolated: 'Arm Name: %{arm_name}'
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
     remove_arm: Remove Arm
     selected_line_items: "Selected Services"
@@ -191,20 +194,20 @@ en:
   line_item:
     object: "Line Item"
     account_number: "Account"
-    add_line_item_study: "Add Study Level Activity"
-    add_line_item_project: "Add Project Level Activity"
+    add_line_item_study: "Add Non-clinical Services"
+    add_line_item_project: "Add Non-clinical Services"
     change_service: "Change Service"
     components: "Components"
     contact: "Contact"
-    create: "Create New Study Level Activity"
-    create_project: "Create New Project Level Activity"
+    create: "Create New Non-clinical Service"
+    create_project: "Create New Non-clinical Service"
     delete_line_item: "Delete line item"
-    edit: "Edit Study Level Activity"
+    edit: "Edit Non-clinical Service"
     flash_messages:
-      created: "Study Level Activity Created"
-      deleted: "Study Level Activity Deleted"
-      not_deleted: "This Study Level Activity has Fulfillments. It cannot be deleted"
-      updated: "Study Level Activity Updated"
+      created: "Non-clinical Service Created"
+      deleted: "Non-clinical Service Deleted"
+      not_deleted: "This Non-clinical Service has Fulfillments. It cannot be deleted"
+      updated: "Non-clinical Service Updated"
     last_fulfillment: "Last Fulfillment"
     log_notes:
       quantity_requested: "Quantity Requested changed to "
@@ -337,15 +340,15 @@ en:
       remove_arm: "Remove Arm"
       remove_service: "Remove Service"
       remove_visit_group: "Remove Visit Group"
-      study_level_activities: "Study Level Activities"
+      study_level_activities: "Non-clinical Services"
     tabs:
       participant_list: "Participant List"
       participant_tracker: "Participant Tracker"
       reports: "Reports"
-      study_level_activities: "Study Level Activities"
-      project_level_activities: "Project Level Activities"
-      study_schedule: "Study Schedule"
-      project_schedule: "Project Schedule"
+      study_level_activities: "Non-clinical Services"
+      project_level_activities: "Non-clinical Services"
+      study_schedule: "Clinical Services"
+      project_schedule: "Clinical Services"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
     back_to_top: 'Back to Top'
@@ -410,12 +413,21 @@ en:
 
   task:
     object: "Task"
-    all_tasks: "Show All Tasks"
+    all_tasks: "All Tasks "
+    my_tasks: "My Tasks "
     assignable_type: "Type"
     assignee_name: "Assigned to"
     completed: "Completed"
     create_task: "Create Task"
     due_at: "Due Date"
+    emails:
+      assigned_new_task: "You have been assigned a new task"
+      content: "Task Content: "
+      creator: "Task Creator: "
+      date: "Due Date: "
+      details: "Details:"
+      greeting: "Hello "
+      new_task_link: "which can be viewed here."
     flash_messages:
       created: "Task Created"
       incompleted: "The selected task(s) have been set to incomplete"
@@ -423,7 +435,8 @@ en:
     identity_name: "Created by"
     new_task: "Create New Task"
     reschedule: "Reschedule"
-    show_complete: "Show Complete"
+    show_complete: "Complete "
+    show_incomplete: "Incomplete "
 
   visit:
     object: "Visit"

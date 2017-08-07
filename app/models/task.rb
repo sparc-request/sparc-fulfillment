@@ -28,6 +28,8 @@ class Task < ActiveRecord::Base
              class_name: "Identity"
   belongs_to :assignable, polymorphic: true
 
+  belongs_to :procedure, ->{ joins(:tasks).where( tasks: { id: Task.where(assignable_type: 'Procedure' ) } ) }, foreign_key: :assignable_id
+
   validates :assignee_id, presence: true
   validates :due_at, presence: true
 
@@ -37,7 +39,8 @@ class Task < ActiveRecord::Base
 
   scope :incomplete, -> { where(complete: false) }
   scope :complete, -> { where(complete: true) }
-  scope :mine, -> (identity) { incomplete.where(assignee: identity) }
+  scope :mine, -> (identity) { where(["identity_id = ? OR assignee_id = ?", identity.id, identity.id]) }
+  scope :json_info, -> { includes(:identity, procedure: [protocol: [:sub_service_request], core: [:parent]]) }
 
   def due_at=(due_date)
     write_attribute(:due_at, Time.strptime(due_date, "%m/%d/%Y")) if due_date.present?

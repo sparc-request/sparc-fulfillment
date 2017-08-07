@@ -95,7 +95,7 @@ feature 'Line Items', js: true do
     visit protocol_path(@protocol.id)
     wait_for_ajax
 
-    click_link 'Study Level Activities'
+    click_link 'Non-clinical Services'
     wait_for_ajax
   end
 
@@ -113,7 +113,7 @@ feature 'Line Items', js: true do
     visit protocol_path(@protocol.id)
     wait_for_ajax
 
-    click_link 'Study Level Activities'
+    click_link 'Non-clinical Services'
     wait_for_ajax
   end
 
@@ -180,6 +180,6 @@ feature 'Line Items', js: true do
     wait_for_ajax
     first('.notes.list[data-notable-type="LineItem"]').click
     wait_for_ajax
-    expect(page).to have_content "Study Level Activity Updated"
+    expect(page).to have_content "Non-clinical Service Updated"
   end
 end

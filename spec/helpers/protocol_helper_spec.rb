@@ -52,6 +52,28 @@ RSpec.describe ProtocolHelper do
     end
   end
 
+  describe "#effective_study_cost" do
+    it "should return the direct cost as the total if indirect cost is not used" do
+      stub_const('ENV', {'USE_INDIRECT_COST' => 'false'})
+      protocol = create(:protocol_imported_from_sparc)
+      protocol.sparc_protocol.update_attributes(indirect_cost_rate: 25.00)
+      sr = create(:service_request, protocol: protocol, status: 'draft')
+      ssr = create(:sub_service_request, service_request: sr)
+      allow(helper).to receive(:effective_current_total).and_return(100)
+      expect(helper.effective_study_cost(protocol)).to eq(100)
+    end
+
+    it "should return the direct plus indirect cost as the total if indirect cost is used" do
+      stub_const('ENV', {'USE_INDIRECT_COST' => 'true'})
+      protocol = create(:protocol_imported_from_sparc)
+      protocol.sparc_protocol.update_attributes(indirect_cost_rate: 25.00)
+      sr = create(:service_request, protocol: protocol, status: 'draft')
+      ssr = create(:sub_service_request, service_request: sr)
+      allow(helper).to receive(:effective_current_total).and_return(100)
+      expect(helper.effective_study_cost(protocol)).to eq(125)
+    end
+  end
+
   describe "#arm_per_participant_line_items_by_core" do
     it "should return the line items of arm" do
       arm = create(:protocol_imported_from_sparc).arms.first

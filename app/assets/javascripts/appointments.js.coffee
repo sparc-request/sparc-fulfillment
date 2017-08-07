@@ -58,23 +58,28 @@ $ ->
         url: "/appointments/#{id}.js"
 
   $(document).on 'click', '.add_service', ->
-    data =
-      'appointment_id': $(this).parents('.row.appointment').data('id'),
-      'service_id': $('#service_list').val(),
-      'qty': $('#service_quantity').val()
+    if $('#service_list').val() == ''
+      $('.service-error').removeClass('hidden')
+    else
+      $('.service-error').addClass('hidden')
+      data =
+        'appointment_id': $(this).parents('.row.appointment').data('id'),
+        'service_id': $('#service_list').val(),
+        'qty': $('#service_quantity').val()
 
-    $.ajax
-      type: 'POST'
-      url:  "/procedures.js"
-      data: data
-      success: ->
-        new_rows    = $('tr.procedure.new_service')
-        core        = $(new_rows).first().parents('.core')
-        multiselect = $(core).find('select.core_multiselect')
-        pg          = new ProcedureGrouper()
+      $.ajax
+        type: 'POST'
+        url:  "/procedures.js"
+        data: data
+        success: ->
+          new_rows    = $('tr.procedure.new_service')
+          core        = $(new_rows).first().parents('.core')
+          multiselect = $(core).find('select.core_multiselect')
+          pg          = new ProcedureGrouper()
 
-        pg.update_group_membership new_row for new_row in new_rows
-        pg.initialize_multiselect(multiselect)
+          pg.update_group_membership new_row for new_row in new_rows
+          pg.initialize_multiselect(multiselect)
+      $('#service_list').val('').trigger('change')
 
   $(document).on 'click', '.start_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')

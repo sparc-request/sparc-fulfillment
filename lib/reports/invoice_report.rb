@@ -80,7 +80,7 @@ class InvoiceReport < Report
             "Service",
             "Fulfillment Date",
             "Performed By",
-            "Fulfillment Components",
+            "Components",
             "Contact",
             "Account #",
             "Quantity Completed",

@@ -41,3 +41,4 @@ LDAP_AUTH_USERNAME=
 LDAP_AUTH_PASSWORD=
 # add the following line if EPIC is turned off for your institution
 USE_EPIC=false
+USE_INDIRECT_COST=false

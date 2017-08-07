@@ -40,6 +40,7 @@ feature "create Task", js: true do
   scenario 'Identity creates a new Task for another Identity' do
     given_i_am_viewing_the_tasks_page
     when_i_create_a_task_assigned_to_another_identity
+    wait_for_ajax
     when_i_click_on_the_all_tasks_button
     then_i_should_see_the_task_is_assigned_to_the_identity
   end
@@ -70,7 +71,7 @@ feature "create Task", js: true do
   end
 
   def when_i_click_on_the_all_tasks_button
-    find('#all_tasks').click
+    find("#all_tasks", visible: false).find(:xpath, "..").click
     wait_for_ajax
   end
 

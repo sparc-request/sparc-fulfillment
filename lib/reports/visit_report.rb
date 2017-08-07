@@ -47,8 +47,7 @@ class VisitReport < Report
                     "Visit Duration (minutes)", 
                     "Type of Visit", 
                     "Visit Indications", 
-                    "Incomplete Visit", 
-                    "List of Cores which have incomplete visits"]
+                    ]
 
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
@@ -73,9 +72,7 @@ class VisitReport < Report
                                             get_date(appointments[0][5]) << 
                                             get_duration(appointments[0]) << 
                                             get_content(appointments[0]) <<
-                                            get_statuses(appointments[0][8]) <<
-                                            has_incomplete(appointments) <<
-                                            core_list(appointments) }.
+                                            get_statuses(appointments[0][8])}.
         sort     { |x, y| x <=> y || 1 }.
         each     { |line|    csv << line }
     end
@@ -106,10 +103,6 @@ class VisitReport < Report
                   map { |protocol| [protocol.id, protocol.srid] }]
   end
 
-  def has_incomplete(appointments)
-    appointments.detect{|appointment| appointment[9] == 'incomplete'}.nil? ? 'No' : 'Yes'
-  end
-
   def get_content(appointments)
     appointments[11].nil? ? nil : appointments[11]
   end
@@ -118,8 +111,5 @@ class VisitReport < Report
     appt_status = AppointmentStatus.find_by(appointment_id: appointment_id)
     (appt_status.blank? ? "" : appt_status.status)
   end
-
-  def core_list(appointments)
-    appointments.select{ |appointment| appointment[9] == "incomplete" }.map{ |appointment| appointment[10] }.uniq.join(', ')
-  end
 end
+
