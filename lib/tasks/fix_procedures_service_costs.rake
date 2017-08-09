@@ -49,9 +49,8 @@ namespace :data do
           item.procedures.find_each do |procedure|
             protocol = procedure.protocol
             service = procedure.service
-
             #Skip over procedures that don't match time frame
-            if !procedure.handled_date.nil? && !(start_date..end_date).cover?(procedure.handled_date.to_date)
+            if !procedure.completed_date.nil? && !(start_date..end_date).cover?(procedure.completed_date.to_date)
               bar.increment! rescue nil
               next
             end
@@ -74,7 +73,7 @@ namespace :data do
                 end
               else
                 ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                csv << [protocol.sparc_id, procedure.id, procedure.service_name, "Incomplete", "Incomplete", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
+                csv << [protocol.sparc_id, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
                 procedure.update_attribute(:service_cost, nil)
               end
 

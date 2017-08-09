@@ -141,8 +141,6 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
     t.string   "title",                 limit: 255
-    t.string   "uploaded_file",         limit: 255
-    t.string   "xml_file",              limit: 255
     t.string   "file_file_name",        limit: 255
     t.string   "file_content_type",     limit: 255
     t.integer  "file_file_size",        limit: 4
