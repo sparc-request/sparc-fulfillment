@@ -40,8 +40,8 @@ class ProjectSummaryReport < Report
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]
       csv << ["PI Name:", "#{protocol.pi ? protocol.pi.full_name : nil}"]
-      csv << ["Appointment Start Date Filter:", "#{format_date(Time.strptime(@params[:start_date], "%m/%d/%Y"))}"]
-      csv << ["Appointment End Date Filter:", "#{format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))}"]
+      csv << ["From:", "#{format_date(Time.strptime(@params[:start_date], "%m/%d/%Y"))}"]
+      csv << ["To:", "#{format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))}"]
       csv << [""]
 
       # amount due for whole study
@@ -56,9 +56,9 @@ class ProjectSummaryReport < Report
         csv << [""]
         csv << [""]
         csv << [""]
-        csv << [""]
-        csv << ["Arm Name: #{arm.name}"]
-        csv << ["", "Participant ID", "Participant Status", visit_groups.pluck(:name), "Totals"].flatten
+        csv << ["Clinical Services"]
+        csv << ["Arm Name: #{arm.name}","","","","","","Invoiceable Visit Cost"]
+        csv << ["", "Patient MRN", "Participant Status", visit_groups.pluck(:name), "Per Patient Invoiceable Total"].flatten
         csv << [""]
 
         participants.each do |participant|
@@ -75,17 +75,17 @@ class ProjectSummaryReport < Report
 
         arm_subtotal = sum_up(visit_group_subtotals)
         csv << [""]
-        csv << ["", "Visit Subtotals - #{arm.name}", "", display_cost_array(visit_group_subtotals + [arm_subtotal])].flatten
+        csv << ["", "Arm Total - #{arm.name}", "", display_cost_array(visit_group_subtotals + [arm_subtotal])].flatten
         arms_total += arm_subtotal
       end
 
       csv << [""]
       csv << [""]
+      csv << ["Clinical Services Invoiceable Total", display_cost(arms_total)]
       csv << [""]
       csv << [""]
       csv << [""]
-      csv << [""]
-      csv << ["Study Level Charges"]
+      csv << ["Non-Clinical Services"]
       csv << ["", "Name", "Cost"]
       csv << [""]
 
@@ -97,8 +97,7 @@ class ProjectSummaryReport < Report
 
       csv << [""]
       csv << [""]
-      csv << ["Study Level Charges Total", display_cost(study_level_charges)]
-      csv << ["Arms Total", display_cost(arms_total)]
+      csv << ["Non-Clinical Services Invoiceable Total", display_cost(study_level_charges)]
       csv << [""]
       csv << [""]
       csv << ["Study Total", display_cost(arms_total + study_level_charges)]
