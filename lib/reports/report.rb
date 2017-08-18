@@ -65,4 +65,12 @@ class Report
       "N/A"
     end
   end
+
+  def formatted_status(protocol)
+    if protocol.status.present?
+      I18n.t(:sub_service_request)[:statuses][protocol.status.to_sym]
+    else
+      '-'
+    end
+  end
 end
