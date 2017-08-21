@@ -23,11 +23,11 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server 'cwf-d.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
+set :repo_url, 'git@sparc_fulfillment:sparc-request/sparc-fulfillment.git'
+server 'bmic-sparc-dev.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
+
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
-
-
 
 # role-based syntax
 # ==================
@@ -41,8 +41,6 @@ server 'cwf-d.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 # role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
 # role :db,  %w{deploy@example.com}
 
-
-
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
@@ -51,6 +49,7 @@ server 'cwf-d.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
 
+set :deploy_to, "/var/www/rails/sparc-fulfillment"
 set :branch, 'testing'
 set :rails_env, 'testing'
 set :rvm_ruby_version, '2.1.5@fulfillment-testing --create'

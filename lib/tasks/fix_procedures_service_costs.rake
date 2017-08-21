@@ -26,10 +26,10 @@ namespace :data do
       type = STDIN.gets.chomp
       if type == "protocol"
         puts 'Please enter a list of protocol IDs, separated by comma, for example: 5 or 5, 4, 3'
-        items = Protocol.find(STDIN.gets.chomp.split(",").map(&:to_i))
+        items = Protocol.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
       elsif type == "service"
         puts 'Please enter a list of service IDs, separated by comma, for example: 5, or 3, 4, 5'
-        items = Service.find(STDIN.gets.chomp.split(",").map(&:to_i))
+        items = Service.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
       end
       puts "Please enter a start date, dd/mm/yyyy :"
       start_date = (STDIN.gets.chomp).to_date
@@ -42,16 +42,15 @@ namespace :data do
       csv << ["Protocol ID:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
       puts "Fixing Procedures..."
 
-      if items.map(&:procedures).flatten.count >= 1
-        bar = ProgressBar.new(items.map(&:procedures).flatten.count)
-        proc = nil
-        items.each do |item|
+      items.each do |item|
+        if item.procedures.count >= 1
+          bar = ProgressBar.new(item.procedures.count)
+          proc = nil
           item.procedures.find_each do |procedure|
             protocol = procedure.protocol
             service = procedure.service
-
             #Skip over procedures that don't match time frame
-            if !procedure.handled_date.nil? && !(start_date..end_date).cover?(procedure.handled_date.to_date)
+            if !procedure.completed_date.nil? && !(start_date..end_date).cover?(procedure.completed_date.to_date)
               bar.increment! rescue nil
               next
             end
@@ -74,7 +73,7 @@ namespace :data do
                 end
               else
                 ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                csv << [protocol.sparc_id, procedure.id, procedure.service_name, "Incomplete", "Incomplete", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
+                csv << [protocol.sparc_id, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
                 procedure.update_attribute(:service_cost, nil)
               end
 
