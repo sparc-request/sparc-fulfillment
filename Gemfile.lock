@@ -67,6 +67,7 @@ GEM
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
     bootstrap-select-rails (1.6.3)
+    bootstrap-toggle-rails (2.2.1.0)
     bootstrap3-datetimepicker-rails (4.17.37)
       momentjs-rails (>= 2.8.1)
     builder (3.2.3)
@@ -87,14 +88,15 @@ GEM
       sshkit (~> 1.2)
     capistrano3-delayed-job (1.4.0)
       capistrano (>= 3.0.0)
-    capybara (2.5.0)
+    capybara (2.13.0)
+      addressable
       mime-types (>= 1.16)
-      nokogiri (>= 1.7.1)
+      nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-webkit (1.7.1)
-      capybara (>= 2.3.0, < 2.6.0)
+    capybara-webkit (1.14.0)
+      capybara (>= 2.3.0, < 2.14.0)
       json
     choice (0.2.0)
     climate_control (0.0.3)
@@ -221,6 +223,8 @@ GEM
     json (1.8.6)
     launchy (2.4.3)
       addressable (~> 2.3)
+    letter_opener (1.4.1)
+      launchy (~> 2.2)
     libv8 (3.16.14.15)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
@@ -241,7 +245,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (2.9.2)
     netrc (0.10.3)
-    nokogiri (1.7.1)
+    nokogiri (1.7.2)
       mini_portile2 (~> 2.1.0)
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
@@ -271,7 +275,7 @@ GEM
       slop (~> 3.4)
     puma (2.11.3)
       rack (>= 1.1, < 2.0)
-    rack (1.6.5)
+    rack (1.6.8)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-mini-profiler (0.10.1)
@@ -420,8 +424,8 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
     will_paginate (3.0.7)
-    xpath (2.0.0)
-      nokogiri (~> 1.7.1)
+    xpath (2.1.0)
+      nokogiri (~> 1.3)
     yajl-ruby (1.2.1)
 
 PLATFORMS
@@ -437,6 +441,7 @@ DEPENDENCIES
   axlsx_rails
   bootstrap-sass
   bootstrap-select-rails
+  bootstrap-toggle-rails
   bootstrap3-datetimepicker-rails (~> 4.17.37)
   capistrano (~> 3.0)
   capistrano-passenger
@@ -462,6 +467,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   launchy
+  letter_opener
   momentjs-rails (>= 2.9.0)
   mysql2
   net-ldap
