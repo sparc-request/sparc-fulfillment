@@ -32,10 +32,9 @@ namespace :data do
           calculated_amount = 0
 
           funding_source = fulfillment.line_item.protocol.sparc_funding_source
-          service = fulfillment.service
           date = fulfillment.fulfilled_at
 
-          calculated_amount = service.cost(funding_source, date)
+          calculated_amount = fulfillment.line_item.cost(funding_source, date)
 
           if calculated_amount != current_amount
             csv << ["Protocol ID: #{fulfillment.line_item.protocol.sparc_id}", "Service Name: #{fulfillment.service_name}","Updating cost for fulfillment #{fulfillment.id} from #{current_amount} to #{calculated_amount}"]
