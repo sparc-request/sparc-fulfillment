@@ -43,6 +43,7 @@ namespace :data do
 
           bar.increment! rescue nil
         rescue Exception => e
+          csv << ["Protocol ID: #{fulfillment.line_item.protocol.sparc_id}", "Service Name: #{fulfillment.service_name}", "Error with #{proc.id}, Message: #{e.message}"]
           puts "Error with #{proc.inspect}, Message: #{e.message}"
           next
         end
