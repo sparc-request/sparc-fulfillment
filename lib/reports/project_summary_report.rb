@@ -70,7 +70,7 @@ class ProjectSummaryReport < Report
           participant_totals    << participant_total
           visit_group_subtotals = add_parallel_arrays(visit_group_subtotals, participant_costs)
 
-          csv << ["", "Subject #{participant.label}", participant.status, display_cost_array(participant_costs + [participant_total])].flatten
+          csv << ["", "#{participant.mrn}", participant.status, display_cost_array(participant_costs + [participant_total])].flatten
         end
 
         arm_subtotal = sum_up(visit_group_subtotals)
