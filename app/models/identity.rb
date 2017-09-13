@@ -24,6 +24,7 @@ class Identity < ActiveRecord::Base
 
   devise :database_authenticatable, :rememberable, :trackable, :omniauthable
 
+  belongs_to :professional_organization
   has_one :identity_counter, dependent: :destroy
 
   has_many :documents, as: :documentable
@@ -54,5 +55,9 @@ class Identity < ActiveRecord::Base
 
   def full_name
     [first_name, last_name].join(' ')
+  end
+
+  def professional_org_lookup(org_type)
+    professional_organization ? professional_organization.parents_and_self.select{|org| org.org_type == org_type}.first.try(:name) : ""
   end
 end

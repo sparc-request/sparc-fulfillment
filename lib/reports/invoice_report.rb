@@ -78,6 +78,10 @@ class InvoiceReport < Report
             "Short Title",
             "Status",
             "Primary PI",
+            "Primary PI Institution",
+            "Primary PI College",
+            "Primary PI Department",
+            "Primary PI Division",
             "Core/Program",
             "Service",
             "Fulfillment Date",
@@ -99,6 +103,10 @@ class InvoiceReport < Report
               protocol.sparc_protocol.short_title,
               formatted_status(protocol),
               protocol.pi ? protocol.pi.full_name : nil,
+              protocol.pi ? protocol.pi.professional_org_lookup("institution") : nil,
+              protocol.pi ? protocol.pi.professional_org_lookup("college") : nil,
+              protocol.pi ? protocol.pi.professional_org_lookup("department") : nil,
+              protocol.pi ? protocol.pi.professional_org_lookup("division") : nil,
               fulfillment.service.organization.name,
               fulfillment.service_name,
               format_date(fulfillment.fulfilled_at),
@@ -128,6 +136,10 @@ class InvoiceReport < Report
             "Short Title",
             "Status",
             "Primary PI",
+            "Primary PI Institution",
+            "Primary PI College",
+            "Primary PI Department",
+            "Primary PI Division",
             "Patient Name",
             "Patient ID",
             "Visit Name",
@@ -159,6 +171,10 @@ class InvoiceReport < Report
                     protocol.sparc_protocol.short_title,
                     formatted_status(protocol),
                     protocol.pi ? protocol.pi.full_name : nil,
+                    protocol.pi ? protocol.pi.professional_org_lookup("institution") : nil,
+                    protocol.pi ? protocol.pi.professional_org_lookup("college") : nil,
+                    protocol.pi ? protocol.pi.professional_org_lookup("department") : nil,
+                    protocol.pi ? protocol.pi.professional_org_lookup("division") : nil,
                     participant.full_name,
                     participant.label,
                     appointment.name,
@@ -182,8 +198,8 @@ class InvoiceReport < Report
         end
         if fulfillments.any? or procedures.any?
           csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "Non-clinical and Clinical Services Total:", display_cost(total)]
-          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy:", display_cost(total_with_subsidy)] if protocol.sub_service_request.subsidy
+          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Non-clinical and Clinical Services Total:", display_cost(total)]
+          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy:", display_cost(total_with_subsidy)] if protocol.sub_service_request.subsidy
           csv << [""]
           csv << [""]
         end
