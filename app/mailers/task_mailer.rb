@@ -9,6 +9,6 @@ class TaskMailer < ApplicationMailer
     @identity = identity
     @task = task
     env = ENV.fetch('environment')
-    mail to: env == 'testing' ? 'sparcrequest@gmail.com' : identity.email, subject: "(SPARCFulfillment) New Task Assigned"
+    mail to: env == 'testing' ? {t(:task)[:test_email]} : identity.email, subject: "(SPARCFulfillment) New Task Assigned"
   end
 end
