@@ -8,6 +8,7 @@ class TaskMailer < ApplicationMailer
   def task_confirmation(identity, task)
     @identity = identity
     @task = task
-    mail to: identity.email, subject: "(SPARCFulfillment) New Task Assigned"
+    env = ENV.fetch('environment')
+    mail to: env == 'testing' ? 'sparcrequest@gmail.com' : identity.email, subject: "(SPARCFulfillment) New Task Assigned"
   end
 end
