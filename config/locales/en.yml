@@ -437,8 +437,6 @@ en:
     reschedule: "Reschedule"
     show_complete: "Complete "
     show_incomplete: "Incomplete "
-    test_email: "sparcrequest@gmail.com"
-
 
   visit:
     object: "Visit"
