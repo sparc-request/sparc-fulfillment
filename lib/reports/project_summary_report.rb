@@ -75,18 +75,15 @@ class ProjectSummaryReport < Report
 
         arm_subtotal = sum_up(visit_group_subtotals)
         csv << [""]
-        csv << ["", "Arm Total - #{arm.name}", "", display_cost_array(visit_group_subtotals + [arm_subtotal])].flatten
+        csv << ["", "#{arm.name} Total", "", display_cost_array(visit_group_subtotals + [arm_subtotal])].flatten
         arms_total += arm_subtotal
       end
 
       csv << [""]
-      csv << [""]
       csv << ["Clinical Services Invoiceable Total", display_cost(arms_total)]
       csv << [""]
-      csv << [""]
-      csv << [""]
       csv << ["Non-Clinical Services"]
-      csv << ["", "Name", "Cost"]
+      csv << ["", "Service", "Quantity Completed", "Quantity Type", "Cost"]
       csv << [""]
 
       study_level_charges = 0
@@ -97,7 +94,7 @@ class ProjectSummaryReport < Report
 
       csv << [""]
       csv << [""]
-      csv << ["Non-Clinical Services Invoiceable Total", display_cost(study_level_charges)]
+      csv << ["Non-Clinical Services Invoiceable Total","","", display_cost(study_level_charges)]
       csv << [""]
       csv << [""]
       csv << ["Study Total", display_cost(arms_total + study_level_charges)]
