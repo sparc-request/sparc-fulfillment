@@ -86,6 +86,10 @@ class ProjectSummaryReport < Report
       csv << ["", "Service", "Quantity Completed", "Quantity Type", "Cost"]
       csv << [""]
 
+      fulfillments.each do |fulfillment|
+        csv << ["", "#{fulfillment.line_item.service.name || 'N/A'}", "#{fulfillment.quantity || 'N/A'}", "#{fulfillment.line_item.quantity_type || 'N/A'}", "#{fulfillment.line_item.service.cost || 'N/A'}"]
+      end
+
       study_level_charges = 0
       protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |f|
         csv << ["", f.service_name, display_cost(f.service_cost)]
