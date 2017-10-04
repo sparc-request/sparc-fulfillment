@@ -87,7 +87,7 @@ class ProjectSummaryReport < Report
       csv << [""]
 
       fulfillments.each do |fulfillment|
-        csv << ["", "#{fulfillment.line_item.service.name || 'N/A'}", "#{fulfillment.quantity || 'N/A'}", "#{fulfillment.line_item.quantity_type || 'N/A'}", "#{fulfillment.line_item.service.cost || 'N/A'}"]
+        csv << ["", "#{fulfillment.line_item.service.name || 'N/A'}", "#{fulfillment.quantity.truncate || 'N/A'}", "#{fulfillment.line_item.quantity_type || 'N/A'}", "#{fulfillment.line_item.service.cost.truncate || 'N/A'}"]
       end
 
       study_level_charges = 0
