@@ -86,19 +86,15 @@ class ProjectSummaryReport < Report
       csv << ["", "Service", "Quantity Completed", "Quantity Type", "Cost"]
       csv << [""]
 
-      fulfillments.each do |fulfillment|
-        csv << ["", "#{fulfillment.line_item.service.name || 'N/A'}", "#{fulfillment.quantity.truncate || 'N/A'}", "#{fulfillment.line_item.quantity_type || 'N/A'}", "#{fulfillment.line_item.service.cost.truncate || 'N/A'}"]
-      end
-
       study_level_charges = 0
       protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |f|
-        csv << ["", f.service_name, display_cost(f.service_cost)]
+        csv << ["", f.service_name, f.quantity.to_s, f.line_item.try(:quantity_type), display_cost(f.service_cost)]
         study_level_charges += f.service_cost
       end
 
       csv << [""]
       csv << [""]
-      csv << ["Non-Clinical Services Invoiceable Total","","", display_cost(study_level_charges)]
+      csv << ["Non-Clinical Services Invoiceable Total", "", "", "", display_cost(study_level_charges)]
       csv << [""]
       csv << [""]
       csv << ["Study Total", display_cost(arms_total + study_level_charges)]
