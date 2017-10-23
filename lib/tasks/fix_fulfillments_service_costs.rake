@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -43,6 +43,7 @@ namespace :data do
 
           bar.increment! rescue nil
         rescue Exception => e
+          csv << ["Protocol ID: #{fulfillment.line_item.protocol.sparc_id}", "Service Name: #{fulfillment.service_name}", "Error with #{proc.id}, Message: #{e.message}"]
           puts "Error with #{proc.inspect}, Message: #{e.message}"
           next
         end
