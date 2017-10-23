@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -40,8 +40,8 @@ class ProjectSummaryReport < Report
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]
       csv << ["PI Name:", "#{protocol.pi ? protocol.pi.full_name : nil}"]
-      csv << ["Appointment Start Date Filter:", "#{format_date(Time.strptime(@params[:start_date], "%m/%d/%Y"))}"]
-      csv << ["Appointment End Date Filter:", "#{format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))}"]
+      csv << ["From:", "#{format_date(Time.strptime(@params[:start_date], "%m/%d/%Y"))}"]
+      csv << ["To:", "#{format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))}"]
       csv << [""]
 
       # amount due for whole study
@@ -56,9 +56,9 @@ class ProjectSummaryReport < Report
         csv << [""]
         csv << [""]
         csv << [""]
-        csv << [""]
-        csv << ["Arm Name: #{arm.name}"]
-        csv << ["", "Participant ID", "Participant Status", visit_groups.pluck(:name), "Totals"].flatten
+        csv << ["Clinical Services"]
+        csv << ["Arm Name: #{arm.name}","","","","","","Invoiceable Visit Cost"]
+        csv << ["", "Patient MRN", "Participant Status", visit_groups.pluck(:name), "Per Patient Invoiceable Total"].flatten
         csv << [""]
 
         participants.each do |participant|
@@ -70,35 +70,31 @@ class ProjectSummaryReport < Report
           participant_totals    << participant_total
           visit_group_subtotals = add_parallel_arrays(visit_group_subtotals, participant_costs)
 
-          csv << ["", "Subject #{participant.label}", participant.status, display_cost_array(participant_costs + [participant_total])].flatten
+          csv << ["", "#{participant.mrn}", participant.status, display_cost_array(participant_costs + [participant_total])].flatten
         end
 
         arm_subtotal = sum_up(visit_group_subtotals)
         csv << [""]
-        csv << ["", "Visit Subtotals - #{arm.name}", "", display_cost_array(visit_group_subtotals + [arm_subtotal])].flatten
+        csv << ["", "#{arm.name} Total", "", display_cost_array(visit_group_subtotals + [arm_subtotal])].flatten
         arms_total += arm_subtotal
       end
 
       csv << [""]
+      csv << ["Clinical Services Invoiceable Total", display_cost(arms_total)]
       csv << [""]
-      csv << [""]
-      csv << [""]
-      csv << [""]
-      csv << [""]
-      csv << ["Study Level Charges"]
-      csv << ["", "Name", "Cost"]
+      csv << ["Non-Clinical Services"]
+      csv << ["", "Service", "Quantity Completed", "Quantity Type", "Cost"]
       csv << [""]
 
       study_level_charges = 0
       protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |f|
-        csv << ["", f.service_name, display_cost(f.service_cost)]
+        csv << ["", f.service_name, f.quantity.to_s, f.line_item.try(:quantity_type), display_cost(f.service_cost)]
         study_level_charges += f.service_cost
       end
 
       csv << [""]
       csv << [""]
-      csv << ["Study Level Charges Total", display_cost(study_level_charges)]
-      csv << ["Arms Total", display_cost(arms_total)]
+      csv << ["Non-Clinical Services Invoiceable Total", "", "", "", display_cost(study_level_charges)]
       csv << [""]
       csv << [""]
       csv << ["Study Total", display_cost(arms_total + study_level_charges)]
