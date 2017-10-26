@@ -40,19 +40,21 @@ class ImportsController < ApplicationController
     respond_to do |format|
       if import.save
         import.update_attribute(:title, determine_if_proof_report ? I18n.t('imports.proof_report_submit') : I18n.t('imports.klok_report_submit'))
-        log_file, valid = import.generate(import.xml_file, determine_if_proof_report)
-        import.update_attribute(:file, File.open(log_file))
-        @valid = valid
-        if @valid
-          format.js
-          format.html { redirect_to imports_path }
-        else
-          import.destroy
-          format.js
+        begin
+          log_file, valid = import.generate(import.xml_file, determine_if_proof_report)
+          import.update_attribute(:file, File.open(log_file))
+          @valid = valid
+          if @valid
+            format.js
+            format.html { redirect_to imports_path }
+          else
+            import.destroy
+            format.js
+          end
+        rescue
+          format.js { render js: "swal('Improper Klok Format', 'Klok File is improperly formatted, name must be formatted as - Name (NetId)', 'error');" }
+          format.html { render :new }
         end
-      else
-        format.js
-        format.html { render :new }
       end
     end
   end
