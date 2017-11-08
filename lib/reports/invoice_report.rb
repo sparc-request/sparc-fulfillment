@@ -92,7 +92,8 @@ class InvoiceReport < Report
             "Quantity Completed",
             "Quantity Type",
             "Research Rate",
-            "Total Cost"
+            "Total Cost",
+            protocol.sub_service_request.subsidy ? "Percent Subsidy" : ""
           ]
           csv << [""]
 
@@ -117,7 +118,8 @@ class InvoiceReport < Report
               fulfillment.quantity,
               fulfillment.line_item.quantity_type,
               display_cost(fulfillment.service_cost),
-              display_cost(fulfillment.total_cost)
+              display_cost(fulfillment.total_cost),
+              display_subsidy_percent(protocol)
             ]
 
             total += fulfillment.total_cost
