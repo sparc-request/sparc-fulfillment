@@ -60,7 +60,7 @@ class VisitReport < Report
       csv << [""]
       csv << REPORT_COLUMNS
       result_set = Appointment.all.joins(:procedures).joins(:participant).
-                   where("#{START_DATE} < ? AND #{START_DATE} > ? AND #{START_DATE} < ? AND #{COMPLETION} != ?", from_start_date, to_start_date, "unstarted").
+                   where("#{START_DATE} > ? AND #{START_DATE} < ? AND #{COMPLETION} != ?", from_start_date, to_start_date, "unstarted").
                    uniq.
                    pluck(  PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, VISIT_GROUP, TYPE, APPT_ID, COMPLETION, :sparc_core_name, CONTENTS)
       get_protocol_srids(result_set)
