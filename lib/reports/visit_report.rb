@@ -52,7 +52,6 @@ class VisitReport < Report
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
-    _24_hours_ago = 24.hours.ago.utc
     from_start_date = @params[:start_date].empty? ? Appointment.order(start_date: :asc).detect{|appointment| appointment.start_date }.start_date : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
     to_start_date   = @params[:end_date].empty? ? Appointment.order(start_date: :desc).first.start_date : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
@@ -61,7 +60,7 @@ class VisitReport < Report
       csv << [""]
       csv << REPORT_COLUMNS
       result_set = Appointment.all.joins(:procedures).joins(:participant).
-                   where("#{START_DATE} < ? AND #{START_DATE} > ? AND #{START_DATE} < ? AND #{COMPLETION} != ?", _24_hours_ago, from_start_date, to_start_date, "unstarted").
+                   where("#{START_DATE} > ? AND #{START_DATE} < ? AND #{COMPLETION} != ?", from_start_date, to_start_date, "unstarted").
                    uniq.
                    pluck(  PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, VISIT_GROUP, TYPE, APPT_ID, COMPLETION, :sparc_core_name, CONTENTS)
       get_protocol_srids(result_set)

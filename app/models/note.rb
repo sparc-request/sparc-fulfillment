@@ -34,6 +34,12 @@ class Note < ActiveRecord::Base
   validates_inclusion_of :reason, in: Proc.new { |note| note.notable_type.constantize::NOTABLE_REASONS },
                                   if: Proc.new { |note| note.reason.present? }
 
+  # required so that custom appointment notes will show. up.  taken from the rails documentation, http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#label-Polymorphic+Associations
+
+  def notable_type=(class_name)
+    super(class_name.constantize.base_class.to_s)
+  end
+
   def comment
     case kind
     when 'followup'
