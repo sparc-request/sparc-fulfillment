@@ -23,7 +23,9 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
+set :repo_url, 'git@sparc_fulfillment:sparc-request/sparc-fulfillment.git'
 server 'cwf-s.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
+
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
