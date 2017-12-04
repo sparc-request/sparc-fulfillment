@@ -39,7 +39,7 @@ namespace :data do
 
       ##Procedures Section
       csv << ["Per Patient Per Visit (Procedures)"]
-      csv << ["Protocol ID:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
+      csv << ["Protocol ID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
       puts "Fixing Procedures..."
 
       items.each do |item|
@@ -68,12 +68,12 @@ namespace :data do
                 end
 
                 if calculated_amount != current_amount
-                  csv << [protocol.sparc_id, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
+                  csv << [protocol.sparc_id, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
                   procedure.update_attribute(:service_cost, calculated_amount)
                 end
               else
                 ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                csv << [protocol.sparc_id, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
+                csv << [protocol.sparc_id, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
                 procedure.update_attribute(:service_cost, nil)
               end
 
