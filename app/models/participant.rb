@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -141,6 +141,10 @@ class Participant < ApplicationRecord
     [first_name, middle_initial].join(' ')
   end
 
+  def can_be_destroyed?
+    procedures.where.not(status: 'unstarted').empty?
+  end
+
   private
 
   def update_faye
@@ -162,4 +166,5 @@ class Participant < ApplicationRecord
       self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
     end
   end
+
 end

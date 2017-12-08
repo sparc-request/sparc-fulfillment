@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170405140625) do
+ActiveRecord::Schema.define(version: 20171109153101) do
 
-  create_table "appointment_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "appointment_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.integer  "appointment_id"
   end
 
-  create_table "appointments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "appointments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.integer  "participant_id"
     t.integer  "visit_group_id"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["type"], name: "index_appointments_on_type", using: :btree
   end
 
-  create_table "arms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "arms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.integer  "protocol_id"
     t.string   "name"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["sparc_id"], name: "index_arms_on_sparc_id", using: :btree
   end
 
-  create_table "components", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "components", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "component"
     t.integer  "position"
     t.integer  "composable_id"
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["composable_id", "composable_type"], name: "index_components_on_composable_id_and_composable_type", using: :btree
   end
 
-  create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "priority",                 default: 0, null: false
     t.integer  "attempts",                 default: 0, null: false
     t.text     "handler",    limit: 65535,             null: false
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   end
 
-  create_table "documents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "documents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "documentable_id"
     t.string   "documentable_type"
     t.datetime "deleted_at"
@@ -97,7 +97,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
   end
 
-  create_table "fulfillments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "fulfillments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.integer  "line_item_id"
     t.datetime "fulfilled_at"
@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["sparc_id"], name: "index_fulfillments_on_sparc_id", using: :btree
   end
 
-  create_table "identity_counters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "identity_counters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "identity_id"
     t.integer  "tasks_count",                default: 0
     t.datetime "created_at",                             null: false
@@ -128,7 +128,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["identity_id"], name: "index_identity_counters_on_identity_id", using: :btree
   end
 
-  create_table "imports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "imports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "file"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
@@ -143,7 +143,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.datetime "xml_file_updated_at"
   end
 
-  create_table "line_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "line_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.integer  "arm_id"
     t.integer  "service_id"
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["sparc_id"], name: "index_line_items_on_sparc_id", using: :btree
   end
 
-  create_table "notes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "notes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "identity_id"
     t.text     "comment",      limit: 65535
     t.datetime "deleted_at"
@@ -178,7 +178,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["notable_id", "notable_type"], name: "index_notes_on_notable_id_and_notable_type", using: :btree
   end
 
-  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.string   "action"
     t.string   "callback_url"
@@ -188,7 +188,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["sparc_id"], name: "index_notifications_on_sparc_id", using: :btree
   end
 
-  create_table "participants", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "participants", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.integer  "protocol_id"
     t.integer  "arm_id"
@@ -218,7 +218,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["sparc_id"], name: "index_participants_on_sparc_id", using: :btree
   end
 
-  create_table "procedures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "procedures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.integer  "appointment_id"
     t.string   "service_name"
@@ -242,20 +242,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["visit_id"], name: "index_procedures_on_visit_id", using: :btree
   end
 
-  create_table "project_roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "identity_id"
-    t.integer  "protocol_id"
-    t.string   "rights"
-    t.string   "role"
-    t.string   "role_other"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-    t.index ["identity_id"], name: "index_project_roles_on_identity_id", using: :btree
-    t.index ["protocol_id"], name: "index_project_roles_on_protocol_id", using: :btree
-  end
-
-  create_table "protocols", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "protocols", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.string   "sponsor_name"
     t.string   "udak_project_number"
@@ -274,22 +261,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id", using: :btree
   end
 
-  create_table "services", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "sparc_id"
-    t.decimal  "cost",                          precision: 10
-    t.string   "name"
-    t.string   "abbreviation"
-    t.text     "description",     limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-    t.integer  "sparc_core_id"
-    t.string   "sparc_core_name"
-    t.index ["deleted_at"], name: "index_services_on_deleted_at", using: :btree
-    t.index ["sparc_id"], name: "index_services_on_sparc_id", unique: true, using: :btree
-  end
-
-  create_table "sessions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "sessions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "session_id",               null: false
     t.text     "data",       limit: 65535
     t.datetime "created_at"
@@ -298,7 +270,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
   end
 
-  create_table "tasks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "tasks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.date     "due_at"
     t.boolean  "complete",                      default: false
     t.datetime "deleted_at"
@@ -314,20 +286,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["identity_id"], name: "index_tasks_on_identity_id", using: :btree
   end
 
-  create_table "user_roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.integer  "protocol_id"
-    t.string   "rights"
-    t.string   "role"
-    t.string   "role_other"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-    t.index ["protocol_id"], name: "index_user_roles_on_protocol_id", using: :btree
-    t.index ["user_id"], name: "index_user_roles_on_user_id", using: :btree
-  end
-
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "email",                  default: "",                           null: false
     t.string   "encrypted_password",     default: "",                           null: false
     t.string   "reset_password_token"
@@ -348,7 +307,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  create_table "versions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "versions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "item_type",                    null: false
     t.integer  "item_id",                      null: false
     t.string   "event",                        null: false
@@ -359,7 +318,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
   end
 
-  create_table "visit_groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "visit_groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.integer  "arm_id"
     t.integer  "position"
@@ -376,7 +335,7 @@ ActiveRecord::Schema.define(version: 20170405140625) do
     t.index ["sparc_id"], name: "index_visit_groups_on_sparc_id", using: :btree
   end
 
-  create_table "visits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "visits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "sparc_id"
     t.integer  "line_item_id"
     t.integer  "visit_group_id"

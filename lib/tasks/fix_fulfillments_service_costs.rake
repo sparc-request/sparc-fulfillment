@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -32,10 +32,9 @@ namespace :data do
           calculated_amount = 0
 
           funding_source = fulfillment.line_item.protocol.sparc_funding_source
-          service = fulfillment.service
           date = fulfillment.fulfilled_at
 
-          calculated_amount = service.cost(funding_source, date)
+          calculated_amount = fulfillment.line_item.cost(funding_source, date)
 
           if calculated_amount != current_amount
             csv << ["Protocol ID: #{fulfillment.line_item.protocol.sparc_id}", "Service Name: #{fulfillment.service_name}","Updating cost for fulfillment #{fulfillment.id} from #{current_amount} to #{calculated_amount}"]
@@ -44,6 +43,7 @@ namespace :data do
 
           bar.increment! rescue nil
         rescue Exception => e
+          csv << ["Protocol ID: #{fulfillment.line_item.protocol.sparc_id}", "Service Name: #{fulfillment.service_name}", "Error with #{proc.id}, Message: #{e.message}"]
           puts "Error with #{proc.inspect}, Message: #{e.message}"
           next
         end

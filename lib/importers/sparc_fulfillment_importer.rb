@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -297,7 +297,11 @@ class SparcFulfillmentImporter
 
           fulfillment_procedure.status = 'complete'
           fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m/%d/%Y")
-          fulfillment_procedure.service_cost = fulfillment_service.cost(fulfillment_procedure.protocol.sparc_funding_source, sparc_procedure_completed_date)
+          if fulfillment_line_item.present?
+            fulfillment_procedure.service_cost = fulfillment_line_item.cost(fulfillment_procedure.protocol.sparc_funding_source, sparc_procedure_completed_date)
+          else
+            fulfillment_procedure.service_cost = fulfillment_service.cost(fulfillment_procedure.protocol.sparc_funding_source, sparc_procedure_completed_date)
+          end
           fulfillment_procedure.performer_id = sparc_procedure_completed_by
         end
 

@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -27,9 +27,13 @@ class Klok::Person < ApplicationRecord
   has_many :klok_projects, class_name: 'Klok::Project', foreign_key: :resource_id, through: :klok_entries
 
   def local_identity
-    ldap_uid = name.split(" ").last.gsub(/[\(\)]*/, '')
-    ldap_uid += "@musc.edu" #### TODO, update Klok so that @musc.edu is added
-    Identity.where(ldap_uid: ldap_uid).first
-  end 
-
+    if name.match(/\([^()]*\)(?![^\[]*])/)
+      ldap_uid = name.split(" ").last.gsub(/[\(\)]*/, '')
+      ldap_uid += "@musc.edu" #### TODO, update Klok so that @musc.edu is added
+      Identity.where(ldap_uid: ldap_uid).first
+    else
+      raise StandardError, "Improper Format"
+    end
+  end
 end
+

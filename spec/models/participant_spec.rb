@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -118,6 +118,21 @@ RSpec.describe Participant, type: :model do
       it 'should return the full name of the participant' do
         participant = create(:participant_with_protocol)
         expect(participant.full_name).to eq(participant.first_name + ' ' + participant.middle_initial + ' ' + participant.last_name)
+      end
+    end
+
+    describe 'can_be_destroyed?' do
+
+      it 'should return true if all procedures are unstarted' do
+        participant = create(:participant_with_protocol)
+        expect(participant.can_be_destroyed?).to eq(true)
+      end
+
+      it 'should return false if any procedures are not unstarted' do
+        protocol = create(:protocol_imported_from_sparc)
+        participant = create(:participant_with_appointments, protocol: protocol, arm: protocol.arms.first)
+        create(:procedure_complete, appointment: participant.appointments.first)
+        expect(participant.can_be_destroyed?).to eq(false)
       end
     end
 

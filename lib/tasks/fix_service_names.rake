@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -82,7 +82,7 @@ namespace :data do
           finished_bar = ProgressBar.new(service.fulfillments.where.not(fulfilled_at: nil).count)
           ##CHeck date range for fulfilled(finished) fulfillments
           service.fulfillments.where.not(fulfilled_at: nil).find_each do |fulfillment|
-            if (start_date..end_date_).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
+            if (start_date..end_date).cover?(fulfillment.fulfilled_at.to_date) && fulfillment.service_name != service.name
               csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, service.name, fulfillment.fulfilled_at.strftime('%D')]
               fulfillment.update_attribute(:service_name, service.name)
               finished_bar.increment!

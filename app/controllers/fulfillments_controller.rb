@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -44,7 +44,7 @@ class FulfillmentsController < ApplicationController
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
     service = @line_item.service
     funding_source = @line_item.protocol.sparc_funding_source
-    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: service.cost(funding_source) }))
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: @line_item.cost(funding_source) }))
     if @fulfillment.valid?
       @fulfillment.save
       update_components_and_create_notes('create')

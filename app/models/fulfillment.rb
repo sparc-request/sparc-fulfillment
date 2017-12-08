@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -40,6 +40,7 @@ class Fulfillment < ApplicationRecord
   validates :fulfilled_at, presence: true
   validates :quantity, presence: true
   validates_numericality_of :quantity
+  validate :cost_available
 
   after_create :update_line_item_name
 
@@ -55,6 +56,13 @@ class Fulfillment < ApplicationRecord
   end
 
   private
+
+  def cost_available
+    cost = line_item.try(:cost, line_item.protocol.sparc_funding_source, self.fulfilled_at) rescue nil
+    if cost.nil?
+      errors[:base] << "No cost found, ensure that a valid pricing map exists for that date."
+    end
+  end
 
   def update_line_item_name
     # adding first fulfillment to line_item with one time fee?

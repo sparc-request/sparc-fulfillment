@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -71,11 +71,17 @@ class InvoiceReport < Report
         procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date)
 
         if fulfillments.any?
-          csv << ["Study Level Charges:"]
+          csv << ["Non-clinical Services"]
           csv << [
             "Protocol ID",
+            "Request ID",
             "Short Title",
+            "Status",
             "Primary PI",
+            "Primary PI Institution",
+            "Primary PI College",
+            "Primary PI Department",
+            "Primary PI Division",
             "Core/Program",
             "Service",
             "Fulfillment Date",
@@ -86,15 +92,21 @@ class InvoiceReport < Report
             "Quantity Completed",
             "Quantity Type",
             "Research Rate",
-            "Total Cost"
+            "Total Cost",
+            protocol.sub_service_request.subsidy ? "Percent Subsidy" : ""
           ]
-          csv << [""]
 
           fulfillments.includes(:line_item, service: [:organization]).order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
             csv << [
               format_protocol_id_column(protocol),
+              protocol.sub_service_request.ssr_id,
               protocol.sparc_protocol.short_title,
+              formatted_status(protocol),
               protocol.pi ? protocol.pi.full_name : nil,
+              protocol.pi ? protocol.pi.professional_org_lookup("institution") : nil,
+              protocol.pi ? protocol.pi.professional_org_lookup("college") : nil,
+              protocol.pi ? protocol.pi.professional_org_lookup("department") : nil,
+              protocol.pi ? protocol.pi.professional_org_lookup("division") : nil,
               fulfillment.service.organization.name,
               fulfillment.service_name,
               format_date(fulfillment.fulfilled_at),
@@ -105,7 +117,8 @@ class InvoiceReport < Report
               fulfillment.quantity,
               fulfillment.line_item.quantity_type,
               display_cost(fulfillment.service_cost),
-              display_cost(fulfillment.total_cost)
+              display_cost(fulfillment.total_cost),
+              display_subsidy_percent(protocol)
             ]
 
             total += fulfillment.total_cost
@@ -117,25 +130,30 @@ class InvoiceReport < Report
           csv << [""]
           csv << [""]
 
-          csv << ["Procedures/Per-Patient-Per-Visit:"]
+          csv << ["Clinical Services:"]
           csv << [
             "Protocol ID",
+            "Request ID",
             "Short Title",
+            "Status",
             "Primary PI",
-            "Patient Name",
-            "Patient ID",
-            "Visit Name",
-            "Visit Date",
+            "Primary PI Institution",
+            "Primary PI College",
+            "Primary PI Department",
+            "Primary PI Division",
             "Core/Program",
             "Service",
             "Service Completion Date",
+            "Patient Name",
+            "Patient ID",
+            "Visit Name",
+            "Visit Date",           
             "Quantity Completed",
+            "Clinical Quantity Type",
             "Research Rate",
-            "",
             "Total Cost",
             protocol.sub_service_request.subsidy ? "Percent Subsidy" : ""
           ]
-          csv << [""]
 
           procedures.group_by{|procedure| procedure.service.organization}.each do |org, org_group|
 
@@ -149,18 +167,24 @@ class InvoiceReport < Report
 
                   csv << [
                     format_protocol_id_column(protocol),
+                    protocol.sub_service_request.ssr_id,
                     protocol.sparc_protocol.short_title,
+                    formatted_status(protocol),
                     protocol.pi ? protocol.pi.full_name : nil,
-                    participant.full_name,
-                    participant.label,
-                    appointment.name,
-                    format_date(appointment.start_date),
+                    protocol.pi ? protocol.pi.professional_org_lookup("institution") : nil,
+                    protocol.pi ? protocol.pi.professional_org_lookup("college") : nil,
+                    protocol.pi ? protocol.pi.professional_org_lookup("department") : nil,
+                    protocol.pi ? protocol.pi.professional_org_lookup("division") : nil,
                     org.name,
                     service_name,
                     format_date(procedure.completed_date),
+                    participant.full_name,
+                    participant.label,
+                    appointment.name,
+                    format_date(appointment.start_date),                 
                     service_group.size,
+                    procedure.service.current_effective_pricing_map.unit_type,
                     display_cost(procedure.service_cost),
-                    "",
                     display_cost(service_group.size * procedure.service_cost.to_f),
                     display_subsidy_percent(protocol)
                   ]
@@ -174,8 +198,8 @@ class InvoiceReport < Report
         end
         if fulfillments.any? or procedures.any?
           csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Study Level and Per Patient Total:", display_cost(total)]
-          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy:", display_cost(total_with_subsidy)] if protocol.sub_service_request.subsidy
+          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Non-clinical and Clinical Services Total:", display_cost(total)]
+          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy:", display_cost(total_with_subsidy)] if protocol.sub_service_request.subsidy
           csv << [""]
           csv << [""]
         end

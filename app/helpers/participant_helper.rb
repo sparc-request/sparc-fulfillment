@@ -1,4 +1,4 @@
-# Copyright © 2011-2016 MUSC Foundation for Research Development~
+# Copyright © 2011-2017 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -56,11 +56,19 @@ module ParticipantHelper
   end
 
   def deleteFormatter(participant)
-    [
-      "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
-      "<i class='glyphicon glyphicon-remove'></i>",
-      "</a>"
-    ].join ""
+    if participant.can_be_destroyed?
+      [
+        "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
+        "<i class='glyphicon glyphicon-remove'></i>",
+        "</a>"
+      ].join ""
+    else
+      [
+        "<div data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>",
+        "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
+      ].join ""
+    end
+
   end
 
   def changeArmFormatter(participant)
