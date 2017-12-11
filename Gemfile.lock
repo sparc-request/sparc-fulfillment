@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/randym/axlsx.git
+  revision: 776037c0fc799bb09da8c9ea47980bd3bf296874
+  ref: 776037c0fc799bb09da8c9ea47980bd3bf296874
+  specs:
+    axlsx (2.1.0.pre)
+      htmlentities (~> 4.3.4)
+      mimemagic (~> 0.3)
+      nokogiri (>= 1.6.6)
+      rubyzip (>= 1.2.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -62,10 +73,6 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    axlsx (2.0.1)
-      htmlentities (~> 4.3.1)
-      nokogiri (>= 1.4.1)
-      rubyzip (~> 1.0.0)
     axlsx_rails (0.5.1)
       actionpack (>= 3.1)
       axlsx (>= 2.0.1)
@@ -78,7 +85,7 @@ GEM
     bootstrap3-datetimepicker-rails (4.17.47)
       momentjs-rails (>= 2.8.1)
     builder (3.2.3)
-    capistrano (3.10.0)
+    capistrano (3.10.1)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -371,7 +378,7 @@ GEM
     ruby-graphviz (1.2.3)
     ruby_parser (3.10.1)
       sexp_processor (~> 4.9)
-    rubyzip (1.0.0)
+    rubyzip (1.2.1)
     safe_yaml (1.0.4)
     sass (3.5.3)
       sass-listen (~> 4.0.0)
@@ -428,7 +435,7 @@ GEM
     turbolinks-source (5.0.3)
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
-    uglifier (4.0.1)
+    uglifier (4.0.2)
       execjs (>= 0.3.0, < 3)
     underscore-rails (1.8.3)
     unf (0.1.4)
@@ -464,6 +471,7 @@ DEPENDENCIES
   addressable
   ar-octopus
   autoprefixer-rails
+  axlsx!
   axlsx_rails
   bootstrap-sass
   bootstrap-select-rails
@@ -514,6 +522,7 @@ DEPENDENCIES
   rspec-activejob (~> 0.4.0)
   rspec-collection_matchers
   rspec-rails
+  rubyzip (>= 1.2.1)
   sass-rails
   sdoc (~> 0.4.0)
   shoulda-callback-matchers
@@ -534,4 +543,4 @@ DEPENDENCIES
   yajl-ruby
 
 BUNDLED WITH
-   1.16.0
+   1.14.6
