@@ -32,7 +32,7 @@ RSpec.describe DocumentsController, type: :controller do
         identity  = Identity.first
         params    = { document: { documentable_id: identity.id, documentable_type: 'Identity' }}
 
-        xhr :get, :new, params, format: :js
+        get :new, params: params, format: :js, xhr: true
 
         expect(assigns(:document)).to be_a_new(Document)
       end

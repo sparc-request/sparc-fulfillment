@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/v1/services/1.json?depth=full
+    uri: http://localhost:5000/v1/services/1.json?depth=full
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - Ruby
+      - rest-client/2.0.2 (darwin16.4.0 x86_64) ruby/2.4.1p111
+      Host:
+      - localhost:5000
+      Authorization:
+      - Basic aXlxdTJibTNUNHJEV1dwbndZZkVsMmk2bzJTcGhwdXFfVEt2Rm5JT1RBMDpxTDFvWm1kTWk3T1U3RzFmMHE2YUNUVlI2SHJtb05tcFpWTmM4RGZIcWVr
   response:
     status:
       code: 200
@@ -20,28 +24,24 @@ http_interactions:
     headers:
       Content-Type:
       - application/json
-      Content-Length:
-      - '688'
-      X-Ua-Compatible:
-      - IE=Edge
-      Etag:
-      - '"ed09acc8892ac2bfc7d14b68af554126"'
       Cache-Control:
-      - max-age=0, private, must-revalidate
+      - no-store, must-revalidate, private, max-age=0
       X-Request-Id:
-      - cb66e5fd49538dcf3aae9484a73f9f7c
+      - 02c30952-faf3-4e0a-a9e2-2a5a7586b0bb
       X-Runtime:
-      - '0.171729'
-      Connection:
-      - keep-alive
-      Server:
-      - thin 1.5.1 codename Straight Razor
+      - '0.021115'
+      X-Miniprofiler-Ids:
+      - '["s46zwb2wc0d5sy7w46yz","hy2lboy7g7oluwrhryfw","l4631jr03bs1tk3g05h4"]'
+      Set-Cookie:
+      - __profilin=p%3Dt; path=/
+      Content-Length:
+      - '666'
     body:
       encoding: UTF-8
       string: '{"service":{"sparc_id":1,"callback_url":"http://127.0.0.1:5000/v1/services/1.json","name":"Biostatistical
         Education","abbreviation":"Biostatistical Education","order":1,"description":"Consultation
-        and assistance in understanding one or more biostatistical concepts","is_available":true,"service_center_cost":null,"cpt_code":"","charge_code":"","revenue_code":"","organization_id":1,"send_to_epic":false,"revenue_code_range_id":null,"service_level_components_count":0,"one_time_fee":true,"line_items_count":305,"components":"a,b,c,o,","process_ssrs_organization":{"sparc_id":1,"callback_url":"http://127.0.0.1:5000/v1/programs/1.json","name":"Biostatistics,
+        and assistance in understanding one or more biostatistical concepts","eap_id":null,"is_available":true,"service_center_cost":null,"cpt_code":"","charge_code":"","revenue_code":"","organization_id":1,"send_to_epic":false,"revenue_code_range_id":null,"one_time_fee":true,"line_items_count":241,"components":"a,b,c,o","process_ssrs_organization":{"sparc_id":1,"callback_url":"http://127.0.0.1:5000/v1/programs/1.json","name":"Biostatistics,
         Design, \u0026 Epidemiology"}}}'
     http_version: 
-  recorded_at: Thu, 25 Jun 2015 14:27:52 GMT
+  recorded_at: Wed, 14 Jun 2017 14:15:04 GMT
 recorded_with: VCR 2.9.3

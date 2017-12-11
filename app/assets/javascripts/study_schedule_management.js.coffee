@@ -82,7 +82,7 @@ $ ->
 
   $(document).on 'click', '#add_visit_group_button', ->
     data =
-      'current_page': $(".visit_dropdown").first().attr('page')
+      'current_page': $("select.visit_dropdown").first().attr('page')
       'schedule_tab': $('#current_tab').attr('value')
       'protocol_id' : $('#study_schedule_buttons').data('protocol-id')
     $.ajax

@@ -31,12 +31,11 @@ RSpec.describe StudyScheduleController do
     it "should change the page to the page passed in" do
       tab = 'template'
       page = 1
-      xhr :get, :change_page, {
+      get :change_page, params: {
         page: page + 1,
         arm_id: @arm.id,
-        tab: tab,
-        format: :js
-      }
+        tab: tab
+      }, format: :js, xhr: true
       expect(assigns(:page)).to eq(page + 1)
     end
 
@@ -45,12 +44,11 @@ RSpec.describe StudyScheduleController do
   describe "GET #change_tab" do
     it "should change the tab to the tab passed in" do
       page = 1
-      xhr :get, :change_tab, {
+      get :change_tab, params: {
         arms_and_pages: {"#{@arm.id}" => page},
         tab: 'quantity',
-        protocol_id: @protocol.id,
-        format: :js
-      }
+        protocol_id: @protocol.id
+      }, format: :js, xhr: true
       expect(assigns(:tab)).to eq('quantity')
     end
   end
@@ -58,22 +56,20 @@ RSpec.describe StudyScheduleController do
   describe "PUT #check_row" do
     it "should set all visits for the line_item to have a research_billing_qty of 1 when checked" do
       line_item = LineItem.where(arm: @arm).first
-      put :check_row, {
+      put :check_row, params: {
         line_item_id: line_item.id,
-        check: 'true',
-        format: :js
-      }
+        check: 'true'
+      }, format: :js
       visit_count = Visit.where(line_item_id: line_item.id).where(research_billing_qty: 1).count
       expect(visit_count).to eq(@arm.visit_count)
     end
 
     it "should set all visits for the line_item to have a research_billing_qty of 0 when unchecked" do
       line_item = LineItem.where(arm: @arm).first
-      put :check_row, {
+      put :check_row, params: {
         line_item_id: line_item.id,
-        check: 'false',
-        format: :js
-      }
+        check: 'false'
+      }, format: :js
       visit_count = Visit.where(line_item_id: line_item.id).where(research_billing_qty: 0).count
       expect(visit_count).to eq(@arm.visit_count)
     end
@@ -82,22 +78,20 @@ RSpec.describe StudyScheduleController do
   describe "PUT #check_column" do
     it "should set all visits for the visit_group to have a research_billing_qty of 1 when checked" do
       visit_group = VisitGroup.first
-      put :check_column, {
+      put :check_column, params: {
         visit_group_id: visit_group.id,
-        check: 'true',
-        format: :js
-      }
+        check: 'true'
+      }, format: :js
       visit_count = Visit.where(visit_group_id: visit_group.id).where(research_billing_qty: 1).count
       expect(visit_count).to eq(@arm.line_items.count)
     end
 
     it "should set all visits for the visit_group to have a research_billing_qty of 0 when unchecked" do
       visit_group = VisitGroup.first
-      put :check_column, {
+      put :check_column, params: {
         visit_group_id: visit_group.id,
-        check: 'false',
-        format: :js
-      }
+        check: 'false'
+      }, format: :js
       visit_count = Visit.where(visit_group_id: visit_group.id).where(research_billing_qty: 0).count
       expect(visit_count).to eq(@arm.line_items.count)
     end

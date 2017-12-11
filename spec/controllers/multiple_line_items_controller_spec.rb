@@ -40,22 +40,20 @@ RSpec.describe MultipleLineItemsController, type: :controller do
   describe "PUT #create_line_items" do
     it "handles the submission of the add line items form" do
       expect{
-        post :create_line_items, {
+        post :create_line_items, params: {
           add_service_id: @service.id,
           add_service_arm_ids_and_pages: ["#{@protocol.arms.first.id} 1", "#{@protocol.arms.second.id} 1"],
-          schedule_tab: "template",
-          format: :js
-        }
+          schedule_tab: "template"
+        }, format: :js
       }.to change(LineItem, :count).by(2)
     end
 
     it "requires arms to be selected" do
       expect{
-        post :create_line_items, {
+        post :create_line_items, params: {
           add_service_id: @service.id,
-          schedule_tag: "template",
-          format: :js
-        }
+          schedule_tag: "template"
+        }, format: :js
       }.to_not change(LineItem, :count)
     end
   end
@@ -63,11 +61,10 @@ RSpec.describe MultipleLineItemsController, type: :controller do
   describe "GET #edit_line_items" do
 
     it "renders a template to remove a service from multiple arms" do
-      xhr :get, :edit_line_items, {
+      get :edit_line_items, params: {
         protocol_id: @protocol.id,
-        service_id: @service.id,
-        format: :js
-      }
+        service_id: @service.id
+      }, format: :js, xhr: true
 
       expect(assigns(:protocol)).to eq(@protocol)
       expect(assigns(:all_services)).to eq(@protocol.line_items.map(&:service).uniq)
@@ -82,11 +79,10 @@ RSpec.describe MultipleLineItemsController, type: :controller do
       create(:line_item, service: @service, arm: @protocol.arms.second, protocol: @protocol)
 
       expect{
-        post :destroy_line_items, {
+        post :destroy_line_items, params: {
           remove_service_id: @service.id,
-          remove_service_arm_ids: ["#{@protocol.arms.first.id}", "#{@protocol.arms.second.id}"],
-          format: :js
-        }
+          remove_service_arm_ids: ["#{@protocol.arms.first.id}", "#{@protocol.arms.second.id}"]
+        }, format: :js
       }.to change(LineItem, :count).by(-2)
     end
 
@@ -94,10 +90,7 @@ RSpec.describe MultipleLineItemsController, type: :controller do
       create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
 
       expect{
-        post :destroy_line_items, {
-          remove_service_id: @service.id,
-          format: :js
-        }
+        post :destroy_line_items, params: { remove_service_id: @service.id }, format: :js
       }.to_not change(LineItem, :count)
     end
 
@@ -107,11 +100,10 @@ RSpec.describe MultipleLineItemsController, type: :controller do
                     create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
 
       expect{
-        post :destroy_line_items, {
+        post :destroy_line_items, params: {
           remove_service_id: @service.id,
-          remove_service_arm_ids: ["#{@protocol.arms.first.id}"],
-          format: :js
-        }
+          remove_service_arm_ids: ["#{@protocol.arms.first.id}"]
+        }, format: :js
       }.to_not change(LineItem, :count)
     end
   end
