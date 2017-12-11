@@ -44,7 +44,7 @@ RSpec.describe ImportsController, type: :controller do
 
   describe 'GET #new' do
     it 'should instantiate a new Import class' do
-      xhr :get, :new
+      get :new, xhr: true
 
       expect(assigns(:import)).to be_a_new Import
     end

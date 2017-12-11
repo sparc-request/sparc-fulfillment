@@ -134,12 +134,14 @@ feature 'Incomplete Procedure', js: true do
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: 1
     find('button.add_service').click
+    wait_for_ajax
   end
 
   def given_i_am_viewing_a_procedure_marked_as_complete
     given_i_am_viewing_an_appointment_with_a_procedure
     when_i_begin_the_appointment
     find('label.status.complete').click
+    wait_for_ajax
   end
 
   def when_i_begin_the_appointment

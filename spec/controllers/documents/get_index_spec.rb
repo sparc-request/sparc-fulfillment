@@ -32,13 +32,12 @@ RSpec.describe DocumentsController, type: :controller do
         line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
         document  = create(:document, documentable_id: line_item.id, documentable_type: 'LineItem')
 
-        xhr :get, :index, {
+        get :index, params: {
           document: {
             documentable_id: line_item.id,
             documentable_type: 'LineItem'
-          },
-          format: :js
-        }
+          }
+        }, format: :js, xhr: true
 
         expect(assigns(:documents)).to eq([document])
       end

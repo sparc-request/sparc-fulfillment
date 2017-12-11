@@ -35,7 +35,7 @@ RSpec.describe NotesController, type: :controller do
         }
       }
 
-      xhr :get, :index, params, format: :js
+      get :index, params: params, format: :js, xhr: true
 
       expect(assigns(:notes).length).to eq(3)
     end
@@ -51,7 +51,7 @@ RSpec.describe NotesController, type: :controller do
         }
       }
 
-      xhr :get, :new, params
+      get :new, params: params, xhr: true
 
       expect(assigns(:note)).to be_a_new(Note)
     end
@@ -67,11 +67,10 @@ RSpec.describe NotesController, type: :controller do
           notable_type: 'Procedure',
           notable_id: procedure.id,
           comment: 'okay'
-        },
-        format: :js
+        }
       }
 
-      expect{ post :create, params }.to change(Note, :count).by(1)
+      expect{ post :create, params: params, format: :js }.to change(Note, :count).by(1)
       expect(assigns(:note)).to have_attributes(comment: 'okay')
     end
   end
