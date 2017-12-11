@@ -154,11 +154,11 @@ $ ->
       url: "/tasks/#{task_id}.js"
       data: data
 
-  $(document).on 'change', '.billing_type', ->
+  $(document).on 'change', '.billing_type.bootstrap-select', ->
     procedure    = $(this).parents('tr.procedure')
     procedure_id = $(procedure).data('id')
     original_group_id = $(procedure).data('group-id')
-    billing_type = $(this).val()
+    billing_type = $(this).children('.selectpicker').find("option:selected").val()
     data = procedure:
            billing_type: billing_type
     $.ajax

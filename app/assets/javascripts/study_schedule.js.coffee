@@ -37,7 +37,7 @@ $ ->
       url:  '/study_schedule/change_page'
       data: data
 
-  $(document).on 'change', '.visit_dropdown', ->
+  $(document).on 'change', '.visit_dropdown.selectpicker', ->
     page_selected = $(this).find('option:selected').attr('page')
     current_page = $(this).attr('page')
     tab = $('#current_tab').val()

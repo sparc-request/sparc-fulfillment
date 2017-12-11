@@ -33,7 +33,7 @@ RSpec.describe Service, type: :model do
         orange_service = create(:service, name: "Orange")
         apple_service = create(:service, name: "Apple")
 
-        all_services = Service.all
+        all_services = Service.all.to_a
         apple_index = all_services.index(apple_service)
         orange_index = all_services.index(orange_service)
 
