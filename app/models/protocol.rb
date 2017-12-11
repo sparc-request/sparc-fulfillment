@@ -124,6 +124,14 @@ class Protocol < ApplicationRecord
     funding_source.blank? ? potential_funding_source : funding_source
   end
 
+  def billing_business_managers
+    project_roles.where(role: "business-grants-manager").map(&:identity)
+  end
+
+  def research_master_id
+    sparc_protocol.research_master_id
+  end
+
   ##### PRIVATE METHODS #####
   private
 
