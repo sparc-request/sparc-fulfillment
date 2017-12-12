@@ -32,7 +32,12 @@ feature 'Identity changes a Service', js: true do
   scenario 'and sees it join an existing group' do
     given_i_am_viewing_a_visit_with_one_procedure_group
     and_the_visit_has_one_ungrouped_procedure
-    when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
+    #when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
+    procedure = Procedure.last
+
+    within "tr.procedure[data-id='#{procedure.id}']" do
+      bootstrap_select "#quantity_type_#{procedure.id}", 'T'
+    end
     then_i_should_see_the_procedure_in_the_group
   end
 

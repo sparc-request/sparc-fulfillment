@@ -36,12 +36,12 @@ class IdentityOrganizations
   private
 
   def fetch_rights
-    @super_user_orgs ||= Organization.includes(:super_users).where(super_users: {identity_id: @id}).references(:super_users).uniq(:organizations)
-    @clinical_provider_orgs ||= Organization.includes(:clinical_providers).where(clinical_providers: {identity_id: @id}).references(:clinical_providers).uniq(:organizations)
+    @super_user_orgs ||= Organization.includes(:super_users).where(super_users: {identity_id: @id}).references(:super_users).distinct(:organizations)
+    @clinical_provider_orgs ||= Organization.includes(:clinical_providers).where(clinical_providers: {identity_id: @id}).references(:clinical_providers).distinct(:organizations)
   end
   
   def authorized_child_organizations(org_ids)
-    org_ids = org_ids.flatten.compact
+    org_ids = org_ids.compact
     if org_ids.empty?
       []
     else

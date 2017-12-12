@@ -22,7 +22,7 @@ require 'capistrano/rvm'
 # require 'capistrano/rails/assets'
 # require 'capistrano/rails/migrations'
 require 'capistrano/passenger'
-require 'capistrano/delayed-job'
+require 'capistrano/delayed_job'
 require 'capistrano/rails'
 
 # required to deploy with dotenv

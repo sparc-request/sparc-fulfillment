@@ -123,6 +123,26 @@ RSpec.describe Protocol, type: :model do
       end
     end
 
+    describe 'billing business managers' do
+
+      it 'should return the billing/business managers of the protocol' do
+        protocol = create_and_assign_protocol_to_me
+
+        expect(protocol.billing_business_managers).to eq protocol.project_roles.where(role: "business-grants-manager").map(&:identity)
+      end
+    end
+
+    describe 'research master id' do
+
+      it 'should return the research master id of the protocol' do
+        protocol = create(:protocol)
+        sparc_protocol = protocol.sparc_protocol
+        sparc_protocol.update_attributes(research_master_id: 1)
+
+        expect(protocol.research_master_id).to eq Sparc::Protocol.where(id: protocol.sparc_id).first.research_master_id
+      end
+    end
+
     describe 'delegated methods' do
 
       let!(:protocol)            { create(:protocol) }

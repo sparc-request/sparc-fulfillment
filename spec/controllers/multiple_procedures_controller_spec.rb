@@ -48,7 +48,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @current_date = DateTime.current
             params = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @current_date.strftime("%m/%d/%Y"), performed_by: @identity.id, format: :js }
 
-            put :update_procedures, params
+            put :update_procedures, params: params
           end
 
           it 'should update the Procedures statuses' do
@@ -75,7 +75,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @current_date = DateTime.current
             params    = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', performed_by: @identity.id, reason: "Assessment missed", comment: "Hello Beautiful", format: :js }
 
-            put :update_procedures, params
+            put :update_procedures, params: params
           end
 
           it 'should update the Procedures statuses' do
@@ -124,7 +124,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @edited_date = DateTime.current.tomorrow
             params = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m/%d/%Y"), performed_by: Identity.last.id, format: :js }
 
-            put :update_procedures, params
+            put :update_procedures, params: params
           end
 
           it "should update the completed date" do
@@ -151,7 +151,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @current_date = DateTime.current
             params    = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', performed_by: @identity.id, reason: "Assessment missed", comment: "Hello Beautiful", format: :js }
 
-            put :update_procedures, params
+            put :update_procedures, params: params
           end
 
           it 'should update the Procedure statuses' do
@@ -201,7 +201,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @edited_date = DateTime.current.tomorrow
             params    = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m/%d/%Y"), performed_by: Identity.first.id, format: :js }
 
-            put :update_procedures, params
+            put :update_procedures, params: params
           end
 
           it 'should update the Procedure statuses' do
@@ -232,7 +232,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @current_date = DateTime.current
             params    = { procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', performed_by: Identity.first.id, reason: "Assessment missed", format: :js }
 
-            put :update_procedures, params
+            put :update_procedures, params: params
           end
 
           it 'should update the Procedure statuses' do

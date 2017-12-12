@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Protocol < ActiveRecord::Base
+class Protocol < ApplicationRecord
 
   include LocalDb
 
@@ -122,6 +122,14 @@ class Protocol < ActiveRecord::Base
 
   def sparc_funding_source
     funding_source.blank? ? potential_funding_source : funding_source
+  end
+
+  def billing_business_managers
+    project_roles.where(role: "business-grants-manager").map(&:identity)
+  end
+
+  def research_master_id
+    sparc_protocol.research_master_id
   end
 
   ##### PRIVATE METHODS #####
