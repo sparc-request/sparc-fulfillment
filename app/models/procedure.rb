@@ -52,6 +52,8 @@ class Procedure < ActiveRecord::Base
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
 
+  validate :cost_available
+
   accepts_nested_attributes_for :notes
 
   scope :untouched,   -> { where(status: 'unstarted') }
@@ -193,6 +195,17 @@ class Procedure < ActiveRecord::Base
   end
 
   private
+
+  def cost_available
+    if visit
+      cost = visit.line_item.try(:cost, protocol.sparc_funding_source, self.completed_date) rescue nil
+    else
+      cost = service.try(:cost, protocol.sparc_funding_source, self.completed_date) rescue nil
+    end
+    if cost.nil?
+      errors[:base] << "No cost found, ensure that a valid pricing map exists for that date."
+    end
+  end
 
   def new_cost(funding_source, date)
     if visit
