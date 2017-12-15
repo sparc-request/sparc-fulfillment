@@ -202,6 +202,7 @@ class Procedure < ApplicationRecord
     else
       cost = service.try(:cost, protocol.sparc_funding_source, self.completed_date) rescue nil
     end
+    # cost = nil
     if cost.nil?
       errors[:base] << "No cost found, ensure that a valid pricing map exists for that date."
     end

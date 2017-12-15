@@ -26,7 +26,12 @@ $(document).on 'click', "#incomplete_all_modal button.save", (e) ->
     $(this).addClass("disabled")
 
 <% if @procedure.errors.present? %>
+console.log(<%= @procedure.errors.messages[:base] %>)
+<% if @procedure.errors.messages[:base] == "No cost found, ensure that a valid pricing map exists for that date." %>
+$("tr[data-id='<%= @procedure.id %>']").parents("div.core").prepend("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
+<% else %>
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
+<% end %>
 <% else %>
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)

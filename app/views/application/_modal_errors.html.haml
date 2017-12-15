@@ -20,5 +20,7 @@
 
 -if errors
   .alert.alert-danger
+    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => "button"}
+      %span{"aria-hidden" => "true"} &times;
     - errors.full_messages.each do |msg|
       %p= msg
