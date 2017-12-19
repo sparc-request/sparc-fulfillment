@@ -42,7 +42,16 @@ FactoryGirl.define do
       end
     end
 
+    trait :without_validations do
+      to_create { |instance| instance.save(validate: false) }
+    end
+
+    trait :with_arm do
+      association :arm, :with_protocol
+    end
+
     factory :appointment_with_procedures, traits: [:with_procedures]
+    factory :appointment_without_validations, traits: [:without_validations]
   end
 end
 
