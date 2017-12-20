@@ -58,7 +58,7 @@ class ProceduresController < ApplicationController
     @appointment = @procedure.appointment
     @statuses = @appointment.appointment_statuses.map{|x| x.status}
 
-    @cost_error_message = (@procedure.errors.messages[:service_cost].select{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}.first rescue nil)
+    @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
   end
 
   def destroy

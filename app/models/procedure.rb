@@ -199,9 +199,9 @@ class Procedure < ApplicationRecord
   def cost_available
     date = completed_date ? completed_date : Date.today
     if visit
-      cost = visit.line_item.try(:cost, protocol.sparc_funding_source, date) rescue nil
+      cost = visit.line_item.try(:cost, protocol.sparc_funding_source, date)
     else
-      cost = service.try(:cost, protocol.sparc_funding_source, date) rescue nil
+      cost = service.try(:cost, protocol.sparc_funding_source, date)
     end
 
     if cost.nil?
