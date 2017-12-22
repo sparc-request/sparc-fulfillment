@@ -33,6 +33,9 @@ FactoryGirl.define do
     end
 
     trait :complete do
+      association :service, factory: :service
+      association :appointment, :with_arm, :without_validations
+
       status 'complete'
       completed_date Date.today.strftime('%m/%d/%Y')
     end

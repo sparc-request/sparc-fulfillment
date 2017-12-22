@@ -58,7 +58,8 @@ class Fulfillment < ApplicationRecord
   private
 
   def cost_available
-    cost = line_item.try(:cost, line_item.protocol.sparc_funding_source, self.fulfilled_at) rescue nil
+    date = fulfilled_at ? fulfilled_at : Date.today
+    cost = line_item.try(:cost, line_item.protocol.sparc_funding_source, date) rescue nil
     if cost.nil?
       errors[:base] << "No cost found, ensure that a valid pricing map exists for that date."
     end

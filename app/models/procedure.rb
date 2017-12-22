@@ -52,6 +52,8 @@ class Procedure < ApplicationRecord
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
 
+  validate :cost_available, if: Proc.new { |procedure| procedure.status == "complete"}
+
   accepts_nested_attributes_for :notes
 
   scope :untouched,   -> { where(status: 'unstarted') }
@@ -193,6 +195,19 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def cost_available
+    date = completed_date ? completed_date : Date.today
+    if visit
+      cost = visit.line_item.try(:cost, protocol.sparc_funding_source, date) rescue nil
+    else
+      cost = service.try(:cost, protocol.sparc_funding_source, date) rescue nil
+    end
+
+    if cost.nil?
+      errors[:service_cost] << "No cost found, ensure that a valid pricing map exists for that date."
+    end
+  end
 
   def new_cost(funding_source, date)
     if visit

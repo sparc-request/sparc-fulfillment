@@ -106,7 +106,7 @@ RSpec.describe VisitGroupsController, type: :controller do
     end
 
     it "should create an error when the visit_group has completed procedures under it" do
-      create(:procedure_complete, appointment: @visit_group.appointments.first, arm: @arm, completed_date: "10/09/2010")
+      create(:procedure_complete, appointment: @visit_group.appointments.first, arm: @arm, completed_date: Date.today.strftime('%m/%d/%Y'), service: create(:service))
       delete :destroy, params: {
         id: @visit_group.id,
         page: "1",

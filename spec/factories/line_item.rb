@@ -36,6 +36,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_service do
+      association :protocol
+      association :service, factory: :service
+    end
+
     factory :line_item_with_fulfillments, traits: [:with_fulfillments]
+    factory :line_item_with_service, traits: [:with_service]
   end
 end

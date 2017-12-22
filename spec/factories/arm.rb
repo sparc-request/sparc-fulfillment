@@ -92,6 +92,11 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_protocol do
+      association :protocol
+    end
+
+    factory :arm_with_protocol, traits: [:with_protocol]
     factory :arm_with_single_service, traits: [:with_singe_line_item, :with_visit_groups, :with_visits, :with_participant]
     factory :arm_with_duplicate_services, traits: [:with_duplicate_line_item, :with_visit_groups, :with_visits, :with_participant]
     factory :arm_with_line_items, traits: [:with_line_items]
