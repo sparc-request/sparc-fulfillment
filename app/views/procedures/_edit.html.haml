@@ -35,7 +35,7 @@
           = form.hidden_field :assignable_type, value: 'Procedure'
           = form.hidden_field :assignable_id, value: procedure.id
           = form.label "task_assignee_id", t(:task)[:assignee_name]+t(:actions)[:required], class: "col-sm-3 control-label"
-          .col-sm-8= form.select :assignee_id, options_from_collection_for_select(clinical_providers.map(&:identity), 'id', 'full_name'), { include_blank: true }, { class: "form-control selectpicker" }
+          .col-sm-8= form.select :assignee_id, options_from_collection_for_select(clinical_providers.map(&:identity).sort_by!{ |i| i.last_name.downcase }.uniq, 'id', 'full_name'), { include_blank: true }, { class: "form-control selectpicker" }
         .form-group
           = form.label "due_at", t(:procedure)[:follow_up_date]+t(:actions)[:required], class: "col-sm-3 control-label"
           .col-sm-8
