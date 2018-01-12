@@ -33,13 +33,13 @@ RSpec.describe FulfillmentsController do
     context 'content-type: application/json' do
 
       it 'renders the :index action' do
-        xhr :get, :index, line_item_id: @line_item.id, format: :js
+        get :index, params: { line_item_id: @line_item.id }, format: :js, xhr: true
 
         expect(response).to be_success
       end
 
       it 'assigns @line_item' do
-        xhr :get, :index, line_item_id: @line_item.id, format: :js
+        get :index, params: { line_item_id: @line_item.id }, format: :js, xhr: true
 
         expect(assigns(:line_item)).to be
       end
@@ -48,7 +48,7 @@ RSpec.describe FulfillmentsController do
     context 'content-type: application/js' do
 
       it 'assigns @fulfillments' do
-        get :index, line_item_id: @line_item.id, format: :json
+        get :index, params: { line_item_id: @line_item.id }, format: :json
 
         expect(assigns(:fulfillments)).to be
       end
@@ -57,10 +57,7 @@ RSpec.describe FulfillmentsController do
 
   describe "GET #new" do
     it "should instantiate a new Fulfillment" do
-      xhr :get, :new, {
-        line_item_id: @line_item.id,
-        format: :js
-      }
+      get :new, params: { line_item_id: @line_item.id }, format: :js, xhr: true
       expect(assigns(:fulfillment)).to be_a_new(Fulfillment)
     end
   end
@@ -68,35 +65,28 @@ RSpec.describe FulfillmentsController do
   describe "POST #create" do
     it "should create a new fulfillment" do
       attributes = @fulfillment.attributes
-      attributes.delete_if{ |key| ["fulfilled_at", "created_at", "updated_at"].include?(key) }
-      attributes[:fulfilled_at] = "09/10/2015"
+      attributes.delete_if{ |key| ["id", "fulfilled_at", "created_at", "updated_at"].include?(key) }
+      attributes[:fulfilled_at] = Date.today.strftime("%m/%d/%Y")
       attributes[:components] = @line_item.components.map{ |c| c.id.to_s }
       expect{
-        post :create, {
-          fulfillment: attributes,
-          format: :js
-        }
+        post :create, params: { fulfillment: attributes }, format: :js
       }.to change(Fulfillment, :count).by(1)
     end
   end
 
   describe "GET #edit" do
     it "should select an instantiated fulfillment" do
-      xhr :get, :edit, {
-        id: @fulfillment.id,
-        format: :js
-      }
+      get :edit, params: { id: @fulfillment.id }, format: :js, xhr: true
       expect(assigns(:fulfillment)).to eq(@fulfillment)
     end
   end
 
   describe "PUT #update" do
     it "should update a fulfillment" do
-      put :update, {
+      put :update, params: {
         id: @fulfillment.id,
-        fulfillment: attributes_for(:fulfillment, line_item_id: @line_item.id, quantity: 328),
-        format: :js
-      }
+        fulfillment: attributes_for(:fulfillment, line_item_id: @line_item.id, quantity: 328)
+      }, format: :js
       @fulfillment.reload
       expect(@fulfillment.quantity).to eq 328
     end

@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 # Load the Rails application.
-require File.expand_path('../application', __FILE__)
+require_relative 'application'
 
 # Initialize the Rails application.
 Rails.application.initialize!

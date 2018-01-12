@@ -25,7 +25,7 @@ $(document).on 'click', "#incomplete_all_modal button.save", (e) ->
   else
     $(this).addClass("disabled")
 
-<% if @procedure.errors.present? %>
+<% if @procedure.errors.present? && !@cost_error_message %>
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
 <% else %>
 
@@ -88,4 +88,8 @@ $('.row.appointment [data-toggle="tooltip"]').tooltip()
 
 $("#group-<%= @procedure.group_id %> button").trigger('click')
 $("#modal_place").modal 'hide'
+
+<% if @cost_error_message %>
+swal("<%= @cost_error_message %>")
+<% end %>
 <% end %>

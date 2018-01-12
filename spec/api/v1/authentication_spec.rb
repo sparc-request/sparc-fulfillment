@@ -29,7 +29,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
       before do
         http_login(ENV['SPARC_API_USERNAME'], ENV['SPARC_API_PASSWORD'])
 
-        post '/v1/notifications.json', params, @env
+        post '/v1/notifications.json', params: params, headers: @env
       end
 
       it 'should allow the request' do
@@ -46,7 +46,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
 
           http_login(bad_username, ENV['SPARC_PASSWORD'])
 
-          post '/v1/notifications.json', params, @env
+          post '/v1/notifications.json', params: params, headers: @env
         end
 
         it 'should not allow the request' do
@@ -65,7 +65,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
 
           http_login(bad_password, ENV['SPARC_PASSWORD'])
 
-          post '/v1/notifications.json', params, @env
+          post '/v1/notifications.json', params: params, headers: @env
         end
 
         it 'should not allow the request' do

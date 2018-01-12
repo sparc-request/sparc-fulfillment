@@ -126,7 +126,7 @@ feature 'Complete Visit', js: true do
 
   def when_i_incomplete_the_procedure
     find("tr.procedure[data-id='#{@procedure.id}'] label.status.incomplete").click
-    bootstrap_select '.reason-select', 'Assessment missed'
+    bootstrap_select '#procedure_notes_attributes_0_reason', 'Assessment missed'
     click_button 'Save'
     wait_for_ajax
   end
