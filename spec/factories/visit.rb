@@ -29,6 +29,7 @@ FactoryGirl.define do
     effort_billing_qty 0
 
     trait :with_complete_procedures do
+      association :line_item, :with_service
       after(:create) do |visit, evaluator|
         create_list(:procedure_complete, 3, visit: visit)
       end

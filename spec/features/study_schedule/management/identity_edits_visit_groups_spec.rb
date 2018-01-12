@@ -210,7 +210,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_visit_group
-    find("input[value='VG']")
     expect(page).to have_css("input[value='VG']")
   end
 

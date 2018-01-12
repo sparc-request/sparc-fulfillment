@@ -68,9 +68,9 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.js {
         @document = Document.create(document_params.merge!(original_filename: params[:document][:document].original_filename,
-                                                           title: params[:document][:document].original_filename,
-                                                           content_type: params[:document][:document].content_type,
-                                                           state: "Completed"))
+                                                          title: params[:document][:document].original_filename,
+                                                          content_type: params[:document][:document].content_type,
+                                                          state: "Completed"))
 
         create_document_file
 
@@ -145,7 +145,7 @@ class DocumentsController < ApplicationController
   end
 
   def authorize_document_access
-    render nothing: true unless @document.accessible_by?(current_identity)
+    head :ok unless @document.accessible_by?(current_identity)
   end
 
   def mark_document_as_accessed

@@ -22,7 +22,7 @@ $("#modal_area").html("<%= escape_javascript(render(partial: 'incomplete_all_mod
 $("#modal_place").modal 'show'
 
 $(document).on 'click', "#incomplete_all_modal button.save", (e) ->
-  if !$('#incomplete_all_modal .performed-by-dropdown').val() || $('.reason-select .selectpicker .selected').index() == 0
+  if !$("#performed_by").find("option:selected").text() || $('#reason').find("option:selected").index() == 0
     e.preventDefault()
     $('#multiple_procedures_modal_errors').addClass('alert').addClass('alert-danger').html('Please complete the required fields:')
   else

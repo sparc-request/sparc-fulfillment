@@ -20,12 +20,12 @@
 
 class ApplicationController < ActionController::Base
 
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
 
   before_action :authenticate_identity!
-  before_filter :breadcrumbs
-  around_filter :set_time_zone, if: :identity_signed_in?
-  before_filter :push_user_to_gon, if: :identity_signed_in?
+  before_action :breadcrumbs
+  around_action :set_time_zone, if: :identity_signed_in?
+  before_action :push_user_to_gon, if: :identity_signed_in?
 
   def set_time_zone(&block)
     time_zone = current_identity.time_zone

@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Organization < ActiveRecord::Base
+class Organization < ApplicationRecord
 
   include SparcShard
 
@@ -60,6 +60,7 @@ class Organization < ActiveRecord::Base
   def inclusive_child_services(scope, is_available=true)
     (is_available ? services : all_services).
       send(scope).
+      to_a.
       push(all_child_services(scope, is_available)).
       flatten.
       sort_by(&:name)

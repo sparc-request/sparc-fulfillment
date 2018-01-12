@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Procedure < ActiveRecord::Base
+class Procedure < ApplicationRecord
 
   STATUS_TYPES = %w(complete incomplete follow_up unstarted).freeze
 
@@ -51,6 +51,8 @@ class Procedure < ActiveRecord::Base
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
+
+  validate :cost_available, if: Proc.new { |procedure| procedure.status == "complete"}
 
   accepts_nested_attributes_for :notes
 
@@ -193,6 +195,19 @@ class Procedure < ActiveRecord::Base
   end
 
   private
+
+  def cost_available
+    date = completed_date ? completed_date : Date.today
+    if visit
+      cost = visit.line_item.try(:cost, protocol.sparc_funding_source, date) rescue nil
+    else
+      cost = service.try(:cost, protocol.sparc_funding_source, date) rescue nil
+    end
+
+    if cost.nil?
+      errors[:service_cost] << "No cost found, ensure that a valid pricing map exists for that date."
+    end
+  end
 
   def new_cost(funding_source, date)
     if visit

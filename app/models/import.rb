@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 require 'csv'
-class Import < ActiveRecord::Base
+class Import < ApplicationRecord
   has_attached_file :file
   validates_attachment :file, content_type: { content_type: 'text/plain' }
   has_attached_file :xml_file

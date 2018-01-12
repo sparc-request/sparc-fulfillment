@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Fulfillment < ActiveRecord::Base
+class Fulfillment < ApplicationRecord
 
   has_paper_trail
   acts_as_paranoid
@@ -40,6 +40,7 @@ class Fulfillment < ActiveRecord::Base
   validates :fulfilled_at, presence: true
   validates :quantity, presence: true
   validates_numericality_of :quantity
+  validate :cost_available
 
   after_create :update_line_item_name
 
@@ -55,6 +56,14 @@ class Fulfillment < ActiveRecord::Base
   end
 
   private
+
+  def cost_available
+    date = fulfilled_at ? fulfilled_at : Date.today
+    cost = line_item.try(:cost, line_item.protocol.sparc_funding_source, date) rescue nil
+    if cost.nil?
+      errors[:base] << "No cost found, ensure that a valid pricing map exists for that date."
+    end
+  end
 
   def update_line_item_name
     # adding first fulfillment to line_item with one time fee?

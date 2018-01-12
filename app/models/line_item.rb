@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class LineItem < ActiveRecord::Base
+class LineItem < ApplicationRecord
 
   has_paper_trail
   acts_as_paranoid
@@ -43,7 +43,7 @@ class LineItem < ActiveRecord::Base
             allow_nil: true
 
   validates :protocol_id, :service_id, presence: true
-  validates :quantity_requested, presence: true, numericality: { greater_than: 0 }, if: Proc.new { |li| li.one_time_fee }
+  validates :quantity_requested, presence: true, numericality: { greater_than_or_equal_to: 0 }, if: Proc.new { |li| li.one_time_fee }
 
   after_create :create_line_item_components
   after_create :increment_sparc_service_counter

@@ -38,7 +38,7 @@ RSpec.describe DocumentsController, type: :controller do
                             documentable_id: line_item.id,
                             documentable_type: 'LineItem')
 
-        get :show, { id: document.id }
+        get :show, params: { id: document.id }
 
         expect(response.headers["Content-Type"]).to include("text/csv")
         expect(response.body).to eq("a, b, c")
@@ -53,7 +53,7 @@ RSpec.describe DocumentsController, type: :controller do
                             documentable_id: identity.id,
                             documentable_type: 'Identity')
 
-        get :show, { id: document.id }
+        get :show, params: { id: document.id }
 
         expect(response.body).to eq("")
       end

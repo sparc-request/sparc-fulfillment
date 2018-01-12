@@ -91,7 +91,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     end
   end
 
-  context 'User tries to delete the last arm' do 
+  context 'User tries to delete the last arm' do
     scenario 'and sees the arm' do
       given_i_am_viewing_a_protocol_with_one_arm
       when_i_click_the_remove_arm_button
@@ -109,7 +109,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
         arm.delete
       end
     end
-    
+
     visit protocol_path @protocol
     wait_for_ajax
   end
@@ -117,7 +117,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   def given_i_am_viewing_a_protocol_with_multiple_arms
     @protocol = create_and_assign_protocol_to_me
     arm       = create(:arm, protocol: @protocol)
-    
+
     visit protocol_path @protocol
     wait_for_ajax
   end
@@ -125,8 +125,8 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def given_there_is_an_arm_with_completed_procedures
     participant  = create(:participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first)
-    procedure    = create(:procedure_complete, appointment: participant.appointments.first, arm: @protocol.arms.first, status: "complete", completed_date: "10/09/2010")
-    
+    procedure    = create(:procedure_complete, appointment: participant.appointments.first, arm: @protocol.arms.first, status: "complete", completed_date: Date.today.strftime('%m/%d/%Y'), service: create(:service))
+
     visit protocol_path @protocol
     wait_for_ajax
   end
@@ -155,7 +155,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   def when_i_set_the_name_to name
     fill_in 'Arm Name', with: name
   end
-  
+
   def when_i_set_the_subject_count_to count
     fill_in 'Subject Count', with: count
   end
