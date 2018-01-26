@@ -30,7 +30,7 @@ $ ->
       url: "/line_items/new"
       data: data
 
-  $(document).on 'change', '.components > .selectpicker', ->
+  $(document).on 'change', '.components .sla_components > .selectpicker', ->
     row_index   = $(this).parents("tr").data("index")
     line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
     data = components: $(this).val(), line_item_id: line_item_id
