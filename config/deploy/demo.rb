@@ -23,7 +23,9 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
+set :repo_url, 'git@sparc_fulfillment:sparc-request/sparc-fulfillment.git'
 server 'sparc-fulfillment-demo.musc.edu', user: 'capistrano', roles: %w{app db web}
+
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
@@ -39,8 +41,6 @@ server 'sparc-fulfillment-demo.musc.edu', user: 'capistrano', roles: %w{app db w
 # role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
 # role :db,  %w{deploy@example.com}
 
-
-
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
@@ -49,9 +49,10 @@ server 'sparc-fulfillment-demo.musc.edu', user: 'capistrano', roles: %w{app db w
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
 
+set :deploy_to, "/var/www/rails/fulfillment"
 set :branch, 'production'
 set :rails_env, 'demo'
-set :rvm_ruby_version, '2.1.5@cwf --create'
+set :rvm_ruby_version, '2.4.1@cwf --create'
 set :passenger_restart_with_touch, true
 #set :passenger_environment_variables, { :path => '/usr/local/rvm/gems/ruby-1.9.3-p286/bin:$PATH' }
 #set :passenger_rvm_ruby_version, 'ruby-1.9.3-p286'
