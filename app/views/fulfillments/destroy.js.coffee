@@ -1,0 +1,1 @@
+$('#fulfillments-table').bootstrapTable('refresh')
