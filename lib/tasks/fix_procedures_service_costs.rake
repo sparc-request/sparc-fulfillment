@@ -90,7 +90,7 @@ namespace :data do
       csv << []
       csv << []
       csv << ["One Time Fee (Fulfillments)"]
-      csv << ["Protocol/SRID:", "fulfillment ID:", "Service Name", "Previous Price", "Updated Price", "Service Completion Date:", ]
+      csv << ["Protocol/SRID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "fulfillment ID:", "Service Name", "Previous Price", "Updated Price", "Service Completion Date:", ]
       puts "Fixing One Time Fee Fulfillments..."
 
       if items.map(&:fulfillments).flatten.count >= 1
@@ -112,7 +112,7 @@ namespace :data do
               calculated_amount = fulfillment.line_item.cost(protocol.sparc_funding_source, fulfillment.fulfilled_at)
 
               if calculated_amount != current_amount
-                csv << [protocol.srid, fulfillment.id, fulfillment.service_name, current_amount, calculated_amount, fulfillment.fulfilled_at.strftime("%D")]
+                csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, fulfillment.id, fulfillment.service_name, current_amount, calculated_amount, fulfillment.fulfilled_at.strftime("%D")]
                 fulfillment.update_attribute(:service_cost, calculated_amount)
               end
 
