@@ -10,7 +10,6 @@ class FixFulfillmentsFromEditedLineItems < ActiveRecord::Migration[5.0]
     end
 
     #Find Fulfillments that have a service_id that doesn't match their line_item's service_id, and correct.
-    ##SCRATCH: Number that fit: 8 [9278, 17600, 22740, 22742, 22743, 23062, 23157, 29964]
     Fulfillment.includes(:line_item).find_each do |fulfillment|
       if fulfillment.service_id != fulfillment.line_item.service_id
         begin
