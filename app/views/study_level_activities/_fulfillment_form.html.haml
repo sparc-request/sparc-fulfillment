@@ -20,7 +20,7 @@
 
 .modal-dialog
   .modal-content
-    = form_for fulfillment, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
+    = form_for fulfillment, {remote: true, html: {class: "form-horizontal fulfillment-form", role: "form"}} do |form|
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
@@ -54,4 +54,4 @@
         .center-block
           %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: fulfillment.line_item_id}}
             = t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}
+          %input.btn.btn-primary.add_fulfillment{type: 'submit', value: t(:actions)[:save]}

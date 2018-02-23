@@ -88,3 +88,7 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
+
+  $(document).on 'click', '.add_fulfillment', ->
+    $('.add_fulfillment').prop('disabled', true)
+    $('.fulfillment-form').submit()
