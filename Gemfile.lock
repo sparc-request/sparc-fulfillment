@@ -281,12 +281,12 @@ GEM
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1)
-    paperclip (4.3.7)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
+    paperclip (5.2.1)
+      activemodel (>= 4.2.0)
+      activesupport (>= 4.2.0)
       cocaine (~> 0.5.5)
       mime-types
-      mimemagic (= 0.3.0)
+      mimemagic (~> 0.3.0)
     paranoia (2.4.0)
       activerecord (>= 4.0, < 5.2)
     progress_bar (1.1.0)
@@ -508,7 +508,7 @@ DEPENDENCIES
   omniauth
   omniauth-shibboleth
   paper_trail (~> 4.0.0.beta)
-  paperclip (~> 4.3, >= 4.3.6)
+  paperclip (~> 5.2, >= 5.2.1)
   paranoia (~> 2.0)
   progress_bar
   pry
