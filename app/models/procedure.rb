@@ -167,6 +167,7 @@ class Procedure < ApplicationRecord
 
     #Reset Status
     self.update_attributes(status: "unstarted")
+    self.update_attributes(service_cost: nil)
     self.reload
   end
 
