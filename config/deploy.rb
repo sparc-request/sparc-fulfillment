@@ -1,4 +1,4 @@
-# Copyright © 2011-2017 MUSC Foundation for Research Development~
+# Copyright © 2011-2018 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -30,8 +30,8 @@ set :repo_url, 'git@github.com:bmic-development/sparc-fulfillment.git'
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, '/var/www/rails/fulfillment'
 
-# Default value for :scm is :git
-set :scm, :git
+# Default value for :scm is :git - Depreciation notice from capistrano
+#set :scm, :git
 
 # Default value for :format is :pretty
 # set :format, :pretty

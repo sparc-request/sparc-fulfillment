@@ -1,4 +1,4 @@
-# Copyright © 2011-2017 MUSC Foundation for Research Development~
+# Copyright © 2011-2018 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -43,6 +43,7 @@ class Fulfillment < ApplicationRecord
   validate :cost_available
 
   after_create :update_line_item_name
+  after_destroy :remove_line_item_name
 
   scope :fulfilled_in_date_range, ->(start_date, end_date) {
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
@@ -67,8 +68,15 @@ class Fulfillment < ApplicationRecord
 
   def update_line_item_name
     # adding first fulfillment to line_item with one time fee?
-    if line_item.fulfillments.size == 1 && line_item.one_time_fee
+    if line_item.one_time_fee && line_item.fulfillments.size == 1
       line_item.set_name
+    end
+  end
+
+  def remove_line_item_name
+    # service.decrement(:line_items_count)
+    if line_item.one_time_fee && line_item.fulfillments.size == 0
+      line_item.update_attributes(name: nil)
     end
   end
 end
