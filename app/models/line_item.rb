@@ -19,7 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class LineItem < ApplicationRecord
-  include ActiveModel::Dirty
 
   has_paper_trail
   acts_as_paranoid
@@ -113,7 +112,7 @@ class LineItem < ApplicationRecord
   private
 
   def reset_components
-    if self.service_id_changed? && one_time_fee
+    if service_id_changed? && one_time_fee
       if service.components.present?
         components.destroy_all
         create_line_item_components
