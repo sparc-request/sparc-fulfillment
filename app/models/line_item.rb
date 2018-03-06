@@ -48,6 +48,7 @@ class LineItem < ApplicationRecord
   after_create :create_line_item_components
   after_create :increment_sparc_service_counter
   after_destroy :decrement_sparc_service_counter
+  after_update :reset_components
 
   def set_name
     update_attributes(name: service.name)
@@ -109,6 +110,15 @@ class LineItem < ApplicationRecord
   end
 
   private
+
+  def reset_components
+    if service_id_changed? && one_time_fee
+      if service.components.present?
+        components.destroy_all
+        create_line_item_components
+      end
+    end
+  end
 
   def create_line_item_components
     if one_time_fee && service.components.present?
