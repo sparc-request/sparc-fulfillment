@@ -114,7 +114,7 @@ class LineItem < ApplicationRecord
   def reset_components
     if service_id_changed? && one_time_fee
       if service.components.present?
-        components.destroy_all
+        components.each{|component| component.really_destroy!}
         create_line_item_components
       end
     end
