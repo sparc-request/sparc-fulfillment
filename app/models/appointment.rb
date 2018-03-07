@@ -96,7 +96,6 @@ class Appointment < ApplicationRecord
               appointment_id: self.id,
               visit_id: visit.id,
               service_name: li.service.name,
-              service_cost: li.cost(li.protocol.sparc_funding_source),
               service_id: li.service.id,
               sparc_core_id: li.service.sparc_core_id,
               sparc_core_name: li.service.sparc_core_name
