@@ -24,10 +24,10 @@
   %td.billing
     = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control billing_type selectpicker"
   %td.status
-    .btn-group{data: {toggle: "buttons"}, class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }"}
+    .btn-group{data: {toggle: "buttons"}, class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' } #{procedure.invoiced? ? 'invoiced_disabled' : ''}"}
       %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : 'inactive'} #{ procedure.appt_started? ? '' : 'disabled' }", data: {core_id: "#{procedure.sparc_core_id}"}}
         %input{class: "procedure_status", type: "radio", value: "complete", autocomplete: "off", id: "complete_button_#{procedure.id}"} Complete
-      %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''} #{ procedure.appt_started? ? '' : 'disabled' }"}
+      %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''} #{ (procedure.appt_started? && !procedure.invoiced?) ? '' : 'disabled' }"}
         %input{class: "procedure_status", type: "radio", value: "incomplete", autocomplete: "off", id: "incomplete_button_#{procedure.id}"} Incomplete
   %td.followup{id: "follow_up_#{procedure.id}"}
     = render partial: "/appointments/followup_calendar", locals: { procedure: procedure }
@@ -40,6 +40,7 @@
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
     = procedure_notes_formatter(procedure)
-  %td.remove
-    %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}
-      %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}
+  - unless procedure.invoiced
+    %td.remove
+      %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}
+        %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}

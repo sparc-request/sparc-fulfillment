@@ -26,7 +26,8 @@
         .col-xs-6
           = text_field_tag 'start_date', '', class: 'form-control', readonly: true
         .col-xs-1.reset_button
-          %button.btn.btn-warning.reset_visit{type: "button"}= t(:appointment)[:reset_visit]
+          %button.btn.btn-warning.reset_visit{type: "button", class: hidden_class(procedures_invoiced?(appointment))}= t(:appointment)[:reset_visit]
+          / %button.btn.btn-warning.reset_visit{type: "button", class: "#{procedures_invoiced?(appointment) ? 'disabled' : ''}"}= t(:appointment)[:reset_visit]
 
   .start_date_btn{class: hidden_class(!appointment.start_date.blank?) }
     %button.btn.btn-success.start_visit= t(:appointment)[:start_visit]
