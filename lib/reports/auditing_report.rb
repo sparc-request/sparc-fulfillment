@@ -36,7 +36,7 @@ class AuditingReport < Report
 
     CSV.open(document.path, "wb") do |csv|
 
-      protocols = Protocol.find(@params[:protocols])
+      protocols = Protocol.where(id: @params[:protocols]).includes(:procedures, :line_items)
 
       if @params[:service_type] == "Clinical Services"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
@@ -64,19 +64,20 @@ class AuditingReport < Report
 
         protocols.each do |protocol|
           protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
-            participant = procedure.appointment.participant
+            appointment = procedure.appointment
+            participant = appointment.participant
 
             csv << [
               protocol.srid,
               participant.full_name,
               participant.label,
-              procedure.appointment.arm.name,
-              procedure.appointment.name,
+              appointment.arm.name,
+              appointment.name,
               format_date(procedure.completed_date.nil? ? nil : procedure.completed_date),
               format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date),
               format_date(procedure.follow_up? ? procedure.handled_date : nil),
               added_formatter(procedure),
-              procedure.service.organization.name,
+              procedure.sparc_core_name,
               procedure.service_name,
               complete_formatter(procedure),
               procedure.formatted_billing_type,
