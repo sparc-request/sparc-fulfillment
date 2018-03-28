@@ -146,6 +146,7 @@ feature 'Incomplete Procedure', js: true do
 
   def when_i_begin_the_appointment
     find('button.start_visit').click
+    wait_for_ajax
   end
 
   def when_i_complete_the_procedure
