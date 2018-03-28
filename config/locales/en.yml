@@ -149,6 +149,7 @@ en:
     add_fulfillment: "Add Fulfillment"
     list_fulfillments: "List"
     components: "Fulfillment Components"
+    invoiced: "Invoiced"
     edit: "Edit Fulfillment"
     flash_messages:
       created: "Fulfillment Created"
