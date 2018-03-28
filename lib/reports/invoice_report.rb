@@ -122,7 +122,6 @@ class InvoiceReport < Report
 
             total += fulfillment.total_cost
             total_with_subsidy += protocol.sub_service_request.subsidy ? fulfillment.total_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : fulfillment.total_cost
-            fulfillment.update_attributes(invoiced: true)
           end
         end
 
@@ -190,7 +189,6 @@ class InvoiceReport < Report
                   service_cost = service_group.size * procedure.service_cost.to_f
                   total += service_cost
                   total_with_subsidy += protocol.sub_service_request.subsidy ? service_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : service_cost
-                  procedure.update_attributes(invoiced: true)
                 end
               end
             end
