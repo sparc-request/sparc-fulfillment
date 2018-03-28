@@ -300,6 +300,7 @@ en:
     r_t: "R/T"
     select_reason: "Select a Reason"
     status: "Status"
+    invoiced: "Invoiced"
 
   protocol:
     object: "Protocol"

@@ -40,7 +40,10 @@
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
     = procedure_notes_formatter(procedure)
-  - unless procedure.invoiced
+  - if procedures_invoiced?(procedure.appointment)
+    %td.invoiced
+      = (procedure.invoiced? ? "Yes" : "No")
+  - unless procedure.invoiced?
     %td.remove
       %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}
         %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}
