@@ -11,8 +11,8 @@ class FixFulfillmentsFromEditedLineItems < ActiveRecord::Migration[5.0]
 
     #Find Fulfillments that have a service_id that doesn't match their line_item's service_id, and correct.
     Fulfillment.includes(:line_item).find_each do |fulfillment|
-      if fulfillment.service_id != fulfillment.line_item.service_id
-        begin
+      begin
+        if fulfillment.service_id != fulfillment.line_item.service_id
           line_item = fulfillment.line_item
 
           #Correct fulfillment service name, service id, and service cost
@@ -29,11 +29,11 @@ class FixFulfillmentsFromEditedLineItems < ActiveRecord::Migration[5.0]
           fulfillment.components.destroy_all
 
           puts "Fixing Fulfillment: #{fulfillment.id}"
-        rescue Exception => e
-          puts "#"*20
-          puts e.message
-          puts "#"*20
         end
+      rescue Exception => e
+        puts "#"*20
+        puts e.message
+        puts "#"*20
       end
     end
   end
