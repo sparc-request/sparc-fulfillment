@@ -112,7 +112,6 @@ $ ->
       url:  "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.reset_visit', ->
-    console.log $(this)
     data = appointment_id: $(this).parents('.row.appointment').data('id')
     if confirm("Resetting this appointment will delete all data which has been recorded for this appointment, are you sure you wish to continue?")
       $.ajax
