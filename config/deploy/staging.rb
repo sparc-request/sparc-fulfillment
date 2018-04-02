@@ -54,7 +54,7 @@ server 'cwf-s.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 # Feel free to add new variables to customise your setup.
 
 set :branch, 'staging'
-set :rails_env, 'staging'
+set :rails_env, 'production'
 set :rvm_ruby_version, '2.4.2@fulfillment-staging --create'
 
 set :passenger_restart_with_touch, true
