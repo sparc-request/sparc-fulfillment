@@ -1,4 +1,4 @@
-# Copyright © 2011-2017 MUSC Foundation for Research Development~
+# Copyright © 2011-2018 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -39,7 +39,7 @@ namespace :data do
 
       ##Procedures Section
       csv << ["Per Patient Per Visit (Procedures)"]
-      csv << ["Protocol ID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
+      csv << ["Protocol/SRID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
       puts "Fixing Procedures..."
 
       items.each do |item|
@@ -68,12 +68,12 @@ namespace :data do
                 end
 
                 if calculated_amount != current_amount
-                  csv << [protocol.sparc_id, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
+                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
                   procedure.update_attribute(:service_cost, calculated_amount)
                 end
               else
                 ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                csv << [protocol.sparc_id, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
+                csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
                 procedure.update_attribute(:service_cost, nil)
               end
 
@@ -90,7 +90,7 @@ namespace :data do
       csv << []
       csv << []
       csv << ["One Time Fee (Fulfillments)"]
-      csv << ["Protocol ID:", "fulfillment ID:", "Service Name", "Previous Price", "Updated Price", "Service Completion Date:", ]
+      csv << ["Protocol/SRID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "fulfillment ID:", "Service Name", "Previous Price", "Updated Price", "Service Completion Date:", ]
       puts "Fixing One Time Fee Fulfillments..."
 
       if items.map(&:fulfillments).flatten.count >= 1
@@ -112,7 +112,7 @@ namespace :data do
               calculated_amount = fulfillment.line_item.cost(protocol.sparc_funding_source, fulfillment.fulfilled_at)
 
               if calculated_amount != current_amount
-                csv << [protocol.sparc_id, fulfillment.id, fulfillment.service_name, current_amount, calculated_amount, fulfillment.fulfilled_at.strftime("%D")]
+                csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, fulfillment.id, fulfillment.service_name, current_amount, calculated_amount, fulfillment.fulfilled_at.strftime("%D")]
                 fulfillment.update_attribute(:service_cost, calculated_amount)
               end
 

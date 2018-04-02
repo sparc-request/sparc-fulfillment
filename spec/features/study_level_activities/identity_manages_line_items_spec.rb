@@ -1,4 +1,4 @@
-# Copyright © 2011-2017 MUSC Foundation for Research Development~
+# Copyright © 2011-2018 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -139,7 +139,8 @@ feature 'Line Items', js: true do
   end
 
   def when_i_fill_in_the_edit_line_item_form
-    bootstrap_select '#line_item_service_id', 'Admiral Tuskface'
+    fill_in 'Account', with: "Purposeful String"
+    fill_in 'Contact', with: "Purposeful String II"
     click_button 'Save'
     wait_for_ajax
   end
@@ -168,7 +169,8 @@ feature 'Line Items', js: true do
   end
 
   def then_i_should_see_the_changes_on_the_page
-    expect(page).to have_content('Admiral Tuskface')
+    expect(page).to have_content("Purposeful String")
+    expect(page).to have_content("Purposeful String II")
   end
 
   def then_the_line_item_should_pull_pricing_map_data

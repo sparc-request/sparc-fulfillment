@@ -1,4 +1,4 @@
-# Copyright © 2011-2017 MUSC Foundation for Research Development~
+# Copyright © 2011-2018 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -68,6 +68,14 @@ class FulfillmentsController < ApplicationController
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
     else
       @errors = @fulfillment.errors
+    end
+  end
+
+  def destroy
+    @fulfillment = Fulfillment.find(params[:id])
+    @fulfillment.destroy
+    respond_to do |format|
+      format.js
     end
   end
 

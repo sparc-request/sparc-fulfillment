@@ -1,4 +1,4 @@
-# Copyright © 2011-2017 MUSC Foundation for Research Development~
+# Copyright © 2011-2018 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -54,8 +54,9 @@ server 'cwf-s.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 # Feel free to add new variables to customise your setup.
 
 set :branch, 'staging'
-set :rails_env, 'production'
-set :rvm_ruby_version, '2.4.1@fulfillment-staging --create'
+set :rails_env, 'staging'
+set :rvm_ruby_version, '2.4.2@fulfillment-staging --create'
+
 set :passenger_restart_with_touch, true
 #set :passenger_environment_variables, { :path => '/usr/local/rvm/gems/ruby-1.9.3-p286/bin:$PATH' }
 #set :passenger_rvm_ruby_version, 'ruby-1.9.3-p286'
