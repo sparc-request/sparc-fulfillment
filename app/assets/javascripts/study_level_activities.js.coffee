@@ -99,3 +99,6 @@ $ ->
       allowSubmit = false
     else
       return false
+
+  $(document).on 'click', '#date_fulfilled_field, #fulfillment_quantity', ->
+    allowSubmit = true
