@@ -87,6 +87,7 @@ feature 'User completes Procedure', js: true do
 
   def when_i_start_the_appointment
     find('button.start_visit').click
+    wait_for_ajax
   end
 
   def when_i_complete_the_procedure
