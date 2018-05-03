@@ -196,26 +196,27 @@ $ ->
       url: "/procedures/#{procedure_id}.js"
 
   $(document).on 'click', 'label.status.incomplete', ->
-    active        = $(this).hasClass('active')
-    procedure_id  = $(this).parents('.procedure').data('id')
-    # undo incomplete status
-    if active
-      data = procedure:
-              status: "unstarted"
-              performer_id: null
+    if !$(this).hasClass('disabled')
+      active        = $(this).hasClass('active')
+      procedure_id  = $(this).parents('.procedure').data('id')
+      # undo incomplete status
+      if active
+        data = procedure:
+                status: "unstarted"
+                performer_id: null
 
-      $.ajax
-        type: 'PUT'
-        data: data
-        url: "/procedures/#{procedure_id}.js"
+        $.ajax
+          type: 'PUT'
+          data: data
+          url: "/procedures/#{procedure_id}.js"
 
-    else
-      data = partial: "incomplete", procedure: status: "incomplete"
+      else
+        data = partial: "incomplete", procedure: status: "incomplete"
 
-      $.ajax
-        type: 'GET'
-        data: data
-        url: "/procedures/#{procedure_id}/edit.js"
+        $.ajax
+          type: 'GET'
+          data: data
+          url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', 'button.incomplete_all', ->
     status = 'incomplete'
@@ -391,6 +392,9 @@ $ ->
   # Display a helpful message when user clicks on a disabled UI element
   $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
     alert(I18n["appointment"]["warning"])
+
+  $(document).on 'click', '.invoiced_disabled, .complete-all-container.invoiced_disabled, .incomplete-all-container.invoiced_disabled', ->
+    alert(I18n["appointment"]["procedure_invoiced_warning"])
 
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")

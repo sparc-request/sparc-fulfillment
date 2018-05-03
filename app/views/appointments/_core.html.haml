@@ -45,6 +45,9 @@
             = t(:procedure)[:performed_by]
           %th.notes
             = t(:procedure)[:notes]
+          - if procedures_invoiced?(appointment)
+            %th.invoiced
+              = t(:procedure)[:invoiced]
           %th.remove
             = t(:procedure)[:remove]
         %tbody
