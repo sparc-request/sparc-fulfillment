@@ -103,6 +103,11 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'sub_service_request/:id', to: redirect { |params, request|
+    protocol_id = Protocol.where(sub_service_request_id: params[:id]).first.id
+    "/protocols/#{protocol_id}"
+  }
+
   mount API::Base => '/'
 
   root 'protocols#index'

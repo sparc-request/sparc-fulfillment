@@ -43,6 +43,7 @@ feature 'User completes Procedure', js: true do
     scenario 'and sees the complete note' do
       given_i_have_added_a_procedure_to_an_appointment
       when_i_start_the_appointment
+      wait_for_ajax
       when_i_incomplete_the_procedure
       when_i_complete_the_procedure
       when_i_view_the_notes_list

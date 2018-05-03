@@ -47,4 +47,8 @@ module AppointmentHelper
                   has_notes: procedure.notes.any?,
                   button_class: "#{procedure.appt_started? ? '' : 'disabled'}"})
   end
+
+  def procedures_invoiced?(appointment)
+    appointment.procedures.any?{|procedure| procedure.invoiced == true}
+  end
 end

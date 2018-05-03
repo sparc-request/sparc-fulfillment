@@ -395,5 +395,8 @@ $ ->
   $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
     alert(I18n["appointment"]["warning"])
 
+  $(document).on 'click', '.invoiced_disabled, .complete-all-container.invoiced_disabled, .incomplete-all-container.invoiced_disabled', ->
+    alert(I18n["appointment"]["procedure_invoiced_warning"])
+
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
