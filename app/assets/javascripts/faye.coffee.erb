@@ -20,8 +20,8 @@
 
 $ ->
   unless <%= Rails.env.test? %>
-    host    = "<%= ENV.fetch('CWF_FAYE_HOST') %>"
-    scheme  = "<%= ENV.fetch('GLOBAL_SCHEME') %>"
+    host    = "<%= ENV['CWF_FAYE_HOST'] %>"
+    scheme  = "<%= ENV['GLOBAL_SCHEME'] %>"
     faye    = new Faye.Client("#{scheme}://#{host}/faye")
 
     faye.disable('websocket')
