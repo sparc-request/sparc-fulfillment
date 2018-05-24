@@ -173,27 +173,28 @@ $ ->
         pg.update_group_membership(procedure, original_group_id)
 
   $(document).on 'click', 'label.status.complete', ->
-    active        = $(this).hasClass('active')
-    procedure_id  = $(this).parents('.procedure').data('id')
-    if active
-      # undo complete status
-      $(this).removeClass('selected_before')
-      $(".procedure[data-id='#{procedure_id}'] .completed_date_field input").val(null)
-      data = procedure:
-              status: "unstarted"
-              performer_id: null
-    else
-      #Actually complete procedure
-      $(this).addClass('selected_before')
-      $(this).removeClass('inactive')
-      data = procedure:
-              status: "complete"
-              performer_id: gon.current_identity_id
+    if !$(this).hasClass('disabled')
+      active        = $(this).hasClass('active')
+      procedure_id  = $(this).parents('.procedure').data('id')
+      if active
+        # undo complete status
+        $(this).removeClass('selected_before')
+        $(".procedure[data-id='#{procedure_id}'] .completed_date_field input").val(null)
+        data = procedure:
+                status: "unstarted"
+                performer_id: null
+      else
+        #Actually complete procedure
+        $(this).addClass('selected_before')
+        $(this).removeClass('inactive')
+        data = procedure:
+                status: "complete"
+                performer_id: gon.current_identity_id
 
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/procedures/#{procedure_id}.js"
+      $.ajax
+        type: 'PUT'
+        data: data
+        url: "/procedures/#{procedure_id}.js"
 
   $(document).on 'click', 'label.status.incomplete', ->
     if !$(this).hasClass('disabled')
@@ -271,11 +272,12 @@ $ ->
       url: "/custom_appointments/new.js"
 
   $(document).on 'click', 'button.followup.new', ->
-    procedure_id  = $(this).parents('.procedure').data('id')
+    if !$(this).hasClass('disabled')
+      procedure_id  = $(this).parents('.procedure').data('id')
 
-    $.ajax
-      type: 'GET'
-      url: "/procedures/#{procedure_id}/edit.js"
+      $.ajax
+        type: 'GET'
+        url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', '.procedure button.delete', ->
     element      = $(this).parents(".procedure")
@@ -377,10 +379,11 @@ $ ->
         rows = $("tr.procedure[data-group-id='#{group_id}']")
 
         procedure_ids.push $.map rows, (row) ->
-          $(row).data('id')
+          disabled = $(row).data('disabled')
+          if disabled == false
+            $(row).data('id')
 
       find_ids group_id for group_id in group_ids
-
       return procedure_ids
 
   close_open_procedure_groups = (groups, group_id) ->
@@ -391,10 +394,20 @@ $ ->
 
   # Display a helpful message when user clicks on a disabled UI element
   $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
-    alert(I18n["appointment"]["warning"])
+    alert(I18n["appointment"]["warning"])   
 
   $(document).on 'click', '.invoiced_disabled, .complete-all-container.invoiced_disabled, .incomplete-all-container.invoiced_disabled', ->
     alert(I18n["appointment"]["procedure_invoiced_warning"])
 
+  $(document).on 'focus', '.dropdown-toggle', (e) ->
+    if $(this).parent().hasClass('disable-select-box')
+      alert(I18n["appointment"]["procedure_invoiced_warning"])
+      $(this).blur()
+
   $(document).on 'click', '.completed_date_btn.contains_disabled', ->
     alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
+
+  $(document).on 'click', '.disabled-status.btn-group .btn.disabled ', (e) ->
+    e.stopPropagation()
+    alert(I18n["appointment"]["procedure_invoiced_warning"])
+
