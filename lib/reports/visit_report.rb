@@ -37,17 +37,32 @@ class VisitReport < Report
   VISIT_NAME  = :name
 
   # report columns
-  REPORT_COLUMNS = ["Protocol ID (SRID)", 
-                    "Patient Last Name", 
-                    "Patient First Name", 
-                    "Visit Name", 
-                    "Custom Visit", 
-                    "Start Date", 
-                    "Completed Date", 
-                    "Visit Duration (minutes)", 
-                    "Type of Visit", 
-                    "Visit Indications", 
-                    ]
+  if ENV.fetch('RMID_URL'){nil}
+    REPORT_COLUMNS = ["Protocol ID (SRID)",
+                      "RMID",
+                      "Patient Last Name",
+                      "Patient First Name",
+                      "Visit Name",
+                      "Custom Visit",
+                      "Start Date",
+                      "Completed Date",
+                      "Visit Duration (minutes)",
+                      "Type of Visit",
+                      "Visit Indications",
+                      ]
+  else
+    REPORT_COLUMNS = ["Protocol ID (SRID)",
+                      "Patient Last Name",
+                      "Patient First Name",
+                      "Visit Name",
+                      "Custom Visit",
+                      "Start Date",
+                      "Completed Date",
+                      "Visit Duration (minutes)",
+                      "Type of Visit",
+                      "Visit Indications",
+                      ]
+  end
 
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
@@ -63,13 +78,16 @@ class VisitReport < Report
                    where("#{START_DATE} > ? AND #{START_DATE} < ? AND #{COMPLETION} != ?", from_start_date, to_start_date, "unstarted").
                    uniq.
                    pluck(  PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, VISIT_GROUP, TYPE, APPT_ID, COMPLETION, :sparc_core_name, CONTENTS)
+
+      get_protocol_rmid(result_set) if ENV.fetch('RMID_URL'){nil}
       get_protocol_srids(result_set)
+
       result_set.group_by { |protocol, last_name, first_name, visit_name| [protocol, last_name, first_name, visit_name] }.
-        map      { |grouping, appointments| get_appointment_info(grouping) << 
-                                            is_custom_visit(appointments) << 
-                                            get_date(appointments[0][4]) << 
-                                            get_date(appointments[0][5]) << 
-                                            get_duration(appointments[0]) << 
+        map      { |grouping, appointments| get_appointment_info(grouping) <<
+                                            is_custom_visit(appointments) <<
+                                            get_date(appointments[0][4]) <<
+                                            get_date(appointments[0][5]) <<
+                                            get_duration(appointments[0]) <<
                                             get_content(appointments[0]) <<
                                             get_statuses(appointments[0][8])}.
         sort     { |x, y| x <=> y || 1 }.
@@ -78,7 +96,11 @@ class VisitReport < Report
   end
 
   def get_appointment_info(grouping)
-    [ @srid[grouping[0]] ] + grouping[1..3]
+    if ENV.fetch('RMID_URL'){nil}
+      [ @srid[grouping[0]] ] + [ @rmid[grouping[0]] ] + grouping[1..3]
+    else
+      [ @srid[grouping[0]] ] + grouping[1..3]
+    end
   end
 
   def is_custom_visit(appointments)
@@ -100,6 +122,15 @@ class VisitReport < Report
                   select(:id, :sparc_id, :sub_service_request_id). # cols necessary for SRID
                   where(id: protocol_ids).
                   map { |protocol| [protocol.id, protocol.srid] }]
+  end
+
+  def get_protocol_rmid(result_set)
+    protocol_ids = result_set.map(&:first).uniq
+    # RMID's indexed by protocol id
+    @rmid = Hash[ Protocol.
+                  select(:id, :sparc_id). # cols necessary for RMID
+                  where(id: protocol_ids).
+                  map { |protocol| [protocol.id, protocol.research_master_id] }]
   end
 
   def get_content(appointments)
