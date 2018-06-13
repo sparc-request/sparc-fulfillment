@@ -69,6 +69,7 @@ class Protocol < ApplicationRecord
            :title,
            :funding_source,
            :potential_funding_source,
+           :research_master_id,
            to: :sparc_protocol
 
   delegate :subsidy_committed,
