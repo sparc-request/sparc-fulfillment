@@ -44,3 +44,5 @@ USE_EPIC=false
 USE_INDIRECT_COST=false
 ENVIRONMENT=testing
 TESTING_EMAIL=sparcrequest@gmail.com
+# add the following line if you have a Research Master ID service (RMID)
+RMID_URL=http://url
