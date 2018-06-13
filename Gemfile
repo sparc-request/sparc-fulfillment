@@ -41,7 +41,7 @@ gem 'remotipart'
 gem 'rest-client'
 gem 'rubyzip', '>= 1.2.1'
 gem 'sass-rails'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', '~> 1.0.0', group: :doc
 gem 'sprockets-rails'
 gem 'therubyracer'
 gem 'thin'
