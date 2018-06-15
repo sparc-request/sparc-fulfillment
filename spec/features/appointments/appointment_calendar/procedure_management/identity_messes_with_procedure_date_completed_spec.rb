@@ -81,6 +81,7 @@ feature 'User messes with a procedures date completed', js: true do
 
   def given_an_appointment_has_started
     find('button.start_visit').click
+    wait_for_ajax
   end
 
   def when_i_complete_the_procedure

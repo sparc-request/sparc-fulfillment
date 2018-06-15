@@ -97,19 +97,20 @@ $ ->
           url: "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.complete_visit', ->
-    start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
-    end_date = new Date($.now())
+    unless $(this).hasClass('disabled')
+      start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
+      end_date = new Date($.now())
 
-    if start_date > end_date
-      data = field: "completed_date", appointment: completed_date: start_date.toUTCString()
-    else
-      data = field: "completed_date", appointment: completed_date: end_date.toUTCString()
+      if start_date > end_date
+        data = field: "completed_date", appointment: completed_date: start_date.toUTCString()
+      else
+        data = field: "completed_date", appointment: completed_date: end_date.toUTCString()
 
-    appointment_id = $(this).parents('.row.appointment').data('id')
-    $.ajax
-      type: 'PUT'
-      data: data
-      url:  "/appointments/#{appointment_id}.js"
+      appointment_id = $(this).parents('.row.appointment').data('id')
+      $.ajax
+        type: 'PUT'
+        data: data
+        url:  "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.reset_visit', ->
     data = appointment_id: $(this).parents('.row.appointment').data('id')
@@ -173,30 +174,31 @@ $ ->
         pg.update_group_membership(procedure, original_group_id)
 
   $(document).on 'click', 'label.status.complete', ->
-    active        = $(this).hasClass('active')
-    procedure_id  = $(this).parents('.procedure').data('id')
-    if active
-      # undo complete status
-      $(this).removeClass('selected_before')
-      $(".procedure[data-id='#{procedure_id}'] .completed_date_field input").val(null)
-      data = procedure:
-              status: "unstarted"
-              performer_id: null
-    else
-      #Actually complete procedure
-      $(this).addClass('selected_before')
-      $(this).removeClass('inactive')
-      data = procedure:
-              status: "complete"
-              performer_id: gon.current_identity_id
+    unless $(this).hasClass('disabled')
+      active        = $(this).hasClass('active')
+      procedure_id  = $(this).parents('.procedure').data('id')
+      if active
+        # undo complete status
+        $(this).removeClass('selected_before')
+        $(".procedure[data-id='#{procedure_id}'] .completed_date_field input").val(null)
+        data = procedure:
+                status: "unstarted"
+                performer_id: null
+      else
+        #Actually complete procedure
+        $(this).addClass('selected_before')
+        $(this).removeClass('inactive')
+        data = procedure:
+                status: "complete"
+                performer_id: gon.current_identity_id
 
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/procedures/#{procedure_id}.js"
+      $.ajax
+        type: 'PUT'
+        data: data
+        url: "/procedures/#{procedure_id}.js"
 
   $(document).on 'click', 'label.status.incomplete', ->
-    if !$(this).hasClass('disabled')
+    unless $(this).hasClass('disabled')
       active        = $(this).hasClass('active')
       procedure_id  = $(this).parents('.procedure').data('id')
       # undo incomplete status
