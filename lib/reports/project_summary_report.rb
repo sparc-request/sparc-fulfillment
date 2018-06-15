@@ -39,6 +39,7 @@ class ProjectSummaryReport < Report
 
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]
+      csv << ["RMID:", "#{protocol.research_master_id}"] if ENV.fetch('RMID_URL'){nil}
       csv << ["PI Name:", "#{protocol.pi ? protocol.pi.full_name : nil}"]
       csv << ["From:", "#{format_date(Time.strptime(@params[:start_date], "%m/%d/%Y"))}"]
       csv << ["To:", "#{format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))}"]

@@ -97,19 +97,20 @@ $ ->
           url: "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.complete_visit', ->
-    start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
-    end_date = new Date($.now())
+    unless $(this).hasClass('disabled')
+      start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
+      end_date = new Date($.now())
 
-    if start_date > end_date
-      data = field: "completed_date", appointment: completed_date: start_date.toUTCString()
-    else
-      data = field: "completed_date", appointment: completed_date: end_date.toUTCString()
+      if start_date > end_date
+        data = field: "completed_date", appointment: completed_date: start_date.toUTCString()
+      else
+        data = field: "completed_date", appointment: completed_date: end_date.toUTCString()
 
-    appointment_id = $(this).parents('.row.appointment').data('id')
-    $.ajax
-      type: 'PUT'
-      data: data
-      url:  "/appointments/#{appointment_id}.js"
+      appointment_id = $(this).parents('.row.appointment').data('id')
+      $.ajax
+        type: 'PUT'
+        data: data
+        url:  "/appointments/#{appointment_id}.js"
 
   $(document).on 'click', '.reset_visit', ->
     data = appointment_id: $(this).parents('.row.appointment').data('id')
@@ -197,7 +198,7 @@ $ ->
         url: "/procedures/#{procedure_id}.js"
 
   $(document).on 'click', 'label.status.incomplete', ->
-    if !$(this).hasClass('disabled')
+    unless $(this).hasClass('disabled')
       active        = $(this).hasClass('active')
       procedure_id  = $(this).parents('.procedure').data('id')
       # undo incomplete status
