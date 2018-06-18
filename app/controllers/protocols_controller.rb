@@ -26,17 +26,17 @@ class ProtocolsController < ApplicationController
   respond_to :json, :html
 
   def index
+    @page = params[:page]
+    @status = params[:status] || 'all'
+    @offset = params[:offset] || 50
+    @limit = params[:limit] || 50
+
+    find_protocols_for_index
+
     respond_to do |format|
       format.html { render }
-      format.json do
-        @protocols = current_identity.protocols
-
-        if params[:status].present? && params[:status] != 'all'
-          @protocols = @protocols.select { |protocol| protocol.status == params[:status] }
-        end
-
-        render
-      end
+      format.json { render }
+      format.js
     end
   end
 
@@ -52,6 +52,31 @@ class ProtocolsController < ApplicationController
   end
 
   private
+
+  def find_protocols_for_index
+    if @status != 'all'
+      @protocols = current_identity.protocols.
+        joins(:sub_service_request)
+        .where(sub_service_requests: { status: @status })
+      @total = @protocols.count
+      @protocols = @protocols.limit(@limit).offset(@offset)
+      search_protocol_attrs
+    else
+      @protocols = current_identity.protocols
+      @total = @protocols.count
+      @protocols = @protocols.limit(@limit).offset(@offset)
+      search_protocol_attrs
+    end
+  end
+
+  def search_protocol_attrs
+    if params[:search] && !params[:search].blank?
+      search_term = params[:search]
+      @protocols = @protocols.joins(:sparc_protocol, project_roles: :identity).
+        where("protocols.sparc_id LIKE ? OR #{Sparc::Protocol.table_name}.short_title LIKE ? OR (#{ProjectRole.table_name}.role = 'primary-pi' AND CONCAT(`first_name`, ' ', `last_name`) LIKE ?)", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
+      @total = @protocols.count
+    end
+  end
 
   def find_protocol
     unless @protocol = Protocol.where(id: params[:id]).first
