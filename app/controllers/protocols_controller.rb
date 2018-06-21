@@ -72,8 +72,15 @@ class ProtocolsController < ApplicationController
   def search_protocol_attrs
     if params[:search] && !params[:search].blank?
       search_term = params[:search]
-      @protocols = @protocols.joins(:sparc_protocol, project_roles: :identity).
-        where("protocols.sparc_id LIKE ? OR #{Sparc::Protocol.table_name}.short_title LIKE ? OR (#{ProjectRole.table_name}.role = 'primary-pi' AND CONCAT(`first_name`, ' ', `last_name`) LIKE ?)", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
+
+      query_string =  "protocols.sparc_id LIKE ? " # search by SRID
+      query_string += "OR #{Sparc::Protocol.table_name}.short_title LIKE ? " # search by short title
+      query_string += "OR (#{ProjectRole.table_name}.role = 'primary-pi' AND CONCAT(`first_name`, ' ', `last_name`) LIKE ?) " # search by PI name
+      query_string += "OR (#{SubServiceRequest.table_name}.org_tree_display LIKE ?)" # search by Provider/Program/Core
+
+      @protocols = @protocols.joins(:sparc_protocol, :sub_service_request, project_roles: :identity).
+        where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
+
       @total = @protocols.count
     end
   end
