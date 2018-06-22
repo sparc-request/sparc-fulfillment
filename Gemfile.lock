@@ -287,8 +287,8 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (~> 0.3.0)
-    paranoia (2.4.0)
-      activerecord (>= 4.0, < 5.2)
+    paranoia (2.4.1)
+      activerecord (>= 4.0, < 5.3)
     progress_bar (1.1.0)
       highline (~> 1.6)
       options (~> 2.3.0)
@@ -508,7 +508,7 @@ DEPENDENCIES
   omniauth-shibboleth
   paper_trail (~> 4.0.0.beta)
   paperclip (~> 5.2, >= 5.2.1)
-  paranoia (~> 2.0)
+  paranoia (~> 2.4)
   progress_bar
   pry
   puma
