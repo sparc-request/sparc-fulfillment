@@ -80,7 +80,7 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'rails-controller-testing'
-  gem 'rspec-activejob', '~> 0.4.0'
+  gem 'rspec-activejob', '~> 0.6.1'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
