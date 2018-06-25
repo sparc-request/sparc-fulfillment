@@ -31,8 +31,6 @@ $('#complete_all_modal button.save').removeClass('disabled')
 
 update_complete_visit_button(<%= @procedures.first.appointment.can_finish? %>)
 
-$(".core[data-core-id='<%= @core_id %>'] .selectpicker.performed-by-dropdown").selectpicker('val', "<%= current_identity.id %>")
-
 <% @procedures.each do |procedure| %>
 
 <% if procedure.incomplete? %>

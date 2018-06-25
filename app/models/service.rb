@@ -43,13 +43,13 @@ class Service < ApplicationRecord
 
     pricing_map = current_effective_pricing_map(date)
 
-    raise ArgumentError, "Service #{self.id} has no pricing maps" if pricing_map.blank?
+    raise ArgumentError, "Service: #{self.name} (#{self.id}) has no pricing maps" if pricing_map.blank?
     if funding_source.blank?
 
       return pricing_map.full_rate
     else
       pricing_setup = current_effective_pricing_setup(date)
-      raise ArgumentError, "Service #{self.id} has no pricing setups" if pricing_setup.blank?
+      raise ArgumentError, "Service: #{self.name} (#{self.id}) has no pricing setups" if pricing_setup.blank?
       rate_type = pricing_setup.rate_type(funding_source)
       rate_percentage = pricing_setup.rate_type_percentage(rate_type)
 

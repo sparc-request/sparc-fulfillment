@@ -98,7 +98,8 @@ en:
     visit_indications: "Visit Indications:"
     visit_type: "Type of Visit:"
     warning: "Please click 'Start Visit' and enter a start date to continue."
-    procedure_invoiced_warning: "This procedure has been invoiced and can not be altered."
+    procedure_invoiced_warning: "This procedure has been invoiced and cannot be altered."
+    procedure_group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
 
   arm:
     object: "Arm"
