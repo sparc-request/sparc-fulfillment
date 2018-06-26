@@ -4,12 +4,16 @@ namespace :data do
     fulfillments = Fulfillment.all
 
     procedures.find_each do |procedure|
-      funding_source = procedure.protocol.sparc_funding_source
-      procedure.update_attribute(:funding_source, funding_source)
+      protocol = Sparc::Protocol.find(procedure.protocol.sparc_id)
+      funding_source = protocol.funding_source
+      unless funding_source.nil?
+        procedure.update_attribute(:funding_source, funding_source)
+      end
     end
 
     fulfillments.find_each do |fulfillment|
-      funding_source = fulfillment.protocol.sparc_funding_source
+      protocol = Sparc::Protocol.find(fulfillment.protocol.sparc_id)
+      funding_source = protocol.funding_source
       unless funding_source.nil?
         fulfillment.update_attribute(:funding_source, funding_source)
       end
