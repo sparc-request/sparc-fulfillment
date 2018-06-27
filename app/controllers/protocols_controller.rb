@@ -31,6 +31,9 @@ class ProtocolsController < ApplicationController
     @offset = params[:offset] || 50
     @limit = params[:limit] || 50
 
+    @sort = determine_sort(params[:sort])
+    @order = params[:order] || 'ASC'
+
     find_protocols_for_index
 
     respond_to do |format|
@@ -54,19 +57,13 @@ class ProtocolsController < ApplicationController
   private
 
   def find_protocols_for_index
-    if @status != 'all'
-      @protocols = current_identity.protocols.
-        joins(:sub_service_request)
-        .where(sub_service_requests: { status: @status })
-      @total = @protocols.count
-      search_protocol_attrs
-      @protocols = @protocols.limit(@limit).offset(@offset)
-    else
-      @protocols = current_identity.protocols
-      @total = @protocols.count
-      search_protocol_attrs
-      @protocols = @protocols.limit(@limit).offset(@offset)
-    end
+    @protocols = current_identity.protocols.joins(:sparc_protocol, :sub_service_request, project_roles: :identity)
+    # srid = Protocol.sparc_id DESC, SubServiceRequest.srid DESC or CONCAT(Protocol.sparc_id, SubServiceRequest.srid) DESC
+    @protocols = @protocols.order(Arel.sql("#{@sort} #{@order}")) if @sort
+    @protocols = @protocols.where(sub_service_requests: { status: @status }) if @status != 'all'
+    @total = @protocols.count
+    search_protocol_attrs
+    @protocols = @protocols.limit(@limit).offset(@offset)
   end
 
   def search_protocol_attrs
@@ -78,8 +75,7 @@ class ProtocolsController < ApplicationController
       query_string += "OR (#{ProjectRole.table_name}.role = 'primary-pi' AND CONCAT(`first_name`, ' ', `last_name`) LIKE ?) " # search by PI name
       query_string += "OR (#{SubServiceRequest.table_name}.org_tree_display LIKE ?)" # search by Provider/Program/Core
 
-      @protocols = @protocols.joins(:sparc_protocol, :sub_service_request, project_roles: :identity).
-        where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
+      @protocols = @protocols.where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
 
       @total = @protocols.count
     end
