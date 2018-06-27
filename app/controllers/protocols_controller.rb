@@ -28,11 +28,10 @@ class ProtocolsController < ApplicationController
   def index
     @page = params[:page]
     @status = params[:status] || 'all'
-    @offset = params[:offset] || 50
+    @offset = params[:offset] || 0
     @limit = params[:limit] || 50
 
-    @sort = determine_sort(params[:sort])
-    @order = params[:order] || 'ASC'
+    @sort = determine_sort
 
     find_protocols_for_index
 
@@ -56,10 +55,27 @@ class ProtocolsController < ApplicationController
 
   private
 
+  def determine_sort
+    order = params[:order] || 'asc'
+
+    @sort =
+      case params[:sort]
+      when 'srid'
+        "sparc_id #{order}, sub_service_requests.ssr_id #{order}"
+      when 'pi'
+        "identities.first_name #{order}, identities.last_name #{order}"
+      when 'irb_approval_date'
+        "human_subjects_info.irb_approval_date #{order}"
+      when 'irb_expiration'
+        "human_subjects_info.irb_expiration_date #{order}"
+      else
+        "#{params[:sort]} #{order}"
+      end
+  end
+
   def find_protocols_for_index
-    @protocols = current_identity.protocols.joins(:sparc_protocol, :sub_service_request, project_roles: :identity)
-    # srid = Protocol.sparc_id DESC, SubServiceRequest.srid DESC or CONCAT(Protocol.sparc_id, SubServiceRequest.srid) DESC
-    @protocols = @protocols.order(Arel.sql("#{@sort} #{@order}")) if @sort
+    @protocols = current_identity.protocols.joins(:sparc_protocol, :sub_service_request, :pi, :human_subjects_info, project_roles: :identity)
+    @protocols = @protocols.order(Arel.sql("#{@sort}")) if @sort
     @protocols = @protocols.where(sub_service_requests: { status: @status }) if @status != 'all'
     @total = @protocols.count
     search_protocol_attrs
