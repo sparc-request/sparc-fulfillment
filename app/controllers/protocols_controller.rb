@@ -68,13 +68,15 @@ class ProtocolsController < ApplicationController
         "human_subjects_info.irb_approval_date #{order}"
       when 'irb_expiration'
         "human_subjects_info.irb_expiration_date #{order}"
+      when 'organizations'
+        "sub_service_requests.org_tree_display #{order}"
       else
         "#{params[:sort]} #{order}"
       end
   end
 
   def find_protocols_for_index
-    @protocols = current_identity.protocols.joins(:sparc_protocol, :sub_service_request, :pi, :human_subjects_info, project_roles: :identity)
+    @protocols = current_identity.protocols.includes(:sparc_protocol, :pi, :human_subjects_info, :coordinators, sub_service_request: [:owner, :service_requester, :service_request]).joins(project_roles: :identity)
     @protocols = @protocols.order(Arel.sql("#{@sort}")) if @sort
     @protocols = @protocols.where(sub_service_requests: { status: @status }) if @status != 'all'
     @total = @protocols.count
