@@ -72,53 +72,56 @@ class InvoiceReport < Report
 
         if fulfillments.any?
           csv << ["Non-clinical Services"]
-          csv << [
-            "Protocol ID",
-            "Request ID",
-            "RMID",
-            "Short Title",
-            "Status",
-            "Primary PI",
-            "Primary PI Affiliation",
-            "Billing/Business Manager(s)",
-            "Core/Program",
-            "Service",
-            "Fulfillment Date",
-            "Performed By",
-            "Components",
-            "Contact",
-            "Account #",
-            "Quantity Completed",
-            "Quantity Type",
-            "Research Rate",
-            "Total Cost",
-            protocol.sub_service_request.subsidy ? "Percent Subsidy" : ""
-          ]
+
+          header = []
+          header << "Protocol ID"
+          header << "Request ID"
+          header << "RMID" if ENV.fetch('RMID_URL'){nil}
+          header << "Short Title"
+          header << "Status"
+          header << "Primary PI"
+          header << "Primary PI Affiliation"
+          header << "Billing/Business Manager(s)"
+          header << "Core/Program"
+          header << "Service"
+          header << "Fulfillment Date"
+          header << "Performed By"
+          header << "Components"
+          header << "Contact"
+          header << "Account #"
+          header << "Quantity Completed"
+          header << "Quantity Type"
+          header << "Research Rate"
+          header << "Total Cost"
+          header << "Percent Subsidy" if protocol.sub_service_request.subsidy
+
+          csv << header
 
           fulfillments.includes(:line_item, service: [:organization]).order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
-            csv << [
-              format_protocol_id_column(protocol),
-              protocol.sub_service_request.ssr_id,
-              protocol.research_master_id,
-              protocol.sparc_protocol.short_title,
-              formatted_status(protocol),
-              protocol.pi ? protocol.pi.full_name : nil,
-              protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
-                             protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil,
-              protocol.billing_business_managers.map(&:full_name).join(','),
-              fulfillment.service.organization.name,
-              fulfillment.service_name,
-              format_date(fulfillment.fulfilled_at),
-              fulfillment.performer.full_name,
-              fulfillment.components.map(&:component).join(','),
-              fulfillment.line_item.contact_name,
-              fulfillment.line_item.account_number,
-              fulfillment.quantity,
-              fulfillment.line_item.quantity_type,
-              display_cost(fulfillment.service_cost),
-              display_cost(fulfillment.total_cost),
-              display_subsidy_percent(protocol)
-            ]
+            data = []
+            data << format_protocol_id_column(protocol)
+            data << protocol.sub_service_request.ssr_id
+            data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
+            data << protocol.sparc_protocol.short_title
+            data << formatted_status(protocol)
+            data << (protocol.pi ? protocol.pi.full_name : nil)
+            data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
+                                   protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
+            data << protocol.billing_business_managers.map(&:full_name).join(',')
+            data << fulfillment.service.organization.name
+            data << fulfillment.service_name
+            data << format_date(fulfillment.fulfilled_at)
+            data << fulfillment.performer.full_name
+            data << fulfillment.components.map(&:component).join(',')
+            data << fulfillment.line_item.contact_name
+            data << fulfillment.line_item.account_number
+            data << fulfillment.quantity
+            data << fulfillment.line_item.quantity_type
+            data << display_cost(fulfillment.service_cost)
+            data << display_cost(fulfillment.total_cost)
+            data << display_subsidy_percent(protocol)
+
+            csv << data
 
             total += fulfillment.total_cost
             total_with_subsidy += protocol.sub_service_request.subsidy ? fulfillment.total_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : fulfillment.total_cost
@@ -130,28 +133,30 @@ class InvoiceReport < Report
           csv << [""]
 
           csv << ["Clinical Services:"]
-          csv << [
-            "Protocol ID",
-            "Request ID",
-            "RMID",
-            "Short Title",
-            "Status",
-            "Primary PI",
-            "Primary PI Affiliation",
-            "Billing/Business Manager(s)",
-            "Core/Program",
-            "Service",
-            "Service Completion Date",
-            "Patient Name",
-            "Patient ID",
-            "Visit Name",
-            "Visit Date",           
-            "Quantity Completed",
-            "Clinical Quantity Type",
-            "Research Rate",
-            "Total Cost",
-            protocol.sub_service_request.subsidy ? "Percent Subsidy" : ""
-          ]
+
+          header = []
+          header << "Protocol ID"
+          header << "Request ID"
+          header << "RMID" if ENV.fetch('RMID_URL'){nil}
+          header << "Short Title"
+          header << "Status"
+          header << "Primary PI"
+          header << "Primary PI Affiliation"
+          header << "Billing/Business Manager(s)"
+          header << "Core/Program"
+          header << "Service"
+          header << "Service Completion Date"
+          header << "Patient Name"
+          header << "Patient ID"
+          header << "Visit Name"
+          header << "Visit Date"
+          header << "Quantity Completed"
+          header << "Clinical Quantity Type"
+          header << "Research Rate"
+          header << "Total Cost"
+          header << "Percent Subsidy" if protocol.sub_service_request.subsidy
+
+          csv << header
 
           procedures.group_by{|procedure| procedure.service.organization}.each do |org, org_group|
 
@@ -163,29 +168,31 @@ class InvoiceReport < Report
                 appointment_group.group_by(&:service_name).each do |service_name, service_group|
                   procedure = service_group.first
 
-                  csv << [
-                    format_protocol_id_column(protocol),
-                    protocol.sub_service_request.ssr_id,
-                    protocol.research_master_id,
-                    protocol.sparc_protocol.short_title,
-                    formatted_status(protocol),
-                    protocol.pi ? protocol.pi.full_name : nil,
-                    protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
-                                   protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil,
-                    protocol.billing_business_managers.map(&:full_name).join(','),
-                    org.name,
-                    service_name,
-                    format_date(procedure.completed_date),
-                    participant.full_name,
-                    participant.label,
-                    appointment.name,
-                    format_date(appointment.start_date),                 
-                    service_group.size,
-                    procedure.service.current_effective_pricing_map.unit_type,
-                    display_cost(procedure.service_cost),
-                    display_cost(service_group.size * procedure.service_cost.to_f),
-                    display_subsidy_percent(protocol)
-                  ]
+                  data = []
+                  data << format_protocol_id_column(protocol)
+                  data << protocol.sub_service_request.ssr_id
+                  data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
+                  data << protocol.sparc_protocol.short_title
+                  data << formatted_status(protocol)
+                  data << (protocol.pi ? protocol.pi.full_name : nil)
+                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
+                                        protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
+                  data << protocol.billing_business_managers.map(&:full_name).join(',')
+                  data << org.name
+                  data << service_name
+                  data << format_date(procedure.completed_date)
+                  data << participant.full_name
+                  data << participant.label
+                  data << appointment.name
+                  data << format_date(appointment.start_date)
+                  data << service_group.size
+                  data << procedure.service.current_effective_pricing_map.unit_type
+                  data << display_cost(procedure.service_cost)
+                  data << display_cost(service_group.size * procedure.service_cost.to_f)
+                  data << display_subsidy_percent(protocol)
+
+                  csv << data
+
                   service_cost = service_group.size * procedure.service_cost.to_f
                   total += service_cost
                   total_with_subsidy += protocol.sub_service_request.subsidy ? service_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : service_cost
