@@ -59,13 +59,13 @@ class ProtocolsController < ApplicationController
         joins(:sub_service_request)
         .where(sub_service_requests: { status: @status })
       @total = @protocols.count
-      @protocols = @protocols.limit(@limit).offset(@offset)
       search_protocol_attrs
+      @protocols = @protocols.limit(@limit).offset(@offset)
     else
       @protocols = current_identity.protocols
       @total = @protocols.count
-      @protocols = @protocols.limit(@limit).offset(@offset)
       search_protocol_attrs
+      @protocols = @protocols.limit(@limit).offset(@offset)
     end
   end
 
