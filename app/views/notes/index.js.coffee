@@ -19,4 +19,5 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modal_area").html("<%= escape_javascript(render(partial: 'index', locals: { notes: @notes, notable_type: @notable_type})) %>")
+$("#modal_place").modal(backdrop: 'static', keyboard: false)
 $("#modal_place").modal 'show'

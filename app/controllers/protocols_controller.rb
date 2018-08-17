@@ -28,8 +28,10 @@ class ProtocolsController < ApplicationController
   def index
     @page = params[:page]
     @status = params[:status] || 'all'
-    @offset = params[:offset] || 50
+    @offset = params[:offset] || 0
     @limit = params[:limit] || 50
+
+    @sort = determine_sort
 
     find_protocols_for_index
 
@@ -53,20 +55,33 @@ class ProtocolsController < ApplicationController
 
   private
 
+  def determine_sort
+    order = params[:order] || 'asc'
+
+    @sort =
+      case params[:sort]
+      when 'srid'
+        "sparc_id #{order}, sub_service_requests.ssr_id #{order}"
+      when 'pi'
+        "identities.first_name #{order}, identities.last_name #{order}"
+      when 'irb_approval_date'
+        "human_subjects_info.irb_approval_date #{order}"
+      when 'irb_expiration'
+        "human_subjects_info.irb_expiration_date #{order}"
+      when 'organizations'
+        "sub_service_requests.org_tree_display #{order}"
+      else
+        "#{params[:sort]} #{order}"
+      end
+  end
+
   def find_protocols_for_index
-    if @status != 'all'
-      @protocols = current_identity.protocols.
-        joins(:sub_service_request)
-        .where(sub_service_requests: { status: @status })
-      @total = @protocols.count
-      search_protocol_attrs
-      @protocols = @protocols.limit(@limit).offset(@offset)
-    else
-      @protocols = current_identity.protocols
-      @total = @protocols.count
-      search_protocol_attrs
-      @protocols = @protocols.limit(@limit).offset(@offset)
-    end
+    @protocols = current_identity.protocols.includes(:sparc_protocol, :pi, :human_subjects_info, :coordinators, sub_service_request: [:owner, :service_requester, :service_request]).joins(project_roles: :identity)
+    @protocols = @protocols.order(Arel.sql("#{@sort}")) if @sort
+    @protocols = @protocols.where(sub_service_requests: { status: @status }) if @status != 'all'
+    @total = @protocols.count
+    search_protocol_attrs
+    @protocols = @protocols.limit(@limit).offset(@offset)
   end
 
   def search_protocol_attrs
@@ -78,8 +93,7 @@ class ProtocolsController < ApplicationController
       query_string += "OR (#{ProjectRole.table_name}.role = 'primary-pi' AND CONCAT(`first_name`, ' ', `last_name`) LIKE ?) " # search by PI name
       query_string += "OR (#{SubServiceRequest.table_name}.org_tree_display LIKE ?)" # search by Provider/Program/Core
 
-      @protocols = @protocols.joins(:sparc_protocol, :sub_service_request, project_roles: :identity).
-        where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
+      @protocols = @protocols.where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
 
       @total = @protocols.count
     end

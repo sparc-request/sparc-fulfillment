@@ -34,10 +34,14 @@ class Protocol < ApplicationRecord
 
   has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
+  has_one :pi_project_role, -> { where(role: 'primary-pi') }, class_name: 'ProjectRole'
+  has_one :pi, through: :pi_project_role, source: :identity
   has_many :subsidies, through: :sub_service_requests
 
   has_many :sub_service_requests, through: :service_requests
   has_many :project_roles,    primary_key: :sparc_id
+  has_many :coordinator_project_roles, -> { where(role: 'research-assistant-coordinator') }, class_name: 'ProjectRole'
+  has_many :coordinators, through: :coordinator_project_roles, source: :identity
   has_many :service_requests, primary_key: :sparc_id
   has_many :arms,             dependent: :destroy
   has_many :line_items,       dependent: :destroy
@@ -99,14 +103,6 @@ class Protocol < ApplicationRecord
   #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.
   def subsidy_expended
     "$0.00"
-  end
-
-  def pi
-    project_roles.where(role: "primary-pi").first.identity
-  end
-
-  def coordinators
-    project_roles.where(role: "research-assistant-coordinator").map(&:identity)
   end
 
   def short_title_with_sparc_id
