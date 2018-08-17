@@ -187,7 +187,7 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def cost(funding_source = protocol.sparc_funding_source, date = Time.current)
+  def cost(date = Time.current)
     if service_cost
       service_cost.to_i
     else

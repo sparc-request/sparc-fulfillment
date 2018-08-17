@@ -78,6 +78,7 @@ class InvoiceReport < Report
           header << "Request ID"
           header << "RMID" if ENV.fetch('RMID_URL'){nil}
           header << "Short Title"
+          header << "Funding Source"
           header << "Status"
           header << "Primary PI"
           header << "Primary PI Affiliation"
@@ -103,6 +104,7 @@ class InvoiceReport < Report
             data << protocol.sub_service_request.ssr_id
             data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
             data << protocol.sparc_protocol.short_title
+            data << fulfillment.funding_source
             data << formatted_status(protocol)
             data << (protocol.pi ? protocol.pi.full_name : nil)
             data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
@@ -139,6 +141,7 @@ class InvoiceReport < Report
           header << "Request ID"
           header << "RMID" if ENV.fetch('RMID_URL'){nil}
           header << "Short Title"
+          header << "Funding Source"
           header << "Status"
           header << "Primary PI"
           header << "Primary PI Affiliation"
@@ -173,6 +176,7 @@ class InvoiceReport < Report
                   data << protocol.sub_service_request.ssr_id
                   data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
                   data << protocol.sparc_protocol.short_title
+                  data << procedure.funding_source
                   data << formatted_status(protocol)
                   data << (protocol.pi ? protocol.pi.full_name : nil)
                   data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 

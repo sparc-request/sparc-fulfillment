@@ -30,6 +30,7 @@ class ProceduresController < ApplicationController
     service         = Service.find params[:service_id]
     performer_id    = params[:performer_id]
     @procedures     = []
+    funding_source = @appointment.protocol.sparc_funding_source
 
     qty.times do
       @procedures << Procedure.create(appointment: @appointment,
@@ -38,7 +39,8 @@ class ProceduresController < ApplicationController
                                       performer_id: performer_id,
                                       billing_type: 'research_billing_qty',
                                       sparc_core_id: service.sparc_core_id,
-                                      sparc_core_name: service.sparc_core_name)
+                                      sparc_core_name: service.sparc_core_name,
+                                      funding_source: funding_source)
     end
   end
 
