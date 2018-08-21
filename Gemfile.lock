@@ -168,10 +168,10 @@ GEM
     erubis (2.7.0)
     eventmachine (1.2.5)
     execjs (2.7.0)
-    factory_girl (4.5.0)
+    factory_girl (4.9.0)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.5.0)
-      factory_girl (~> 4.5.0)
+    factory_girl_rails (4.9.0)
+      factory_girl (~> 4.9.0)
       railties (>= 3.0.0)
     faker (1.4.3)
       i18n (~> 0.5)
@@ -338,7 +338,7 @@ GEM
       method_source
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (12.3.0)
+    rake (12.3.1)
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -489,7 +489,7 @@ DEPENDENCIES
   delayed_job_active_record
   devise
   dotenv-rails
-  factory_girl_rails (~> 4.5.0)
+  factory_girl_rails (~> 4.9.0)
   faker (~> 1.4.3)
   faye
   foreman
