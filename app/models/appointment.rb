@@ -98,7 +98,8 @@ class Appointment < ApplicationRecord
               service_name: li.service.name,
               service_id: li.service.id,
               sparc_core_id: li.service.sparc_core_id,
-              sparc_core_name: li.service.sparc_core_name
+              sparc_core_name: li.service.sparc_core_name,
+              funding_source: li.protocol.sparc_funding_source
             }
             visit.research_billing_qty.times do
               proc = Procedure.new(attributes)
