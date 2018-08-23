@@ -51,8 +51,9 @@ class ImportsController < ApplicationController
             import.destroy
             format.js
           end
-        rescue
-          format.js { render js: "swal('Improper Klok Format', 'Klok File is improperly formatted, name must be formatted as - Name (NetId)', 'error');" }
+        rescue Exception => e
+          import.destroy # remove the import since it has an error
+          format.js { render js: "swal('Klok Import Error', \"#{e.message}\", 'error');" }
           format.html { render :new }
         end
       end

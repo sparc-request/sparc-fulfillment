@@ -46,6 +46,9 @@
                   = t(:fulfillment)[:components]
                 %th{data: {class: 'options', align: "center", field: "options"}}
                   = t(:actions)[:actions]
+                - if line_item.fulfillments.any?{|fulfillment| fulfillment.invoiced == true}
+                  %th{data: {class: 'invoiced', align: "center", field: "invoiced"}}
+                    = t(:fulfillment)[:invoiced]
         #fulfillment-klok-description
           %i{class: 'glyphicon glyphicon-time'}
           %span= t(:fulfillment)[:klok_description]

@@ -25,6 +25,8 @@ development:
   database: cwf_development
   pool: 5
   timeout: 5000
+  variables:
+    sql_mode: TRADITIONAL
   
 # configured for travis-ci
 test: &test
@@ -34,3 +36,5 @@ test: &test
   username: travis
   pool: 5
   timeout: 5000
+  variables:
+    sql_mode: TRADITIONAL

@@ -98,6 +98,8 @@ en:
     visit_indications: "Visit Indications:"
     visit_type: "Type of Visit:"
     warning: "Please click 'Start Visit' and enter a start date to continue."
+    procedure_invoiced_warning: "This procedure has been invoiced and cannot be altered."
+    procedure_group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
 
   arm:
     object: "Arm"
@@ -148,6 +150,7 @@ en:
     add_fulfillment: "Add Fulfillment"
     list_fulfillments: "List"
     components: "Fulfillment Components"
+    invoiced: "Invoiced"
     edit: "Edit Fulfillment"
     flash_messages:
       created: "Fulfillment Created"
@@ -298,6 +301,7 @@ en:
     r_t: "R/T"
     select_reason: "Select a Reason"
     status: "Status"
+    invoiced: "Invoiced"
 
   protocol:
     object: "Protocol"

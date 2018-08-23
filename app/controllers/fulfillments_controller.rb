@@ -44,7 +44,7 @@ class FulfillmentsController < ApplicationController
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
     service = @line_item.service
     funding_source = @line_item.protocol.sparc_funding_source
-    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: @line_item.cost(funding_source) }))
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: @line_item.cost(funding_source), funding_source: funding_source }))
     if @fulfillment.valid?
       @fulfillment.save
       update_components_and_create_notes('create')

@@ -23,7 +23,6 @@ class Import < ApplicationRecord
   has_attached_file :file
   validates_attachment :file, content_type: { content_type: 'text/plain' }
   has_attached_file :xml_file
-  validates_attachment :xml_file, content_type: { content_type: 'text/xml' }
 
 
   def generate(file, proof_report)

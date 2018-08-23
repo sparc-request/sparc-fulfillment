@@ -54,10 +54,17 @@ class MultipleProceduresController < ApplicationController
 
     #Reset parent appointment
     @appointment.update_attributes(start_date: nil, completed_date: nil)
-    #Remove custom procedures from appointment
-    @appointment.procedures.where(visit_id: nil).each{|proc| proc.destroy_regardless_of_status}
-    #Reset all procedures under appointment
+ 
+    #Reset all procedures under appointment so they can be destroyed
     @appointment.procedures.each{|procedure| procedure.reset}
+    #Destroy all procedures
+    @appointment.procedures.each do |procedure|
+      procedure.destroy
+    end
+
+    #Reload appointment to grab any calendar changes, then initialize procedures
+    @appointment.reload
+    @appointment.initialize_procedures
 
     @refresh_dashboard = true
 

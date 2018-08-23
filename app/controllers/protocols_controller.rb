@@ -26,17 +26,19 @@ class ProtocolsController < ApplicationController
   respond_to :json, :html
 
   def index
+    @page = params[:page]
+    @status = params[:status] || 'all'
+    @offset = params[:offset] || 0
+    @limit = params[:limit] || 50
+
+    @sort = determine_sort
+
+    find_protocols_for_index
+
     respond_to do |format|
       format.html { render }
-      format.json do
-        @protocols = current_identity.protocols
-
-        if params[:status].present? && params[:status] != 'all'
-          @protocols = @protocols.select { |protocol| protocol.status == params[:status] }
-        end
-
-        render
-      end
+      format.json { render }
+      format.js
     end
   end
 
@@ -52,6 +54,50 @@ class ProtocolsController < ApplicationController
   end
 
   private
+
+  def determine_sort
+    order = params[:order] || 'asc'
+
+    @sort =
+      case params[:sort]
+      when 'srid'
+        "sparc_id #{order}, sub_service_requests.ssr_id #{order}"
+      when 'pi'
+        "identities.first_name #{order}, identities.last_name #{order}"
+      when 'irb_approval_date'
+        "human_subjects_info.irb_approval_date #{order}"
+      when 'irb_expiration'
+        "human_subjects_info.irb_expiration_date #{order}"
+      when 'organizations'
+        "sub_service_requests.org_tree_display #{order}"
+      else
+        "#{params[:sort]} #{order}"
+      end
+  end
+
+  def find_protocols_for_index
+    @protocols = current_identity.protocols.includes(:sparc_protocol, :pi, :human_subjects_info, :coordinators, sub_service_request: [:owner, :service_requester, :service_request]).joins(project_roles: :identity)
+    @protocols = @protocols.order(Arel.sql("#{@sort}")) if @sort
+    @protocols = @protocols.where(sub_service_requests: { status: @status }) if @status != 'all'
+    @total = @protocols.count
+    search_protocol_attrs
+    @protocols = @protocols.limit(@limit).offset(@offset)
+  end
+
+  def search_protocol_attrs
+    if params[:search] && !params[:search].blank?
+      search_term = params[:search]
+
+      query_string =  "protocols.sparc_id LIKE ? " # search by SRID
+      query_string += "OR #{Sparc::Protocol.quoted_table_name}.short_title LIKE ? " # search by short title
+      query_string += "OR (#{ProjectRole.quoted_table_name}.role = 'primary-pi' AND CONCAT(#{Identity.quoted_table_name}.first_name, ' ', #{Identity.quoted_table_name}.last_name) LIKE ?) " # search by PI name
+      query_string += "OR (#{SubServiceRequest.quoted_table_name}.org_tree_display LIKE ?)" # search by Provider/Program/Core
+
+      @protocols = @protocols.where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
+
+      @total = @protocols.count
+    end
+  end
 
   def find_protocol
     unless @protocol = Protocol.where(id: params[:id]).first
