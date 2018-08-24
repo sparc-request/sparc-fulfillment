@@ -18,8 +18,12 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+<% if @procedure_ids.present? %>
 $("#modal_area").html("<%= escape_javascript(render(partial: 'complete_all_modal', locals: { procedure_ids: @procedure_ids})) %>")
 $("#modal_place").modal 'show'
+<% else %>
+alert(I18n["appointment"]["procedure_group_invoiced_warning"])
+<% end %>
 
 $(document).on 'click', "#complete_all_modal button.save", (e) ->
   if !$('.date_field').val() || !$('#complete_all_modal .filter-option').text()

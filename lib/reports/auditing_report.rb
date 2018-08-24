@@ -36,105 +36,111 @@ class AuditingReport < Report
 
     CSV.open(document.path, "wb") do |csv|
 
-      protocols = Protocol.find(@params[:protocols])
+      protocols = Protocol.where(id: @params[:protocols]).includes({procedures: :task}, :line_items)
 
       if @params[:service_type] == "Clinical Services"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
         csv << [""]
         csv << [""]
-        csv << [
-          "Protocol ID",
-          "Patient Name",
-          "Patient ID",
-          "Arm Name",
-          "Visit Name",
-          "Service Completion Date",
-          "Marked as Incomplete Date",
-          "Marked with Follow-Up Date",
-          "Added?",
-          "Nexus Core",
-          "Service Name",
-          "Completed?",
-          "Billing Type (R/T/O)",
-          "If not completed,
-          reason and comment",
-          "Follow-Up date and comment",
-          "Cost"
-        ]
+
+        header = [ "Protocol ID" ]
+        header << "RMID" if ENV.fetch('RMID_URL'){nil}
+        header << "Patient Name"
+        header << "Patient ID"
+        header << "Arm Name"
+        header << "Visit Name"
+        header << "Service Completion Date"
+        header << "Marked as Incomplete Date"
+        header << "Marked with Follow-Up Date"
+        header << "Added?"
+        header << "Nexus Core"
+        header << "Service Name"
+        header << "Completed?"
+        header << "Billing Type (R/T/O)"
+        header << "If not completed, reason and comment"
+        header << "Follow-Up date and comment"
+        header << "Cost"
+
+        csv << header
 
         protocols.each do |protocol|
           protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
-            participant = procedure.appointment.participant
+            appointment = procedure.appointment
+            participant = appointment.participant
 
-            csv << [
-              protocol.srid,
-              participant.full_name,
-              participant.label,
-              procedure.appointment.arm.name,
-              procedure.appointment.name,
-              format_date(procedure.completed_date.nil? ? nil : procedure.completed_date),
-              format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date),
-              format_date(procedure.follow_up? ? procedure.handled_date : nil),
-              added_formatter(procedure),
-              procedure.service.organization.name,
-              procedure.service_name,
-              complete_formatter(procedure),
-              procedure.formatted_billing_type,
-              reason_formatter(procedure),
-              follow_up_formatter(procedure),
-              display_cost(procedure.service_cost)
-            ]
+            data = [ protocol.srid ]
+            data <<  protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
+            data <<  participant.full_name
+            data <<  participant.label
+            data <<  appointment.arm.name
+            data <<  appointment.name
+            data <<  format_date(procedure.completed_date.nil? ? nil : procedure.completed_date)
+            data <<  format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date)
+            data <<  format_date(procedure.follow_up? ? procedure.handled_date : nil)
+            data <<  added_formatter(procedure)
+            data <<  procedure.sparc_core_name
+            data <<  procedure.service_name
+            data <<  complete_formatter(procedure)
+            data <<  procedure.formatted_billing_type
+            data <<  reason_formatter(procedure)
+            data <<  follow_up_formatter(procedure)
+            data <<  display_cost(procedure.service_cost)
+
+            csv << data
           end
         end
       else
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
         csv << [""]
         csv << [""]
-        csv << [
-          "Protocol ID",
-          "Short Title",
-          "Principal Investigator",
-          "Organization",
-          "Service Name",
-          "Account",
-          "Contact",
-          "Quantity Type",
-          "Unit Cost",
-          "Requested",
-          "Remaining",
-          "Service Started Date",
-          "Components",
-          "Last Fulfillment Date",
-          "Notes",
-          "Documents",
-          "Fields Modified",
-          "Date"
-        ]
+
+        header = [ "Protocol ID" ]
+        header << "RMID" if ENV.fetch('RMID_URL'){nil}
+        header <<  "Short Title"
+        header <<  "Principal Investigator"
+        header <<  "Organization"
+        header <<  "Service Name"
+        header <<  "Account"
+        header <<  "Contact"
+        header <<  "Quantity Type"
+        header <<  "Unit Cost"
+        header <<  "Requested"
+        header <<  "Remaining"
+        header <<  "Service Started Date"
+        header <<  "Components"
+        header <<  "Last Fulfillment Date"
+        header <<  "Notes"
+        header <<  "Documents"
+        header <<  "Fields Modified"
+        header <<  "Date"
+
+        csv << header
 
         protocols.each do |protocol|
           protocol.line_items.each do |line_item|
             next unless line_item.versions.where(event: "update", created_at: @start_date..@end_date).any?
             line_item.versions.where(event: "update").each do |version|
-              csv << [
-                protocol.srid,
-                protocol.short_title,
-                protocol.pi.full_name,
-                protocol.organization.abbreviation,
-                line_item.service.name,
-                line_item.account_number,
-                line_item.contact_name,
-                line_item.quantity_type,
-                display_cost(line_item.cost),
-                line_item.quantity_requested,
-                line_item.quantity_remaining,
-                format_date(line_item.started_at),
-                line_item.components.where(selected: true).map(&:component).join(' | '),
-                format_date(line_item.last_fulfillment),
-                line_item.notes.map(&:comment).join(' | '),
-                line_item.documents.map(&:title).join(' | '),
-                changeset_formatter(version.changeset),
-                format_date(version.created_at)
-              ]
+              data = [ protocol.srid ]
+              data <<  protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
+              data <<  protocol.short_title
+              data <<  protocol.pi.full_name
+              data <<  protocol.organization.abbreviation
+              data <<  line_item.service.name
+              data <<  line_item.account_number
+              data <<  line_item.contact_name
+              data <<  line_item.quantity_type
+              data <<  display_cost(line_item.cost)
+              data <<  line_item.quantity_requested
+              data <<  line_item.quantity_remaining
+              data <<  format_date(line_item.started_at)
+              data <<  line_item.components.where(selected: true).map(&:component).join(' | ')
+              data <<  format_date(line_item.last_fulfillment)
+              data <<  line_item.notes.map(&:comment).join(' | ')
+              data <<  line_item.documents.map(&:title).join(' | ')
+              data <<  changeset_formatter(version.changeset)
+              data <<  format_date(version.created_at)
+
+              csv << data
             end
           end
         end

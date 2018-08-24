@@ -17,11 +17,10 @@
 -# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
-
 #custom-toolbar
   = select_tag 'index_selectpicker', options_for_select((t(:sub_service_request)[:statuses].values.zip t(:sub_service_request)[:statuses].keys), 'All'), class: 'selectpicker'
 .bootstrap-table-dropdown-overflow
-  %table.protocols.custom_striped{id: "protocol-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: protocols_path(format: :json), "sort-name" => "sparc_id", "sort-order" => 'asc', cookie: "true", "cookie-id-table" => "protocols", striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel']}}
+  %table.protocols.custom_striped{id: "protocol-list", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: protocols_path(format: :json), "page_size" => @limit, "pagination" => "true", "side-pagination" => "server", "sort-name" => "sparc_id", "sort-order" => 'asc', cookie: "true", "cookie-id-table" => "protocols", striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel']}}
     %thead
       %tr
         %th{data: {class: 'srid', align: 'left', sortable: "true", field: 'srid'}}
@@ -42,15 +41,15 @@
           = t(:protocol)[:start_date]
         %th{data: {class: 'end_date', align: 'center', sortable: "true", sorter: "dateSorter", field: "end_date", visible: "false"}}
           = t(:protocol)[:end_date]
-        %th{data: {class: 'total_at_approval', align: 'right', sortable: "true", field: "total_at_approval", visible: "false"}}
+        %th{data: {class: 'total_at_approval', align: 'right', field: "total_at_approval", visible: "false"}}
           = t(:protocol)[:total_at_approval]
-        %th{data: {class: 'percent_subsidy', align: 'right', sortable: "true", field: "percent_subsidy", formatter: "number_to_percent", visible: "false"}}
+        %th{data: {class: 'percent_subsidy', align: 'right', field: "percent_subsidy", formatter: "number_to_percent", visible: "false"}}
           = t(:protocol)[:subsidy_amount]
-        %th{data: {class: 'subsidy_committed', align: 'right', sortable: "true", field: "subsidy_committed", visible: "false"}}
+        %th{data: {class: 'subsidy_committed', align: 'right', field: "subsidy_committed", visible: "false"}}
           = t(:protocol)[:subsidy_committed]
-        %th{data: {class: 'owner', align: 'right', sortable: "true", field: "owner", visible: "false"}}
+        %th{data: {class: 'owner', align: 'right', field: "owner", visible: "false"}}
           = t(:protocol)[:owner]
-        %th{data: {class: 'requester', align: 'right', sortable: "true", field: "requester", visible: "false"}}
+        %th{data: {class: 'requester', align: 'right', field: "requester", visible: "false"}}
           = t(:protocol)[:requester]
         %th{data: {class: 'organizations', align: 'right', sortable: "true", field: "organizations", visible: "false"}}
           = t(:protocol)[:organizations]

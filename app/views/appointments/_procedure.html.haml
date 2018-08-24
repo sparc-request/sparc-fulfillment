@@ -18,28 +18,32 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-%tr.procedure.new_service{ data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id } }
-  %td.name
+%tr.procedure.new_service{ data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id, disabled: procedure.invoiced? ? 'true' : 'false' } }
+  %td.name{class: "#{procedures_invoiced?(procedure.appointment) ? 'col-sm-1' : 'col-sm-2'} #{procedure.invoiced? ? 'disabled-status' : ''}"}
     = service_name_display(procedure.service)
-  %td.billing
-    = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: "form-control billing_type selectpicker"
-  %td.status
-    .btn-group{data: {toggle: "buttons"}, class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }"}
-      %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : 'inactive'} #{ procedure.appt_started? ? '' : 'disabled' }", data: {core_id: "#{procedure.sparc_core_id}"}}
-        %input{class: "procedure_status", type: "radio", value: "complete", autocomplete: "off", id: "complete_button_#{procedure.id}"} Complete
-      %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''} #{ procedure.appt_started? ? '' : 'disabled' }"}
-        %input{class: "procedure_status", type: "radio", value: "incomplete", autocomplete: "off", id: "incomplete_button_#{procedure.id}"} Incomplete
-  %td.followup{id: "follow_up_#{procedure.id}"}
+  %td.col-sm-1.billing
+    = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: procedure.invoiced? ? "form-control billing_type selectpicker disable-select-box invoiced_disabled " : "form-control billing_type selectpicker", disabled: procedure.invoiced?
+  %td.col-sm-3.status
+    .btn-group{data: {toggle: "buttons"}, class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' } #{procedure.invoiced? ? 'disabled-status' : ''}"}
+      %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : 'inactive'} #{ !procedure.appt_started? ? 'disabled' : procedure.invoiced? ? 'disabled' : '' }", data: {core_id: "#{procedure.sparc_core_id}"}}
+        %input{class: "procedure_status", type: "radio", value: "complete", autocomplete: "off", id: "complete_button_#{procedure.id}", disabled: procedure.invoiced?, readonly: procedure.invoiced?} Complete
+      %label.status.incomplete{class: "btn btn-default #{procedure.incomplete? ? 'active': ''} #{ !procedure.appt_started? ? 'disabled' : procedure.invoiced? ? 'disabled' : '' }"}
+        %input{class: "procedure_status", type: "radio", value: "incomplete", autocomplete: "off", id: "incomplete_button_#{procedure.id}", disabled: procedure.invoiced?, readonly: procedure.invoiced?} Incomplete
+  %td.col-sm-1.followup{id: "follow_up_#{procedure.id}"}
     = render partial: "/appointments/followup_calendar", locals: { procedure: procedure }
-  %td.completed-date
-    .input-group.date
-      %input.datetimepicker{type: "text", class: "form-control completed_date_field", disabled: !(procedure.appt_started? && procedure.complete?), value: format_date(procedure.completed_date), readonly: true}
-  %td.performed-by
-    = select_tag "performed-by-#{procedure.id}", options_for_select(procedure.performable_by, procedure.performer_id), include_blank: "N/A", class: "performed-by-dropdown selectpicker", data: { width: '125px' }, 'showIcon' => false
-  %td.notes
+  %td.col-sm-1.completed-date
+    .input-group.date{class: procedure.invoiced? ? "invoiced_disabled" : ""}
+      %input.datetimepicker{type: "text", class: "form-control completed_date_field", disabled: !(procedure.appt_started? && procedure.complete?) || procedure.invoiced?, value: format_date(procedure.completed_date), readonly: true}
+  %td.performed-by{class: procedures_invoiced?(procedure.appointment) ? "col-sm-1" : "col-sm-2"}
+    = select_tag "performed-by-#{procedure.id}", options_for_select(procedure.performable_by, procedure.performer_id), include_blank: "N/A", class: procedure.invoiced? ? "performed-by-dropdown selectpicker disable-select-box invoiced_disabled" : "performed-by-dropdown selectpicker", data: { width: '125px' }, 'showIcon' => false, disabled: procedure.invoiced?
+  %td.col-sm-1.notes
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
     = procedure_notes_formatter(procedure)
-  %td.remove
-    %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}
-      %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}
+  - if procedures_invoiced?(procedure.appointment)
+    %td.col-sm-2.invoiced
+      = (procedure.invoiced? ? "Yes" : "No")
+  - unless procedure.invoiced?
+    %td.col-sm-1.remove
+      %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}
+        %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}

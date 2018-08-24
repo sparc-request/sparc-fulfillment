@@ -127,7 +127,7 @@ feature 'Identity incompletes all Services', js: true do
   end
 
   def and_i_unroll_accordion
-    find("tr.procedure-group td[colspan='8'] button").click
+    find("tr.procedure-group td[colspan='10'] button").click
     wait_for_ajax
   end
 

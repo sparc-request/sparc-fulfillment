@@ -8,3 +8,4 @@ json.quantity_type fulfillment.line_item.quantity_type
 json.performed_by fulfillment.performer.full_name if fulfillment.performer
 json.components fulfillment_components_formatter(fulfillment.components)
 json.options fulfillment_options_buttons(fulfillment)
+json.invoiced (fulfillment.invoiced? ? "Yes" : "No")

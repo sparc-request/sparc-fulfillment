@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180306213506) do
+ActiveRecord::Schema.define(version: 20180613165940) do
 
   create_table "appointment_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "status"
@@ -101,7 +101,8 @@ ActiveRecord::Schema.define(version: 20180306213506) do
     t.integer  "sparc_id"
     t.integer  "line_item_id"
     t.datetime "fulfilled_at"
-    t.decimal  "quantity",      precision: 10, scale: 2
+    t.decimal  "quantity",       precision: 10, scale: 2
+    t.string   "funding_source"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
@@ -111,6 +112,7 @@ ActiveRecord::Schema.define(version: 20180306213506) do
     t.string   "service_name"
     t.integer  "service_cost"
     t.integer  "klok_entry_id"
+    t.boolean  "invoiced"
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id", using: :btree
     t.index ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id", using: :btree
     t.index ["line_item_id"], name: "index_fulfillments_on_line_item_id", using: :btree
@@ -235,6 +237,8 @@ ActiveRecord::Schema.define(version: 20180306213506) do
     t.integer  "visit_id"
     t.integer  "performer_id"
     t.datetime "incompleted_date"
+    t.boolean  "invoiced"
+    t.string   "funding_source"
     t.index ["appointment_id"], name: "index_procedures_on_appointment_id", using: :btree
     t.index ["completed_date"], name: "index_procedures_on_completed_date", using: :btree
     t.index ["service_id"], name: "index_procedures_on_service_id", using: :btree
