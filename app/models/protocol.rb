@@ -105,6 +105,8 @@ class Protocol < ApplicationRecord
     "$0.00"
   end
 
+
+
   def short_title_with_sparc_id
     "(#{self.srid}) #{self.short_title}"
   end

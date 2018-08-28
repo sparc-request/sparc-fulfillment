@@ -25,7 +25,21 @@ class IdentityOrganizations
 
   def fulfillment_access_protocols
     fetch_rights
-    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs}).distinct
+    organization_ids = @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs
+
+    Protocol.includes(
+      :coordinators,
+      :pi,
+      :human_subjects_info,
+      :subsidy,
+      :service_requests,
+      project_roles: [:identity],
+      sparc_protocol: [:service_requests],
+      sub_service_request: [:owner, :service_requester, :service_request]
+    ).where(
+      sub_service_requests: {organization_id: organization_ids}
+    ).distinct
+
   end
 
   def fulfillment_organizations_with_protocols
