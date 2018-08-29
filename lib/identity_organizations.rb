@@ -28,8 +28,6 @@ class IdentityOrganizations
     organization_ids = @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs
 
     Protocol.includes(
-      :coordinators,
-      :pi,
       :human_subjects_info,
       :subsidy,
       :service_requests,
