@@ -50,7 +50,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'underscore-rails', '~> 1.8.3'
 gem 'will_paginate'
 gem 'yajl-ruby', require: 'yajl'
-
+gem 'dalli'
 group :deploy do
   gem 'capistrano', '~> 3.0'
   gem 'capistrano-rvm'
