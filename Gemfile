@@ -84,7 +84,7 @@ group :test do
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 2.8.0", require: false
+  gem 'shoulda-matchers', "~> 3.1.2", require: false
   gem 'timecop'
   gem 'webmock', '~> 2.3.2'
   gem 'vcr', '~> 2.9.3'
