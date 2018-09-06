@@ -44,7 +44,7 @@ GEM
       activemodel (= 5.0.3)
       activesupport (= 5.0.3)
       arel (~> 7.0)
-    activerecord-import (0.21.0)
+    activerecord-import (0.25.0)
       activerecord (>= 3.2)
     activerecord-session_store (1.1.0)
       actionpack (>= 4.0, < 5.2)
