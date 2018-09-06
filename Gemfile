@@ -62,7 +62,7 @@ end
 
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.9.0'
-  gem 'faker', '~> 1.4.3'
+  gem 'faker', '~> 1.9.1'
   gem 'pry'
 end
 
