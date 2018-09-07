@@ -95,7 +95,7 @@ GEM
       sshkit (~> 1.2)
     capistrano-passenger (0.2.0)
       capistrano (~> 3.0)
-    capistrano-rails (1.3.1)
+    capistrano-rails (1.4.0)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
     capistrano-rvm (0.1.2)
@@ -476,7 +476,7 @@ DEPENDENCIES
   bootstrap3-datetimepicker-rails (~> 4.17.37)
   capistrano (~> 3.11)
   capistrano-passenger
-  capistrano-rails (~> 1.1)
+  capistrano-rails (~> 1.4)
   capistrano-rvm
   capistrano3-delayed-job (~> 1.0)
   capybara-webkit

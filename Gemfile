@@ -54,7 +54,7 @@ gem 'yajl-ruby', require: 'yajl'
 group :deploy do
   gem 'capistrano', '~> 3.11'
   gem 'capistrano-rvm'
-  gem 'capistrano-rails', '~> 1.1'
+  gem 'capistrano-rails', '~> 1.4'
   gem 'capistrano-passenger'
   gem 'capistrano3-delayed-job', '~> 1.0'
 end
