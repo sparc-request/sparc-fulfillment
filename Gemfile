@@ -33,7 +33,7 @@ gem 'net-ldap'
 gem 'omniauth'
 gem 'paperclip', '~> 6.1'
 gem 'paper_trail', '~> 4.0.0.beta'
-gem 'paranoia', '~> 2.0'
+gem 'paranoia', '~> 2.4'
 gem 'progress_bar'
 gem 'puma'
 gem 'rails', '5.0.3'
@@ -62,7 +62,7 @@ end
 
 group :development, :test, :testing do
   gem 'factory_girl_rails', '~> 4.9.0'
-  gem 'faker', '~> 1.4.3'
+  gem 'faker', '~> 1.9.1'
   gem 'pry'
 end
 
@@ -80,12 +80,12 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'rails-controller-testing'
-  gem 'rspec-activejob', '~> 0.4.0'
+  gem 'rspec-activejob', '~> 0.6.1'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 2.8.0", require: false
+  gem 'shoulda-matchers', "~> 3.1.2", require: false
   gem 'timecop'
   gem 'webmock', '~> 2.3.2'
-  gem 'vcr', '~> 2.9.3'
+  gem 'vcr', '~> 4.0.0'
 end
