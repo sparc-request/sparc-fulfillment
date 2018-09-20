@@ -42,7 +42,7 @@ namespace :data do
       csv << ["Protocol/SRID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
       puts "Fixing Procedures..."
 
-      items.each do |item|
+      items.each_with_index do |item, index|
         if item.procedures.count >= 1
           bar = ProgressBar.new(item.procedures.count)
           proc = nil
@@ -86,6 +86,7 @@ namespace :data do
             end
           end
         end
+        puts "#{index}/#{items.count}"
       end
 
       ##One Time Fees Section
