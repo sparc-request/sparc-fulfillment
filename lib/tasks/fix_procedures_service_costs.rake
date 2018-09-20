@@ -72,9 +72,11 @@ namespace :data do
                   procedure.update_attribute(:service_cost, calculated_amount)
                 end
               else
-                ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
-                procedure.update_attribute(:service_cost, nil)
+                if !procedure.service_cost.nil?
+                  ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
+                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
+                  procedure.update_attribute(:service_cost, nil)
+                end
               end
 
               bar.increment! rescue nil
