@@ -21,17 +21,17 @@
 RSpec.configure do |config|
 
   config.before(:suite) do
-    Appointment.paper_trail_off!
-    Arm.paper_trail_off!
-    Component.paper_trail_off!
-    Fulfillment.paper_trail_off!
-    LineItem.paper_trail_off!
-    Note.paper_trail_off!
-    Participant.paper_trail_off!
-    Procedure.paper_trail_off!
-    Protocol.paper_trail_off!
-    Task.paper_trail_off!
-    Visit.paper_trail_off!
-    VisitGroup.paper_trail_off!
+    PaperTrail.request.disable_model(Appointment)
+    PaperTrail.request.disable_model(Arm)
+    PaperTrail.request.disable_model(Component)
+    PaperTrail.request.disable_model(Fulfillment)
+    PaperTrail.request.disable_model(LineItem)
+    PaperTrail.request.disable_model(Note)
+    PaperTrail.request.disable_model(Participant)
+    PaperTrail.request.disable_model(Procedure)
+    PaperTrail.request.disable_model(Protocol)
+    PaperTrail.request.disable_model(Task)
+    PaperTrail.request.disable_model(Visit)
+    PaperTrail.request.disable_model(VisitGroup)
   end
 end

@@ -36,7 +36,16 @@ class ProtocolsController < ApplicationController
     find_protocols_for_index
 
     respond_to do |format|
-      format.html { render }
+
+      format.html {
+        if cookies['protocols.bs.table.columns'].blank? && !ENV['DEFAULT_HOME_COLUMNS'].blank?
+          cookies['protocols.bs.table.columns'] = {
+            :value => ENV['DEFAULT_HOME_COLUMNS'].split(',').to_json,
+            :expires => 2.hours.from_now
+          }
+        end
+        render
+      }
       format.json { render }
       format.js
     end
