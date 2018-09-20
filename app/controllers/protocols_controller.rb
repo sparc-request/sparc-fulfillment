@@ -85,7 +85,7 @@ class ProtocolsController < ApplicationController
   end
 
   def find_protocols_for_index
-    @protocols = current_identity.protocols.includes(:sparc_protocol, :pi, :human_subjects_info, :coordinators, sub_service_request: [:owner, :service_requester, :service_request]).joins(project_roles: :identity)
+    @protocols = current_identity.protocols
     @protocols = @protocols.order(Arel.sql("#{@sort}")) if @sort
     @protocols = @protocols.where(sub_service_requests: { status: @status }) if @status != 'all'
     @total = @protocols.count
