@@ -31,7 +31,8 @@ development:
   username: root
   password:
 
-test:# configured for travis-ci
+# configured for travis-ci
+test:
   <<: *default
   database: test_sparc_request # for travis-ci, needs to match sparc-request test database name
   username: travis
