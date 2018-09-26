@@ -18,10 +18,8 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::Protocol < ApplicationRecord
+class Sparc::Protocol < SparcDbBase
   self.inheritance_column = nil # ignore STI
-  
-  include SparcShard
 
   has_many :service_requests
   has_many :arms

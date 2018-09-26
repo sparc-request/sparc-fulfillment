@@ -18,10 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::Fulfillment < ApplicationRecord
-  
-  include SparcShard
-
+class Sparc::Fulfillment < SparcDbBase
   belongs_to :line_item
   has_many :audits, -> { where auditable_type: 'Fulfillment' }, foreign_key: :auditable_id
 end

@@ -15,7 +15,7 @@ before_install:
   - export TZ=America/New_York
 before_script:
   - cp config/database.yml.example config/database.yml
-  - cp config/shards.yml.example config/shards.yml
+  - cp config/sparc_db.yml.example config/sparc_db.yml
   - cp config/faye.yml.example config/faye.yml
   - cp dotenv.example .env
   - mysql -e 'create database test_sparc_request;'
