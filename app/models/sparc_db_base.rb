@@ -22,11 +22,16 @@ class SparcDbBase < ApplicationRecord
   self.abstract_class = true
   establish_connection(SPARC_DB)
 
+  def self.inherited(child)
+    child.establish_connection(SPARC_DB)
+    super
+  end
+
   def readonly?
     Rails.env.production?
   end
 
-  def sparc_record?
+  def self.sparc_record?
     true
   end
 

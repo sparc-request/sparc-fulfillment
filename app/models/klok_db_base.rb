@@ -22,6 +22,11 @@ class KlokDbBase < ApplicationRecord
   self.abstract_class = true
   establish_connection(KLOK_DB)
 
+  def self.inherited(child)
+    child.establish_connection(KLOK_DB)
+    super
+  end
+
   def self.klok_record?
     true
   end
