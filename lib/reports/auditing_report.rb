@@ -60,6 +60,7 @@ class AuditingReport < Report
         header << "If not completed, reason and comment"
         header << "Follow-Up date and comment"
         header << "Cost"
+        header << "Notes"
 
         csv << header
 
@@ -69,22 +70,23 @@ class AuditingReport < Report
             participant = appointment.participant
 
             data = [ protocol.srid ]
-            data <<  protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
-            data <<  participant.full_name
-            data <<  participant.label
-            data <<  appointment.arm.name
-            data <<  appointment.name
-            data <<  format_date(procedure.completed_date.nil? ? nil : procedure.completed_date)
-            data <<  format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date)
-            data <<  format_date(procedure.follow_up? ? procedure.handled_date : nil)
-            data <<  added_formatter(procedure)
-            data <<  procedure.sparc_core_name
-            data <<  procedure.service_name
-            data <<  complete_formatter(procedure)
-            data <<  procedure.formatted_billing_type
-            data <<  reason_formatter(procedure)
-            data <<  follow_up_formatter(procedure)
-            data <<  display_cost(procedure.service_cost)
+            data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
+            data << participant.full_name
+            data << participant.label
+            data << appointment.arm.name
+            data << appointment.name
+            data << format_date(procedure.completed_date.nil? ? nil : procedure.completed_date)
+            data << format_date(procedure.incompleted_date.nil? ? nil : procedure.incompleted_date)
+            data << format_date(procedure.follow_up? ? procedure.handled_date : nil)
+            data << added_formatter(procedure)
+            data << procedure.sparc_core_name
+            data << procedure.service_name
+            data << complete_formatter(procedure)
+            data << procedure.formatted_billing_type
+            data << reason_formatter(procedure)
+            data << follow_up_formatter(procedure)
+            data << display_cost(procedure.service_cost)
+            data << procedure.notes.map(&:comment).join(' | ')
 
             csv << data
           end
@@ -96,23 +98,23 @@ class AuditingReport < Report
 
         header = [ "Protocol ID" ]
         header << "RMID" if ENV.fetch('RMID_URL'){nil}
-        header <<  "Short Title"
-        header <<  "Principal Investigator"
-        header <<  "Organization"
-        header <<  "Service Name"
-        header <<  "Account"
-        header <<  "Contact"
-        header <<  "Quantity Type"
-        header <<  "Unit Cost"
-        header <<  "Requested"
-        header <<  "Remaining"
-        header <<  "Service Started Date"
-        header <<  "Components"
-        header <<  "Last Fulfillment Date"
-        header <<  "Notes"
-        header <<  "Documents"
-        header <<  "Fields Modified"
-        header <<  "Date"
+        header << "Short Title"
+        header << "Principal Investigator"
+        header << "Organization"
+        header << "Service Name"
+        header << "Account"
+        header << "Contact"
+        header << "Quantity Type"
+        header << "Unit Cost"
+        header << "Requested"
+        header << "Remaining"
+        header << "Service Started Date"
+        header << "Components"
+        header << "Last Fulfillment Date"
+        header << "Notes"
+        header << "Documents"
+        header << "Fields Modified"
+        header << "Date"
 
         csv << header
 
@@ -121,24 +123,24 @@ class AuditingReport < Report
             next unless line_item.versions.where(event: "update", created_at: @start_date..@end_date).any?
             line_item.versions.where(event: "update").each do |version|
               data = [ protocol.srid ]
-              data <<  protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
-              data <<  protocol.short_title
-              data <<  protocol.pi.full_name
-              data <<  protocol.organization.abbreviation
-              data <<  line_item.service.name
-              data <<  line_item.account_number
-              data <<  line_item.contact_name
-              data <<  line_item.quantity_type
-              data <<  display_cost(line_item.cost)
-              data <<  line_item.quantity_requested
-              data <<  line_item.quantity_remaining
-              data <<  format_date(line_item.started_at)
-              data <<  line_item.components.where(selected: true).map(&:component).join(' | ')
-              data <<  format_date(line_item.last_fulfillment)
-              data <<  line_item.notes.map(&:comment).join(' | ')
-              data <<  line_item.documents.map(&:title).join(' | ')
-              data <<  changeset_formatter(version.changeset)
-              data <<  format_date(version.created_at)
+              data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
+              data << protocol.short_title
+              data << protocol.pi.full_name
+              data << protocol.organization.abbreviation
+              data << line_item.service.name
+              data << line_item.account_number
+              data << line_item.contact_name
+              data << line_item.quantity_type
+              data << display_cost(line_item.cost)
+              data << line_item.quantity_requested
+              data << line_item.quantity_remaining
+              data << format_date(line_item.started_at)
+              data << line_item.components.where(selected: true).map(&:component).join(' | ')
+              data << format_date(line_item.last_fulfillment)
+              data << line_item.notes.map(&:comment).join(' | ')
+              data << line_item.documents.map(&:title).join(' | ')
+              data << changeset_formatter(version.changeset)
+              data << format_date(version.created_at)
 
               csv << data
             end
