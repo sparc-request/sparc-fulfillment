@@ -42,7 +42,7 @@ namespace :data do
       csv << ["Protocol/SRID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
       puts "Fixing Procedures..."
 
-      items.each do |item|
+      items.each_with_index do |item, index|
         if item.procedures.count >= 1
           bar = ProgressBar.new(item.procedures.count)
           proc = nil
@@ -72,9 +72,11 @@ namespace :data do
                   procedure.update_attribute(:service_cost, calculated_amount)
                 end
               else
-                ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
-                procedure.update_attribute(:service_cost, nil)
+                if !procedure.service_cost.nil?
+                  ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
+                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
+                  procedure.update_attribute(:service_cost, nil)
+                end
               end
 
               bar.increment! rescue nil
@@ -84,6 +86,7 @@ namespace :data do
             end
           end
         end
+        puts "#{index}/#{items.count}"
       end
 
       ##One Time Fees Section
