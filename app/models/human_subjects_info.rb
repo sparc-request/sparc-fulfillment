@@ -18,10 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class HumanSubjectsInfo < ApplicationRecord
-
-  include SparcShard
-  
+class HumanSubjectsInfo < SparcDbBase
   self.table_name = self.table_name_prefix + 'human_subjects_info'
 
   belongs_to :protocol, primary_key: :sparc_id
