@@ -17,18 +17,23 @@ task :fix_split_notify => :environment do
     file
   end
 
+  #need to save all duplicated objects
   def create_calendar_data(protocol, line_item)
     puts "Creating new calendar data"
     old_arm = line_item.arm
     new_arm = old_arm.dup
+    new_arm.save(validate: false)
     line_item.update_attributes(arm_id: new_arm.id)
     new_arm.update_attributes(protocol_id: protocol.id)
     old_arm.visit_groups.each do |vg|
       new_vg = vg.dup
-      new_vg.update_attributes(arm_id: new_arm.id)
+      new_vg.arm_id = new_arm.id
+      new_vg.save(validate: false)
       vg.visits.each do |visit|
         new_visit = visit.dup
-        new_visit.update_attributes(visit_group_id: new_vg.id, line_item_id: line_item.id)
+        new_visit.visit_group_id = new_vg.id
+        new_visit.line_item_id = line_item.id
+        new_visit.save(validate: false)
       end
     end
   end
@@ -53,6 +58,10 @@ task :fix_split_notify => :environment do
                                        sub_service_request_id: row['New SSR ID'])
             line_item.update_attributes(protocol_id: protocol.id)
             create_calendar_data(protocol, line_item) if (row['Is One Time Fee?'] == 'false')
+          else
+            puts "Assigning to existing protocol"
+            protocol = Protocol.where(sub_service_request_id: row['New SSR ID'].to_i).first
+            line_item.update_attributes(protocol_id: protocol.id)
           end
         else
           puts 'Line item not found'
