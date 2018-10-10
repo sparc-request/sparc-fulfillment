@@ -44,6 +44,7 @@ RSpec.describe Appointment, type: :model do
         arm = create(:arm, protocol: protocol)
         participant = create(:participant, protocol: protocol, arm: arm)
         @appt = create(:appointment, arm: arm, name: "Visit 1", participant: participant, position: 1)
+        binding.pry
         @proc1 = create(:procedure, :complete, appointment: @appt)
         @proc2 = create(:procedure, appointment: @appt)
       end

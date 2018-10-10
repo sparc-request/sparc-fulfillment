@@ -38,9 +38,9 @@ class VisitGroup < ApplicationRecord
   validates :window_before,
             :window_after,
             presence: true, numericality: { only_integer: true }
-  validates :day, presence: true, unless: "ENV.fetch('USE_EPIC'){nil} == 'false'"
-  validate :day_must_be_in_order, unless: "day.blank? || arm_id.blank?"
-  validates :day, numericality: { only_integer: true }, unless: "day.blank?"
+  validates :day, presence: true, unless: -> { ENV.fetch('USE_EPIC'){nil} == 'false' }
+  validate :day_must_be_in_order, unless: -> { day.blank? || arm_id.blank? }
+  validates :day, numericality: { only_integer: true }, unless: -> { day.blank? }
 
   before_destroy :check_for_completed_data
 
