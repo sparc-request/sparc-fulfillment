@@ -45,4 +45,6 @@ config/database.yml
 config/faye.yml
 config/setup_load_paths.rb
 config/shards.yml
+config/sparc_db.yml
+config/klok_db.yml
 fulfill.sql

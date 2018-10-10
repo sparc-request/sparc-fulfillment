@@ -18,10 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class PricingSetup < ApplicationRecord
-
-  include SparcShard
-
+class PricingSetup < SparcDbBase
   belongs_to :organization
 
   scope :current, -> (date) { where("effective_date <= ?", date).order("effective_date DESC").limit(1) }
