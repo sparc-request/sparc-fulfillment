@@ -492,7 +492,6 @@ DEPENDENCIES
   delayed_job_active_record
   devise
   dotenv-rails
-  execjs
   factory_girl_rails (~> 4.9.0)
   faker (~> 1.9.1)
   faye
@@ -534,7 +533,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   sprockets-rails
-  therubyracer (= 0.12.3)
+  therubyracer
   thin
   timecop
   turbolinks
@@ -546,4 +545,4 @@ DEPENDENCIES
   yajl-ruby
 
 BUNDLED WITH
-   1.16.3
+   1.17.0.pre.1
