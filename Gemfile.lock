@@ -492,6 +492,7 @@ DEPENDENCIES
   delayed_job_active_record
   devise
   dotenv-rails
+  execjs
   factory_girl_rails (~> 4.9.0)
   faker (~> 1.9.1)
   faye
