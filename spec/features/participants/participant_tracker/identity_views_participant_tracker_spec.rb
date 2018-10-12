@@ -41,7 +41,7 @@ feature 'User views Participant Tracker', js: true do
     participant_first_names = Participant.all.map(&:first_name)
 
     participant_first_names.each do |first_name|
-      expect(page).to have_css('table.participants tbody td.first_name', first_name)
+      expect(page).to have_content(first_name)
     end
   end
 end
