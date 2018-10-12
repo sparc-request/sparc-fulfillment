@@ -9,6 +9,15 @@ GIT
       nokogiri (>= 1.6.6)
       rubyzip (>= 1.2.1)
 
+GIT
+  remote: https://github.com/thoughtbot/capybara-webkit
+  revision: 77fdac424cd6fdb5aa266b229a888cc58da8e95e
+  branch: master
+  specs:
+    capybara-webkit (1.15.1)
+      capybara (>= 2.3, < 4.0)
+      json
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -105,16 +114,13 @@ GEM
     capistrano3-delayed-job (1.7.5)
       capistrano (~> 3.0, >= 3.0.0)
       daemons (~> 1.2.4)
-    capybara (3.8.2)
+    capybara (3.9.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
       xpath (~> 3.1)
-    capybara-webkit (1.15.0)
-      capybara (>= 2.3, < 4.0)
-      json
     choice (0.2.0)
     climate_control (0.2.0)
     coderay (1.1.2)
@@ -483,7 +489,7 @@ DEPENDENCIES
   capistrano-rails (~> 1.4)
   capistrano-rvm
   capistrano3-delayed-job (~> 1.0)
-  capybara-webkit
+  capybara-webkit!
   climate_control
   coffee-rails
   daemons
