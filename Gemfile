@@ -42,7 +42,7 @@ gem 'rubyzip', '>= 1.2.1'
 gem 'sass-rails'
 gem 'sdoc', '~> 1.0.0', group: :doc
 gem 'sprockets-rails'
-gem 'therubyracer'
+gem 'therubyracer', '0.12.3', :platforms => :ruby, group: :production
 gem 'thin'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'

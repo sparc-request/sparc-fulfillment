@@ -533,7 +533,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   sprockets-rails
-  therubyracer
+  therubyracer (= 0.12.3)
   thin
   timecop
   turbolinks
