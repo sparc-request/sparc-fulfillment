@@ -241,7 +241,7 @@ GEM
       addressable (~> 2.3)
     letter_opener (1.6.0)
       launchy (~> 2.2)
-    libv8 (3.16.14.19)
+    libv8 (6.7.288.46.1)
     loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -256,6 +256,8 @@ GEM
     mimemagic (0.3.2)
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
+    mini_racer (0.2.3)
+      libv8 (>= 6.3)
     minitest (5.11.3)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
@@ -343,7 +345,6 @@ GEM
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     rdoc (6.0.4)
-    ref (2.0.0)
     remotipart (1.4.2)
     request_store (1.4.1)
       rack (>= 1.4)
@@ -421,9 +422,6 @@ GEM
     temple (0.8.0)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thin (1.7.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -504,6 +502,7 @@ DEPENDENCIES
   jquery-rails
   launchy
   letter_opener
+  mini_racer
   momentjs-rails (>= 2.9.0)
   mysql2
   net-ldap
@@ -533,7 +532,6 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   sprockets-rails
-  therubyracer
   thin
   timecop
   turbolinks
