@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class AddHeaderFieldsToParticipants < ActiveRecord::Migration
+class AddHeaderFieldsToParticipants < ActiveRecord::Migration[4.2]
   def change
     add_column :participants, :recruitment_source, :string
     add_column :participants, :external_id, :string

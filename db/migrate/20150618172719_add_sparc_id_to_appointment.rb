@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class AddSparcIdToAppointment < ActiveRecord::Migration
+class AddSparcIdToAppointment < ActiveRecord::Migration[4.2]
   def change
     add_column :appointments, :sparc_id, :integer, :after => :id
     add_index "appointments", ["sparc_id"], name: "index_appointments_on_sparc_id", using: :btree

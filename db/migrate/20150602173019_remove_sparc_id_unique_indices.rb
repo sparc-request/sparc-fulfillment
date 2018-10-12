@@ -18,16 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class RemoveSparcIdUniqueIndices < ActiveRecord::Migration
+class RemoveSparcIdUniqueIndices < ActiveRecord::Migration[4.2]
   def change
     #arms
     remove_index "arms", name: "index_arms_on_sparc_id"
     add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", using: :btree
-    
+
     #visits
     remove_index "visits", name: "index_visits_on_sparc_id"
     add_index "visits", ["sparc_id"], name: "index_visits_on_sparc_id", using: :btree
-    
+
     #visit_groups
     remove_index "visit_groups", name: "index_visit_groups_on_sparc_id"
     add_index "visit_groups", ["sparc_id"], name: "index_visit_groups_on_sparc_id", using: :btree

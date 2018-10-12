@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class AccountNumberContactToLineItem < ActiveRecord::Migration
+class AccountNumberContactToLineItem < ActiveRecord::Migration[4.2]
   def change
     remove_column :fulfillments, :account_number, :string
     add_column :line_items, :account_number, :string
