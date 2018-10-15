@@ -32,13 +32,14 @@ class Procedure < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
+  belongs_to :appointment
+
   has_one :protocol,    through: :appointment
   has_one :arm,         through: :appointment
   has_one :participant, through: :appointment
   has_one :visit_group, through: :appointment
   has_one :task,        as: :assignable, dependent: :destroy
 
-  belongs_to :appointment
   belongs_to :visit
   belongs_to :service
   belongs_to :performer, class_name: "Identity"

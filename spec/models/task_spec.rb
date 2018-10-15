@@ -91,7 +91,8 @@ RSpec.describe Task, type: :model do
 
   def an_identity_that_is_assigned_a_complete_task
     @identity = create(:identity)
-    @task     = create(:task_complete, identity: @identity)
+    @assignee = create(:identity)
+    @task     = create(:task_complete, identity: @identity, assignee: @assignee)
   end
 
   def assignee_completes_the_task
@@ -115,6 +116,6 @@ RSpec.describe Task, type: :model do
   end
 
   def assignee_should_have_no_tasks
-    expect(@identity.tasks_count).to eq(0)
+    expect(@assignee.tasks_count).to eq(0)
   end
 end

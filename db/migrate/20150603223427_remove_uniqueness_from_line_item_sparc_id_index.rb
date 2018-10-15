@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class RemoveUniquenessFromLineItemSparcIdIndex < ActiveRecord::Migration
+class RemoveUniquenessFromLineItemSparcIdIndex < ActiveRecord::Migration[4.2]
   def change
     remove_index "line_items", name: "index_line_items_on_sparc_id"
     add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", using: :btree
