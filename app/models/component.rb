@@ -26,6 +26,7 @@ class Component < ApplicationRecord
   belongs_to :composable, polymorphic: true
 
   default_scope {order(:position)}
+  scope :selected,  -> { where(selected: true) }
 
   validates :component, presence: true
 end

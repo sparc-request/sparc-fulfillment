@@ -59,6 +59,15 @@ module StudyLevelActivitiesHelper
     raw content_tag(:div, button + ul, class: 'btn-group overflow_webkit_button')
   end
 
+  def sla_notes notes
+    bullet_notes = []
+    notes.each do |note|
+      note_content = "\u2022 " + note.comment + ", " + Identity.find(LineItem.find(1801).notes.first.identity_id).full_name + ", " + LineItem.find(1801).notes.first.created_at.strftime('%Y/%m/%d')
+      bullet_notes << note_content
+    end
+    bullet_notes.join("<br>")
+  end
+
   def fulfillments_drop_button line_item
     button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", type: 'button', class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
   end
