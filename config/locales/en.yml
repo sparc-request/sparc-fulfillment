@@ -222,6 +222,8 @@ en:
     quantity: "Quantity"
     service: "Service"
     started: "Started"
+    notes: "Notes"
+    documents: "Documents"
 
   navbar:
     logged_in_msg: "Logged in as"
