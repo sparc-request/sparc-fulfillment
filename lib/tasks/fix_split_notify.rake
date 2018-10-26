@@ -46,18 +46,35 @@ task :fix_split_notify => :environment do
   if (continue == 'y') || (continue == 'Y')
     ActiveRecord::Base.transaction do
       CSV.foreach(input_file, :headers => true) do |row|
-        line_item = LineItem.where(sparc_id: row['Line Item ID'].to_i).first
+        puts "*" * 20
+        puts "Line Item ID"
+        puts row['Line Item ID'].to_i
+        puts "*" * 20
+        line_item_array = LineItem.where(sparc_id: row['Line Item ID'].to_i)
+        puts line_item_array
+        line_item = line_item_array.first
+        puts "Sparc protocol ID"
         puts row['Sparc ID']
+        puts line_item.inspect
         if line_item
           if row['Assigned or Created'] == 'Created'
             puts "Creating new protocol"
-            protocol = Protocol.create(sparc_id: row['Sparc ID'].to_i, sponsor_name: row['Sponsor Name'],
+            protocol = Protocol.new(sparc_id: row['Sparc ID'].to_i, sponsor_name: row['Sponsor Name'],
                                        udak_project_number: row['Udak Number'], start_date: row['Start Date'],
                                        end_date: row['End Date'], recruitment_start_date: row['recruitment_start'],
                                        recruitment_end_date: row['Recruitment End'], study_cost: row['Study Cost'].to_i,
-                                       sub_service_request_id: row['New SSR ID'])
-            line_item.update_attributes(protocol_id: protocol.id)
-            create_calendar_data(protocol, line_item) if (row['Is One Time Fee?'] == 'false')
+                                       sub_service_request_id: row['New SSR ID'].to_i)
+            puts protocol.inspect
+            if protocol.valid?
+              puts "In save block"
+              protocol.save
+              line_item.update_attributes(protocol_id: protocol.id)
+              create_calendar_data(protocol, line_item) if (row['Is One Time Fee?'] == 'false')
+            else
+              puts "#"*50
+              puts "Error importing protocol"
+              puts protocol.errors.inspect
+            end  
           else
             puts "Assigning to existing protocol"
             protocol = Protocol.where(sub_service_request_id: row['New SSR ID'].to_i).first
