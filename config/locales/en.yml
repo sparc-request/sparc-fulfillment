@@ -319,6 +319,7 @@ en:
     owner: "Owner"
     principal_investigator: "Principal Investigator"
     requester: "Service Requester"
+    rmid: "RMID"
     short_title: "Short Title"
     sparc_id: "SPARC ID"
     srid: "SRID"
