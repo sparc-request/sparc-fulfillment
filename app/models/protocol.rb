@@ -28,26 +28,27 @@ class Protocol < ApplicationRecord
   acts_as_paranoid
 
   belongs_to :sub_service_request
-  has_one  :subsidy, through: :sub_service_request
-
   belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
-
-  has_one :organization, through: :sub_service_request
   has_one :human_subjects_info, primary_key: :sparc_id
-  has_many :subsidies, through: :sub_service_requests
-
-  has_many :sub_service_requests, through: :service_requests
-  has_many :project_roles,    primary_key: :sparc_id
   has_many :service_requests, primary_key: :sparc_id
+  has_many :project_roles,    primary_key: :sparc_id
   has_many :arms,             dependent: :destroy
   has_many :line_items,       dependent: :destroy
-  has_many :fulfillments,     through: :line_items
   has_many :participants,     dependent: :destroy
-  has_many :appointments,     through: :participants
-  has_many :procedures,       through: :appointments
   has_many :documents,        as: :documentable
+
+  has_many :sub_service_requests, through: :service_requests
+  has_many :subsidies, through: :sub_service_requests
+
+  has_one :organization, through: :sub_service_request
   has_many :clinical_providers, through: :organization
   has_many :super_users, through: :organization
+
+  has_many :appointments,     through: :participants
+  has_many :procedures,       through: :appointments
+
+  has_one  :subsidy, through: :sub_service_request
+  has_many :fulfillments,     through: :line_items
 
   before_save :set_documents_count
 
