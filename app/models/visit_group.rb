@@ -28,8 +28,9 @@ class VisitGroup < ApplicationRecord
   belongs_to :arm
 
   has_many :visits, dependent: :destroy
-  has_many :line_items, through: :arm
   has_many :appointments
+
+  has_many :line_items, through: :arm
 
   default_scope { order(:position) }
 

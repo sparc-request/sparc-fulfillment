@@ -23,9 +23,10 @@ class Service < SparcDbBase
 
   has_many :line_items
   has_many :pricing_maps
-  has_many :pricing_setups, through: :organization
   has_many :procedures
   has_many :fulfillments
+
+  has_many :pricing_setups, through: :organization
 
   default_scope { order(name: :asc) }
 

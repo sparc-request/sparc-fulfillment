@@ -25,8 +25,10 @@ class Sparc::LineItem < SparcDbBase
 
   has_many :fulfillments
   has_many :line_items_visits
-  has_many :arms, through: :line_items_visits
   has_many :admin_rates
+
+  has_many :arms, through: :line_items_visits
+
   attr_accessor :pricing_scheme
 
   delegate  :name, to: :service

@@ -21,11 +21,12 @@
 class Klok::Project < KlokDbBase
   self.primary_key = 'project_id'
 
-  has_many :klok_entries, class_name: 'Klok::Entry', foreign_key: :project_id
-  has_many :klok_people, class_name: 'Klok::Person', foreign_key: :resource_id, through: :klok_entries
-  belongs_to :parent_project, class_name: 'Klok::Project', foreign_key: :parent_id
-  has_many :child_projects, class_name: 'Klok::Project', foreign_key: :parent_id
   belongs_to :service, foreign_key: :code
+  belongs_to :parent_project, class_name: 'Klok::Project', foreign_key: :parent_id
+  has_many :klok_entries, class_name: 'Klok::Entry', foreign_key: :project_id
+  has_many :child_projects, class_name: 'Klok::Project', foreign_key: :parent_id
+
+  has_many :klok_people, class_name: 'Klok::Person', foreign_key: :resource_id, through: :klok_entries
 
   def ssr_id
     parent_project.try(:code) || code

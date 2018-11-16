@@ -32,15 +32,13 @@ class Appointment < ApplicationRecord
   include CustomPositioning #custom methods around positioning, acts_as_list
 
   belongs_to :arm, -> { with_deleted }
-
-  has_one :protocol, through: :arm
-
   belongs_to :participant
   belongs_to :visit_group
-
   has_many :appointment_statuses, dependent: :destroy
   has_many :procedures
   has_many :notes, as: :notable
+
+  has_one :protocol, through: :arm
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
   scope :incompleted, -> { where('appointments.completed_date IS NULL') }
