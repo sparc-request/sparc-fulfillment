@@ -38,6 +38,7 @@
 require 'shoulda-matchers'
 require 'simplecov'
 require 'rspec/active_job'
+require 'rspec/rails'
 require 'paperclip/matchers'
 
 Shoulda::Matchers.configure do |config|
