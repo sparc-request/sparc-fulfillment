@@ -37,7 +37,7 @@ feature 'Fulfillments', js: true do
       click_button "Add Fulfillment"
       wait_for_ajax
       when_i_fill_out_the_fulfillment_form
-      expect(page).to have_content('Fulfillment Created')
+      expect(page).to have_selector('td', text: '45')
     end
   end
 

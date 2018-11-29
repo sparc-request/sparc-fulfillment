@@ -45,13 +45,10 @@ feature 'User edits Participant', js: true do
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
 
     find("input[value='Save Participant']").click
-    
-    refresh_bootstrap_table 'table.participants'
+    wait_for_ajax
   end
 
   def then_i_should_see_the_updated_details
-    expect(page).to have_css('#flashes_container', text: 'Participant Updated')
-    wait_for_ajax
     expect(page).to have_css('table.participants tbody tr td.first_name', text: 'Starlord')
   end
 end

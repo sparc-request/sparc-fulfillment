@@ -220,7 +220,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_not_see_the_visit_group
-    expect(page).to_not have_content("#{@visit_groups.first.name}")
+    expect(page).to have_no_selector(".visit_name", text: @visit_groups.first.name)
   end
 
   def then_i_should_see_the_position_is position
