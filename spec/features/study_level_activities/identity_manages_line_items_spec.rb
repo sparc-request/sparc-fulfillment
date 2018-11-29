@@ -126,6 +126,7 @@ feature 'Line Items', js: true do
     first("#study-level-activities-table .available-actions-button").click
     wait_for_ajax
     find(".otf_delete").click
+    accept_confirm
     wait_for_ajax
   end
 

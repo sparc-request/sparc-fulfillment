@@ -167,6 +167,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def when_i_click_the_remove_submit_button
     click_button 'Remove'
+    accept_confirm
     wait_for_ajax
   end
 
@@ -182,12 +183,6 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def when_i_select_the_arm_with_completed_procedures
     bootstrap_select "#arm_form_select", @protocol.arms.first.name
-  end
-
-  def when_i_accept_the_confirmation_alert
-    page.accept_alert do
-      click_button('OK')
-    end
   end
 
   def then_i_should_see_the_new_arm

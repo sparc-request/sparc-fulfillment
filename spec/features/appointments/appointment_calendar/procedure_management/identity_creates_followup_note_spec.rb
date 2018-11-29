@@ -133,9 +133,11 @@ feature 'Followup note', js: true do
   end
 
   def when_i_try_to_add_a_follow_up_note
-    @alert = accept_alert(with: 'Please click Start Visit and enter a start date to continue.') do
-      find('button.followup.new').trigger('click')
-    end
+    find('button.followup.new').click
+    alert = page.driver.browser.switch_to.alert
+    @alert_message = alert.text
+    alert.accept
+    wait_for_ajax
   end
 
   def then_i_should_see_the_followup_button
@@ -166,6 +168,6 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_see_a_helpful_message
-    expect(@alert).to eq("Please click 'Start Visit' and enter a start date to continue.")
+    expect(@alert_message).to eq("Please click 'Start Visit' and enter a start date to continue.")
   end
 end

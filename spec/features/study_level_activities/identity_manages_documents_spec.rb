@@ -81,7 +81,7 @@ feature 'Identity manages Doucuments', js: true do
   end
 
   def then_i_should_see_the_line_item_documents_list
-    expect(page).to have_content('Line Item Documents')
+    expect(page).to have_selector('.modal-title', text: 'Line Item Documents')
   end
 
   def then_i_should_see_the_document

@@ -23,27 +23,34 @@ module Features
   module BootstrapHelpers
 
     def bootstrap_multiselect(class_or_id, selections = ['all'])
-      bootstrap_multiselect = page.find("select#{class_or_id}", visible: false).first(:xpath, ".//..")
-
+      expect(page).to have_selector("select#{class_or_id}", visible: false)
+      bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".btn-group").find('.dropdown-toggle')
       bootstrap_multiselect.click
+
+      expect(page).to have_selector('.open .dropdown-menu')
       if selections.first == 'all'
-        check 'Select all'
+        first('.open .dropdown-menu a', text: 'Select all').click
       else
         selections.each do |selection|
-          check selection
+          first('.open .dropdown-menu a', text: selection).click
         end
       end
       find('body').click # Click away
+      wait_for_ajax
     end
 
     def bootstrap_select(class_or_id, choice)
-      page.find("select#{class_or_id}").first(:xpath, ".//..").click
+      expect(page).to have_selector("select#{class_or_id}", visible: false)
+      bootstrap_select = page.first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
+      
+      bootstrap_select.click
+      expect(page).to have_selector('.dropdown-menu.open')
       first('.dropdown-menu.open span.text', text: choice).click
       wait_for_ajax
     end
 
     def bootstrap_selected?(element, choice)
-      page.find("button[data-id='#{element}'][title='#{choice}']")
+      page.find("button.dropdown-toggle[data-id='#{element}'][title='#{choice}']")
     end
   end
 end
