@@ -112,7 +112,6 @@ feature 'Custom appointment', js: true do
   def when_i_complete_the_procedure
     find('button.start_visit').click
     find('label.status.complete').click
-    accept_confirm
     wait_for_ajax
 
     click_button 'Complete Visit'

@@ -37,11 +37,9 @@ feature 'Fulfillments', js: true do
       click_button "Add Fulfillment"
       wait_for_ajax
       when_i_fill_out_the_fulfillment_form
-      expect(page).to have_selector('td', text: '45')
+      expect(page).to have_selector('.modal td', text: '45')
     end
   end
-
-
 
   def given_i_have_fulfillments
     @protocol = create_and_assign_protocol_to_me
@@ -67,9 +65,8 @@ feature 'Fulfillments', js: true do
   def when_i_fill_out_the_fulfillment_form
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    fill_in 'Quantity', with: "45"
     find('.modal-header').click
-    wait_for_ajax
+    fill_in 'Quantity', with: "45"
     click_button "Save"
     wait_for_ajax
   end

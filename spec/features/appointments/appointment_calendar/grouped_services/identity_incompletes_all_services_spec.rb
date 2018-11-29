@@ -113,6 +113,7 @@ feature 'Identity incompletes all Services', js: true do
 
   def and_i_click_incomplete_all_and_give_a_reason
     find('button.incomplete_all').click
+    wait_for_ajax
     reason = Procedure::NOTABLE_REASONS.first
     bootstrap_select '.reason-select', reason
     fill_in 'Comment', with: 'Test comment'
@@ -136,12 +137,12 @@ feature 'Identity incompletes all Services', js: true do
 
     selected_procedures.each do |procedure|
       expect(procedure.status).to eq 'incomplete'
-      expect(page).to have_css("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
+      expect(page).to have_selector("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
     end
 
     unselected_procedures.each do |procedure|
       expect(procedure.status).to eq 'unstarted'
-      expect(page).to_not have_css("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
+      expect(page).to_not have_selector("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
     end
   end
 
