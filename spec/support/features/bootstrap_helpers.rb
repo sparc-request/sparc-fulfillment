@@ -19,9 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module Features
-
   module BootstrapHelpers
-
     def bootstrap_multiselect(class_or_id, selections = ['all'])
       expect(page).to have_selector("select#{class_or_id}", visible: false)
       bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".btn-group").find('.dropdown-toggle')

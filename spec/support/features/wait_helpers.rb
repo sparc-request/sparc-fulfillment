@@ -39,7 +39,3 @@ module Features
     end
   end
 end
-
-RSpec.configure do |config|
-  config.include Features::WaitHelpers, type: :feature
-end

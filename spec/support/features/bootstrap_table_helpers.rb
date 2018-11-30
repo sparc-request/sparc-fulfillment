@@ -19,9 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module Features
-
   module BootstrapTableHelpers
-
     def search_bootstrap_table(query)
       page.find('.search input').set(query)
     end

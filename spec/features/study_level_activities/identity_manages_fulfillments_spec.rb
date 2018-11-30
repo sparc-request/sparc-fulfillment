@@ -37,7 +37,7 @@ feature 'Fulfillments', js: true do
       click_button "Add Fulfillment"
       wait_for_ajax
       when_i_fill_out_the_fulfillment_form
-      expect(page).to have_selector('.modal td', text: '45')
+      expect(page).to have_selector('.modal td', text: '45.0')
     end
   end
 
@@ -53,7 +53,6 @@ feature 'Fulfillments', js: true do
   end
 
   def and_i_have_opened_up_fulfillments
-    given_i_have_fulfillments
     visit protocol_path(@protocol.id)
     wait_for_ajax
     click_link "Non-clinical Services"

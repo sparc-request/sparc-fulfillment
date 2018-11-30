@@ -54,8 +54,7 @@ feature 'Identity manages Doucuments', js: true do
 
   def when_i_click_on_line_item_documents_icon
     first("#study-level-activities-table .available-actions-button").click
-    wait_for_ajax
-    first('.documents[data-documentable-type="LineItem"]').click
+    first('.documents.list').click
     wait_for_ajax
   end
 
