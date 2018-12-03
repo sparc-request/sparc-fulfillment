@@ -121,7 +121,6 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def then_i_should_see_the_title_has_been_updated
-    refresh_bootstrap_table('#documents_table')
-    expect(page).to have_selector('td', text: "A custom title")
+    expect(page).to have_content("A custom title")
   end
 end
