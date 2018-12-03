@@ -42,14 +42,13 @@ feature 'Fulfillments', js: true do
   end
 
   def given_i_have_fulfillments
-    @protocol = create_and_assign_protocol_to_me
-    sparc_protocol = @protocol.sparc_protocol
-    sparc_protocol.update_attributes(type: 'Study')
-    service     = create(:service_with_one_time_fee)
-    @line_item  = create(:line_item, protocol: @protocol, service: service)
-    @components = @line_item.components
-    @clinical_providers = Identity.first.clinical_providers
-    @fulfillment = create(:fulfillment, line_item: @line_item)
+    @protocol = create(:protocol_imported_from_sparc)
+    @protocol.sparc_protocol.update_attributes(type: 'Study')
+    org       = @protocol.sub_service_request.organization
+    service   = create(:service_with_one_time_fee, organization: org)
+    line_item = create(:line_item, protocol: @protocol, service: service)
+                create(:fulfillment, line_item: line_item)
+                create(:clinical_provider, identity: Identity.first, organization: org)
   end
 
   def and_i_have_opened_up_fulfillments
@@ -64,7 +63,7 @@ feature 'Fulfillments', js: true do
   def when_i_fill_out_the_fulfillment_form
     page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    find('.modal-header').click
+    find('.modal-title').click
     fill_in 'Quantity', with: "45"
     click_button "Save"
     wait_for_ajax

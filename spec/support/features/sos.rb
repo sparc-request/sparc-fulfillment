@@ -18,15 +18,10 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-Dir[Rails.root.join("spec/support/features/*.rb")].each { |f| require f }
-
-RSpec.configure do |config|
-  config.include Features::BootstrapHelpers, type: :feature
-  config.include Features::BootstrapTableHelpers, type: :feature
-  config.include Features::BrowserHelpers, type: :feature
-  config.include Features::PageHelpers, type: :feature
-  config.include Features::SOS, type: :feature
-  config.include Features::TaskHelpers, type: :feature
-  config.include Features::VisitHelpers, type: :feature
-  config.include Features::WaitHelpers, type: :feature
+module Features
+  module SOS
+    def sos
+      save_and_open_screenshot
+    end
+  end
 end

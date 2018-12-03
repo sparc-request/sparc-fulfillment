@@ -54,16 +54,20 @@ feature 'Identity edits document title', js: true, enqueue: false do
   end
 
   def given_i_am_viewing_the_all_reports_page_with_documents
-    @protocol = create_and_assign_protocol_to_me
-    create(:document_of_identity_report, documentable_id: Identity.first.id)
+    @protocol = create(:protocol_imported_from_sparc)
+    org       = @protocol.sub_service_request.organization
+                create(:clinical_provider, identity: Identity.first, organization: org)
+                create(:document_of_identity_report, documentable_id: Identity.first.id)
 
     visit documents_path
     wait_for_ajax
   end
 
   def given_i_am_viewing_the_reports_tab_with_documents
-    @protocol = create_and_assign_protocol_to_me
-    create(:document_of_protocol_report, documentable_id: @protocol.id)
+    @protocol = create(:protocol_imported_from_sparc)
+    org       = @protocol.sub_service_request.organization
+                create(:clinical_provider, identity: Identity.first, organization: org)
+                create(:document_of_protocol_report, documentable_id: @protocol.id)
 
     visit protocol_path @protocol
     wait_for_ajax
@@ -81,26 +85,26 @@ feature 'Identity edits document title', js: true, enqueue: false do
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
     
     # close calendar thing, so it's not covering protocol dropdown    
-    find(".modal-header", match: :first).click
+    find('.modal-title').click
 
     page.execute_script %Q{ $("#end_date").trigger("focus")}
     page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
 
     # close calendar thing, so it's not covering protocol dropdown
-    find(".modal-header", match: :first).click
+    find('.modal-title').click
 
     find('button.multiselect').click
     check(@protocol.organization.name)
 
     # close organization dropdown, so it's not covering protocol dropdown
-    find(".modal-header", match: :first).click
+    find('.modal-title').click
 
     #Actually choose protocol
     find('.bootstrap-select').click
     find('.dropdown-menu a', text: @protocol.short_title_with_sparc_id).click
 
     # close protocol dropdown, so it's not covering 'Request Report' button
-    find('.modal-header', match: :first).click
+    find('.modal-title').click
 
     find("input[type='submit']").click
     wait_for_ajax
