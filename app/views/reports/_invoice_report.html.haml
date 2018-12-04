@@ -41,11 +41,11 @@
             .form-group
               = label_tag "start_date", t(:reports)[:start_date]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
-                = text_field_tag "start_date", nil, class: "datepicker form-control", readonly: true
+                = text_field_tag "start_date", nil, class: "form-control", readonly: true
             .form-group
               = label_tag "end_date", t(:reports)[:end_date]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
-                = text_field_tag "end_date", nil, class: "datepicker form-control", readonly: true
+                = text_field_tag "end_date", nil, class: "form-control", readonly: true
             .form-group
               = label_tag "organizations", t(:reports)[:organization], class: "col-sm-3 control-label"
               .col-sm-9
