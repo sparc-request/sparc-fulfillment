@@ -101,7 +101,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
 
     #Actually choose protocol
     find('.bootstrap-select').click
-    find('.dropdown-menu a', text: @protocol.short_title_with_sparc_id).click
+    find('.dropdown-menu a', text: @protocol.short_title_with_sparc_id.truncate(50)).click
 
     # close protocol dropdown, so it's not covering 'Request Report' button
     find('.modal-title').click
