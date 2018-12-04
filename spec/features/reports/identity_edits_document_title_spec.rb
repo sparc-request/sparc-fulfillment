@@ -81,14 +81,14 @@ feature 'Identity edits document title', js: true, enqueue: false do
     wait_for_ajax
 
     fill_in 'Title', with: "A custom title"
-    page.execute_script %Q{ $("#start_date").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
+    page.execute_script %Q{ $("#start_date").focus() }
+    page.execute_script %Q{ $("td.day:contains('10')").click() }
     
     # close calendar thing, so it's not covering protocol dropdown    
     find('.modal-title').click
 
-    page.execute_script %Q{ $("#end_date").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
+    page.execute_script %Q{ $("#end_date").focus() }
+    page.execute_script %Q{ $("td.day:contains('10')").click() }
 
     # close calendar thing, so it's not covering protocol dropdown
     find('.modal-title').click
@@ -101,7 +101,7 @@ feature 'Identity edits document title', js: true, enqueue: false do
 
     #Actually choose protocol
     find('.bootstrap-select').click
-    find('.dropdown-menu a', text: @protocol.short_title_with_sparc_id.truncate(50)).click
+    find('.dropdown-menu a', text: @protocol.short_title_with_sparc_id).click
 
     # close protocol dropdown, so it's not covering 'Request Report' button
     find('.modal-title').click

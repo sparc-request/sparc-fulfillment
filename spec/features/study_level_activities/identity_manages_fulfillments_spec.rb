@@ -61,8 +61,8 @@ feature 'Fulfillments', js: true do
   end
 
   def when_i_fill_out_the_fulfillment_form
-    page.execute_script %Q{ $('#date_fulfilled_field').trigger("focus") }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    page.execute_script %Q{ $('#date_fulfilled_field').focus() }
+    page.execute_script %Q{ $("td.day:contains('15')").click() }
     find('.modal-title').click
     fill_in 'Quantity', with: "45"
     click_button "Save"
