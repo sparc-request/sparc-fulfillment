@@ -45,6 +45,10 @@ $ ->
       url: "/tasks/#{task_id}.js"
       data: data
 
+  ##Stop double click issues:
+  $(document).on 'submit', 'form#new_task', ->
+    $('#new_task_submit').attr('disabled','disabled')
+
 
   $(document).on 'click', '.task-reschedule', ->
     task_id = $(this).attr('task_id')
