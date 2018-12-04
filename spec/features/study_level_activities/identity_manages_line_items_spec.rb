@@ -55,12 +55,6 @@ feature 'Line Items', js: true do
   end
 
   context 'User deletes a line item with fulfillments' do
-    scenario 'and sees a flash message' do
-      given_i_am_viewing_the_study_level_activities_tab_with_fulfillments
-      when_i_click_on_the_delete_line_item_button
-      then_i_should_see_a_flash_message
-    end
-
     scenario 'and sees the line item' do
       given_i_am_viewing_the_study_level_activities_tab_with_fulfillments
       when_i_click_on_the_delete_line_item_button
@@ -69,12 +63,6 @@ feature 'Line Items', js: true do
   end
 
   context 'User deletes a line item without fulfillments' do
-    scenario 'and sees a flash message' do
-      given_i_am_viewing_the_study_level_activities_tab_without_fulfillments
-      when_i_click_on_the_delete_line_item_button
-      then_i_should_see_a_flash_message
-    end
-
     scenario 'and does not see the line item' do
       given_i_am_viewing_the_study_level_activities_tab_without_fulfillments
       when_i_click_on_the_delete_line_item_button
@@ -144,10 +132,6 @@ feature 'Line Items', js: true do
     fill_in 'Contact', with: "Purposeful String II"
     click_button 'Save'
     wait_for_ajax
-  end
-
-  def then_i_should_see_a_flash_message
-    expect(page).to have_css ".alert"
   end
 
   def then_i_should_not_see_the_line_item
