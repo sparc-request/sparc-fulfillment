@@ -56,7 +56,7 @@ feature "create Task", js: true do
     page.execute_script %Q{ $('#follow_up_datepicker').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
-    click_button 'Save'
+    find("#new_task .modal-footer .btn-primary").click
     wait_for_ajax
   end
 
@@ -66,7 +66,7 @@ feature "create Task", js: true do
     page.execute_script %Q{ $('#follow_up_datepicker').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
     fill_in :task_body, with: "Test body"
-    click_button 'Save'
+    find("#new_task .modal-footer .btn-primary").click
     wait_for_ajax
   end
 
