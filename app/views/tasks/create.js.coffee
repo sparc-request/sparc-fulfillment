@@ -20,8 +20,6 @@
 
 <% if @errors.present? %>
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
-$('#new_task_submit').attr('disabled', false)
-
 <% else %>
 if !$('.notification.task-notifications').length
   $('<span class="notification task-notifications"></span>').appendTo($('a.tasks'))
