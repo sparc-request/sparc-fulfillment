@@ -50,5 +50,22 @@ module Features
     def bootstrap_selected?(element, choice)
       page.find("button.dropdown-toggle[data-id='#{element}'][title='#{choice}']")
     end
+
+    def bootstrap_datepicker(element, args={})
+      e = page.find(element)
+
+      if e['readonly']
+        page.execute_script "$('#{element}').focus()"
+        page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
+        find('.year', text: args[:year]).click if args[:year]
+        find('.month', text: args[:month]).click if args[:month]
+        find('.day', text: args[:day]).click if args[:day]
+      else
+        page.execute_script "$('#{element}').focus()"
+        page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
+        e.send_keys(:delete)
+        e.set(args[:text])
+      end
+    end
   end
 end
