@@ -136,9 +136,7 @@ feature 'Complete Visit', js: true do
     wait_for_ajax
 
     bootstrap_select '#task_assignee_id', @identity.full_name
-
-    page.execute_script %Q{ $("#follow_up_procedure_datepicker").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
+    bootstrap_datepicker '#follow_up_procedure_datepicker', day: '10'
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'
     wait_for_ajax

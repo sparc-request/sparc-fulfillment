@@ -116,8 +116,7 @@ feature 'Followup note', js: true do
 
   def when_i_fill_out_and_submit_the_followup_form
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    page.execute_script %Q{ $("#follow_up_procedure_datepicker").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
+    bootstrap_datepicker '#follow_up_procedure_datepicker', day: '10'
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'
     wait_for_ajax
@@ -158,9 +157,7 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_be_able_to_edit_the_followup_date
-    page.execute_script %Q{ $(".followup_procedure_datepicker").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    wait_for_ajax
+    bootstrap_datepicker '#follow_up_procedure_datepicker', day: '15'
   end
 
   def then_i_should_see_the_date_change

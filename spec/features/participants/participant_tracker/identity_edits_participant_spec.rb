@@ -41,9 +41,7 @@ feature 'User edits Participant', js: true do
   def when_i_update_a_participants_details
     page.find('table.participants tbody tr:first-child td.edit a').click
     fill_in 'First Name', with: 'Starlord'
-    page.execute_script %Q{ $('#dob_time_picker').trigger("focus") }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-
+    bootstrap_datepicker '#dob_time_picker', day: '15'
     find("input[value='Save Participant']").click
     wait_for_ajax
   end
