@@ -157,7 +157,7 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_be_able_to_edit_the_followup_date
-    bootstrap_datepicker '#follow_up_procedure_datepicker', day: '15'
+    bootstrap_datepicker '.followup_procedure_datepicker', day: '15'
   end
 
   def then_i_should_see_the_date_change

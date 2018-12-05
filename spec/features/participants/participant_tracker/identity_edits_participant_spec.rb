@@ -29,9 +29,9 @@ feature 'User edits Participant', js: true do
   end
 
   def given_i_am_viewing_the_participant_tracker
-    protocol = create_and_assign_protocol_to_me
+    @protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.id)
+    visit protocol_path(@protocol.id)
     wait_for_ajax
 
     click_link 'Participant Tracker'
@@ -41,7 +41,7 @@ feature 'User edits Participant', js: true do
   def when_i_update_a_participants_details
     page.find('table.participants tbody tr:first-child td.edit a').click
     fill_in 'First Name', with: 'Starlord'
-    bootstrap_datepicker '#dob_time_picker', day: '15'
+    bootstrap_datepicker '#dob_time_picker', year: @protocol.participants.first.date_of_birth.to_date.year + 2, month: 'Mar', day: '15'
     find("input[value='Save Participant']").click
     wait_for_ajax
   end
