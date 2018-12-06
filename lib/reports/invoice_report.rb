@@ -88,6 +88,7 @@ class InvoiceReport < Report
           header << "Fulfillment Date"
           header << "Performed By"
           header << "Components"
+          # header << "Notes"
           header << "Contact"
           header << "Account #"
           header << "Quantity Completed"
@@ -107,7 +108,7 @@ class InvoiceReport < Report
             data << fulfillment.funding_source
             data << formatted_status(protocol)
             data << (protocol.pi ? protocol.pi.full_name : nil)
-            data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
+            data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
                                    protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
             data << protocol.billing_business_managers.map(&:full_name).join(',')
             data << fulfillment.service.organization.name
@@ -115,6 +116,7 @@ class InvoiceReport < Report
             data << format_date(fulfillment.fulfilled_at)
             data << fulfillment.performer.full_name
             data << fulfillment.components.map(&:component).join(',')
+            data << fulfillment.notes.map(&:comment).join(' | ')
             data << fulfillment.line_item.contact_name
             data << fulfillment.line_item.account_number
             data << fulfillment.quantity
@@ -179,7 +181,7 @@ class InvoiceReport < Report
                   data << procedure.funding_source
                   data << formatted_status(protocol)
                   data << (protocol.pi ? protocol.pi.full_name : nil)
-                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
+                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
                                         protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
                   data << protocol.billing_business_managers.map(&:full_name).join(',')
                   data << org.name

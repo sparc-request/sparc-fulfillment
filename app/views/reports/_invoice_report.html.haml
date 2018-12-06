@@ -34,6 +34,7 @@
         .row
           .col-md-12
             = hidden_field_tag "report_type", report_type
+            = hidden_field_tag "include_notes", false
             .form-group
               = label_tag "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
@@ -75,10 +76,8 @@
                   = t(:reports)[:descending]
             .form-group
               = label_tag "include_notes", t(:reports)[:include_notes], class: "col-sm-3 control-label"
-              .col-sm-3
-                %label.checkbox-inline
-                  = checkbox_tag "sort_order", t(:reports)[:asc], true
-                  = t(:reports)[:ascending]
+              .checkbox.col-sm-9
+                %label= check_box_tag "include_notes", true, false
 
       .modal-footer
         .center-block
