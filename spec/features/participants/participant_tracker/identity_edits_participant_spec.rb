@@ -29,9 +29,9 @@ feature 'User edits Participant', js: true do
   end
 
   def given_i_am_viewing_the_participant_tracker
-    protocol = create_and_assign_protocol_to_me
+    @protocol = create_and_assign_protocol_to_me
 
-    visit protocol_path(protocol.id)
+    visit protocol_path(@protocol.id)
     wait_for_ajax
 
     click_link 'Participant Tracker'
@@ -41,17 +41,12 @@ feature 'User edits Participant', js: true do
   def when_i_update_a_participants_details
     page.find('table.participants tbody tr:first-child td.edit a').click
     fill_in 'First Name', with: 'Starlord'
-    page.execute_script %Q{ $('#dob_time_picker').trigger("focus") }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-
+    bootstrap_datepicker '#dob_time_picker', year: @protocol.participants.first.date_of_birth.to_date.year + 2, month: 'Mar', day: '15'
     find("input[value='Save Participant']").click
-    
-    refresh_bootstrap_table 'table.participants'
+    wait_for_ajax
   end
 
   def then_i_should_see_the_updated_details
-    expect(page).to have_css('#flashes_container', text: 'Participant Updated')
-    wait_for_ajax
     expect(page).to have_css('table.participants tbody tr td.first_name', text: 'Starlord')
   end
 end

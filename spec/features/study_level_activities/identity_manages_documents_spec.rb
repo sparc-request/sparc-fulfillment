@@ -54,8 +54,7 @@ feature 'Identity manages Doucuments', js: true do
 
   def when_i_click_on_line_item_documents_icon
     first("#study-level-activities-table .available-actions-button").click
-    wait_for_ajax
-    first('.documents[data-documentable-type="LineItem"]').click
+    first('.documents.list').click
     wait_for_ajax
   end
 
@@ -81,7 +80,7 @@ feature 'Identity manages Doucuments', js: true do
   end
 
   def then_i_should_see_the_line_item_documents_list
-    expect(page).to have_content('Line Item Documents')
+    expect(page).to have_selector('.modal-title', text: 'Line Item Documents')
   end
 
   def then_i_should_see_the_document

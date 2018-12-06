@@ -31,15 +31,6 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
       when_i_click_the_add_submit_button
       then_i_should_see_it_on_that_arm
     end
-
-    scenario 'and sees a flash message' do
-      given_i_am_viewing_a_protocol
-      given_an_arm_has_services
-      when_i_click_the_add_services_button
-      when_i_fill_in_the_form
-      when_i_click_the_add_submit_button
-      then_i_should_see_a_flash_message_of_type 'add'
-    end
   end
 
   context 'User deletes a service from an arm' do
@@ -50,15 +41,6 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
       when_i_select_a_service_and_arm
       when_i_click_the_remove_submit_button
       then_i_should_not_see_it_on_that_arm
-    end
-
-    scenario 'and sees a flash message' do
-      given_i_am_viewing_a_protocol
-      given_an_arm_has_services
-      when_i_click_the_remove_services_button
-      when_i_select_a_service_and_arm
-      when_i_click_the_remove_submit_button
-      then_i_should_see_a_flash_message_of_type 'remove'
     end
   end
 
@@ -128,14 +110,5 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
   def then_i_should_not_see_it_on_that_arm
     arm = find(".arm_#{@arm.id}")
     expect(arm).not_to have_content "#{@services.first.name}"
-  end
-
-  def then_i_should_see_a_flash_message_of_type action_type
-    case action_type
-      when 'add'
-        expect(page).to have_content("Service(s) have been added to the chosen arms")
-      when 'remove'
-        expect(page).to have_content("Service(s) have been removed from the chosen arms")
-    end
   end
 end

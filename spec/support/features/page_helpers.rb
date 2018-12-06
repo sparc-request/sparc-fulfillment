@@ -19,18 +19,10 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module Features
-  module BootstrapTableHelpers
-    def search_bootstrap_table(query)
-      page.find('.search input').set(query)
-    end
-
-    def refresh_bootstrap_table(table, url=nil)
-      if url.present?
-        page.execute_script "$('#{ table }').bootstrapTable('refresh', {url: '#{url}', silent: 'true' })"
-      else
-        sleep(2)
-        page.execute_script "$('#{ table }').bootstrapTable('refresh', { silent: 'true' })"
-      end
+  module PageHelpers
+    def accept_confirm(&block)
+      block.call if block_given?
+      page.driver.browser.switch_to.alert.accept
     end
   end
 end

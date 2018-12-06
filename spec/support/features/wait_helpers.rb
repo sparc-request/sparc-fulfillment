@@ -19,18 +19,23 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module Features
-  module BootstrapTableHelpers
-    def search_bootstrap_table(query)
-      page.find('.search input').set(query)
+  module WaitHelpers
+    def wait_for_page(path)
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until{ current_path == path }
     end
 
-    def refresh_bootstrap_table(table, url=nil)
-      if url.present?
-        page.execute_script "$('#{ table }').bootstrapTable('refresh', {url: '#{url}', silent: 'true' })"
-      else
-        sleep(2)
-        page.execute_script "$('#{ table }').bootstrapTable('refresh', { silent: 'true' })"
+    def wait_for_ajax
+      Timeout.timeout(Capybara.default_max_wait_time) do
+        loop until finished_all_ajax_requests? && finished_all_animations?
       end
+    end
+
+    def finished_all_ajax_requests?
+      page.evaluate_script('jQuery.active') == 0
+    end
+
+    def finished_all_animations?
+      page.evaluate_script('$(":animated").length') == 0
     end
   end
 end
