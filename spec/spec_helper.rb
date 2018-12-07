@@ -58,7 +58,7 @@ SimpleCov.start do
   add_group "Jobs", "app/jobs"
 end
 
-FactoryGirl::SyntaxRunner.class_eval do
+FactoryBot::SyntaxRunner.class_eval do
   include ActionDispatch::TestProcess
 end
 
