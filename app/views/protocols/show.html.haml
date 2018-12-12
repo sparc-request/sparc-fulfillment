@@ -27,9 +27,10 @@
         = link_to t(:protocol)[:tabs][(is_protocol_type_study? (@protocol)) ? :study_schedule : :project_schedule], "#study_schedule", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_schedule'}
       %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "participant_tracker" ? "active" : "")}
         = link_to t(:protocol)[:tabs][:participant_tracker], "#participant_tracker", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'participant_tracker'}
+    %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "patient_registry" ? "active" : "")}
+      = link_to t(:protocol)[:tabs][:patient_registry], "#patient_registry", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'patient_registry'}
     %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "study_level_activities" ? "active" : "")}
       = link_to t(:protocol)[:tabs][(is_protocol_type_study? (@protocol)) ? :study_level_activities : :project_level_activities], "#study_level_activities", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_level_activities'}
-
     %li.custom-tab.protocol-tab{role: 'presentation', :id => "protocol-reports-tab", class: (@current_protocol_tab == "reports" ? "active" : "")}
       = link_to t(:protocol)[:tabs][:reports], "#reports", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'reports'}
       - if @protocol.unaccessed_documents_count > 0
@@ -43,6 +44,10 @@
 
       .tab-pane#participant_tracker{role: 'tabpanel', class: (@current_protocol_tab == "participant_tracker" ? "active" : "")}
         = render partial: 'participant_tracker', locals: {protocol: @protocol}
+    / - if current_identity.patient_registrars.map(&:organization_id).include? @protocol.organization.id
+    
+    .tab-pane#patient_registry{role: 'tabpanel', class: (@current_protocol_tab == "patient_registry" ? "active" : "")}
+      = render partial: 'patient_registry', locals: {protocol: @protocol}
 
     .tab-pane#study_level_activities{role: 'tabpanel', class: (@current_protocol_tab == "study_level_activities" ? "active" : "")}
       = render partial: 'study_level_activities', locals: {protocol: @protocol}

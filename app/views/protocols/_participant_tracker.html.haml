@@ -22,7 +22,7 @@
 #custom-toolbar
   %button.btn.btn-primary.new-participant{type: "button", data: {protocol_id: protocol.id}, aria: {label: "Create Participant"}}=t(:participant)[:new_participant]
 #participant_tracker
-  %table.participants{id: "participants-tracker-table", data: {toggle: 'table', search: "true", toolbar: '#custom-toolbar', url: participants_path(protocol_id: protocol.id, format: :json), striped: "true", height: "400", sort: {name: 'last_name', order: 'asc'}, show: {columns: "true", refresh: "true", toggle: "true", export: "true"}, export: {types: ['excel']}, select: {item: {name: "toolbar1"}}}}
+  %table.participants{id: "participants-tracker-table", data: {toggle: 'table', search: "true", toolbar: '#custom-toolbar', url: participants_for_protocol_participants_path(protocol_id: protocol.id, format: :json), striped: "true", height: "400", sort: {name: 'last_name', order: 'asc'}, show: {columns: "true", refresh: "true", toggle: "true", export: "true"}, export: {types: ['excel']}, select: {item: {name: "toolbar1"}}}}
     %thead.primary-header
       %tr
         %th{data: {class: 'calendar', align: "center", field: "calendar"}}= t(:participant)[:calendar]
@@ -37,5 +37,4 @@
         %th{data: {class: 'notes', align: "center", field: "notes"}}= t(:participant)[:notes]
         %th{data: {class: 'recruitment_source', align: "left", sortable: "true", field: "recruitment_source", visible: "false"}}= t(:participant)[:recruitment_source]
         %th{data: {class: 'details', align: "center", field: "details"}}= t(:actions)[:details]
-        %th{data: {class: 'edit', align: "center", field: "edit"}}= t(:actions)[:edit]
         %th{data: {class: 'delete', align: "center", field: "delete"}}= t(:actions)[:delete]

@@ -349,6 +349,7 @@ en:
     tabs:
       participant_list: "Participant List"
       participant_tracker: "Participant Tracker"
+      patient_registry: "Patient Registry"
       reports: "Reports"
       study_level_activities: "Non-clinical Services"
       project_level_activities: "Non-clinical Services"
@@ -357,6 +358,9 @@ en:
     udak_project_number: "UDAK Project #"
     updates: "Updates"
     back_to_top: 'Back to Top'
+
+  patient:
+    registry: "Patient Registry"
 
   reports:
     asc: "ASC"

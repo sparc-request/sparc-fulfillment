@@ -20,16 +20,21 @@
 
 class ParticipantsController < ApplicationController
 
-  before_action :find_protocol, only: [:index, :new]
+  before_action :find_protocol, only: [:participants_for_protocol, :new]
   before_action :find_participant, only: [:show, :edit, :update, :destroy, :edit_arm, :update_arm, :details]
   before_action :note_old_participant_attributes, only: [:update, :update_arm]
   before_action :authorize_protocol, only: [:show]
 
   def index
+    @page = params[:page]
+    @status = params[:status] || 'all'
+    @offset = params[:offset] || 0
+    @limit = params[:limit] || 50
+    @participants = Participant.all.limit(@limit).offset(@offset)
+    @total = @participants.count
+
     respond_to do |format|
       format.json {
-        @participants = @protocol.participants
-
         render
       }
     end
@@ -84,6 +89,16 @@ class ParticipantsController < ApplicationController
     note_successful_changes
 
     flash[:success] = t(:participant)[:flash_messages][:arm_change]
+  end
+
+  def participants_for_protocol
+    respond_to do |format|
+      format.json {
+        @participants = @protocol.participants
+
+        render
+      }
+    end
   end
 
   private
