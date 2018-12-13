@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class RenameIdentityForeignKeys < ActiveRecord::Migration
+class RenameIdentityForeignKeys < ActiveRecord::Migration[4.2]
   def change
     rename_column :notes, :user_id, :identity_id
     rename_column :tasks, :user_id, :identity_id

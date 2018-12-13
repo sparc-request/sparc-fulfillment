@@ -64,8 +64,6 @@ module ClinicalWorkFulfillment
       generate.test_framework :rspec
     end
 
-    config.active_record.raise_in_transactional_callbacks = true
-
     # ActiveJob
     config.active_job.queue_adapter = :delayed_job
 

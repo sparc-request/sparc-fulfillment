@@ -105,10 +105,11 @@ feature 'User completes Procedure', js: true do
   end
 
   def when_i_try_to_complete_the_procedure
-    @alert = accept_alert(with: 'Please click Start Visit and enter a start date to continue.') do
-      find('label.status.complete').trigger('click')
-      wait_for_ajax
-    end
+    find('label.status.complete').click
+    alert = page.driver.browser.switch_to.alert
+    @alert_message = alert.text
+    alert.accept
+    wait_for_ajax
   end
 
   def when_i_view_the_notes_list
@@ -124,6 +125,6 @@ feature 'User completes Procedure', js: true do
   end
 
   def then_i_should_see_a_helpful_message
-    expect(@alert).to eq("Please click 'Start Visit' and enter a start date to continue.")
+    expect(@alert_message).to eq("Please click 'Start Visit' and enter a start date to continue.")
   end
 end

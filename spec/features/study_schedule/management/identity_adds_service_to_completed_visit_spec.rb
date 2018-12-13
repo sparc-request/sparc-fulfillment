@@ -41,6 +41,7 @@ feature 'Identity adds service to completed visit', js: :true do
       procedure_count = Procedure.all.count
 
       find("#line_item_#{line_item.id} .check_row").click
+      accept_confirm
       wait_for_ajax
 
       expect(Procedure.all.count).to eq(procedure_count)

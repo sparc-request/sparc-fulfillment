@@ -23,6 +23,7 @@ class Klok::Entry < KlokDbBase
 
   belongs_to :klok_person, class_name: 'Klok::Person', foreign_key: :resource_id
   belongs_to :klok_project, class_name: 'Klok::Project', foreign_key: :project_id
+
   has_one :service, through: :klok_project
 
   delegate :local_protocol,

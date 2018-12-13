@@ -38,6 +38,7 @@
 require 'shoulda-matchers'
 require 'simplecov'
 require 'rspec/active_job'
+require 'rspec/rails'
 require 'paperclip/matchers'
 
 Shoulda::Matchers.configure do |config|
@@ -57,7 +58,7 @@ SimpleCov.start do
   add_group "Jobs", "app/jobs"
 end
 
-FactoryGirl::SyntaxRunner.class_eval do
+FactoryBot::SyntaxRunner.class_eval do
   include ActionDispatch::TestProcess
 end
 

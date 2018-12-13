@@ -23,7 +23,9 @@ require 'rails_helper'
 feature 'Identity incompletes all Services', js: true do
 
   before :each do
-    @protocol     = create_and_assign_protocol_to_me
+    @protocol     = create(:protocol_imported_from_sparc)
+    org           = @protocol.sub_service_request.organization
+                    create(:clinical_provider, identity: Identity.first, organization: org)
     @participant  = @protocol.participants.first
     @appointment  = @participant.appointments.first
     @services     = @protocol.organization.inclusive_child_services(:per_participant)
@@ -64,14 +66,12 @@ feature 'Identity incompletes all Services', js: true do
     scenario 'selects all grouped procedures' do
       when_i_select_all_grouped_procedures_in_the_core_dropdown
       and_i_click_incomplete_all_and_give_a_reason
-      and_i_unroll_accordion
       then_the_selected_procedures_should_be_incompleted
     end
 
     scenario 'selects all procedures' do
       when_i_select_all_procedures_in_the_core_dropdown
       and_i_click_incomplete_all_and_give_a_reason
-      and_i_unroll_accordion
       then_the_selected_procedures_should_be_incompleted
     end
   end
@@ -113,6 +113,7 @@ feature 'Identity incompletes all Services', js: true do
 
   def and_i_click_incomplete_all_and_give_a_reason
     find('button.incomplete_all').click
+    wait_for_ajax
     reason = Procedure::NOTABLE_REASONS.first
     bootstrap_select '.reason-select', reason
     fill_in 'Comment', with: 'Test comment'
@@ -122,12 +123,13 @@ feature 'Identity incompletes all Services', js: true do
 
   def and_i_click_incomplete_all_and_close_the_alert
     find('button.incomplete_all').click
+    wait_for_ajax
     click_button 'Close'
     wait_for_ajax
   end
 
   def and_i_unroll_accordion
-    find("tr.procedure-group td[colspan='10'] button").click
+    find("tr.procedure-group button").click
     wait_for_ajax
   end
 
@@ -136,12 +138,12 @@ feature 'Identity incompletes all Services', js: true do
 
     selected_procedures.each do |procedure|
       expect(procedure.status).to eq 'incomplete'
-      expect(page).to have_css("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
+      expect(page).to have_selector("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
     end
 
     unselected_procedures.each do |procedure|
       expect(procedure.status).to eq 'unstarted'
-      expect(page).to_not have_css("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
+      expect(page).to_not have_selector("tr.procedure[data-id='#{procedure.id}'] label.status.incomplete.active")
     end
   end
 

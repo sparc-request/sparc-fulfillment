@@ -196,10 +196,11 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def when_i_try_to_incomplete_the_procedure
-    @alert_message = accept_alert(with: 'Please click Start Visit and enter a start date to continue.') do
-      find('label.status.incomplete').trigger('click')
-      wait_for_ajax
-    end
+    find('label.status.incomplete').click
+    alert = page.driver.browser.switch_to.alert
+    @alert_message = alert.text
+    alert.accept
+    wait_for_ajax
   end
 
   def then_i_should_see_one_complete_note

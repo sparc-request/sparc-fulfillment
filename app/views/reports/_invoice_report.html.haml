@@ -34,6 +34,7 @@
         .row
           .col-md-12
             = hidden_field_tag "report_type", report_type
+            = hidden_field_tag "include_notes", false
             .form-group
               = label_tag "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
@@ -41,11 +42,11 @@
             .form-group
               = label_tag "start_date", t(:reports)[:start_date]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
-                = text_field_tag "start_date", nil, class: "datepicker form-control", readonly: true
+                = text_field_tag "start_date", nil, class: "form-control", readonly: true
             .form-group
               = label_tag "end_date", t(:reports)[:end_date]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
-                = text_field_tag "end_date", nil, class: "datepicker form-control", readonly: true
+                = text_field_tag "end_date", nil, class: "form-control", readonly: true
             .form-group
               = label_tag "organizations", t(:reports)[:organization], class: "col-sm-3 control-label"
               .col-sm-9
@@ -73,6 +74,10 @@
                 %label.radio-inline
                   = radio_button_tag "sort_order", t(:reports)[:desc]
                   = t(:reports)[:descending]
+            .form-group
+              = label_tag "include_notes", t(:reports)[:include_notes], class: "col-sm-3 control-label"
+              .checkbox.col-sm-9
+                %label= check_box_tag "include_notes", true, false
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}

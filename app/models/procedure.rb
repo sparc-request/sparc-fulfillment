@@ -32,20 +32,19 @@ class Procedure < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
-  has_one :protocol,    through: :appointment
-  has_one :arm,         through: :appointment
-  has_one :participant, through: :appointment
-  has_one :visit_group, through: :appointment
-  has_one :task,        as: :assignable, dependent: :destroy
-
   belongs_to :appointment
   belongs_to :visit
   belongs_to :service
   belongs_to :performer, class_name: "Identity"
   belongs_to :core, class_name: "Organization", foreign_key: :sparc_core_id
-
+  has_one :task,        as: :assignable, dependent: :destroy
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
+
+  has_one :protocol,    through: :appointment
+  has_one :arm,         through: :appointment
+  has_one :participant, through: :appointment
+  has_one :visit_group, through: :appointment
 
   before_update :set_save_dependencies
 

@@ -31,10 +31,10 @@ class Participant < ApplicationRecord
 
   belongs_to :protocol
   belongs_to :arm
-
-  has_many :appointments
-  has_many :procedures, through: :appointments
   has_many :notes, as: :notable
+  has_many :appointments
+
+  has_many :procedures, through: :appointments
 
   delegate :srid,
            to: :protocol

@@ -43,6 +43,7 @@ feature 'User tries to reset appointment', js: true do
     visit protocol_path(@protocol.id)
     wait_for_ajax
     find("#line_item_#{line_item_1.id} .check_row").click()
+    accept_confirm
     wait_for_ajax
 
     #Select the visit
@@ -71,6 +72,7 @@ feature 'User tries to reset appointment', js: true do
 
   def when_i_click_the_reset_button
     find("button.reset_visit").click
+    accept_confirm
     wait_for_ajax
   end
 

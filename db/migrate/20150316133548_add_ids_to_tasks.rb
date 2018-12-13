@@ -18,11 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class AddIdsToTasks < ActiveRecord::Migration
+class AddIdsToTasks < ActiveRecord::Migration[4.2]
   def change
     remove_column :tasks, :created_by, :string
     remove_column :tasks, :assignment, :string
     add_column :tasks, :user_id, :integer
-    add_column :tasks, :assignee_id, :integer 
+    add_column :tasks, :assignee_id, :integer
   end
 end

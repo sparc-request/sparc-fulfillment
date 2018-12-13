@@ -40,11 +40,7 @@ feature "rescheduling a Task", js: true do
   def when_i_reschedule_the_task
     page.all('.task-reschedule').last.click
     wait_for_ajax
-    
-    page.execute_script %Q{ $('#reschedule_datepicker').trigger("focus") }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    wait_for_ajax
-    
+    bootstrap_datepicker '#reschedule_datepicker', day: '15'
     click_button "Save"
     wait_for_ajax
   end
