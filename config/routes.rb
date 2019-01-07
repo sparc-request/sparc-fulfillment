@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   resources :participants do
     collection do
       get 'participants_for_protocol'
+      post 'update_protocol_association', to: 'participants#update_protocol_association'
     end
     get 'change_arm(/:id)', to: 'participants#edit_arm'
     post 'change_arm(/:id)', to: 'participants#update_arm'

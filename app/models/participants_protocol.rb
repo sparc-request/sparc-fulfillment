@@ -1,0 +1,2 @@
+class ParticipantsProtocol < ApplicationRecord
+end

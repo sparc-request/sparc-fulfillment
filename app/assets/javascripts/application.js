@@ -53,6 +53,7 @@
 //= require study_schedule_management
 //= require participants
 //= require participant_tracker
+//= require patient_registry
 //= require appointments
 //= require autoload_appointment
 //= require tasks

@@ -261,6 +261,8 @@ en:
     flash_messages:
       arm_change: "Participant Successfully Changed Arms"
       created: "Participant Created"
+      added_to_protocol: "Participant added to protocol."
+      removed_from_protocol:  "Participant removed from protocol."
       not_found: "Participant Not Found"
       removed: "Participant Removed"
       recruitment_source: "Recruitment Source has been updated"
@@ -270,6 +272,7 @@ en:
     id: "ID"
     list: "Participant List"
     last_name: "Last Name"
+    selected: "Selected?"
     middle_initial: "Middle Initial"
     mrn: "MRN"
     new_participant: "Create New Participant"

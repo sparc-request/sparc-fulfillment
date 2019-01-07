@@ -29,15 +29,15 @@ class Participant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
-  belongs_to :protocol
   belongs_to :arm
   has_many :notes, as: :notable
+  has_and_belongs_to_many :protocols, join_table: "participants_protocols"
   has_many :appointments
 
   has_many :procedures, through: :appointments
 
-  delegate :srid,
-           to: :protocol
+  # delegate :srid,
+  #          to: :protocol
 
   after_save :update_faye
   after_destroy :update_faye

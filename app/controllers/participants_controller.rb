@@ -20,8 +20,8 @@
 
 class ParticipantsController < ApplicationController
 
-  before_action :find_protocol, only: [:participants_for_protocol, :new]
-  before_action :find_participant, only: [:show, :edit, :update, :destroy, :edit_arm, :update_arm, :details]
+  before_action :find_protocol, only: [:index, :participants_for_protocol, :new, :update_protocol_association]
+  before_action :find_participant, only: [:show, :edit, :update, :destroy, :edit_arm, :update_arm, :details, :update_protocol_association]
   before_action :note_old_participant_attributes, only: [:update, :update_arm]
   before_action :authorize_protocol, only: [:show]
 
@@ -30,13 +30,29 @@ class ParticipantsController < ApplicationController
     @status = params[:status] || 'all'
     @offset = params[:offset] || 0
     @limit = params[:limit] || 50
-    @participants = Participant.all.limit(@limit).offset(@offset)
-    @total = @participants.count
 
+    find_participants_for_index
     respond_to do |format|
       format.json {
         render
       }
+    end
+  end
+
+  def find_participants_for_index
+    @participants = Participant.all
+    @total = @participants.count
+    search_participant_attrs
+    @participants = @participants.limit(@limit).offset(@offset)
+  end
+
+  def update_protocol_association
+    if params[:checked] == 'true'
+      @participant.protocols << @protocol
+      flash[:success] = t(:participant)[:flash_messages][:added_to_protocol]
+    else
+      @participant.protocols.delete(@protocol)
+      flash[:success] = t(:participant)[:flash_messages][:removed_from_protocol]
     end
   end
 
@@ -103,6 +119,20 @@ class ParticipantsController < ApplicationController
 
   private
 
+  def search_participant_attrs
+    if params[:search] && !params[:search].blank?
+      search_term = params[:search]
+
+      query_string = "participants.mrn LIKE ? " # search by mrn
+      query_string += "OR participants.first_name LIKE ? " # search by first name
+      query_string += "OR participants.last_name LIKE ? " # search by last name
+
+      @participants = @participants.where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
+
+      @total = @participants.count
+    end
+  end
+
   def find_protocol
     @protocol = Protocol.find(params[:protocol_id])
   end
@@ -115,9 +145,7 @@ class ParticipantsController < ApplicationController
     participant_id = params[:id] || params[:participant_id]
     @participant = Participant.where(id: participant_id).first
 
-    if @participant.present?
-      @protocol = @participant.protocol
-    else
+    if !@participant.present?
       flash[:alert] = t(:participant)[:flash_messages][:not_found]
       redirect_to root_path
     end
