@@ -23,7 +23,9 @@ require 'rails_helper'
 feature 'Identity changes a Service', js: true do
 
   before :each do
-    @protocol     = create_and_assign_protocol_to_me
+    @protocol     = create(:protocol_imported_from_sparc)
+    org           = @protocol.sub_service_request.organization
+                    create(:clinical_provider, identity: Identity.first, organization: org)
     @participant  = @protocol.participants.first
     @appointment  = @participant.appointments.first
     @services     = @protocol.organization.inclusive_child_services(:per_participant)
@@ -166,10 +168,6 @@ feature 'Identity changes a Service', js: true do
 
   def then_i_should_see_one_procedure_group
     expect(page).to have_css('tr.procedure-group', count: 1)
-    within "tr.procedure-group" do
-      find('button').click
-      wait_for_ajax
-    end
     expect(page).to have_css('tr.procedure', count: 2)
   end
 

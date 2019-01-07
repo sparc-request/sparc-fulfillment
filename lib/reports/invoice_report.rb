@@ -88,6 +88,7 @@ class InvoiceReport < Report
           header << "Fulfillment Date"
           header << "Performed By"
           header << "Components"
+          header << "Notes" if @params[:include_notes] == "true"
           header << "Contact"
           header << "Account #"
           header << "Quantity Completed"
@@ -107,7 +108,7 @@ class InvoiceReport < Report
             data << fulfillment.funding_source
             data << formatted_status(protocol)
             data << (protocol.pi ? protocol.pi.full_name : nil)
-            data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
+            data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
                                    protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
             data << protocol.billing_business_managers.map(&:full_name).join(',')
             data << fulfillment.service.organization.name
@@ -115,6 +116,7 @@ class InvoiceReport < Report
             data << format_date(fulfillment.fulfilled_at)
             data << fulfillment.performer.full_name
             data << fulfillment.components.map(&:component).join(',')
+            data << fulfillment.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
             data << fulfillment.line_item.contact_name
             data << fulfillment.line_item.account_number
             data << fulfillment.quantity
@@ -151,6 +153,7 @@ class InvoiceReport < Report
           header << "Service Completion Date"
           header << "Patient Name"
           header << "Patient ID"
+          header << "Notes" if @params[:include_notes] == "true"
           header << "Visit Name"
           header << "Visit Date"
           header << "Quantity Completed"
@@ -179,7 +182,7 @@ class InvoiceReport < Report
                   data << procedure.funding_source
                   data << formatted_status(protocol)
                   data << (protocol.pi ? protocol.pi.full_name : nil)
-                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
+                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
                                         protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
                   data << protocol.billing_business_managers.map(&:full_name).join(',')
                   data << org.name
@@ -187,6 +190,7 @@ class InvoiceReport < Report
                   data << format_date(procedure.completed_date)
                   data << participant.full_name
                   data << participant.label
+                  data << procedure.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
                   data << appointment.name
                   data << format_date(appointment.start_date)
                   data << service_group.size

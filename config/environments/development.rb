@@ -40,6 +40,16 @@ Rails.application.configure do
     config.public_file_server.headers = {
       'Cache-Control' => 'public, max-age=172800'
     }
+
+    config.cache_store = [:mem_cache_store] + ENV['MEMCACHE_SERVERS'].split(',')
+  elsif ! ENV['MEMCACHE_SERVERS'].blank?
+    config.action_controller.perform_caching = true
+
+    config.public_file_server.headers = {
+      'Cache-Control' => 'public, max-age=172800'
+    }
+
+    config.cache_store = [:mem_cache_store] + ENV['MEMCACHE_SERVERS'].split(',')
   else
     config.action_controller.perform_caching = false
 

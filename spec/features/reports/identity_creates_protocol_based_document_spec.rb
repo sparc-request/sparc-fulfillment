@@ -108,7 +108,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
 
   def when_i_click_the_created_document_icon
-    find("button#study_schedule_report_#{@protocol.id.to_s}").trigger('click')
+    find("button#study_schedule_report_#{@protocol.id.to_s}").click
     wait_for_ajax
   end
 

@@ -71,6 +71,7 @@ module ProtocolHelper
   end
 
   def formatted_requester protocol
+
     if protocol.sub_service_request.present? && protocol.sub_service_request.service_request.present? && protocol.service_requester.present?
       protocol.service_requester.full_name
     else

@@ -49,7 +49,6 @@ feature 'User changes Participant Arm', js: true do
   end
 
   def then_i_should_see_the_arm_is_updated
-    expect(page).to have_css('#flashes_container', text: 'Participant Successfully Changed Arms')
     expect(page).to have_css('table.participants tbody tr:first-child td.arm_name', text: @second_arm.name)
   end
 end

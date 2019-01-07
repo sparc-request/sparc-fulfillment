@@ -18,18 +18,17 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::LineItem < ApplicationRecord
-  
-  include SparcShard
-  
+class Sparc::LineItem < SparcDbBase
   belongs_to :service
   belongs_to :service_request
   belongs_to :sub_service_request
 
   has_many :fulfillments
   has_many :line_items_visits
-  has_many :arms, through: :line_items_visits
   has_many :admin_rates
+
+  has_many :arms, through: :line_items_visits
+
   attr_accessor :pricing_scheme
 
   delegate  :name, to: :service

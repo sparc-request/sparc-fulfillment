@@ -18,16 +18,14 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::Report < ApplicationRecord
+class Sparc::Report < SparcDbBase
   require 'open-uri'
-
-  include SparcShard
 
   belongs_to :sub_service_request
 
   def fetch
     url = ENV['GLOBAL_SCHEME'] + '://' + ENV['SPARC_API_HOST'] + '/system/reports/xlsxes/' + id_partition + '/original/' + xlsx_file_name + "?#{Time.now.to_f.to_i}"
-    open(url).read 
+    open(url).read
   end
 
   # Returns the id of the instance in a split path form. e.g. returns

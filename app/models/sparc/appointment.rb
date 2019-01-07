@@ -18,9 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::Appointment < ApplicationRecord
-  include SparcShard
-  
+class Sparc::Appointment < SparcDbBase
   belongs_to :calendar
   belongs_to :visit_group
   belongs_to :organization

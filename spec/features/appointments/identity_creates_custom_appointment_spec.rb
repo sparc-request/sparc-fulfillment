@@ -69,12 +69,12 @@ feature 'Custom appointment', js: true do
     @protocol     = create_and_assign_protocol_to_me
     @participant  = @protocol.participants.first
 
-    @participant.arm  = case has_arm
-                        when :with_arm
-                          Arm.first
-                        when :without_arm
-                          nil
-                        end
+    case has_arm
+    when :with_arm
+      @participant.update_attribute(:arm, Arm.first)
+    when :without_arm
+      @participant.update_attribute(:arm, nil)
+    end
 
     visit participant_path @participant
     wait_for_ajax

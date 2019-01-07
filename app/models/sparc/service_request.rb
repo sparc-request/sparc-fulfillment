@@ -18,10 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Sparc::ServiceRequest < ApplicationRecord
-  
-  include SparcShard
-
+class Sparc::ServiceRequest < SparcDbBase
   belongs_to :protocol
   has_many :sub_service_requests
   has_many :line_items

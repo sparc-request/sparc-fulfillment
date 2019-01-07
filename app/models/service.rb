@@ -18,17 +18,15 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Service < ApplicationRecord
-
-  include SparcShard
-
+class Service < SparcDbBase
   belongs_to :organization
 
   has_many :line_items
   has_many :pricing_maps
-  has_many :pricing_setups, through: :organization
   has_many :procedures
   has_many :fulfillments
+
+  has_many :pricing_setups, through: :organization
 
   default_scope { order(name: :asc) }
 

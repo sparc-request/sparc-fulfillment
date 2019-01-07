@@ -96,6 +96,9 @@ class ProtocolImporter
         end # arms loop
       end # per_participant services.present?
 
+      # Update fulfillment imported status on sub_service_request
+      sparc_sub_service_request.update_attribute(:imported_to_fulfillment, true)
+
       # one_time_fee line_item creation
       sparc_sub_service_request.one_time_fee_line_items.each do |sparc_line_item|
         sparc_line_item_quantity            = sparc_line_item.quantity || 0
