@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class RemoveIrbDatesFromProtocols < ActiveRecord::Migration
+class RemoveIrbDatesFromProtocols < ActiveRecord::Migration[4.2]
   def change
     remove_column :protocols, :irb_approval_date, :timestamp
     remove_column :protocols, :irb_expiration_date, :timestamp

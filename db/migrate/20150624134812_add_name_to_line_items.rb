@@ -22,7 +22,7 @@
 # the name column will hold the name of the associated
 # Service at the time the first Fulfillment was added.
 
-class AddNameToLineItems < ActiveRecord::Migration
+class AddNameToLineItems < ActiveRecord::Migration[4.2]
   def up
     add_column :line_items, :name, :string
     LineItem.find_each do |li|

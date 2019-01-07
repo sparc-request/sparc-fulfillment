@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class PutDefaultOfZeroOnLineItemsSubjectCount < ActiveRecord::Migration
+class PutDefaultOfZeroOnLineItemsSubjectCount < ActiveRecord::Migration[4.2]
   def up
     change_column :line_items, :subject_count, :integer, default: 0
     LineItem.where(subject_count: nil).update_all(subject_count: 0)

@@ -33,7 +33,11 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
-
+  if ! ENV['MEMCACHE_SERVERS'].blank?
+    config.cache_store = [:mem_cache_store] + ENV['MEMCACHE_SERVERS'].split(',')
+  else
+    config.cache_store = :null_store
+  end
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = false
@@ -72,7 +76,6 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
-
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "railsdiff_#{Rails.env}"

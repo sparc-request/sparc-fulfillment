@@ -25,6 +25,8 @@
       %tr
         %th{data: {class: 'srid', align: 'left', sortable: "true", field: 'srid'}}
           = t(:protocol)[:srid]
+        %th{data: {class: 'rmid', align: 'left', sortable: "true", field: 'rmid', visible: (ENV.fetch('USE_RMID'){nil} == "true" ? "true" : "false") }}
+          = t(:protocol)[:rmid]
         %th{data: {class: 'status', align: 'left', sortable: "true", field: "status"}}
           = t(:protocol)[:status]
         %th{data: {class: 'short_title', align: 'left', sortable: "true", field: "short_title"}}

@@ -57,9 +57,9 @@ class Task < ApplicationRecord
   end
 
   def update_assignee_counter
-    if self.complete_changed?(from: false, to: true)
+    if saved_change_to_complete?(from: false, to: true)
       decrement_assignee_counter
-    elsif self.complete_changed?(from: true, to: false)
+    elsif saved_change_to_complete?(from: true, to: false)
       increment_assignee_counter
     end
   end

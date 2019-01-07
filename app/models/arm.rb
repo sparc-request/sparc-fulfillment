@@ -31,7 +31,7 @@ class Arm < ApplicationRecord
   has_many :participants
 
   validates :name, presence: true
-  validates_uniqueness_of :name, scope: :protocol
+  validates_uniqueness_of :name, scope: :protocol_id
   validates :name, format: { without: /\[|\]|\*|\/|\\|\?|\:/, message: "cannot contain any of the following: [ ] * / \\ ? :"}
   validates_numericality_of :subject_count, greater_than_or_equal_to: 1
   validates_numericality_of :visit_count, greater_than_or_equal_to: 1

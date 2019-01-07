@@ -5,8 +5,7 @@ gem 'activerecord-import'
 gem 'activerecord-session_store'
 gem 'acts_as_list'
 gem 'addressable'
-gem 'ar-octopus'
-gem 'autoprefixer-rails'
+gem 'autoprefixer-rails', '7.2.2'
 gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09da8c9ea47980bd3bf296874'
 gem 'axlsx_rails'
 gem 'bootstrap-sass'
@@ -31,12 +30,12 @@ gem 'momentjs-rails', '>= 2.9.0'
 gem 'mysql2'
 gem 'net-ldap'
 gem 'omniauth'
-gem 'paperclip', '~> 5.2', '>= 5.2.1'
-gem 'paper_trail', '~> 4.0.0.beta'
-gem 'paranoia', '~> 2.0'
+gem 'paperclip', '~> 6.1'
+gem 'paper_trail', '~> 10.0.1'
+gem 'paranoia', '~> 2.4'
 gem 'progress_bar'
 gem 'puma'
-gem 'rails', '5.0.3'
+gem 'rails', '5.2.1.1'
 gem 'remotipart'
 gem 'rest-client'
 gem 'rubyzip', '>= 1.2.1'
@@ -50,19 +49,19 @@ gem 'uglifier', '>= 1.3.0'
 gem 'underscore-rails', '~> 1.8.3'
 gem 'will_paginate'
 gem 'yajl-ruby', require: 'yajl'
-
+gem 'dalli'
 group :deploy do
   gem 'capistrano', '~> 3.11'
   gem 'capistrano-rvm'
-  gem 'capistrano-rails', '~> 1.1'
+  gem 'capistrano-rails', '~> 1.4'
   gem 'capistrano-passenger'
   gem 'capistrano3-delayed-job', '~> 1.0'
 end
 
 
 group :development, :test, :testing do
-  gem 'factory_girl_rails', '~> 4.9.0'
-  gem 'faker', '~> 1.4.3'
+  gem "factory_bot_rails"
+  gem 'faker', '~> 1.9.1'
   gem 'pry'
 end
 
@@ -75,17 +74,19 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-webkit'
+  gem 'capybara'
   gem 'climate_control'
   gem 'database_cleaner'
+  gem 'geckodriver-helper'
   gem 'launchy'
   gem 'rails-controller-testing'
-  gem 'rspec-activejob', '~> 0.4.0'
+  gem 'rspec-activejob', '~> 0.6.1'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
+  gem 'selenium-webdriver'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 2.8.0", require: false
+  gem 'shoulda-matchers', "~> 3.1.2", require: false
   gem 'timecop'
   gem 'webmock', '~> 2.3.2'
-  gem 'vcr', '~> 2.9.3'
+  gem 'vcr', '~> 4.0.0'
 end

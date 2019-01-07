@@ -54,10 +54,9 @@ feature "Identity views Task", js: true do
 
     find(".new-task").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    page.execute_script %Q{ $('#follow_up_datepicker').trigger("focus") }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    bootstrap_datepicker '#follow_up_datepicker', day: '15'
     fill_in :task_body, with: "Test body"
-    click_button 'Save'
+    find("#new_task .modal-footer .btn-primary").click
     wait_for_ajax
     find("table.tasks tbody tr:first-child").click
     wait_for_ajax

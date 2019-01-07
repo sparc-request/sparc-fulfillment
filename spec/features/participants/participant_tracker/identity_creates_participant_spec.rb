@@ -50,11 +50,7 @@ feature 'User creates Participant', js: true do
     bootstrap_select '#participant_state', participant.state
     fill_in 'Zip Code', with: participant.zipcode
     bootstrap_select '#participant_status', participant.status
-    page.execute_script %Q{ $("#dob_time_picker").trigger("focus") }
-
-    page.execute_script %Q{ $("td.year:contains('0')").trigger("click") }
-    page.execute_script %Q{ $("td.month:contains('Mar')").trigger("click") }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    bootstrap_datepicker '#dob_time_picker', year: Date.current.year, month: 'Mar', day: '15'
     bootstrap_select '#participant_gender', "Female"
     bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
     bootstrap_select '#participant_race', "Asian"
@@ -65,7 +61,6 @@ feature 'User creates Participant', js: true do
   end
 
   def then_i_should_see_the_new_participant_in_the_list
-    expect(page).to have_css('#flashes_container', text: 'Participant Created')
     expect(page).to have_css('table.participants tbody tr', count: 4)
   end
 

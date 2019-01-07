@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class MigrateArmIdToAppointments < ActiveRecord::Migration
+class MigrateArmIdToAppointments < ActiveRecord::Migration[4.2]
   def change
     Appointment.all.each do |appt|
       appt.update_attribute(:arm_id, appt.visit_group.arm_id)

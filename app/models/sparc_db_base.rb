@@ -18,20 +18,27 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-octopus:
-  environments:
-    - test
-    - development
-    - testing
-    - staging
-    - production
-  development:
-    sparc:
-      adapter: mysql2
-      username: root
-      database: sparc-request_development
-  test: # configured for travis-ci
-    sparc:
-      adapter: mysql2
-      username: travis
-      database: test_sparc_request # for travis-ci, needs to match sparc-request test database name
+class SparcDbBase < ApplicationRecord
+  self.abstract_class = true
+  establish_connection(SPARC_DB)
+
+  def self.inherited(child)
+    child.establish_connection(SPARC_DB)
+    super
+  end
+
+  def readonly?
+    Rails.env.production?
+  end
+
+  def self.sparc_record?
+    true
+  end
+
+  # Allow queries (in particular, JOINs) across both SPARC and
+  # CWF databases by explicitly prefixing the appropriate SPARC
+  # database name to tables belonging to it.
+  def self.table_name_prefix
+    SPARC_DB["database"] + '.'
+  end
+end

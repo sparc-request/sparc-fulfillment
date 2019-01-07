@@ -24,6 +24,9 @@ RSpec.configure do |config|
   config.include Features::BootstrapHelpers, type: :feature
   config.include Features::BootstrapTableHelpers, type: :feature
   config.include Features::BrowserHelpers, type: :feature
+  config.include Features::PageHelpers, type: :feature
+  config.include Features::SOS, type: :feature
   config.include Features::TaskHelpers, type: :feature
   config.include Features::VisitHelpers, type: :feature
+  config.include Features::WaitHelpers, type: :feature
 end

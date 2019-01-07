@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-require 'factory_girl'
+require 'factory_bot_rails'
 
 namespace :data do
 
@@ -29,25 +29,25 @@ namespace :data do
     clean_old_fake_data
 
     # Globally unique :sparc_ids
-    FactoryGirl.define { sequence(:sparc_id) }
+    FactoryBot.define { sequence(:sparc_id) }
 
     # Create Indentity
-    identity = FactoryGirl.create(:identity, email: 'email@musc.edu', ldap_uid: 'ldap@musc.edu', password: 'password')
+    identity = FactoryBot.create(:identity, email: 'email@musc.edu', ldap_uid: 'ldap@musc.edu', password: 'password')
 
     # Create 10 Protocols
     10.times do
-      sub_service_request = FactoryGirl.create(:sub_service_request_with_organization)
-      protocol            = FactoryGirl.create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-      parent_organization = FactoryGirl.create(:organization, type: "Provider")
+      sub_service_request = FactoryBot.create(:sub_service_request_with_organization)
+      protocol            = FactoryBot.create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+      parent_organization = FactoryBot.create(:organization, type: "Provider")
       organization        = sub_service_request.organization
       organization.update_attributes(parent: parent_organization)
-      FactoryGirl.create(:clinical_provider, identity: identity, organization: organization)
-      FactoryGirl.create(:project_role_pi, identity: identity, protocol: protocol)
+      FactoryBot.create(:clinical_provider, identity: identity, organization: organization)
+      FactoryBot.create(:project_role_pi, identity: identity, protocol: protocol)
     end
 
     # Create 10 tasks
     10.times do
-      identity.tasks.push FactoryGirl.create(:task, assignee: identity)
+      identity.tasks.push FactoryBot.create(:task, assignee: identity)
     end
   end
 end

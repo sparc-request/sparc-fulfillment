@@ -18,28 +18,25 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Organization < ApplicationRecord
-
-  include SparcShard
-
+class Organization < SparcDbBase
   belongs_to :parent, class_name: "Organization"
+  has_many :sub_service_requests
+  has_many :pricing_setups
+  has_many :super_users
+  has_many :clinical_providers
+  has_many :children, class_name: "Organization", foreign_key: :parent_id
+
+  has_many :protocols, through: :sub_service_requests
 
   has_many :services,
             -> {where(is_available: true)}
 
   has_many :all_services, class_name: "Service" # include services regardless of is_available
 
-  has_many :sub_service_requests
-  has_many :protocols, through: :sub_service_requests
-  has_many :pricing_setups
   has_many :non_process_ssrs_children,
             -> { where(process_ssrs: false) },
             class_name: "Organization",
             foreign_key: :parent_id
-  has_many :super_users
-  has_many :clinical_providers
-
-  has_many :children, class_name: "Organization", foreign_key: :parent_id
 
   # Returns this organization's pricing setup that is effective on a given date.
   def effective_pricing_setup_for_date(date=Date.today)
