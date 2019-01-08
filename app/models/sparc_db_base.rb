@@ -28,7 +28,8 @@ class SparcDbBase < ApplicationRecord
   end
 
   def readonly?
-    Rails.env.production?
+    false #TODO: some tables may need to be read only.
+    # Rails.env.production?
   end
 
   def self.sparc_record?
