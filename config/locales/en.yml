@@ -365,6 +365,7 @@ en:
     desc: "DESC"
     descending: "Descending"
     include_notes: "Include Notes"
+    include_invoiced: "Include Invoiced"
     invoice_report: "Invoice Report"
     end_date: "End Date"
     organization: "Organization(s)*"
