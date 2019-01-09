@@ -28,7 +28,7 @@ class Arm < ApplicationRecord
   has_many :line_items, dependent: :destroy
   has_many :visit_groups, dependent: :destroy
   has_many :appointments
-  has_many :participants
+  has_many :protocols_participants
 
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :protocol_id

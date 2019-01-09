@@ -49,11 +49,19 @@ $ ->
       type: 'GET'
       url: "/participants/#{participant_id}/edit"
 
-  $(document).on 'click', '.participant-details', ->
+  $(document).on 'click', '.patient-registry-details', ->
     participant_id = $(this).attr('participant_id')
     $.ajax
       type: 'GET'
       url: "/participants/#{participant_id}/details"
+      data: 'protocol_id' : ''
+
+  $(document).on 'click', '.participant-tracker-details', ->
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/details"
+      data: 'protocol_id' : $(this).attr('protocol_id')
 
 (exports ? this).refreshParticipantTables = ->
   $("#participants-list-table").bootstrapTable 'refresh', {silent: true}

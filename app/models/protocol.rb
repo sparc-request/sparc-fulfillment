@@ -34,7 +34,7 @@ class Protocol < ApplicationRecord
   has_many :project_roles,    primary_key: :sparc_id
   has_many :arms,             dependent: :destroy
   has_many :line_items,       dependent: :destroy
-  has_and_belongs_to_many :participants, dependent: :destroy, join_table: "participants_protocols"
+  has_many :protocols_participants
   has_many :documents,        as: :documentable
 
   has_many :sub_service_requests, through: :service_requests

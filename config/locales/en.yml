@@ -228,6 +228,7 @@ en:
     reports_link: 'All Reports'
     tasks_link: 'All Tasks'
     imports_link: 'Imports'
+    patient_registry_link: 'Patient Registry'
 
   notes:
     object: "Note"

@@ -39,26 +39,26 @@ module ParticipantHelper
     ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'N/A']
   end
 
-  def detailsFormatter(participant)
+  def detailsFormatterRegistry(participant)
     [
-      "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+      "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-sunglasses'></i>",
       "</a>"
     ].join ""
   end
 
-  def editFormatter(participant)
+  def editFormatterRegistry(participant)
     [
-      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-edit'></i>",
       "</a>"
     ].join ""
   end
 
-  def deleteFormatter(participant)
+  def deleteFormatterRegistry(participant)
     if participant.can_be_destroyed?
       [
-        "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
+        "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
         "<i class='glyphicon glyphicon-remove'></i>",
         "</a>"
       ].join ""
@@ -68,23 +68,66 @@ module ParticipantHelper
         "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
       ].join ""
     end
-
   end
 
-  def changeArmFormatter(participant)
+  def detailsFormatter(participant, protocol_participant)
+    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
+    participant_details_class = params[:action] == 'index' ? 'patient-registry-details': 'participant-tracker-details'
     [
-      "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}' arm_id='#{participant.arm_id}'>",
+      "<a class='details #{participant_details_class} ml10' href='javascript:void(0)' title='Details' #{protocol_id_attr} participant_id='#{participant.id}'>",
+      "<i class='glyphicon glyphicon-sunglasses'></i>",
+      "</a>"
+    ].join ""
+  end
+
+  def editFormatter(participant, protocol_participant)
+    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
+    [
+      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' #{protocol_id_attr} participant_id='#{participant.id}'>",
+      "<i class='glyphicon glyphicon-edit'></i>",
+      "</a>"
+    ].join ""
+  end
+
+  def deleteFormatter(participant, protocol_participant)
+    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
+    if participant.can_be_destroyed?
+      [
+        "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' #{protocol_id_attr} participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
+        "<i class='glyphicon glyphicon-remove'></i>",
+        "</a>"
+      ].join ""
+    else
+      [
+        "<div data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>",
+        "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
+      ].join ""
+    end
+  end
+
+  def changeArmFormatter(participant, protocol_participant)
+    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
+    arm_id = protocol_participant.nil? ? nil : protocol_participant.arm_id
+    arm_id_attr = arm_id.nil? ? "" : "arm_id='#{arm_id}'"
+    [
+      "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' #{protocol_id_attr} participant_id='#{participant.id}' #{arm_id_attr}>",
       "<i class='glyphicon glyphicon-random'></i>",
       "</a>"
     ].join ""
   end
 
-  def calendarFormatter(participant)
+  def calendarFormatter(participant, protocol_participant)
+    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
     if participant.appointments.empty?
       "<i class='glyphicon glyphicon-calendar' title='Assign arm to view participant calendar' style='cursor:default'></i>"
     else
       [
-        "<a class='participant-calendar' href='javascript:void(0)' title='Calendar' protocol_id='#{participant.protocol_id}' participant_id='#{participant.id}'>",
+        "<a class='participant-calendar' href='javascript:void(0)' title='Calendar' #{protocol_id_attr} participant_id='#{participant.id}'>",
         "<i class='glyphicon glyphicon-calendar'></i>",
         "</a>"
       ].join ""
@@ -99,8 +142,8 @@ module ParticipantHelper
     end
   end
 
-  def statusFormatter(participant)
-    select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id}
+  def statusFormatter(participant, protocol_participant)
+    select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, protocol_participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id}
   end
 
   def notes_formatter(participant)
@@ -118,7 +161,7 @@ module ParticipantHelper
   end
 
   def selected_for_protocol_formatter(participant, protocol)
-    selected_for_protocol = participant.protocols.map{|p| p.id}.include?(protocol.id)
+    selected_for_protocol = participant.protocol_ids.include?(protocol.id)
     "<input class='selected_for_protocol' type='checkbox' " + (selected_for_protocol ? "checked='checked'" : "") + " protocol_id='#{protocol.id}' participant_id='#{participant.id}'>"
   end
 end

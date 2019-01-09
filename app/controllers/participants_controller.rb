@@ -20,7 +20,7 @@
 
 class ParticipantsController < ApplicationController
 
-  before_action :find_protocol, only: [:index, :participants_for_protocol, :new, :update_protocol_association]
+  before_action :find_protocol, only: [:participants_for_protocol, :new, :update_protocol_association]
   before_action :find_participant, only: [:show, :edit, :update, :destroy, :edit_arm, :update_arm, :details, :update_protocol_association]
   before_action :note_old_participant_attributes, only: [:update, :update_arm]
   before_action :authorize_protocol, only: [:show]
@@ -32,10 +32,10 @@ class ParticipantsController < ApplicationController
     @limit = params[:limit] || 50
 
     find_participants_for_index
+
     respond_to do |format|
-      format.json {
-        render
-      }
+      format.html
+      format.json
     end
   end
 
@@ -76,7 +76,7 @@ class ParticipantsController < ApplicationController
     if @participant.valid?
       @participant.save
 
-      assign_arm_if_only_one_arm
+      # assign_arm_if_only_one_arm
       
       flash[:success] = t(:participant)[:flash_messages][:created]
     else
@@ -110,11 +110,15 @@ class ParticipantsController < ApplicationController
   def participants_for_protocol
     respond_to do |format|
       format.json {
-        @participants = @protocol.participants
+        @participants = Participant.by_protocol_id(@protocol.id)
 
         render
       }
     end
+  end
+
+  def details
+    @protocol_participant = @participant.protocols_participants.where(protocol_id: params[:protocol_id]).first
   end
 
   private
@@ -151,12 +155,12 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def assign_arm_if_only_one_arm
-    if @participant.protocol.arms.size == 1
-      @participant.update_attributes(arm_id: @participant.protocol.arms.first.id)
-      @participant.update_appointments_on_arm_change
-    end
-  end
+  # def assign_arm_if_only_one_arm
+  #   if @participant.protocol.arms.size == 1
+  #     @participant.update_attributes(arm_id: @participant.protocol.arms.first.id)
+  #     @participant.update_appointments_on_arm_change
+  #   end
+  # end
 
   def note_old_participant_attributes
     @old_attributes = @participant.attributes

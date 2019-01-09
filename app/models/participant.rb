@@ -29,20 +29,17 @@ class Participant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
-  belongs_to :arm
   has_many :notes, as: :notable
-  has_and_belongs_to_many :protocols, join_table: "participants_protocols"
+  # has_and_belongs_to_many :arms, join_table: "participants_protocols"
+  # has_and_belongs_to_many :protocols, join_table: "participants_protocols"
+  has_many :protocols_participants
   has_many :appointments
-
   has_many :procedures, through: :appointments
-
-  # delegate :srid,
-  #          to: :protocol
-
+  
   after_save :update_faye
   after_destroy :update_faye
 
-  validates :protocol_id, presence: true
+  # validates :protocol_id, presence: true
   validates :last_name, presence: true
   validates :first_name, presence: true
 
@@ -63,6 +60,10 @@ class Participant < ApplicationRecord
   validate :zip_code_format
 
   validate :phone_number_format
+
+  scope :by_protocol_id, -> (protocol_id) {
+    joins(:protocols_participants).where("protocols_participants.protocol_id = ? ", protocol_id)
+  }
 
   def self.title id
     participant = Participant.find id
@@ -143,6 +144,10 @@ class Participant < ApplicationRecord
 
   def can_be_destroyed?
     procedures.where.not(status: 'unstarted').empty?
+  end
+
+  def protocol_ids
+    protocols_participants.map{ |pp| pp.protocol_id }
   end
 
   private
