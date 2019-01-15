@@ -57,9 +57,21 @@ module Features
       if e['readonly']
         page.execute_script "$('#{element}').focus()"
         page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
-        find('.year', text: args[:year]).click if args[:year]
-        find('.month', text: args[:month]).click if args[:month]
-        find('.day', text: args[:day]).click if args[:day]
+
+        if args[:year]
+          expect(page).to have_selector('.year', text: args[:year])
+          first('.year', text: args[:year]).click
+        end
+
+        if args[:month]
+          expect(page).to have_selector('.month', text: args[:month])
+          first('.month', text: args[:month]).click
+        end
+
+        if args[:day]
+          expect(page).to have_selector('.day', text: args[:day])
+          first('.day', text: args[:day]).click
+        end
       else
         page.execute_script "$('#{element}').focus()"
         page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
