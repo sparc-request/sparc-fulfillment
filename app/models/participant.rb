@@ -33,11 +33,12 @@ class Participant < ApplicationRecord
   # has_and_belongs_to_many :arms, join_table: "participants_protocols"
   # has_and_belongs_to_many :protocols, join_table: "participants_protocols"
   has_many :protocols_participants
-  has_many :appointments
-  has_many :procedures, through: :appointments
+  # has_many :appointments
+  # has_many :procedures, through: :appointments
+  has_many :protocols, through: :protocols_participants
   
-  after_save :update_faye
-  after_destroy :update_faye
+  #after_save :update_faye
+  #after_destroy :update_faye
 
   # validates :protocol_id, presence: true
   validates :last_name, presence: true
@@ -63,6 +64,10 @@ class Participant < ApplicationRecord
 
   scope :by_protocol_id, -> (protocol_id) {
     joins(:protocols_participants).where("protocols_participants.protocol_id = ? ", protocol_id)
+  }
+
+  scope :except_by_protocol_id, -> (protocol_id) {
+    joins(:protocols_participants).where("protocols_participants.protocol_id != ? ", protocol_id)
   }
 
   def self.title id
@@ -112,23 +117,23 @@ class Participant < ApplicationRecord
     label
   end
 
-  def build_appointments
-    ActiveRecord::Base.transaction do
-      if self.arm
-        if self.appointments.empty?
-          appointments_for_visit_groups(self.arm.visit_groups)
-        elsif has_new_visit_groups?
-          appointments_for_visit_groups(new_visit_groups)
-        end
+  # def build_appointments
+  #   ActiveRecord::Base.transaction do
+  #     if self.arm
+  #       if self.appointments.empty?
+  #         appointments_for_visit_groups(self.arm.visit_groups)
+  #       elsif has_new_visit_groups?
+  #         appointments_for_visit_groups(new_visit_groups)
+  #       end
 
-      end
-    end
-  end
+  #     end
+  #   end
+  # end
 
-  def update_appointments_on_arm_change
-    self.appointments.each{ |appt| appt.destroy_if_incomplete }
-    self.build_appointments
-  end
+  # def update_appointments_on_arm_change
+  #   self.appointments.each{ |appt| appt.destroy_if_incomplete }
+  #   self.build_appointments
+  # end
 
   def full_name
     [first_name, middle_initial, last_name].join(' ')
@@ -142,10 +147,6 @@ class Participant < ApplicationRecord
     [first_name, middle_initial].join(' ')
   end
 
-  def can_be_destroyed?
-    procedures.where.not(status: 'unstarted').empty?
-  end
-
   def protocol_ids
     protocols_participants.map{ |pp| pp.protocol_id }
   end
@@ -156,20 +157,20 @@ class Participant < ApplicationRecord
     FayeJob.perform_later protocol
   end
 
-  def has_new_visit_groups?
-    self.arm.visit_groups.order(:id).pluck(:id) != self.appointments.where(arm_id: self.arm_id).where.not(visit_group_id: nil).order(:visit_group_id).pluck(:visit_group_id)
-  end
+  # def has_new_visit_groups?
+  #   self.arm.visit_groups.order(:id).pluck(:id) != self.appointments.where(arm_id: self.arm_id).where.not(visit_group_id: nil).order(:visit_group_id).pluck(:visit_group_id)
+  # end
 
-  def new_visit_groups
-    participant_vgs = self.appointments.map{|app| app.visit_group}
-    arm_vgs = self.arm.visit_groups
-    arm_vgs - participant_vgs
-  end
+  # def new_visit_groups
+  #   participant_vgs = self.appointments.map{|app| app.visit_group}
+  #   arm_vgs = self.arm.visit_groups
+  #   arm_vgs - participant_vgs
+  # end
 
-  def appointments_for_visit_groups visit_groups
-    visit_groups.each do |vg|
-      self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
-    end
-  end
+  # def appointments_for_visit_groups visit_groups
+  #   visit_groups.each do |vg|
+  #     self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
+  #   end
+  # end
 
 end

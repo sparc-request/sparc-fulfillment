@@ -32,7 +32,9 @@ class Appointment < ApplicationRecord
   include CustomPositioning #custom methods around positioning, acts_as_list
 
   belongs_to :arm, -> { with_deleted }
-  belongs_to :participant
+  belongs_to :protocols_participant
+  #appointments needs a protocols_participants_id
+  # belongs_to :participant
   belongs_to :visit_group
   has_many :appointment_statuses, dependent: :destroy
   has_many :procedures

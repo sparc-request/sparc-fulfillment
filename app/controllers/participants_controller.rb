@@ -20,8 +20,9 @@
 
 class ParticipantsController < ApplicationController
 
-  before_action :find_protocol, only: [:participants_for_protocol, :new, :update_protocol_association]
-  before_action :find_participant, only: [:show, :edit, :update, :destroy, :edit_arm, :update_arm, :details, :update_protocol_association]
+  before_action :find_protocol, only: [:details, :destroy, :participants_in_protocol, :edit_arm, :participants_not_in_protocol, :update_protocol_association, :search]
+  before_action :find_participant, only: [:details, :show, :edit, :update, :destroy, :edit_arm, :update_arm, :details, :update_protocol_association]
+  before_action :find_protocol_participant, only: [:details, :edit_arm, :destroy, :update_arm, :assign_arm_if_only_one_arm]
   before_action :note_old_participant_attributes, only: [:update, :update_arm]
   before_action :authorize_protocol, only: [:show]
 
@@ -29,7 +30,7 @@ class ParticipantsController < ApplicationController
     @page = params[:page]
     @status = params[:status] || 'all'
     @offset = params[:offset] || 0
-    @limit = params[:limit] || 50
+    @limit = params[:limit] || 25
 
     find_participants_for_index
 
@@ -49,6 +50,7 @@ class ParticipantsController < ApplicationController
   def update_protocol_association
     if params[:checked] == 'true'
       @participant.protocols << @protocol
+      assign_arm_if_only_one_arm
       flash[:success] = t(:participant)[:flash_messages][:added_to_protocol]
     else
       @participant.protocols.delete(@protocol)
@@ -59,8 +61,16 @@ class ParticipantsController < ApplicationController
   def new
     respond_to do |format|
       format.js {
-        @participant = Participant.new(protocol_id: @protocol.id)
+        @participant = Participant.new()
       }
+    end
+  end
+
+  def search
+    find_participants_for_index
+    respond_to do |format|
+      format.html
+      format.json
     end
   end
 
@@ -75,8 +85,6 @@ class ParticipantsController < ApplicationController
 
     if @participant.valid?
       @participant.save
-
-      # assign_arm_if_only_one_arm
       
       flash[:success] = t(:participant)[:flash_messages][:created]
     else
@@ -94,20 +102,19 @@ class ParticipantsController < ApplicationController
   end
 
   def destroy
-    @protocol_id = @participant.protocol_id
-    @participant.destroy
+    @protocol_participant.destroy
     flash[:alert] = t(:participant)[:flash_messages][:removed]
   end
 
   def update_arm
-    @participant.update_attributes(arm_id: participant_params[:arm_id])
-    @participant.update_appointments_on_arm_change
+    @protocol_participant.update_attributes(arm_id: participant_params[:arm_id])
+    @protocol_participant.update_appointments_on_arm_change
     note_successful_changes
 
     flash[:success] = t(:participant)[:flash_messages][:arm_change]
   end
 
-  def participants_for_protocol
+  def participants_in_protocol
     respond_to do |format|
       format.json {
         @participants = Participant.by_protocol_id(@protocol.id)
@@ -117,8 +124,18 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def details
-    @protocol_participant = @participant.protocols_participants.where(protocol_id: params[:protocol_id]).first
+  def participants_not_in_protocol
+    page = params[:page]
+    @status = params[:status] || 'all'
+    @offset = params[:offset] || 0
+    @limit = params[:limit] || 25
+
+    find_participants_for_index
+
+    respond_to do |format|
+      format.json
+      format.js
+    end
   end
 
   private
@@ -141,6 +158,10 @@ class ParticipantsController < ApplicationController
     @protocol = Protocol.find(params[:protocol_id])
   end
 
+  def find_protocol_participant
+    @protocol_participant = ProtocolsParticipant.where(protocol_id: @protocol.id, participant_id: @participant.id).first
+  end
+
   def participant_params
     params.require(:participant).permit(:protocol_id, :arm_id, :last_name, :first_name, :middle_initial, :mrn, :external_id, :status, :date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
   end
@@ -155,12 +176,12 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  # def assign_arm_if_only_one_arm
-  #   if @participant.protocol.arms.size == 1
-  #     @participant.update_attributes(arm_id: @participant.protocol.arms.first.id)
-  #     @participant.update_appointments_on_arm_change
-  #   end
-  # end
+  def assign_arm_if_only_one_arm
+    if @protocol.arms.size == 1
+      @protocol_participant.update_attributes(arm_id: @protocol.arms.first.id)
+      @protocol_participant.update_appointments_on_arm_change
+    end
+  end
 
   def note_old_participant_attributes
     @old_attributes = @participant.attributes

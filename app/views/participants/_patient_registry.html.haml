@@ -19,8 +19,8 @@
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 %h3= t(:patient)[:registry]
-#custom-toolbar
-  %button.btn.btn-primary.new-participant{type: "button", data: {protocol_id: protocol.id}, aria: {label: "Create Participant"}}=t(:participant)[:new_participant]
+/ #custom-toolbar
+/   %button.btn.btn-primary.new-participant{type: "button", data: {protocol_id: protocol.id}, aria: {label: "Create Participant"}}=t(:participant)[:new_participant]
 .bootstrap-table-dropdown-overflow
   #patient_registry
     %table.participants.custom_striped{id: "patient-registry-table", data: {protocol_id: @protocol.id, toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: participants_path(protocol_id: protocol.id, format: :json), "page_size" => @limit, "pagination" => "true", "side-pagination" => "server", "sort-name" => "sparc_id", "sort-order" => 'asc', cookie: "true", "cookie-id-table" => "patient-registry-table", striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel'], "checkbox-header": "false"}}

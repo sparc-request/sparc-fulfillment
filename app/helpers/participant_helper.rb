@@ -39,7 +39,7 @@ module ParticipantHelper
     ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'N/A']
   end
 
-  def detailsFormatterRegistry(participant)
+  def registry_details_formatter(participant)
     [
       "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-sunglasses'></i>",
@@ -47,7 +47,7 @@ module ParticipantHelper
     ].join ""
   end
 
-  def editFormatterRegistry(participant)
+  def registry_edit_formatter(participant)
     [
       "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-edit'></i>",
@@ -55,7 +55,7 @@ module ParticipantHelper
     ].join ""
   end
 
-  def deleteFormatterRegistry(participant)
+  def registry_delete_formatter(participant)
     if participant.can_be_destroyed?
       [
         "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
@@ -94,7 +94,7 @@ module ParticipantHelper
   def deleteFormatter(participant, protocol_participant)
     protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    if participant.can_be_destroyed?
+    if protocol_participant.can_be_destroyed?
       [
         "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' #{protocol_id_attr} participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
         "<i class='glyphicon glyphicon-remove'></i>",
@@ -123,7 +123,7 @@ module ParticipantHelper
   def calendarFormatter(participant, protocol_participant)
     protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    if participant.appointments.empty?
+    if protocol_participant.appointments.empty?
       "<i class='glyphicon glyphicon-calendar' title='Assign arm to view participant calendar' style='cursor:default'></i>"
     else
       [
