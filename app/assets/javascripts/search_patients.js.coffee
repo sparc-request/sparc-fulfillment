@@ -18,5 +18,15 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_area").html("<%= escape_javascript(render(:partial =>'participants/details_modal', locals: {participant: @participant})) %>");
-$("#modal_place").modal 'show'
+$ ->
+
+  $(document).on 'change', '.associate', ->
+    data =
+      'protocol_id': $(this).attr('protocol_id')
+      'participant_id': $(this).attr('participant_id')
+      'checked': $(this).is(':checked')
+
+    $.ajax
+      type: 'POST'
+      url: "/participants/update_protocol_association"
+      data: data

@@ -4,7 +4,7 @@ json.id participant.id
 json.protocol_id @protocol.id
 json.srid @protocol.srid
 json.arm_id protocol_participant.arm_id
-json.arm_name truncated_formatter(protocol_participant.arm.name) if protocol_participant.arm
+json.arm_name truncated_formatter(protocol_participant.arm.name)
 json.first_middle truncated_formatter(participant.first_middle)
 json.first_name truncated_formatter(participant.first_name)
 json.middle_initial participant.middle_initial
@@ -13,7 +13,7 @@ json.name truncated_formatter(participant.full_name)
 json.mrn truncated_formatter(participant.mrn)
 json.external_id truncated_formatter(participant.external_id)
 json.statusText protocol_participant.status
-json.statusDropdown statusFormatter(participant, protocol_participant) if protocol_participant
+json.statusDropdown statusFormatter(participant, protocol_participant, @protocol.id)
 json.notes notes_formatter(participant)
 json.date_of_birth format_date(participant.date_of_birth)
 json.gender participant.gender

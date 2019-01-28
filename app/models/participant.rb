@@ -151,6 +151,10 @@ class Participant < ApplicationRecord
     protocols_participants.map{ |pp| pp.protocol_id }
   end
 
+  def can_be_destroyed?
+    ProtocolsParticipant.where(participant: id).empty?
+  end
+
   private
 
   def update_faye

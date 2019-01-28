@@ -20,10 +20,10 @@
 
 class ParticipantsController < ApplicationController
 
-  before_action :find_protocol, only: [:details, :destroy, :participants_in_protocol, :edit_arm, :participants_not_in_protocol, :update_protocol_association, :search]
-  before_action :find_participant, only: [:details, :show, :edit, :update, :destroy, :edit_arm, :update_arm, :details, :update_protocol_association]
-  before_action :find_protocol_participant, only: [:details, :edit_arm, :destroy, :update_arm, :assign_arm_if_only_one_arm]
-  before_action :note_old_participant_attributes, only: [:update, :update_arm]
+  before_action :find_protocol, only: [:destroy_protocol_participant, :update_status, :participants_in_protocol, :edit_arm, :search_for_patients, :update_protocol_association, :search]
+  before_action :find_participant, only: [:destroy_protocol_participant, :update_status, :details, :show, :edit, :update, :destroy, :edit_arm, :update_arm, :update_protocol_association, :patient_registry_modal_details]
+  before_action :find_protocol_participant, only: [:destroy_protocol_participant, :update_status, :edit_arm, :update_arm, :update_protocol_association, :assign_arm_if_only_one_arm]
+  before_action :note_old_participant_attributes, only: [:update_status, :update_arm]
   before_action :authorize_protocol, only: [:show]
 
   def index
@@ -49,7 +49,7 @@ class ParticipantsController < ApplicationController
 
   def update_protocol_association
     if params[:checked] == 'true'
-      @participant.protocols << @protocol
+      @protocol_participant = ProtocolsParticipant.new(protocol_id: @protocol.id, participant_id: @participant.id)
       assign_arm_if_only_one_arm
       flash[:success] = t(:participant)[:flash_messages][:added_to_protocol]
     else
@@ -94,6 +94,14 @@ class ParticipantsController < ApplicationController
 
   def update
     if @participant.update_attributes(participant_params)
+      flash[:success] = t(:participant)[:flash_messages][:updated]
+    else
+      @errors = @participant.errors
+    end
+  end
+
+  def update_status
+    if @protocol_participant.update_attributes(participant_params)
       note_successful_changes
       flash[:success] = t(:participant)[:flash_messages][:updated]
     else
@@ -101,8 +109,13 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def destroy
+  def destroy_protocol_participant 
     @protocol_participant.destroy
+    flash[:alert] = t(:participant)[:flash_messages][:removed]
+  end
+
+  def destroy
+    @participant.destroy
     flash[:alert] = t(:participant)[:flash_messages][:removed]
   end
 
@@ -124,7 +137,7 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def participants_not_in_protocol
+  def search_for_patients
     page = params[:page]
     @status = params[:status] || 'all'
     @offset = params[:offset] || 0
@@ -159,7 +172,11 @@ class ParticipantsController < ApplicationController
   end
 
   def find_protocol_participant
-    @protocol_participant = ProtocolsParticipant.where(protocol_id: @protocol.id, participant_id: @participant.id).first
+    if params[:protocol_participant]
+      @protocol_participant = ProtocolsParticipant.where(protocol_participant.id).first
+    else
+      @protocol_participant = ProtocolsParticipant.where(protocol_id: @protocol.id, participant_id: @participant.id).first
+    end
   end
 
   def participant_params

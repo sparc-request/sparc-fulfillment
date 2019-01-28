@@ -54,6 +54,7 @@
 //= require participants
 //= require participant_tracker
 //= require patient_registry
+//= require search_patients
 //= require appointments
 //= require autoload_appointment
 //= require tasks

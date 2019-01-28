@@ -250,6 +250,7 @@ en:
     reason: "Reason *"
 
   participant:
+    associate: "Associate"
     object: "Participant"
     address: "Address"
     arm: "Current Arm"
@@ -281,6 +282,7 @@ en:
     notes: "Notes"
     participant_report: "Report"
     phone: "Phone"
+    phone_num: "Phone #"
     race: "Race"
     recruitment_source: "Recruitment Source"
     save_participant: "Save Participant"

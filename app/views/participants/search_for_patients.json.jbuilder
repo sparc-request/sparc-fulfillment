@@ -17,8 +17,8 @@ json.rows @participants do |participant|
     json.race participant.race
     json.address truncated_formatter(participant.address)
     json.phone phoneNumberFormatter(participant)
-    json.details registry_details_formatter(participant)
     json.edit registry_edit_formatter(participant)
-    json.selected_for_protocol selected_for_protocol_formatter(participant, @protocol)
+    json.associate associate_formatter(participant, @protocol)
+    json.recruitment_source truncated_formatter(participant.recruitment_source)
   end
 end

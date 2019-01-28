@@ -46,7 +46,7 @@ module ParticipantHelper
       "</a>"
     ].join ""
   end
-
+  
   def registry_edit_formatter(participant)
     [
       "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
@@ -58,7 +58,7 @@ module ParticipantHelper
   def registry_delete_formatter(participant)
     if participant.can_be_destroyed?
       [
-        "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
+        "<a class='remove destroy-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
         "<i class='glyphicon glyphicon-remove'></i>",
         "</a>"
       ].join ""
@@ -73,9 +73,8 @@ module ParticipantHelper
   def detailsFormatter(participant, protocol_participant)
     protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    participant_details_class = params[:action] == 'index' ? 'patient-registry-details': 'participant-tracker-details'
     [
-      "<a class='details #{participant_details_class} ml10' href='javascript:void(0)' title='Details' #{protocol_id_attr} participant_id='#{participant.id}'>",
+      "<a class='participant-details ml10' href='javascript:void(0)' title='Details' #{protocol_id_attr} participant_id='#{participant.id}'>",
       "<i class='glyphicon glyphicon-sunglasses'></i>",
       "</a>"
     ].join ""
@@ -142,8 +141,8 @@ module ParticipantHelper
     end
   end
 
-  def statusFormatter(participant, protocol_participant)
-    select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, protocol_participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id}
+  def statusFormatter(participant, protocol_participant, protocol_id)
+    select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, protocol_participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id, protocol_id: protocol_id}
   end
 
   def notes_formatter(participant)
@@ -160,8 +159,8 @@ module ParticipantHelper
     html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
-  def selected_for_protocol_formatter(participant, protocol)
-    selected_for_protocol = participant.protocol_ids.include?(protocol.id)
-    "<input class='selected_for_protocol' type='checkbox' " + (selected_for_protocol ? "checked='checked'" : "") + " protocol_id='#{protocol.id}' participant_id='#{participant.id}'>"
+  def associate_formatter(participant, protocol)
+    associate = participant.protocol_ids.include?(protocol.id)
+    "<input class='associate' type='checkbox' " + (associate ? "checked='checked'" : "") + " protocol_id='#{protocol.id}' participant_id='#{participant.id}'>"
   end
 end

@@ -59,13 +59,15 @@ Rails.application.routes.draw do
   resources :participants do
     collection do
       get 'participants_in_protocol'
-      get 'participants_not_in_protocol'
+      get 'search_for_patients'
       post 'update_protocol_association', to: 'participants#update_protocol_association'
       get 'search', to: 'participants#search'
     end
+    put 'change_status(/:id)', to: 'participants#update_status'
     get 'change_arm(/:id)', to: 'participants#edit_arm'
     post 'change_arm(/:id)', to: 'participants#update_arm'
     get 'details', to: 'participants#details'
+    put 'destroy_protocol_participant'
   end
 
   resources :tasks do

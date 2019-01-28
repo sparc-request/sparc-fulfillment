@@ -20,13 +20,37 @@
 
 $ ->
 
-  $(document).on 'change', '.selected_for_protocol', ->
+  $(document).on 'click', '.new-participant', ->
     data =
-      'protocol_id': $(this).attr('protocol_id')
-      'participant_id': $(this).attr('participant_id')
-      'checked': $(this).is(':checked')
+      'protocol_id' : $(this).data('protocol-id')
 
     $.ajax
-      type: 'POST'
-      url: "/participants/update_protocol_association"
+      type: 'GET'
+      url: "/participants/new.js"
       data: data
+
+  $(document).on 'click', '.search-participant', ->
+    data =
+      'protocol_id' : $(this).data('protocol-id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/search.js"
+      data: data
+
+  $(document).on 'click', '.edit-participant', ->
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/edit"
+
+  $(document).on 'click', '.destroy-participant', ->
+    console.log("destroy participant")
+    participant_id = $(this).attr('participant_id')
+    name = $(this).attr('participant_name')
+    del = confirm "Are you sure you want to remove #{name} from Patient Registry?"
+    if del
+      $.ajax
+        type: 'DELETE'
+        url: "/participants/#{participant_id}"
+        data: 'protocol_id': $(this).attr('protocol_id')
+    

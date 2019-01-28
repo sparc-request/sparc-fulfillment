@@ -23,5 +23,7 @@ class AddProtocolsParticipantsIdToAppointments < ActiveRecord::Migration[5.2]
     #   end
     # end
     puts "Appointments with no matches: #{bad_data}"
+    puts "*Number of Appointments with no matches: #{bad_data.count}"
+    puts "Number of Appointments with no matches: #{bad_data}.count"
   end
 end

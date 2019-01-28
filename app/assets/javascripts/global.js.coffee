@@ -47,6 +47,7 @@ $ ->
     $(this).blur()
 
   $(document).on 'click', 'button.notes.list',  ->
+    console.log("notes")
     id = $(this).data('notable-id')
     type = $(this).data('notable-type')
     data = note:
@@ -58,6 +59,7 @@ $ ->
       data: data
 
   $(document).on 'click', 'button.note.new',  ->
+    console.log('notes')
     id = $(this).data('notable-id')
     type = $(this).data('notable-type')
     data = note:

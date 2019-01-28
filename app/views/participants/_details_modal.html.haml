@@ -34,10 +34,6 @@
         .detail
           .field.col-xs-4= t(:participant)[:id]
           .col-xs-8= participant.external_id
-        - if @protocol_participant
-          .detail
-            .field.col-xs-4= t(:participant)[:status]
-            .col-xs-8= @protocol_participant.status
         .detail
           .field.col-xs-4= t(:participant)[:dob]
           .col-xs-8= format_date(participant.date_of_birth)

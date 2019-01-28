@@ -19,5 +19,6 @@ json.rows @participants do |participant|
     json.phone phoneNumberFormatter(participant)
     json.details registry_details_formatter(participant)
     json.edit registry_edit_formatter(participant)
+    json.delete registry_delete_formatter(participant)
   end
 end
