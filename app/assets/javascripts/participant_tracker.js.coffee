@@ -29,14 +29,12 @@ $ ->
 
   ### *CALENDAR ### 
   $(document).on 'click', '.participant-calendar', ->
-    console.log("calendar")
     protocol_id = $(this).attr('protocol_id')
     participant_id = $(this).attr('participant_id')
     window.location = "/participants/#{participant_id}"
 
   ### REPORT ###
   $(document).on 'load-success.bs.table', '#participants-tracker-table', ->
-    console.log("report")
     tables_to_refresh = ['table.protocol_reports']
     
     $.each $('table.participants td.participant_report button'), (index, value) ->
@@ -44,7 +42,6 @@ $ ->
 
   ### *ASSIGN ARM ###
   $(document).on 'click', '.change-arm', ->
-    console.log("assign arm")
     participant_id = $(this).attr('participant_id')
     data = arm_id : $(this).attr('arm_id'), protocol_id: $(this).attr('protocol_id')
     $.ajax
@@ -53,13 +50,11 @@ $ ->
       data: data
 
   ### *STATUS ###
-  $(document).on 'change', '.participant_status.selectpicker', ->
-    console.log("status")
+  $(document).on 'change', '.protocols_participant_status.selectpicker', ->
     participant_id = $(this).data("id")
     protocol_id = $(this).data("protocol-id")
     status         = $(this).val()
-    console.log(protocol_id)
-    data = 'participant': {'status': status}, 'protocol_id': protocol_id
+    data = 'protocols_participant': {'status': status}, 'protocol_id': protocol_id
     $.ajax
       type: "PUT"
       url: "/participants/#{participant_id}/change_status"
@@ -70,7 +65,6 @@ $ ->
 
   ### *DETAILS ###
   $(document).on 'click', '.participant-details', ->
-    console.log("details")
     participant_id = $(this).attr('participant_id')
     $.ajax
       type: 'GET'
@@ -78,12 +72,11 @@ $ ->
 
   ### *DELETE ###
   $(document).on 'click', '.remove-participant', ->
-    console.log("remove participant")
     participant_id = $(this).attr('participant_id')
     name = $(this).attr('participant_name')
     del = confirm "Are you sure you want to remove #{name} from the Participant List?"
     if del
       $.ajax
         type: 'PUT'
-        url: "/participants/#{participant_id}/destroy_protocol_participant"
+        url: "/participants/#{participant_id}/destroy_protocols_participant"
         data: 'protocol_id': $(this).attr('protocol_id')

@@ -88,7 +88,7 @@ class AppointmentsController < ApplicationController
 
   def custom_appointment_params
     params.require(:custom_appointment)
-          .permit(:arm_id, :participant_id, :name, :position,
+          .permit(:arm_id, :participant_id, :participants_protocol_id, :name, :position,
                  notes_attributes: [:comment, :kind, :identity_id, :reason])
   end
 end

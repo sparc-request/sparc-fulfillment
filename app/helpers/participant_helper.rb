@@ -70,8 +70,8 @@ module ParticipantHelper
     end
   end
 
-  def detailsFormatter(participant, protocol_participant)
-    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+  def detailsFormatter(participant, protocols_participant)
+    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
     [
       "<a class='participant-details ml10' href='javascript:void(0)' title='Details' #{protocol_id_attr} participant_id='#{participant.id}'>",
@@ -80,8 +80,8 @@ module ParticipantHelper
     ].join ""
   end
 
-  def editFormatter(participant, protocol_participant)
-    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+  def editFormatter(participant, protocols_participant)
+    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
     [
       "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' #{protocol_id_attr} participant_id='#{participant.id}'>",
@@ -90,10 +90,10 @@ module ParticipantHelper
     ].join ""
   end
 
-  def deleteFormatter(participant, protocol_participant)
-    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+  def deleteFormatter(participant, protocols_participant)
+    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    if protocol_participant.can_be_destroyed?
+    if protocols_participant.can_be_destroyed?
       [
         "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' #{protocol_id_attr} participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
         "<i class='glyphicon glyphicon-remove'></i>",
@@ -107,10 +107,10 @@ module ParticipantHelper
     end
   end
 
-  def changeArmFormatter(participant, protocol_participant)
-    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+  def changeArmFormatter(participant, protocols_participant)
+    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    arm_id = protocol_participant.nil? ? nil : protocol_participant.arm_id
+    arm_id = protocols_participant.nil? ? nil : protocols_participant.arm_id
     arm_id_attr = arm_id.nil? ? "" : "arm_id='#{arm_id}'"
     [
       "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' #{protocol_id_attr} participant_id='#{participant.id}' #{arm_id_attr}>",
@@ -119,10 +119,10 @@ module ParticipantHelper
     ].join ""
   end
 
-  def calendarFormatter(participant, protocol_participant)
-    protocol_id = protocol_participant.nil? ? nil : protocol_participant.protocol_id
+  def calendarFormatter(participant, protocols_participant)
+    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    if protocol_participant.appointments.empty?
+    if protocols_participant.appointments.empty?
       "<i class='glyphicon glyphicon-calendar' title='Assign arm to view participant calendar' style='cursor:default'></i>"
     else
       [
@@ -141,8 +141,8 @@ module ParticipantHelper
     end
   end
 
-  def statusFormatter(participant, protocol_participant, protocol_id)
-    select_tag "participant_status_#{participant.id}", options_for_select(Participant::STATUS_OPTIONS, protocol_participant.status), include_blank: true, class: "participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id, protocol_id: protocol_id}
+  def statusFormatter(participant, protocols_participant, protocol_id)
+    select_tag "protocols_participant_status_#{protocols_participant.id}", options_for_select(Participant::STATUS_OPTIONS, protocols_participant.status), include_blank: true, class: "protocols_participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id, protocol_id: protocol_id}
   end
 
   def notes_formatter(participant)

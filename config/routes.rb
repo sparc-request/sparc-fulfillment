@@ -67,7 +67,7 @@ Rails.application.routes.draw do
     get 'change_arm(/:id)', to: 'participants#edit_arm'
     post 'change_arm(/:id)', to: 'participants#update_arm'
     get 'details', to: 'participants#details'
-    put 'destroy_protocol_participant'
+    put 'destroy_protocols_participant'
   end
 
   resources :tasks do

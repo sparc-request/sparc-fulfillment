@@ -25,14 +25,12 @@ RSpec.describe Appointment, type: :model do
   it { is_expected.to have_one(:protocol) }
 
   it { is_expected.to belong_to(:arm) }
-  it { is_expected.to belong_to(:participant) }
   it { is_expected.to belong_to(:visit_group) }
-
   it { is_expected.to have_many(:procedures) }
   it { is_expected.to have_many(:appointment_statuses) }
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :participant_id }
+    it { is_expected.to validate_presence_of :protocols_participant_id }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :arm_id }
   end
@@ -42,8 +40,9 @@ RSpec.describe Appointment, type: :model do
       before :each do
         protocol = create(:protocol)
         arm = create(:arm, protocol: protocol)
-        participant = create(:participant, protocol: protocol, arm: arm)
-        @appt = create(:appointment, arm: arm, name: "Visit 1", participant: participant, position: 1)
+        participant = create(:participant)
+        protocols_participant = create(:protocols_participant, arm_id: arm.id, protocol_id: protocol.id, participant_id: participant.id)
+        @appt = create(:appointment, arm: arm, name: "Visit 1", protocols_participant: protocols_participant, position: 1)
         @proc1 = create(:procedure, :complete, appointment: @appt)
         @proc2 = create(:procedure, appointment: @appt)
       end

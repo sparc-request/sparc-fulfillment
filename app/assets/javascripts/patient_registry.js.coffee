@@ -44,7 +44,6 @@ $ ->
       url: "/participants/#{participant_id}/edit"
 
   $(document).on 'click', '.destroy-participant', ->
-    console.log("destroy participant")
     participant_id = $(this).attr('participant_id')
     name = $(this).attr('participant_name')
     del = confirm "Are you sure you want to remove #{name} from Patient Registry?"

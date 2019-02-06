@@ -6,6 +6,10 @@ class ProtocolsParticipant < ApplicationRecord
   has_many :appointments
   has_many :procedures, through: :appointments
 
+  validates :protocol_id, presence: true
+  validates :participant_id, presence: true
+  validates :arm_id, presence: true
+
   def build_appointments
     ActiveRecord::Base.transaction do
       if arm
@@ -22,6 +26,8 @@ class ProtocolsParticipant < ApplicationRecord
     appointments.each{ |appt| appt.destroy_if_incomplete }
     build_appointments
   end
+
+  private
 
   def has_new_visit_groups?
     arm.visit_groups.order(:id).pluck(:id) != appointments.where(arm_id: arm_id).where.not(visit_group_id: nil).order(:visit_group_id).pluck(:visit_group_id)

@@ -27,7 +27,7 @@ class Appointment < ApplicationRecord
 
   has_paper_trail
   acts_as_paranoid
-  acts_as_list scope: [:arm_id, :participant_id]
+  acts_as_list scope: [:arm_id, :protocols_participant_id]
 
   include CustomPositioning #custom methods around positioning, acts_as_list
 
@@ -47,9 +47,9 @@ class Appointment < ApplicationRecord
   scope :unstarted, -> { where('appointments.start_date IS NULL AND appointments.completed_date IS NULL') }
   scope :with_completed_procedures, -> { joins(:procedures).where("procedures.completed_date IS NOT NULL") }
 
-  validates :participant_id, presence: true
   validates :name, presence: true
   validates :arm_id, presence: true
+  validates :protocols_participant_id, presence: true
 
   accepts_nested_attributes_for :notes
 
