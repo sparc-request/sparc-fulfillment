@@ -20,58 +20,45 @@
 
 require 'rails_helper'
 
-RSpec.describe NotesController, type: :controller do
+feature 'User associates Participant to Protocol', js: true do
 
-  login_user
-
-  describe 'GET #index' do
-
-    it 'should assign @notes' do
-      procedure = create(:procedure_with_notes)
-      params    = {
-        note: {
-          notable_type: 'Procedure',
-          notable_id: procedure.id
-        }
-      }
-
-      get :index, params: params, format: :js, xhr: true
-
-      expect(assigns(:notes).length).to eq(3)
-    end
+  scenario 'and sees the new Participants in the list' do
+    given_i_am_viewing_the_associate_participants_to_protocol_modal
+    i_should_see_associated_participants_as_checked
+    when_i_click_to_associate_a_participant
+    then_i_should_see_the_new_participant_in_the_list
   end
 
-  describe 'GET #new' do
+  def given_i_am_viewing_the_associate_participants_to_protocol_modal
+    @protocol    = create_and_assign_protocol_to_me
+    create(:participant)
+    visit protocol_path(@protocol.id)
+    wait_for_ajax
 
-    it 'should instantiate a new note' do
-      params = {
-        note: {
-          notable_type: 'Procedure',
-          notable_id: 1
-        }
-      }
+    click_link 'Participant Tracker'
+    wait_for_ajax
 
-      get :new, params: params, xhr: true
-
-      expect(assigns(:note)).to be_a_new(Note)
-    end
+    click_button 'Search For Participants'
+    wait_for_ajax
   end
 
-  describe 'POST #create' do
+  def i_should_see_associated_participants_as_checked
+    expect(all('input[type=checkbox]:checked').count).to eq(@protocol.protocols_participants.count)
+  end
 
-    it 'should create a new note' do
-      appointment = create(:appointment, name: 'Foggy Bottoms', arm_id: 1, protocols_participant_id: 1)
-      procedure = create(:procedure, appointment_id: appointment.id)
-      params = {
-        note: {
-          notable_type: 'Procedure',
-          notable_id: procedure.id,
-          comment: 'okay'
-        }
-      }
+  def when_i_click_to_associate_a_participant
+    all_participant_ids = Participant.all.map(&:id)
+    participant_ids_associated_to_protocol = @protocol.protocols_participants.map(&:id)
+    participant_id_left_to_associate = (all_participant_ids + participant_ids_associated_to_protocol) - (all_participant_ids & participant_ids_associated_to_protocol)
+    find("input[type='checkbox'][participant_id='#{participant_id_left_to_associate.first}']").set(true)
+    wait_for_ajax
+  end
 
-      expect{ post :create, params: params, format: :js }.to change(Note, :count).by(1)
-      expect(assigns(:note)).to have_attributes(comment: 'okay')
-    end
+  def then_i_should_see_the_new_participant_in_the_list
+    expect(page).to have_css('#flashes_container', text: 'Participant added to protocol.')
+    wait_for_ajax
+    click_button 'Close'
+    wait_for_ajax
+    expect(page).to have_css('table.participants tbody tr', count: 4)
   end
 end

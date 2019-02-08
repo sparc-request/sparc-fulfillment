@@ -20,9 +20,9 @@
 
 module ParticipantHelper
 
-  def appointments_for_select(arm, participant)
+  def appointments_for_select(arm, protocols_participant)
     appointments = []
-    participant.appointments.incompleted.each do |appt|
+    protocols_participant.appointments.incompleted.each do |appt|
       if appt.arm.name == arm.name
         appointments << appt
       end
@@ -119,14 +119,12 @@ module ParticipantHelper
     ].join ""
   end
 
-  def calendarFormatter(participant, protocols_participant)
-    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
-    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
+  def calendarFormatter(protocols_participant)
     if protocols_participant.appointments.empty?
       "<i class='glyphicon glyphicon-calendar' title='Assign arm to view participant calendar' style='cursor:default'></i>"
     else
       [
-        "<a class='participant-calendar' href='javascript:void(0)' title='Calendar' #{protocol_id_attr} participant_id='#{participant.id}'>",
+        "<a class='participant-calendar' href='javascript:void(0)' title='Calendar' participant_id='#{protocols_participant.participant_id}' protocols_participant_id='#{protocols_participant.id}' protocol_id='#{protocols_participant.protocol_id}'>",
         "<i class='glyphicon glyphicon-calendar'></i>",
         "</a>"
       ].join ""
@@ -152,10 +150,10 @@ module ParticipantHelper
                   button_class: 'participant_notes'})
   end
 
-  def participant_report_formatter(participant, protocol)
+  def participant_report_formatter(protocols_participant)
     icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
-    button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button participant_report dropdown-toggle', id: "participant_report_#{participant.id.to_s}", 'aria-expanded' => 'false', title: 'Participant Report', 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-participant_id' => participant.id)
-    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_participant_report_#{participant.id.to_s}", role: 'menu')
+    button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button participant_report dropdown-toggle', id: "participant_report_#{protocols_participant.id.to_s}", 'aria-expanded' => 'false', title: 'Participant Report', 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report',  'data-documentable_id' => protocols_participant.protocol_id, 'data-documentable_type' => 'Protocol', 'data-protocols_participant_id' => protocols_participant.id)
+    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_participant_report_#{protocols_participant.participant_id.to_s}", role: 'menu')
     html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
 

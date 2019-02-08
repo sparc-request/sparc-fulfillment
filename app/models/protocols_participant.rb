@@ -6,9 +6,11 @@ class ProtocolsParticipant < ApplicationRecord
   has_many :appointments
   has_many :procedures, through: :appointments
 
+  after_save :update_faye
+  after_destroy :update_faye
+
   validates :protocol_id, presence: true
   validates :participant_id, presence: true
-  validates :arm_id, presence: true
 
   def build_appointments
     ActiveRecord::Base.transaction do
@@ -25,6 +27,10 @@ class ProtocolsParticipant < ApplicationRecord
   def update_appointments_on_arm_change
     appointments.each{ |appt| appt.destroy_if_incomplete }
     build_appointments
+  end
+
+  def can_be_destroyed?
+    procedures.where.not(status: 'unstarted').empty?
   end
 
   private
@@ -45,7 +51,7 @@ class ProtocolsParticipant < ApplicationRecord
     end
   end
 
-  def can_be_destroyed?
-    procedures.where.not(status: 'unstarted').empty?
+  def update_faye
+    FayeJob.perform_later protocol
   end
 end

@@ -28,7 +28,7 @@ $ ->
 
 (exports ? this).refreshParticipantTables = ->
   $("#participants-list-table").bootstrapTable 'refresh', {silent: true}
-  $("#participants-tracker-table").bootstrapTable 'refresh', {silent: true}
+  $("#participant-tracker-table").bootstrapTable 'refresh', {silent: true}
   $("#participant-info").bootstrapTable 'refresh', {silent: true}
   $("#patient-registry-table").bootstrapTable 'refresh', {silent: true}
 

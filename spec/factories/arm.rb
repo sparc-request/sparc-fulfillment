@@ -86,9 +86,10 @@ FactoryGirl.define do
       end
     end
 
-    trait :with_participant do
+    trait :with_protocols_participant do
       after(:create) do |arm, evaluator|
-        create(:participant_with_appointments, arm: arm, protocol: arm.protocol)
+        participant = create(:participant)
+        create(:protocols_participant_with_appointments, arm: arm, protocol: arm.protocol, participant: participant)
       end
     end
 
@@ -97,11 +98,11 @@ FactoryGirl.define do
     end
 
     factory :arm_with_protocol, traits: [:with_protocol]
-    factory :arm_with_single_service, traits: [:with_singe_line_item, :with_visit_groups, :with_visits, :with_participant]
-    factory :arm_with_duplicate_services, traits: [:with_duplicate_line_item, :with_visit_groups, :with_visits, :with_participant]
+    factory :arm_with_single_service, traits: [:with_singe_line_item, :with_visit_groups, :with_visits, :with_protocols_participant]
+    factory :arm_with_duplicate_services, traits: [:with_duplicate_line_item, :with_visit_groups, :with_visits, :with_protocols_participant]
     factory :arm_with_line_items, traits: [:with_line_items]
     factory :arm_with_visit_groups, traits: [:with_visit_groups]
-    factory :arm_imported_from_sparc, traits: [:with_line_items, :with_visit_groups, :with_visits, :with_participant]
+    factory :arm_imported_from_sparc, traits: [:with_line_items, :with_visit_groups, :with_visits, :with_protocols_participant]
     factory :arm_with_only_per_patient_line_items, traits: [:with_only_per_patient_line_items, :with_visit_groups, :with_visits]
     factory :arm_with_one_visit_group, traits: [:with_one_visit_group]
   end

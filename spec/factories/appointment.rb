@@ -22,8 +22,8 @@ FactoryGirl.define do
 
   factory :appointment do
     visit_group nil
-    position 1
     protocols_participant nil
+    position 1
     
     trait :with_procedures do
 

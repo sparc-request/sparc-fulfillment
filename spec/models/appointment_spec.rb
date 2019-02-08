@@ -41,7 +41,7 @@ RSpec.describe Appointment, type: :model do
         protocol = create(:protocol)
         arm = create(:arm, protocol: protocol)
         participant = create(:participant)
-        protocols_participant = create(:protocols_participant, arm_id: arm.id, protocol_id: protocol.id, participant_id: participant.id)
+        protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
         @appt = create(:appointment, arm: arm, name: "Visit 1", protocols_participant: protocols_participant, position: 1)
         @proc1 = create(:procedure, :complete, appointment: @appt)
         @proc2 = create(:procedure, appointment: @appt)
@@ -63,13 +63,14 @@ RSpec.describe Appointment, type: :model do
         service2 = create(:service, name: 'B')
         protocol = create(:protocol)
         arm = create(:arm, protocol: protocol)
-        participant = create(:participant, protocol: protocol, arm: arm)
+        participant = create(:participant)
+        protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
         line_item1 = create(:line_item, arm: arm, service: service1, protocol: protocol)
         line_item2 = create(:line_item, arm: arm, service: service2, protocol: protocol)
         visit_group = create(:visit_group, arm: arm)
         @visit_li1 = create(:visit, visit_group: visit_group, line_item: line_item1)
         @visit_li2 = create(:visit, visit_group: visit_group, line_item: line_item2)
-        @appt = create(:appointment, visit_group: visit_group, participant: participant, arm: arm, name: visit_group.name, position: 1)
+        @appt = create(:appointment, visit_group: visit_group, protocols_participant: protocols_participant, arm: arm, name: visit_group.name, position: 1)
       end
 
       it 'should not create a procedure if there is no visit for a line_item' do

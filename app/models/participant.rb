@@ -32,9 +32,6 @@ class Participant < ApplicationRecord
   has_many :notes, as: :notable
   has_many :protocols_participants
   has_many :protocols, through: :protocols_participants
-  
-  # after_save :update_faye
-  # after_destroy :update_faye
 
   validates :last_name, presence: true
   validates :first_name, presence: true
@@ -130,11 +127,5 @@ class Participant < ApplicationRecord
 
   def can_be_destroyed?
     ProtocolsParticipant.where(participant: id).empty?
-  end
-
-  private
-
-  def update_faye
-    FayeJob.perform_later protocol
   end
 end

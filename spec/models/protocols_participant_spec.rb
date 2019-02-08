@@ -39,7 +39,6 @@ RSpec.describe ProtocolsParticipant, type: :model do
 
     it { is_expected.to validate_presence_of(:protocol_id) }
     it { is_expected.to validate_presence_of(:participant_id) }
-    it { is_expected.to validate_presence_of(:arm_id) }
   end
 
   context 'class methods' do
@@ -49,7 +48,7 @@ RSpec.describe ProtocolsParticipant, type: :model do
     let!(:arm)          { create(:arm, protocol_id: protocol.id) }
     let!(:visit_group1) { create(:visit_group, arm: arm, name: 'Turd') }
     let!(:visit_group2) { create(:visit_group, arm: arm, name: 'Ferguson') }
-    let!(:protocols_participant)  { create(:protocols_participant, arm_id: arm.id, protocol_id: protocol.id, participant_id: participant.id) }
+    let!(:protocols_participant)  { create(:protocols_participant, arm: arm, protocol: protocol, participant: participant) }
 
 
     describe 'update appointments on arm change' do

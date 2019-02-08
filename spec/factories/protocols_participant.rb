@@ -26,6 +26,10 @@ FactoryGirl.define do
     participant nil
     status { Participant::STATUS_OPTIONS.select{|stat| stat != 'Screening'}.sample }
 
+    trait :with_protocol do 
+      protocol  
+    end
+
     trait :with_appointments do
       after(:create) do | protocols_participant, evaluator|
         protocols_participant.arm.visit_groups.each do |vg|
@@ -41,20 +45,21 @@ FactoryGirl.define do
     end
 
     trait :with_completed_appointments do
-      after(:create) do | participant, evaluator|
-        participant.arm.visit_groups.each do |visit_group|
+      after(:create) do | protocols_participant, evaluator|
+        protocols_participant.arm.visit_groups.each do |visit_group|
           create(:appointment,
-                  participant: participant,
+                  protocols_participant: protocols_participant,
                   visit_group: visit_group,
                   name: visit_group.name,
                   visit_group_position: visit_group.position,
                   arm_id: visit_group.arm_id,
-                  position: participant.appointments.count + 1,
+                  position: protocols_participant.appointments.count + 1,
                   completed_date: Time.current + visit_group.id.days)
         end
       end
     end
 
+    factory :protocols_participant_with_protocol, traits: [:with_protocol]
     factory :protocols_participant_with_appointments, traits: [:with_appointments]
     factory :protocols_participant_with_completed_appointments, traits: [:with_completed_appointments]
   end

@@ -136,7 +136,6 @@ class DocumentsController < ApplicationController
       id    = current_identity.id
       type  = 'Identity'
     end
-
     @documentable ||= type.constantize.find id
   end
 

@@ -20,53 +20,49 @@
 
 require 'rails_helper'
 
-feature 'User deletes Participant', js: true do
+feature 'User changes the status of a participant on the participant tracker', js: true do
 
-  scenario 'and sees the Participant is removed from the list' do
-    given_i_have_a_participant
+  scenario 'and sees the updated status on the page' do
     given_i_am_viewing_the_participant_tracker
-    when_i_delete_a_participant
-    then_i_should_not_see_the_participant
+    when_i_update_the_participant_status
+    then_i_should_see_the_updated_status
   end
 
-  scenario 'and connot delete when there is procedure data' do
-    given_i_have_a_participant
-    and_the_participant_is_not_deletable
+  scenario 'and sees the status updated note' do
     given_i_am_viewing_the_participant_tracker
-    then_i_should_see_disabled_delete_button
-  end
-
-  def and_the_participant_is_not_deletable
-    participant = Participant.first
-    create(:procedure_complete, appointment: participant.appointments.first, arm: @protocol.arms.first)
-  end
-
-  def given_i_have_a_participant
-    @protocol = create_and_assign_protocol_to_me
+    when_i_update_the_participant_status
+    then_i_should_see_an_associated_note
   end
 
   def given_i_am_viewing_the_participant_tracker
-    visit protocol_path(@protocol.id)
+    @protocol    = create_and_assign_protocol_to_me
+    @protocols_participant = @protocol.protocols_participants.first
+
+    visit protocol_path @protocol.id
     wait_for_ajax
 
     click_link 'Participant Tracker'
     wait_for_ajax
   end
 
-  def when_i_delete_a_participant
-    accept_confirm do
-      page.find('table.participants tbody tr:first-child td.delete a').click
-    end
+  def when_i_update_the_participant_status
+    bootstrap_select "#protocols_participant_status_#{@protocols_participant.id}", "Screening"
+    wait_for_ajax
 
     refresh_bootstrap_table 'table.participants'
+    wait_for_ajax
   end
 
-  def then_i_should_not_see_the_participant
-    expect(page).to have_css('#flashes_container', text: 'Participant Removed')
-    expect(page).to have_css('table.participants tbody tr', count: 2)
+  def then_i_should_see_the_updated_status
+    expect(bootstrap_selected?("protocols_participant_status_#{@protocols_participant.id}", "Screening")).to be
   end
 
-  def then_i_should_see_disabled_delete_button
-    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted."]')
+  def then_i_should_see_an_associated_note
+    expect(bootstrap_selected?("protocols_participant_status_#{@protocols_participant.id}", "Screening")).to be
+    wait_for_ajax
+    find("button.participant_notes[data-notable-id='#{@protocols_participant.id}']").click
+    wait_for_ajax
+
+    expect(page).to have_content('Status changed')
   end
 end

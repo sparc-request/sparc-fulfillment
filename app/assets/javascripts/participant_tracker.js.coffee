@@ -24,17 +24,30 @@ $ ->
   $(document).on 'click', '.search-participants', ->
     $.ajax
       type: 'GET'
-      url: "/participants/search_for_patients.js"
+      url: "/participants/associate_participants_to_protocol.js"
       data: 'protocol_id' : $(this).data('protocol-id')
 
   ### *CALENDAR ### 
   $(document).on 'click', '.participant-calendar', ->
-    protocol_id = $(this).attr('protocol_id')
+    protocols_participant_id = $(this).attr('protocols_participant_id')
     participant_id = $(this).attr('participant_id')
-    window.location = "/participants/#{participant_id}"
+    protocol_id = $(this).attr('protocol_id')
+    window.location = "/participants/calendar?protocols_participant_id=#{protocols_participant_id}&protocol_id=#{protocol_id}&participant_id=#{participant_id}"
+  #   protocols_participant_id = $(this).attr('protocols_participant_id')
+  #   window.location = "/participants/#{protocols_participant_id}"
+
+  # $(document).on 'click', '.participant-calendar', ->
+  #   protocols_participant_id = $(this).attr('protocols_participant_id')
+  #   participant_id = $(this).attr('participant_id')
+  #   protocol_id = $(this).attr('protocol_id')
+  #   $.ajax
+  #     type: 'GET'
+  #     url: "/participants/#{participant_id}"
+  #     dataType: 'html'
+  #     data: "protocols_participant_id" : protocols_participant_id, "protocol_id" : protocol_id
 
   ### REPORT ###
-  $(document).on 'load-success.bs.table', '#participants-tracker-table', ->
+  $(document).on 'load-success.bs.table', '#participant-tracker-table', ->
     tables_to_refresh = ['table.protocol_reports']
     
     $.each $('table.participants td.participant_report button'), (index, value) ->

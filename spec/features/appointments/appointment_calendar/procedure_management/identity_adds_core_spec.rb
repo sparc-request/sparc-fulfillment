@@ -24,7 +24,7 @@ feature 'User adds a Procedure to an unstarted visit', js: true do
 
   before :each do
     @protocol     = create_and_assign_protocol_to_me
-    @participant  = Participant.first
+    @protocols_participant  = ProtocolsParticipant.first
     @appointment  = Appointment.first
     @services     = @protocol.organization.inclusive_child_services(:per_participant)
   end

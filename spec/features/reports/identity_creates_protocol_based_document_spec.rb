@@ -99,7 +99,6 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
       @document_id = find("button#study_schedule_report_#{@protocol.id.to_s}")["document_id"]
     when 'participant_report'
       click_link 'Participant Tracker'
-
       first("button.participant_report").click
       wait_for_ajax
 

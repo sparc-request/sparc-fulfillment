@@ -54,7 +54,7 @@ RSpec.describe ParticipantsController do
     @protocol = create(:protocol)
     @arm = create(:arm, protocol_id: @protocol.id)
     @participant = create(:participant)
-    @protocols_participant = create(:protocols_participant)
+    @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
   end
 
   describe "GET #index" do
@@ -86,10 +86,9 @@ RSpec.describe ParticipantsController do
     it "should assign the arm if there is only one arm on a protocol" do
       post :update_protocol_association, params: {
         protocol_id: @protocol.id,
-        participant_id: @participant.id,
+        participant_id: create(:participant),
         checked: true
       }, format: :js, xhr: true
-
       expect(assigns(:protocols_participant).arm).to eq(@arm)
     end
 
@@ -98,10 +97,9 @@ RSpec.describe ParticipantsController do
       
       post :update_protocol_association, params: {
         protocol_id: @protocol.id,
-        participant_id: @participant.id,
+        participant_id: create(:participant).id,
         checked: true
       }, format: :js, xhr: true
-
       expect(assigns(:protocols_participant).arm.nil?).to eq(true)
     end
   end

@@ -95,8 +95,8 @@ RSpec.describe MultipleLineItemsController, type: :controller do
     end
 
     it "should not delete services with completed procedures" do
-      participant = create(:participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first)
-                    create(:procedure_complete, service: @service, appointment: participant.appointments.first, arm: @protocol.arms.first)
+      protocols_participant = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first, participant: create(:participant))
+                    create(:procedure_complete, service: @service, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
                     create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
 
       expect{

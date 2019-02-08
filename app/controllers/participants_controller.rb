@@ -20,9 +20,9 @@
 
 class ParticipantsController < ApplicationController
 
-  before_action :find_protocol, only: [:update_arm, :destroy_protocols_participant, :update_status, :participants_in_protocol, :edit_arm, :search_for_patients, :update_protocol_association, :search]
-  before_action :find_participant, only: [:destroy_protocols_participant, :update_status, :details, :show, :edit, :update, :destroy, :edit_arm, :update_arm, :update_protocol_association, :patient_registry_modal_details]
-  before_action :find_protocols_participant, only: [:destroy_protocols_participant, :update_status, :edit_arm, :update_arm, :update_protocol_association, :assign_arm_if_only_one_arm]
+  before_action :find_protocol, only: [:show, :update_arm, :destroy_protocols_participant, :update_status, :protocols_participants_in_protocol, :edit_arm, :associate_participants_to_protocol, :update_protocol_association, :search]
+  before_action :find_participant, only: [:show, :destroy_protocols_participant, :update_status, :details, :edit, :update, :destroy, :edit_arm, :update_arm, :update_protocol_association, :patient_registry_modal_details]
+  before_action :find_protocols_participant, only: [:show, :destroy_protocols_participant, :update_status, :edit_arm, :update_arm, :update_protocol_association, :assign_arm_if_only_one_arm]
   before_action :note_old_protocols_participant_attributes, only: [:update_status, :update_arm]
   before_action :authorize_protocol, only: [:show]
 
@@ -32,7 +32,8 @@ class ParticipantsController < ApplicationController
     @offset = params[:offset] || 0
     @limit = params[:limit] || 25
 
-    find_participants_for_index
+    @sort = determine_patient_sort
+    find_participants(action_name)
 
     respond_to do |format|
       format.html
@@ -40,9 +41,14 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def find_participants_for_index
-    @participants = Participant.all
+  def find_participants(action_name)
+    if action_name == "protocols_participants_in_protocol"
+      @participants = Participant.by_protocol_id(@protocol.id)
+    else
+      @participants = Participant.all
+    end
     @total = @participants.count
+    @participants = @participants.order(Arel.sql("#{@sort}")) if @sort
     search_participant_attrs
     @participants = @participants.limit(@limit).offset(@offset)
   end
@@ -51,9 +57,12 @@ class ParticipantsController < ApplicationController
     if params[:checked] == 'true'
       @protocols_participant = ProtocolsParticipant.new(protocol_id: @protocol.id, participant_id: @participant.id)
       assign_arm_if_only_one_arm
-      flash[:success] = t(:participant)[:flash_messages][:added_to_protocol]
+      if @protocols_participant.valid?
+        @protocols_participant.save
+        flash[:success] = t(:participant)[:flash_messages][:added_to_protocol]
+      end
     else
-      @participant.protocols.delete(@protocol)
+      @protocols_participant.destroy
       flash[:success] = t(:participant)[:flash_messages][:removed_from_protocol]
     end
   end
@@ -67,7 +76,7 @@ class ParticipantsController < ApplicationController
   end
 
   def search
-    find_participants_for_index
+    find_participants(action_name)
     respond_to do |format|
       format.html
       format.json
@@ -75,8 +84,7 @@ class ParticipantsController < ApplicationController
   end
 
   def show
-    @participant.build_appointments
-
+    @protocols_participant.build_appointments
     gon.push({appointment_id: params[:appointment_id]})
   end
 
@@ -127,23 +135,30 @@ class ParticipantsController < ApplicationController
     flash[:success] = t(:participant)[:flash_messages][:arm_change]
   end
 
-  def participants_in_protocol
+  def protocols_participants_in_protocol
+    @page = params[:page]
+    @status = params[:status] || 'all'
+    @offset = params[:offset] || 0
+    @limit = params[:limit] || 10
+
+    @sort = determine_patient_sort
+    find_participants(action_name)
+
     respond_to do |format|
       format.json {
-        @participants = Participant.by_protocol_id(@protocol.id)
-
         render
       }
     end
   end
 
-  def search_for_patients
+  def associate_participants_to_protocol
     page = params[:page]
     @status = params[:status] || 'all'
     @offset = params[:offset] || 0
     @limit = params[:limit] || 25
 
-    find_participants_for_index
+    @sort = determine_patient_sort
+    find_participants(action_name)
 
     respond_to do |format|
       format.json
@@ -152,6 +167,26 @@ class ParticipantsController < ApplicationController
   end
 
   private
+
+  def determine_patient_sort
+    if params[:order]
+      order = params[:order] || 'asc'
+    end
+
+    @sort =
+      case params[:sort]
+      when 'last_name'
+        "participants.last_name #{order}"
+      when 'first_name'
+        "participants.first_name #{order}"
+      when 'mrn'
+        "participants.mrn #{order}"
+      when 'recruitment_source'
+        "participants.recruitment_source #{order}"
+      else
+        "#{params[:sort]} #{order}"
+      end
+  end
 
   def search_participant_attrs
     if params[:search] && !params[:search].blank?
@@ -172,7 +207,8 @@ class ParticipantsController < ApplicationController
   end
 
   def find_protocols_participant
-    @protocols_participant = ProtocolsParticipant.where(protocol_id: @protocol.id, participant_id: @participant.id).first
+    where_clause = params[:protocols_participant_id].present? ? "id = #{params[:protocols_participant_id]}" : "protocols_participants.protocol_id = #{@protocol.id} AND protocols_participants.participant_id = #{@participant.id}"
+    @protocols_participant = ProtocolsParticipant.where(where_clause).first
   end
 
   def participant_params

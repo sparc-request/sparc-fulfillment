@@ -18,38 +18,38 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-module Features
+require 'rails_helper'
 
-  module VisitHelpers
+feature 'User changes Participant Arm', js: true do
 
-    def and_the_visit_has_one_grouped_procedure
-      2.times { add_a_procedure @services.first }
-    end
+  scenario 'and sees the updated Participant' do
+    given_i_am_viewing_the_participant_tracker
+    when_i_change_a_participants_arm
+    then_i_should_see_the_arm_is_updated
+  end
 
-    def add_a_procedure(service, count = 1)
-      bootstrap_select '#service_list', service.name
-      fill_in 'service_quantity', with: count
-      find('button.add_service').click
-      wait_for_ajax
-    end
+  def given_i_am_viewing_the_participant_tracker
+    protocol    = create_and_assign_protocol_to_me
+    @second_arm  = protocol.arms.second
 
-    def given_i_am_viewing_a_visit
-      visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
-      wait_for_ajax
+    visit protocol_path(protocol.id)
+    wait_for_ajax
 
-      bootstrap_select '#appointment_select', @appointment.name
-      wait_for_ajax
-    end
+    click_link 'Participant Tracker'
+    wait_for_ajax
+  end
 
-    def given_i_am_viewing_a_started_visit
-      visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
-      wait_for_ajax
+  def when_i_change_a_participants_arm
+    page.find('table.participants tbody tr:first-child td.change_arm a').click
+    wait_for_ajax
+    bootstrap_select "#protocols_participant_arm_id", @second_arm.name
 
-      bootstrap_select '#appointment_select', @appointment.name
-      wait_for_ajax
-      
-      find('button.start_visit').click
-      wait_for_ajax
-    end
+    click_button 'Save'
+    wait_for_ajax
+  end
+
+  def then_i_should_see_the_arm_is_updated
+    expect(page).to have_css('#flashes_container', text: 'Participant Successfully Changed Arms')
+    expect(page).to have_css('table.participants tbody tr:first-child td.arm_name', text: @second_arm.name)
   end
 end

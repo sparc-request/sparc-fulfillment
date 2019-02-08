@@ -47,6 +47,8 @@ feature "Identity views Task", js: true do
   def given_i_am_on_the_tasks_page
     visit tasks_path
     wait_for_ajax
+    save_and_open_screenshot
+    
   end
 
   def when_i_view_a_identity_task_assigned_to_myself

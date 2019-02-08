@@ -24,7 +24,7 @@ RSpec.describe Procedure, type: :model do
 
   it { is_expected.to have_one(:protocol) }
   it { is_expected.to have_one(:arm) }
-  it { is_expected.to have_one(:participant) }
+  it { is_expected.to have_one(:protocols_participant) }
 
   it { is_expected.to belong_to(:appointment) }
   it { is_expected.to belong_to(:visit) }
@@ -42,8 +42,10 @@ RSpec.describe Procedure, type: :model do
     before :each do
       @service = create(:service)
       protocol = create(:protocol)
+      participant = create(:participant)
       arm = create(:arm, protocol: protocol)
-      @appointment = create(:appointment, arm: arm, participant_id: 5, name: "Super Arm")
+      protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
+      @appointment = create(:appointment, arm: arm, protocols_participant: protocols_participant, name: "Super Arm", protocol: protocol)
     end
 
     describe 'service_name' do

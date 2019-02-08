@@ -18,38 +18,45 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-module Features
+require 'rails_helper'
 
-  module VisitHelpers
+feature 'User disassociates Participant to Protocol', js: true do
 
-    def and_the_visit_has_one_grouped_procedure
-      2.times { add_a_procedure @services.first }
-    end
+  scenario 'and sees the participant removed from participant tracker list' do
+    given_i_am_viewing_the_associate_participants_to_protocol_modal
+    i_should_see_associated_participants_as_checked
+    when_i_click_to_disassociate_a_participant
+    then_i_should_see_the_participant_removed_from_list
+  end
 
-    def add_a_procedure(service, count = 1)
-      bootstrap_select '#service_list', service.name
-      fill_in 'service_quantity', with: count
-      find('button.add_service').click
-      wait_for_ajax
-    end
+  def given_i_am_viewing_the_associate_participants_to_protocol_modal
+    @protocol    = create_and_assign_protocol_to_me
+    create(:participant)
+    visit protocol_path(@protocol.id)
+    wait_for_ajax
 
-    def given_i_am_viewing_a_visit
-      visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
-      wait_for_ajax
+    click_link 'Participant Tracker'
+    wait_for_ajax
 
-      bootstrap_select '#appointment_select', @appointment.name
-      wait_for_ajax
-    end
+    click_button 'Search For Participants'
+    wait_for_ajax
+  end
 
-    def given_i_am_viewing_a_started_visit
-      visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
-      wait_for_ajax
+  def i_should_see_associated_participants_as_checked
+    expect(all('input[type=checkbox]:checked').count).to eq(@protocol.protocols_participants.count)
+  end
 
-      bootstrap_select '#appointment_select', @appointment.name
-      wait_for_ajax
-      
-      find('button.start_visit').click
-      wait_for_ajax
-    end
+  def when_i_click_to_disassociate_a_participant
+    participant_ids_associated_to_protocol = @protocol.protocols_participants.map(&:id)
+    find("input[type='checkbox'][participant_id='#{participant_ids_associated_to_protocol.first}']").set(false)
+    wait_for_ajax
+  end
+
+  def then_i_should_see_the_participant_removed_from_list
+    expect(page).to have_css('#flashes_container', text: 'Participant removed from protocol.')
+    wait_for_ajax
+    click_button 'Close'
+    wait_for_ajax
+    expect(page).to have_css('table.participants tbody tr', count: 2)
   end
 end

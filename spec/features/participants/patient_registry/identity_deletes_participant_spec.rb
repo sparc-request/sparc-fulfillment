@@ -20,49 +20,51 @@
 
 require 'rails_helper'
 
-feature 'User changes the status of a participant on the participant tracker', js: true do
+feature 'User deletes Participant', js: true do
 
-  scenario 'and sees the updated status on the page' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_update_the_participant_status
-    then_i_should_see_the_updated_status
+  scenario 'and sees the Participant is removed from the list' do
+    given_i_have_a_participant
+    and_the_participant_is_deletable
+    given_i_am_viewing_the_patient_registry
+    when_i_delete_a_participant
+    then_i_should_not_see_the_participant
   end
 
-  scenario 'and sees the status updated note' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_update_the_participant_status
-    then_i_should_see_an_associated_note
+  scenario 'and connot delete when there is procedure data' do
+    given_i_have_a_participant
+    given_i_am_viewing_the_patient_registry
+    then_i_should_see_disabled_delete_button
   end
 
-  def given_i_am_viewing_the_participant_tracker
-    @protocol    = create_and_assign_protocol_to_me
-    @participant = @protocol.participants.first
+  def and_the_participant_is_deletable
+    ProtocolsParticipant.where(participant_id: @participant.id, protocol_id: @protocol.id).first.delete
+  end
 
-    visit protocol_path @protocol.id
-    wait_for_ajax
+  def given_i_have_a_participant
+    @protocol = create_and_assign_protocol_to_me
+    @participants = Participant.all.order(Arel.sql("participants.last_name asc"))
+    @participant = @participants.first
+  end
 
-    click_link 'Participant Tracker'
+  def given_i_am_viewing_the_patient_registry
+    visit participants_path
     wait_for_ajax
   end
 
-  def when_i_update_the_participant_status
-    bootstrap_select "#participant_status_#{@participant.id}", "Screening"
-    wait_for_ajax
+  def when_i_delete_a_participant
+    accept_confirm do
+      page.find('table.participants tbody tr:first-child td.delete a').click
+    end
 
     refresh_bootstrap_table 'table.participants'
-    wait_for_ajax
   end
 
-  def then_i_should_see_the_updated_status
-    expect(bootstrap_selected?("participant_status_#{@participant.id}", "Screening")).to be
+  def then_i_should_not_see_the_participant
+    expect(page).to have_css('#flashes_container', text: 'Participant Removed')
+    expect(page).to have_css('table.participants tbody tr', count: 2)
   end
 
-  def then_i_should_see_an_associated_note
-    expect(bootstrap_selected?("participant_status_#{@participant.id}", "Screening")).to be
-    wait_for_ajax
-    find("button.participant_notes[data-notable-id='#{@participant.id}']").click
-    wait_for_ajax
-
-    expect(page).to have_content('Status changed')
+  def then_i_should_see_disabled_delete_button
+    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted."]')
   end
 end
