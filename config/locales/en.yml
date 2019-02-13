@@ -306,6 +306,7 @@ en:
   protocol:
     object: "Protocol"
     admin_portal_link: "SPARCDashboard"
+    admin_portal_link_tooltip: "Back to SPARCDashboard"
     coordinators: "Coordinators"
     end_date: "Study End Date"
     flash_messages:
