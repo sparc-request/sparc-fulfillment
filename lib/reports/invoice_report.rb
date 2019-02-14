@@ -56,7 +56,7 @@ class InvoiceReport < Report
       if @params[:sort_by] == "Protocol ID"
         protocols = Protocol.where(id: @params[:protocols]).sort_by(&:sparc_id)
       else
-        protocols = Protocol.where(id: @params[:protocols]).sort_by{ |protocol| protocol.pi.full_name }
+        protocols = Protocol.where(id: @params[:protocols]).sort_by{ |protocol| protocol.pi.last_name }
       end
 
       if @params[:sort_order] == "DESC"
