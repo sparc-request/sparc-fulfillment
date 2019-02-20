@@ -22,4 +22,6 @@
 $('#doc_modal_errors').empty().append("<div class='alert alert-danger'><%= @error %></div>")
 <% else %>
 $('.modal').modal('hide')
+unless $("span#<%= @selector %>.glyphicon").hasClass("blue-glyphicon")
+  $("span#<%= @selector %>.glyphicon").addClass("blue-glyphicon")
 <% end %>
