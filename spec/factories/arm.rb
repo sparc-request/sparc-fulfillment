@@ -21,11 +21,11 @@
 FactoryBot.define do
 
   factory :arm do
-    protocol nil
+    protocol { nil }
     sparc_id
     sequence(:name) { |n| "#{Faker::App.name} #{n}" }
-    visit_count 5
-    subject_count 5
+    visit_count { 5 }
+    subject_count { 5 }
 
     trait :with_singe_line_item do
       after(:create) do |arm, evaluator|

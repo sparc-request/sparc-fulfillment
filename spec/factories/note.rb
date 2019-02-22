@@ -21,15 +21,15 @@
 FactoryBot.define do
 
   factory :note do
-    identity nil
-    kind 'note'
+    identity { nil }
+    kind { 'note' }
 
     trait :followup do
-      kind 'followup'
+      kind { 'followup' }
     end
 
     trait :reason do
-      kind 'reason'
+      kind { 'reason' }
     end
 
     factory :note_followup, traits: [:followup]

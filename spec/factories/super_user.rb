@@ -21,8 +21,8 @@
 FactoryBot.define do
 
   factory :super_user do
-    identity nil
-    organization nil
+    identity { nil }
+    organization { nil }
 
     trait :with_organization do
       organization

@@ -21,9 +21,9 @@
 FactoryBot.define do
 
   factory :appointment do
-    visit_group nil
-    participant nil
-    position 1
+    visit_group { nil }
+    participant { nil }
+    position { 1 }
     
     trait :with_procedures do
 

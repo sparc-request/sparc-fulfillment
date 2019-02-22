@@ -21,17 +21,17 @@
 FactoryBot.define do
 
   factory :project_role do
-    identity nil
-    protocol nil
-    project_rights "to party"
+    identity { nil }
+    protocol { nil }
+    project_rights { "to party" }
 
     trait :pi do
-      role "primary-pi"
+      role { "primary-pi" }
       identity
     end
 
     trait :coordinator do
-      role "research-assistant-coordinator"
+      role { "research-assistant-coordinator" }
       identity
     end
 

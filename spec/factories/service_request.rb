@@ -21,7 +21,7 @@
 FactoryBot.define do
 
   factory :service_request do
-    protocol nil
+    protocol { nil }
 
     trait :with_protocol do
       protocol factory: :protocol_imported_from_sparc
