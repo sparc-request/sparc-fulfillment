@@ -21,7 +21,7 @@
 FactoryBot.define do
 
   factory :sub_service_request do
-    organization nil
+    organization { nil }
 
     trait :with_organization do
       organization factory: :organization_with_services
