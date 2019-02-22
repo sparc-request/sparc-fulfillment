@@ -21,7 +21,7 @@
 FactoryBot.define do
 
   factory :visit_group do
-    arm nil
+    arm { nil }
     sparc_id
     sequence(:position, 1)
     sequence(:day) { |n| 7 * n + 1 } # days spaced a week apart
