@@ -96,6 +96,7 @@ class InvoiceReport < Report
           header << "Research Rate"
           header << "Total Cost"
           header << "Percent Subsidy" if protocol.sub_service_request.subsidy
+          header << "Invoiced" if @params[:include_invoiced] == "true"
 
           csv << header
 
@@ -123,7 +124,8 @@ class InvoiceReport < Report
             data << fulfillment.line_item.quantity_type
             data << display_cost(fulfillment.service_cost)
             data << display_cost(fulfillment.total_cost)
-            data << display_subsidy_percent(protocol)
+            data << display_subsidy_percent(protocol) if protocol.sub_service_request.subsidy
+            data << (fulfillment.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
             csv << data
 
@@ -161,6 +163,7 @@ class InvoiceReport < Report
           header << "Research Rate"
           header << "Total Cost"
           header << "Percent Subsidy" if protocol.sub_service_request.subsidy
+          header << "Invoiced" if @params[:include_invoiced] == "true"
 
           csv << header
 
@@ -197,7 +200,8 @@ class InvoiceReport < Report
                   data << procedure.service.current_effective_pricing_map.unit_type
                   data << display_cost(procedure.service_cost)
                   data << display_cost(service_group.size * procedure.service_cost.to_f)
-                  data << display_subsidy_percent(protocol)
+                  data << display_subsidy_percent(protocol) if protocol.sub_service_request.subsidy
+                  data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
                   csv << data
 
