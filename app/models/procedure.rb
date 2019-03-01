@@ -27,7 +27,7 @@ class Procedure < ApplicationRecord
                       'Assessment not yet IRB approved', 'Duplicated assessment',
                       'Assessment performed by other personnel/study staff', 'Participant refused assessment',
                       'Assessment not performed due to equipment failure', 'Not collected/not done--unknown reason',
-                      'Not applicable for this visit'].freeze
+                      'Not applicable for this visit', 'Other'].freeze
 
   has_paper_trail
   acts_as_paranoid
