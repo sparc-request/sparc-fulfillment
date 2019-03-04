@@ -21,7 +21,7 @@
 class ProtocolsController < ApplicationController
 
   before_action :find_protocol, only: [:show]
-  before_action :authorize_protocol, only: [:show]
+  before_action :authorize_protocol, only: [:show], :unless => proc { |controller| controller.request.format.json? }
 
   respond_to :json, :html
 
