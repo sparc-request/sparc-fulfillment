@@ -108,14 +108,5 @@ RSpec.describe Participant, type: :model do
         expect(participant.full_name).to eq(participant.first_name + ' ' + participant.middle_initial + ' ' + participant.last_name)
       end
     end
-
-    describe 'callbacks' do
-
-      it 'should callback :update_via_faye after save' do
-        participant = create(:participant)
-
-        expect(participant).to callback(:update_faye).after(:save)
-      end
-    end
   end
 end

@@ -66,11 +66,11 @@ class RemoteObjectUpdaterJob < ActiveJob::Base
 
   def skip_faye_callbacks
     Protocol.skip_callback    :save, :after, :update_faye
-    Participant.skip_callback :save, :after, :update_faye
+    ProtocolsParticipant.skip_callback :save, :after, :update_faye
   end
 
   def set_faye_callbacks
     Protocol.set_callback    :save, :after, :update_faye
-    Participant.set_callback :save, :after, :update_faye
+    ProtocolsParticipant.set_callback :save, :after, :update_faye
   end
 end

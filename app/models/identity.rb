@@ -57,4 +57,8 @@ class Identity < SparcDbBase
   def professional_org_lookup(org_type)
     professional_organization ? professional_organization.parents_and_self.select{|org| org.org_type == org_type}.first.try(:name) : ""
   end
+
+  def is_a_patient_registrar?
+    PatientRegistrar.all.map(&:identity_id).include? self.id
+  end
 end

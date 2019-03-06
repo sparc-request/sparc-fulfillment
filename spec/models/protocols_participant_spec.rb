@@ -89,5 +89,14 @@ RSpec.describe ProtocolsParticipant, type: :model do
         expect(protocols_participant.appointments.count).to eq(2)
       end
     end
+
+    describe 'callbacks' do
+
+      it 'should callback :update_via_faye after save' do
+        protocols_participant = create(:protocols_participant, arm_id: create(:arm).id, protocol_id: create(:protocol).id, participant_id: create(:participant).id)
+
+        expect(protocols_participant).to callback(:update_faye).after(:save)
+      end
+    end
   end
 end

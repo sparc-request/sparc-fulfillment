@@ -29,6 +29,7 @@ feature 'User edits Participant', js: true do
   end
 
   def given_i_am_viewing_the_patient_registry
+    create(:patient_registrar, identity: Identity.first, organization: create(:organization))
     create_and_assign_protocol_to_me
     visit participants_path
     wait_for_ajax

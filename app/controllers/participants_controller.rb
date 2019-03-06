@@ -25,6 +25,7 @@ class ParticipantsController < ApplicationController
   before_action :find_protocols_participant, only: [:show, :destroy_protocols_participant, :update_status, :edit_arm, :update_arm, :update_protocol_association, :assign_arm_if_only_one_arm]
   before_action :note_old_protocols_participant_attributes, only: [:update_status, :update_arm]
   before_action :authorize_protocol, only: [:show]
+  before_action :authorize_patient_registrar, only: [:index]
 
   def index
     @page = params[:page]
@@ -167,6 +168,13 @@ class ParticipantsController < ApplicationController
   end
 
   private
+
+  def authorize_patient_registrar
+    unless current_identity.is_a_patient_registrar?
+      flash[:alert] = t(:protocol)[:flash_messages][:unauthorized]
+      redirect_to root_path
+    end
+  end
 
   def determine_patient_sort
     if params[:order]

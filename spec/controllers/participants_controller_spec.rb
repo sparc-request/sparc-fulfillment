@@ -26,13 +26,16 @@ RSpec.describe ParticipantsController do
 
   describe "GET #index" do
 
-    context 'content-type: text/html' do
-      before :each do
-        get :index, format: :html
-      end
+    context 'current_identity is patient_registrar' do
 
-      it { is_expected.to render_template :index }
-      it { is_expected.to respond_with :ok }
+      context 'content-type: text/html' do
+        before :each do
+          get :index, format: :html
+        end
+
+        it { is_expected.to render_template :index }
+        it { is_expected.to respond_with :ok }
+      end
     end
 
     context 'content-type: application/json' do
@@ -55,6 +58,7 @@ RSpec.describe ParticipantsController do
     @arm = create(:arm, protocol_id: @protocol.id)
     @participant = create(:participant)
     @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
+    create(:patient_registrar, identity: Identity.last, organization: create(:organization))
   end
 
   describe "GET #index" do

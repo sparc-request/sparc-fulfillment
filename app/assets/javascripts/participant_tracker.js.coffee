@@ -33,18 +33,6 @@ $ ->
     participant_id = $(this).attr('participant_id')
     protocol_id = $(this).attr('protocol_id')
     window.location = "/participants/calendar?protocols_participant_id=#{protocols_participant_id}&protocol_id=#{protocol_id}&participant_id=#{participant_id}"
-  #   protocols_participant_id = $(this).attr('protocols_participant_id')
-  #   window.location = "/participants/#{protocols_participant_id}"
-
-  # $(document).on 'click', '.participant-calendar', ->
-  #   protocols_participant_id = $(this).attr('protocols_participant_id')
-  #   participant_id = $(this).attr('participant_id')
-  #   protocol_id = $(this).attr('protocol_id')
-  #   $.ajax
-  #     type: 'GET'
-  #     url: "/participants/#{participant_id}"
-  #     dataType: 'html'
-  #     data: "protocols_participant_id" : protocols_participant_id, "protocol_id" : protocol_id
 
   ### REPORT ###
   $(document).on 'load-success.bs.table', '#participant-tracker-table', ->

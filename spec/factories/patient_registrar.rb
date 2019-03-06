@@ -18,32 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-require 'rails_helper'
+FactoryBot.define do
 
-feature 'User edits Participant', js: true do
+  factory :patient_registrar do
+    identity { nil }
+    organization { nil }
 
-  scenario 'and sees the updated Participant' do
-    given_i_am_viewing_the_patient_registry
-    when_i_update_a_participants_details
-    then_i_should_see_the_updated_details
-  end
+    trait :with_organization do
+      organization
+    end
 
-
-  def given_i_am_viewing_the_patient_registry
-    @protocol = create_and_assign_protocol_to_me
-    visit participants_path
-    wait_for_ajax
-  end
-
-  def when_i_update_a_participants_details
-    page.find('table.participants tbody tr:first-child td.edit a').click
-    fill_in 'First Name', with: 'Starlord'
-    bootstrap_datepicker '#dob_time_picker', year: @protocol.protocols_participants.first.participant.date_of_birth.to_date.year + 2, month: 'Mar', day: '15'
-    find("input[value='Save Participant']").click
-    wait_for_ajax
-  end
-
-  def then_i_should_see_the_updated_details
-    expect(page).to have_css('table.participants tbody tr td.first_name', text: 'Starlord')
+    factory :patient_registrar_with_organization, traits: [:with_organization]
   end
 end

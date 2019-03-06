@@ -20,52 +20,41 @@
 
 require 'rails_helper'
 
-feature 'User deletes Participant', js: true do
+feature 'User views Patient Registry', js: true do
 
-  scenario 'and sees the Participant is removed from the list' do
-    given_i_have_a_participant
-    and_the_participant_is_deletable
-    given_i_am_viewing_the_patient_registry
-    when_i_delete_a_participant
-    then_i_should_not_see_the_participant
+  scenario 'and does not have access' do
+    when_i_visit_the_patient_registry
+    then_i_should_be_redirected_to_the_home_page
   end
 
-  scenario 'and connot delete when there is procedure data' do
-    given_i_have_a_participant
-    given_i_am_viewing_the_patient_registry
-    then_i_should_see_disabled_delete_button
+  scenario 'and sees the Patient Registry table' do
+    given_i_am_a_patient_registrar
+    when_i_visit_the_patient_registry
+    then_i_should_see_the_patient_registry
   end
 
-  def and_the_participant_is_deletable
-    ProtocolsParticipant.where(participant_id: @participant.id, protocol_id: @protocol.id).first.delete
-  end
 
-  def given_i_have_a_participant
-    @protocol = create_and_assign_protocol_to_me
-    @participants = Participant.all.order(Arel.sql("participants.last_name asc"))
-    @participant = @participants.first
-  end
-
-  def given_i_am_viewing_the_patient_registry
-    create(:patient_registrar, identity: Identity.first, organization: create(:organization))
+  def given_i_am_not_a_patient_registrar
+    create_and_assign_protocol_to_me
     visit participants_path
     wait_for_ajax
   end
 
-  def when_i_delete_a_participant
-    accept_confirm do
-      page.find('table.participants tbody tr:first-child td.delete a').click
-    end
-
-    refresh_bootstrap_table 'table.participants'
+  def given_i_am_a_patient_registrar
+    create(:patient_registrar, identity: Identity.first, organization: create(:organization))
   end
 
-  def then_i_should_not_see_the_participant
-    expect(page).to have_css('#flashes_container', text: 'Participant Removed')
-    expect(page).to have_css('table.participants tbody tr', count: 2)
+  def when_i_visit_the_patient_registry
+    create_and_assign_protocol_to_me
+    visit participants_path
+    wait_for_ajax
   end
 
-  def then_i_should_see_disabled_delete_button
-    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted."]')
+  def then_i_should_be_redirected_to_the_home_page
+    expect(current_path).to eq root_path # gets redirected back to index
+  end
+
+  def then_i_should_see_the_patient_registry
+    expect(page).to have_css('#patient-registry-table')
   end
 end
