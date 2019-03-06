@@ -18,13 +18,13 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :fulfillment do
-    line_item nil
-    fulfilled_at "09/09/2025"
-    quantity     5
-    performer_id 1
+    line_item { nil }
+    fulfilled_at { "09/09/2025" }
+    quantity     { 5 }
+    performer_id { 1 }
 
     trait :without_validations do
       to_create { |instance| instance.save(validate: false) }

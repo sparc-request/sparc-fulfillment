@@ -18,30 +18,29 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryBot.define do
+module Features
+  module WaitHelpers
+    def wait_for_page(path)
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until{ current_path == path }
+    end
 
-  factory :line_item do
-    arm { nil }
-    service { nil }
-    protocol { nil }
-    name { nil }
-    sparc_id
-    quantity_requested { Faker::Number.number(3) }
-    quantity_type { "Each" }
-
-    trait :with_fulfillments do
-      after(:create) do |line_item, evaluator|
-        service = line_item.service
-        create(:fulfillment, line_item: line_item, service_id: service.id, service_name: service.name, service_cost: line_item.cost(line_item.protocol.funding_source))
+    def wait_for_ajax
+      Timeout.timeout(Capybara.default_max_wait_time) do
+        loop until jquery_defined?
+        loop until finished_all_ajax_requests? && finished_all_animations?
       end
     end
 
-    trait :with_service do
-      association :protocol
-      association :service, factory: :service
+    def jquery_defined?
+      page.evaluate_script(%Q{typeof jQuery !== 'undefined'}) && page.evaluate_script(%Q{typeof $ !== 'undefined'})
     end
 
-    factory :line_item_with_fulfillments, traits: [:with_fulfillments]
-    factory :line_item_with_service, traits: [:with_service]
+    def finished_all_ajax_requests?
+      page.evaluate_script('jQuery.active') == 0
+    end
+
+    def finished_all_animations?
+      page.evaluate_script('$(":animated").length') == 0
+    end
   end
 end

@@ -18,19 +18,10 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-module WaitForAjax
-
-  def wait_for_ajax
-    Timeout.timeout(Capybara.default_max_wait_time) do
-      loop until finished_all_ajax_requests?
+module Features
+  module SOS
+    def sos
+      save_and_open_screenshot
     end
   end
-
-  def finished_all_ajax_requests?
-    page.evaluate_script('jQuery.active') == 0
-  end
-end
-
-RSpec.configure do |config|
-  config.include WaitForAjax, type: :feature
 end

@@ -18,16 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :component do
     sequence(:component) { Faker::App.name }
     sequence(:position) { |n| (n%3)+1 }
-    selected false
+    selected { false }
 
     trait :of_line_item do
-      composable_type "LineItem"
-      composable_id nil
+      composable_type { "LineItem" }
+      composable_id { nil }
     end
 
     factory :component_of_line_item, traits: [:of_line_item]

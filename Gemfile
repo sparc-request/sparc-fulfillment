@@ -60,7 +60,7 @@ end
 
 
 group :development, :test, :testing do
-  gem 'factory_girl_rails', '~> 4.9.0'
+  gem "factory_bot_rails"
   gem 'faker', '~> 1.9.1'
   gem 'pry'
 end
@@ -74,14 +74,16 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-webkit', git: 'https://github.com/thoughtbot/capybara-webkit', branch: 'master'
+  gem 'capybara'
   gem 'climate_control'
   gem 'database_cleaner'
+  gem 'geckodriver-helper'
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec-activejob', '~> 0.6.1'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
+  gem 'selenium-webdriver'
   gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', "~> 3.1.2", require: false
   gem 'timecop'

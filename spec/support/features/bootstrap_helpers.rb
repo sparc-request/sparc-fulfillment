@@ -19,31 +19,65 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module Features
-
   module BootstrapHelpers
-
     def bootstrap_multiselect(class_or_id, selections = ['all'])
-      bootstrap_multiselect = page.find("select#{class_or_id}", visible: false).first(:xpath, ".//..")
-
+      expect(page).to have_selector("select#{class_or_id}", visible: false)
+      bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".btn-group").find('.dropdown-toggle')
       bootstrap_multiselect.click
+
+      expect(page).to have_selector('.open .dropdown-menu')
       if selections.first == 'all'
-        check 'Select all'
+        first('.open .dropdown-menu a', text: 'Select all').click
       else
         selections.each do |selection|
-          check selection
+          first('.open .dropdown-menu a', text: selection).click
         end
       end
       find('body').click # Click away
+      wait_for_ajax
     end
 
     def bootstrap_select(class_or_id, choice)
-      page.find("select#{class_or_id}").first(:xpath, ".//..").click
+      expect(page).to have_selector("select#{class_or_id}", visible: false)
+      bootstrap_select = page.first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
+      
+      bootstrap_select.click
+      expect(page).to have_selector('.dropdown-menu.open')
       first('.dropdown-menu.open span.text', text: choice).click
       wait_for_ajax
     end
 
     def bootstrap_selected?(element, choice)
-      page.find("button[data-id='#{element}'][title='#{choice}']")
+      page.find("button.dropdown-toggle[data-id='#{element}'][title='#{choice}']")
+    end
+
+    def bootstrap_datepicker(element, args={})
+      e = page.find(element)
+
+      if e['readonly']
+        page.execute_script "$('#{element}').focus()"
+        page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
+
+        if args[:year]
+          expect(page).to have_selector('.year', text: args[:year])
+          first('.year', text: args[:year]).click
+        end
+
+        if args[:month]
+          expect(page).to have_selector('.month', text: args[:month])
+          first('.month', text: args[:month]).click
+        end
+
+        if args[:day]
+          expect(page).to have_selector('.day', text: args[:day])
+          first('.day', text: args[:day]).click
+        end
+      else
+        page.execute_script "$('#{element}').focus()"
+        page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
+        e.send_keys(:delete)
+        e.set(args[:text])
+      end
     end
   end
 end

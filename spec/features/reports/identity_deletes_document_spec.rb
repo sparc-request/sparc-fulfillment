@@ -94,6 +94,7 @@ feature 'Identity deletes a document', js: true, enqueue: false do
 
   def when_i_click_the_delete_icon
     first("a.remove-document").click
+    accept_confirm
     wait_for_ajax
   end
 

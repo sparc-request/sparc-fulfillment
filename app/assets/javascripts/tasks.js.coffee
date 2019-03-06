@@ -45,7 +45,6 @@ $ ->
       url: "/tasks/#{task_id}.js"
       data: data
 
-
   $(document).on 'click', '.task-reschedule', ->
     task_id = $(this).attr('task_id')
 

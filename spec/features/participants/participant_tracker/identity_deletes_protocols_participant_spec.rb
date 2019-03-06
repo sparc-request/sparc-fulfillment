@@ -62,7 +62,6 @@ feature 'User deletes Participant', js: true do
   end
 
   def then_i_should_not_see_the_participant
-    expect(page).to have_css('#flashes_container', text: 'Participant Removed')
     expect(page).to have_css('table.participants tbody tr', count: 2)
   end
 

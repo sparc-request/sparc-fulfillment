@@ -52,7 +52,7 @@ feature 'Delete Procedure', js: true do
     
     bootstrap_select '#service_list', service.name
     fill_in 'service_quantity', with: number_of_procedures
-    find('button.add_service').trigger('click')
+    find('button.add_service').click
     wait_for_ajax
   end
 

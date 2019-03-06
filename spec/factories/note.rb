@@ -18,18 +18,18 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :note do
-    identity nil
-    kind 'note'
+    identity { nil }
+    kind { 'note' }
 
     trait :followup do
-      kind 'followup'
+      kind { 'followup' }
     end
 
     trait :reason do
-      kind 'reason'
+      kind { 'reason' }
     end
 
     factory :note_followup, traits: [:followup]

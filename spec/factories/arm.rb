@@ -18,14 +18,14 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :arm do
-    protocol nil
+    protocol { nil }
     sparc_id
     sequence(:name) { |n| "#{Faker::App.name} #{n}" }
-    visit_count 5
-    subject_count 5
+    visit_count { 5 }
+    subject_count { 5 }
 
     trait :with_singe_line_item do
       after(:create) do |arm, evaluator|

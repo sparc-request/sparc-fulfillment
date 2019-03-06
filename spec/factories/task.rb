@@ -18,16 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :task, aliases: [:task_incomplete] do
     identity
     assignee factory: :identity
-    due_at "09/09/2025"
+    due_at { "09/09/2025" }
     body { Faker::Lorem.sentence }
 
     trait :complete do
-      complete true
+      complete { true }
     end
 
     factory :task_complete, traits: [:complete]

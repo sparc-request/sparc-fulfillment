@@ -116,8 +116,7 @@ feature 'Followup note', js: true do
 
   def when_i_fill_out_and_submit_the_followup_form
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    page.execute_script %Q{ $("#follow_up_procedure_datepicker").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('10')").trigger("click") }
+    bootstrap_datepicker '#follow_up_procedure_datepicker', day: '10'
     fill_in 'Comment', with: 'Test comment'
     click_button 'Save'
     wait_for_ajax
@@ -133,9 +132,11 @@ feature 'Followup note', js: true do
   end
 
   def when_i_try_to_add_a_follow_up_note
-    @alert = accept_alert(with: 'Please click Start Visit and enter a start date to continue.') do
-      find('button.followup.new').trigger('click')
-    end
+    find('button.followup.new').click
+    alert = page.driver.browser.switch_to.alert
+    @alert_message = alert.text
+    alert.accept
+    wait_for_ajax
   end
 
   def then_i_should_see_the_followup_button
@@ -156,9 +157,7 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_be_able_to_edit_the_followup_date
-    page.execute_script %Q{ $(".followup_procedure_datepicker").trigger("focus")}
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
-    wait_for_ajax
+    bootstrap_datepicker '.followup_procedure_datepicker', day: '15'
   end
 
   def then_i_should_see_the_date_change
@@ -166,6 +165,6 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_see_a_helpful_message
-    expect(@alert).to eq("Please click 'Start Visit' and enter a start date to continue.")
+    expect(@alert_message).to eq("Please click 'Start Visit' and enter a start date to continue.")
   end
 end

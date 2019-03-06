@@ -110,7 +110,6 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def when_i_edit_the_completed_date
-
     find('.procedures .completed_date_field')
     page.execute_script %Q{ $('.procedures .completed_date_field').trigger('click'); }
     next_month               = Time.current.month + 1

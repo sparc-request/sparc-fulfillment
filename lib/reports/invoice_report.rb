@@ -39,6 +39,14 @@ class InvoiceReport < Report
     end
   end
 
+  def display_modified_rate_column(procedure)
+    if procedure.visit
+      procedure.visit.try(:line_item).try(:admin_rates).any? ? "Yes" : "No"
+    else
+      "No"
+    end
+  end
+
   def generate(document)
     #We want to filter from 00:00:00 in the local time zone,
     #then convert to UTC to match database times
@@ -56,7 +64,7 @@ class InvoiceReport < Report
       if @params[:sort_by] == "Protocol ID"
         protocols = Protocol.where(id: @params[:protocols]).sort_by(&:sparc_id)
       else
-        protocols = Protocol.where(id: @params[:protocols]).sort_by{ |protocol| protocol.pi.full_name }
+        protocols = Protocol.where(id: @params[:protocols]).sort_by{ |protocol| protocol.pi.last_name }
       end
 
       if @params[:sort_order] == "DESC"
@@ -88,13 +96,16 @@ class InvoiceReport < Report
           header << "Fulfillment Date"
           header << "Performed By"
           header << "Components"
+          header << "Notes" if @params[:include_notes] == "true"
           header << "Contact"
           header << "Account #"
           header << "Quantity Completed"
           header << "Quantity Type"
           header << "Research Rate"
           header << "Total Cost"
+          header << "Modified Rate"
           header << "Percent Subsidy" if protocol.sub_service_request.subsidy
+          header << "Invoiced" if @params[:include_invoiced] == "true"
 
           csv << header
 
@@ -107,7 +118,7 @@ class InvoiceReport < Report
             data << fulfillment.funding_source
             data << formatted_status(protocol)
             data << (protocol.pi ? protocol.pi.full_name : nil)
-            data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
+            data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
                                    protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
             data << protocol.billing_business_managers.map(&:full_name).join(',')
             data << fulfillment.service.organization.name
@@ -115,13 +126,16 @@ class InvoiceReport < Report
             data << format_date(fulfillment.fulfilled_at)
             data << fulfillment.performer.full_name
             data << fulfillment.components.map(&:component).join(',')
+            data << fulfillment.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
             data << fulfillment.line_item.contact_name
             data << fulfillment.line_item.account_number
             data << fulfillment.quantity
             data << fulfillment.line_item.quantity_type
             data << display_cost(fulfillment.service_cost)
             data << display_cost(fulfillment.total_cost)
-            data << display_subsidy_percent(protocol)
+            data << (fulfillment.line_item.admin_rates.any? ? "Yes" : "No")
+            data << display_subsidy_percent(protocol) if protocol.sub_service_request.subsidy
+            data << (fulfillment.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
             csv << data
 
@@ -151,13 +165,16 @@ class InvoiceReport < Report
           header << "Service Completion Date"
           header << "Patient Name"
           header << "Patient ID"
+          header << "Notes" if @params[:include_notes] == "true"
           header << "Visit Name"
           header << "Visit Date"
           header << "Quantity Completed"
           header << "Clinical Quantity Type"
           header << "Research Rate"
           header << "Total Cost"
+          header << "Modified Rate"
           header << "Percent Subsidy" if protocol.sub_service_request.subsidy
+          header << "Invoiced" if @params[:include_invoiced] == "true"
 
           csv << header
 
@@ -179,7 +196,7 @@ class InvoiceReport < Report
                   data << procedure.funding_source
                   data << formatted_status(protocol)
                   data << (protocol.pi ? protocol.pi.full_name : nil)
-                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), 
+                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
                                         protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
                   data << protocol.billing_business_managers.map(&:full_name).join(',')
                   data << org.name
@@ -187,13 +204,16 @@ class InvoiceReport < Report
                   data << format_date(procedure.completed_date)
                   data << participant.full_name
                   data << participant.label
+                  data << procedure.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
                   data << appointment.name
                   data << format_date(appointment.start_date)
                   data << service_group.size
                   data << procedure.service.current_effective_pricing_map.unit_type
                   data << display_cost(procedure.service_cost)
                   data << display_cost(service_group.size * procedure.service_cost.to_f)
-                  data << display_subsidy_percent(protocol)
+                  data << display_modified_rate_column(procedure)
+                  data << display_subsidy_percent(protocol) if protocol.sub_service_request.subsidy
+                  data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
                   csv << data
 
