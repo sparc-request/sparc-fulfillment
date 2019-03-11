@@ -69,9 +69,7 @@ module StudyLevelActivitiesHelper
     unless fulfillment.invoiced?
       options = raw(
         note_list_item({object: fulfillment, has_notes: fulfillment.notes.any?})+
-        content_tag(:li, raw(
-          content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: fulfillment.id, documentable_type: "Fulfillment"}))
-        )+
+        document_list_item({object: fulfillment, has_documents: fulfillment.documents.any?})+
         content_tag(:li, raw(
           content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Fulfillment', type: 'button', class: 'btn btn-default form-control actions-button otf_fulfillment_edit'))
         )+
