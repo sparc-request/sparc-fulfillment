@@ -70,7 +70,7 @@ GEM
     archive-zip (0.11.0)
       io-like (~> 0.3.0)
     arel (9.0.0)
-    autoprefixer-rails (7.2.2)
+    autoprefixer-rails (9.4.10.2)
       execjs
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
@@ -480,7 +480,7 @@ DEPENDENCIES
   activerecord-session_store
   acts_as_list
   addressable
-  autoprefixer-rails (= 7.2.2)
+  autoprefixer-rails (= 9.4.10.2)
   axlsx!
   axlsx_rails
   bootstrap-sass
