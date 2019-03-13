@@ -81,3 +81,16 @@ $ ->
         type: 'PUT'
         url: "/participants/#{participant_id}/destroy_protocols_participant"
         data: 'protocol_id': $(this).attr('protocol_id')
+
+
+  ### ASSOCIATE PARTICIPANTS ###
+  $(document).on 'change', '.associate', ->
+    data =
+      'protocol_id': $(this).attr('protocol_id')
+      'participant_id': $(this).attr('participant_id')
+      'checked': $(this).is(':checked')
+
+    $.ajax
+      type: 'POST'
+      url: "/participants/update_protocol_association"
+      data: data

@@ -2,18 +2,16 @@ class AddProtocolsParticipantsIdToAppointments < ActiveRecord::Migration[5.2]
   def change
     add_column :appointments, :protocols_participant_id, :integer
     bad_data = []
-    appointment_data = Appointment.all.map{ |appointment| [appointment_id: appointment.id, participant_id: appointment.participant_id, arm_id: appointment.arm_id] }
-
-    appointment_data.each do |data|
-      data = data.first
-      if ProtocolsParticipant.where(participant_id: data[:participant_id], arm_id: data[:arm_id]).empty?
-        bad_data << data[:appointment_id]
+    progress_bar = ProgressBar.new(Appointment.count)
+    Appointment.all.each do |appt|
+      if protocols_participant = ProtocolsParticipant.where(participant_id: appt.participant_id, arm_id: appt.arm_id).first
+        Appointment.find(appt.id).update_attributes(protocols_participant_id: protocols_participant.id, arm_id: appt.arm_id)
       else
-        Appointment.where(id: data[:appointment_id]).first.update_attributes(protocols_participant_id: (ProtocolsParticipant.where(participant_id: data[:participant_id], arm_id: data[:arm_id])).first.id)
+        bad_data << appt.id
       end
+      progress_bar.increment!
     end
     puts "Appointments with no matches: #{bad_data}"
-    puts "*Number of Appointments with no matches: #{bad_data.count}"
-    puts "Number of Appointments with no matches: #{bad_data}.count"
+    puts "Number of Appointments with no matches: #{bad_data.count}"
   end
 end

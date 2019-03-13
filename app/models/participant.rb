@@ -122,10 +122,10 @@ class Participant < ApplicationRecord
   end
 
   def protocol_ids
-    protocols_participants.map{ |pp| pp.protocol_id }
+    protocols.ids
   end
 
   def can_be_destroyed?
-    ProtocolsParticipant.where(participant: id).empty?
+    protocols_participants.empty?
   end
 end

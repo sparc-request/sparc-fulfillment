@@ -59,6 +59,6 @@ class Identity < SparcDbBase
   end
 
   def is_a_patient_registrar?
-    PatientRegistrar.all.map(&:identity_id).include? self.id
+    PatientRegistrar.where(identity: self).any?
   end
 end
