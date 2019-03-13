@@ -26,7 +26,7 @@ namespace :data do
 
     CSV.open("tmp/fix_one_time_fee_line_items_#{Time.now.strftime('%m%d%Y%H%M%S')}.csv", "wb") do |csv|
 
-      csv << ["Line Item ID", "Service ID", "Protocol ID", "Sub Service Request ID", "New Line Item Sparc ID", "Message"]
+      csv << ["Line Item ID (in Fulfillment)", "Service ID", "Service Name", "Protocol ID (in SPARCRequest)", "Protocol ID (in Fulfillment)", "Request ID", "Sub Service Request ID", "New Line Item Sparc ID", "Message"]
 
       line_items.each do |fulfillment_line_item|
         begin
@@ -36,9 +36,9 @@ namespace :data do
 
           if request_line_item
             fulfillment_line_item.update_attribute(:sparc_id, request_line_item.id)
-            csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.protocol.sparc_id}", "#{sub_service_request.id}", "#{request_line_item.id}", ["Sparc ID (of Fulfillment Line Item Table) updated"] ]
+            csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{fulfillment_line_item.protocol.srid}", "#{sub_service_request.id}", "#{request_line_item.id}", ["Sparc ID (of Fulfillment Line Item Table) updated"] ]
           else
-            csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.protocol.sparc_id}", "#{sub_service_request.id}", "", "No line items (in SPARCRequest) with corresponding Service ID" ]
+            csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{fulfillment_line_item.protocol.srid}", "#{sub_service_request.id}", "", "No line items (in SPARCRequest) with corresponding Service ID" ]
           end
 
         rescue Exception => e
