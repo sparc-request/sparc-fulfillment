@@ -16,10 +16,5 @@ class CreateProtocolsParticipant < ActiveRecord::Migration[5.2]
       ProtocolsParticipant.create(participant_id: participant.id, protocol_id: participant.protocol_id, arm_id: participant.arm_id, status: participant.status, sparc_id: participant.sparc_id)
       progress_bar.increment!
     end
-
-    remove_column :participants, :sparc_id, :integer
-    remove_column :participants, :protocol_id, :integer
-    remove_column :participants, :arm_id, :integer
-    remove_column :participants, :status, :string
   end
 end

@@ -192,9 +192,13 @@ ActiveRecord::Schema.define(version: 2019_01_16_150033) do
   end
 
   create_table "participants", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+    t.integer "sparc_id"
+    t.integer "protocol_id"
+    t.integer "arm_id"
     t.string "first_name", collation: "utf8_unicode_ci"
     t.string "last_name", collation: "utf8_unicode_ci"
     t.string "mrn"
+    t.string "status"
     t.datetime "date_of_birth"
     t.string "gender"
     t.string "ethnicity"
@@ -211,7 +215,10 @@ ActiveRecord::Schema.define(version: 2019_01_16_150033) do
     t.string "recruitment_source"
     t.string "external_id"
     t.string "middle_initial", limit: 1
+    t.index ["arm_id"], name: "index_participants_on_arm_id"
     t.index ["deleted_at"], name: "index_participants_on_deleted_at"
+    t.index ["protocol_id"], name: "index_participants_on_protocol_id"
+    t.index ["sparc_id"], name: "index_participants_on_sparc_id"
   end
 
   create_table "procedures", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|

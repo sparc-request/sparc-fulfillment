@@ -5,7 +5,7 @@ class AddProtocolsParticipantsIdToAppointments < ActiveRecord::Migration[5.2]
     progress_bar = ProgressBar.new(Appointment.count)
     Appointment.all.each do |appt|
       if protocols_participant = ProtocolsParticipant.where(participant_id: appt.participant_id, arm_id: appt.arm_id).first
-        Appointment.find(appt.id).update_attributes(protocols_participant_id: protocols_participant.id, arm_id: appt.arm_id)
+        Appointment.find(appt.id).update_attribute(:protocols_participant_id, protocols_participant.id)
       else
         bad_data << appt.id
       end
