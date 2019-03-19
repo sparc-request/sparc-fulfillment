@@ -1,5 +1,4 @@
 json.total @total
-#json.(participants)
 json.rows @participants do |participant|
   protocols_participant = ProtocolsParticipant.where(participant_id: participant.id, protocol_id: @protocol.id).first
   json.cache! participant, expires_in: 5.minutes do

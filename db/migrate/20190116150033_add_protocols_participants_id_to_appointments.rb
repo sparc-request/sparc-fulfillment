@@ -1,5 +1,5 @@
 class AddProtocolsParticipantsIdToAppointments < ActiveRecord::Migration[5.2]
-  def change
+  def up
     add_column :appointments, :protocols_participant_id, :integer
     bad_data = []
     progress_bar = ProgressBar.new(Appointment.count)

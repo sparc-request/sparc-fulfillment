@@ -277,7 +277,7 @@ ActiveRecord::Schema.define(version: 2019_01_16_150033) do
     t.datetime "updated_at", null: false
     t.index ["arm_id"], name: "index_protocols_participants_on_arm_id"
     t.index ["participant_id"], name: "index_protocols_participants_on_participant_id"
-    t.index ["protocol_id", "participant_id"], name: "index_protocols_participants_on_protocol_id_and_participant_id", unique: true
+    t.index ["protocol_id", "participant_id"], name: "index_protocols_participants_on_protocol_id_and_participant_id"
     t.index ["protocol_id"], name: "index_protocols_participants_on_protocol_id"
   end
 

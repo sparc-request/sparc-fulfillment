@@ -27,7 +27,6 @@ namespace :data do
       last_name = row['Patient Name'].split(' ').last
       mrn = row['Patient MRN']
       status = row['Patient Status']
-      #dob = DateTime.strptime(row['Patient DOB'], '%m/%d/%Y')
       dob = row['Patient DOB']
       gender = row['Patient Gender']
       ethnicity = row['Patient Ethnicity']
@@ -43,36 +42,51 @@ namespace :data do
     end
 
     def process_participant_to_be_destroyed(participant_to_destroy, participant_to_retain)
-      ### Find ProtocolsParticipant and update
-
       ProtocolsParticipant
         .where(participant_id: participant_to_destroy.id)
         .update_all(participant_id: participant_to_retain.id)
-      ### Find Participant and Destroy
+      ### Find Participant an
       participant_to_destroy.destroy
+      Participant.only_deleted.where(id: participant_to_destroy.id).delete_all
     end
     #### csv location tmp/patient_registry.csv
     #### Patient ID (Records to Merge), Patient MRN, Patient Name, Patient Middle Name, Patient Status, Patient DOB, Patient Gender, Patient Ethnicity, Patient Race, Patient Address, Patient Phone Number, Patient City, Patient State, Patient Zip Code, Patient External ID
-
-    CSV.foreach("tmp/patient_registry.csv", headers: true) do |row|
-
-      participant_ids = row['Patient ID (Records to Merge)'].split(';').map{|id| id.strip}
-
-      participant_ids.each_with_index do |participant_id, index|
-        if index == 0 ### Grab first Participant and update
-          @participant_to_retain = Participant.find(participant_id) 
-          if @participant_to_retain.nil?
-            binding.pry
+    participant_ids_that_do_not_exist = []
+    CSV.foreach("tmp/patient_registry.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
+      if !row['Patient ID (Records to Merge)'].nil?
+        participant_ids = row['Patient ID (Records to Merge)'].split(';').map{|id| id.strip}
+        
+        participant_ids.each_with_index do |participant_id, index|
+          if index == 0 || @participant_to_retain.nil? ### Grab first Participant and update
+            @participant_to_retain = Participant.find_by(id: participant_id)
+            if @participant_to_retain.nil?
+              ### permanently delete record
+              if deleted_participant = Participant.with_deleted.find_by(id: participant_id)
+                deleted_participant.destroy
+                Participant.only_deleted.where(id: deleted_participant.id).delete_all
+              else
+                participant_ids_that_do_not_exist << participant_id
+              end
+              next
+            end
+            process_participant_to_be_retained(row, participant_id, @participant_to_retain)
+          else
+            participant_to_destroy = Participant.find_by(id: participant_id)
+            if participant_to_destroy.nil?
+              ### permanently delete record
+              if deleted_participant = Participant.with_deleted.find_by(id: participant_id)
+                deleted_participant.destroy
+                Participant.only_deleted.where(id: deleted_participant.id).delete_all
+              else
+                participant_ids_that_do_not_exist << participant_id
+              end
+              next
+            end
+            process_participant_to_be_destroyed(participant_to_destroy, @participant_to_retain)
           end
-          process_participant_to_be_retained(row, participant_id, @participant_to_retain)
-        else
-          participant_to_destroy = Participant.find(participant_id)
-          if participant_to_destroy.nil? || @participant_to_retain.nil?
-            binding.pry
-          end
-          process_participant_to_be_destroyed(participant_to_destroy, @participant_to_retain)
         end
       end
     end
+    puts "Participant IDs that do not exist: #{participant_ids_that_do_not_exist}"
   end
 end
