@@ -1,5 +1,5 @@
 class CreateProtocolsParticipant < ActiveRecord::Migration[5.2]
-  def change
+  def up
     create_table :protocols_participants do |t|
       t.index [:protocol_id, :participant_id]
       t.references :protocol

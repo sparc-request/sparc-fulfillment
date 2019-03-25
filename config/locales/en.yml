@@ -369,6 +369,8 @@ en:
 
   patient:
     registry: "Patient Registry"
+    confirm_removal_part_1: "Are you sure you want to remove"
+    confirm_removal_part_2: "from Patient Registry?"
 
   reports:
     asc: "ASC"

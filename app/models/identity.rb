@@ -30,6 +30,7 @@ class Identity < SparcDbBase
   has_many :reports
   has_many :clinical_providers
   has_many :super_users
+  has_many :patient_registrars
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
@@ -59,6 +60,6 @@ class Identity < SparcDbBase
   end
 
   def is_a_patient_registrar?
-    PatientRegistrar.where(identity: self).any?
+    patient_registrars.any?
   end
 end
