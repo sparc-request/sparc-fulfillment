@@ -18,37 +18,37 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :procedure do
-    appointment nil
-    visit nil
+    appointment { nil }
+    visit { nil }
 
     trait :insurance_billing_qty do
-      billing_type 'insurance_billing_qty'
+      billing_type { 'insurance_billing_qty' }
     end
 
     trait :research_billing_qty do
-      billing_type 'research_billing_qty'
+      billing_type { 'research_billing_qty' }
     end
 
     trait :complete do
       association :service, factory: :service
       association :appointment, :with_arm, :without_validations
 
-      status 'complete'
-      completed_date Date.today.strftime('%m/%d/%Y')
+      status { 'complete' }
+      completed_date { Date.today.strftime('%m/%d/%Y') }
     end
 
     trait :incomplete do
-      status 'incomplete'
-      completed_date nil
-      incompleted_date Date.today.strftime('%m/%d/%Y')
+      status { 'incomplete' }
+      completed_date { nil }
+      incompleted_date { Date.today.strftime('%m/%d/%Y') }
     end
 
     trait :follow_up do
-      status 'follow_up'
-      completed_date nil
+      status { 'follow_up' }
+      completed_date { nil }
       after(:create) do |procedure, evaluator|
         create(:task, assignable: procedure)
       end

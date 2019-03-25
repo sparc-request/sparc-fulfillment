@@ -18,30 +18,29 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-require 'rails_helper'
+module Features
+  module WaitHelpers
+    def wait_for_page(path)
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until{ current_path == path }
+    end
 
-feature 'User views Participant Tracker', js: true do
+    def wait_for_ajax
+      Timeout.timeout(Capybara.default_max_wait_time) do
+        loop until jquery_defined?
+        loop until finished_all_ajax_requests? && finished_all_animations?
+      end
+    end
 
-  scenario 'and sees Participants' do
-    given_i_am_viewing_the_participant_tracker
-    then_i_should_see_participants
-  end
+    def jquery_defined?
+      page.evaluate_script(%Q{typeof jQuery !== 'undefined'}) && page.evaluate_script(%Q{typeof $ !== 'undefined'})
+    end
 
-  def given_i_am_viewing_the_participant_tracker
-    protocol = create_and_assign_protocol_to_me
+    def finished_all_ajax_requests?
+      page.evaluate_script('jQuery.active') == 0
+    end
 
-    visit protocol_path(protocol.id)
-    wait_for_ajax
-
-    click_link 'Participant Tracker'
-    wait_for_ajax
-  end
-
-  def then_i_should_see_participants
-    participant_first_names = Participant.all.map(&:first_name)
-
-    participant_first_names.each do |first_name|
-      expect(page).to have_content(first_name)
+    def finished_all_animations?
+      page.evaluate_script('$(":animated").length') == 0
     end
   end
 end

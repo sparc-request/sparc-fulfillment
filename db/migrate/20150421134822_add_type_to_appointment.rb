@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class AddTypeToAppointment < ActiveRecord::Migration
+class AddTypeToAppointment < ActiveRecord::Migration[4.2]
   def change
     add_column :appointments, :type, :string, :default => "Appointment"
     add_index :appointments, :type

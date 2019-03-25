@@ -18,14 +18,14 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :document do |n|
-    title "MyDocument"
+    title { "MyDocument" }
 
     trait :with_csv_file do
-      original_filename "file.csv"
-      content_type 'text/csv'
+      original_filename { "file.csv" }
+      content_type { 'text/csv' }
       after :create do |document, evaluator|
         File.open(document.path, "w") do |file|
           file.write("a, b, c")
@@ -34,12 +34,12 @@ FactoryGirl.define do
     end
 
     trait :of_identity_report do
-      documentable_type "Identity"
-      documentable_id nil
-      report_type "invoice_report"
-      state "Completed"
-      original_filename "file.csv"
-      content_type 'text/csv'
+      documentable_type { "Identity" }
+      documentable_id { nil }
+      report_type { "invoice_report" }
+      state { "Completed" }
+      original_filename { "file.csv" }
+      content_type { 'text/csv' }
 
       after :create do |document|
         identity = Identity.find(document.documentable_id)
@@ -49,12 +49,12 @@ FactoryGirl.define do
     end
 
     trait :of_protocol_report do
-      documentable_type "Protocol"
-      documentable_id nil
-      report_type "study_schedule_report"
-      state "Completed"
-      original_filename "file.csv"
-      content_type 'text/csv'
+      documentable_type { "Protocol" }
+      documentable_id { nil }
+      report_type { "study_schedule_report" }
+      state { "Completed" }
+      original_filename { "file.csv" }
+      content_type { 'text/csv' }
 
       after :create do |document|
         protocol = Protocol.find(document.documentable_id)
@@ -64,12 +64,12 @@ FactoryGirl.define do
     end
 
     trait :of_participant_report do
-      documentable_type "Protocol"
-      documentable_id nil
-      report_type "participant_report"
-      state "Completed"
-      original_filename "file.csv"
-      content_type 'text/csv'
+      documentable_type { "Protocol" }
+      documentable_id { nil }
+      report_type { "participant_report" }
+      state { "Completed" }
+      original_filename { "file.csv" }
+      content_type { 'text/csv' }
 
       after :create do |document|
         protocol = Protocol.find(document.documentable_id)

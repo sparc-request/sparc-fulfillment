@@ -6,6 +6,7 @@ json.rows @protocols do |protocol|
     json.id protocol.id
     json.sparc_id protocol.sparc_id
     json.srid protocol.srid
+    json.rmid protocol.research_master_id
     json.status formatted_status(protocol)
     json.short_title protocol.short_title
     json.irb_approval_date format_date(protocol.irb_approval_date)

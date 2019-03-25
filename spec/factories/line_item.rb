@@ -18,16 +18,16 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :line_item do
-    arm nil
-    service nil
-    protocol nil
-    name nil
+    arm { nil }
+    service { nil }
+    protocol { nil }
+    name { nil }
     sparc_id
     quantity_requested { Faker::Number.number(3) }
-    quantity_type "Each"
+    quantity_type { "Each" }
 
     trait :with_fulfillments do
       after(:create) do |line_item, evaluator|

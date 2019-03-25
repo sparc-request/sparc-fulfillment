@@ -49,4 +49,4 @@
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
-          %button.btn.btn-primary{type: 'submit'}=t(:actions)[:save]
+          = submit_tag t(:actions)[:save], class: "btn btn-primary"

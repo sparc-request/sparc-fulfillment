@@ -18,13 +18,13 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 	
 	factory :professional_organization do
 		sequence(:name) { |n| "Fake Organization #{n}" }  # need this for fake data
 
 		transient do
-			children_count 0
+			children_count { 0 }
 		end
 
 		after(:create) do |professional_organization, evaluator|
@@ -41,20 +41,20 @@ FactoryGirl.define do
 		end
 
 		trait :institution do
-			org_type "institution"
-			parent_id nil
+			org_type { "institution" }
+			parent_id { nil }
 		end
 
 		trait :college do
-			org_type "college"
+			org_type { "college" }
 		end
 
 		trait :department do
-			org_type "department"
+			org_type { "department" }
 		end
 
 		trait :division do
-			org_type "division"
+			org_type { "division" }
 		end
 
 		trait :with_child_organizations do

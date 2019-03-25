@@ -5,10 +5,11 @@ gem 'activerecord-import'
 gem 'activerecord-session_store'
 gem 'acts_as_list'
 gem 'addressable'
-gem 'autoprefixer-rails'
+gem 'autoprefixer-rails', '7.2.2'
 gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09da8c9ea47980bd3bf296874'
 gem 'axlsx_rails'
 gem 'bootstrap-sass'
+gem 'sassc-rails', '>= 2.1.0'
 gem 'bootstrap-select-rails'
 gem 'bootstrap-toggle-rails'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.17.37'
@@ -35,7 +36,7 @@ gem 'paper_trail', '~> 10.0.1'
 gem 'paranoia', '~> 2.4'
 gem 'progress_bar'
 gem 'puma'
-gem 'rails', '5.0.3'
+gem 'rails', '5.2.2.1'
 gem 'remotipart'
 gem 'rest-client'
 gem 'rubyzip', '>= 1.2.1'
@@ -60,7 +61,7 @@ end
 
 
 group :development, :test, :testing do
-  gem 'factory_girl_rails', '~> 4.9.0'
+  gem "factory_bot_rails"
   gem 'faker', '~> 1.9.1'
   gem 'pry'
 end
@@ -74,14 +75,16 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-webkit'
+  gem 'capybara'
   gem 'climate_control'
   gem 'database_cleaner'
+  gem 'geckodriver-helper'
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec-activejob', '~> 0.6.1'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
+  gem 'selenium-webdriver'
   gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', "~> 3.1.2", require: false
   gem 'timecop'

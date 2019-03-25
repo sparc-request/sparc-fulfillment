@@ -27,11 +27,11 @@ class Fulfillment < ApplicationRecord
   belongs_to :service
   belongs_to :creator, class_name: "Identity"
   belongs_to :performer, class_name: "Identity"
-  has_one :protocol, through: :line_item
-
   has_many :components, as: :composable
   has_many :notes, as: :notable
   has_many :documents, as: :documentable
+
+  has_one :protocol, through: :line_item
 
   delegate :quantity_type, to: :line_item
 

@@ -51,9 +51,7 @@ module StudyLevelActivitiesHelper
   def sla_options_buttons line_item
     options = raw(
       note_list_item({object: line_item, has_notes: line_item.notes.any?})+
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: line_item.id, documentable_type: "LineItem"}))
-      )+
+      document_list_item({object: line_item, has_documents: line_item.documents.any?})+
       content_tag(:li, raw(
         content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_edit'))
       )+
@@ -81,9 +79,7 @@ module StudyLevelActivitiesHelper
     unless fulfillment.invoiced?
       options = raw(
         note_list_item({object: fulfillment, has_notes: fulfillment.notes.any?})+
-        content_tag(:li, raw(
-          content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: fulfillment.id, documentable_type: "Fulfillment"}))
-        )+
+        document_list_item({object: fulfillment, has_documents: fulfillment.documents.any?})+
         content_tag(:li, raw(
           content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Fulfillment', type: 'button', class: 'btn btn-default form-control actions-button otf_fulfillment_edit'))
         )+
@@ -129,8 +125,16 @@ module StudyLevelActivitiesHelper
   def note_list_item params
     content_tag(:li, raw(
       content_tag(:button,
-        raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:span_class].nil? ? '' : params[:span_class]} #{params[:has_notes] ? 'blue-notes' : ''}", aria: {hidden: "true"}))+
-        ' Notes', type: 'button', class: "btn btn-default #{params[:button_class].nil? ? '' : params[:button_class]} form-control actions-button notes list", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
+        raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:has_notes] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
+        ' Notes', type: 'button', class: "btn btn-default form-control actions-button notes list", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
+    )
+  end
+
+  def document_list_item params
+    content_tag(:li, raw(
+      content_tag(:button,
+        raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_documents", class: "glyphicon glyphicon-open-file #{params[:has_documents] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
+        ' Documents', type: 'button', class: "btn btn-default form-control actions-button documents list", data: {documentable_id: params[:object].id, documentable_type: params[:object].class.name}))
     )
   end
 end

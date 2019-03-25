@@ -308,6 +308,7 @@ en:
   protocol:
     object: "Protocol"
     admin_portal_link: "SPARCDashboard"
+    admin_portal_link_tooltip: "Back to SPARCDashboard"
     coordinators: "Coordinators"
     end_date: "Study End Date"
     flash_messages:
@@ -321,6 +322,7 @@ en:
     owner: "Owner"
     principal_investigator: "Principal Investigator"
     requester: "Service Requester"
+    rmid: "RMID"
     short_title: "Short Title"
     sparc_id: "SPARC ID"
     srid: "SRID"
@@ -365,6 +367,8 @@ en:
     auditing_report: "Auditing Report"
     desc: "DESC"
     descending: "Descending"
+    include_notes: "Include Notes"
+    include_invoiced: "Include Invoiced"
     invoice_report: "Invoice Report"
     end_date: "End Date"
     organization: "Organization(s)*"

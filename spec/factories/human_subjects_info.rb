@@ -18,11 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :human_subjects_info do
-    protocol nil
-    irb_approval_date 1.day.from_now
-    irb_expiration_date 2.days.from_now
+    protocol { nil }
+    irb_approval_date { 1.day.from_now }
+    irb_expiration_date { 2.days.from_now }
   end
 end

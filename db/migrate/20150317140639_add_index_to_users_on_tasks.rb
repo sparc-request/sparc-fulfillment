@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class AddIndexToUsersOnTasks < ActiveRecord::Migration
+class AddIndexToUsersOnTasks < ActiveRecord::Migration[4.2]
   def change
     add_index "tasks", ["user_id"], name: "index_tasks_on_user_id", using: :btree
   end

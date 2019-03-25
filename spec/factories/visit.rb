@@ -18,15 +18,15 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :visit do
-    line_item nil
-    visit_group nil
+    line_item { nil }
+    visit_group { nil }
     sparc_id
-    research_billing_qty 0
-    insurance_billing_qty 0
-    effort_billing_qty 0
+    research_billing_qty { 0 }
+    insurance_billing_qty { 0 }
+    effort_billing_qty { 0 }
 
     trait :with_complete_procedures do
       association :line_item, :with_service
@@ -42,15 +42,15 @@ FactoryGirl.define do
     end
 
     trait :with_billing do
-      research_billing_qty 1
-      insurance_billing_qty 1
-      effort_billing_qty 1
+      research_billing_qty { 1 }
+      insurance_billing_qty { 1 }
+      effort_billing_qty { 1 }
     end
 
     trait :without_billing do
-      research_billing_qty 0
-      insurance_billing_qty 0
-      effort_billing_qty 0
+      research_billing_qty { 0 }
+      insurance_billing_qty { 0 }
+      effort_billing_qty { 0 }
     end
 
     factory :visit_with_complete_and_incomplete_procedures, traits: [:with_complete_procedures, :with_incomplete_procedures]

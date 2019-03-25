@@ -56,7 +56,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
   end
 
   def when_i_download_the_report
-    first("a.attached_file").trigger("click")
+    first("a.attached_file").click
     wait_for_ajax
   end
 

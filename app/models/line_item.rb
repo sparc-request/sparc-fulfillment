@@ -26,14 +26,16 @@ class LineItem < ApplicationRecord
   belongs_to :protocol
   belongs_to :arm
   belongs_to :service
-
-  has_many :visit_groups, through: :arm
-  has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, dependent: :destroy
   has_many :fulfillments
   has_many :notes, as: :notable
   has_many :documents, as: :documentable
   has_many :components, as: :composable
   has_many :admin_rates, primary_key: :sparc_id
+
+  has_many :visit_groups, through: :arm
+
+  has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, dependent: :destroy
+
 
   delegate  :name,
             :sparc_core_id,
@@ -112,7 +114,7 @@ class LineItem < ApplicationRecord
   private
 
   def reset_components
-    if service_id_changed? && one_time_fee
+    if saved_change_to_service_id? && one_time_fee
       if service.components.present?
         components.each{|component| component.really_destroy!}
         create_line_item_components

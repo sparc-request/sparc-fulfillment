@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class AddIndiciesToSparcIds < ActiveRecord::Migration
+class AddIndiciesToSparcIds < ActiveRecord::Migration[4.2]
   def change
     add_index "arms", ["sparc_id"], name: "index_arms_on_sparc_id", unique: true, using: :btree
     add_index "line_items", ["sparc_id"], name: "index_line_items_on_sparc_id", unique: true, using: :btree

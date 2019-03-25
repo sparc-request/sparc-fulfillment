@@ -21,7 +21,7 @@
 class ProtocolsController < ApplicationController
 
   before_action :find_protocol, only: [:show]
-  before_action :authorize_protocol, only: [:show]
+  before_action :authorize_protocol, only: [:show], :unless => proc { |controller| controller.request.format.json? }
 
   respond_to :json, :html
 
@@ -71,6 +71,8 @@ class ProtocolsController < ApplicationController
       case params[:sort]
       when 'srid'
         "sparc_id #{order}, sub_service_requests.ssr_id #{order}"
+      when 'rmid'
+        "protocols.research_master_id #{order}"
       when 'pi'
         "identities.first_name #{order}, identities.last_name #{order}"
       when 'irb_approval_date'
@@ -85,7 +87,7 @@ class ProtocolsController < ApplicationController
   end
 
   def find_protocols_for_index
-    @protocols = current_identity.protocols
+    @protocols = current_identity.protocols_full
     @protocols = @protocols.order(Arel.sql("#{@sort}")) if @sort
     @protocols = @protocols.where(sub_service_requests: { status: @status }) if @status != 'all'
     @total = @protocols.count
@@ -101,8 +103,9 @@ class ProtocolsController < ApplicationController
       query_string += "OR #{Sparc::Protocol.quoted_table_name}.short_title LIKE ? " # search by short title
       query_string += "OR (#{ProjectRole.quoted_table_name}.role = 'primary-pi' AND CONCAT(#{Identity.quoted_table_name}.first_name, ' ', #{Identity.quoted_table_name}.last_name) LIKE ?) " # search by PI name
       query_string += "OR (#{SubServiceRequest.quoted_table_name}.org_tree_display LIKE ?)" # search by Provider/Program/Core
+      query_string += "OR #{Sparc::Protocol.quoted_table_name}.research_master_id LIKE ? " #searchh by RMID
 
-      @protocols = @protocols.where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
+      @protocols = @protocols.where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
 
       @total = @protocols.count
     end

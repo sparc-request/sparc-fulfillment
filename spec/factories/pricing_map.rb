@@ -18,19 +18,19 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :pricing_map, aliases: [:pricing_map_present] do
-    effective_date Time.current
-    full_rate 500.0
-    quantity_type "Each"
+    effective_date { Time.current }
+    full_rate { 500.0 }
+    quantity_type { "Each" }
 
     trait :future do
-      effective_date Time.current + 25.days
+      effective_date { Time.current + 25.days }
     end
 
     trait :past do
-      effective_date Time.current - 25.days
+      effective_date { Time.current - 25.days }
     end
 
     factory :pricing_map_future, traits: [:future]

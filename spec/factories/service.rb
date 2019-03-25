@@ -18,15 +18,15 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :service, aliases: [:service_created_by_sparc] do
     organization factory: :organization_core
     sequence(:name) { Faker::Commerce.product_name }
-    description 'Description'
-    abbreviation 'Abbreviation'
-    one_time_fee false
-    is_available true
+    description { 'Description' }
+    abbreviation { 'Abbreviation' }
+    one_time_fee { false }
+    is_available { true }
 
     after(:create) do |service|
       pricing_map = build(:pricing_map_past)
@@ -39,8 +39,8 @@ FactoryGirl.define do
     end
 
     trait :with_one_time_fee do
-      one_time_fee true
-      components "eine,meine,mo,"
+      one_time_fee { true }
+      components { "eine,meine,mo," }
     end
 
     factory :service_with_one_time_fee, traits: [:with_one_time_fee]

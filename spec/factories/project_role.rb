@@ -18,20 +18,20 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :project_role do
-    identity nil
-    protocol nil
-    project_rights "to party"
+    identity { nil }
+    protocol { nil }
+    project_rights { "to party" }
 
     trait :pi do
-      role "primary-pi"
+      role { "primary-pi" }
       identity
     end
 
     trait :coordinator do
-      role "research-assistant-coordinator"
+      role { "research-assistant-coordinator" }
       identity
     end
 

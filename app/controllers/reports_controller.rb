@@ -80,6 +80,8 @@ class ReportsController < ApplicationController
               :protocol_id,
               :sort_by,
               :sort_order,
+              :include_notes,
+              :include_invoiced,
               :participant_id,
               :documentable_id,
               :documentable_type,

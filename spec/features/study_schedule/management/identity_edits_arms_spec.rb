@@ -30,14 +30,6 @@ feature 'Identity edits arms on protocol study schedule', js: true do
       when_i_click_the_add_submit_button
       then_i_should_see_the_new_arm
     end
-
-    scenario 'and sees a flash message' do
-      given_i_am_viewing_a_protocol_with_one_arm
-      when_i_click_the_add_arm_button
-      when_i_fill_in_the_form
-      when_i_click_the_add_submit_button
-      then_i_should_see_a_flash_message_of_type 'add'
-    end
   end
 
   context 'User edits an arm' do
@@ -49,15 +41,6 @@ feature 'Identity edits arms on protocol study schedule', js: true do
       when_i_click_the_save_submit_button
       then_i_should_see_the_updated_arm
     end
-
-    scenario 'and sees a flash message' do
-      given_i_am_viewing_a_protocol_with_one_arm
-      when_i_click_the_edit_arm_button
-      when_i_set_the_name_to 'other arm name'
-      when_i_set_the_subject_count_to 1234
-      when_i_click_the_save_submit_button
-      then_i_should_see_a_flash_message_of_type 'edit'
-    end
   end
 
   context 'User deletes an arm' do
@@ -68,14 +51,6 @@ feature 'Identity edits arms on protocol study schedule', js: true do
       bootstrap_select "#arm_form_select", @protocol.arms.first.name
       when_i_click_the_remove_submit_button
       then_i_should_not_see_the_arm
-    end
-
-    scenario 'and sees a flash message' do
-      given_i_am_viewing_a_protocol_with_multiple_arms
-      when_i_click_the_remove_arm_button
-      # Ensure that the selected arm is the correct one being deleted
-      when_i_click_the_remove_submit_button
-      then_i_should_see_a_flash_message_of_type 'remove'
     end
   end
 
@@ -167,6 +142,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def when_i_click_the_remove_submit_button
     click_button 'Remove'
+    accept_confirm
     wait_for_ajax
   end
 
@@ -184,12 +160,6 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     bootstrap_select "#arm_form_select", @protocol.arms.first.name
   end
 
-  def when_i_accept_the_confirmation_alert
-    page.accept_alert do
-      click_button('OK')
-    end
-  end
-
   def then_i_should_see_the_new_arm
     expect(find(".study_schedule_container")).to have_content "arm name"
   end
@@ -204,16 +174,5 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def then_i_should_still_see_the_arm
     expect(find(".study_schedule_container")).to have_content @protocol.arms.last.name #The last arm (with procedures) is gone
-  end
-
-  def then_i_should_see_a_flash_message_of_type action_type
-    case action_type
-      when 'add'
-        expect(page).to have_content("Arm Created")
-      when 'edit'
-        expect(page).to have_content("Arm Updated")
-      when 'remove'
-        expect(page).to have_content("Arm Destroyed")
-    end
   end
 end
