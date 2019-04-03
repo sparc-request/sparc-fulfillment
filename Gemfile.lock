@@ -234,7 +234,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     io-like (0.3.0)
-    jbuilder (2.7.0)
+    jbuilder (2.8.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
     jquery-rails (4.3.3)
@@ -519,7 +519,7 @@ DEPENDENCIES
   grape (~> 1.1.0)
   haml-rails
   hashie-forbidden_attributes
-  jbuilder (~> 2.0)
+  jbuilder (~> 2.8)
   jquery-rails
   launchy
   letter_opener
