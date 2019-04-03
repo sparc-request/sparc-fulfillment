@@ -73,7 +73,7 @@ class DocumentsController < ApplicationController
                                                           state: "Completed"))
 
         create_document_file
-
+        @selector = "#{@document.unique_selector}_documents"
         flash.now[:success] = t(:documents)[:flash_messages][:created]
       }
     end
@@ -101,7 +101,7 @@ class DocumentsController < ApplicationController
 
   def destroy
     respond_to do |format|
-      format.js {        
+      format.js {
         mark_document_as_accessed if @document.last_accessed_at.nil?
         @document.destroy
 

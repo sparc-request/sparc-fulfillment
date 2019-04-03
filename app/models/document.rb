@@ -25,7 +25,7 @@ class Document < ApplicationRecord
   belongs_to :documentable, polymorphic: true
 
   validates :title, presence: true
-  
+
   def path
     [ENV.fetch('DOCUMENTS_FOLDER'), id].join('/')
   end
@@ -41,8 +41,12 @@ class Document < ApplicationRecord
   def downloaded?
     last_accessed_at
   end
-  
+
   def accessible_by?(identity)
     !(documentable_type == 'Identity') || (documentable_type == 'Identity' && documentable == identity)
+  end
+
+  def unique_selector
+    "#{documentable_type.downcase}_#{documentable_id}"
   end
 end

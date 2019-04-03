@@ -24,6 +24,6 @@ class HumanSubjectsInfo < SparcDbBase
   belongs_to :protocol, primary_key: :sparc_id
 
   def irb_number
-    pro_number.blank? ? hr_number : pro_number
+    pro_number
   end
 end

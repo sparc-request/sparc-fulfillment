@@ -40,6 +40,12 @@ class IdentityOrganizations
 
   end
 
+  def authorized_protocols
+    ##This is a different version of the above "fulfillment_access_protocols" method, but without eager loading of un-needed relations.
+    fetch_rights
+    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs}).distinct
+  end
+
   def fulfillment_organizations_with_protocols
     fetch_rights
     Organization.joins(:protocols).where(id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs).distinct

@@ -34,6 +34,11 @@ class Identity < SparcDbBase
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
   def protocols
+    IdentityOrganizations.new(id).authorized_protocols
+  end
+
+  def protocols_full
+    ##Includes relationship objects
     IdentityOrganizations.new(id).fulfillment_access_protocols
   end
 
