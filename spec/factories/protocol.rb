@@ -22,13 +22,13 @@ FactoryBot.define do
 
   factory :protocol, aliases: [:protocol_complete] do
     sparc_id
-    sub_service_request nil
+    sub_service_request { nil }
     sponsor_name { Faker::Company.name }
     udak_project_number { Faker::Company.duns_number }
     start_date { Faker::Date.between(10.years.ago, 3.days.ago) }
-    end_date Time.current
+    end_date { Time.current }
     recruitment_start_date { Faker::Date.between(10.years.ago, 3.days.ago) }
-    recruitment_end_date Time.current
+    recruitment_end_date { Time.current }
     study_cost { Faker::Number.number(8) }
 
     after(:create) do |protocol, evaluator|

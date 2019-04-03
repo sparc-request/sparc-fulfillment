@@ -24,18 +24,6 @@ class VisitReport < Report
   VALIDATES_PRESENCE_OF     = [:title].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
-  # db columns of interest; qualified because of ambiguities
-  APPT_ID     = '`appointments`.`id`'
-  START_DATE  = '`appointments`.`start_date`'
-  VISIT_GROUP = '`appointments`.`visit_group_id`'
-  TYPE        = '`appointments`.`type`'
-  CONTENTS    = '`appointments`.`contents`'
-  COMPLETION  = '`procedures`.`status`'
-  PROTOCOL_ID = '`participants`.`protocol_id`'
-  LAST_NAME   = '`participants`.`last_name`'
-  FIRST_NAME  = '`participants`.`first_name`'
-  VISIT_NAME  = :name
-
   # report columns
   if ENV.fetch('RMID_URL'){nil}
     REPORT_COLUMNS = ["Protocol ID (SRID)",
@@ -74,10 +62,17 @@ class VisitReport < Report
       csv << ["Visit Start Date From #{@params[:start_date]} To #{@params[:end_date]}"]
       csv << [""]
       csv << REPORT_COLUMNS
-      result_set = Appointment.all.joins(:procedures).joins(:participant).
-                   where("#{START_DATE} > ? AND #{START_DATE} < ? AND #{COMPLETION} != ?", from_start_date, to_start_date, "unstarted").
-                   uniq.
-                   pluck(  PROTOCOL_ID, LAST_NAME, FIRST_NAME, VISIT_NAME, :start_date, :completed_date, VISIT_GROUP, TYPE, APPT_ID, COMPLETION, :sparc_core_name, CONTENTS)
+
+      result_set  = Appointment.all.joins(:procedures, :participant).
+                    where(
+                      Appointment.arel_table[:start_date].gt(from_start_date).and(
+                        Appointment.arel_table[:start_date].lt(to_start_date)).and(
+                        Procedure.arel_table[:status].not_eq("unstarted"))).distinct.
+                    pluck(
+                      Participant.arel_table[:protocol_id], Participant.arel_table[:last_name], Participant.arel_table[:first_name],
+                      Appointment.arel_table[:name], Appointment.arel_table[:start_date], Appointment.arel_table[:completed_date],
+                      Appointment.arel_table[:visit_group_id], Appointment.arel_table[:type], Appointment.arel_table[:id],
+                      Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents])
 
       get_protocol_rmid(result_set) if ENV.fetch('RMID_URL'){nil}
       get_protocol_srids(result_set)

@@ -20,6 +20,11 @@
 
 <% if @error.present? %>
 $('#doc_modal_errors').empty().append("<div class='alert alert-danger'><%= @error %></div>")
+<% elsif @document.documentable_type == "Fulfillment" %>
+$("#modal_area").html("<%= escape_javascript(render(partial: 'study_level_activities/fulfillments_table', locals: {line_item: @document.documentable.line_item, header_text: 'Fulfillments List'})) %>")
+$("#fulfillments-table").bootstrapTable()
 <% else %>
 $('.modal').modal('hide')
+unless $("span#<%= @selector %>.glyphicon").hasClass("blue-glyphicon")
+  $("span#<%= @selector %>.glyphicon").addClass("blue-glyphicon")
 <% end %>
