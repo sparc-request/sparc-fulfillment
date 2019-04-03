@@ -90,7 +90,7 @@ RSpec.describe ApplicationHelper do
                 button_class: ''}
 
       it "should return a blue button with white text" do
-        expect(helper.notes_button(params)).to have_selector(".blue-notes")
+        expect(helper.notes_button(params)).to have_selector(".blue-glyphicon")
       end
     end
   end

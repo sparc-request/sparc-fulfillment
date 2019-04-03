@@ -21,7 +21,7 @@
 module ProtocolHelper
 
   def admin_portal_link(protocol)
-    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-default btn-xs admin_portal_link', title: 'Admin Portal link', aria: { expanded: 'false' }) do
+    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-default btn-xs admin_portal_link', title: t(:protocol)[:admin_portal_link_tooltip], aria: { expanded: 'false' }) do
       content_tag(:span, '', class: 'glyphicon glyphicon-link')
     end
   end

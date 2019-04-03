@@ -115,6 +115,12 @@ class Klok::Entry < KlokDbBase
     end
   end
 
+  def duration_error
+    unless self.duration >= 0
+      self.errors[:base] << 'fulfilled quantity value can not be negative'
+    end
+  end
+
   def error_messages
     duplicate
     klok_project_present
@@ -126,6 +132,7 @@ class Klok::Entry < KlokDbBase
     service_not_available_to_protocol_error
     klok_person_error
     local_identity_error
+    duration_error
     return self.errors[:base]
   end
 
@@ -139,6 +146,7 @@ class Klok::Entry < KlokDbBase
     self.service.present? &&
     self.local_protocol_includes_service(self.service) &&
     self.klok_person.present? &&
-    self.local_identity.present?
+    self.local_identity.present? &&
+    self.duration >= 0
   end
 end
