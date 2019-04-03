@@ -29,6 +29,7 @@ before_script:
   - cp config/database.yml.example config/database.yml
   - cp config/epic.yml.example config/epic.yml
   - cp config/ldap.yml.example config/ldap.yml
+  - cp config/fulfillment_db.yml.example config/fulfillment_db.yml
   - RAILS_ENV=test bundle exec rake db:migrate
   - cd ../sparc-fulfillment
   - pwd
