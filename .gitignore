@@ -48,3 +48,5 @@ config/shards.yml
 config/sparc_db.yml
 config/klok_db.yml
 fulfill.sql
+
+public/system/*
