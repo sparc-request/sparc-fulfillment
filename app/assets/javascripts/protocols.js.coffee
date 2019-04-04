@@ -43,6 +43,8 @@ $ ->
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
     $(document).on 'click', '.financial', ->
+      $('.financial').addClass('active')
+      $('.management').removeClass('active')
       $('#protocol-list').removeClass('custom_striped')
       $('#protocol-list').addClass('custom_striped_financial')
       $('#protocol-list').bootstrapTable('hideColumn', 'updates')
@@ -58,6 +60,8 @@ $ ->
       $('#protocol-list').bootstrapTable('showColumn', 'subsidy_expended')
 
     $(document).on 'click', '.management', ->
+      $('.management').addClass('active')
+      $('.financial').removeClass('active')
       $('#protocol-list').addClass('custom_striped')
       $('#protocol-list').removeClass('custom_striped_financial')
       $('#protocol-list').bootstrapTable('showColumn', 'updates')

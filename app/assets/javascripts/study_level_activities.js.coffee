@@ -102,3 +102,12 @@ $ ->
 
   $(document).on 'click', '#date_fulfilled_field, #fulfillment_quantity', ->
     allowSubmit = true
+
+  # Do not display in dropdown that allows you to add/remove columns
+  # These columns will always be outputted to the export file
+  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'sla_docs')  
+  # because it will not show up in the export file
+
+  $('#study_level_activities li').find("[data-field='sla_docs']").closest('li').hide()
+  $('#study_level_activities li').find("[data-field='sla_notes']").closest('li').hide()
+  $('#study_level_activities li').find("[data-field='components_export']").closest('li').hide()

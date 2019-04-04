@@ -95,7 +95,7 @@
 
                 if (typeof this.options.exportTypes === 'string') {
                     var types = this.options.exportTypes.slice(1, -1).replace(/ /g, '').split(',');
-
+ 
                     exportTypes = [];
                     $.each(types, function (i, value) {
                         exportTypes.push(value.slice(1, -1));
