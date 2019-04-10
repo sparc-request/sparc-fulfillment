@@ -39,6 +39,7 @@ class Participant < ApplicationRecord
   validate :middle_initial_format
 
   validates :mrn, presence: true
+  validates_uniqueness_of :mrn
   validates_length_of :mrn, maximum: 255
 
   validates :date_of_birth, presence: true

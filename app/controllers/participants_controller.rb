@@ -199,13 +199,23 @@ class ParticipantsController < ApplicationController
   def search_participant_attrs
     if params[:search] && !params[:search].blank?
       search_term = params[:search]
+      search_tokens = search_term.split(" ")
 
-      query_string = "participants.mrn LIKE ? " # search by mrn
-      query_string += "OR participants.first_name LIKE ? " # search by first name
-      query_string += "OR participants.last_name LIKE ? " # search by last name
-
-      @participants = @participants.where(query_string, "%#{search_term}%", "%#{search_term}%", "%#{search_term}%")
-
+      if search_tokens.count > 1
+        first_token = "%#{search_tokens[0]}"
+        second_token = "%#{search_tokens[1]}"
+        @participants = @participants.where("(participants.first_name LIKE ? AND participants.last_name LIKE ?) OR (participants.first_name LIKE ? AND participants.last_name LIKE ?)",
+          first_token,
+          second_token,
+          second_token,
+          first_token)
+      else
+        search_token = "%#{search_tokens[0]}"
+        @participants = @participants.where("participants.mrn LIKE ? OR participants.first_name LIKE ? OR participants.last_name LIKE ?",
+          search_token,
+          search_token,
+          search_token)
+      end
       @total = @participants.count
     end
   end
