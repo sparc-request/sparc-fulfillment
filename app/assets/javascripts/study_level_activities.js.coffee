@@ -105,9 +105,17 @@ $ ->
 
   # Do not display in dropdown that allows you to add/remove columns
   # These columns will always be outputted to the export file
-  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'sla_docs')  
+  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')  
   # because it will not show up in the export file
 
-  $('#study_level_activities li').find("[data-field='sla_docs']").closest('li').hide()
-  $('#study_level_activities li').find("[data-field='sla_notes']").closest('li').hide()
+  $('#study_level_activities li').find("[data-field='docs']").closest('li').hide()
+  $('#study_level_activities li').find("[data-field='notes']").closest('li').hide()
   $('#study_level_activities li').find("[data-field='components_export']").closest('li').hide()
+
+  ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
+  excluded_cols = []
+  $('.exclude_in_export').each ->
+    excluded_cols.push $(this).closest('th').index()
+
+  if excluded_cols.length
+    $('#study-level-activities-table').data('export-options').ignoreColumn = excluded_cols
