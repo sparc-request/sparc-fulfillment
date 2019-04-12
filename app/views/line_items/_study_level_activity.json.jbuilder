@@ -13,5 +13,5 @@ json.service_components_export  line_item.components.selected.map(&:component).j
 json.last_fulfillment           format_date(line_item.last_fulfillment)
 json.options                    sla_options_buttons(line_item)
 json.fulfillments_button        fulfillments_drop_button(line_item)
-json.sla_notes                  sla_notes(line_item.notes)
-json.sla_docs                   sla_documents(line_item.documents)
+json.notes                      notes(line_item.notes)
+json.docs                       documents(line_item.documents)
