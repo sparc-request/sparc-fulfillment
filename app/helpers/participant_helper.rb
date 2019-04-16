@@ -159,6 +159,9 @@ module ParticipantHelper
 
   def associate_formatter(participant, protocol)
     associate = participant.protocol_ids.include?(protocol.id)
-    "<input class='associate' type='checkbox' " + (associate ? "checked='checked'" : "") + " protocol_id='#{protocol.id}' participant_id='#{participant.id}'>"
+    protocols_participant = ProtocolsParticipant.where(protocol_id: protocol.id, participant_id: participant.id)
+    protocols_participant_cannot_be_destroyed = protocols_participant.empty? ? false : !protocols_participant.first.can_be_destroyed?
+    "<input class='associate' type='checkbox' " + (protocols_participant_cannot_be_destroyed && associate ? "checked='checked' disabled" : associate ? "checked='checked'" : "") + " protocol_id='#{protocol.id}' participant_id='#{participant.id}'>"
+
   end
 end
