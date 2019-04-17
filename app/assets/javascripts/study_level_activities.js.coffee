@@ -113,9 +113,5 @@ $ ->
   $('#study_level_activities li').find("[data-field='components_export']").closest('li').hide()
 
   ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
-  excluded_cols = []
-  $('.exclude_in_export').each ->
-    excluded_cols.push $(this).closest('th').index()
+  exclude_from_export('study-level-activities-table')
 
-  if excluded_cols.length
-    $('#study-level-activities-table').data('export-options').ignoreColumn = excluded_cols
