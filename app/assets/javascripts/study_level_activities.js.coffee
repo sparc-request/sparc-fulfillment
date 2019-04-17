@@ -112,15 +112,6 @@ $ ->
   $('#study_level_activities li').find("[data-field='notes']").closest('li').hide()
   $('#study_level_activities li').find("[data-field='components_export']").closest('li').hide()
 
-  ### In Fulfillments we want to ignore data-field: options ###
-  $(window).on 'shown.bs.modal', (e) ->
-    options_column_index = $('.options.exclude_in_export').closest('th').index()
-    
-    $('.fulfillments').data("export-options").ignoreColumn = [options_column_index]
-
   ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
-  fulfillments_button_column_index = $('.fulfillments_button.exclude_in_export').closest('th').index()
-  components_column_index = $('.components.exclude_in_export').closest('th').index()
-  sla_options_column_index = $('.options.exclude_in_export').closest('th').index()
-
-  $('study_level_activities').data("export-options").ignoreColumn = [fulfillments_button_column_index, components_column_index, sla_options_column_index]
+  exclude_from_export('study-level-activities-table')
+  exclude_from_export('fulfillments-table')
