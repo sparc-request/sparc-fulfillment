@@ -19,6 +19,7 @@ before_script:
   - cp dotenv.example .env
   - mysql -e 'create database test_sparc_request;'
   - mysql -e 'create database cwf_test;'
+  - mkdir -p tmp
   - cd ..
   - git clone https://github.com/sparc-request/sparc-request.git
   - cd sparc-request
