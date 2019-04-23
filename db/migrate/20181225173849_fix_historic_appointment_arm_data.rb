@@ -1,6 +1,6 @@
 class FixHistoricAppointmentArmData < ActiveRecord::Migration[5.2]
   def change
-    CSV.open("tmp/fixed_appointment_arm_ids.csv", "wb") do |csv|
+    CSV.open(Rails.root.join("tmp/fixed_appointment_arm_ids.csv"), "wb") do |csv|
       csv << ["Protocol/SSR ID", "Appointment ID", "Participant Name", "Appointment Name", "Incorrect Arm ID", "Correct (new) Arm ID"]
       bar = ProgressBar.new(Appointment.count)
       Appointment.find_each do |appointment|
