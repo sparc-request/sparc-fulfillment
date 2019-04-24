@@ -38,7 +38,7 @@ class Appointment < ApplicationRecord
   has_one :protocol, through: :arm
 
   has_many :appointment_statuses, dependent: :destroy
-  has_many :procedures
+  has_many :procedures, dependent: :destroy
   has_many :notes, as: :notable
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
@@ -80,6 +80,18 @@ class Appointment < ApplicationRecord
     if not (completed_date || has_completed_procedures?)
       self.destroy
     end
+  end
+
+  def destroy
+    if can_be_destroyed?
+      super
+    else
+      raise ActiveRecord::ActiveRecordError
+    end
+  end
+
+  def can_be_destroyed?
+    procedures.where.not(status: 'unstarted').empty?
   end
 
   def formatted_name

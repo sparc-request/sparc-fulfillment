@@ -32,6 +32,8 @@ class Participant < ApplicationRecord
   has_many :notes, as: :notable
   has_many :protocols_participants
   has_many :protocols, through: :protocols_participants
+  has_many :appointments, dependent: :destroy
+  has_many :procedures, through: :appointments
 
   validates :last_name, presence: true
   validates :first_name, presence: true
@@ -128,5 +130,13 @@ class Participant < ApplicationRecord
 
   def can_be_destroyed?
     protocols_participants.empty?
+  end
+
+  def destroy
+    if can_be_destroyed?
+      super
+    else
+      raise ActiveRecord::ActiveRecordError
+    end
   end
 end
