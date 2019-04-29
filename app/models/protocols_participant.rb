@@ -3,7 +3,7 @@ class ProtocolsParticipant < ApplicationRecord
   belongs_to :participant
   belongs_to :arm
 
-  has_many :appointments
+  has_many :appointments, dependent: :destroy
   has_many :procedures, through: :appointments
 
   after_save :update_faye
@@ -25,7 +25,7 @@ class ProtocolsParticipant < ApplicationRecord
   end
 
   def update_appointments_on_arm_change
-    appointments.each{ |appt| appt.destroy_if_incomplete }
+    appointments.each{ |appt| appt.destroy if appt.can_be_destroyed? }
     build_appointments
   end
 

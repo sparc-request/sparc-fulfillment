@@ -76,12 +76,6 @@ class Appointment < ApplicationRecord
     self.completed_date = Time.now
   end
 
-  def destroy_if_incomplete
-    if not (completed_date || has_completed_procedures?)
-      self.destroy
-    end
-  end
-
   def destroy
     if can_be_destroyed?
       super

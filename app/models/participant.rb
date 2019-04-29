@@ -30,9 +30,10 @@ class Participant < ApplicationRecord
   acts_as_paranoid
 
   has_many :notes, as: :notable
-  has_many :protocols_participants
+  has_many :protocols_participants, dependent: :destroy
+
   has_many :protocols, through: :protocols_participants
-  has_many :appointments, dependent: :destroy
+  has_many :appointments, through: :protocols_participants
   has_many :procedures, through: :appointments
 
   validates :last_name, presence: true
@@ -129,7 +130,7 @@ class Participant < ApplicationRecord
   end
 
   def can_be_destroyed?
-    protocols_participants.empty?
+    procedures.where.not(status: 'unstarted').empty?
   end
 
   def destroy
