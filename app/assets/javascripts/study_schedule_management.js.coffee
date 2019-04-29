@@ -181,13 +181,4 @@ $ ->
       url: "/multiple_line_items/edit_line_items"
       data: 'protocol_id': $('#study_schedule_buttons').data('protocol-id')
 
-  $(document).on 'change', "#remove_service_id", ->
-    data =
-      'protocol_id' : $('#study_schedule_buttons').data('protocol-id')
-      'service_id'  : $(this).find('option:selected').val()
-    $.ajax
-      type: 'GET'
-      url: "/multiple_line_items/edit_line_items"
-      data: data
-
 ##          **END MANAGE LINE ITEMS**               ##
