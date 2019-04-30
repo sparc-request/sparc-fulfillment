@@ -17,7 +17,7 @@ task delayed_job_monitor: :environment do
     message = ""
     if delayed_job_webhook.present?
       message += "```[SPARCFulfillment][#{Rails.env}]\n"
-      message += prev_status
+      message += prev_status.split("\n").last # makes sure we only get the last message and not the warnings, this may go away on production
 
       message += "delayed_job: attempting restart\n"
     end
