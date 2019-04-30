@@ -33,6 +33,7 @@
 //= require bootstrap-toggle
 //= require bootstrap-table-export
 //= require bootstrap-table-custom
+//= require xlsx.core.min
 //= require tableExport
 //= require jquery.base64
 //= require moment

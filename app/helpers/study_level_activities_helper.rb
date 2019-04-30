@@ -38,6 +38,16 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def notes notes
+    bullet_point = notes.count > 1 ? "\u2022 " : ""
+    notes.map{ |note| bullet_point + note.comment + ", " + Identity.find(note.identity_id).full_name + ", " + note.created_at.strftime('%Y/%m/%d') }.join("<br>")
+  end
+
+  def documents documents
+    bullet_point = documents.count > 1 ? "\u2022 " : ""
+    documents.map{ |document| bullet_point + document.original_filename }.join("<br>")
+  end
+
   def sla_options_buttons line_item
     options = raw(
       note_list_item({object: line_item, has_notes: line_item.notes.any?})+
