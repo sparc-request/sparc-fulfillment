@@ -35,7 +35,7 @@ class Appointment < ApplicationRecord
   belongs_to :participant
   belongs_to :visit_group
   has_many :appointment_statuses, dependent: :destroy
-  has_many :procedures
+  has_many :procedures, dependent: :destroy
   has_many :notes, as: :notable
 
   has_one :protocol, through: :arm
