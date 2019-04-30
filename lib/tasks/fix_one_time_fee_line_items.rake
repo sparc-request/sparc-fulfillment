@@ -33,12 +33,15 @@ namespace :data do
           service_id = fulfillment_line_item.service_id
           sub_service_request = Sparc::SubServiceRequest.find(fulfillment_line_item.protocol.sub_service_request_id)
           request_line_item = sub_service_request.line_items.where(service_id: service_id).first
+          fulfillment_line_item_with_sparc_id = request_line_item ? fulfillment_line_item.protocol.line_items.where(sparc_id: request_line_item.id).first : nil #siblings with SPARCRequest line item id
 
-          if request_line_item
-            fulfillment_line_item.update_attribute(:sparc_id, request_line_item.id)
-            csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{fulfillment_line_item.protocol.srid}", "#{sub_service_request.id}", "#{request_line_item.id}", ["Sparc ID (of Fulfillment Line Item Table) updated"] ]
+          if fulfillment_line_item_with_sparc_id || request_line_item.nil?
+            new_request_line_item = sub_service_request.line_items.create(service_request_id: sub_service_request.service_request_id, service_id: service_id, quantity: fulfillment_line_item.quantity_requested)
+            fulfillment_line_item.update_attribute(:sparc_id, new_request_line_item.id)
+            csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{fulfillment_line_item.protocol.srid}", "#{sub_service_request.id}", "#{new_request_line_item.id}", "New SPARC Line Item created & Sparc ID (of Fulfillment Line Item Table) updated" ]
           else
-            csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{fulfillment_line_item.protocol.srid}", "#{sub_service_request.id}", "", "No line items (in SPARCRequest) with corresponding Service ID" ]
+            fulfillment_line_item.update_attribute(:sparc_id, request_line_item.id)
+            csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{fulfillment_line_item.protocol.srid}", "#{sub_service_request.id}", "#{request_line_item.id}", "Sparc ID (of Fulfillment Line Item Table) updated" ]
           end
 
         rescue Exception => e
