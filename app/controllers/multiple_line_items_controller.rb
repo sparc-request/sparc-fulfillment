@@ -60,10 +60,7 @@ class MultipleLineItemsController < ApplicationController
   def edit_line_items
     # called to render modal to mass remove line items
     protocol = Protocol.find(params[:protocol_id])
-    @line_items = protocol.line_items.includes(:arm, :service, appointments: :procedures).
-                    select{ |li| li.appointments.none?(&:has_completed_procedures?) }.
-                    group_by{ |li| li.arm.name }.
-                    map{ |arm, lis| [arm, lis.map{ |li| [li.name, li.id] }] }
+    @line_items = protocol.line_items.includes(:arm, :service, appointments: :procedures).select{ |li| li.appointments.none?(&:has_completed_procedures?) }
   end
 
   def destroy_line_items
