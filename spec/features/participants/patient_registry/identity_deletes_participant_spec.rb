@@ -32,6 +32,7 @@ feature 'User deletes Participant', js: true do
 
   scenario 'and connot delete when there is procedure data' do
     given_i_have_a_participant
+    and_the_participant_has_procedure_data
     given_i_am_viewing_the_patient_registry
     then_i_should_see_disabled_delete_button
   end
@@ -44,6 +45,15 @@ feature 'User deletes Participant', js: true do
     @protocol = create_and_assign_protocol_to_me
     @participants = Participant.all.order(Arel.sql("participants.last_name asc"))
     @participant = @participants.first
+  end
+
+  def and_the_participant_has_procedure_data
+    @protocol = create(:protocol)
+    @arm = create(:arm, protocol: @protocol)
+    @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
+    @vg_a        = create(:visit_group, name: 'A', position: 1, day: 2, arm_id: @arm.id)
+    @appointment = create(:appointment, visit_group: @vg_a, protocols_participant: @protocols_participant, name: @vg_a.name, arm_id: @vg_a.arm_id, position: 1)
+    @procedure   = create(:procedure, :complete, appointment: @appointment)
   end
 
   def given_i_am_viewing_the_patient_registry

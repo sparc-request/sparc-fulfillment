@@ -31,7 +31,7 @@ class VisitGroup < ApplicationRecord
   has_many :appointments, dependent: :destroy
 
   has_many :line_items, through: :arm
-  has_many :procedures, through: :appointment
+  has_many :procedures, through: :appointments
 
   default_scope { order(:position) }
 

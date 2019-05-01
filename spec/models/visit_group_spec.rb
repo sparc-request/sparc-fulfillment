@@ -222,13 +222,11 @@ RSpec.describe VisitGroup, type: :model do
 
         it "should not allow the appointment to be deleted if it is completed" do
           @appointment.update_attributes(completed_date: Time.current)
-          @vg_a.destroy
-          expect(@protocols_participant.appointments.empty?).to eq(false)
+          expect{@vg_a.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
         end
 
         it "should not allow the appointment to be deleted if any of it's procedures are completed" do
-          @vg_a.destroy
-          expect(@protocols_participant.appointments.empty?).to eq(false)
+          expect{@vg_a.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
         end
       end
     end
