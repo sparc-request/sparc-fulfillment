@@ -68,7 +68,7 @@ module StudyLevelActivitiesHelper
   end
 
   def fulfillments_drop_button line_item
-    button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", type: 'button', class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
+    button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
   end
 
   def is_protocol_type_study? (protocol)
