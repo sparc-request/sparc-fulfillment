@@ -27,4 +27,5 @@ $("#fulfillments-table").bootstrapTable()
 $('.modal').modal('hide')
 unless $("span#<%= @selector %>.glyphicon").hasClass("blue-glyphicon")
   $("span#<%= @selector %>.glyphicon").addClass("blue-glyphicon")
+$('#study-level-activities-table').bootstrapTable('refresh', {silent: "true"})
 <% end %>
