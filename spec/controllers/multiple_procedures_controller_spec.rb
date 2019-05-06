@@ -30,8 +30,9 @@ RSpec.describe MultipleProceduresController, type: :controller do
     @service     = create(:service)
     protocol     = create(:protocol_imported_from_sparc)
     arm          = protocol.arms.first
-    participant  = arm.participants.first
-    @appointment = create(:appointment, name: "Visit Test", arm: arm, participant: participant)
+    participant  = create(:participant)
+    protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
+    @appointment = create(:appointment, name: "Visit Test", arm: arm, protocols_participant: protocols_participant)
   end
 
   describe 'PUT #update_procedures' do

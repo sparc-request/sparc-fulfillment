@@ -38,11 +38,11 @@ feature 'User creates an appointment note', js: true do
 
   def given_i_am_viewing_an_appointment
     protocol      = create_and_assign_protocol_to_me
-    @participant  = protocol.participants.first
-    @visit_group  = @participant.appointments.first.visit_group
+    @protocols_participant  = protocol.protocols_participants.first
+    @visit_group  = @protocols_participant.appointments.first.visit_group
     @identity     = create(:identity)
 
-    visit participant_path @participant
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: protocol.id)
     wait_for_ajax
 
     bootstrap_select '#appointment_select', @visit_group.name

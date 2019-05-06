@@ -63,8 +63,8 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
   end
 
   def given_a_service_has_completed_procedures
-    participant  = create(:participant_with_appointments, protocol: @protocol, arm: @arm)
-    procedure    = create(:procedure_complete, service: @services.first, appointment: participant.appointments.first, arm: @arm, status: "complete", completed_date: "10/09/2010")
+    protocols_participant  = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @arm)
+    procedure    = create(:procedure_complete, service: @services.first, appointment: protocols_participant.appointments.first, arm: @arm, status: "complete", completed_date: "10/09/2010")
   end
 
   def when_i_click_the_add_services_button

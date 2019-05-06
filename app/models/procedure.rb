@@ -43,7 +43,7 @@ class Procedure < ApplicationRecord
 
   has_one :protocol,    through: :appointment
   has_one :arm,         through: :appointment
-  has_one :participant, through: :appointment
+  has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
   before_update :set_save_dependencies
@@ -239,6 +239,7 @@ class Procedure < ApplicationRecord
     end
 
     if status_changed?(to: "complete")
+
       write_attribute(:service_cost, new_cost(protocol.sparc_funding_source, completed_date))
     end
 

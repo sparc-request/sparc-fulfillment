@@ -30,6 +30,7 @@ class Identity < SparcDbBase
   has_many :reports
   has_many :clinical_providers
   has_many :super_users
+  has_many :patient_registrars
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
@@ -61,5 +62,9 @@ class Identity < SparcDbBase
 
   def professional_org_lookup(org_type)
     professional_organization ? professional_organization.parents_and_self.select{|org| org.org_type == org_type}.first.try(:name) : ""
+  end
+
+  def is_a_patient_registrar?
+    patient_registrars.any?
   end
 end

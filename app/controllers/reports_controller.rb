@@ -34,7 +34,6 @@ class ReportsController < ApplicationController
 
     @report = @report_type.classify.constantize.new(reports_params)
     @errors = @report.errors
-
     if @report.valid?
       @reports_params = reports_params
       @documentable.documents.push @document
@@ -83,6 +82,7 @@ class ReportsController < ApplicationController
               :include_notes,
               :include_invoiced,
               :participant_id,
+              :protocols_participant_id,
               :documentable_id,
               :documentable_type,
               :organizations => [],

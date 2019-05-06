@@ -60,7 +60,7 @@ RSpec.describe NotesController, type: :controller do
   describe 'POST #create' do
 
     it 'should create a new note' do
-      appointment = create(:appointment, name: 'Foggy Bottoms', arm_id: 1, participant_id: 1)
+      appointment = create(:appointment, name: 'Foggy Bottoms', arm_id: 1, protocols_participant_id: 1)
       procedure = create(:procedure, appointment_id: appointment.id)
       params = {
         note: {

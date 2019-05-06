@@ -47,11 +47,11 @@ RSpec.describe FayeJob, type: :job do
       end
     end
 
-    context 'Particpant#save' do
+    context 'ProtocolsParticpant#save' do
 
       before do
         @protocol = create(:protocol)
-        create(:participant, protocol: @protocol)
+        create(:protocols_participant, protocol: @protocol, participant: create(:participant), arm: create(:arm))
       end
 
       it "should POST to the Faye server on the 'protocols' channel" do

@@ -26,8 +26,8 @@ RSpec.describe AppointmentHelper do
     it "should return old statuses" do
       arm = create(:arm)
       protocol = create_and_assign_protocol_to_me
-      participant = create(:participant, arm: arm, protocol: protocol)
-      appointment = create(:appointment, name: "Test Appt", participant: participant, arm: arm)
+      protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: create(:participant))
+      appointment = create(:appointment, name: "Test Appt", protocols_participant: protocols_participant, arm: arm)
       statuses = appointment.appointment_statuses.map{|x| x.status}
       expect(helper.historical_statuses(statuses)).to eq(statuses - Appointment::STATUSES)
     end

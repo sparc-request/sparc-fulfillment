@@ -1,4 +1,10 @@
 class FixDeletedParticipantData < ActiveRecord::Migration[5.2]
+
+  class Appointment < ApplicationRecord
+    belongs_to :participant
+    has_many :procedures
+  end
+
   def change
     CSV.open(Rails.root.join("tmp/fixed_missing_participants.csv"), "wb") do |csv|
       csv << ["Appointment ID", "Appointment Name", "Participant ID", "Participant Name", "Action Taken"]

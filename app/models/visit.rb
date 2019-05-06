@@ -53,8 +53,8 @@ class Visit < ApplicationRecord
     service = self.line_item.service
     new_procedure_values  = []
     new_procedure_columns = [:visit_id, :service_id, :service_name, :billing_type, :sparc_core_id, :sparc_core_name, :appointment_id]
-    self.visit_group.arm.participants.each do |participant|
-      appointment = participant.appointments.where("visit_group_id = ?", self.visit_group.id).first
+    self.visit_group.arm.protocols_participants.each do |protocols_participant|
+      appointment = protocols_participant.appointments.where("visit_group_id = ?", self.visit_group.id).first
       next if (appointment.nil? || appointment.completed_date?)
       
       unless appointment.procedures.empty?

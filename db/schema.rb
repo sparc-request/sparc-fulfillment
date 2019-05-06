@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_25_173849) do
+ActiveRecord::Schema.define(version: 2019_01_16_150033) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "status"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2018_12_25_173849) do
     t.string "contents"
     t.string "type", default: "Appointment"
     t.integer "arm_id"
+    t.integer "protocols_participant_id"
     t.index ["arm_id"], name: "index_appointments_on_arm_id"
     t.index ["sparc_id"], name: "index_appointments_on_sparc_id"
     t.index ["type"], name: "index_appointments_on_type"
@@ -194,8 +195,8 @@ ActiveRecord::Schema.define(version: 2018_12_25_173849) do
     t.integer "sparc_id"
     t.integer "protocol_id"
     t.integer "arm_id"
-    t.string "first_name"
-    t.string "last_name"
+    t.string "first_name", collation: "utf8_unicode_ci"
+    t.string "last_name", collation: "utf8_unicode_ci"
     t.string "mrn"
     t.string "status"
     t.datetime "date_of_birth"
@@ -263,6 +264,21 @@ ActiveRecord::Schema.define(version: 2018_12_25_173849) do
     t.index ["deleted_at"], name: "index_protocols_on_deleted_at"
     t.index ["sparc_id"], name: "index_protocols_on_sparc_id"
     t.index ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id"
+  end
+
+  create_table "protocols_participants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "protocol_id"
+    t.bigint "participant_id"
+    t.bigint "arm_id"
+    t.integer "sparc_id"
+    t.string "status"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["arm_id"], name: "index_protocols_participants_on_arm_id"
+    t.index ["participant_id"], name: "index_protocols_participants_on_participant_id"
+    t.index ["protocol_id", "participant_id"], name: "index_protocols_participants_on_protocol_id_and_participant_id"
+    t.index ["protocol_id"], name: "index_protocols_participants_on_protocol_id"
   end
 
   create_table "sessions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
