@@ -1,16 +1,17 @@
+class Appointment < ApplicationRecord
+  belongs_to :participant
+  has_many :procedures
+end
+
 class FixDeletedParticipantData < ActiveRecord::Migration[5.2]
-
-  class Appointment < ApplicationRecord
-    belongs_to :participant
-    has_many :procedures
-  end
-
   def change
     CSV.open(Rails.root.join("tmp/fixed_missing_participants.csv"), "wb") do |csv|
       csv << ["Appointment ID", "Appointment Name", "Participant ID", "Participant Name", "Action Taken"]
       ##Appointments where participant is missing
-      bar = ProgressBar.new(Appointment.includes(:participant).where(participants: {id: nil}).count)
-      Appointment.includes(:participant).where(participants: {id: nil}).each do |appointment|
+      appointments = Appointment.includes(:participant).where(participants: {id: nil})
+      bar = ProgressBar.new(appointments.count)
+
+      appointments.each do |appointment|
         deleted_participant = Participant.with_deleted.where(id: appointment.participant_id).first
         if deleted_participant
           ##Participant was soft deleted
