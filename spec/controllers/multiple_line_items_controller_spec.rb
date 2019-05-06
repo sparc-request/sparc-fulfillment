@@ -61,8 +61,8 @@ RSpec.describe MultipleLineItemsController, type: :controller do
   describe "GET #edit_line_items" do
 
     it "renders a template to remove a service from multiple arms" do
-      participant = create(:participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first)
-                    create(:procedure_complete, service: @service, appointment: participant.appointments.first, arm: @protocol.arms.first)
+      protocols_participant = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first, participant: create(:participant))
+                    create(:procedure_complete, service: @service, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
       complete_li = create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
 
       get :edit_line_items, params: {
