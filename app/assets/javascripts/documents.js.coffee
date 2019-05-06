@@ -52,16 +52,16 @@ $ ->
   row_index = element.parents().eq(1).attr("data-index")
 
   date_downloaded_element = element.parent().siblings("td.viewed_at")
-  
+
   if date_downloaded_element.text().length == 0
     add_to_report_notification_count(documentable_type, -1)
     
     utcdate = moment().format(I18n["documents"]["date_time_formatter_js"])
-    
+
     $(table_to_update).bootstrapTable 'updateCell', 
-      rowIndex: row_index
-      fieldName: 'viewed_at'
-      fieldValue: utcdate
+      index: row_index
+      field: 'viewed_at'
+      value: utcdate
 
 (exports ? this).refreshDocumentsTables = ->
   $('#documents_table').bootstrapTable('refresh', {silent: "true"})

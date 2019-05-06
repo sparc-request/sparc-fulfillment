@@ -102,3 +102,16 @@ $ ->
 
   $(document).on 'click', '#date_fulfilled_field, #fulfillment_quantity', ->
     allowSubmit = true
+
+  # Do not display in dropdown that allows you to add/remove columns
+  # These columns will always be outputted to the export file
+  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')  
+  # because it will not show up in the export file
+
+  $('#study_level_activities li').find("[data-field='docs']").closest('li').hide()
+  $('#study_level_activities li').find("[data-field='notes']").closest('li').hide()
+  $('#study_level_activities li').find("[data-field='components_export']").closest('li').hide()
+
+  ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
+  exclude_from_export('study-level-activities-table')
+

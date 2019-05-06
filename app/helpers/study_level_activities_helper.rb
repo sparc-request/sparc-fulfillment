@@ -38,6 +38,16 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def notes notes
+    bullet_point = notes.count > 1 ? "\u2022 " : ""
+    notes.map{ |note| bullet_point + note.comment + ", " + Identity.find(note.identity_id).full_name + ", " + note.created_at.strftime('%Y/%m/%d') }.join("<br>")
+  end
+
+  def documents documents
+    bullet_point = documents.count > 1 ? "\u2022 " : ""
+    documents.map{ |document| bullet_point + document.original_filename }.join("<br>")
+  end
+
   def sla_options_buttons line_item
     options = raw(
       note_list_item({object: line_item, has_notes: line_item.notes.any?})+
@@ -58,7 +68,7 @@ module StudyLevelActivitiesHelper
   end
 
   def fulfillments_drop_button line_item
-    button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", type: 'button', class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
+    button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
   end
 
   def is_protocol_type_study? (protocol)

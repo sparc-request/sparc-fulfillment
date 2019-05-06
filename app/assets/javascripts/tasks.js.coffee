@@ -54,7 +54,7 @@ $ ->
 
   - if $("body.tasks-index").length > 0
 
-    $("table.tasks").bootstrapTable('hideColumn', 'id')
+    $("table.tasks").bootstrapTable('hideColumn', 'protocol_id')
 
     $(document).on "change", "#complete, #all_tasks", ->
       scope = if $("#all_tasks").prop("checked") then "all" else "mine"
