@@ -51,7 +51,7 @@ class ProjectSummaryReport < Report
       protocol.arms.each do |arm|
         visit_groups          = arm.visit_groups
         visit_group_subtotals = [0] * visit_groups.count # total costs for each visit group
-        participants = arm.participants
+        protocols_participants = arm.protocols_participants
         participant_totals    = []  # totals per participant
 
         csv << [""]
@@ -62,9 +62,9 @@ class ProjectSummaryReport < Report
         csv << ["", "Patient MRN", "Participant Status", visit_groups.pluck(:name), "Per Patient Invoiceable Total"].flatten
         csv << [""]
 
-        participants.each do |participant|
+        protocols_participants.each do |protocols_participant|
           participant_costs = visit_groups.map do |vg|
-            total_completed_cost_for_participant(vg, participant) || "N/A"
+            total_completed_cost_for_participant(vg, protocols_participant) || "N/A"
           end
 
           participant_total     = sum_up(participant_costs)
@@ -126,8 +126,8 @@ class ProjectSummaryReport < Report
 
   # Totals the service costs (for completed procedures) rendered
   # for given participant.
-  def total_completed_cost_for_participant(vg, participant)
-    (appointment = vg.appointments.where(participant: participant).first) ? total_completed_cost(appointment) : nil
+  def total_completed_cost_for_participant(vg, protocols_participant)
+    (appointment = vg.appointments.where(protocols_participant: protocols_participant).first) ? total_completed_cost(appointment) : nil
   end
 
   def total_completed_cost(appointment)
