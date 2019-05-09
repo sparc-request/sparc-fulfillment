@@ -183,7 +183,7 @@ class InvoiceReport < Report
             org_group.group_by{|procedure| procedure.appointment.visit_group}.each do |visit_group, vg_group|
 
               vg_group.group_by(&:appointment).each do |appointment, appointment_group|
-                participant = appointment.participant
+                participant = appointment.protocols_participant.participant
 
                 appointment_group.group_by(&:service_name).each do |service_name, service_group|
                   procedure = service_group.first
