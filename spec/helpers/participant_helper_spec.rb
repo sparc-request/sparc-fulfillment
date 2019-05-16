@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -26,23 +26,24 @@ RSpec.describe ParticipantHelper do
     it "should return appointments on the arm" do
       protocol = create_and_assign_protocol_to_me
       arm = protocol.arms.last
-      participant = create(:participant, protocol: protocol, arm: arm)
+      protocols_participant = create(:protocols_participant, protocol: protocol, arm: arm, participant: create(:participant))
 
       2.times do
-        create(:appointment, participant: participant, arm: arm, name: "Appt")
-        create(:appointment, participant: participant, arm: protocol.arms.first, name: "Bad Appt")
+        create(:appointment, protocols_participant: protocols_participant, arm: arm, name: "Appt")
+        create(:appointment, protocols_participant: protocols_participant, arm: protocol.arms.first, name: "Bad Appt")
       end
 
-      array = [participant.appointments[0], participant.appointments[2]]
+      array = [protocols_participant.appointments[0], protocols_participant.appointments[2]]
 
-      expect(helper.appointments_for_select(arm, participant)).to eq(array)
+      expect(helper.appointments_for_select(arm, protocols_participant)).to eq(array)
     end
   end
 
   describe "#phoneNumberFormatter" do
     it "should return a formatted phone number if in the form ##########" do
       protocol = create_and_assign_protocol_to_me
-      participant = protocol.arms.first.participants.first
+      protocols_participant = protocol.arms.first.protocols_participants.first
+      participant = Participant.find(protocols_participant.participant_id)
       
       good_phone = "123-123-1234"
       bad_phone  = "5555555555"

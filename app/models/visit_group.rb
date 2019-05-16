@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -28,9 +28,10 @@ class VisitGroup < ApplicationRecord
   belongs_to :arm
 
   has_many :visits, dependent: :destroy
-  has_many :appointments
+  has_many :appointments, dependent: :destroy
 
   has_many :line_items, through: :arm
+  has_many :procedures, through: :appointments
 
   default_scope { order(:position) }
 
@@ -43,8 +44,6 @@ class VisitGroup < ApplicationRecord
   validate :day_must_be_in_order, unless: -> { day.blank? || arm_id.blank? }
   validates :day, numericality: { only_integer: true }, unless: -> { day.blank? }
 
-  before_destroy :check_for_completed_data
-
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)
   end
@@ -53,11 +52,19 @@ class VisitGroup < ApplicationRecord
     visits.joins(:line_item).group(:service_id).sum(:insurance_billing_qty)
   end
 
-  private
-
-  def check_for_completed_data
-    self.appointments.each { |appt| appt.destroy_if_incomplete }
+  def destroy
+    if can_be_destroyed?
+      super
+    else
+      raise ActiveRecord::ActiveRecordError
+    end
   end
+
+  def can_be_destroyed?
+    procedures.where.not(status: 'unstarted').empty?
+  end
+
+  private
 
   # Used to validate :day, when present. Preceding VisitGroup must have a
   # smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).

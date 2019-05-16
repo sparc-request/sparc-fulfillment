@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -99,7 +99,6 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
       @document_id = find("button#study_schedule_report_#{@protocol.id.to_s}")["document_id"]
     when 'participant_report'
       click_link 'Participant Tracker'
-
       first("button.participant_report").click
       wait_for_ajax
 

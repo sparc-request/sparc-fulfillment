@@ -1,4 +1,4 @@
--# Copyright © 2011-2018 MUSC Foundation for Research Development~
+-# Copyright © 2011-2019 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -50,7 +50,7 @@
         %dt
           = t(:participant)[:full_name]
         %dd
-          = task.assignable.participant.full_name
+          = task.assignable.protocols_participant.participant.full_name
         %dt
           = t(:protocol)[:object]
         %dd
@@ -58,7 +58,7 @@
         %dt
           = t(:visit)[:object]
         %dd
-          = task.assignable.visit_group.name
+          = task.assignable.visit_group.nil? ? '' : task.assignable.visit_group.name
         %dt
           = t(:arm)[:object]
         %dd
@@ -66,7 +66,7 @@
         %dt
           = t(:procedure)[:object]
         %dd
-          = link_to task.assignable.service_name, participant_path(id: task.assignable.participant.id, appointment_id: task.assignable.appointment_id)
+          = link_to task.assignable.service_name, participant_path(id: task.assignable.protocols_participant.participant_id, protocol_id: task.assignable.protocol.id, protocols_participant_id: task.assignable.protocols_participant.id, appointment_id: task.assignable.appointment_id)
       %dl.dl-horizontal
         %dt
           = t(:task)[:object]

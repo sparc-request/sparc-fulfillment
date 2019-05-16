@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -23,10 +23,10 @@ FactoryBot.define do
   factory :service, aliases: [:service_created_by_sparc] do
     organization factory: :organization_core
     sequence(:name) { Faker::Commerce.product_name }
-    description 'Description'
-    abbreviation 'Abbreviation'
-    one_time_fee false
-    is_available true
+    description { 'Description' }
+    abbreviation { 'Abbreviation' }
+    one_time_fee { false }
+    is_available { true }
 
     after(:create) do |service|
       pricing_map = build(:pricing_map_past)
@@ -39,8 +39,8 @@ FactoryBot.define do
     end
 
     trait :with_one_time_fee do
-      one_time_fee true
-      components "eine,meine,mo,"
+      one_time_fee { true }
+      components { "eine,meine,mo," }
     end
 
     factory :service_with_one_time_fee, traits: [:with_one_time_fee]

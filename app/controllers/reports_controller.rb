@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -34,7 +34,6 @@ class ReportsController < ApplicationController
 
     @report = @report_type.classify.constantize.new(reports_params)
     @errors = @report.errors
-
     if @report.valid?
       @reports_params = reports_params
       @documentable.documents.push @document
@@ -81,7 +80,9 @@ class ReportsController < ApplicationController
               :sort_by,
               :sort_order,
               :include_notes,
+              :include_invoiced,
               :participant_id,
+              :protocols_participant_id,
               :documentable_id,
               :documentable_type,
               :organizations => [],

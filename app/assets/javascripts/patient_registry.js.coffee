@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -18,31 +18,37 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-require 'rails_helper'
+$ ->
 
-feature 'User views Participant details', js: true do
+  $(document).on 'click', '.new-participant', ->
+    data =
+      'protocol_id' : $(this).data('protocol-id')
 
-  scenario 'and sees the Participants attributes' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_click_the_participant_details_icon
-    then_i_should_see_the_participant_details
-  end
+    $.ajax
+      type: 'GET'
+      url: "/participants/new.js"
+      data: data
 
-  def given_i_am_viewing_the_participant_tracker
-    protocol    = create_and_assign_protocol_to_me
+  $(document).on 'click', '.search-participant', ->
+    data =
+      'protocol_id' : $(this).data('protocol-id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/search.js"
+      data: data
 
-    visit protocol_path(protocol.id)
-    wait_for_ajax
+  $(document).on 'click', '.edit-participant', ->
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/edit"
 
-    click_link 'Participant Tracker'
-    wait_for_ajax
-  end
-
-  def when_i_click_the_participant_details_icon
-    page.find('table.participants tbody tr:first-child td.details a').click
-  end
-
-  def then_i_should_see_the_participant_details
-    expect(page).to have_css('.modal-title', text: 'Participant Details')
-  end
-end
+  $(document).on 'click', '.destroy-participant', ->
+    participant_id = $(this).attr('participant_id')
+    name = $(this).attr('participant_name')
+    if confirm I18n['patient']['confirm_removal_part_1'] + " #{name} " + I18n['patient']['confirm_removal_part_2']
+      $.ajax
+        type: 'DELETE'
+        url: "/participants/#{participant_id}"
+        data: 'protocol_id': $(this).attr('protocol_id')
+    

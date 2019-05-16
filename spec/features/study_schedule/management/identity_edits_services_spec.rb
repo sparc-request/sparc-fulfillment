@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -63,8 +63,8 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
   end
 
   def given_a_service_has_completed_procedures
-    participant  = create(:participant_with_appointments, protocol: @protocol, arm: @arm)
-    procedure    = create(:procedure_complete, service: @services.first, appointment: participant.appointments.first, arm: @arm, status: "complete", completed_date: "10/09/2010")
+    protocols_participant  = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @arm)
+    procedure    = create(:procedure_complete, service: @services.first, appointment: protocols_participant.appointments.first, arm: @arm, status: "complete", completed_date: "10/09/2010")
   end
 
   def when_i_click_the_add_services_button
@@ -85,10 +85,8 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
   end
 
   def when_i_select_a_service_and_arm
-    bootstrap_select "#remove_service_id", "#{@services.first.name}"
-    find("h4#line_item").click # click out of bootstrap multiple select
-
-    bootstrap_select "#remove_service_arm_ids_", "#{@arm.name}"
+    find('#line_item_ids', visible: false).sibling('.dropdown-toggle').click
+    first('.open .dropdown-menu a', text: @services.first.name).click
     find("h4#line_item").click # click out of bootstrap multiple select
   end
 

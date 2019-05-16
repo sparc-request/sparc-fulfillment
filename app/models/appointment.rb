@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -27,27 +27,28 @@ class Appointment < ApplicationRecord
 
   has_paper_trail
   acts_as_paranoid
-  acts_as_list scope: [:arm_id, :participant_id]
+  acts_as_list scope: [:arm_id, :protocols_participant_id]
 
   include CustomPositioning #custom methods around positioning, acts_as_list
 
   belongs_to :arm, -> { with_deleted }
-  belongs_to :participant
+  belongs_to :protocols_participant
   belongs_to :visit_group
-  has_many :appointment_statuses, dependent: :destroy
-  has_many :procedures
-  has_many :notes, as: :notable
 
   has_one :protocol, through: :arm
+
+  has_many :appointment_statuses, dependent: :destroy
+  has_many :procedures, dependent: :destroy
+  has_many :notes, as: :notable
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
   scope :incompleted, -> { where('appointments.completed_date IS NULL') }
   scope :unstarted, -> { where('appointments.start_date IS NULL AND appointments.completed_date IS NULL') }
   scope :with_completed_procedures, -> { joins(:procedures).where("procedures.completed_date IS NOT NULL") }
 
-  validates :participant_id, presence: true
   validates :name, presence: true
   validates :arm_id, presence: true
+  validates :protocols_participant_id, presence: true
 
   accepts_nested_attributes_for :notes
 
@@ -75,10 +76,16 @@ class Appointment < ApplicationRecord
     self.completed_date = Time.now
   end
 
-  def destroy_if_incomplete
-    if not (completed_date || has_completed_procedures?)
-      self.destroy
+  def destroy
+    if can_be_destroyed?
+      super
+    else
+      raise ActiveRecord::ActiveRecordError
     end
+  end
+
+  def can_be_destroyed?
+    procedures.where.not(status: 'unstarted').empty?
   end
 
   def formatted_name

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -73,7 +73,7 @@ class DocumentsController < ApplicationController
                                                           state: "Completed"))
 
         create_document_file
-
+        @selector = "#{@document.unique_selector}_documents"
         flash.now[:success] = t(:documents)[:flash_messages][:created]
       }
     end
@@ -101,7 +101,7 @@ class DocumentsController < ApplicationController
 
   def destroy
     respond_to do |format|
-      format.js {        
+      format.js {
         mark_document_as_accessed if @document.last_accessed_at.nil?
         @document.destroy
 
@@ -136,7 +136,6 @@ class DocumentsController < ApplicationController
       id    = current_identity.id
       type  = 'Identity'
     end
-
     @documentable ||= type.constantize.find id
   end
 

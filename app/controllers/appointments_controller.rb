@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -30,7 +30,6 @@ class AppointmentsController < ApplicationController
   end
 
   def create
-
     @appointment = CustomAppointment.new(custom_appointment_params)
 
     if @appointment.valid?
@@ -50,8 +49,8 @@ class AppointmentsController < ApplicationController
   end
 
   def completed_appointments
-    participant = Participant.find(params[:participant_id])
-    @appointments = participant.appointments.completed
+    protocols_participant = ProtocolsParticipant.find(params[:protocols_participant_id])
+    @appointments = protocols_participant.appointments.completed
     respond_with @appointments
   end
 
@@ -88,7 +87,7 @@ class AppointmentsController < ApplicationController
 
   def custom_appointment_params
     params.require(:custom_appointment)
-          .permit(:arm_id, :participant_id, :name, :position,
+          .permit(:arm_id, :protocols_participant_id, :name, :position,
                  notes_attributes: [:comment, :kind, :identity_id, :reason])
   end
 end

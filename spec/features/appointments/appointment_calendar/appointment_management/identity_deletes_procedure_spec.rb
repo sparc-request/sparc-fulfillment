@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -40,11 +40,11 @@ feature 'Delete Procedure', js: true do
 
   def given_i_am_viewing_a_core_with_n_procedures_such_that_n_is number_of_procedures
     protocol      = create_and_assign_protocol_to_me
-    participant   = protocol.participants.first
-    visit_group   = participant.appointments.first.visit_group
+    protocols_participant   = protocol.protocols_participants.first
+    visit_group   = protocols_participant.appointments.first.visit_group
     service       = protocol.organization.inclusive_child_services(:per_participant).first
 
-    visit participant_path participant
+    visit calendar_participants_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
     bootstrap_select('#appointment_select', visit_group.name)

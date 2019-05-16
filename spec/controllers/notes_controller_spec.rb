@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -60,7 +60,7 @@ RSpec.describe NotesController, type: :controller do
   describe 'POST #create' do
 
     it 'should create a new note' do
-      appointment = create(:appointment, name: 'Foggy Bottoms', arm_id: 1, participant_id: 1)
+      appointment = create(:appointment, name: 'Foggy Bottoms', arm_id: 1, protocols_participant_id: 1)
       procedure = create(:procedure, appointment_id: appointment.id)
       params = {
         note: {

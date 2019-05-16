@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -42,24 +42,27 @@ feature 'User views Participant', js: true do
 
   def given_i_do_not_have_access_to_a_protocol
     @protocol    = create(:protocol_imported_from_sparc)
-    @participant = @protocol.participants.first
+    @protocols_participant = @protocol.protocols_participants.first
   end
 
   def given_i_have_access_to_a_protocol
     @protocol     = create_and_assign_protocol_to_me
-    @participant  = @protocol.participants.first
+    @protocols_participant  = @protocol.protocols_participants.first
   end
 
   def given_i_have_access_to_a_protocol_with_appointments
-    protocol      = create_and_assign_protocol_to_me
-    @participant  = create(:participant_with_completed_appointments,
-                            protocol: protocol,
-                            arm: protocol.arms.first)
-    @appointments = @participant.appointments
+    @protocol     = create_and_assign_protocol_to_me
+    @protocols_participant  = create(:protocols_participant_with_completed_appointments, 
+                            protocol_id: @protocol.id,
+                            arm_id: @protocol.arms.first.id,
+                            participant: create(:participant))
+    @appointments = @protocols_participant.appointments
+
   end
 
   def when_i_view_a_participants_calendar
-    visit participant_path @participant
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
+    wait_for_ajax
     wait_for_ajax
   end
 
@@ -69,11 +72,11 @@ feature 'User views Participant', js: true do
 
   def then_i_should_see_the_participant_calendar
     expect(page).to have_css('#participant-info')
-    expect(page).to have_content(@participant.full_name)
-    expect(page).to have_content(@participant.mrn) unless @participant.mrn.blank?
-    expect(page).to have_content(@participant.external_id) unless @participant.external_id.blank?
-    expect(page).to have_content(@participant.arm.name) unless @participant.arm.blank?
-    expect(page).to have_content(@participant.status)
+    expect(page).to have_content(@protocols_participant.participant.full_name)
+    expect(page).to have_content(@protocols_participant.participant.mrn) unless @protocols_participant.participant.mrn.blank?
+    expect(page).to have_content(@protocols_participant.participant.external_id) unless @protocols_participant.participant.external_id.blank?
+    expect(page).to have_content(@protocols_participant.arm.name) unless @protocols_participant.arm.blank?
+    expect(page).to have_content(@protocols_participant.status)
     expect(page).to have_content(@protocol.id)
   end
 

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,7 +21,7 @@
 module ProtocolHelper
 
   def admin_portal_link(protocol)
-    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-default btn-xs admin_portal_link', title: 'Admin Portal link', aria: { expanded: 'false' }) do
+    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-default btn-xs admin_portal_link', title: t(:protocol)[:admin_portal_link_tooltip], aria: { expanded: 'false' }) do
       content_tag(:span, '', class: 'glyphicon glyphicon-link')
     end
   end

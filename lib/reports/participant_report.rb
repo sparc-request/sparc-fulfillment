@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -20,18 +20,19 @@
 
 class ParticipantReport < Report
 
-  VALIDATES_PRESENCE_OF = [:title, :participant_id].freeze
+  VALIDATES_PRESENCE_OF = [:title, :protocols_participant_id].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
 
   def generate(document)
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
-    participant = Participant.find(@params[:participant_id])
-    protocol    = participant.protocol
+    protocols_participant = ProtocolsParticipant.find(@params[:protocols_participant_id])
+    protocol    = Protocol.find(protocols_participant.protocol_id)
+    participant = Participant.find(protocols_participant.participant_id)
 
     CSV.open(document.path, "wb") do |csv|
-      csv << ["Protocol:", participant.protocol.short_title_with_sparc_id]
+      csv << ["Protocol:", protocol.short_title_with_sparc_id]
       csv << ["Protocol PI Name:", protocol.pi ? "#{protocol.pi.full_name} (#{protocol.pi.email})" : nil]
       csv << ["Participant Name:", participant.full_name]
       csv << ["Participant ID:", participant.label]
@@ -41,7 +42,7 @@ class ParticipantReport < Report
       header_row = ["Visit Schedule", ""]
       label_row = ["Procedure Name", "Service Cost"]
 
-      appointments = participant.appointments.order(:position)
+      appointments = protocols_participant.appointments.order(:position)
 
       appointments.each do |appointment|
         header_row << (appointment.completed_date ? appointment.completed_date.strftime("%D") : "")
@@ -55,14 +56,14 @@ class ParticipantReport < Report
 
       csv << [""]
 
-      procedure_row_generator(participant.procedures.where.not(visit_id: nil), appointments, csv)
+      procedure_row_generator(protocols_participant.procedures.where.not(visit_id: nil), appointments, csv)
 
       csv << [""]
       csv << [""]
       csv << ["Unscheduled Procedures"]
       csv << [""]
 
-      procedure_row_generator(participant.procedures.where(visit_id: nil), appointments, csv)
+      procedure_row_generator(protocols_participant.procedures.where(visit_id: nil), appointments, csv)
 
       csv << [""]
       csv << [""]

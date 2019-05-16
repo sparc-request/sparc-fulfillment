@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,7 +21,7 @@
 <% if !(@appointment.errors.empty?) %>
 $("#appointment_modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @appointment.errors})) %>")
 <% else %>
-$(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {participant: @appointment.participant})) %>")
+$(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {protocols_participant: @appointment.protocols_participant})) %>")
 $("#appointment_select").selectpicker()
 $("#modal_place").modal 'hide'
 <% end %>

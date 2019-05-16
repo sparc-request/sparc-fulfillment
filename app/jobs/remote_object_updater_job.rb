@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -66,11 +66,11 @@ class RemoteObjectUpdaterJob < ActiveJob::Base
 
   def skip_faye_callbacks
     Protocol.skip_callback    :save, :after, :update_faye
-    Participant.skip_callback :save, :after, :update_faye
+    ProtocolsParticipant.skip_callback :save, :after, :update_faye
   end
 
   def set_faye_callbacks
     Protocol.set_callback    :save, :after, :update_faye
-    Participant.set_callback :save, :after, :update_faye
+    ProtocolsParticipant.set_callback :save, :after, :update_faye
   end
 end

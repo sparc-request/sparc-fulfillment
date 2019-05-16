@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {participant: @appointment.participant})) %>")
+$(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {protocols_participant: @appointment.protocols_participant})) %>")
 if "<%= @field %>" == "start_date"
   start_input_div = $('.start_date_input')
   if start_input_div.hasClass('hidden')
@@ -37,4 +37,4 @@ if "<%= @field %>" == "completed_date"
     completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
 
 if "<%= @field %>" == "completed_date" or "<%= @field %>" == "reset_completed_date"
-  $('table#completed-appointments-table').bootstrapTable('refresh', {url: "/appointments/completed_appointments.json?participant_id=<%= @appointment.participant_id %>", silent: "true"})
+  $('table#completed-appointments-table').bootstrapTable('refresh', {url: "/appointments/completed_appointments.json?protocols_participant_id=<%= @appointment.protocols_participant_id %>", silent: "true"})

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -37,8 +37,8 @@ feature 'User deletes Participant', js: true do
   end
 
   def and_the_participant_is_not_deletable
-    participant = Participant.first
-    create(:procedure_complete, appointment: participant.appointments.first, arm: @protocol.arms.first)
+    protocols_participant = ProtocolsParticipant.first
+    create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
   end
 
   def given_i_have_a_participant

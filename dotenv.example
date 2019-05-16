@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -47,3 +47,6 @@ TESTING_EMAIL=sparcrequest@gmail.com
 # add the following lines if you have a Research Master ID service (RMID)
 USE_RMID=false
 RMID_URL=http://url
+# add webhook if you want delayed job monitoring to notify you on slack
+DELAYED_JOB_WEBHOOK=https://hooks.slack.com/services/T03ALDSB7/BG5S03D8B/5pYjtYFcmofzjTM
+DEFAULT_HOME_COLUMNS=srid,rmid,status,short_title,pi,coordinators,irb_approval_date,irb_expiration_date,organizations

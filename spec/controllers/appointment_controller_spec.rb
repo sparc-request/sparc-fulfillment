@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -27,14 +27,15 @@ RSpec.describe AppointmentsController do
     @protocol = create(:protocol_imported_from_sparc)
     @service = create(:service)
     @arm = @protocol.arms.first
-    @participant = create(:participant, arm: @arm, protocol: @protocol)
-    @custom_appointment = create(:custom_appointment, participant: @participant, arm: @arm, name: "Custom Visit", position: 1)
+    @participant = create(:participant)
+    @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
+    @custom_appointment = create(:custom_appointment, protocols_participant: @protocols_participant, arm: @arm, name: "Custom Visit", position: 1)
   end
 
   describe "GET #new" do
     it "should instantiate a new custom appointment" do
       get :new, params: {
-        custom_appointment: { participant_id: @participant.id, arm_id: @arm.id },
+        custom_appointment: { protocols_participant_id: @protocols_participant.id, arm_id: @arm.id },
       }, format: :js, xhr: true
       expect(assigns(:appointment)).to be_a_new(CustomAppointment)
       expect(assigns(:note)).to be_a_new(Note)
@@ -85,7 +86,7 @@ RSpec.describe AppointmentsController do
   describe "PATCH #update" do
     it "should save the start date" do
       tomorrow = Time.now.tomorrow
-      appointment = create(:appointment, start_date: Time.now, arm: @arm, name: "Visit 1", participant: @participant)
+      appointment = create(:appointment, start_date: Time.now, arm: @arm, name: "Visit 1", protocols_participant: @protocols_participant)
       patch :update, params: {
         id: appointment.id,
         field: 'start_date',
@@ -96,7 +97,7 @@ RSpec.describe AppointmentsController do
 
     it "should save the completed date" do
       tomorrow = Time.now.tomorrow
-      appointment = create(:appointment, start_date: Time.current, completed_date: Time.now, arm: @arm, name: "Visit 1", participant: @participant)
+      appointment = create(:appointment, start_date: Time.current, completed_date: Time.now, arm: @arm, name: "Visit 1", protocols_participant: @protocols_participant)
       put :update, params: {
         id: appointment.id,
         field: 'completed_date',

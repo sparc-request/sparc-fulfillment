@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -38,6 +38,12 @@ class IdentityOrganizations
       sub_service_requests: {organization_id: organization_ids}
     ).distinct
 
+  end
+
+  def authorized_protocols
+    ##This is a different version of the above "fulfillment_access_protocols" method, but without eager loading of un-needed relations.
+    fetch_rights
+    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs}).distinct
   end
 
   def fulfillment_organizations_with_protocols

@@ -1,4 +1,4 @@
--# Copyright © 2011-2018 MUSC Foundation for Research Development~
+-# Copyright © 2011-2019 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -31,7 +31,6 @@
         = render partial: 'required_fields'
         .row
           .col-md-12
-            = p.hidden_field :protocol_id
             .form-group
               = p.label "last_name", t(:participant)[:last_name]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "last_name", {class: 'form-control'}
@@ -48,9 +47,6 @@
             .form-group
               = p.label "external_id", t(:participant)[:id], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "external_id", {class: 'form-control'}
-            .form-group
-              = p.label "status", t(:participant)[:status], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "status", Participant::STATUS_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
             .form-group
               = p.label "date_of_birth", t(:participant)[:dob]+t(:actions)[:required], class: "col-sm-4 control-label "
               .col-sm-7

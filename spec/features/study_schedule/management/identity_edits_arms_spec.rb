@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -99,8 +99,8 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
 
   def given_there_is_an_arm_with_completed_procedures
-    participant  = create(:participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first)
-    procedure    = create(:procedure_complete, appointment: participant.appointments.first, arm: @protocol.arms.first, status: "complete", completed_date: Date.today.strftime('%m/%d/%Y'), service: create(:service))
+    protocols_participant  = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first, participant: create(:participant))
+    procedure    = create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first, status: "complete", completed_date: Date.today.strftime('%m/%d/%Y'), service: create(:service))
 
     visit protocol_path @protocol
     wait_for_ajax

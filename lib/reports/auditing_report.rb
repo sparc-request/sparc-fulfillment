@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -67,7 +67,7 @@ class AuditingReport < Report
         protocols.each do |protocol|
           protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
             appointment = procedure.appointment
-            participant = appointment.participant
+            participant = appointment.protocols_participant.participant
 
             data = [ protocol.srid ]
             data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}

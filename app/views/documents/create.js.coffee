@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -20,6 +20,12 @@
 
 <% if @error.present? %>
 $('#doc_modal_errors').empty().append("<div class='alert alert-danger'><%= @error %></div>")
+<% elsif @document.documentable_type == "Fulfillment" %>
+##Document is being added to Fulfillment
+$("#modal_area").html("<%= escape_javascript(render(partial: 'study_level_activities/fulfillments_table', locals: {line_item: @document.documentable.line_item, header_text: 'Fulfillments List'})) %>")
+$("#fulfillments-table").bootstrapTable()
 <% else %>
+##Document is being added to Line Item
+$('#study-level-activities-table').bootstrapTable('refresh', {silent: "true"})
 $('.modal').modal('hide')
 <% end %>

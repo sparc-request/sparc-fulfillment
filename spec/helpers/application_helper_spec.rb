@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -90,7 +90,7 @@ RSpec.describe ApplicationHelper do
                 button_class: ''}
 
       it "should return a blue button with white text" do
-        expect(helper.notes_button(params)).to have_selector(".blue-notes")
+        expect(helper.notes_button(params)).to have_selector(".blue-glyphicon")
       end
     end
   end

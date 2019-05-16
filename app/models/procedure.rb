@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -27,7 +27,7 @@ class Procedure < ApplicationRecord
                       'Assessment not yet IRB approved', 'Duplicated assessment',
                       'Assessment performed by other personnel/study staff', 'Participant refused assessment',
                       'Assessment not performed due to equipment failure', 'Not collected/not done--unknown reason',
-                      'Not applicable for this visit'].freeze
+                      'Not applicable for this visit', 'Other'].freeze
 
   has_paper_trail
   acts_as_paranoid
@@ -43,7 +43,7 @@ class Procedure < ApplicationRecord
 
   has_one :protocol,    through: :appointment
   has_one :arm,         through: :appointment
-  has_one :participant, through: :appointment
+  has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
   before_update :set_save_dependencies
@@ -239,6 +239,7 @@ class Procedure < ApplicationRecord
     end
 
     if status_changed?(to: "complete")
+
       write_attribute(:service_cost, new_cost(protocol.sparc_funding_source, completed_date))
     end
 

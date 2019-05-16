@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,13 +21,13 @@
 FactoryBot.define do
 
   factory :line_item do
-    arm nil
-    service nil
-    protocol nil
-    name nil
+    arm { nil }
+    service { nil }
+    protocol { nil }
+    name { nil }
     sparc_id
     quantity_requested { Faker::Number.number(3) }
-    quantity_type "Each"
+    quantity_type { "Each" }
 
     trait :with_fulfillments do
       after(:create) do |line_item, evaluator|

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -31,9 +31,11 @@ feature 'Identity adds service to completed visit', js: :true do
       services  = protocol.organization.inclusive_child_services(:per_participant)
       arm       = create(:arm_with_visit_groups, protocol: protocol)
       line_item = create(:line_item, arm: arm, service: services.first, protocol: protocol)
-      participant  = create(:participant_with_completed_appointments,
+      participant = create(:participant)
+      protocols_participant  = create(:protocols_participant_with_completed_appointments,
                             protocol: protocol,
-                            arm: protocol.arms.first)
+                            arm: protocol.arms.first,
+                            participant: participant)
 
       visit protocol_path protocol
       wait_for_ajax

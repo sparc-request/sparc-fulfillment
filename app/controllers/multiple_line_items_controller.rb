@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -59,34 +59,13 @@ class MultipleLineItemsController < ApplicationController
 
   def edit_line_items
     # called to render modal to mass remove line items
-    @protocol = Protocol.find params[:protocol_id]
-    @all_services = @protocol.line_items.map(&:service).uniq
-    @service = params[:service_id].present? ? Service.find(params[:service_id]) : @all_services.first
-    @arms = @protocol.arms.select{ |arm| arm.line_items.detect{|li| li.service_id == @service.id} }
+    protocol = Protocol.find(params[:protocol_id])
+    @line_items = protocol.line_items.includes(:arm, :service, appointments: :procedures).select{ |li| li.appointments.none?(&:has_completed_procedures?) }
   end
 
   def destroy_line_items
     # handles submission of the remove line items form
-    @service = Service.find(params[:remove_service_id])
-    if params[:remove_service_arm_ids] # if they selected arms, otherwise add error
-      @arm_ids = [params[:remove_service_arm_ids]].flatten
-      line_items = @arm_ids.map{ |arm_id| LineItem.where("arm_id = #{arm_id} AND service_id = #{@service.id}").first } # get line_items to delete
-      @line_item_ids = line_items.map(&:id)
-      line_items.each do |li|
-        #TODO this keeps you from deleting if the appointment has ANY completed procedure
-        if li.visit_groups.map(&:appointments).flatten.map{|a| a.has_completed_procedures?}.include?(true) # don't delete if line_item has completed procedures
-          @service.errors.add(:service, "'#{li.name}' on Arm '#{li.arm.name}' has completed procedures and cannot be deleted")
-        end
-      end
-      unless @service.errors.present?
-        line_items.each{ |li| li.destroy }
-        flash.now[:success] = t(:services)[:deleted]
-      else
-        @errors = @service.errors
-      end
-    else
-      @service.errors.add(:arms, "to remove '#{@service.name}' from must be selected")
-      @errors = @service.errors
-    end
+    @line_items = LineItem.where(id: params[:line_item_ids]).destroy_all
+    flash.now[:success] = t(:services)[:deleted]
   end
 end

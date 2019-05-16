@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -33,6 +33,7 @@ class LineItem < ApplicationRecord
   has_many :admin_rates, primary_key: :sparc_id
 
   has_many :visit_groups, through: :arm
+  has_many :appointments, through: :visit_groups
 
   has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, dependent: :destroy
 

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -22,13 +22,13 @@ FactoryBot.define do
 
   factory :protocol, aliases: [:protocol_complete] do
     sparc_id
-    sub_service_request nil
+    sub_service_request { nil }
     sponsor_name { Faker::Company.name }
     udak_project_number { Faker::Company.duns_number }
     start_date { Faker::Date.between(10.years.ago, 3.days.ago) }
-    end_date Time.current
+    end_date { Time.current }
     recruitment_start_date { Faker::Date.between(10.years.ago, 3.days.ago) }
-    recruitment_end_date Time.current
+    recruitment_end_date { Time.current }
     study_cost { Faker::Number.number(8) }
 
     after(:create) do |protocol, evaluator|

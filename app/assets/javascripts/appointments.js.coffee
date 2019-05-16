@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -262,10 +262,10 @@ $ ->
     $(this).closest('.align-select-menu').find('.complete_all, .incomplete_all').toggleClass('disabled', all_unchecked)
 
   $(document).on 'click', 'button.appointment.new', ->
-    participant_id = $(this).data('participant-id')
+    protocols_participant_id = $(this).data('protocols-participant-id')
     arm_id = $(this).data('arm-id')
 
-    data = custom_appointment: participant_id: participant_id, arm_id: arm_id
+    data = custom_appointment: arm_id: arm_id, protocols_participant_id: protocols_participant_id
 
     $.ajax
       type: 'GET'

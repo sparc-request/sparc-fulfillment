@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -43,9 +43,10 @@ $ ->
       $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
     $(document).on 'click', '.financial', ->
+      $(this).addClass('active')
+      $('.management').removeClass('active')
       $('#protocol-list').removeClass('custom_striped')
       $('#protocol-list').addClass('custom_striped_financial')
-      $('#protocol-list').bootstrapTable('hideColumn', 'updates')
       $('#protocol-list').bootstrapTable('hideColumn', 'status')
       $('#protocol-list').bootstrapTable('hideColumn', 'short_title')
       $('#protocol-list').bootstrapTable('hideColumn', 'coordinators')
@@ -55,12 +56,12 @@ $ ->
       $('#protocol-list').bootstrapTable('showColumn', 'total_at_approval')
       $('#protocol-list').bootstrapTable('showColumn', 'percent_subsidy')
       $('#protocol-list').bootstrapTable('showColumn', 'subsidy_committed')
-      $('#protocol-list').bootstrapTable('showColumn', 'subsidy_expended')
 
     $(document).on 'click', '.management', ->
+      $(this).addClass('active')
+      $('.financial').removeClass('active')
       $('#protocol-list').addClass('custom_striped')
       $('#protocol-list').removeClass('custom_striped_financial')
-      $('#protocol-list').bootstrapTable('showColumn', 'updates')
       $('#protocol-list').bootstrapTable('showColumn', 'status')
       $('#protocol-list').bootstrapTable('showColumn', 'short_title')
       $('#protocol-list').bootstrapTable('showColumn', 'coordinators')
@@ -70,7 +71,6 @@ $ ->
       $('#protocol-list').bootstrapTable('hideColumn', 'total_at_approval')
       $('#protocol-list').bootstrapTable('hideColumn', 'percent_subsidy')
       $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
-      $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_expended')
 
     $(window).scroll ->
       if $(this).scrollTop() > 50

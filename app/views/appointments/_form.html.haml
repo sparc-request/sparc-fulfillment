@@ -1,4 +1,4 @@
--# Copyright © 2011-2018 MUSC Foundation for Research Development~
+-# Copyright © 2011-2019 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,7 +21,7 @@
 .modal-dialog
   .modal-content
     = form_for appointment, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
-      = form.hidden_field :participant_id
+      = form.hidden_field :protocols_participant_id
       = form.hidden_field :arm_id
       .modal-header
         %button.close{type: 'button', data: {dismiss: 'modal'}}
@@ -39,7 +39,7 @@
             = form.text_field :name, {class: 'form-control'}
         .form-group
           = form.label "position", t(:appointment)[:position], class: "col-sm-3 control-label"
-          .col-sm-8= form.select "position", options_from_collection_for_select(appointment.arm.appointments.where(participant_id: appointment.participant_id), 'position', 'insertion_name') << app_add_as_last_option(appointment), {include_blank: ''}, class: "form-control selectpicker visit-group-position"
+          .col-sm-8= form.select "position", options_from_collection_for_select(appointment.arm.appointments.where(protocols_participant_id: appointment.protocols_participant_id), 'position', 'insertion_name') << app_add_as_last_option(appointment), {include_blank: ''}, class: "form-control selectpicker visit-group-position"
         = form.fields_for :notes, note do |note_form|
           = note_form.hidden_field :kind
           = note_form.hidden_field :identity_id, value: current_identity.id

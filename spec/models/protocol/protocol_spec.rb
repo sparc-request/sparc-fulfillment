@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -29,7 +29,7 @@ RSpec.describe Protocol, type: :model do
 
   it { is_expected.to have_many(:arms).dependent(:destroy) }
   it { is_expected.to have_many(:line_items).dependent(:destroy) }
-  it { is_expected.to have_many(:participants).dependent(:destroy) }
+  it { is_expected.to have_many(:protocols_participants).dependent(:destroy) }
   it { is_expected.to have_many(:project_roles) }
   it { is_expected.to have_many(:service_requests) }
   it { is_expected.to belong_to(:sub_service_request) }

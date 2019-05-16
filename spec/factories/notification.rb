@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,37 +21,37 @@
 FactoryBot.define do
 
   factory :notification, aliases: [:notification_protocol_create] do
-    sparc_id 1
-    kind 'Protocol'
-    action 'create'
-    callback_url 'http://localhost:5000/v1/protocols/1.json'
+    sparc_id { 1 }
+    kind { 'Protocol' }
+    action { 'create' }
+    callback_url { 'http://localhost:5000/v1/protocols/1.json' }
 
     trait :protocol do
-      kind 'Protocol'
-      callback_url 'http://localhost:5000/v1/protocols/1.json'
+      kind { 'Protocol' }
+      callback_url { 'http://localhost:5000/v1/protocols/1.json' }
     end
 
     trait :study do
-      kind 'Study'
-      callback_url 'http://localhost:5000/v1/study/1.json'
+      kind { 'Study' }
+      callback_url { 'http://localhost:5000/v1/study/1.json' }
     end
 
     trait :service do
-      kind 'Service'
-      callback_url 'http://localhost:5000/v1/services/1.json'
+      kind { 'Service' }
+      callback_url { 'http://localhost:5000/v1/services/1.json' }
     end
 
     trait :sub_service_request do
-      kind 'SubServiceRequest'
-      callback_url 'http://localhost:5000/v1/sub_service_requests/1.json'
+      kind { 'SubServiceRequest' }
+      callback_url { 'http://localhost:5000/v1/sub_service_requests/1.json' }
     end
 
     trait :create do
-      action 'create'
+      action { 'create' }
     end
 
     trait :update do
-      action 'update'
+      action { 'update' }
     end
 
     factory :notification_service_create,             traits: [:service, :create]

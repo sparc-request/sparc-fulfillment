@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,16 +21,16 @@
 FactoryBot.define do
 
   factory :pricing_map, aliases: [:pricing_map_present] do
-    effective_date Time.current
-    full_rate 500.0
-    quantity_type "Each"
+    effective_date { Time.current }
+    full_rate { 500.0 }
+    quantity_type { "Each" }
 
     trait :future do
-      effective_date Time.current + 25.days
+      effective_date { Time.current + 25.days }
     end
 
     trait :past do
-      effective_date Time.current - 25.days
+      effective_date { Time.current - 25.days }
     end
 
     factory :pricing_map_future, traits: [:future]

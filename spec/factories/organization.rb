@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -22,11 +22,11 @@ FactoryBot.define do
 
   factory :organization do
     sequence(:name) { |n| "Fake Organization #{n}" }  # need this for fake data
-    process_ssrs false
+    process_ssrs { false }
 
     transient do
-      children_count 0
-      has_protocols false
+      children_count { 0 }
+      has_protocols { false }
     end
 
     after :create do |organization, evaluator|
@@ -59,20 +59,20 @@ FactoryBot.define do
     end
 
     trait :institution do
-      type "Institution"
-      parent_id nil
+      type { "Institution" }
+      parent_id { nil }
     end
 
     trait :core do
-      type "Core"
+      type { "Core" }
     end
 
     trait :program do
-      type "Program"
+      type { "Program" }
     end
 
     trait :provider do
-      type "Provider"
+      type { "Provider" }
     end
 
     trait :with_protocols do
