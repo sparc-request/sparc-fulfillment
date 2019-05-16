@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,9 +21,9 @@
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @report.errors})) %>");
 if $("#modal_errors > .alert.alert-danger > p").length == 0
   <% if @reports_params %>
-  <% if not @reports_params[:participant_id].blank? %>
-  $("#participant_report_<%= @reports_params[:participant_id] %>").data("document_id", "<%= @document.id %>")
-  $("#participant_report_<%= @reports_params[:participant_id] %>").attr("document_id", "<%= @document.id %>")
+  <% if not @reports_params[:protocols_participant_id].blank? %>
+  $("#participant_report_<%= @reports_params[:protocols_participant_id] %>").data("document_id", "<%= @document.id %>")
+  $("#participant_report_<%= @reports_params[:protocols_participant_id] %>").attr("document_id", "<%= @document.id %>")
   <% elsif @document.documentable_type == 'Protocol' %>
   $("#study_schedule_report_<%= @reports_params[:protocol_id] %>").data("document_id", "<%= @document.id %>")
   $("#study_schedule_report_<%= @reports_params[:protocol_id] %>").attr("document_id", "<%= @document.id %>")

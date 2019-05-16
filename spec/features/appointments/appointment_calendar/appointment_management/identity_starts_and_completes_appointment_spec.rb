@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -99,11 +99,11 @@ feature 'Start Complete Buttons', js: true do
 
   def given_i_am_viewing_an_appointment
     @protocol    = create_and_assign_protocol_to_me
-    @participant = @protocol.participants.first
-    @appointment = @participant.appointments.first
+    @protocols_participant = @protocol.protocols_participants.first
+    @appointment = @protocols_participant.appointments.first
     @visit_group = @appointment.visit_group
 
-    visit participant_path(@participant)
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
     wait_for_ajax
     bootstrap_select '#appointment_select', @visit_group.name
     wait_for_ajax
@@ -127,7 +127,7 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def when_i_load_the_page
-    visit current_path
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
     wait_for_ajax
 
     find('#completed-appointments-table tr', text: @visit_group.name).click
@@ -135,7 +135,7 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def when_i_load_the_page_and_select_a_visit
-    visit current_path
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
     wait_for_ajax
 
     bootstrap_select '#appointment_select', @visit_group.name

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -30,10 +30,16 @@ class Identity < SparcDbBase
   has_many :reports
   has_many :clinical_providers
   has_many :super_users
+  has_many :patient_registrars
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
   def protocols
+    IdentityOrganizations.new(id).authorized_protocols
+  end
+
+  def protocols_full
+    ##Includes relationship objects
     IdentityOrganizations.new(id).fulfillment_access_protocols
   end
 
@@ -56,5 +62,9 @@ class Identity < SparcDbBase
 
   def professional_org_lookup(org_type)
     professional_organization ? professional_organization.parents_and_self.select{|org| org.org_type == org_type}.first.try(:name) : ""
+  end
+
+  def is_a_patient_registrar?
+    patient_registrars.any?
   end
 end

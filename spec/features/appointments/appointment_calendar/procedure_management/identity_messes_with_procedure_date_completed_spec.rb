@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -60,11 +60,11 @@ feature 'User messes with a procedures date completed', js: true do
     @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
 
     @protocol     = create_and_assign_protocol_to_me
-    @participant  = @protocol.participants.first
+    @protocols_participant  = @protocol.protocols_participants.first
     service      = @protocol.organization.inclusive_child_services(:per_participant).first
     @pricing_map   = create(:pricing_map, service: service, effective_date: @the_middle_of_next_month)
 
-    visit participant_path(@participant)
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
   end
 
@@ -99,7 +99,7 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def when_i_add_a_procedure
-    visit_group = @participant.appointments.first.visit_group
+    visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
     bootstrap_select('#appointment_select', visit_group.name)

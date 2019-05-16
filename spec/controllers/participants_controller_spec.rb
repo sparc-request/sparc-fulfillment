@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -22,23 +22,56 @@ require 'rails_helper'
 
 RSpec.describe ParticipantsController do
 
+  login_user
+
+  describe "GET #index" do
+
+    context 'current_identity is patient_registrar' do
+
+      context 'content-type: text/html' do
+        before :each do
+          get :index, format: :html
+        end
+
+        it { is_expected.to render_template :index }
+        it { is_expected.to respond_with :ok }
+      end
+    end
+
+    context 'content-type: application/json' do
+      before :each do
+        get :index, format: :json
+      end
+
+      it 'assigns @partcipants' do
+        expect(assigns(:participants)).to be
+      end
+
+      it { is_expected.to render_template :index }
+      it { is_expected.to respond_with :ok }
+    end
+  end
+
   before :each do
     sign_in
     @protocol = create(:protocol)
     @arm = create(:arm, protocol_id: @protocol.id)
-    @participant = create(:participant, protocol_id: @protocol.id)
+    @participant = create(:participant)
+    @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
+    create(:patient_registrar, identity: Identity.last, organization: create(:organization))
   end
 
   describe "GET #index" do
     it "should get participants" do
-      get :index, params: { protocol_id: @protocol.id }, format: :json
-      expect(assigns(:participants)).to eq([@participant])
+      @participant2 = create(:participant)
+      get :index, format: :json
+      expect(assigns(:participants)).to eq([@participant, @participant2])
     end
   end
 
   describe "GET #new" do
     it "should instantiate a new participant" do
-      get :new, params: { protocol_id: @protocol.id }, format: :js, xhr: true
+      get :new, format: :js, xhr: true
       expect(assigns(:participant)).to be_a_new(Participant)
     end
   end
@@ -49,46 +82,36 @@ RSpec.describe ParticipantsController do
       bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
       attributes.delete_if {|key| bad_attributes.include?(key)}
       attributes[:date_of_birth] = "09/10/2015"
+      attributes[:mrn] = "888"
       expect{
         post :create, params: { participant: attributes }, format: :js
       }.to change(Participant, :count).by(1)
     end
 
     it "should assign the arm if there is only one arm on a protocol" do
-      attributes = @participant.attributes
-      bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
-      attributes.delete_if {|key| bad_attributes.include?(key)}
-      attributes[:date_of_birth] = "09/10/2015"
-
-      post :create, params: {
+      post :update_protocol_association, params: {
         protocol_id: @protocol.id,
-        participant: attributes
+        participant_id: create(:participant),
+        checked: true
       }, format: :js, xhr: true
-
-      expect(assigns(:participant).arm).to eq(@arm)
+      expect(assigns(:protocols_participant).arm).to eq(@arm)
     end
 
     it "should not assign the arm if there are multiple arms on a protocol" do
-      attributes = @participant.attributes
-      bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
-      attributes.delete_if {|key| bad_attributes.include?(key)}
-      attributes[:date_of_birth] = "09/10/2015"
-
       create(:arm, protocol_id: @protocol.id)
       
-      post :create, params: {
+      post :update_protocol_association, params: {
         protocol_id: @protocol.id,
-        participant: attributes
+        participant_id: create(:participant).id,
+        checked: true
       }, format: :js, xhr: true
-
-      expect(assigns(:participant).arm.nil?).to eq(true)
+      expect(assigns(:protocols_participant).arm.nil?).to eq(true)
     end
   end
 
   describe "GET #edit" do
     it "should select an instantiated participant" do
       get :edit, params: {
-        protocol_id: @protocol.id,
         id: @participant.id
       }, format: :js, xhr: true
       expect(assigns(:participant)).to eq(@participant)
@@ -130,14 +153,15 @@ RSpec.describe ParticipantsController do
 
   describe "PUT #update_arm" do
     it "should change a participant's arm" do
+      @protocols_participant.update_attributes(protocol_id: @protocol.id, participant_id: @participant.id)
       @arm = create(:arm, protocol_id: @protocol.id)
       put :update_arm, params: {
         protocol_id: @protocol.id,
         participant_id: @participant.id,
-        participant: {arm_id: @arm.id}
+        protocols_participant: {arm_id: @arm.id}
       }, format: :js
-      @participant.reload
-      expect(@participant.arm_id).to eq @arm.id
+      @protocols_participant.reload
+      expect(@protocols_participant.arm_id).to eq @arm.id
     end
   end
 

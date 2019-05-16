@@ -1,4 +1,4 @@
-// Copyright © 2011-2018 MUSC Foundation for Research Development~
+// Copyright © 2011-2019 MUSC Foundation for Research Development~
 // All rights reserved.~
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -33,6 +33,7 @@
 //= require bootstrap-toggle
 //= require bootstrap-table-export
 //= require bootstrap-table-custom
+//= require xlsx.core.min
 //= require tableExport
 //= require jquery.base64
 //= require moment
@@ -53,6 +54,7 @@
 //= require study_schedule_management
 //= require participants
 //= require participant_tracker
+//= require patient_registry
 //= require appointments
 //= require autoload_appointment
 //= require tasks

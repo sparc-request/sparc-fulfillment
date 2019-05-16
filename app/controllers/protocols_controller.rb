@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,7 +21,7 @@
 class ProtocolsController < ApplicationController
 
   before_action :find_protocol, only: [:show]
-  before_action :authorize_protocol, only: [:show]
+  before_action :authorize_protocol, only: [:show], :unless => proc { |controller| controller.request.format.json? }
 
   respond_to :json, :html
 
@@ -87,7 +87,7 @@ class ProtocolsController < ApplicationController
   end
 
   def find_protocols_for_index
-    @protocols = current_identity.protocols
+    @protocols = current_identity.protocols_full
     @protocols = @protocols.order(Arel.sql("#{@sort}")) if @sort
     @protocols = @protocols.where(sub_service_requests: { status: @status }) if @status != 'all'
     @total = @protocols.count

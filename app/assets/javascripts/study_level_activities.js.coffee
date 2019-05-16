@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -102,3 +102,16 @@ $ ->
 
   $(document).on 'click', '#date_fulfilled_field, #fulfillment_quantity', ->
     allowSubmit = true
+
+  # Do not display in dropdown that allows you to add/remove columns
+  # These columns will always be outputted to the export file
+  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')  
+  # because it will not show up in the export file
+
+  $('#study_level_activities li').find("[data-field='docs']").closest('li').hide()
+  $('#study_level_activities li').find("[data-field='notes']").closest('li').hide()
+  $('#study_level_activities li').find("[data-field='components_export']").closest('li').hide()
+
+  ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
+  exclude_from_export('study-level-activities-table')
+

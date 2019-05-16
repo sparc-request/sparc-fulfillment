@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,12 +21,12 @@
 FactoryBot.define do
 
   factory :visit do
-    line_item nil
-    visit_group nil
+    line_item { nil }
+    visit_group { nil }
     sparc_id
-    research_billing_qty 0
-    insurance_billing_qty 0
-    effort_billing_qty 0
+    research_billing_qty { 0 }
+    insurance_billing_qty { 0 }
+    effort_billing_qty { 0 }
 
     trait :with_complete_procedures do
       association :line_item, :with_service
@@ -42,15 +42,15 @@ FactoryBot.define do
     end
 
     trait :with_billing do
-      research_billing_qty 1
-      insurance_billing_qty 1
-      effort_billing_qty 1
+      research_billing_qty { 1 }
+      insurance_billing_qty { 1 }
+      effort_billing_qty { 1 }
     end
 
     trait :without_billing do
-      research_billing_qty 0
-      insurance_billing_qty 0
-      effort_billing_qty 0
+      research_billing_qty { 0 }
+      insurance_billing_qty { 0 }
+      effort_billing_qty { 0 }
     end
 
     factory :visit_with_complete_and_incomplete_procedures, traits: [:with_complete_procedures, :with_incomplete_procedures]

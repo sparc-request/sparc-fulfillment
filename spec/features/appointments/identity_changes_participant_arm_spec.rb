@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -35,21 +35,21 @@ feature "Change Participant Arm", js: :true do
   def when_i_start_work_on_an_appointment
     @protocol     = create_and_assign_protocol_to_me
     @original_arm = @protocol.arms.first
-    @participant  = @protocol.participants.first
-    @participant.update_attribute(:arm_id, @original_arm.id)
+    @protocols_participant  = @protocol.protocols_participants.first
+    @protocols_participant.update_attribute(:arm_id, @original_arm.id)
     @procedure = create(:procedure, visit_group: @original_arm.visit_groups.first, completed_date: "08/08/2013")
     @service   = @protocol.organization.inclusive_child_services(:per_participant).first
     
-    visit participant_path @participant
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
 
   end
 
   def then_i_change_the_arm_of_the_participant
     @new_arm = create(:arm, protocol_id: @protocol.id)
-    @participant.update_attribute(:arm_id, @new_arm.id)
+    @protocols_participant.update_attribute(:arm_id, @new_arm.id)
     
-    visit participant_path @participant
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
   end
 
@@ -59,7 +59,7 @@ feature "Change Participant Arm", js: :true do
   end
 
   def then_i_switch_back_to_the_original_arm
-    @participant.update_attribute(:arm_id, @original_arm.id)
+    @protocols_participant.update_attribute(:arm_id, @original_arm.id)
   end
 
   def and_all_the_visits_should_appear

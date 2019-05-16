@@ -1,4 +1,4 @@
--# Copyright © 2011-2018 MUSC Foundation for Research Development~
+-# Copyright © 2011-2019 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -29,7 +29,6 @@
         = link_to t(:protocol)[:tabs][:participant_tracker], "#participant_tracker", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'participant_tracker'}
     %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "study_level_activities" ? "active" : "")}
       = link_to t(:protocol)[:tabs][(is_protocol_type_study? (@protocol)) ? :study_level_activities : :project_level_activities], "#study_level_activities", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_level_activities'}
-
     %li.custom-tab.protocol-tab{role: 'presentation', :id => "protocol-reports-tab", class: (@current_protocol_tab == "reports" ? "active" : "")}
       = link_to t(:protocol)[:tabs][:reports], "#reports", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'reports'}
       - if @protocol.unaccessed_documents_count > 0
@@ -42,7 +41,7 @@
         = render partial: 'study_schedule/calendar', locals: {protocol: @protocol, page: @page, tab: (cookies["active-schedule-tab".to_sym]) ? cookies["active-schedule-tab".to_sym] : 'template'}
 
       .tab-pane#participant_tracker{role: 'tabpanel', class: (@current_protocol_tab == "participant_tracker" ? "active" : "")}
-        = render partial: 'participant_tracker', locals: {protocol: @protocol}
+        = render partial: 'participants/participant_tracker', locals: {protocol: @protocol}
 
     .tab-pane#study_level_activities{role: 'tabpanel', class: (@current_protocol_tab == "study_level_activities" ? "active" : "")}
       = render partial: 'study_level_activities', locals: {protocol: @protocol}

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -24,6 +24,6 @@ class HumanSubjectsInfo < SparcDbBase
   belongs_to :protocol, primary_key: :sparc_id
 
   def irb_number
-    pro_number.blank? ? hr_number : pro_number
+    pro_number
   end
 end

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -86,7 +86,7 @@ RSpec.describe LineItemsController do
     end
 
     it "should update a pppv LineItem and update associated procedures" do
-      create(:procedure, visit: create(:visit, line_item: @pppv_line_item, visit_group: create(:visit_group, arm: @pppv_line_item.arm)), appointment: create(:appointment, arm: @pppv_line_item.arm, name: "this", participant: create(:participant, protocol: @protocol)))
+      create(:procedure, visit: create(:visit, line_item: @pppv_line_item, visit_group: create(:visit_group, arm: @pppv_line_item.arm)), appointment: create(:appointment, arm: @pppv_line_item.arm, name: "this", protocols_participant: create(:protocols_participant, arm: @pppv_line_item.arm, participant: create(:participant), protocol: @protocol)))
       put :update, params: {
         id: @pppv_line_item.id,
         line_item: {service_id: @service_2.id}

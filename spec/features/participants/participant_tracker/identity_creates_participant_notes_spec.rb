@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -50,8 +50,8 @@ feature 'User views the participant tracker page', js: true do
 
   def given_i_am_viewing_the_participant_tracker
     @protocol = create_and_assign_protocol_to_me
-    @participant = create(:participant, protocol: @protocol, arm: @protocol.arms.first)
-    @original_arm = @participant.arm
+    @protocols_participant = @protocol.protocols_participants.first
+    @original_arm = @protocols_participant.arm
 
     visit protocol_path @protocol
     wait_for_ajax
@@ -61,7 +61,7 @@ feature 'User views the participant tracker page', js: true do
   end
 
   def when_i_click_on_the_notes_button
-    find(".participant_notes[data-notable-id='#{@participant.id}']").click
+    find(".participant_notes[data-notable-id='#{@protocols_participant.id}']").click
     wait_for_ajax
   end
 
@@ -74,10 +74,10 @@ feature 'User views the participant tracker page', js: true do
   end
 
   def when_i_change_the_particpants_arm
-    find(".change-arm[participant_id='#{@participant.id}']").click
+    find(".change-arm[participant_id='#{@protocols_participant.id}']").click
     wait_for_ajax
 
-    bootstrap_select "#participant_arm_id", @protocol.arms.second.name
+    bootstrap_select "#protocols_participant_arm_id", @protocol.arms.second.name
 
     click_button 'Save'
     wait_for_ajax

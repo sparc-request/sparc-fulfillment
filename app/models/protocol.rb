@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -34,7 +34,7 @@ class Protocol < ApplicationRecord
   has_many :project_roles,    primary_key: :sparc_id
   has_many :arms,             dependent: :destroy
   has_many :line_items,       dependent: :destroy
-  has_many :participants,     dependent: :destroy
+  has_many :protocols_participants, dependent: :destroy
   has_many :documents,        as: :documentable
 
   has_many :sub_service_requests, through: :service_requests
@@ -44,7 +44,7 @@ class Protocol < ApplicationRecord
   has_many :clinical_providers, through: :organization
   has_many :super_users, through: :organization
 
-  has_many :appointments,     through: :participants
+  has_many :appointments,     through: :protocols_participants
   has_many :procedures,       through: :appointments
 
   has_one  :subsidy, through: :sub_service_request

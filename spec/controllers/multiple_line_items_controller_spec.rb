@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -61,50 +61,28 @@ RSpec.describe MultipleLineItemsController, type: :controller do
   describe "GET #edit_line_items" do
 
     it "renders a template to remove a service from multiple arms" do
+      protocols_participant = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first, participant: create(:participant))
+                    create(:procedure_complete, service: @service, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
+      complete_li = create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
+
       get :edit_line_items, params: {
-        protocol_id: @protocol.id,
-        service_id: @service.id
+        protocol_id: @protocol.id
       }, format: :js, xhr: true
 
-      expect(assigns(:protocol)).to eq(@protocol)
-      expect(assigns(:all_services)).to eq(@protocol.line_items.map(&:service).uniq)
-      expect(assigns(:service)).to eq(@service)
-      expect(assigns(:arms)).to eq((@protocol.arms.select{ |arm| arm.line_items.detect{|li| li.service_id == @service.id} }))
+      expect(assigns(:line_items)).to eq(@protocol.line_items.select{ |li| li.appointments.none?(&:has_completed_procedures?) })
     end
   end
 
   describe "PUT #destroy_line_items" do
     it "handles the submission of the remove line items form" do
-      create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
-      create(:line_item, service: @service, arm: @protocol.arms.second, protocol: @protocol)
+      li_1 = create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
+      li_2 = create(:line_item, service: @service, arm: @protocol.arms.second, protocol: @protocol)
 
       expect{
         post :destroy_line_items, params: {
-          remove_service_id: @service.id,
-          remove_service_arm_ids: ["#{@protocol.arms.first.id}", "#{@protocol.arms.second.id}"]
+          line_item_ids: [li_1.id, li_2.id]
         }, format: :js
       }.to change(LineItem, :count).by(-2)
-    end
-
-    it "requires arms to be selected" do
-      create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
-
-      expect{
-        post :destroy_line_items, params: { remove_service_id: @service.id }, format: :js
-      }.to_not change(LineItem, :count)
-    end
-
-    it "should not delete services with completed procedures" do
-      participant = create(:participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first)
-                    create(:procedure_complete, service: @service, appointment: participant.appointments.first, arm: @protocol.arms.first)
-                    create(:line_item, service: @service, arm: @protocol.arms.first, protocol: @protocol)
-
-      expect{
-        post :destroy_line_items, params: {
-          remove_service_id: @service.id,
-          remove_service_arm_ids: ["#{@protocol.arms.first.id}"]
-        }, format: :js
-      }.to_not change(LineItem, :count)
     end
   end
 end

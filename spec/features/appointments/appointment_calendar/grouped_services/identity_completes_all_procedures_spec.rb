@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -24,8 +24,8 @@ feature 'Identity completes all Services', js: true do
 
   before :each do
     @protocol    = create_and_assign_protocol_to_me
-    @participant = @protocol.participants.first
-    @appointment = @participant.appointments.first
+    @protocols_participant = @protocol.protocols_participants.first
+    @appointment = @protocols_participant.appointments.first
     @services    = @protocol.organization.inclusive_child_services(:per_participant)
   end
 

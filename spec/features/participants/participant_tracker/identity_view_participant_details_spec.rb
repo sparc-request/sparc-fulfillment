@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -20,33 +20,29 @@
 
 require 'rails_helper'
 
-feature 'User edits Participant', js: true do
+feature 'User views Participant details', js: true do
 
-  scenario 'and sees the updated Participant' do
+  scenario 'and sees the Participants attributes' do
     given_i_am_viewing_the_participant_tracker
-    when_i_update_a_participants_details
-    then_i_should_see_the_updated_details
+    when_i_click_the_participant_details_icon
+    then_i_should_see_the_participant_details
   end
 
   def given_i_am_viewing_the_participant_tracker
-    @protocol = create_and_assign_protocol_to_me
+    protocol    = create_and_assign_protocol_to_me
 
-    visit protocol_path(@protocol.id)
+    visit protocol_path(protocol.id)
     wait_for_ajax
 
     click_link 'Participant Tracker'
     wait_for_ajax
   end
 
-  def when_i_update_a_participants_details
-    page.find('table.participants tbody tr:first-child td.edit a').click
-    fill_in 'First Name', with: 'Starlord'
-    bootstrap_datepicker '#dob_time_picker', year: @protocol.participants.first.date_of_birth.to_date.year + 2, month: 'Mar', day: '15'
-    find("input[value='Save Participant']").click
-    wait_for_ajax
+  def when_i_click_the_participant_details_icon
+    page.find('table.participants tbody tr:first-child td.details a').click
   end
 
-  def then_i_should_see_the_updated_details
-    expect(page).to have_css('table.participants tbody tr td.first_name', text: 'Starlord')
+  def then_i_should_see_the_participant_details
+    expect(page).to have_css('.modal-title', text: 'Participant Details')
   end
 end

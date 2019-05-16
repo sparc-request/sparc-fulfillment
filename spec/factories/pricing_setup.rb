@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -22,7 +22,7 @@ FactoryBot.define do
 
   factory :pricing_setup do
     effective_date { Faker::Date.between(10.years.ago, 3.days.ago) }
-    federal 100.00
-    federal_rate_type "federal"
+    federal { 100.00 }
+    federal_rate_type { "federal" }
   end
 end

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,11 +21,11 @@
 FactoryBot.define do
 
   factory :document do |n|
-    title "MyDocument"
+    title { "MyDocument" }
 
     trait :with_csv_file do
-      original_filename "file.csv"
-      content_type 'text/csv'
+      original_filename { "file.csv" }
+      content_type { 'text/csv' }
       after :create do |document, evaluator|
         File.open(document.path, "w") do |file|
           file.write("a, b, c")
@@ -34,12 +34,12 @@ FactoryBot.define do
     end
 
     trait :of_identity_report do
-      documentable_type "Identity"
-      documentable_id nil
-      report_type "invoice_report"
-      state "Completed"
-      original_filename "file.csv"
-      content_type 'text/csv'
+      documentable_type { "Identity" }
+      documentable_id { nil }
+      report_type { "invoice_report" }
+      state { "Completed" }
+      original_filename { "file.csv" }
+      content_type { 'text/csv' }
 
       after :create do |document|
         identity = Identity.find(document.documentable_id)
@@ -49,12 +49,12 @@ FactoryBot.define do
     end
 
     trait :of_protocol_report do
-      documentable_type "Protocol"
-      documentable_id nil
-      report_type "study_schedule_report"
-      state "Completed"
-      original_filename "file.csv"
-      content_type 'text/csv'
+      documentable_type { "Protocol" }
+      documentable_id { nil }
+      report_type { "study_schedule_report" }
+      state { "Completed" }
+      original_filename { "file.csv" }
+      content_type { 'text/csv' }
 
       after :create do |document|
         protocol = Protocol.find(document.documentable_id)
@@ -64,12 +64,12 @@ FactoryBot.define do
     end
 
     trait :of_participant_report do
-      documentable_type "Protocol"
-      documentable_id nil
-      report_type "participant_report"
-      state "Completed"
-      original_filename "file.csv"
-      content_type 'text/csv'
+      documentable_type { "Protocol" }
+      documentable_id { nil }
+      report_type { "participant_report" }
+      state { "Completed" }
+      original_filename { "file.csv" }
+      content_type { 'text/csv' }
 
       after :create do |document|
         protocol = Protocol.find(document.documentable_id)

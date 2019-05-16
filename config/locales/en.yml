@@ -222,12 +222,15 @@ en:
     quantity: "Quantity"
     service: "Service"
     started: "Started"
+    notes: "Notes"
+    documents: "Documents"
 
   navbar:
     logged_in_msg: "Logged in as"
     reports_link: 'All Reports'
     tasks_link: 'All Tasks'
     imports_link: 'Imports'
+    patient_registry_link: 'Patient Registry'
 
   notes:
     object: "Note"
@@ -249,6 +252,7 @@ en:
     reason: "Reason *"
 
   participant:
+    associate: "Associate"
     object: "Participant"
     address: "Address"
     arm: "Current Arm"
@@ -261,6 +265,8 @@ en:
     flash_messages:
       arm_change: "Participant Successfully Changed Arms"
       created: "Participant Created"
+      added_to_protocol: "Participant added to protocol."
+      removed_from_protocol:  "Participant removed from protocol."
       not_found: "Participant Not Found"
       removed: "Participant Removed"
       recruitment_source: "Recruitment Source has been updated"
@@ -270,12 +276,15 @@ en:
     id: "ID"
     list: "Participant List"
     last_name: "Last Name"
+    selected: "Selected?"
     middle_initial: "Middle Initial"
     mrn: "MRN"
     new_participant: "Create New Participant"
+    search_participant: "Search For Participants"
     notes: "Notes"
     participant_report: "Report"
     phone: "Phone"
+    phone_num: "Phone #"
     race: "Race"
     recruitment_source: "Recruitment Source"
     save_participant: "Save Participant"
@@ -306,6 +315,7 @@ en:
   protocol:
     object: "Protocol"
     admin_portal_link: "SPARCDashboard"
+    admin_portal_link_tooltip: "Back to SPARCDashboard"
     coordinators: "Coordinators"
     end_date: "Study End Date"
     flash_messages:
@@ -349,6 +359,7 @@ en:
     tabs:
       participant_list: "Participant List"
       participant_tracker: "Participant Tracker"
+      patient_registry: "Patient Registry"
       reports: "Reports"
       study_level_activities: "Non-clinical Services"
       project_level_activities: "Non-clinical Services"
@@ -358,6 +369,11 @@ en:
     updates: "Updates"
     back_to_top: 'Back to Top'
 
+  patient:
+    registry: "Patient Registry"
+    confirm_removal_part_1: "Are you sure you want to remove"
+    confirm_removal_part_2: "from Patient Registry?"
+
   reports:
     asc: "ASC"
     ascending: "Ascending"
@@ -365,6 +381,7 @@ en:
     desc: "DESC"
     descending: "Descending"
     include_notes: "Include Notes"
+    include_invoiced: "Include Invoiced"
     invoice_report: "Invoice Report"
     end_date: "End Date"
     organization: "Organization(s)*"

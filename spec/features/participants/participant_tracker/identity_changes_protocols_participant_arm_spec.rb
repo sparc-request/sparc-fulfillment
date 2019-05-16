@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -20,55 +20,35 @@
 
 require 'rails_helper'
 
-feature 'User creates Participant', js: true do
+feature 'User changes Participant Arm', js: true do
 
-  scenario 'and sees the new Participants in the list' do
+  scenario 'and sees the updated Participant' do
     given_i_am_viewing_the_participant_tracker
-    when_i_create_a_new_participant
-    then_i_should_see_the_new_participant_in_the_list
+    when_i_change_a_participants_arm
+    then_i_should_see_the_arm_is_updated
   end
 
   def given_i_am_viewing_the_participant_tracker
-    @protocol = create_and_assign_protocol_to_me
+    protocol    = create_and_assign_protocol_to_me
+    @second_arm  = protocol.arms.second
 
-    visit protocol_path(@protocol.id)
+    visit protocol_path(protocol.id)
     wait_for_ajax
 
     click_link 'Participant Tracker'
     wait_for_ajax
   end
 
-  def when_i_create_a_new_participant
-    find('.new-participant').click
+  def when_i_change_a_participants_arm
+    page.find('table.participants tbody tr:first-child td.change_arm a').click
+    wait_for_ajax
+    bootstrap_select "#protocols_participant_arm_id", @second_arm.name
 
-    participant = build(:participant_with_protocol)
-
-    fill_in 'First Name', with: participant.first_name
-    fill_in 'Last Name', with: participant.last_name
-    fill_in 'MRN', with: participant.mrn
-    fill_in 'City', with: participant.city
-    bootstrap_select '#participant_state', participant.state
-    fill_in 'Zip Code', with: participant.zipcode
-    bootstrap_select '#participant_status', participant.status
-    bootstrap_datepicker '#dob_time_picker', year: Date.current.year, month: 'Mar', day: '15'
-    bootstrap_select '#participant_gender', "Female"
-    bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
-    bootstrap_select '#participant_race', "Asian"
-    fill_in 'Address', with: "123 Fake Street"
-
-    find("input[value='Save Participant']").click
+    click_button 'Save'
     wait_for_ajax
   end
 
-  def then_i_should_see_the_new_participant_in_the_list
-    expect(page).to have_css('table.participants tbody tr', count: 4)
-  end
-
-  def then_they_should_have_an_assigned_arm
-    expect(Participant.last.arm_id).to eq(@protocol.arms.first.id)
-  end
-
-  def then_they_should_not_have_an_assigned_arm
-    expect(Participant.last.arm_id).to eq(nil)
+  def then_i_should_see_the_arm_is_updated
+    expect(page).to have_css('table.participants tbody tr:first-child td.arm_name', text: @second_arm.name)
   end
 end

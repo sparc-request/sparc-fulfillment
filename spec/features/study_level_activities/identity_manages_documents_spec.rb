@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -77,6 +77,7 @@ feature 'Identity manages Doucuments', js: true do
   def when_i_upload_a_document
     attach_file(find("input[type='file']")[:id], @filename)
     click_button "Save"
+    wait_for_ajax
   end
 
   def then_i_should_see_the_line_item_documents_list

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -30,8 +30,9 @@ RSpec.describe MultipleProceduresController, type: :controller do
     @service     = create(:service)
     protocol     = create(:protocol_imported_from_sparc)
     arm          = protocol.arms.first
-    participant  = arm.participants.first
-    @appointment = create(:appointment, name: "Visit Test", arm: arm, participant: participant)
+    participant  = create(:participant)
+    protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
+    @appointment = create(:appointment, name: "Visit Test", arm: arm, protocols_participant: protocols_participant)
   end
 
   describe 'PUT #update_procedures' do

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,10 +21,10 @@
 FactoryBot.define do
 
   factory :fulfillment do
-    line_item nil
-    fulfilled_at "09/09/2025"
-    quantity     5
-    performer_id 1
+    line_item { nil }
+    fulfilled_at { "09/09/2025" }
+    quantity     { 5 }
+    performer_id { 1 }
 
     trait :without_validations do
       to_create { |instance| instance.save(validate: false) }

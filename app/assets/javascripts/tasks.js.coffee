@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -54,7 +54,7 @@ $ ->
 
   - if $("body.tasks-index").length > 0
 
-    $("table.tasks").bootstrapTable('hideColumn', 'id')
+    $("table.tasks").bootstrapTable('hideColumn', 'protocol_id')
 
     $(document).on "change", "#complete, #all_tasks", ->
       scope = if $("#all_tasks").prop("checked") then "all" else "mine"

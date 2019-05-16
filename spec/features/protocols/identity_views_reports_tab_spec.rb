@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -37,14 +37,14 @@ feature 'Identity views Report tab', js: true, enqueue: false do
 
   scenario 'and sees a list of Participant reports' do
     protocol = create_data
-    participant = protocol.participants.first
+    protocols_participant = protocol.protocols_participants.first
     visit protocol_path(protocol)
     wait_for_ajax
 
     click_link 'Participant Tracker'
     wait_for_ajax
 
-    click_button "participant_report_#{participant.id}"
+    click_button "participant_report_#{protocols_participant.participant_id}"
     wait_for_ajax
 
     click_link 'Reports'

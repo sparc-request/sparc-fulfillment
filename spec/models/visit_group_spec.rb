@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -189,8 +189,9 @@ RSpec.describe VisitGroup, type: :model do
           @vg_a        = create(:visit_group, name: 'A', position: 1, day: 2, arm_id: @arm.id)
           @vg_b        = create(:visit_group, name: 'B', position: 2, day: 4, arm_id: @arm.id)
           @vg_c        = create(:visit_group, name: 'C', position: 3, day: 6, arm_id: @arm.id)
-          @participant = create(:participant, arm: @arm, protocol: @protocol)
-          @appointment = create(:appointment, visit_group: @vg_a, participant: @participant, name: @vg_a.name, arm_id: @vg_a.arm_id, position: 1)
+          @participant = create(:participant)
+          @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
+          @appointment = create(:appointment, visit_group: @vg_a, protocols_participant: @protocols_participant, name: @vg_a.name, arm_id: @vg_a.arm_id, position: 1)
           @procedure   = create(:procedure, :complete, appointment: @appointment)
         end
 
@@ -216,18 +217,16 @@ RSpec.describe VisitGroup, type: :model do
         it "should allow the appointment to be deleted if it is not completed" do
           @procedure.update_attributes(status: "unstarted")
           @vg_a.destroy
-          expect(@participant.appointments.empty?).to eq(true)
+          expect(@protocols_participant.appointments.empty?).to eq(true)
         end
 
         it "should not allow the appointment to be deleted if it is completed" do
           @appointment.update_attributes(completed_date: Time.current)
-          @vg_a.destroy
-          expect(@participant.appointments.empty?).to eq(false)
+          expect{@vg_a.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
         end
 
         it "should not allow the appointment to be deleted if any of it's procedures are completed" do
-          @vg_a.destroy
-          expect(@participant.appointments.empty?).to eq(false)
+          expect{@vg_a.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
         end
       end
     end

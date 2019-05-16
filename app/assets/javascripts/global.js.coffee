@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -131,3 +131,12 @@ $ ->
   notification_count = parseInt(notification_bubble.text())
   if notification_count == 0
     notification_bubble.remove();
+
+### Add "exclude_in_export" class to columns you want excluded from export and then pass in table ID ###
+window.exclude_from_export = (table_id) ->
+  excluded_cols = []
+  $('.exclude_in_export').each ->
+    excluded_cols.push $(this).closest('th').index()
+
+  if excluded_cols.length
+    $('#'+table_id).data('export-options').ignoreColumn = excluded_cols

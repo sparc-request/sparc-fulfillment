@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~P
+# Copyright © 2011-2019 MUSC Foundation for Research Development~P
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -63,13 +63,13 @@ class VisitReport < Report
       csv << [""]
       csv << REPORT_COLUMNS
 
-      result_set  = Appointment.all.joins(:procedures, :participant).
+      result_set  = Appointment.all.joins(procedures: [{ protocols_participant: :participant}]).
                     where(
                       Appointment.arel_table[:start_date].gt(from_start_date).and(
                         Appointment.arel_table[:start_date].lt(to_start_date)).and(
                         Procedure.arel_table[:status].not_eq("unstarted"))).distinct.
                     pluck(
-                      Participant.arel_table[:protocol_id], Participant.arel_table[:last_name], Participant.arel_table[:first_name],
+                      ProtocolsParticipant.arel_table[:protocol_id], Participant.arel_table[:last_name], Participant.arel_table[:first_name],
                       Appointment.arel_table[:name], Appointment.arel_table[:start_date], Appointment.arel_table[:completed_date],
                       Appointment.arel_table[:visit_group_id], Appointment.arel_table[:type], Appointment.arel_table[:id],
                       Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents])

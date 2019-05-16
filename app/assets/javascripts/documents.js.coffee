@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -52,16 +52,16 @@ $ ->
   row_index = element.parents().eq(1).attr("data-index")
 
   date_downloaded_element = element.parent().siblings("td.viewed_at")
-  
+
   if date_downloaded_element.text().length == 0
     add_to_report_notification_count(documentable_type, -1)
     
     utcdate = moment().format(I18n["documents"]["date_time_formatter_js"])
-    
+
     $(table_to_update).bootstrapTable 'updateCell', 
-      rowIndex: row_index
-      fieldName: 'viewed_at'
-      fieldValue: utcdate
+      index: row_index
+      field: 'viewed_at'
+      value: utcdate
 
 (exports ? this).refreshDocumentsTables = ->
   $('#documents_table').bootstrapTable('refresh', {silent: "true"})

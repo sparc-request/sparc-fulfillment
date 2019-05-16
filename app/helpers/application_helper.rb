@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -141,7 +141,7 @@ module ApplicationHelper
 
   def notes_button params
     content_tag(:button, class: "btn btn-default #{params[:button_class].nil? ? '' : params[:button_class]} list notes", title: params[:title], label: "Notes List", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}, toggle: "tooltip", animation: 'false') do
-      content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:span_class].nil? ? "" : params[:span_class]} #{params[:has_notes] ? "blue-notes" : ""}")
+      content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:has_notes] ? "blue-glyphicon" : ""}")
     end
   end
 

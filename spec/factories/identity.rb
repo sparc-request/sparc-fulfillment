@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -23,13 +23,13 @@ FactoryBot.define do
   sequence(:ldap_uid) { |n| "ldap#{n}@musc.edu" }
 
   factory :identity do
-    email 'email@musc.edu' # need this for fake data
+    email { 'email@musc.edu' } # need this for fake data
     ldap_uid
     sequence(:first_name) { |n| "Sally-#{n}"}
-    last_name "Smith"
-    password "password"
-    password_confirmation "password"
-    time_zone "Eastern Time (US & Canada)"
+    last_name { "Smith" }
+    password { "password" }
+    password_confirmation { "password" }
+    time_zone { "Eastern Time (US & Canada)" }
 
     trait :with_counter do
       after :create do |identity|

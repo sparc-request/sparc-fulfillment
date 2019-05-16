@@ -1,4 +1,4 @@
--# Copyright © 2011-2018 MUSC Foundation for Research Development~
+-# Copyright © 2011-2019 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -23,10 +23,10 @@
     %span= t(:appointment)[:appointment_dropdown]
     %select.selectpicker#appointment_select
       %option{value: -1} Please Select
-      - arms_for_appointments(participant.appointments).each do |arm|
+      - arms_for_appointments(protocols_participant.appointments).each do |arm|
         %option{:disabled => true, :style => 'font-weight:bold;'}= arm.name.humanize + ':'
-        = options_from_collection_for_select(appointments_for_select(arm, participant), 'id', 'formatted_name')
+        = options_from_collection_for_select(appointments_for_select(arm, protocols_participant), 'id', 'formatted_name')
         %option{'data-divider' => true, :disabled => true}
-    %span.custom-visit-container{title: participant.arm_id.nil? ? t(:visit)[:no_arm] : t(:visit)[:custom], data: {toggle: "tooltip", animation: 'false'}}
-      %button.btn.btn-primary.appointment.new{type: "button", disabled: participant.arm_id.nil? ? true : false, data: {participant_id: participant.id, arm_id: participant.arm_id}}
+    %span.custom-visit-container{title: protocols_participant.arm_id.nil? ? t(:visit)[:no_arm] : t(:visit)[:custom], data: {toggle: "tooltip", animation: 'false'}}
+      %button.btn.btn-primary.appointment.new{type: "button", disabled: protocols_participant.arm_id.nil? ? true : false, data: {protocols_participant_id: protocols_participant.id, arm_id: protocols_participant.arm_id}}
         %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}

@@ -1,4 +1,4 @@
--# Copyright © 2011-2018 MUSC Foundation for Research Development~
+-# Copyright © 2011-2019 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -78,6 +78,10 @@
               = label_tag "include_notes", t(:reports)[:include_notes], class: "col-sm-3 control-label"
               .checkbox.col-sm-9
                 %label= check_box_tag "include_notes", true, false
+            .form-group
+              = label_tag "include_invoiced", t(:reports)[:include_invoiced], class: "col-sm-3 control-label"
+              .checkbox.col-sm-9
+                %label= check_box_tag "include_invoiced", true, false
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}

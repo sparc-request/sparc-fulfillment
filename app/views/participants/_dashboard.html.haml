@@ -1,4 +1,4 @@
--# Copyright © 2011-2018 MUSC Foundation for Research Development~
+-# Copyright © 2011-2019 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -24,7 +24,7 @@
     %br
     #dashboard_container
       #dashboard
-        %table.visits#completed-appointments-table{ data: { height: 300, toggle: 'table', url: completed_appointments_appointments_path(participant_id: participant.id, format: :json), striped: 'true', 'sort-name' => 'completed_date', 'sort-order' => 'asc' } }
+        %table.visits#completed-appointments-table{ data: {height: 300, toggle: 'table', url: completed_appointments_appointments_path(participant_id: participant.id, protocols_participant_id: protocols_participant.id, format: :json), striped: 'true', 'sort-name' => 'completed_date', 'sort-order' => 'asc' } }
           %thead
             %tr
               %th{ data: { align: 'left', field: 'name' } }

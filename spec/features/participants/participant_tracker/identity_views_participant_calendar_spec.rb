@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -71,7 +71,7 @@ feature 'User tries to view the participant calendar', js: true do
 
   def given_i_am_viewing_the_participant_tracker
     @protocol = create_and_assign_protocol_to_me
-    @participant = @protocol.participants.first
+    @protocols_participant = @protocol.protocols_participants.first
 
     visit protocol_path @protocol
     wait_for_ajax
@@ -80,18 +80,18 @@ feature 'User tries to view the participant calendar', js: true do
   end
 
   def given_a_participant_has_an_arm
-    @participant.arm = Arm.first
+    @protocols_participant.arm = Arm.first
   end
 
   def given_a_participant_does_not_have_an_arm
-    @participant.arm = nil
+    @protocols_participant.arm = nil
   end
 
   def given_a_participant_has_completed_appointments
-    @appointment = @participant.appointments.first
+    @appointment = @protocols_participant.appointments.first
     @visit_group = @appointment.visit_group
 
-    visit participant_path @participant
+    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
 
     bootstrap_select '#appointment_select', @visit_group.name
@@ -109,7 +109,7 @@ feature 'User tries to view the participant calendar', js: true do
   end
 
   def given_a_participant_does_not_have_completed_appointments
-    @participant.appointments.completed.destroy_all
+    @protocols_participant.appointments.completed.destroy_all
   end
 
   def when_i_click_the_participant_calendar_icon
@@ -126,7 +126,7 @@ feature 'User tries to view the participant calendar', js: true do
   end
 
   def then_i_will_see_the_participant_calendar
-    expect(current_path) == participants_path + '/' + @participant.id.to_s
+    expect(current_path) == participants_path + '/' + @protocols_participant.id.to_s
   end
 
   def then_i_will_not_be_redirected

@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -28,7 +28,7 @@ class Arm < ApplicationRecord
   has_many :line_items, dependent: :destroy
   has_many :visit_groups, dependent: :destroy
   has_many :appointments
-  has_many :participants
+  has_many :protocols_participants
 
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :protocol_id

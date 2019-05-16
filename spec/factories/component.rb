@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -23,11 +23,11 @@ FactoryBot.define do
   factory :component do
     sequence(:component) { Faker::App.name }
     sequence(:position) { |n| (n%3)+1 }
-    selected false
+    selected { false }
 
     trait :of_line_item do
-      composable_type "LineItem"
-      composable_id nil
+      composable_type { "LineItem" }
+      composable_id { nil }
     end
 
     factory :component_of_line_item, traits: [:of_line_item]

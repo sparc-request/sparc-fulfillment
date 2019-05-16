@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -29,26 +29,20 @@ class Participant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
-  belongs_to :protocol
-  belongs_to :arm
   has_many :notes, as: :notable
-  has_many :appointments
+  has_many :protocols_participants, dependent: :destroy
 
+  has_many :protocols, through: :protocols_participants
+  has_many :appointments, through: :protocols_participants
   has_many :procedures, through: :appointments
 
-  delegate :srid,
-           to: :protocol
-
-  after_save :update_faye
-  after_destroy :update_faye
-
-  validates :protocol_id, presence: true
   validates :last_name, presence: true
   validates :first_name, presence: true
 
   validate :middle_initial_format
 
   validates :mrn, presence: true
+  validates_uniqueness_of :mrn
   validates_length_of :mrn, maximum: 255
 
   validates :date_of_birth, presence: true
@@ -63,6 +57,14 @@ class Participant < ApplicationRecord
   validate :zip_code_format
 
   validate :phone_number_format
+
+  scope :by_protocol_id, -> (protocol_id) {
+    joins(:protocols_participants).where("protocols_participants.protocol_id = ? ", protocol_id)
+  }
+
+  scope :except_by_protocol_id, -> (protocol_id) {
+    joins(:protocols_participants).where("protocols_participants.protocol_id != ? ", protocol_id)
+  }
 
   def self.title id
     participant = Participant.find id
@@ -111,24 +113,6 @@ class Participant < ApplicationRecord
     label
   end
 
-  def build_appointments
-    ActiveRecord::Base.transaction do
-      if self.arm
-        if self.appointments.empty?
-          appointments_for_visit_groups(self.arm.visit_groups)
-        elsif has_new_visit_groups?
-          appointments_for_visit_groups(new_visit_groups)
-        end
-
-      end
-    end
-  end
-
-  def update_appointments_on_arm_change
-    self.appointments.each{ |appt| appt.destroy_if_incomplete }
-    self.build_appointments
-  end
-
   def full_name
     [first_name, middle_initial, last_name].join(' ')
   end
@@ -141,30 +125,19 @@ class Participant < ApplicationRecord
     [first_name, middle_initial].join(' ')
   end
 
+  def protocol_ids
+    protocols.ids
+  end
+
   def can_be_destroyed?
     procedures.where.not(status: 'unstarted').empty?
   end
 
-  private
-
-  def update_faye
-    FayeJob.perform_later protocol
-  end
-
-  def has_new_visit_groups?
-    self.arm.visit_groups.order(:id).pluck(:id) != self.appointments.where(arm_id: self.arm_id).where.not(visit_group_id: nil).order(:visit_group_id).pluck(:visit_group_id)
-  end
-
-  def new_visit_groups
-    participant_vgs = self.appointments.map{|app| app.visit_group}
-    arm_vgs = self.arm.visit_groups
-    arm_vgs - participant_vgs
-  end
-
-  def appointments_for_visit_groups visit_groups
-    visit_groups.each do |vg|
-      self.appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
+  def destroy
+    if can_be_destroyed?
+      super
+    else
+      raise ActiveRecord::ActiveRecordError
     end
   end
-
 end

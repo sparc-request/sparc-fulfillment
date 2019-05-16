@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -31,15 +31,15 @@ feature 'User views procedure which has an unavailable service', js: true do
 
 	def given_i_am_viewing_the_appointment_calendar
 		protocol 		= create_and_assign_protocol_to_me
-		@participant = protocol.participants.first
+		@protocols_participant = protocol.protocols_participants.first
 
-		visit participant_path(@participant)
+		visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: protocol.id)
 		wait_for_ajax
 	end
 
 	def when_the_participant_has_a_procedure_with_an_inactive_service
 		service     = Service.first
-		@appointment = @participant.appointments.first
+		@appointment = @protocols_participant.appointments.first
 
 		service.update_attributes(is_available: false)
 
