@@ -18,23 +18,18 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-/*The MIT License (MIT)
-Copyright (c) 2014 https://github.com/kayalshri/
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.*/
+/**
+ * @preserve tableExport.jquery.plugin
+ *
+ * Version 1.10.3
+ *
+ * Copyright (c) 2015-2019 hhurz, https://github.com/hhurz
+ *
+ * Original Work Copyright (c) 2014 Giri Raj
+ *
+ * Licensed under the MIT License
+ **/
+
 
 'use strict';
 
@@ -111,8 +106,6 @@ THE SOFTWARE.*/
           thousandsSeparator: ','
         }
       },
-      onAfterSaveToFile:   null,
-      onBeforeSaveToFile:  null,        // Return false as result to abort save process
       onCellData:          null,
       onCellHtmlData:      null,
       onIgnoreRow:         null,        // onIgnoreRow($tr, rowIndex): function should return true to not export a row
@@ -131,7 +124,7 @@ THE SOFTWARE.*/
         leadingWS:         false,       // preserve leading white spaces
         trailingWS:        false        // preserve trailing white spaces
       },
-      preventInjection:    true,        // Prepend a single quote to cell strings that start with =,+,- or @ to prevent formula injection
+      preventInjection:    true,
       tbodySelector:       'tr',
       tfootSelector:       'tr',        // Set empty ('') to prevent export of tfoot rows
       theadSelector:       'tr',
@@ -282,12 +275,15 @@ THE SOFTWARE.*/
         return;
       }
 
-      saveToFile ( csvData, 
-                   defaults.fileName + '.' + defaults.type, 
-                   "text/" + (defaults.type === 'csv' ? 'csv' : 'plain'), 
-                   "utf-8", 
-                   "", 
-                   (defaults.type === 'csv' && defaults.csvUseBOM) );
+      try {
+        blob = new Blob([csvData], {type: "text/" + (defaults.type === 'csv' ? 'csv' : 'plain') + ";charset=utf-8"});
+        saveAs(blob, defaults.fileName + '.' + defaults.type, (defaults.type !== 'csv' || defaults.csvUseBOM === false));
+      }
+      catch (e) {
+        downloadFile(defaults.fileName + '.' + defaults.type,
+          'data:text/' + (defaults.type === 'csv' ? 'csv' : 'plain') + ';charset=utf-8,' + ((defaults.type === 'csv' && defaults.csvUseBOM) ? '\ufeff' : ''),
+          csvData);
+      }
 
     } else if ( defaults.type === 'sql' ) {
 
@@ -332,7 +328,15 @@ THE SOFTWARE.*/
       if ( defaults.outputMode === 'base64' )
         return base64encode(tdData);
 
-      saveToFile ( tdData, defaults.fileName + '.sql', "application/sql", "utf-8", "", false );
+      try {
+        blob = new Blob([tdData], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, defaults.fileName + '.sql');
+      }
+      catch (e) {
+        downloadFile(defaults.fileName + '.sql',
+          'data:application/sql;charset=utf-8,',
+          tdData);
+      }
 
     } else if ( defaults.type === 'json' ) {
       var jsonHeaderArray = [];
@@ -386,7 +390,15 @@ THE SOFTWARE.*/
       if ( defaults.outputMode === 'base64' )
         return base64encode(sdata);
 
-      saveToFile ( sdata, defaults.fileName + '.json', "application/json", "utf-8", "base64", false );
+      try {
+        blob = new Blob([sdata], {type: "application/json;charset=utf-8"});
+        saveAs(blob, defaults.fileName + '.json');
+      }
+      catch (e) {
+        downloadFile(defaults.fileName + '.json',
+          'data:application/json;charset=utf-8;base64,',
+          sdata);
+      }
 
     } else if ( defaults.type === 'xml' ) {
       rowIndex = 0;
@@ -434,7 +446,15 @@ THE SOFTWARE.*/
       if ( defaults.outputMode === 'base64' )
         return base64encode(xml);
 
-      saveToFile ( xml, defaults.fileName + '.xml', "application/xml", "utf-8", "base64", false );
+      try {
+        blob = new Blob([xml], {type: "application/xml;charset=utf-8"});
+        saveAs(blob, defaults.fileName + '.xml');
+      }
+      catch (e) {
+        downloadFile(defaults.fileName + '.xml',
+          'data:application/xml;charset=utf-8;base64,',
+          xml);
+      }
     }
     else if ( defaults.type === 'excel' && defaults.mso.fileFormat === 'xmlss' ) {
       var docDatas = [];
@@ -634,43 +654,97 @@ THE SOFTWARE.*/
       if ( defaults.outputMode === 'base64' )
         return base64encode(xmlssDocFile);
 
-      saveToFile ( xmlssDocFile, defaults.fileName + '.xml', "application/xml", "utf-8", "base64", false );
+      try {
+        blob = new Blob([xmlssDocFile], {type: "application/xml;charset=utf-8"});
+        saveAs(blob, defaults.fileName + '.xml');
+      }
+      catch (e) {
+        downloadFile(defaults.fileName + '.xml',
+          'data:application/xml;charset=utf-8;base64,',
+          xmlssDocFile);
+      }
     }
     else if ( defaults.type === 'excel' && defaults.mso.fileFormat === 'xlsx' ) {
 
-      var docNames = [];
-      var workbook = XLSX.utils.book_new();
+      var data  = [];
+      var spans = [];
+      rowIndex  = 0;
 
-      // Multiple worksheets and .xlsx file extension #202
+      $rows = collectHeadRows ($(el));
+      $rows.push.apply($rows, collectRows ($(el)));
 
-      $(el).filter(function () {
-        return isVisible($(this));
-      }).each(function () {
-        var $table = $(this);
-        var ws = XLSX.utils.table_to_sheet(this);
+      $($rows).each(function () {
+        var cols = [];
+        ForEachVisibleCell(this, 'th,td', rowIndex, $rows.length,
+                           function (cell, row, col) {
+                             if ( typeof cell !== 'undefined' && cell !== null ) {
 
-        var sheetName = '';
-        if ( typeof defaults.mso.worksheetName === 'string' && defaults.mso.worksheetName.length )
-          sheetName = defaults.mso.worksheetName + ' ' + (docNames.length + 1);
-        else if ( typeof defaults.mso.worksheetName[docNames.length] !== 'undefined' )
-          sheetName = defaults.mso.worksheetName[docNames.length];
-        if ( ! sheetName.length )
-          sheetName = $table.find('caption').text() || '';
-        if ( ! sheetName.length )
-          sheetName = 'Table ' + (docNames.length + 1);
-        sheetName = $.trim(sheetName.replace(/[\\\/[\]*:?'"]/g,'').substring(0,31));
+                               var cellValue = parseString(cell, row, col);
 
-        docNames.push(sheetName);
-        XLSX.utils.book_append_sheet(workbook, ws, sheetName);
+                               var colspan = getColspan (cell);
+                               var rowspan = getRowspan (cell);
+
+                               // Skip span ranges
+                               $.each(spans, function () {
+                                 var range = this;
+                                 if ( rowIndex >= range.s.r && rowIndex <= range.e.r && cols.length >= range.s.c && cols.length <= range.e.c ) {
+                                   for ( var i = 0; i <= range.e.c - range.s.c; ++i )
+                                     cols.push(null);
+                                 }
+                               });
+
+                               // Handle Row Span
+                               if ( rowspan || colspan ) {
+                                 rowspan = rowspan || 1;
+                                 colspan = colspan || 1;
+                                 spans.push({
+                                              s: {r: rowIndex, c: cols.length},
+                                              e: {r: rowIndex + rowspan - 1, c: cols.length + colspan - 1}
+                                            });
+                               }
+
+                               // Handle Value
+                               if ( typeof defaults.onCellData !== 'function' ) {
+
+                                 // Type conversion
+                                 if ( cellValue !== "" && cellValue === +cellValue )
+                                   cellValue = +cellValue;
+                               }
+                               cols.push(cellValue !== "" ? cellValue : null);
+
+                               // Handle Colspan
+                               if ( colspan )
+                                 for ( var k = 0; k < colspan - 1; ++k )
+                                   cols.push(null);
+                             }
+                           });
+        data.push(cols);
+        rowIndex++;
       });
 
-      // add worksheet to workbook
-      var wbout = XLSX.write(workbook, {type: 'binary', bookType: defaults.mso.fileFormat, bookSST: false});
+      //noinspection JSPotentiallyInvalidConstructorUsage
+      var wb = new jx_Workbook(),
+        ws = jx_createSheet(data);
 
-      saveToFile ( jx_s2ab(wbout), 
-                   defaults.fileName + '.' + defaults.mso.fileFormat, 
-                   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
-                   "UTF-8", "", false );
+      // add span ranges to worksheet
+      ws['!merges'] = spans;
+
+      // add worksheet to workbook
+      //wb.SheetNames.push(defaults.mso.worksheetName);
+      //wb.Sheets[defaults.mso.worksheetName] = ws;
+      XLSX.utils.book_append_sheet(wb, ws, defaults.mso.worksheetName);
+
+      var wbout = XLSX.write(wb, {type: 'binary', bookType: defaults.mso.fileFormat, bookSST: false});
+
+      try {
+        blob = new Blob([jx_s2ab(wbout)], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'});
+        saveAs(blob, defaults.fileName + '.' + defaults.mso.fileFormat);
+      }
+      catch (e) {
+        downloadFile(defaults.fileName + '.' + defaults.mso.fileFormat,
+          'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8,',
+          jx_s2ab(wbout));
+      }
     }
     else if ( defaults.type === 'excel' || defaults.type === 'xls' || defaults.type === 'word' || defaults.type === 'doc' ) {
 
@@ -703,23 +777,19 @@ THE SOFTWARE.*/
         docData += '<table><thead>';
         $hrows = collectHeadRows ($table);
         $($hrows).each(function () {
-          var $row = $(this);
           trData = "";
           ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length,
                              function (cell, row, col) {
                                if ( cell !== null ) {
                                  var thstyle = '';
-                                 var cellstyles = document.defaultView.getComputedStyle(cell, null);
-                                 var rowstyles = document.defaultView.getComputedStyle($row[0], null);
-
                                  trData += '<th';
-                                 for ( var cssStyle in defaults.mso.styles ) {
-                                   var thcss = cellstyles[defaults.mso.styles[cssStyle]];
-                                   if ( thcss === '' )
-                                     thcss = rowstyles[defaults.mso.styles[cssStyle]];
-                                   if ( thcss !== '' && thcss !== '0px none rgb(0, 0, 0)' && thcss !== 'rgba(0, 0, 0, 0)' ) {
-                                     thstyle += (thstyle === '') ? 'style="' : ';';
-                                     thstyle += defaults.mso.styles[cssStyle] + ':' + thcss;
+                                 for ( var styles in defaults.mso.styles ) {
+                                   if ( defaults.mso.styles.hasOwnProperty(styles) ) {
+                                     var thcss = $(cell).css(defaults.mso.styles[styles]);
+                                     if ( thcss !== '' && thcss !== '0px none rgb(0, 0, 0)' && thcss !== 'rgba(0, 0, 0, 0)' ) {
+                                       thstyle += (thstyle === '') ? 'style="' : ';';
+                                       thstyle += defaults.mso.styles[styles] + ':' + thcss;
+                                     }
                                    }
                                  }
                                  if ( thstyle !== '' )
@@ -753,8 +823,6 @@ THE SOFTWARE.*/
                                  var tdvalue = parseString(cell, row, col);
                                  var tdstyle = '';
                                  var tdcss   = $(cell).data("tableexport-msonumberformat");
-                                 var cellstyles = document.defaultView.getComputedStyle(cell, null);
-                                 var rowstyles = document.defaultView.getComputedStyle($row[0], null);
 
                                  if ( typeof tdcss === 'undefined' && typeof defaults.mso.onMsoNumberFormat === 'function' )
                                    tdcss = defaults.mso.onMsoNumberFormat(cell, row, col);
@@ -763,13 +831,15 @@ THE SOFTWARE.*/
                                    tdstyle = 'style="mso-number-format:\'' + tdcss + '\'';
 
                                  for ( var cssStyle in defaults.mso.styles ) {
-                                   tdcss = cellstyles[defaults.mso.styles[cssStyle]];
-                                   if ( tdcss === '' )
-                                     tdcss = rowstyles[defaults.mso.styles[cssStyle]];
+                                   if ( defaults.mso.styles.hasOwnProperty(cssStyle) ) {
+                                     tdcss = $(cell).css(defaults.mso.styles[cssStyle]);
+                                     if ( tdcss === '' )
+                                       tdcss = $row.css(defaults.mso.styles[cssStyle]);
 
-                                   if ( tdcss !== '' && tdcss !== '0px none rgb(0, 0, 0)' && tdcss !== 'rgba(0, 0, 0, 0)' ) {
-                                     tdstyle += (tdstyle === '') ? 'style="' : ';';
-                                     tdstyle += defaults.mso.styles[cssStyle] + ':' + tdcss;
+                                     if ( tdcss !== '' && tdcss !== '0px none rgb(0, 0, 0)' && tdcss !== 'rgba(0, 0, 0, 0)' ) {
+                                       tdstyle += (tdstyle === '') ? 'style="' : ';';
+                                       tdstyle += defaults.mso.styles[cssStyle] + ':' + tdcss;
+                                     }
                                    }
                                  }
                                  trData += '<td';
@@ -853,9 +923,19 @@ THE SOFTWARE.*/
       if ( defaults.outputMode === 'base64' )
         return base64encode(docFile);
 
-      saveToFile ( docFile, defaults.fileName + '.' + MSDocExt, "application/vnd.ms-" + MSDocType, "", "base64", false );
+      try {
+        blob = new Blob([docFile], {type: 'application/vnd.ms-' + defaults.type});
+        saveAs(blob, defaults.fileName + '.' + MSDocExt);
+      }
+      catch (e) {
+        downloadFile(defaults.fileName + '.' + MSDocExt,
+          'data:application/vnd.ms-' + MSDocType + ';base64,',
+          docFile);
+      }
     }
     else if ( defaults.type === 'png' ) {
+      //html2canvas($(el)[0], {
+      //  onrendered: function (canvas) {
       html2canvas($(el)[0]).then(
         function (canvas) {
 
@@ -878,7 +958,14 @@ THE SOFTWARE.*/
             return;
           }
 
-          saveToFile ( buffer, defaults.fileName + '.png', "image/png", "", "", false );
+          try {
+            blob = new Blob([buffer], {type: "image/png"});
+            saveAs(blob, defaults.fileName + '.png');
+          }
+          catch (e) {
+            downloadFile(defaults.fileName + '.png', 'data:image/png,', blob);
+          }
+          //}
         });
 
     } else if ( defaults.type === 'pdf' ) {
@@ -970,7 +1057,14 @@ THE SOFTWARE.*/
         $.extend(true, pdfMake.fonts, defaults.pdfmake.fonts);
 
         pdfMake.createPdf(docDefinition).getBuffer(function (buffer) {
-          saveToFile ( buffer, defaults.fileName + '.pdf', "application/pdf", "", "", false );
+
+          try {
+            var blob = new Blob([buffer], {type: "application/pdf"});
+            saveAs(blob, defaults.fileName + '.pdf');
+          }
+          catch (e) {
+            downloadFile(defaults.fileName + '.pdf', 'application/pdf', buffer);
+          }
         });
 
       }
@@ -1233,7 +1327,7 @@ THE SOFTWARE.*/
 
                       drawAutotableText(cell, tecell.elements, teOptions);
                     }
-                    else
+                    else 
                       drawAutotableText(cell, {}, teOptions);
                   }
                 }
@@ -1245,7 +1339,7 @@ THE SOFTWARE.*/
                   cell.width = r.width * teOptions.wScaleFactor;
                   cell.height = r.height * teOptions.hScaleFactor;
                   data.row.height = cell.height;
-
+                  
                   jsPdfDrawImage (cell, container, imgId, teOptions);
                 }
                 return false;
@@ -2171,32 +2265,6 @@ THE SOFTWARE.*/
       return hash;
     }
 
-    function saveToFile (data, fileName, type, charset, encoding, bom) {
-      var saveIt = true;
-      if ( typeof defaults.onBeforeSaveToFile === 'function' ) {
-        saveIt = defaults.onBeforeSaveToFile(data, fileName, type, charset, encoding);
-        if ( typeof saveIt !== 'boolean' )
-          saveIt = true;
-      }
-
-      if (saveIt) {
-        try {
-          blob = new Blob([data], {type: type + ';charset=' + charset});
-          saveAs (blob, fileName, bom === false);
-
-          if ( typeof defaults.onAfterSaveToFile === 'function' )
-            defaults.onAfterSaveToFile(data, fileName);
-        }
-        catch (e) {
-          downloadFile (fileName, 
-                        'data:' + type + 
-                        (charset.length ? ';charset=' + charset : '') +
-                        (encoding.length ? ';' + encoding : '') + ',' + (bom ? '\ufeff' : ''), 
-                        data);
-        }
-      }
-    }
-
     function downloadFile (filename, header, data) {
       var ua = window.navigator.userAgent;
       if ( filename !== false && window.navigator.msSaveOrOpenBlob ) {
@@ -2269,9 +2337,6 @@ THE SOFTWARE.*/
             if ( blobUrl )
               window.URL.revokeObjectURL(blobUrl);
             document.body.removeChild(DownloadLink);
-
-            if ( typeof defaults.onAfterSaveToFile === 'function' )
-              defaults.onAfterSaveToFile(data, filename);
           }, 100);
         }
       }
