@@ -204,11 +204,14 @@ class ParticipantsController < ApplicationController
       if search_tokens.count > 1
         first_token = "%#{search_tokens[0]}%"
         second_token = "%#{search_tokens[1]}%"
-        @participants = @participants.where("(participants.first_name LIKE ? AND participants.last_name LIKE ?) OR (participants.first_name LIKE ? AND participants.last_name LIKE ?)",
+        all = "%#{search_term}%"
+        @participants = @participants.where("(participants.first_name LIKE ? AND participants.last_name LIKE ?) OR (participants.first_name LIKE ? AND participants.last_name LIKE ?) OR (participants.first_name LIKE ? AND participants.middle_initial LIKE ?)",
           first_token,
           second_token,
           second_token,
-          first_token)
+          first_token,
+          first_token,
+          second_token)
       else
         search_token = "%#{search_tokens[0]}%"
         @participants = @participants.where("participants.mrn LIKE ? OR participants.first_name LIKE ? OR participants.last_name LIKE ?",

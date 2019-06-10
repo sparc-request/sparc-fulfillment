@@ -23,7 +23,7 @@
   %button.btn.btn-primary.new-participant{type: "button", aria: {label: "Create Participant"}}=t(:participant)[:new_participant]
 .bootstrap-table-dropdown-overflow
   #patient_registry
-    %table.participants.custom_striped{id: "patient-registry-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: participants_path(format: :json), "page_size" => @limit, "pagination" => "true", "side-pagination" => "server", "sort-name" => "last_name", "sort-order" => 'asc', cookie: "true", "cookie-id-table" => "patient-registry-table", striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel'], "checkbox-header": "false"}}
+    %table.participants.custom_striped{id: "patient-registry-table", data: {toggle: 'table', search: "true", "trim-on-search" => "false",  "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: participants_path(format: :json), "page_size" => @limit, "pagination" => "true", "side-pagination" => "server", "sort-name" => "last_name", "sort-order" => 'asc', cookie: "true", "cookie-id-table" => "patient-registry-table", striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel'], "checkbox-header": "false"}}
       %thead
         %tr
           %th{data: {class: 'last_name truncate', align: "left", sortable: "true", field: "last_name"}}= t(:participant)[:last_name]
