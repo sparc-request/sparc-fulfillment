@@ -26,17 +26,13 @@ namespace :data do
 
     def report_appointment_data(participants_with_same_protocol_id, csv)
       csv << ["//////////////////"]
-      csv << ["Able to Merge?", "Participant ID", "Participant Name", "Arm Name", "ProtocolsParticipant ID(s)", "Appointment ID", "Sparc ID", "Participant ID", "Visit Group ID", "Visit Group Position", "Position", "Name", "Start Date", "Completed Date", "Deleted At", "Created At", "Updated At", "Contents", "Type", "Arm ID", "Protocols" "Participant ID"]
+      csv << ["Able to Merge?", "Participant ID", "Participant Name", "Arm Name", "ProtocolsParticipant ID(s)", "Appointment ID", "Sparc ID", "Visit Group ID", "Visit Group Position", "Position", "Name", "Start Date", "Completed Date", "Deleted At", "Created At", "Updated At", "Contents", "Type", "Arm ID"]
       appointment_size = participants_with_same_protocol_id.map(&:appointments).map(&:size)
       if !(appointment_size.include? 0)
-        if participants_with_same_protocol_id.size == 2
-          participants_with_same_protocol_id.first.
-          binding.pry
-        end
         participants_with_same_protocol_id.each do |participant|
           participant.protocols_participants.each do |protocols_participant|
             protocols_participant.appointments.each do |appointment|
-              csv << ["No", participant.id, protocols_participant.id, participant.name, participant. appointment.id, appointment.sparc_id, appointment.participant_id, appointment.visit_group_id, appointment.visit_group_position, appointment.position, appointment.name, appointment.start_date, appointment.completed_date, appointment.deleted_at, appointment.created_at, appointment.updated_at, appointment.contents, appointment.type, appointment.arm_id, appointment.protocols_participant_id]
+              csv << ["No", participant.id, participant.full_name, Arm.find_by_id(appointment.arm_id).try(:name), protocols_participant.id, appointment.id, appointment.sparc_id, appointment.visit_group_id, appointment.visit_group_position, appointment.position, appointment.name, appointment.start_date, appointment.completed_date, appointment.deleted_at, appointment.created_at, appointment.updated_at, appointment.contents, appointment.type, appointment.arm_id]
             end
           end
         end
@@ -45,7 +41,7 @@ namespace :data do
           csv << [participant.id, participants_with_same_protocol_id.first.protocols_participants.ids]
           participant.protocols_participants.each do |protocols_participant|
             protocols_participant.appointments.each do |appointment|
-              csv << ["Yes", participant.id, protocols_participant.id, participant.name, appointment.id, appointment.sparc_id, appointment.participant_id, appointment.visit_group_id, appointment.visit_group_position, appointment.position, appointment.name, appointment.start_date, appointment.completed_date, appointment.deleted_at, appointment.created_at, appointment.updated_at, appointment.contents, appointment.type, appointment.arm_id, appointment.protocols_participant_id]
+              csv << ["Yes", participant.id, participant.full_name, Arm.find_by_id(appointment.arm_id).try(:name), protocols_participant.id, appointment.id, appointment.sparc_id, appointment.visit_group_id, appointment.visit_group_position, appointment.position, appointment.name, appointment.start_date, appointment.completed_date, appointment.deleted_at, appointment.created_at, appointment.updated_at, appointment.contents, appointment.type, appointment.arm_id]
             end
           end
         end
