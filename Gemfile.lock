@@ -294,8 +294,8 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    paranoia (2.4.1)
-      activerecord (>= 4.0, < 5.3)
+    paranoia (2.4.2)
+      activerecord (>= 4.0, < 6.1)
     progress_bar (1.3.0)
       highline (>= 1.6, < 3)
       options (~> 2.3.0)
