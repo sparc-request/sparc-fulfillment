@@ -18,10 +18,50 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+### Patient DOB column needs to be in this format:  "Month/Date/Year".  Example:  "2/27/1953".
+### Last time we had errors because a column name was not named the correct way:  'Patient External ID'
 namespace :data do
   desc "Merge duplicate Participants"
   task merge_duplicate_participants: :environment do
 
+    def destroy_participant_and_destroy_protocols_participant_and_update_associated_appointment(deleted_participant, protocols_participant_to_retain, csv)
+      protocols_participant_to_be_deleted = ProtocolsParticipant.where(participant_id: deleted_participant.id)
+
+      ### Delete Participant ###
+      csv << ["Delete Participant with same protocol_id", "", deleted_participant.id, deleted_participant.sparc_id, deleted_participant.protocol_id, deleted_participant.arm_id, deleted_participant.first_name, deleted_participant.last_name, deleted_participant.mrn, deleted_participant.status, deleted_participant.date_of_birth, deleted_participant.gender, deleted_participant.ethnicity, deleted_participant.race, deleted_participant.address, deleted_participant.phone, deleted_participant.deleted_at, deleted_participant.created_at, deleted_participant.updated_at, deleted_participant.total_cost, deleted_participant.city, deleted_participant.state, deleted_participant.zipcode, deleted_participant.recruitment_source, deleted_participant.external_id, deleted_participant.middle_initial]
+
+      puts "**" *50
+      puts "Original appointments"
+      puts Appointment.where(protocols_participant_id: protocols_participant_to_be_deleted.ids).ids
+
+      ### Update Associated Appointment ###
+      Appointment.where(protocols_participant_id: protocols_participant_to_be_deleted.ids).update_all(protocols_participant_id: protocols_participant_to_retain.id)
+
+      puts "updated to"
+      puts Appointment.where(protocols_participant_id: protocols_participant_to_retain).ids
+
+      ### Destroy Participant, therefore deleting protocols_participant because of dependent:destroy ###
+
+      puts "Destroy Participant, therefore deleting protocols_participant because of dependent:destroy"
+      puts deleted_participant.id
+      puts "**" *50
+      Participant.destroy(deleted_participant.id)
+      Participant.only_deleted.where(id: deleted_participant.id).delete_all
+    end
+
+    ### Destroy participant ###
+    def process_participant_to_be_destroyed(deleted_participant, participant_id, csv)
+      if deleted_participant
+        csv << ["Delete Participant", "", deleted_participant.id, deleted_participant.sparc_id, deleted_participant.protocol_id, deleted_participant.arm_id, deleted_participant.first_name, deleted_participant.last_name, deleted_participant.mrn, deleted_participant.status, deleted_participant.date_of_birth, deleted_participant.gender, deleted_participant.ethnicity, deleted_participant.race, deleted_participant.address, deleted_participant.phone, deleted_participant.deleted_at, deleted_participant.created_at, deleted_participant.updated_at, deleted_participant.total_cost, deleted_participant.city, deleted_participant.state, deleted_participant.zipcode, deleted_participant.recruitment_source, deleted_participant.external_id, deleted_participant.middle_initial]
+        deleted_participant.destroy
+        Participant.only_deleted.where(id: deleted_participant.id).delete_all
+      else
+        @participant_ids_that_do_not_exist << participant_id
+        csv << ["ID does not exisit", participant_id]
+      end
+    end
+
+    ### Update participant information, no need to update protocols_participant since participant_id will remain the same ###
     def process_participant_to_be_retained(row, participant_id, participant_to_retain, csv)
       first_name = row['Patient Name'].split(' ').first
       last_name = row['Patient Name'].split(' ').last
@@ -40,22 +80,9 @@ namespace :data do
 
       csv << ["Updated Participant", "", participant_to_retain.id, participant_to_retain.sparc_id, participant_to_retain.protocol_id, participant_to_retain.arm_id, participant_to_retain.first_name, participant_to_retain.last_name, participant_to_retain.mrn, participant_to_retain.status, participant_to_retain.date_of_birth, participant_to_retain.gender, participant_to_retain.ethnicity, participant_to_retain.race, participant_to_retain.address, participant_to_retain.phone, participant_to_retain.deleted_at, participant_to_retain.created_at, participant_to_retain.updated_at, participant_to_retain.total_cost, participant_to_retain.city, participant_to_retain.state, participant_to_retain.zipcode, participant_to_retain.recruitment_source, participant_to_retain.external_id, participant_to_retain.middle_initial]
 
-      participant_to_retain.update_attributes(first_name: first_name, last_name: last_name, mrn: mrn, status: status, gender: gender, ethnicity: ethnicity, race: race, address: address, phone: phone, city: city, state: state, zipcode: zipcode, external_id: external_id)
-      participant_to_retain.write_attribute(:date_of_birth, Date.strptime(dob, "%m/%d/%Y"))
+      participant_to_retain.update_attributes(first_name: first_name, last_name: last_name, mrn: mrn, status: status, date_of_birth: dob, gender: gender, ethnicity: ethnicity, race: race, address: address, phone: phone, city: city, state: state, zipcode: zipcode, external_id: external_id)
 
       csv << ["Participant after update", "", participant_to_retain.id, participant_to_retain.sparc_id, participant_to_retain.protocol_id, participant_to_retain.arm_id, participant_to_retain.first_name, participant_to_retain.last_name, participant_to_retain.mrn, participant_to_retain.status, participant_to_retain.date_of_birth, participant_to_retain.gender, participant_to_retain.ethnicity, participant_to_retain.race, participant_to_retain.address, participant_to_retain.phone, participant_to_retain.deleted_at, participant_to_retain.created_at, participant_to_retain.updated_at, participant_to_retain.total_cost, participant_to_retain.city, participant_to_retain.state, participant_to_retain.zipcode, participant_to_retain.recruitment_source, participant_to_retain.external_id, participant_to_retain.middle_initial]
-    end
-
-    ### Destroy participant ###
-    def process_participant_to_be_destroyed(deleted_participant, participant_id, csv)
-      if deleted_participant
-        csv << ["Delete Participant", "", deleted_participant.id, deleted_participant.sparc_id, deleted_participant.protocol_id, deleted_participant.arm_id, deleted_participant.first_name, deleted_participant.last_name, deleted_participant.mrn, deleted_participant.status, deleted_participant.date_of_birth, deleted_participant.gender, deleted_participant.ethnicity, deleted_participant.race, deleted_participant.address, deleted_participant.phone, deleted_participant.deleted_at, deleted_participant.created_at, deleted_participant.updated_at, deleted_participant.total_cost, deleted_participant.city, deleted_participant.state, deleted_participant.zipcode, deleted_participant.recruitment_source, deleted_participant.external_id, deleted_participant.middle_initial]
-        deleted_participant.destroy
-        Participant.only_deleted.where(id: deleted_participant.id).delete_all
-      else
-        @participant_ids_that_do_not_exist << participant_id
-        csv << ["ID does not exist", participant_id]
-      end
     end
 
     def process_participant_to_be_destroyed_and_update_associated_protocols_participant(participant_to_destroy, participant_to_retain, csv)
@@ -70,49 +97,83 @@ namespace :data do
       participant_to_destroy.destroy
       Participant.only_deleted.where(id: participant_to_destroy.id).delete_all
     end
-    puts "Two files are created, see tmp/appointment_data.csv and tmp/participant_changes.csv."
-    Rake::Task["data:report_for_appointment_data"].invoke
-    participant_ids_that_do_not_exist = []
+    #### csv location tmp/patient_registry.csv
+    #### Patient ID (Records to Merge), Patient MRN, Patient Name, Patient Middle Name, Patient Status, Patient DOB, Patient Gender, Patient Ethnicity, Patient Race, Patient Address, Patient Phone Number, Patient City, Patient State, Patient Zip Code, Patient External ID
+    @participant_ids_that_do_not_exist = []
     CSV.open("tmp/participant_changes.csv", "wb") do |csv|
        csv << ["Script Action", "ProtocolsParticipant ID(s)", "Participant ID", "Sparc ID", "Protocol ID", "Arm ID", "First Name", "Last Name", "MRN", "Status", "DOB", "Gender", "Ethnicity", "Race", "Address", "Phone", "Deleted At", "Created At", "Updated At", "Total Cost", "City", "State", "Zipcode", "Recruitment Source", "External ID", "Middle Initial"]
+      CSV.foreach("tmp/patient_registry.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
 
-      CSV.foreach("tmp/patient_registry_2.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
-        valid_date = Date.strptime(row['Patient DOB'], '%m/%d/%Y').between?(Date.today - 200.years, Date.today)
-        header_discrepancy = row.headers - ["Patient ID (Records to Merge)", "Patient MRN", "Patient Name", "Patient Middle Initial", "Patient Status", "Patient DOB", "Patient Gender", "Patient Ethnicity", "Patient Race", "Patient Address", "Patient Phone Number", "Patient City", "Patient State", "Patient Zip Code", "Patient External ID"]
-        if header_discrepancy.present?
-          puts "****Please look at this header discrepancy: #{header_discrepancy}.****"
-          puts "The headers should be the following:  Patient ID (Records to Merge), Patient MRN, Patient Name, Patient Middle Name, Patient Status, Patient DOB, Patient Gender, Patient Ethnicity, Patient Race, Patient Address, Patient Phone Number, Patient City, Patient State, Patient Zip Code, Patient External ID"
-          puts "Please fix this header discrepancy in the file patient_registry.csv and rerun the script."
-          break
-        elsif !valid_date
-          puts "*****Date of Birth needs to be changed in the patient_registry excel file to this format:  'Month/Date/Year' Example:  '2/27/1953'*****"
-          break
-        else
-          csv << ["//////////////////"]
+        csv << ["//////////////////"]
 
-          if !row['Patient ID (Records to Merge)'].nil?
-            participant_ids = row['Patient ID (Records to Merge)'].split(';').map{|id| id.strip}
-            participant_ids.each_with_index do |participant_id, index|
-              if index == 0 || @participant_to_retain.nil? ### Grab first Participant and update
-                @participant_to_retain = Participant.find_by(id: participant_id)
-                if @participant_to_retain.nil?
-                  process_participant_to_be_destroyed(Participant.with_deleted.find_by(id: participant_id), participant_id, csv)
-                  next
-                end
-                process_participant_to_be_retained(row, participant_id, @participant_to_retain, csv)
-              else
-                participant_to_destroy = Participant.find_by(id: participant_id)
-                if participant_to_destroy.nil?
-                  process_participant_to_be_destroyed(Participant.with_deleted.find_by(id: participant_id), participant_id, csv)
-                  next
-                end
-                process_participant_to_be_destroyed_and_update_associated_protocols_participant(participant_to_destroy, @participant_to_retain, csv)
+        if !row['Patient ID (Records to Merge)'].nil?
+          participant_ids = row['Patient ID (Records to Merge)'].split(';').map{|id| id.strip}
+
+          protocols_with_duplicate_participants = []
+          protocols_with_duplicate_participants << participant_ids.map{|participant_id| Participant.find_by(id: participant_id).try(:protocol_id)}.group_by{ |e| e }.select { |k, v| v.size > 1 }.map(&:first).first
+
+          participants_with_same_protocol_id = Participant.where(id: participant_ids).where(protocol_id: protocols_with_duplicate_participants.first)
+
+          participant_ids.each_with_index do |participant_id, index|
+
+            if index == 0 || @participant_to_retain.nil? ### Grab first Participant and update
+              @participant_to_retain = Participant.find_by(id: participant_id)
+              @protocols_participant_to_retain = ProtocolsParticipant.where(participant_id: @participant_to_retain).first
+              if @participant_to_retain.nil?
+                puts "**" *50
+                puts "@participant_to_retain.nil?"
+                puts @participant_to_retain.nil?
+                puts "**" *50
+                ### permanently delete record
+                process_participant_to_be_destroyed(Participant.with_deleted.find_by(id: participant_id), participant_id, csv)
+                next
               end
+              @participant_id_of_processed_participant_with_duplicate_protocol_ids = (participants_with_same_protocol_id.include? @participant_to_retain) ? @participant_to_retain.id : nil
+              process_participant_to_be_retained(row, participant_id, @participant_to_retain, csv)
+
+            ### grab participant that has a duplicate protocol_id and determine whether it's the first
+            elsif participants_with_same_protocol_id.include? Participant.find_by(id: participant_id)
+              ### if we have already updated a participant with duplicate protocol_id,
+              ### then destroy the participant, the protocols_participant, and update associated appointments
+              if @participant_id_of_processed_participant_with_duplicate_protocol_ids.present?
+                puts "**" *50
+                puts "destroy_participant_and_destroy_protocols_participant_and_update_associated_appointment"
+                puts "ProtocolsParticipant"
+                puts ProtocolsParticipant.where(participant_id: @participant_to_retain).ids
+                puts "Participant"
+                puts participant_id
+                puts "**" *50
+                destroy_participant_and_destroy_protocols_participant_and_update_associated_appointment(Participant.find_by(id: participant_id), @protocols_participant_to_retain, csv)
+              ### Otherwise that means we haven't
+              else
+                puts "**" *50
+                puts "process_participant_to_be_destroyed_and_update_associated_protocols_participant"
+                puts participant_id
+                puts "**" *50
+                @participant_id_of_processed_participant_with_duplicate_protocol_ids = participant_id
+                process_participant_to_be_destroyed_and_update_associated_protocols_participant(Participant.find_by(id: participant_id), @participant_to_retain, csv)
+              end
+            else
+              participant_to_destroy = Participant.find_by(id: participant_id)
+              if participant_to_destroy.nil?
+                puts "**" *50
+                puts "participant_to_destroy.nil?"
+                puts participant_to_destroy.nil?
+                puts participant_id
+                puts "**" *50
+                process_participant_to_be_destroyed(Participant.find_by(id: participant_id), participant_id, csv)
+                next
+              end
+              # puts "**" *50
+              # puts "not duplicate protocol_ids, process_participant_to_be_destroyed_and_update_associated_protocols_participant"
+              # puts participant_to_destroy
+              # puts "**" *50
+              process_participant_to_be_destroyed_and_update_associated_protocols_participant(participant_to_destroy, @participant_to_retain, csv)
             end
           end
         end
       end
     end
-    puts "Participant IDs that do not exist: #{participant_ids_that_do_not_exist}"
+    puts "Participant IDs that do not exist: #{@participant_ids_that_do_not_exist}"
   end
 end
