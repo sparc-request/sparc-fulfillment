@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   resources :reports, only: [:new, :create] do
     collection do
       get 'update_protocols_dropdown'
+      get 'update_mrn_dropdown'
     end
   end
 
