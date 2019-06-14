@@ -91,5 +91,5 @@ group :test do
   gem 'shoulda-matchers', "~> 4.1.0", require: false
   gem 'timecop'
   gem 'webmock', '~> 3.6.0'
-  gem 'vcr', '~> 4.0.0'
+  gem 'vcr', '~> 5.0.0'
 end
