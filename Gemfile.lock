@@ -201,7 +201,7 @@ GEM
       actionpack (>= 3.0)
       multi_json
       request_store (>= 1.0)
-    grape (1.1.0)
+    grape (1.2.4)
       activesupport
       builder
       mustermann-grape (~> 1.0.0)
@@ -520,7 +520,7 @@ DEPENDENCIES
   foreman
   geckodriver-helper
   gon
-  grape (~> 1.1.0)
+  grape (~> 1.2.4)
   haml-rails
   hashie-forbidden_attributes
   jbuilder (~> 2.8)
