@@ -22,7 +22,7 @@
 #custom-toolbar
   %button.btn.btn-primary.search-participants{type: "button", data: {protocol_id: protocol.id}, aria: {label: "Search Participant"}}=t(:participant)[:search_participant]
 #participant_tracker
-  %table.participants.custom_striped{id: "participant-tracker-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: protocols_participants_in_protocol_participants_path(protocol_id: protocol.id, format: :json), "page_size" => @limit.nil? ? 10 : @limit, "pagination" => "true", "side-pagination" => "server", "sort-name" => "last_name", "sort-order" => 'asc', cookie: "true", "cookie-id-table" => "participant-tracker-table", striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel'], "checkbox-header": "false"}}
+  %table.participants.custom_striped{id: "participant-tracker-table", data: {toggle: 'table', search: "true", "trim-on-search" => "false", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: protocols_participants_in_protocol_participants_path(protocol_id: protocol.id, format: :json), "page_size" => @limit.nil? ? 10 : @limit, "pagination" => "true", "side-pagination" => "server", "sort-name" => "last_name", "sort-order" => 'asc', cookie: "true", "cookie-id-table" => "participant-tracker-table", striped: "true", toolbar: "#custom-toolbar", "show-export" => "true", "export-types" => ['excel'], "checkbox-header": "false"}}
     %thead.primary-header
       %tr
         %th{data: {class: 'calendar', align: "center", field: "calendar"}}
