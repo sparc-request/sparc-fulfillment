@@ -65,16 +65,10 @@
                   class: "selectpicker form-control",
                   id: "gender_select",
                   title: "Select Gender"
-            .form-group.protocols
+            .form-group.protocols-group
               = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
-              .col-sm-9
-                = select_tag 'protocols',
-                  truncated_options_from_collection_for_select(current_identity.protocols, "id", "short_title_with_sparc_id"),
-                  data: { actions_box: true, live_search: true }, 
-                  class: "selectpicker form-control", 
-                  multiple: true,
-                  id: "protocol select",
-                  title: "Select Protocols's"
+              .col-sm-9#protocol_section.background_load
+                %i.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}

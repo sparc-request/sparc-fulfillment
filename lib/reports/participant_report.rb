@@ -61,11 +61,11 @@ class ParticipantReport < Report
       end
 
       if @mrns
-        csv << ["MRN's", @mrns.map{|x| x.to_i}.map(&:inspect).join(', ')]
+        csv << ["MRN's", @mrns.join(', ')]
       end
 
       if @protocols
-        csv << ["Protocols", @protocols.map(&:inspect).join(', ')]
+        csv << ["Protocols(Sparc ID)", Protocol.find(@protocols).map(&:sparc_id).join(', ')]
       end
 
       header = [ "Participant ID" ]
@@ -86,7 +86,7 @@ class ParticipantReport < Report
       header << "State"
       header << "Zip"
       header << "Recruitment Source"
-      header << "Protocols"
+      header << "Protocol(s)"
 
       csv << header
       
@@ -95,7 +95,7 @@ class ParticipantReport < Report
         data << participant.first_name
         data << participant.middle_initial
         data << participant.last_name
-        data << participant.mrn
+        data << "'#{participant.mrn}"
         data << participant.status
         data << participant.date_of_birth
         data << participant.gender

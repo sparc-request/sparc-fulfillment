@@ -66,9 +66,6 @@ class Participant < ApplicationRecord
     joins(:protocols_participants).where("protocols_participants.protocol_id != ? ", protocol_id)
   }
 
-  scope :dob_in_date_range, ->(start_date, end_date) {
-        where("date_of_birth is not NULL AND date_of_birth between ? AND ?", start_date, end_date)}
-
   def self.title id
     participant = Participant.find id
     [Protocol.title(participant.protocol.id), participant.last_name, participant.first_name].join(', ')
