@@ -67,7 +67,7 @@ namespace :data do
     CSV.open("tmp/participant_changes.csv", "wb") do |csv|
        csv << ["Script Action", "ProtocolsParticipant ID(s)", "Participant ID", "Sparc ID", "Protocol ID", "Arm ID", "First Name", "Last Name", "MRN", "Status", "DOB", "Gender", "Ethnicity", "Race", "Address", "Phone", "Deleted At", "Created At", "Updated At", "Total Cost", "City", "State", "Zipcode", "Recruitment Source", "External ID", "Middle Initial"]
 
-      CSV.foreach("tmp/patient_registry_new.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
+      CSV.foreach("tmp/patient_registry_2.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
         header_discrepancy = row.headers - ["Patient ID (Records to Merge)", "Patient MRN", "Patient Name", "Patient Middle Initial", "Patient Status", "Patient DOB", "Patient Gender", "Patient Ethnicity", "Patient Race", "Patient Address", "Patient Phone Number", "Patient City", "Patient State", "Patient Zip Code", "Patient External ID"]
         if header_discrepancy.present?
           puts "****Please look at this header discrepancy: #{header_discrepancy}.****"
@@ -79,7 +79,6 @@ namespace :data do
 
           if !row['Patient ID (Records to Merge)'].nil?
             participant_ids = row['Patient ID (Records to Merge)'].split(';').map{|id| id.strip}
-            puts participant_ids
             participant_ids.each_with_index do |participant_id, index|
               if index == 0 || @participant_to_retain.nil? ### Grab first Participant and update
                 @participant_to_retain = Participant.find_by(id: participant_id)
