@@ -51,7 +51,7 @@ namespace :data do
     @participant_ids_that_do_not_exist = []
     CSV.open("tmp/appointment_data.csv", "wb") do |csv|
       csv << ["Duplicate Participants With Same Protocol ID"]
-      CSV.foreach("tmp/patient_registry_round_2.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
+      CSV.foreach("tmp/patient_registry_2.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
         if !row['Patient ID (Records to Merge)'].nil?
           participant_ids = row['Patient ID (Records to Merge)'].split(';').map{|id| id.strip}
 
