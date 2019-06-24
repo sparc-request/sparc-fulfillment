@@ -51,7 +51,7 @@ namespace :data do
     @participant_ids_that_do_not_exist = []
     CSV.open("tmp/appointment_data.csv", "wb") do |csv|
       csv << ["Duplicate Participants With Same Protocol ID"]
-      CSV.foreach("tmp/patient_registry.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
+      CSV.foreach("tmp/patient_registry_round_2.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
         if !row['Patient ID (Records to Merge)'].nil?
           participant_ids = row['Patient ID (Records to Merge)'].split(';').map{|id| id.strip}
 
@@ -59,12 +59,12 @@ namespace :data do
           protocols_with_duplicate_participants << participant_ids.map{|participant_id| Participant.find_by(id: participant_id).try(:protocol_id)}.group_by{ |e| e }.select { |k, v| v.size > 1 }.map(&:first).first
 
           participants_with_same_protocol_id = Participant.where(id: participant_ids).where(protocol_id: protocols_with_duplicate_participants.first)
+
           if participants_with_same_protocol_id.present?
             report_appointment_data(participants_with_same_protocol_id, csv)
           end
         end
       end
     end
-    puts "Participant IDs that do not exist: #{@participant_ids_that_do_not_exist}"
   end
 end
