@@ -47,6 +47,18 @@ namespace :data do
       csv << ["Participant after update", "", participant_to_retain.id, participant_to_retain.sparc_id, participant_to_retain.protocol_id, participant_to_retain.arm_id, participant_to_retain.first_name, participant_to_retain.last_name, participant_to_retain.mrn, participant_to_retain.status, participant_to_retain.date_of_birth, participant_to_retain.gender, participant_to_retain.ethnicity, participant_to_retain.race, participant_to_retain.address, participant_to_retain.phone, participant_to_retain.deleted_at, participant_to_retain.created_at, participant_to_retain.updated_at, participant_to_retain.total_cost, participant_to_retain.city, participant_to_retain.state, participant_to_retain.zipcode, participant_to_retain.recruitment_source, participant_to_retain.external_id, participant_to_retain.middle_initial]
     end
 
+    ### Destroy participant ###
+    def process_participant_to_be_destroyed(deleted_participant, participant_id, csv)
+      if deleted_participant
+        csv << ["Delete Participant", "", deleted_participant.id, deleted_participant.sparc_id, deleted_participant.protocol_id, deleted_participant.arm_id, deleted_participant.first_name, deleted_participant.last_name, deleted_participant.mrn, deleted_participant.status, deleted_participant.date_of_birth, deleted_participant.gender, deleted_participant.ethnicity, deleted_participant.race, deleted_participant.address, deleted_participant.phone, deleted_participant.deleted_at, deleted_participant.created_at, deleted_participant.updated_at, deleted_participant.total_cost, deleted_participant.city, deleted_participant.state, deleted_participant.zipcode, deleted_participant.recruitment_source, deleted_participant.external_id, deleted_participant.middle_initial]
+        deleted_participant.destroy
+        Participant.only_deleted.where(id: deleted_participant.id).delete_all
+      else
+        @participant_ids_that_do_not_exist << participant_id
+        csv << ["ID does not exisit", participant_id]
+      end
+    end
+
     def process_participant_to_be_destroyed_and_update_associated_protocols_participant(participant_to_destroy, participant_to_retain, csv)
 
       csv << ["Updated Participant ID on ProtocolsParticipant", ProtocolsParticipant.where(participant_id: participant_to_destroy.id).map(&:id)]
@@ -83,30 +95,14 @@ namespace :data do
               if index == 0 || @participant_to_retain.nil? ### Grab first Participant and update
                 @participant_to_retain = Participant.find_by(id: participant_id)
                 if @participant_to_retain.nil?
-                  ### permanently delete record
-                  if deleted_participant = Participant.with_deleted.find_by(id: participant_id)
-                    csv << ["Deleted Participant", "", deleted_participant.id, deleted_participant.sparc_id, deleted_participant.protocol_id, deleted_participant.arm_id, deleted_participant.first_name, deleted_participant.last_name, deleted_participant.mrn, deleted_participant.status, deleted_participant.date_of_birth, deleted_participant.gender, deleted_participant.ethnicity, deleted_participant.race, deleted_participant.address, deleted_participant.phone, deleted_participant.deleted_at, deleted_participant.created_at, deleted_participant.updated_at, deleted_participant.total_cost, deleted_participant.city, deleted_participant.state, deleted_participant.zipcode, deleted_participant.recruitment_source, deleted_participant.external_id, deleted_participant.middle_initial]
-                    deleted_participant.destroy
-                    Participant.only_deleted.where(id: deleted_participant.id).delete_all
-                  else
-                    participant_ids_that_do_not_exist << participant_id
-                    csv << ["ID does not exist", participant_id]
-                  end
+                  process_participant_to_be_destroyed(Participant.with_deleted.find_by(id: participant_id), participant_id, csv)
                   next
                 end
                 process_participant_to_be_retained(row, participant_id, @participant_to_retain, csv)
               else
                 participant_to_destroy = Participant.find_by(id: participant_id)
                 if participant_to_destroy.nil?
-                  ### permanently delete record
-                  if deleted_participant = Participant.with_deleted.find_by(id: participant_id)
-                    csv << ["Deleted Participant", "", deleted_participant.id, deleted_participant.sparc_id, deleted_participant.protocol_id, deleted_participant.arm_id, deleted_participant.first_name, deleted_participant.last_name, deleted_participant.mrn, deleted_participant.status, deleted_participant.date_of_birth, deleted_participant.gender, deleted_participant.ethnicity, deleted_participant.race, deleted_participant.address, deleted_participant.phone, deleted_participant.deleted_at, deleted_participant.created_at, deleted_participant.updated_at, deleted_participant.total_cost, deleted_participant.city, deleted_participant.state, deleted_participant.zipcode, deleted_participant.recruitment_source, deleted_participant.external_id, deleted_participant.middle_initial]
-                    deleted_participant.destroy
-                    Participant.only_deleted.where(id: deleted_participant.id).delete_all
-                  else
-                    participant_ids_that_do_not_exist << participant_id
-                    csv << ["ID does not exist", participant_id]
-                  end
+                  process_participant_to_be_destroyed(Participant.with_deleted.find_by(id: participant_id), participant_id, csv)
                   next
                 end
                 process_participant_to_be_destroyed_and_update_associated_protocols_participant(participant_to_destroy, @participant_to_retain, csv)
