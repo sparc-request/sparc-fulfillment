@@ -41,14 +41,6 @@ class ReportsController < ApplicationController
     end
   end
 
-  def get_mrns
-
-  end
-
-  def get_protocols
-
-  end
-
   def update_protocols_dropdown
     @single_protocol = (params[:report_type] == "project_summary_report")
 
