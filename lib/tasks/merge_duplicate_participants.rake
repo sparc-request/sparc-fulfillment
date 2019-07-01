@@ -18,8 +18,6 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-### Patient DOB column needs to be in this format:  "Month/Date/Year".  Example:  "2/27/1953".
-### Last time we had errors because a column name was not named the correct way:  'Patient External ID'
 namespace :data do
   desc "Merge duplicate Participants"
   task merge_duplicate_participants: :environment do
@@ -42,7 +40,8 @@ namespace :data do
 
       csv << ["Updated Participant", "", participant_to_retain.id, participant_to_retain.sparc_id, participant_to_retain.protocol_id, participant_to_retain.arm_id, participant_to_retain.first_name, participant_to_retain.last_name, participant_to_retain.mrn, participant_to_retain.status, participant_to_retain.date_of_birth, participant_to_retain.gender, participant_to_retain.ethnicity, participant_to_retain.race, participant_to_retain.address, participant_to_retain.phone, participant_to_retain.deleted_at, participant_to_retain.created_at, participant_to_retain.updated_at, participant_to_retain.total_cost, participant_to_retain.city, participant_to_retain.state, participant_to_retain.zipcode, participant_to_retain.recruitment_source, participant_to_retain.external_id, participant_to_retain.middle_initial]
 
-      participant_to_retain.update_attributes(first_name: first_name, last_name: last_name, mrn: mrn, status: status, date_of_birth: dob, gender: gender, ethnicity: ethnicity, race: race, address: address, phone: phone, city: city, state: state, zipcode: zipcode, external_id: external_id)
+      participant_to_retain.update_attributes(first_name: first_name, last_name: last_name, mrn: mrn, status: status, gender: gender, ethnicity: ethnicity, race: race, address: address, phone: phone, city: city, state: state, zipcode: zipcode, external_id: external_id)
+      participant_to_retain.write_attribute(:date_of_birth, Date.strptime(dob, "%m/%d/%Y"))
 
       csv << ["Participant after update", "", participant_to_retain.id, participant_to_retain.sparc_id, participant_to_retain.protocol_id, participant_to_retain.arm_id, participant_to_retain.first_name, participant_to_retain.last_name, participant_to_retain.mrn, participant_to_retain.status, participant_to_retain.date_of_birth, participant_to_retain.gender, participant_to_retain.ethnicity, participant_to_retain.race, participant_to_retain.address, participant_to_retain.phone, participant_to_retain.deleted_at, participant_to_retain.created_at, participant_to_retain.updated_at, participant_to_retain.total_cost, participant_to_retain.city, participant_to_retain.state, participant_to_retain.zipcode, participant_to_retain.recruitment_source, participant_to_retain.external_id, participant_to_retain.middle_initial]
     end
@@ -55,7 +54,7 @@ namespace :data do
         Participant.only_deleted.where(id: deleted_participant.id).delete_all
       else
         @participant_ids_that_do_not_exist << participant_id
-        csv << ["ID does not exisit", participant_id]
+        csv << ["ID does not exist", participant_id]
       end
     end
 
@@ -73,18 +72,20 @@ namespace :data do
     end
     puts "Two files are created, see tmp/appointment_data.csv and tmp/participant_changes.csv."
     Rake::Task["data:report_for_appointment_data"].invoke
-    #### csv location tmp/patient_registry.csv
-    #### Patient ID (Records to Merge), Patient MRN, Patient Name, Patient Middle Name, Patient Status, Patient DOB, Patient Gender, Patient Ethnicity, Patient Race, Patient Address, Patient Phone Number, Patient City, Patient State, Patient Zip Code, Patient External ID
     participant_ids_that_do_not_exist = []
     CSV.open("tmp/participant_changes.csv", "wb") do |csv|
        csv << ["Script Action", "ProtocolsParticipant ID(s)", "Participant ID", "Sparc ID", "Protocol ID", "Arm ID", "First Name", "Last Name", "MRN", "Status", "DOB", "Gender", "Ethnicity", "Race", "Address", "Phone", "Deleted At", "Created At", "Updated At", "Total Cost", "City", "State", "Zipcode", "Recruitment Source", "External ID", "Middle Initial"]
 
       CSV.foreach("tmp/patient_registry_2.csv", headers: true, :encoding => 'windows-1251:utf-8') do |row|
+        valid_date = Date.strptime(row['Patient DOB'], '%m/%d/%Y').between?(Date.today - 200.years, Date.today)
         header_discrepancy = row.headers - ["Patient ID (Records to Merge)", "Patient MRN", "Patient Name", "Patient Middle Initial", "Patient Status", "Patient DOB", "Patient Gender", "Patient Ethnicity", "Patient Race", "Patient Address", "Patient Phone Number", "Patient City", "Patient State", "Patient Zip Code", "Patient External ID"]
         if header_discrepancy.present?
           puts "****Please look at this header discrepancy: #{header_discrepancy}.****"
           puts "The headers should be the following:  Patient ID (Records to Merge), Patient MRN, Patient Name, Patient Middle Name, Patient Status, Patient DOB, Patient Gender, Patient Ethnicity, Patient Race, Patient Address, Patient Phone Number, Patient City, Patient State, Patient Zip Code, Patient External ID"
           puts "Please fix this header discrepancy in the file patient_registry.csv and rerun the script."
+          break
+        elsif !valid_date
+          puts "*****Date of Birth needs to be changed in the patient_registry excel file to this format:  'Month/Date/Year' Example:  '2/27/1953'*****"
           break
         else
           csv << ["//////////////////"]
