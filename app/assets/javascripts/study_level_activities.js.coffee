@@ -114,4 +114,3 @@ $ ->
 
   ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
   exclude_from_export('study-level-activities-table')
-  exclude_from_export('fulfillments-table')

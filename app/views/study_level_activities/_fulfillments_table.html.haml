@@ -29,7 +29,7 @@
       .modal-body
         .bootstrap-table-dropdown-overflow
           #fulfillment-custom-toolbar
-          %table.fulfillments{id: "fulfillments-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: fulfillments_path(format: :json, line_item_id: line_item.id), striped: "true", toolbar: "#fulfillment-custom-toolbar", "show-export" => "true", "export-types" => ['xlsx'], "export-options" => '{"ignoreColumn": []}'}}
+          %table.fulfillments{id: "fulfillments-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggleOn" => "true", url: fulfillments_path(format: :json, line_item_id: line_item.id), striped: "true", toolbar: "#fulfillment-custom-toolbar", "show-export" => "true", "export-types" => ['xlsx'], "export-options" => '{"ignoreColumn": []}'}}
             %thead.secondary-header
               %tr
                 %th{data: {class: 'fulfillment_grouper', align: "left", sortable: 'true', sorter: 'dateSorter', field: "fulfillment_grouper"}}
