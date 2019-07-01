@@ -110,7 +110,11 @@ RSpec.describe TasksController, type: :controller do
 
     it "should create a task with a note" do
       assignee = create(:identity)
-      appointment = create(:appointment, name: 'Sandy Bottoms', arm_id: 1, participant_id: 1)
+      protocol = create(:protocol)
+      arm = create(:arm, protocol: protocol)
+      participant = create(:participant)
+      protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
+      appointment = create(:appointment, name: 'Sandy Bottoms', arm_id: 1, protocols_participant: protocols_participant)
       procedure = create(:procedure, appointment_id: appointment.id)
       attributes = attributes_for(:task)
       attributes[:due_at] = "09/09/2009"

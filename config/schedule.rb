@@ -19,6 +19,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.hour, :roles => [:app] do
+every 15.minutes, :roles => [:app] do
   rake 'delayed_job_monitor'
 end

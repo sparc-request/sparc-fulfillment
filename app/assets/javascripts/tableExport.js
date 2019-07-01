@@ -21,14 +21,15 @@
 /**
  * @preserve tableExport.jquery.plugin
  *
- * Version 1.10.2
+ * Version 1.10.3
  *
- * Copyright (c) 2015-2018 hhurz, https://github.com/hhurz
+ * Copyright (c) 2015-2019 hhurz, https://github.com/hhurz
  *
  * Original Work Copyright (c) 2014 Giri Raj
  *
  * Licensed under the MIT License
  **/
+
 
 'use strict';
 

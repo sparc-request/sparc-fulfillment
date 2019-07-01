@@ -37,7 +37,7 @@ feature 'Identity views nav bar', js: true do
 
   scenario 'after switching between Protocols and views active tabs' do
     given_there_are_two_protocols
-    when_i_view_the_first_protocol_participant_tracker
+    when_i_view_the_first_participants_in_protocol_tracker
     when_i_visit_the_home_page
     when_i_view_the_second_protocol
     then_the_study_schedule_tab_should_be_active
@@ -83,7 +83,7 @@ feature 'Identity views nav bar', js: true do
     wait_for_ajax
   end
 
-  def when_i_view_the_first_protocol_participant_tracker
+  def when_i_view_the_first_participants_in_protocol_tracker
     protocol = Protocol.first
 
     visit protocol_path(protocol.id)

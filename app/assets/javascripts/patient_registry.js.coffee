@@ -18,37 +18,37 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-require 'rails_helper'
+$ ->
 
-feature 'User changes Participant Arm', js: true do
+  $(document).on 'click', '.new-participant', ->
+    data =
+      'protocol_id' : $(this).data('protocol-id')
 
-  scenario 'and sees the updated Participant' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_change_a_participants_arm
-    then_i_should_see_the_arm_is_updated
-  end
+    $.ajax
+      type: 'GET'
+      url: "/participants/new.js"
+      data: data
 
-  def given_i_am_viewing_the_participant_tracker
-    protocol    = create_and_assign_protocol_to_me
-    @second_arm  = protocol.arms.second
+  $(document).on 'click', '.search-participant', ->
+    data =
+      'protocol_id' : $(this).data('protocol-id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/search.js"
+      data: data
 
-    visit protocol_path(protocol.id)
-    wait_for_ajax
+  $(document).on 'click', '.edit-participant', ->
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/edit"
 
-    click_link 'Participant Tracker'
-    wait_for_ajax
-  end
-
-  def when_i_change_a_participants_arm
-    page.find('table.participants tbody tr:first-child td.change_arm a').click
-    wait_for_ajax
-    bootstrap_select "#participant_arm_id", @second_arm.name
-
-    click_button 'Save'
-    wait_for_ajax
-  end
-
-  def then_i_should_see_the_arm_is_updated
-    expect(page).to have_css('table.participants tbody tr:first-child td.arm_name', text: @second_arm.name)
-  end
-end
+  $(document).on 'click', '.destroy-participant', ->
+    participant_id = $(this).attr('participant_id')
+    name = $(this).attr('participant_name')
+    if confirm I18n['patient']['confirm_removal_part_1'] + " #{name} " + I18n['patient']['confirm_removal_part_2']
+      $.ajax
+        type: 'DELETE'
+        url: "/participants/#{participant_id}"
+        data: 'protocol_id': $(this).attr('protocol_id')
+    

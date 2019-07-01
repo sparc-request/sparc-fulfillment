@@ -34,7 +34,7 @@ module Features
     end
 
     def given_i_am_viewing_a_visit
-      visit participant_path @participant
+      visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
       wait_for_ajax
 
       bootstrap_select '#appointment_select', @appointment.name
@@ -42,7 +42,7 @@ module Features
     end
 
     def given_i_am_viewing_a_started_visit
-      visit participant_path @participant
+      visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
       wait_for_ajax
 
       bootstrap_select '#appointment_select', @appointment.name

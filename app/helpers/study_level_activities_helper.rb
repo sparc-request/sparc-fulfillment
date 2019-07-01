@@ -40,7 +40,7 @@ module StudyLevelActivitiesHelper
 
   def notes notes
     bullet_point = notes.count > 1 ? "\u2022 " : ""
-    notes.map{ |note| bullet_point + note.comment + ", " + Identity.find(note.identity_id).full_name + ", " + note.created_at.strftime('%Y/%m/%d') }.join("<br>")
+    notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + Identity.find(note.identity_id).full_name }.join("<br>")
   end
 
   def documents documents
@@ -68,7 +68,7 @@ module StudyLevelActivitiesHelper
   end
 
   def fulfillments_drop_button line_item
-    button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", type: 'button', class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
+    button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
   end
 
   def is_protocol_type_study? (protocol)
