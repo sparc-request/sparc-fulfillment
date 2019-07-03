@@ -38,7 +38,7 @@ feature 'User disassociates Participant to Protocol', js: true do
     click_link 'Participant Tracker'
     wait_for_ajax
 
-    click_button 'Search For Participants'
+    click_button 'Search Patient Registry'
     wait_for_ajax
   end
 

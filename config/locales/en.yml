@@ -280,7 +280,7 @@ en:
     middle_initial: "Middle Initial"
     mrn: "MRN"
     new_participant: "Create New Participant"
-    search_participant: "Search For Participants"
+    search_participant: "Search Patient Registry"
     notes: "Notes"
     participant_report: "Report"
     phone: "Phone"
