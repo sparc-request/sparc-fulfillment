@@ -19,85 +19,102 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ParticipantReport < Report
-
-  VALIDATES_PRESENCE_OF = [:title, :protocols_participant_id].freeze
+  VALIDATES_PRESENCE_OF = [:title].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
 
   def generate(document)
+    #We want to filter from 00:00:00 in the local time zone,
+    #then convert to UTC to match database times
+    @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc unless !@params[:end_date].present? || !@params[:start_date].present?
+    #We want to filter from 11:59:59 in the local time zone,
+    #then convert to UTC to match database times
+    @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second unless !@params[:start_date].present? || !@params[:end_date].present?
+
+    @gender = @params[:gender] unless @params[:gender] == 'Both' || @params[:gender] == ''
+    @mrns = @params[:mrns]
+    @protocols = @params[:protocols]
+
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
-    protocols_participant = ProtocolsParticipant.find(@params[:protocols_participant_id])
-    protocol    = Protocol.find(protocols_participant.protocol_id)
-    participant = Participant.find(protocols_participant.participant_id)
 
     CSV.open(document.path, "wb") do |csv|
-      csv << ["Protocol:", protocol.short_title_with_sparc_id]
-      csv << ["Protocol PI Name:", protocol.pi ? "#{protocol.pi.full_name} (#{protocol.pi.email})" : nil]
-      csv << ["Participant Name:", participant.full_name]
-      csv << ["Participant ID:", participant.label]
-      csv << [""]
-      csv << [""]
 
-      header_row = ["Visit Schedule", ""]
-      label_row = ["Procedure Name", "Service Cost"]
+      conditions = {:mrn => @mrns, :gender => @gender, :date_of_birth => @start_date..@end_date}
+      conditions.delete_if {|k,v| !v.present? || v.to_s == ".." }
+      participants = Participant.where(conditions)
 
-      appointments = protocols_participant.appointments.order(:position)
-
-      appointments.each do |appointment|
-        header_row << (appointment.completed_date ? appointment.completed_date.strftime("%D") : "")
-        label_row << appointment.name
+      if @protocols
+        participants = Participant.where(conditions).joins(:protocols_participants).where(protocol_id: @protocols)
       end
 
-      label_row << ""
-      label_row << "Totals"
-      csv << header_row
-      csv << label_row
-
-      csv << [""]
-
-      procedure_row_generator(protocols_participant.procedures.where.not(visit_id: nil), appointments, csv)
-
-      csv << [""]
-      csv << [""]
-      csv << ["Unscheduled Procedures"]
-      csv << [""]
-
-      procedure_row_generator(protocols_participant.procedures.where(visit_id: nil), appointments, csv)
-
-      csv << [""]
-      csv << [""]
-      csv << [""]
-      total_row = ["Total/Visit", ""]
-      grand_total = 0
-
-      appointments.each do |appointment|
-        appointment_total = appointment.procedures.where.not(completed_date: nil).to_a.sum(&:service_cost)
-        total_row << display_cost(appointment_total)
-        grand_total += appointment_total
+      if @start_date || @gender || @mrns || @protocols
+        csv << ["Chosen Filters:"]
       end
 
-      total_row << ""
-      total_row << display_cost(grand_total)
-      csv << total_row
-    end
-  end
-
-  def procedure_row_generator(procedures, appointments, csv)
-    procedures.to_a.group_by(&:service).each do |service, procedures_by_service|
-      procedures_by_service.group_by(&:cost).each do |service_cost, procedures_by_cost|
-        total_for_row = 0
-        procedure_row = [service.name]
-        procedure_row << display_cost(service_cost)
-        appointments.each do |appointment|
-          cost = procedures_by_cost.select{|procedure| procedure.appointment_id == appointment.id && procedure.complete?}.sum(&:service_cost)
-          procedure_row << display_cost(cost)
-          total_for_row += cost
-        end
-        procedure_row << ""
-        procedure_row << display_cost(total_for_row)
-        csv << procedure_row
+      if @start_date
+        csv << ["From Date of Birth", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To Date of Birth", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
       end
+
+      if @gender
+        csv << ["Gender", @gender]
+      end
+
+      if @mrns
+        csv << ["MRN's", @mrns.join(', ')]
+      end
+
+      if @protocols
+        csv << ["Protocols(Sparc ID)", Protocol.find(@protocols).map(&:sparc_id).join(', ')]
+      end
+
+      header = [ "Participant ID" ]
+      header << "First Name"
+      header << "Middle Initial"
+      header << "Last Name"
+      header << "MRN"
+      header << "Status"
+      header << "Date of Birth"
+      header << "Gender"
+      header << "Ethnicity"
+      header << "Race"
+      header << "Address"
+      header << "Phone"
+      header << "Created At"
+      header << "Updated At"
+      header << "City"
+      header << "State"
+      header << "Zip"
+      header << "Recruitment Source"
+      header << "Protocol(s)"
+
+      csv << header
+      
+      participants.find_each do |participant|
+        data = [participant.id]
+        data << participant.first_name
+        data << participant.middle_initial
+        data << participant.last_name
+        data << "'#{participant.mrn}"
+        data << participant.status
+        data << participant.date_of_birth
+        data << participant.gender
+        data << participant.ethnicity
+        data << participant.race
+        data << participant.address
+        data << participant.phone
+        data << participant.created_at
+        data << participant.updated_at
+        data << participant.city
+        data << participant.state
+        data << participant.zipcode
+        data << participant.recruitment_source
+        data << participant.protocols.map(&:sparc_id).map(&:inspect).join(', ')
+
+        csv << data
+      end
+      
     end
   end
 end
+
