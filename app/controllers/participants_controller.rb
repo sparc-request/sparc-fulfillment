@@ -45,6 +45,8 @@ class ParticipantsController < ApplicationController
   def find_participants(action_name)
     if action_name == "protocols_participants_in_protocol"
       @participants = Participant.by_protocol_id(@protocol.id)
+    elsif action_name == "associate_participants_to_protocol"
+      @participants = Participant.able_to_be_associated
     else
       @participants = Participant.all
     end
@@ -230,7 +232,7 @@ class ParticipantsController < ApplicationController
   end
 
   def participant_params
-    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn, :external_id,:date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
+    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn, :external_id,:date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source, :deidentified)
   end
 
   def protocols_participant_params

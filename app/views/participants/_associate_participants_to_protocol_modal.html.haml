@@ -37,6 +37,7 @@
               %th{data: {class: 'first_name truncate', align: "left", sortable: "true", field: "first_middle"}}= t(:participant)[:first_name]
               %th{data: {class: 'mrn truncate', align: "left", sortable: "true", field: "mrn"}}= t(:participant)[:mrn]
               %th{data: {class: 'date_of_birth truncate', align: "left", sortable: "true", field: "date_of_birth"}}= t(:participant)[:dob]  
+              %th{data: {class: 'deidentified truncate', align: "left", sortable: "true", field: "deidentified", visible: "true"}}= t(:participant)[:deidentified] 
               %th{data: {class: 'recruitment_source', align: "left", sortable: "true", field: "recruitment_source", visible: "false"}}= t(:participant)[:recruitment_source]
               %th{data: {class: 'phone truncate', align: "left", sortable: "true", field: "phone"}}= t(:participant)[:phone_num]
     .modal-footer

@@ -260,6 +260,7 @@ en:
     city: "City"
     details: "Participant Details"
     dob: "Date of Birth"
+    deidentified: "De-identified"
     ethnicity: "Ethnicity"
     first_name: "First Name"
     flash_messages:
@@ -373,6 +374,7 @@ en:
     registry: "Patient Registry"
     confirm_removal_part_1: "Are you sure you want to remove"
     confirm_removal_part_2: "from Patient Registry?"
+    deidentified_patient: "De-identified Patient"
 
   reports:
     asc: "ASC"

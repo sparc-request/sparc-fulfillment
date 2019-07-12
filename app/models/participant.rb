@@ -65,6 +65,10 @@ class Participant < ApplicationRecord
   scope :except_by_protocol_id, -> (protocol_id) {
     joins(:protocols_participants).where("protocols_participants.protocol_id != ? ", protocol_id)
   }
+  ### A participant is marked as "de-identified" and has been associated to a protocol
+  scope :deidentified_true_and_associated_to_a_protocol, -> { where(deidentified: true).joins(:protocols_participants).ids }
+
+  scope :able_to_be_associated, -> { where(id: (Participant.all.ids - deidentified_true_and_associated_to_a_protocol).uniq) }
 
   def self.title id
     participant = Participant.find id

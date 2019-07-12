@@ -68,7 +68,8 @@ class ParticipantReport < Report
         csv << ["Protocols(Sparc ID)", Protocol.find(@protocols).map(&:sparc_id).join(', ')]
       end
 
-      header = [ "Participant ID" ]
+      header = ["De-identified"]
+      header << "Participant ID"
       header << "First Name"
       header << "Middle Initial"
       header << "Last Name"
@@ -91,7 +92,8 @@ class ParticipantReport < Report
       csv << header
       
       participants.find_each do |participant|
-        data = [participant.id]
+        data = [participant.deidentified]
+        data << participant.id
         data << participant.first_name
         data << participant.middle_initial
         data << participant.last_name

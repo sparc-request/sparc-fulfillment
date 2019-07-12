@@ -150,6 +150,10 @@ module ParticipantHelper
                   button_class: 'participant_notes'})
   end
 
+  def deidentified_patient(participant)
+    participant.deidentified == false ? "No" : "Yes"
+  end
+
   def participant_report_formatter(protocols_participant)
     icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
     button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button participant_report dropdown-toggle', id: "participant_report_#{protocols_participant.id.to_s}", 'aria-expanded' => 'false', title: 'Participant Report', 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report',  'data-documentable_id' => protocols_participant.protocol_id, 'data-documentable_type' => 'Protocol', 'data-protocols_participant_id' => protocols_participant.id)
