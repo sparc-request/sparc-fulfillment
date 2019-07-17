@@ -151,7 +151,7 @@ module ParticipantHelper
   end
 
   def deidentified_patient(participant)
-    participant.deidentified == false ? "No" : "Yes"
+    participant.deidentified == false ? "No" : participant.deidentified == true ? "Yes" : "N/A"
   end
 
   def participant_report_formatter(protocols_participant)
