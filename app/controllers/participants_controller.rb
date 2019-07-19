@@ -26,6 +26,7 @@ class ParticipantsController < ApplicationController
   before_action :note_old_protocols_participant_attributes, only: [:update_status, :update_arm]
   before_action :authorize_protocol, only: [:show]
   before_action :authorize_patient_registrar, only: [:index]
+  before_action :format_participant_name, only: [:create]
 
   def index
     @page = params[:page]
@@ -40,6 +41,12 @@ class ParticipantsController < ApplicationController
       format.html
       format.json
     end
+  end
+
+  def format_participant_name
+    params[:participant][:first_name] = params[:participant][:first_name].upcase.squish
+    params[:participant][:last_name] = params[:participant][:last_name].upcase.squish
+    params[:participant][:middle_initial] = params[:participant][:middle_initial].upcase.squish
   end
 
   def find_participants(action_name)
