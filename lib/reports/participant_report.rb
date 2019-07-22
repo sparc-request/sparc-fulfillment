@@ -42,13 +42,13 @@ class ParticipantReport < Report
 
       conditions = {:mrn => @mrns, :gender => @gender, :date_of_birth => @start_date..@end_date}
       conditions.delete_if {|k,v| !v.present? || v.to_s == ".." }
-      participants = Participant.where(conditions)
+      participants = Participant.where(conditions).distinct
 
       if @protocols
-        participants = Participant.where(conditions).joins(:protocols_participants).where(protocol_id: @protocols)
+        participants = Participant.where(conditions).joins(:protocols_participants).where(protocol_id: @protocols).distinct
       end
 
-      if @start_date || @gender || @mrns || @protocols
+      if @start_date || @gender
         csv << ["Chosen Filters:"]
       end
 
@@ -58,14 +58,6 @@ class ParticipantReport < Report
 
       if @gender
         csv << ["Gender", @gender]
-      end
-
-      if @mrns
-        csv << ["MRN's", @mrns.join(', ')]
-      end
-
-      if @protocols
-        csv << ["Protocols(Sparc ID)", Protocol.find(@protocols).map(&:sparc_id).join(', ')]
       end
 
       header = [ "Participant ID" ]
@@ -80,8 +72,6 @@ class ParticipantReport < Report
       header << "Race"
       header << "Address"
       header << "Phone"
-      header << "Created At"
-      header << "Updated At"
       header << "City"
       header << "State"
       header << "Zip"
@@ -89,13 +79,13 @@ class ParticipantReport < Report
       header << "Protocol(s)"
 
       csv << header
-      
       participants.find_each do |participant|
+
         data = [participant.id]
         data << participant.first_name
         data << participant.middle_initial
         data << participant.last_name
-        data << "'#{participant.mrn}"
+        data << "MRN: #{participant.mrn}"
         data << participant.status
         data << participant.date_of_birth
         data << participant.gender
@@ -103,8 +93,6 @@ class ParticipantReport < Report
         data << participant.race
         data << participant.address
         data << participant.phone
-        data << participant.created_at
-        data << participant.updated_at
         data << participant.city
         data << participant.state
         data << participant.zipcode
