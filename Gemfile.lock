@@ -235,9 +235,8 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     io-like (0.3.0)
-    jbuilder (2.8.0)
+    jbuilder (2.9.1)
       activesupport (>= 4.2.0)
-      multi_json (>= 1.2)
     jquery-rails (4.3.5)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -275,7 +274,7 @@ GEM
       net-ssh (>= 2.6.5, < 6.0.0)
     net-ssh (5.2.0)
     netrc (0.11.0)
-    nio4r (2.3.1)
+    nio4r (2.4.0)
     nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
     omniauth (1.9.0)
@@ -303,7 +302,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     public_suffix (3.1.1)
-    puma (4.0.0)
+    puma (4.0.1)
       nio4r (~> 2.0)
     rack (2.0.7)
     rack-accept (0.4.5)
@@ -523,7 +522,7 @@ DEPENDENCIES
   grape (~> 1.2.4)
   haml-rails
   hashie-forbidden_attributes
-  jbuilder (~> 2.8)
+  jbuilder (~> 2.9)
   jquery-rails
   launchy
   letter_opener

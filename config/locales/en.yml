@@ -394,6 +394,7 @@ en:
     participant_report: "Participant Report"
     primary_pi: "Primary PI"
     project_summary_report: "Project Summary Report"
+    not_required_protocols: "Protocol(s)"
     protocols: "Protocol(s)*"
     protocol_id: "Protocol ID"
     request_report: "Request Report"
