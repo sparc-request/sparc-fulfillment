@@ -60,7 +60,8 @@ class ParticipantReport < Report
         csv << ["Gender", @gender]
       end
 
-      header = [ "Participant ID" ]
+      header = ["Participant ID"]
+      header << "De-identified"
       header << "First Name"
       header << "Middle Initial"
       header << "Last Name"
@@ -80,8 +81,10 @@ class ParticipantReport < Report
 
       csv << header
       participants.find_each do |participant|
+        deidentified = participant.deidentified == false ? "No" : participant.deidentified == true ? "Yes" : "N/A"
 
         data = [participant.id]
+        data << deidentified
         data << participant.first_name
         data << participant.middle_initial
         data << participant.last_name
