@@ -47,6 +47,11 @@ class InvoiceReport < Report
     end
   end
 
+  def insert_blank_column_for_notes(totals)
+    totals.insert(0,"") if @params[:include_notes] == "true"
+    totals
+  end
+
   def generate(document)
     #We want to filter from 00:00:00 in the local time zone,
     #then convert to UTC to match database times
@@ -227,8 +232,15 @@ class InvoiceReport < Report
         end
         if fulfillments.any? or procedures.any?
           csv << [""]
-          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Non-clinical and Clinical Services Total:", display_cost(total)]
-          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy:", display_cost(total_with_subsidy)] if protocol.sub_service_request.subsidy
+
+          total_services = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Non-clinical and Clinical Services Total:", display_cost(total)]
+          csv << insert_blank_column_for_notes(total_services)
+
+          if protocol.sub_service_request.subsidy
+            total_subsidy = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy:", display_cost(total_with_subsidy)]
+            csv << insert_blank_column_for_notes(total_subsidy)
+          end
+
           csv << [""]
           csv << [""]
         end
