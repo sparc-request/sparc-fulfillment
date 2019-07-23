@@ -14,6 +14,7 @@ json.rows @participants do |participant|
     json.gender participant.gender
     json.ethnicity participant.ethnicity
     json.race participant.race
+    json.deidentified deidentified_patient(participant)
     json.address truncated_formatter(participant.address)
     json.phone phoneNumberFormatter(participant)
     json.edit registry_edit_formatter(participant)

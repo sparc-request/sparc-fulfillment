@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2019 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -18,15 +18,8 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_area").html("<%= escape_javascript(render(:partial =>'participants/associate_participants_to_protocol_modal', locals: {protocol: @protocol})) %>");
-$("#modal_place").modal 'show'
-$("#patient-registry-modal").bootstrapTable()
-
-### De-identified Patient ###
-$('#patient-registry-modal').on 'load-success.bs.table', ->
-  $rows = $('#patient-registry-modal tr')
-  $rows.each (i, item) ->
-    $this = $(item)
-    if $(item).find("td.deidentified:contains('Yes')").length
-      $this.addClass 'deidentified_patient'
-    return
+class ChangeParticipantTypeToDate < ActiveRecord::Migration[5.2]
+  def change
+    change_column :participants, :date_of_birth, :date
+  end
+end

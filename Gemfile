@@ -25,7 +25,7 @@ gem 'grape', '~> 1.2.4'
 gem 'haml-rails'
 gem 'hashie-forbidden_attributes'
 gem 'jquery-rails'
-gem 'jbuilder', '~> 2.8'
+gem 'jbuilder', '~> 2.9'
 gem 'letter_opener'
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'mysql2'
@@ -64,7 +64,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 1.9.3'
+  gem 'faker', '~> 1.9.6'
   gem 'pry'
 end
 

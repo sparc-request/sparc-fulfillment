@@ -135,8 +135,7 @@ $ ->
 ### Add "exclude_in_export" class to columns you want excluded from export and then pass in table ID ###
 window.exclude_from_export = (table_id) ->
   excluded_cols = []
-  $('.exclude_in_export').each ->
+  $('#'+table_id + ' .exclude_in_export').each ->
     excluded_cols.push $(this).closest('th').index()
-
   if excluded_cols.length
     $('#'+table_id).data('export-options').ignoreColumn = excluded_cols

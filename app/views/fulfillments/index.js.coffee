@@ -22,3 +22,6 @@ $("#modal_area").html("<%= escape_javascript(render(:partial =>'study_level_acti
 $("#fulfillments-table").bootstrapTable()
 $("#modal_place").modal(backdrop: 'static', keyboard: false)
 $("#modal_place").modal 'show'
+$('.fulfillments-list li').find("[data-field='docs']").closest('li').hide()
+$('.fulfillments-list li').find("[data-field='notes']").closest('li').hide()
+exclude_from_export('fulfillments-table')
