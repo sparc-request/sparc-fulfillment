@@ -284,8 +284,8 @@ GEM
       omniauth (>= 1.0.0)
     options (2.3.2)
     orm_adapter (0.5.0)
-    paper_trail (10.3.0)
-      activerecord (>= 4.2, < 6.1)
+    paper_trail (10.3.1)
+      activerecord (>= 4.2)
       request_store (~> 1.1)
     paperclip (6.1.0)
       activemodel (>= 4.2.0)
@@ -531,7 +531,7 @@ DEPENDENCIES
   net-ldap
   omniauth
   omniauth-shibboleth
-  paper_trail (~> 10.3.0)
+  paper_trail (~> 10.3.1)
   paperclip (~> 6.1)
   paranoia (~> 2.4)
   progress_bar
