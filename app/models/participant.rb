@@ -40,7 +40,7 @@ class Participant < ApplicationRecord
   validates :first_name, presence: true
 
   validate :middle_initial_format
-
+  validate :mrn_format, if: :validate_mrn_true
   validates :mrn, presence: true
   validates_uniqueness_of :mrn
   validates_length_of :mrn, maximum: 255
@@ -101,6 +101,18 @@ class Participant < ApplicationRecord
         errors.add(:middle_initial, "must be a single letter")
       end
     end
+  end
+
+  def mrn_format
+    if !mrn.blank?
+      if !mrn.scan(/\D/).empty?
+        errors.add(:mrn, "must only contain numbers")
+      end
+    end
+  end
+
+  def validate_mrn_true
+    ENV['VALIDATE_MRN'].present? ? ENV.fetch('VALIDATE_MRN') == 'true' : false
   end
 
   def label
