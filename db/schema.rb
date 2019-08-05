@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_14_012215) do
+ActiveRecord::Schema.define(version: 2019_07_01_115421) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "status"
@@ -199,7 +199,7 @@ ActiveRecord::Schema.define(version: 2019_06_14_012215) do
     t.string "last_name", collation: "utf8_unicode_ci"
     t.string "mrn"
     t.string "status"
-    t.datetime "date_of_birth"
+    t.date "date_of_birth"
     t.string "gender"
     t.string "ethnicity"
     t.string "race"
@@ -267,7 +267,7 @@ ActiveRecord::Schema.define(version: 2019_06_14_012215) do
     t.index ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id"
   end
 
-  create_table "protocols_participants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "protocols_participants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.bigint "protocol_id"
     t.bigint "participant_id"
     t.bigint "arm_id"
