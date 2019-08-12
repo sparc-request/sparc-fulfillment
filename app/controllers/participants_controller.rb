@@ -194,8 +194,8 @@ class ParticipantsController < ApplicationController
       case params[:sort]
       when 'last_name'
         "participants.last_name #{order}"
-      when 'first_name'
-        "participants.first_name #{order}"
+      when 'first_middle'
+         "participants.first_name #{order}"
       when 'mrn'
         "participants.mrn #{order}"
       when 'recruitment_source'
