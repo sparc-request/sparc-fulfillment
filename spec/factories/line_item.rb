@@ -26,7 +26,7 @@ FactoryBot.define do
     protocol { nil }
     name { nil }
     sparc_id
-    quantity_requested { Faker::Number.number(3) }
+    quantity_requested { Faker::Number.number(digits: 3) }
     quantity_type { "Each" }
 
     trait :with_fulfillments do
