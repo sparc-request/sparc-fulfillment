@@ -29,7 +29,7 @@ FactoryBot.define do
     end_date { Time.current }
     recruitment_start_date { Faker::Date.between(from: 10.years.ago, to: 3.days.ago) }
     recruitment_end_date { Time.current }
-    study_cost { Faker::Number.number(8) }
+    study_cost { Faker::Number.number(digits: 8) }
 
     after(:create) do |protocol, evaluator|
       sparc_protocol = create(:sparc_protocol)
