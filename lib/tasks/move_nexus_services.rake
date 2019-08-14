@@ -79,6 +79,8 @@ task move_nexus_services: :environment do
       has_both = true
     end
 
-    request_list << [protocol.id, has_multiple_samples, has_both]
+    if (has_both == true) || (has_multiple_samples == true)
+      request_list << [protocol.sparc_id, has_multiple_samples, has_both]
+    end
   end
 end
