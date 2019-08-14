@@ -49,7 +49,7 @@ class MultipleLineItemsController < ApplicationController
           @arm_hash[arm_id] = {page: page, line_item: line_item}
         end
       end
-      
+
       flash.now[:success] = t(:services)[:created]
     else
       @service.errors.add(:arms, "to add '#{@service.name}' to must be selected")
@@ -60,7 +60,7 @@ class MultipleLineItemsController < ApplicationController
   def edit_line_items
     # called to render modal to mass remove line items
     protocol = Protocol.find(params[:protocol_id])
-    @line_items = protocol.line_items.includes(:arm, :service, appointments: :procedures).select{ |li| li.appointments.none?(&:has_completed_procedures?) }
+    @line_items = protocol.line_items.select{|line_item| !line_item.one_time_fee && line_item.arm.procedures.where(service_id: line_item.service_id).touched.empty? }
   end
 
   def destroy_line_items
