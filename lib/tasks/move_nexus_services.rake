@@ -2,6 +2,7 @@ task move_nexus_services: :environment do
 
   old_service_ids = [42,58,126,208,486,487,3548]
   new_service_id  = 37996
+  new_service_name = 'Sample Processing'
 
   line_items = LineItem.where(service_id: old_service_ids)
   procedures = Procedure.where(service_id: old_service_ids)
@@ -31,7 +32,7 @@ task move_nexus_services: :environment do
       puts procedure.service_id
       puts "<>" * 20
       data_altered << ['Procedure', procedure.id, procedure.service_id, procedure.status, '']
-      procedure.update_attributes(service_id: new_service_id)
+      procedure.update_attributes(service_id: new_service_id, service_name: new_service_name)
     elsif (procedure.status == 'complete') && (procedure.completed_date > "2019-7-1")
       puts "8" * 100
       puts procedure.status
@@ -39,7 +40,7 @@ task move_nexus_services: :environment do
       puts procedure.completed_date
       puts "8" * 100 
       data_altered << ['Procedure', procedure.id, procedure.service_id, procedure.status, procedure.completed_date]
-      procedure.update_attributes(service_id: new_service_id)
+      procedure.update_attributes(service_id: new_service_id, service_name: new_service_name)
     end
   end
 end
