@@ -56,17 +56,18 @@ task move_nexus_services: :environment do
     has_both = false
 
     protocol.arms.each do |arm|
-      processing_services = arm.line_items.map{|item| item.service_id == 37996}
+      processing_services = arm.line_items.select{|item| item.service_id == 37996}
       if processing_services.size > 1
         has_multiple_samples = true
       end
 
       inactive_service_ids.each do |id|
         arm.line_items.each do |item|
-          if item.id == id
+          service_id = item.service_id
+          if service_id == id
             has_inactive = true
             puts "Has inactive service"
-          elsif item.id = 37996
+          elsif service_id == 37996
             puts "Has sample service"
             has_sample = true
           end
