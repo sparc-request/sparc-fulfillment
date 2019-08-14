@@ -43,4 +43,42 @@ task move_nexus_services: :environment do
       procedure.update_attributes(service_id: new_service_id, service_name: new_service_name)
     end
   end
+
+  request_list = CSV.open("tmp/request_list.csv", "wb")
+  request_list << ['Protocol ID', 'Multiple Sample Processing', 'Sample Processing and Inactive']
+  inactive_service_ids = [42,58,126,208,486,487,3548]
+
+  Protocol.all.each do |protocol|
+    puts "Checking protocol #{protocol.id}"
+    has_sample = false
+    has_inactive = false
+    has_multiple_samples = false
+    has_both = false
+
+    protocol.arms.each do |arm|
+      processing_services = arm.line_items.map{|item| item.service_id == 37996}
+      if processing_services.size > 1
+        has_multiple_samples = true
+      end
+
+      inactive_service_ids.each do |id|
+        arm.line_items.each do |item|
+          if item.id == id
+            has_inactive = true
+            puts "Has inactive service"
+          elsif item.id = 37996
+            puts "Has sample service"
+            has_sample = true
+          end
+        end
+      end
+    end
+
+    if (has_sample == true) && (has_inactive == true)
+      puts "Has both sample and inactive services"
+      has_both = true
+    end
+
+    request_list << [protocol.id, has_multiple_samples, has_both]
+  end
 end
