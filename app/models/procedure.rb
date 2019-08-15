@@ -58,6 +58,7 @@ class Procedure < ApplicationRecord
   scope :untouched,   -> { where(status: 'unstarted') }
   scope :incomplete,  -> { where(status: 'incomplete') }
   scope :complete,    -> { where(status: 'complete') }
+  scope :touched,     -> { where.not(status: 'unstarted') }
 
   # select Procedures that belong to an Appointment without a start date
   scope :belonging_to_unbegun_appt, -> { joins(:appointment).where('appointments.start_date IS NULL') }
