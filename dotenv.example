@@ -43,6 +43,7 @@ LDAP_AUTH_PASSWORD=
 USE_EPIC=false
 USE_INDIRECT_COST=false
 ENVIRONMENT=testing
+VALIDATE_MRN=true
 TESTING_EMAIL=sparcrequest@gmail.com
 # add the following lines if you have a Research Master ID service (RMID)
 USE_RMID=false
