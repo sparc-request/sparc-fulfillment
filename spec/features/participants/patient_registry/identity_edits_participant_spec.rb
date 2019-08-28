@@ -37,7 +37,7 @@ feature 'User edits Participant', js: true do
 
   def when_i_update_a_participants_details
     page.find('table.participants tbody tr:first-child td.edit a').click
-    fill_in 'First Name', with: 'Starlord'
+    fill_in 'First Name', with: 'STARLORD'
     page.execute_script %Q{ $('#dob_time_picker').trigger("focus") }
     page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
 
@@ -49,6 +49,6 @@ feature 'User edits Participant', js: true do
   def then_i_should_see_the_updated_details
     expect(page).to have_css('#flashes_container', text: 'Participant Updated')
     wait_for_ajax
-    expect(page).to have_css('table.participants tbody tr td.first_name', text: 'Starlord')
+    expect(page).to have_css('table.participants tbody tr td.first_name', text: 'STARLORD')
   end
 end
