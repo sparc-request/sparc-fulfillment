@@ -26,7 +26,7 @@ class ParticipantsController < ApplicationController
   before_action :note_old_protocols_participant_attributes, only: [:update_status, :update_arm]
   before_action :authorize_protocol, only: [:show]
   before_action :authorize_patient_registrar, only: [:index]
-  before_action :format_participant_name, only: [:create]
+  before_action :format_participant_name, only: [:create, :update]
 
   def index
     @page = params[:page]
