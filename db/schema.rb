@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_01_115421) do
+ActiveRecord::Schema.define(version: 2019_07_10_135118) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "status"
@@ -215,6 +215,7 @@ ActiveRecord::Schema.define(version: 2019_07_01_115421) do
     t.string "recruitment_source"
     t.string "external_id"
     t.string "middle_initial", limit: 1
+    t.boolean "deidentified", default: false
     t.index ["arm_id"], name: "index_participants_on_arm_id"
     t.index ["deleted_at"], name: "index_participants_on_deleted_at"
     t.index ["mrn"], name: "index_participants_on_mrn"
