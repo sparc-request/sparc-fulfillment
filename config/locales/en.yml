@@ -382,6 +382,7 @@ en:
     auditing_report: "Auditing Report"
     desc: "DESC"
     descending: "Descending"
+    inactive: " (inactive)"
     include_notes: "Include Notes"
     include_invoiced: "Include Invoiced"
     invoice_report: "Invoice Report"
