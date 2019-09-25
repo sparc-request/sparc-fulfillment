@@ -46,9 +46,12 @@
                   = t(:fulfillment)[:components]
                 %th{data: {class: 'options exclude_in_export', align: "center", field: "options"}}
                   = t(:actions)[:actions]
-                - if line_item.fulfillments.any?{|fulfillment| fulfillment.invoiced == true}
-                  %th{data: {class: 'invoiced', align: "center", field: "invoiced"}}
-                    = t(:fulfillment)[:invoiced]
+                - if @current_user.billing_manager_protocols.includes?(line_item.protocol)
+                  -# Do stuff
+                - else
+                  - if line_item.fulfillments.any?{|fulfillment| fulfillment.invoiced == true}
+                    %th{data: {class: 'invoiced', align: "center", field: "invoiced"}}
+                      = t(:fulfillment)[:invoiced]
                 %th{data: {class: 'notes hidden', align: "center", field: "notes"}}
                   = t(:line_item)[:notes]
                 %th{data: {class: 'docs hidden', align: "center", field: "docs"}}

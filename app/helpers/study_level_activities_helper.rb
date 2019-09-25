@@ -103,6 +103,9 @@ module StudyLevelActivitiesHelper
     raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
+  def invoiced_toggle fulfillment
+  end
+
   def fulfillment_grouper_formatter fulfillment
     fulfillment.fulfilled_at.strftime('%b %Y')
   end
