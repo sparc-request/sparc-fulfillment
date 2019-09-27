@@ -48,6 +48,7 @@ multi_select.multiselect({
   disableIfEmpty: true,
   enableClickableOptGroups: true,
   enableCaseInsensitiveFiltering: true,
+  enableHTML: true,
   buttonWidth: '100%',
   onDropdownShow: (e) ->
     # If user does not select an organization,

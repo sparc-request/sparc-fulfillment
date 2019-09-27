@@ -41,10 +41,10 @@ RSpec.describe InvoiceReportGroupedOptions do
           program_with_protocols,
           core_with_protocols,
         ]
-    
-        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Providers", [["Gryffindor", provider_id]]], ["Programs", [["Slytherin", program_id]]], ["Cores", [["Hufflepuff", core_id]]]])
-     
-      end 
+
+        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Providers", [["<span class=\"text\">Gryffindor</span>", provider_id]]], ["Programs", [["<span class=\"text\">Slytherin</span>", program_id]]], ["Cores", [["<span class=\"text\">Hufflepuff</span>", core_id]]]])
+
+      end
     end
 
     context 'program, and core all have organizations with protocols' do
@@ -61,10 +61,10 @@ RSpec.describe InvoiceReportGroupedOptions do
           program_with_protocols,
           core_with_protocols
         ]
-    
-        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Programs", [["Slytherin", program_id]]], ["Cores", [["Hufflepuff", core_id]]]])
-     
-      end 
+
+        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Programs", [["<span class=\"text\">Slytherin</span>", program_id]]], ["Cores", [["<span class=\"text\">Hufflepuff</span>", core_id]]]])
+
+      end
     end
   end
 end
