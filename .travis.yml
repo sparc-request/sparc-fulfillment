@@ -1,17 +1,19 @@
 language: ruby
 cache: bundler
-dist: precise
+dist: xenial
 addons:
   firefox: latest
 env:
   - MOZ_HEADLESS=1
 
+services:
+  - xvfb
+  - mysql
+
 before_install:
   - "export TZ=America/New_York"
 before_script:
   - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
   - cp config/database.yml.example config/database.yml
   - cp config/sparc_db.yml.example config/sparc_db.yml
   - cp config/klok_db.yml.example config/klok_db.yml
