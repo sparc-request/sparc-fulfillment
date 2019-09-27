@@ -19,12 +19,16 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class InvoiceReportGroupedOptions
+  include ActionView::Helpers::TagHelper
+
   def initialize(organizations)
     @organizations = organizations
   end
 
   def collect_grouped_options
-    groups = @organizations.group_by(&:type)
+    groups = @organizations.
+      sort { |lhs, rhs| lhs.name <=> rhs.name }.
+      group_by(&:type)
     options = ["Institution", "Provider", "Program", "Core"].map do |type|
       next unless groups[type].present?
       [type.pluralize, extract_name_and_id(groups[type])]
@@ -35,6 +39,15 @@ class InvoiceReportGroupedOptions
   private
 
   def extract_name_and_id(orgs)
-    orgs.map { |org| [org.name, org.id] }
+    org_options = []
+    inactive = content_tag(:strong, I18n.t(:reports)[:inactive], class: 'text-danger')
+    orgs.each do |org|
+      name = content_tag(
+              :span,
+              org.name + (org.is_available ? "" : inactive),
+              class: 'text')
+      org_options << [raw(name), org.id]
+    end
+    org_options
   end
 end
