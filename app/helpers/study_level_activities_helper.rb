@@ -103,7 +103,15 @@ module StudyLevelActivitiesHelper
     raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
-  def invoiced_toggle fulfillment
+  def toggle_invoiced fulfillment
+    if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
+      html = '-'
+      html = raw content_tag(:input, '', id: 'invoiced_fulfillment', class: 'invoiced', name: 'invoiced', type: 'checkbox', checked: fulfillment.invoiced? ? "checked" : nil, "data-off" => "No", "data-offstyle" => "danger", "data-on" => "Yes", "data-onstyle" => "success", "data-toggle" => "toggle", data: {documentable_id: fulfillment.id, documentable_type: "Fulfillment"})
+
+      html
+    else
+      (fulfillment.invoiced? ? "Yes" : "No")
+    end
   end
 
   def fulfillment_grouper_formatter fulfillment

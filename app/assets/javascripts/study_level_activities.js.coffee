@@ -20,6 +20,15 @@
 
 $ ->
 
+  $(document).on 'click', '#invoiced_fulfillment', ->
+    invoiced = $(this).prop('checked')
+    fulfillment_id = $(this).data('documentable-id')
+    data = invoiced: invoiced
+    $.ajax
+      type: 'PUT'
+      url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
+      data: data
+
   allowSubmit = true
   # Line Item Bindings
 

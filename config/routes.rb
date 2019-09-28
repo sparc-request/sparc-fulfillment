@@ -29,7 +29,6 @@ Rails.application.routes.draw do
   resources :protocols
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
-  resources :fulfillments
   resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents
@@ -41,6 +40,12 @@ Rails.application.routes.draw do
   resources :reports, only: [:new, :create] do
     collection do
       get 'update_protocols_dropdown'
+    end
+  end
+
+  resources :fulfillments do
+    collection do
+      put 'toggle_invoiced(/:id)', to: 'fulfillments#toggle_invoiced'
     end
   end
 

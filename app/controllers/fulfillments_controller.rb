@@ -20,7 +20,7 @@
 
 class FulfillmentsController < ApplicationController
 
-  before_action :find_fulfillment, only: [:edit, :update]
+  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced]
 
   def index
     @line_item = LineItem.find(params[:line_item_id])
@@ -69,6 +69,11 @@ class FulfillmentsController < ApplicationController
     else
       @errors = @fulfillment.errors
     end
+  end
+
+  def toggle_invoiced
+    invoiced = params[:invoiced] == 'true' ? true : params[:invoiced] == 'false' ? false : nil
+    @fulfillment.update_attributes(invoiced: invoiced)
   end
 
   def destroy
