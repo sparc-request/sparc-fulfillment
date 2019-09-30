@@ -72,8 +72,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def toggle_invoiced
-    invoiced = params[:invoiced] == 'true' ? true : params[:invoiced] == 'false' ? false : nil
-    @fulfillment.update_attributes(invoiced: invoiced)
+    @fulfillment.update_attributes(invoiced: params[:invoiced])
   end
 
   def destroy
