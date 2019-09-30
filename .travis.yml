@@ -12,6 +12,7 @@ services:
 
 before_install:
   - "export TZ=America/New_York"
+  - gem install bundler
 before_script:
   - "export DISPLAY=:99.0"
   - cp config/database.yml.example config/database.yml
