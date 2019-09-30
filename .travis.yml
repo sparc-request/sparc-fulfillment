@@ -11,8 +11,9 @@ services:
   - mysql
 
 before_install:
-  - "export TZ=America/New_York"
+  - gem update --system
   - gem install bundler
+  - "export TZ=America/New_York"
 before_script:
   - "export DISPLAY=:99.0"
   - cp config/database.yml.example config/database.yml
