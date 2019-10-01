@@ -64,7 +64,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 2.4.0'
+  gem 'faker', '~> 2.5.0'
   gem 'pry'
 end
 
@@ -90,6 +90,6 @@ group :test do
   gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', "~> 4.1.2", require: false
   gem 'timecop'
-  gem 'webmock', '~> 3.7.5'
+  gem 'webmock', '~> 3.7.6'
   gem 'vcr', '~> 5.0.0'
 end
