@@ -20,6 +20,14 @@
 
 $ ->
 
+  $(document).on 'change', '#invoice_toggle_container :input', ->
+    data = invoiced: $(this).val()
+    fulfillment_id = $(this).parents('div#invoice_toggle_container').data('fulfillment-id')
+    $.ajax
+      type: 'PUT'
+      url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
+      data: data
+
   allowSubmit = true
   # Line Item Bindings
 
@@ -105,7 +113,7 @@ $ ->
 
   # Do not display in dropdown that allows you to add/remove columns
   # These columns will always be outputted to the export file
-  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')  
+  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')
   # because it will not show up in the export file
 
   $('#study_level_activities li').find("[data-field='docs']").closest('li').hide()
