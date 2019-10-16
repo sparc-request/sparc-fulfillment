@@ -176,7 +176,8 @@ class AuditingReport < Report
     formatted = []
     changeset.select{|k, v| k != "updated_at"}.each do |field, changes|
       if field == "service_id"
-        formatted << "#{field.humanize}: #{Service.find(changes.first).name} => #{Service.find(changes.last).name}"
+        original_service = Service.find_by_id(changes.first)
+        formatted << "#{field.humanize}: #{service.nil? ? 'Service Not Found' : original_service.name} => #{Service.find(changes.last).name}"
       else
         formatted << "#{field.humanize}: #{changes.first} => #{changes.last}"
       end
