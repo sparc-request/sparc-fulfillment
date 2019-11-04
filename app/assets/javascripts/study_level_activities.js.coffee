@@ -20,16 +20,16 @@
 
 $ ->
 
-  $(document).on 'change', '#invoice_toggle_container :input', ->
-    data = invoiced: $(this).val()
-    fulfillment_id = $(this).parents('div#invoice_toggle_container').data('fulfillment-id')
+  allowSubmit = true
+  # Line Item Bindings
+
+  $(document).on 'change', 'input.invoice_toggle', ->
+    data = invoiced: $(this).prop('checked')
+    fulfillment_id = $(this).data('id')
     $.ajax
       type: 'PUT'
       url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
       data: data
-
-  allowSubmit = true
-  # Line Item Bindings
 
   $(document).on 'click', ".otf_service_new", ->
     protocol_id = $('#protocol_id').val()

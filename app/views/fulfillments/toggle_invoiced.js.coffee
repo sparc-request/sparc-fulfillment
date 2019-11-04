@@ -19,3 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $('#fulfillments-table').bootstrapTable('refresh')
+
+$(document).on 'load-success.bs.table', '#fulfillments-table', ->
+  $('input.invoice_toggle').bootstrapToggle()

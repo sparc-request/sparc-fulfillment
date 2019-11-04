@@ -25,3 +25,6 @@ $("#modal_place").modal 'show'
 $('.fulfillments-list li').find("[data-field='docs']").closest('li').hide()
 $('.fulfillments-list li').find("[data-field='notes']").closest('li').hide()
 exclude_from_export('fulfillments-table')
+
+$(document).on 'load-success.bs.table', '#fulfillments-table', ->
+  $('input.invoice_toggle').bootstrapToggle()

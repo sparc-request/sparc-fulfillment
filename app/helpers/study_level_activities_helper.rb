@@ -105,9 +105,7 @@ module StudyLevelActivitiesHelper
 
   def toggle_invoiced(fulfillment)
     if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
-      option_1 = content_tag(:label, content_tag(:input, "Yes", type: "radio", name: "invoiced", value: "true"), class: "btn btn-primary #{fulfillment.invoiced? ? 'active' : ''}")
-      option_2 = content_tag(:label, content_tag(:input, "No", type: "radio", name: "invoiced", value: "false"), class: "btn btn-primary #{fulfillment.invoiced? ? '' : 'active'}")
-      content_tag(:div, raw(option_1 + option_2), class: "btn-group", id: "invoice_toggle_container", data: {toggle: "buttons", 'fulfillment-id' => fulfillment.id})
+      content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced?, class: 'invoice_toggle')
     else
       (fulfillment.invoiced? ? "Yes" : "No")
     end
