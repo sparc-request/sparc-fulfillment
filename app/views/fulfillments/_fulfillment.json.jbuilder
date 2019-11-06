@@ -8,6 +8,7 @@ json.quantity_type             fulfillment.line_item.quantity_type
 json.performed_by              fulfillment.performer.full_name if fulfillment.performer
 json.components                fulfillment_components_formatter(fulfillment.components)
 json.options                   fulfillment_options_buttons(fulfillment)
-json.invoiced                  toggle_invoiced fulfillment
+json.invoiced                  toggle_invoiced(fulfillment)
+json.export_invoiced           invoice_read_only(fulfillment)
 json.notes                     notes(fulfillment.notes)
 json.docs                      documents(fulfillment.documents)

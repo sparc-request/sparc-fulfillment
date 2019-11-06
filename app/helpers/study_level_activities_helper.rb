@@ -105,10 +105,14 @@ module StudyLevelActivitiesHelper
 
   def toggle_invoiced(fulfillment)
     if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
-      content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced?, class: 'invoice_toggle')
+      invoice_toggle_button(fulfillment)
     else
-      (fulfillment.invoiced? ? "Yes" : "No")
+      invoice_read_only(fulfillment)
     end
+  end
+
+  def invoice_read_only(fulfillment)
+    (fulfillment.invoiced? ? "Yes" : "No")
   end
 
   def fulfillment_grouper_formatter(fulfillment)
@@ -129,6 +133,10 @@ module StudyLevelActivitiesHelper
   end
 
   private
+
+  def invoice_toggle_button(fulfillment)
+    content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced?, class: 'invoice_toggle')
+  end
 
   def note_list_item(params)
     content_tag(:li, raw(

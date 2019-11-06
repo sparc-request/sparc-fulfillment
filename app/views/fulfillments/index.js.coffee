@@ -24,7 +24,12 @@ $("#modal_place").modal(backdrop: 'static', keyboard: false)
 $("#modal_place").modal 'show'
 $('.fulfillments-list li').find("[data-field='docs']").closest('li').hide()
 $('.fulfillments-list li').find("[data-field='notes']").closest('li').hide()
+$('.fulfillments-list li').find("[data-field='export_invoiced']").closest('li').hide()
 exclude_from_export('fulfillments-table')
 
-$(document).on 'load-success.bs.table', '#fulfillments-table', ->
+$('#fulfillments-table').on 'load-success.bs.table', () ->
   $('input.invoice_toggle').bootstrapToggle()
+
+$('#fulfillments-table').on 'column-switch.bs.table', (e, field, checked) ->
+  if field == 'invoiced' && checked == true
+    $('input.invoice_toggle').bootstrapToggle()
