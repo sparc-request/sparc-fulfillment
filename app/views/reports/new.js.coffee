@@ -38,6 +38,13 @@ if $("#protocol_section.background_load").length
 
 $(".modal-content .selectpicker").selectpicker()
 
+$(".modal-content #mrn_select").selectpicker({
+  selectedTextFormat: 'count',
+  countSelectedText: (selected, total) -> if (selected == total) then "All MRNs" else "#{selected} MRNs selected"
+  actionsBox: true,
+  liveSearch: true
+})
+
 multi_select = $("#organization_select")
 multi_select.multiselect({
   numberDisplayed: 2,
