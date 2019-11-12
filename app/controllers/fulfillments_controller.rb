@@ -73,9 +73,6 @@ class FulfillmentsController < ApplicationController
 
   def toggle_invoiced
     persist_original_attributes_to_track_changes
-    puts '#' * 50
-    puts fulfillment_params.inspect
-    puts '#' * 50
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
     detect_changes_and_create_notes
   end
@@ -136,7 +133,7 @@ class FulfillmentsController < ApplicationController
           remove.destroy
           if action == 'update'
             comment = "Component: #{component} removed"
-            @fulfillment.notes.create(kind: 'log', commenIt: comment, identity: current_identity)
+            @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
           end
         end
       end
