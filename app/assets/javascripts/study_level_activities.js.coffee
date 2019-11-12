@@ -24,12 +24,14 @@ $ ->
   # Line Item Bindings
 
   $(document).on 'change', 'input.invoice_toggle', ->
-    data = invoiced: $(this).prop('checked')
+    invoiced = $(this).prop('checked')
     fulfillment_id = $(this).data('id')
     $.ajax
       type: 'PUT'
       url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
-      data: data
+      data:
+        fulfillment:
+          invoiced: invoiced
 
   $(document).on 'click', ".otf_service_new", ->
     protocol_id = $('#protocol_id').val()

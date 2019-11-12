@@ -163,6 +163,7 @@ en:
       fulfilled_at: "Fulfillment Date changed to "
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
+      invoiced: "Invoiced changed to "
     no_components: "Fulfillment Has No Components"
     performed_by: "Performed By"
     qty_type: "Quantity Type"
