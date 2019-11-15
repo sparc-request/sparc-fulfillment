@@ -42,15 +42,16 @@
     %button.btn-block.new_report.btn.btn-primary{ data: { type: "project_summary_report" } }
       %i.glyphicon.glyphicon-equalizer
       Project Summary Report
-  .button-width{class: report_column_width}
-    %button.btn-block.new_report.btn.btn-primary{ data: { type: "visit_report" } }
-      %i.glyphicon.glyphicon-equalizer
-      Visit Report
-  - if current_identity.is_a_patient_registrar?
-    .col-md-3
-      %button.btn-block.new_report.btn.btn-primary{ data: { type: "participant_report" } }
+  - if ENV.fetch('CLINICAL_SERVICES') == true
+    .button-width{class: report_column_width}
+      %button.btn-block.new_report.btn.btn-primary{ data: { type: "visit_report" } }
         %i.glyphicon.glyphicon-equalizer
-        Participant Report
+        Visit Report
+    - if current_identity.is_a_patient_registrar?
+      .col-md-3
+        %button.btn-block.new_report.btn.btn-primary{ data: { type: "participant_report" } }
+          %i.glyphicon.glyphicon-equalizer
+          Participant Report
 .row
   .col-md-12
     = render "documents"
