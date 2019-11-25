@@ -285,6 +285,9 @@ GEM
     omniauth (1.9.0)
       hashie (>= 3.4.6, < 3.7.0)
       rack (>= 1.6.2, < 3)
+    omniauth-rails_csrf_protection (0.1.2)
+      actionpack (>= 4.2)
+      omniauth (>= 1.3.1)
     omniauth-shibboleth (1.3.0)
       omniauth (>= 1.0.0)
     options (2.3.2)
@@ -524,6 +527,7 @@ DEPENDENCIES
   mysql2
   net-ldap
   omniauth
+  omniauth-rails_csrf_protection
   omniauth-shibboleth
   paper_trail (~> 10.3.1)
   paperclip (~> 6.1)

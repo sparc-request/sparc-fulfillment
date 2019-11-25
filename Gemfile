@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'omniauth-shibboleth'
+gem 'omniauth-rails_csrf_protection'
 gem 'activerecord-import'
 gem 'activerecord-session_store'
 gem 'acts_as_list'
