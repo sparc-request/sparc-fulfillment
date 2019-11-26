@@ -78,9 +78,9 @@ class VisitReport < Report
 
       sorted_result_set = sort_result_set(result_set)
 
-      sorted_result_set[0].each do |appointment|
+      sorted_result_set.each do |appointment|
         if HAS_RMID
-          csv << [appointment[0], sorted_result_set[1], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
+          csv << [appointment[0], appointment[12], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
                   get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
                   get_content(appointment), get_statuses(appointment[6])]
         else
@@ -93,20 +93,21 @@ class VisitReport < Report
   end
 
   def sort_result_set(result_set)
-    protocol = Protocol.find(appointment[0])
     used_appointments = []
     sorted_set = []
     result_set.each do |appointment|
+      protocol = Protocol.find(appointment[0])
       comparison_array = [appointment[0], appointment[1], appointment[2], appointment[3], get_duration(appointment), appointment[6]]
       unless used_appointments.include?(comparison_array)
         used_appointments << comparison_array
         srid = protocol.srid
         appointment[0] = srid
+        appointment << protocol.research_master_id
         sorted_set << appointment
       end
     end
     
-    [sorted_set.sort{ |x, y| x <=> y || 1 }, protocol.rmid]
+    sorted_set.sort{ |x, y| x <=> y || 1 }
   end
 
   def is_custom_visit(appointment)
