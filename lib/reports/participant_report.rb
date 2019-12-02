@@ -66,7 +66,6 @@ class ParticipantReport < Report
       header << "Middle Initial"
       header << "Last Name"
       header << "MRN"
-      header << "Status"
       header << "Date of Birth"
       header << "Gender"
       header << "Ethnicity"
@@ -89,7 +88,6 @@ class ParticipantReport < Report
         data << participant.middle_initial
         data << participant.last_name
         data << "MRN: #{participant.mrn}"
-        data << participant.status
         data << participant.date_of_birth
         data << participant.gender
         data << participant.ethnicity
