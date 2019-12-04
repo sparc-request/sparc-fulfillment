@@ -74,13 +74,13 @@ class VisitReport < Report
                       ProtocolsParticipant.arel_table[:protocol_id], Participant.arel_table[:last_name], Participant.arel_table[:first_name],
                       Appointment.arel_table[:name], Appointment.arel_table[:start_date], Appointment.arel_table[:completed_date],
                       Appointment.arel_table[:visit_group_id], Appointment.arel_table[:type], Appointment.arel_table[:id],
-                      Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents])
+                      Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents], Participant.arel_table[:id])
 
       sorted_result_set = sort_result_set(result_set)
 
       sorted_result_set.each do |appointment|
         if HAS_RMID
-          csv << [appointment[0], appointment[12], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
+          csv << [appointment[0], appointment[13], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
                   get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
                   get_content(appointment), get_statuses(appointment[6])]
         else
@@ -97,8 +97,8 @@ class VisitReport < Report
     sorted_set = []
     result_set.each do |appointment|
       protocol = Protocol.find(appointment[0])
-      comparison_array = [appointment[0], appointment[1], appointment[2], appointment[3], get_duration(appointment), appointment[6]]
-      unless used_appointments.include?(comparison_array)
+      comparison_array = [appointment[0], appointment[1], appointment[2], appointment[3], get_duration(appointment), appointment[6], appointment[12]]
+      if !used_appointments.include?(comparison_array)
         used_appointments << comparison_array
         srid = protocol.srid
         appointment[0] = srid
