@@ -82,30 +82,18 @@ class VisitReport < Report
         if HAS_RMID
           csv << [appointment[0], appointment[13], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
                   get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
-                  get_content(appointment), get_statuses(appointment[6])]
+                  get_content(appointment), get_statuses(appointment[8])]
         else
           csv << [appointment[0], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
                   get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
-                  get_content(appointment), get_statuses(appointment[6])]
+                  get_content(appointment), get_statuses(appointment[8])]
         end
       end
     end
   end
 
   def sort_result_set(result_set)
-    used_appointments = []
-    sorted_set = []
-    result_set.each do |appointment|
-      protocol = Protocol.find(appointment[0])
-      comparison_array = [appointment[0], appointment[1], appointment[2], appointment[3], get_duration(appointment), appointment[6], appointment[12]]
-      if !used_appointments.include?(comparison_array)
-        used_appointments << comparison_array
-        srid = protocol.srid
-        appointment[0] = srid
-        appointment << protocol.research_master_id
-        sorted_set << appointment
-      end
-    end
+    sorted_set = filter_result_set(result_set)
     
     sorted_set.sort{ |x, y| x <=> y || 1 }
   end
@@ -133,6 +121,24 @@ class VisitReport < Report
   def get_statuses(appointment_id)
     appt_status = AppointmentStatus.find_by(appointment_id: appointment_id)
     (appt_status.blank? ? "" : appt_status.status)
+  end
+
+  def filter_result_set(result_set)
+    used_appointments = []
+    filtered_set = []
+    result_set.each do |appointment|
+      protocol = Protocol.find(appointment[0])
+      comparison_array = [appointment[0], appointment[1], appointment[2], appointment[3], get_duration(appointment), appointment[6], appointment[12]]
+      if !used_appointments.include?(comparison_array)
+        used_appointments << comparison_array
+        srid = protocol.srid
+        appointment[0] = srid
+        appointment << protocol.research_master_id
+        filtered_set << appointment
+      end
+    end
+
+    filtered_set
   end
 end
 
