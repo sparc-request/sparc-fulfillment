@@ -22,7 +22,7 @@
 = hidden_field_tag :protocol_id, @protocol.id
 %div{role: 'tabpanel'}
   %ul.nav.nav-tabs.nav-justified{role: 'tablist'}
-    - if @services_present
+    - if @services_present && (ENV.fetch('CLINICAL_SERVICES') == 'true')
       %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "study_schedule" ? "active" : "")}
         = link_to t(:protocol)[:tabs][(is_protocol_type_study? (@protocol)) ? :study_schedule : :project_schedule], "#study_schedule", {"data-toggle" => 'tab', role: 'tab', "aria-controls" => 'study_schedule'}
       %li.custom-tab.protocol-tab{role: 'presentation', class: (@current_protocol_tab == "participant_tracker" ? "active" : "")}
@@ -36,7 +36,7 @@
           = @protocol.unaccessed_documents_count
 
   .tab-content
-    - if @services_present
+    - if @services_present && (ENV.fetch('CLINICAL_SERVICES') == 'true')
       .tab-pane#study_schedule{role: 'tabpanel', class: (@current_protocol_tab == "study_schedule" ? "active" : "")}
         = render partial: 'study_schedule/calendar', locals: {protocol: @protocol, page: @page, tab: (cookies["active-schedule-tab".to_sym]) ? cookies["active-schedule-tab".to_sym] : 'template'}
 
