@@ -45,7 +45,7 @@
           = link_to imports_path, class: 'imports' do
             %span.glyphicon.glyphicon-import{aria: {hidden: "true"}}
             = t(:navbar)[:imports_link]
-        - if current_identity.is_a_patient_registrar?
+        - if current_identity.is_a_patient_registrar? && (ENV.fetch('CLINICAL_SERVICES') == 'true')
           %li
             = link_to participants_path, class: 'patient_registry' do
               %span.glyphicon.glyphicon-user{aria: {hidden: "true"}}
