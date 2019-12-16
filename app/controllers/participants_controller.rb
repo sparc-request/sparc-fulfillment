@@ -26,6 +26,7 @@ class ParticipantsController < ApplicationController
   before_action :note_old_protocols_participant_attributes, only: [:update_status, :update_arm]
   before_action :authorize_protocol, only: [:show]
   before_action :authorize_patient_registrar, only: [:index]
+  before_action :format_participant_name, only: [:create, :update]
 
   def index
     @page = params[:page]
@@ -42,9 +43,17 @@ class ParticipantsController < ApplicationController
     end
   end
 
+  def format_participant_name
+    params[:participant][:first_name] = params[:participant][:first_name].upcase.squish
+    params[:participant][:last_name] = params[:participant][:last_name].upcase.squish
+    params[:participant][:middle_initial] = params[:participant][:middle_initial].upcase.squish
+  end
+
   def find_participants(action_name)
     if action_name == "protocols_participants_in_protocol"
       @participants = Participant.by_protocol_id(@protocol.id)
+    elsif action_name == "associate_participants_to_protocol"
+      @participants = Participant.able_to_be_associated
     else
       @participants = Participant.all
     end
@@ -185,8 +194,8 @@ class ParticipantsController < ApplicationController
       case params[:sort]
       when 'last_name'
         "participants.last_name #{order}"
-      when 'first_name'
-        "participants.first_name #{order}"
+      when 'first_middle'
+         "participants.first_name #{order}"
       when 'mrn'
         "participants.mrn #{order}"
       when 'recruitment_source'
@@ -199,11 +208,11 @@ class ParticipantsController < ApplicationController
   def search_participant_attrs
     if params[:search] && !params[:search].blank?
       search_term = params[:search]
-      search_tokens = search_term.split(" ")
+      search_tokens = search_term.squish.split(" ")
 
       if search_tokens.count > 1
-        first_token = "%#{search_tokens[0]}%"
-        second_token = "%#{search_tokens[1]}%"
+        first_token = "#{search_tokens[0]}%"
+        second_token = "#{search_tokens[1]}%"
         @participants = @participants.where("(participants.first_name LIKE ? AND participants.last_name LIKE ?) OR (participants.first_name LIKE ? AND participants.last_name LIKE ?)",
           first_token,
           second_token,
@@ -230,7 +239,7 @@ class ParticipantsController < ApplicationController
   end
 
   def participant_params
-    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn, :external_id,:date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source)
+    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn, :external_id,:date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source, :deidentified)
   end
 
   def protocols_participant_params

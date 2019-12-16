@@ -26,8 +26,12 @@ class ImporterJob < ActiveJob::Base
 
   def perform sparc_id, callback_url, action
     skip_faye_callbacks
-    yield
-    set_faye_callbacks
+
+    begin
+      yield
+    ensure
+      set_faye_callbacks
+    end
   end
 
   private

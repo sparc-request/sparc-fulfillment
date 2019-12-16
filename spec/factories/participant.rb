@@ -24,7 +24,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     middle_initial { Faker::Base.letterify('?') }
-    mrn { Faker::Number.number(8) }
+    mrn { Faker::Number.number(digits: 8) }
     date_of_birth { "08/16/1996" }
     gender { Participant::GENDER_OPTIONS.sample }
     ethnicity { Participant::ETHNICITY_OPTIONS.sample }

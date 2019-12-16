@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_13_182044) do
+ActiveRecord::Schema.define(version: 2019_11_25_154411) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "status"
@@ -22,7 +22,6 @@ ActiveRecord::Schema.define(version: 2019_05_13_182044) do
 
   create_table "appointments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.integer "sparc_id"
-    t.integer "participant_id"
     t.integer "visit_group_id"
     t.integer "visit_group_position"
     t.integer "position"
@@ -192,14 +191,10 @@ ActiveRecord::Schema.define(version: 2019_05_13_182044) do
   end
 
   create_table "participants", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
-    t.integer "sparc_id"
-    t.integer "protocol_id"
-    t.integer "arm_id"
     t.string "first_name", collation: "utf8_unicode_ci"
     t.string "last_name", collation: "utf8_unicode_ci"
     t.string "mrn"
-    t.string "status"
-    t.datetime "date_of_birth"
+    t.date "date_of_birth"
     t.string "gender"
     t.string "ethnicity"
     t.string "race"
@@ -215,10 +210,9 @@ ActiveRecord::Schema.define(version: 2019_05_13_182044) do
     t.string "recruitment_source"
     t.string "external_id"
     t.string "middle_initial", limit: 1
-    t.index ["arm_id"], name: "index_participants_on_arm_id"
+    t.boolean "deidentified", default: false
     t.index ["deleted_at"], name: "index_participants_on_deleted_at"
-    t.index ["protocol_id"], name: "index_participants_on_protocol_id"
-    t.index ["sparc_id"], name: "index_participants_on_sparc_id"
+    t.index ["mrn"], name: "index_participants_on_mrn"
   end
 
   create_table "procedures", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
@@ -266,7 +260,7 @@ ActiveRecord::Schema.define(version: 2019_05_13_182044) do
     t.index ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id"
   end
 
-  create_table "protocols_participants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "protocols_participants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.bigint "protocol_id"
     t.bigint "participant_id"
     t.bigint "arm_id"

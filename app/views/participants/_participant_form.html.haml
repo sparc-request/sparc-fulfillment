@@ -17,7 +17,6 @@
 -# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
-
 .modal-dialog
   .modal-content
     = form_for participant, {remote: true, html: {class: "form-horizontal new_participant", role: "form"}} do |p|
@@ -31,6 +30,10 @@
         = render partial: 'required_fields'
         .row
           .col-md-12
+            .form-group
+              = p.label "deidentified", t(:patient)[:deidentified_patient], class: "col-sm-4 control-label"
+              .checkbox.col-sm-7
+                %label= p.check_box "deidentified"
             .form-group
               = p.label "last_name", t(:participant)[:last_name]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "last_name", {class: 'form-control'}

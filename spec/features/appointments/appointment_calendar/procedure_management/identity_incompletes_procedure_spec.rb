@@ -184,7 +184,7 @@ feature 'Incomplete Procedure', js: true do
     procedure  = Procedure.first
     identity   = Identity.first
 
-    expect(page).to have_css("tr.procedure[data-id='#{procedure.id}'] .bootstrap-select.performed-by-dropdown span.filter-option", text: identity.full_name)
+    expect(page).to have_css("tr.procedure[data-id='#{procedure.id}'] .bootstrap-select.performed-by-dropdown div.filter-option", text: identity.full_name)
   end
 
   def when_i_view_the_notes_list
@@ -233,7 +233,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def then_i_should_see_that_the_procedure_performed_by_has_been_reset
-    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: "")
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown div.filter-option", text: "")
   end
 
   def then_i_should_see_a_helpful_message

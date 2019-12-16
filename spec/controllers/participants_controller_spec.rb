@@ -123,10 +123,10 @@ RSpec.describe ParticipantsController do
       put :update, params: {
         protocol_id: @protocol.id,
         id: @participant.id,
-        participant: attributes_for(:participant, first_name: 'Chick')
+        participant: attributes_for(:participant, first_name: 'CHICK')
       }, format: :js
       @participant.reload
-      expect(@participant.first_name).to eq 'Chick'
+      expect(@participant.first_name).to eq 'CHICK'
     end
   end
 

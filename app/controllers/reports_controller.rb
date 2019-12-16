@@ -73,6 +73,7 @@ class ReportsController < ApplicationController
               :title,
               :start_date,
               :end_date,
+              :gender,
               :service_type,
               :time_zone,
               :protocol,
@@ -85,6 +86,7 @@ class ReportsController < ApplicationController
               :protocols_participant_id,
               :documentable_id,
               :documentable_type,
+              :mrns => [],
               :organizations => [],
               :protocols => []).merge(identity_id: current_identity.id)
   end

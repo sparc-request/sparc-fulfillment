@@ -1,17 +1,21 @@
 language: ruby
 cache: bundler
-dist: precise
+dist: xenial
 addons:
   firefox: latest
 env:
   - MOZ_HEADLESS=1
 
+services:
+  - xvfb
+  - mysql
+
 before_install:
+  - gem update --system
+  - gem install bundler
   - "export TZ=America/New_York"
 before_script:
   - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
   - cp config/database.yml.example config/database.yml
   - cp config/sparc_db.yml.example config/sparc_db.yml
   - cp config/klok_db.yml.example config/klok_db.yml
@@ -23,9 +27,10 @@ before_script:
   - cd ..
   - git clone https://github.com/sparc-request/sparc-request.git
   - cd sparc-request
-  - git checkout v3.5.0
+  - git checkout v3.6.0
   - rvm use $(< .ruby-version) --install --binary --fuzzy
   - export BUNDLE_GEMFILE=$PWD/Gemfile
+  - gem install bundler
   - bundle install --jobs=3 --retry=3 --deployment --path=${BUNDLE_PATH:-vendor/bundle}
   - cp config/database.yml.example config/database.yml
   - cp config/epic.yml.example config/epic.yml

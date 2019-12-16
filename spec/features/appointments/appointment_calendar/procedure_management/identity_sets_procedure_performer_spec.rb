@@ -103,10 +103,10 @@ feature 'User sets Procedure performer', js: true do
 
   def then_i_should_see_that_i_am_the_procedure_performer
     @identity   = Identity.first
-    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: @identity.full_name)
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown div.filter-option", text: @identity.full_name)
   end
 
   def then_i_should_see_that_the_performer_has_not_been_set
-    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown span.filter-option", text: "N/A")
+    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown div.filter-option", text: "N/A")
   end
 end

@@ -33,7 +33,8 @@ class LineItem < ApplicationRecord
   has_many :admin_rates, primary_key: :sparc_id
 
   has_many :visit_groups, through: :arm
-  has_many :appointments, through: :visit_groups
+  ##Commented out, because this isn't a direct connection, and is unintuitive.
+  # has_many :appointments, through: :visit_groups
 
   has_many :visits, -> { includes(:visit_group).order("visit_groups.position") }, dependent: :destroy
 

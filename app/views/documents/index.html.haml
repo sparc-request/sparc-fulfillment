@@ -17,7 +17,7 @@
 -# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
-
+- report_column_width= current_identity.is_a_patient_registrar? ? 'col-md-2' : 'col-md-3'
 .row
   .col-md-12
     .page-header
@@ -30,11 +30,11 @@
       %h3
         = t(:reports)[:page_title]
 .row.report-buttons
-  .col-md-3
+  .button-width{class: report_column_width}
     %button.btn-block.new_report.btn.btn-primary{ data: { type: "invoice_report" } }
       %i.glyphicon.glyphicon-equalizer
       Invoice Report
-  .col-md-3
+  .button-width{class: report_column_width}
     %button.btn-block.new_report.btn.btn-primary{ data: { type: "auditing_report" } }
       %i.glyphicon.glyphicon-equalizer
       Auditing Report
@@ -42,10 +42,16 @@
     %button.btn-block.new_report.btn.btn-primary{ data: { type: "project_summary_report" } }
       %i.glyphicon.glyphicon-equalizer
       Project Summary Report
-  .col-md-3
-    %button.btn-block.new_report.btn.btn-primary{ data: { type: "visit_report" } }
-      %i.glyphicon.glyphicon-equalizer
-      Visit Report
+  - if ENV.fetch('CLINICAL_SERVICES') == 'true'
+    .button-width{class: report_column_width}
+      %button.btn-block.new_report.btn.btn-primary{ data: { type: "visit_report" } }
+        %i.glyphicon.glyphicon-equalizer
+        Visit Report
+    - if current_identity.is_a_patient_registrar?
+      .col-md-3
+        %button.btn-block.new_report.btn.btn-primary{ data: { type: "participant_report" } }
+          %i.glyphicon.glyphicon-equalizer
+          Participant Report
 .row
   .col-md-12
     = render "documents"

@@ -20,9 +20,45 @@
 
 namespace :data do
   desc "Fix procedures and fulfillments with bad service_cost values"
-  task fix_procedure_and_fulfillment_service_costs: :environment do
+  task fix_pricing: :environment do
+
+    def prompt(*args)
+      print(*args)
+      STDIN.gets.strip
+    end
+
+    def get_file(error=false)
+      puts "No import file specified or the file specified does not exist in tmp" if error
+      file = prompt "Please specify the file name to import from tmp (must be a CSV): "
+
+      while file.blank? or not File.exists?(Rails.root.join("tmp", file))
+        file = get_file(true)
+      end
+
+      file
+    end
+
+    def get_service_ids
+      file = get_file
+      service_ids = []
+      continue = prompt("Are you sure you want to import service ids from #{file}? (Yes/No) ")
+
+      if continue == 'Yes'
+        input_file = Rails.root.join("tmp", file)
+        CSV.foreach(input_file, :headers => true, skip_blanks: true, skip_lines: /^(?:,\s*)+$/) do |row|
+          service_ids << row['Service ID'].to_i
+        end
+
+      else
+        puts "Import aborted, please start over"
+        exit
+      end
+
+      service_ids
+    end
+
     CSV.open("tmp/fixed_procedure_and_fulfillment_service_costs.csv", "wb+") do |csv|
-      puts 'Are you correcting procedures/fulfillments based on protocol id?, or service id? Please enter "service" or "protocol"'
+      puts 'Are you correcting procedures/fulfillments based on protocol id, service id, or csv? Please enter "service", "protocol" or "csv"'
       type = STDIN.gets.chomp
       if type == "protocol"
         puts 'Please enter a list of protocol IDs, separated by comma, for example: 5 or 5, 4, 3'
@@ -30,6 +66,8 @@ namespace :data do
       elsif type == "service"
         puts 'Please enter a list of service IDs, separated by comma, for example: 5, or 3, 4, 5'
         items = Service.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
+      elsif type == "csv"
+        items = Service.where(id: get_service_ids.map(&:to_i))
       end
       puts "Please enter a start date, dd/mm/yyyy :"
       start_date = (STDIN.gets.chomp).to_date
@@ -68,13 +106,13 @@ namespace :data do
                 end
 
                 if calculated_amount != current_amount
-                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
+                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.protocols_participant.participant.try(:full_name), procedure.protocols_participant.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
                   procedure.update_attribute(:service_cost, calculated_amount)
                 end
               else
                 if !procedure.service_cost.nil?
                   ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.participant.try(:full_name), procedure.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
+                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.protocols_participant.participant.try(:full_name), procedure.protocols_participant.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
                   procedure.update_attribute(:service_cost, nil)
                 end
               end
