@@ -51,4 +51,12 @@ $ ->
         type: 'DELETE'
         url: "/participants/#{participant_id}"
         data: 'protocol_id': $(this).attr('protocol_id')
-    
+
+  ### De-identified Patient ###
+  $('#patient-registry-table').on 'load-success.bs.table', ->
+    $rows = $('#patient-registry-table tr')
+    $rows.each (i, item) ->
+      $this = $(item)
+      if $(item).find("td.deidentified:contains('Yes')").length
+        $this.addClass 'deidentified_patient'
+      return

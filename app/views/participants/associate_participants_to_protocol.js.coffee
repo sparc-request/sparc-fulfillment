@@ -21,3 +21,12 @@
 $("#modal_area").html("<%= escape_javascript(render(:partial =>'participants/associate_participants_to_protocol_modal', locals: {protocol: @protocol})) %>");
 $("#modal_place").modal 'show'
 $("#patient-registry-modal").bootstrapTable()
+
+### De-identified Patient ###
+$('#patient-registry-modal').on 'load-success.bs.table', ->
+  $rows = $('#patient-registry-modal tr')
+  $rows.each (i, item) ->
+    $this = $(item)
+    if $(item).find("td.deidentified:contains('Yes')").length
+      $this.addClass 'deidentified_patient'
+    return

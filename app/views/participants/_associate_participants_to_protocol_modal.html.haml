@@ -29,7 +29,7 @@
     #details_container
     .modal-body
       .bootstrap-table-dropdown-overflow
-        %table.participants.custom_striped{id: "patient-registry-modal", data: {protocol_id: @protocol.id, toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: associate_participants_to_protocol_participants_path(protocol_id: protocol.id, format: :json), "page_size" => @limit, "pagination" => "true", "side-pagination" => "server", "sort-name" => "last_name", "sort-order" => 'asc', cookie: "true", "cookie-id-table" => "patient-registry-modal", striped: "true", "show-export" => "true", "export-types" => ['excel'], "checkbox-header": "false"}}
+        %table.participants.custom_striped{id: "patient-registry-modal", data: {protocol_id: @protocol.id, toggle: 'table', search: "true", "trim-on-search" => "false", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: associate_participants_to_protocol_participants_path(protocol_id: protocol.id, format: :json), "page_size" => @limit, "pagination" => "true", "side-pagination" => "server", "sort-name" => "last_name", "sort-order" => 'asc', "cookie-id-table" => "patient-registry-modal", striped: "true", "show-export" => "true", "export-types" => ['excel'], "checkbox-header": "false"}}
           %thead
             %tr
               %th{data: {class: 'truncate', align: "center", field: "associate"}}= t(:participant)[:associate]
@@ -37,6 +37,7 @@
               %th{data: {class: 'first_name truncate', align: "left", sortable: "true", field: "first_middle"}}= t(:participant)[:first_name]
               %th{data: {class: 'mrn truncate', align: "left", sortable: "true", field: "mrn"}}= t(:participant)[:mrn]
               %th{data: {class: 'date_of_birth truncate', align: "left", sortable: "true", field: "date_of_birth"}}= t(:participant)[:dob]  
+              %th{data: {class: 'deidentified truncate', align: "left", sortable: "true", field: "deidentified", visible: "true"}}= t(:participant)[:deidentified] 
               %th{data: {class: 'recruitment_source', align: "left", sortable: "true", field: "recruitment_source", visible: "false"}}= t(:participant)[:recruitment_source]
               %th{data: {class: 'phone truncate', align: "left", sortable: "true", field: "phone"}}= t(:participant)[:phone_num]
     .modal-footer

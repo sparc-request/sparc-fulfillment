@@ -21,11 +21,48 @@
 require 'rails_helper'
 
 feature 'User creates Participant', js: true do
+  context 'with a numerical mrn' do
+    context 'and VALIDATE_MRN is true' do
+      scenario 'and sees the new Participants in the list' do
+        given_i_am_viewing_the_patient_registry
+        if_validate_mrn_is_true
+        when_i_create_a_new_participant_with_numerical_mrn
+        then_i_should_see_the_new_participant_in_the_list
+      end
+    end
+  end
 
-  scenario 'and sees the new Participants in the list' do
-    given_i_am_viewing_the_patient_registry
-    when_i_create_a_new_participant
-    then_i_should_see_the_new_participant_in_the_list
+  context 'with a non-numerical mrn' do
+    context 'and VALIDATE_MRN is true' do
+      scenario 'and sees the new Participants in the list' do
+        given_i_am_viewing_the_patient_registry
+        if_validate_mrn_is_true
+        when_i_create_a_new_participant_with_non_numerical_mrn
+        then_i_should_see_an_error_message
+      end
+    end
+  end
+
+  context 'with a numerical mrn' do
+    context 'if_validate_mrn_is_false' do
+      scenario 'and sees the new Participants in the list' do
+        given_i_am_viewing_the_patient_registry
+        if_validate_mrn_is_false
+        when_i_create_a_new_participant_with_numerical_mrn
+        then_i_should_see_the_new_participant_in_the_list
+      end
+    end
+  end
+
+  context 'with a non-numerical mrn' do
+    context 'if_validate_mrn_is_false' do
+      scenario 'and sees the new Participants in the list' do
+        given_i_am_viewing_the_patient_registry
+        if_validate_mrn_is_false
+        when_i_create_a_new_participant_with_non_numerical_mrn
+        then_i_should_see_the_new_participant_in_the_list
+      end
+    end
   end
 
   def given_i_am_viewing_the_patient_registry
@@ -35,7 +72,33 @@ feature 'User creates Participant', js: true do
     wait_for_ajax
   end
 
-  def when_i_create_a_new_participant
+  def if_validate_mrn_is_false
+    stub_const('ENV', {'VALIDATE_MRN' => 'false'})
+  end
+
+  def if_validate_mrn_is_true
+    stub_const('ENV', {'VALIDATE_MRN' => 'true'})
+  end
+
+  def when_i_create_a_new_participant_with_non_numerical_mrn
+    find('.new-participant').click
+
+    fill_in 'First Name', with: "Harry"
+    fill_in 'Last Name', with: "Potter"
+    fill_in 'MRN', with: "1234abc"
+    fill_in 'City', with: "London"
+    bootstrap_select '#participant_state', "South Carolina"
+    fill_in 'Zip Code', with: "11111"
+    bootstrap_datepicker '#dob_time_picker', year: Date.current.year, month: 'Mar', day: '15'
+    bootstrap_select '#participant_gender', "Male"
+    bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
+    bootstrap_select '#participant_race', "Asian"
+    fill_in 'Address', with: "123 Hogwarts"
+    find("input[value='Save Participant']").click
+    wait_for_ajax
+  end
+
+  def when_i_create_a_new_participant_with_numerical_mrn
     find('.new-participant').click
 
     fill_in 'First Name', with: "Harry"
@@ -56,6 +119,10 @@ feature 'User creates Participant', js: true do
   def then_i_should_see_the_new_participant_in_the_list
     expect(page).to have_css('#flashes_container', text: 'Participant Created')
     expect(page).to have_css('table.participants tbody tr', count: 1)
+  end
+
+  def then_i_should_see_an_error_message
+    expect(page).to have_css('#modal_errors', text: 'MRN must only contain numbers')
   end
 
   def then_they_should_have_an_assigned_arm

@@ -24,8 +24,10 @@ class VisitReport < Report
   VALIDATES_PRESENCE_OF     = [:title].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
+  HAS_RMID = ENV.fetch('RMID_URL'){nil}
+
   # report columns
-  if ENV.fetch('RMID_URL'){nil}
+  if HAS_RMID
     REPORT_COLUMNS = ["Protocol ID (SRID)",
                       "RMID",
                       "Patient Last Name",
@@ -72,69 +74,71 @@ class VisitReport < Report
                       ProtocolsParticipant.arel_table[:protocol_id], Participant.arel_table[:last_name], Participant.arel_table[:first_name],
                       Appointment.arel_table[:name], Appointment.arel_table[:start_date], Appointment.arel_table[:completed_date],
                       Appointment.arel_table[:visit_group_id], Appointment.arel_table[:type], Appointment.arel_table[:id],
-                      Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents])
+                      Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents], Participant.arel_table[:id])
 
-      get_protocol_rmid(result_set) if ENV.fetch('RMID_URL'){nil}
-      get_protocol_srids(result_set)
+      sorted_result_set = sort_result_set(result_set)
 
-      result_set.group_by { |protocol, last_name, first_name, visit_name| [protocol, last_name, first_name, visit_name] }.
-        map      { |grouping, appointments| get_appointment_info(grouping) <<
-                                            is_custom_visit(appointments) <<
-                                            get_date(appointments[0][4]) <<
-                                            get_date(appointments[0][5]) <<
-                                            get_duration(appointments[0]) <<
-                                            get_content(appointments[0]) <<
-                                            get_statuses(appointments[0][8])}.
-        sort     { |x, y| x <=> y || 1 }.
-        each     { |line|    csv << line }
+      sorted_result_set.each do |appointment|
+        if HAS_RMID
+          csv << [appointment[0], appointment[13], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
+                  get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
+                  get_content(appointment), get_statuses(appointment[8])]
+        else
+          csv << [appointment[0], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
+                  get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
+                  get_content(appointment), get_statuses(appointment[8])]
+        end
+      end
     end
   end
 
-  def get_appointment_info(grouping)
-    if ENV.fetch('RMID_URL'){nil}
-      [ @srid[grouping[0]] ] + [ @rmid[grouping[0]] ] + grouping[1..3]
-    else
-      [ @srid[grouping[0]] ] + grouping[1..3]
-    end
+  def sort_result_set(result_set)
+    sorted_set = filter_result_set(result_set)
+    
+    sorted_set.sort{ |x, y| x <=> y || 1 }
   end
 
-  def is_custom_visit(appointments)
-    appointments.detect{ |appointment| appointment[6].nil? } ? "Yes" : "No"
+  def is_custom_visit(appointment)
+    appointment[6].nil? ? "Yes" : "No"
   end
 
   def get_duration(appointment)
     appointment[5].nil? ? "N/A" : ((appointment[5] - appointment[4])/60).round
   end
 
-  def get_date(appointment)
-    appointment.nil? ? "N/A" : format_date(appointment)
+  def get_date(appointment, start)
+    if start == true
+      return appointment[4].nil? ? "N/A" : format_date(appointment[4])
+    else
+      return appointment[5].nil? ? "N/A" : format_date(appointment[5])
+    end
   end
 
-  def get_protocol_srids(result_set)
-    protocol_ids = result_set.map(&:first).uniq
-    # SRID's indexed by protocol id
-    @srid = Hash[ Protocol.includes(:sub_service_request).
-                  select(:id, :sparc_id, :sub_service_request_id). # cols necessary for SRID
-                  where(id: protocol_ids).
-                  map { |protocol| [protocol.id, protocol.srid] }]
-  end
-
-  def get_protocol_rmid(result_set)
-    protocol_ids = result_set.map(&:first).uniq
-    # RMID's indexed by protocol id
-    @rmid = Hash[ Protocol.
-                  select(:id, :sparc_id). # cols necessary for RMID
-                  where(id: protocol_ids).
-                  map { |protocol| [protocol.id, protocol.research_master_id] }]
-  end
-
-  def get_content(appointments)
-    appointments[11].nil? ? nil : appointments[11]
+  def get_content(appointment)
+    appointment[11].nil? ? nil : appointment[11]
   end
 
   def get_statuses(appointment_id)
     appt_status = AppointmentStatus.find_by(appointment_id: appointment_id)
     (appt_status.blank? ? "" : appt_status.status)
+  end
+
+  def filter_result_set(result_set)
+    used_appointments = []
+    filtered_set = []
+    result_set.each do |appointment|
+      protocol = Protocol.find(appointment[0])
+      comparison_array = [appointment[0], appointment[1], appointment[2], appointment[3], get_duration(appointment), appointment[6], appointment[12]]
+      if !used_appointments.include?(comparison_array)
+        used_appointments << comparison_array
+        srid = protocol.srid
+        appointment[0] = srid
+        appointment << protocol.research_master_id
+        filtered_set << appointment
+      end
+    end
+
+    filtered_set
   end
 end
 

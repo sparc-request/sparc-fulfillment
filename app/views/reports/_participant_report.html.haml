@@ -27,7 +27,7 @@
           %span.sr-only
             = t(:actions)[:close]
         %h4.modal-title.text-center
-          = t(:reports)[:auditing_report]
+          = t(:reports)[:participant_report]
       .modal-body
         #modal_errors
         = render partial: 'required_fields'
@@ -35,26 +35,38 @@
           .col-md-12
             = hidden_field_tag "report_type", report_type
             .form-group
-              = label_tag "service_type", t(:reports)[:service_type]+t(:actions)[:required], class: "col-sm-3 control-label"
+              = label_tag "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag "service_type", options_for_select(ENV.fetch('CLINICAL_SERVICES') == 'true' ? Constants::AUDITING_REPORT_SERVICE_TYPES : Constants::AUDITING_REPORT_NON_CLINICAL_SERVICE_TYPES),
+                = text_field_tag "title", title, class: 'form-control'
+            .form-group
+              = label_tag "start_date", t(:reports)[:date_of_birth_from], class: "col-sm-3 control-label"
+              .col-sm-9
+                = text_field_tag "start_date", nil, class: "form-control", readonly: true
+            .form-group
+              = label_tag "end_date", t(:reports)[:date_of_birth_to], class: "col-sm-3 control-label"
+              .col-sm-9
+                = text_field_tag "end_date", nil, class: "form-control", readonly: true
+            .form-group.mrn
+              = label_tag "mrns", t(:reports)[:mrn], class: "col-sm-3 control-label"
+              .col-sm-9
+                = select_tag 'mrns',
+                  options_for_select(Participant.all.order(:mrn).pluck(:mrn)), 
+                  data: { actions_box: true, live_search: true }, 
+                  class: "selectpicker form-control", 
+                  multiple: true,
+                  id: "mrn_select",
+                  title: "Select MRN's"
+            .form-group.gender
+              = label_tag "gender", t(:reports)[:gender], class: "col-sm-3 control-label"
+              .col-sm-9
+                = select_tag "gender",
+                  options_for_select(["Female", "Male", "Both"]),
                   include_blank: true,
                   class: "selectpicker form-control",
-                  id: "service_type_select",
-                  title: "Select a Service Type"
-            .form-group
-              =label_tag "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
-              .col-sm-9= text_field_tag "title", title, class: "form-control"
-            .form-group
-              = label_tag "start_date", t(:reports)[:start_date]+t(:actions)[:required], class: "col-sm-3 control-label"
-              .col-sm-9
-                = text_field_tag "start_date", nil, class: "datepicker form-control", readonly: true
-            .form-group
-              = label_tag "end_date", t(:reports)[:end_date]+t(:actions)[:required], class: "col-sm-3 control-label"
-              .col-sm-9
-                = text_field_tag "end_date", nil, class: "datepicker form-control", readonly: true
+                  id: "gender_select",
+                  title: "Select Gender"
             .form-group.protocols-group
-              = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
+              = label_tag "protocol", t(:reports)[:not_required_protocols], class: "col-sm-3 control-label"
               .col-sm-9#protocol_section.background_load
                 %i.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin
       .modal-footer

@@ -29,7 +29,7 @@
       .modal-body
         .bootstrap-table-dropdown-overflow
           #fulfillment-custom-toolbar
-          %table.fulfillments{id: "fulfillments-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", url: fulfillments_path(format: :json, line_item_id: line_item.id), striped: "true", toolbar: "#fulfillment-custom-toolbar", "show-export" => "true", "export-types" => ['excel']}}
+          %table.fulfillments{id: "fulfillments-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggleOn" => "true", url: fulfillments_path(format: :json, line_item_id: line_item.id), striped: "true", toolbar: "#fulfillment-custom-toolbar", "show-export" => "true", "export-types" => ['xlsx'], "export-options" => '{"ignoreColumn": []}'}}
             %thead.secondary-header
               %tr
                 %th{data: {class: 'fulfillment_grouper', align: "left", sortable: 'true', sorter: 'dateSorter', field: "fulfillment_grouper"}}
@@ -44,11 +44,17 @@
                   = t(:fulfillment)[:performed_by]
                 %th{data: {class: 'components', align: "center", field: "components"}}
                   = t(:fulfillment)[:components]
-                %th{data: {class: 'options', align: "center", field: "options"}}
+                %th{data: {class: 'options exclude_in_export', align: "center", field: "options"}}
                   = t(:actions)[:actions]
-                - if line_item.fulfillments.any?{|fulfillment| fulfillment.invoiced == true}
-                  %th{data: {class: 'invoiced', align: "center", field: "invoiced"}}
+                - if line_item.fulfillments.any?{|fulfillment| fulfillment.invoiced == true} || current_identity.billing_manager_protocols.include?(line_item.protocol)
+                  %th{data: {class: 'invoiced exclude_in_export', align: "center", field: "invoiced"}}
                     = t(:fulfillment)[:invoiced]
+                %th{data: {class: 'export_invoiced hidden', align: "center", field: "export_invoiced"}}
+                  = t(:fulfillment)[:invoiced]
+                %th{data: {class: 'notes hidden', align: "center", field: "notes"}}
+                  = t(:line_item)[:notes]
+                %th{data: {class: 'docs hidden', align: "center", field: "docs"}}
+                  = t(:line_item)[:documents]
         #fulfillment-klok-description
           %i{class: 'glyphicon glyphicon-time'}
           %span= t(:fulfillment)[:klok_description]

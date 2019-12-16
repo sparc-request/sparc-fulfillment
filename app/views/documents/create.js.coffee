@@ -24,6 +24,18 @@ $('#doc_modal_errors').empty().append("<div class='alert alert-danger'><%= @erro
 ##Document is being added to Fulfillment
 $("#modal_area").html("<%= escape_javascript(render(partial: 'study_level_activities/fulfillments_table', locals: {line_item: @document.documentable.line_item, header_text: 'Fulfillments List'})) %>")
 $("#fulfillments-table").bootstrapTable()
+
+$('.fulfillments-list li').find("[data-field='docs']").closest('li').hide()
+$('.fulfillments-list li').find("[data-field='notes']").closest('li').hide()
+$('.fulfillments-list li').find("[data-field='export_invoiced']").closest('li').hide()
+exclude_from_export('fulfillments-table')
+
+$('#fulfillments-table').on 'load-success.bs.table', () ->
+  $('input.invoice_toggle').bootstrapToggle()
+
+$('#fulfillments-table').on 'column-switch.bs.table', (e, field, checked) ->
+  if field == 'invoiced' && checked == true
+    $('input.invoice_toggle').bootstrapToggle()
 <% else %>
 ##Document is being added to Line Item
 $('#study-level-activities-table').bootstrapTable('refresh', {silent: "true"})

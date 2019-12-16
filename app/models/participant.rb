@@ -23,7 +23,7 @@ class Participant < ApplicationRecord
   ETHNICITY_OPTIONS   = ['Hispanic or Latino', 'Not Hispanic or Latino', 'Unknown/Other/Unreported'].freeze
   RACE_OPTIONS        = ['American Indian/Alaska Native', 'Asian', 'Middle Eastern', 'Native Hawaiian or other Pacific Islander', 'Black or African American', 'White', 'Unknown/Other/Unreported'].freeze
   STATUS_OPTIONS      = ['Consented','Screening', 'Enrolled - receiving treatment', 'Follow-up', 'Completed'].freeze
-  GENDER_OPTIONS      = ['Male', 'Female'].freeze
+  GENDER_OPTIONS      = ['Male', 'Female', 'Unknown'].freeze
   RECRUITMENT_OPTIONS = ['', 'Participating Site Referral', 'Primary Physician / or Healthcare Provider Referred', 'Other Physician / or Healthcare Provider Referred', 'Local Advertising (Flyer, Brochure, Newspaper, etc.)', 'Friends or Family Referred', 'SC Research.org', 'MUSC Heroes.org', 'Clinical Trials.gov', 'Billboard Ad Campaign', 'TV Ad Campaign', 'Other'].freeze
 
   has_paper_trail
@@ -40,7 +40,7 @@ class Participant < ApplicationRecord
   validates :first_name, presence: true
 
   validate :middle_initial_format
-
+  validate :mrn_format, if: :validate_mrn_true
   validates :mrn, presence: true
   validates_uniqueness_of :mrn
   validates_length_of :mrn, maximum: 255
@@ -65,6 +65,10 @@ class Participant < ApplicationRecord
   scope :except_by_protocol_id, -> (protocol_id) {
     joins(:protocols_participants).where("protocols_participants.protocol_id != ? ", protocol_id)
   }
+  ### A participant is marked as "de-identified" and has been associated to a protocol
+  scope :deidentified_true_and_associated_to_a_protocol, -> { where(deidentified: true).joins(:protocols_participants).ids }
+
+  scope :able_to_be_associated, -> { where(id: (Participant.all.ids - deidentified_true_and_associated_to_a_protocol).uniq) }
 
   def self.title id
     participant = Participant.find id
@@ -72,7 +76,7 @@ class Participant < ApplicationRecord
   end
 
   def date_of_birth=(dob)
-    write_attribute(:date_of_birth, Time.strptime(dob, "%m/%d/%Y")) if dob.present?
+    write_attribute(:date_of_birth, Date.strptime(dob, "%m/%d/%Y")) if dob.present?
   end
 
   def phone_number_format
@@ -97,6 +101,18 @@ class Participant < ApplicationRecord
         errors.add(:middle_initial, "must be a single letter")
       end
     end
+  end
+
+  def mrn_format
+    if !mrn.blank?
+      if !mrn.scan(/\D/).empty?
+        errors.add(:mrn, "must only contain numbers")
+      end
+    end
+  end
+
+  def validate_mrn_true
+    ENV['VALIDATE_MRN'].present? ? ENV.fetch('VALIDATE_MRN') == 'true' : false
   end
 
   def label

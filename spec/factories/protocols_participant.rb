@@ -21,9 +21,9 @@
 FactoryBot.define do
 
   factory :protocols_participant do
-    arm nil
-    protocol nil
-    participant nil
+    arm { nil }
+    protocol { nil }
+    participant { nil }
     status { Participant::STATUS_OPTIONS.select{|stat| stat != 'Screening'}.sample }
 
     trait :with_protocol do 

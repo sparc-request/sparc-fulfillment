@@ -43,6 +43,7 @@ LDAP_AUTH_PASSWORD=
 USE_EPIC=false
 USE_INDIRECT_COST=false
 ENVIRONMENT=testing
+VALIDATE_MRN=true
 TESTING_EMAIL=sparcrequest@gmail.com
 # add the following lines if you have a Research Master ID service (RMID)
 USE_RMID=false
@@ -50,3 +51,4 @@ RMID_URL=http://url
 # add webhook if you want delayed job monitoring to notify you on slack
 DELAYED_JOB_WEBHOOK=https://hooks.slack.com/services/T03ALDSB7/BG5S03D8B/5pYjtYFcmofzjTM
 DEFAULT_HOME_COLUMNS=srid,rmid,status,short_title,pi,coordinators,irb_approval_date,irb_expiration_date,organizations
+CLINICAL_SERVICES=true

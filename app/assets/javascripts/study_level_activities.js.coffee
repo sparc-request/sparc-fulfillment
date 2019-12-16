@@ -23,6 +23,16 @@ $ ->
   allowSubmit = true
   # Line Item Bindings
 
+  $(document).on 'change', 'input.invoice_toggle', ->
+    invoiced = $(this).prop('checked')
+    fulfillment_id = $(this).data('id')
+    $.ajax
+      type: 'PUT'
+      url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
+      data:
+        fulfillment:
+          invoiced: invoiced
+
   $(document).on 'click', ".otf_service_new", ->
     protocol_id = $('#protocol_id').val()
     data = protocol_id: protocol_id
@@ -105,7 +115,7 @@ $ ->
 
   # Do not display in dropdown that allows you to add/remove columns
   # These columns will always be outputted to the export file
-  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')  
+  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')
   # because it will not show up in the export file
 
   $('#study_level_activities li').find("[data-field='docs']").closest('li').hide()
@@ -114,4 +124,3 @@ $ ->
 
   ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
   exclude_from_export('study-level-activities-table')
-

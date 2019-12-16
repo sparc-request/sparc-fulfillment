@@ -69,7 +69,7 @@ RSpec.describe MultipleLineItemsController, type: :controller do
         protocol_id: @protocol.id
       }, format: :js, xhr: true
 
-      expect(assigns(:line_items)).to eq(@protocol.line_items.select{ |li| li.appointments.none?(&:has_completed_procedures?) })
+      expect(assigns(:line_items)).to eq(@protocol.line_items.select{|line_item| !line_item.one_time_fee && line_item.arm.procedures.where(service_id: line_item.service_id).touched.empty? })
     end
   end
 

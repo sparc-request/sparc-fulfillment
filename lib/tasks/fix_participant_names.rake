@@ -18,9 +18,22 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$ ->
-  $(document).on 'click', '.otf_fulfillment_delete', ->
-    $.ajax
-      type: 'delete'
-      url: "/fulfillments/#{$(this).data('id')}.js"
+namespace :data do
+  desc "Fix participant names"
+  task fix_participant_names: :environment do
 
+    participants = Participant.all
+    bar = ProgressBar.new(participants.count)
+
+    participants.find_each do |participant|
+      first_name = participant.first_name.nil? ? nil : participant.first_name.upcase.squish
+      last_name = participant.last_name.nil? ? nil : participant.last_name.upcase.squish
+      middle_initial = participant.middle_initial.nil? ? nil : participant.middle_initial.upcase.squish
+      
+      participant.update_attribute(:first_name, first_name)
+      participant.update_attribute(:last_name, last_name)
+      participant.update_attribute(:middle_initial, middle_initial)
+      bar.increment! rescue nil
+    end
+  end
+end

@@ -37,7 +37,7 @@ feature 'User tries to reset appointment', js: true do
     arm           = @protocol.arms.first
     @participant  = Participant.first
     @visit_group  = arm.visit_groups.first
-    @appointment  = @visit_group.appointments.where(participant_id: @participant).first
+    @appointment  = @visit_group.appointments.where(protocols_participant_id: protocols_participant.id).first
     line_item_1   = arm.line_items[0]
 
     #Add services for the visit group

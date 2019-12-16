@@ -94,3 +94,11 @@ $ ->
       type: 'POST'
       url: "/participants/update_protocol_association"
       data: data
+
+  ###### Custom Search Text #####
+  $table = $('#participant_tracker .participants')
+  $table.on 'post-body.bs.table', ->
+    $search = $table.data('bootstrap.table').$toolbar.find('.search input')
+    $search.attr 'placeholder', 'Search Existing'
+    return
+  return
