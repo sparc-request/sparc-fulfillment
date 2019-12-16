@@ -20,4 +20,5 @@
 
 module Constants
   AUDITING_REPORT_SERVICE_TYPES = ['Non-clinical Services', 'Clinical Services']
+  AUDITING_REPORT_NON_CLINICAL_SERVICE_TYPES = ['Non-clinical Services']
 end
