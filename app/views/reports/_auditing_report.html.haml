@@ -37,8 +37,7 @@
             .form-group
               = label_tag "service_type", t(:reports)[:service_type]+t(:actions)[:required], class: "col-sm-3 control-label"
               .col-sm-9
-                = select_tag "service_type",
-                  options_for_select(Constants::AUDITING_REPORT_SERVICE_TYPES),
+                = select_tag "service_type", options_for_select(ENV.fetch('CLINICAL_SERVICES') == 'true' ? Constants::AUDITING_REPORT_SERVICE_TYPES : Constants::AUDITING_REPORT_NON_CLINICAL_SERVICE_TYPES),
                   include_blank: true,
                   class: "selectpicker form-control",
                   id: "service_type_select",

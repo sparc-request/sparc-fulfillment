@@ -27,7 +27,7 @@ class ParticipantInformation
     participants = Participant.all
 
     CSV.open("participant_info.csv", "wb") do |csv|
-      csv << ["Protocol ID", "Request ID", "(Service Provider) Organization", "Short Title", "Long Title", "PI Name", "Funding Source", "Arm Name", "Patient ID", "Patient MRN", "Patient Name", "Patient Middle Initial", "Patient Status", "Patient Date of Birth", "Patient Gender", "Patient Ethnicity", "Patient Race", "Patient Address", "Patient Phone #", "City", "State", "Zip Code", "External ID"]
+      csv << ["Protocol ID", "Request ID", "(Service Provider) Organization", "Short Title", "Long Title", "PI Name", "Funding Source", "Arm Name", "Patient ID", "Patient MRN", "Patient Name", "Patient Middle Initial", "Patient Date of Birth", "Patient Gender", "Patient Ethnicity", "Patient Race", "Patient Address", "Patient Phone #", "City", "State", "Zip Code", "External ID"]
       participants.each do |participant|
         csv << [
            participant.protocol_id,
@@ -42,7 +42,6 @@ class ParticipantInformation
            participant.mrn,
            "#{participant.first_name} #{participant.last_name}",
            participant.middle_initial,
-           participant.status,
            participant.date_of_birth,
            participant.gender,
            participant.ethnicity,

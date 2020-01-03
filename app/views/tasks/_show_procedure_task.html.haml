@@ -66,7 +66,10 @@
         %dt
           = t(:procedure)[:object]
         %dd
-          = link_to task.assignable.service_name, participant_path(id: task.assignable.protocols_participant.participant_id, protocol_id: task.assignable.protocol.id, protocols_participant_id: task.assignable.protocols_participant.id, appointment_id: task.assignable.appointment_id)
+          - if (ENV.fetch('CLINICAL_SERVICES') == 'true')
+            = link_to task.assignable.service_name, participant_path(id: task.assignable.protocols_participant.participant_id, protocol_id: task.assignable.protocol.id, protocols_participant_id: task.assignable.protocols_participant.id, appointment_id: task.assignable.appointment_id)
+          - else
+            task.assignable.service_name
       %dl.dl-horizontal
         %dt
           = t(:task)[:object]

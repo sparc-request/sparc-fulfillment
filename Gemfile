@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'omniauth-shibboleth'
+gem 'omniauth-rails_csrf_protection'
 gem 'activerecord-import'
 gem 'activerecord-session_store'
 gem 'acts_as_list'
@@ -21,14 +22,14 @@ gem 'dotenv-rails'
 gem 'rails-erd'
 gem 'faye'
 gem 'gon'
-gem 'grape', '~> 1.2.4'
+gem 'grape', '~> 1.2.5'
 gem 'haml-rails'
 gem 'hashie-forbidden_attributes'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.9'
 gem 'letter_opener'
 gem 'momentjs-rails', '>= 2.9.0'
-gem 'mysql2'
+gem 'mysql2', '0.5.2'
 gem 'net-ldap'
 gem 'omniauth'
 gem 'paperclip', '~> 6.1'
@@ -64,7 +65,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 2.6.0'
+  gem 'faker', '~> 2.8.1'
   gem 'pry'
 end
 
