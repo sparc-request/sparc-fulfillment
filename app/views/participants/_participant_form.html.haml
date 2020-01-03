@@ -30,11 +30,14 @@
         = render partial: 'required_fields'
         .row
           .col-md-12
-            - if participant.can_be_deidentified?
-              .form-group
-                = p.label "deidentified", t(:patient)[:deidentified_patient], class: "col-sm-4 control-label"
+            .form-group
+              = p.label "deidentified", t(:patient)[:deidentified_patient], class: "col-sm-4 control-label"
+              - if participant.can_be_deidentified?
                 .checkbox.col-sm-7
                   %label= p.check_box "deidentified"
+              - else
+                .checkbox.col-sm-7{ disabled: true, title: t(:patient)[:cannot_be_deidentified], data: { toggle: 'tooltip', placement: 'top'} }
+                  %label= p.check_box "deidentified", disabled: true
             .form-group
               = p.label "last_name", t(:participant)[:last_name]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "last_name", {class: 'form-control'}
