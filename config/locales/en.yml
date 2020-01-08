@@ -376,6 +376,7 @@ en:
     confirm_removal_part_1: "Are you sure you want to remove"
     confirm_removal_part_2: "from Patient Registry?"
     deidentified_patient: "De-identified Patient"
+    cannot_be_deidentified: "Patient cannot be de-identified because he/she is already associated to more than one protocol"
 
   reports:
     asc: "ASC"

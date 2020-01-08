@@ -145,6 +145,10 @@ class Participant < ApplicationRecord
     protocols.ids
   end
 
+  def can_be_deidentified?
+    protocols.length <= 1
+  end
+
   def can_be_destroyed?
     procedures.where.not(status: 'unstarted').empty?
   end
