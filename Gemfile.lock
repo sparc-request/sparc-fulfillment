@@ -195,7 +195,7 @@ GEM
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     ffi (1.11.1)
-    foreman (0.86.0)
+    foreman (0.87.0)
     geckodriver-helper (0.24.0)
       archive-zip (~> 0.7)
     globalid (0.4.2)
