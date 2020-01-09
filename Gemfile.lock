@@ -236,7 +236,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http_parser.rb (0.6.0)
-    i18n (1.7.0)
+    i18n (1.7.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     io-like (0.3.0)
@@ -413,7 +413,7 @@ GEM
     sexp_processor (4.12.1)
     shoulda-callback-matchers (1.1.4)
       activesupport (>= 3)
-    shoulda-matchers (4.1.2)
+    shoulda-matchers (4.2.0)
       activesupport (>= 4.2.0)
     simplecov (0.17.1)
       docile (~> 1.1)
@@ -550,7 +550,7 @@ DEPENDENCIES
   sdoc (~> 1.0.0)
   selenium-webdriver
   shoulda-callback-matchers
-  shoulda-matchers (~> 4.1.2)
+  shoulda-matchers (~> 4.2.0)
   simplecov
   slack-notifier (~> 2.3)
   spring
