@@ -27,4 +27,5 @@ $('#study-level-activities-table').bootstrapTable('refresh')
 
 $('#fulfillments-table').on 'load-success.bs.table', () ->
   $('input.invoice_toggle').bootstrapToggle()
+  $('input.credit_toggle').bootstrapToggle()
 <% end %>

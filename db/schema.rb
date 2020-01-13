@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_25_154411) do
+ActiveRecord::Schema.define(version: 2020_01_13_023916) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "status"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(version: 2019_11_25_154411) do
     t.integer "service_cost"
     t.integer "klok_entry_id"
     t.boolean "invoiced"
+    t.boolean "credited"
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id"
     t.index ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id"
     t.index ["line_item_id"], name: "index_fulfillments_on_line_item_id"

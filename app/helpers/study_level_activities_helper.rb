@@ -138,6 +138,10 @@ module StudyLevelActivitiesHelper
     content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced?, class: 'invoice_toggle')
   end
 
+  def credit_toggle_button(fulfillment)
+    content_tag(:input, '', type: "checkbox", name: "credited", checked: fulfillment.credited?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.credited?, class: 'credit_toggle')
+  end
+
   def note_list_item(params)
     content_tag(:li, raw(
       content_tag(:button,

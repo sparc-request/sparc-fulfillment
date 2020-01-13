@@ -151,6 +151,7 @@ en:
     list_fulfillments: "List"
     components: "Fulfillment Components"
     invoiced: "Invoiced"
+    credited: "Credited"
     edit: "Edit Fulfillment"
     flash_messages:
       created: "Fulfillment Created"
