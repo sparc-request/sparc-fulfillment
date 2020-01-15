@@ -115,6 +115,10 @@ module StudyLevelActivitiesHelper
     (fulfillment.invoiced? ? "Yes" : "No")
   end
 
+  def credit_read_only(fulfillment)
+    (fulfillment.credited? ? "Yes" : "No")
+  end
+
   def fulfillment_grouper_formatter(fulfillment)
     fulfillment.fulfilled_at.strftime('%b %Y')
   end

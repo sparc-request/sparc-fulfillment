@@ -10,6 +10,7 @@ json.components                fulfillment_components_formatter(fulfillment.comp
 json.options                   fulfillment_options_buttons(fulfillment)
 json.invoiced                  toggle_invoiced(fulfillment)
 json.credited				   credit_toggle_button(fulfillment)
+json.export_credited		   credit_read_only(fulfillment)
 json.export_invoiced           invoice_read_only(fulfillment)
 json.notes                     notes(fulfillment.notes)
 json.docs                      documents(fulfillment.documents)
