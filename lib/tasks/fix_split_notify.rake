@@ -45,8 +45,7 @@ task :fix_split_notify => :environment do
   if (continue == 'y') || (continue == 'Y')
     ActiveRecord::Base.transaction do
       CSV.open("tmp/line_item_comparison_report.csv", "w+") do |csv|
-        # csv << ['Assigned or created', 'Sparc ID', 'Sparc line item count', 'Cwf line item count']
-        csv << ['Reason Skipped']
+        csv << ['Assigned or created', 'Sparc ID', 'Sparc line item count', 'Cwf line item count', 'Reason Skipped']
         CSV.foreach(input_file, :headers => true) do |row|
           line_item_array = LineItem.where(sparc_id: row['Line Item ID'].to_i)
           line_item = line_item_array.first
@@ -63,7 +62,7 @@ task :fix_split_notify => :environment do
                 protocol.save
                 line_item.update_attributes(protocol_id: protocol.id)
                 create_calendar_data(protocol, line_item) if (row['Is One Time Fee?'] == 'false')
-                # csv << [row['Assigned or Created'], "#{protocol.sub_service_request_id}", row['Line Item Count'], "#{protocol.line_items.count}"]
+                csv << [row['Assigned or Created'], "#{protocol.sub_service_request_id}", row['Line Item Count'], "#{protocol.line_items.count}", ""]
               else
                 puts "#"*50
                 puts "Error importing protocol"
@@ -73,16 +72,16 @@ task :fix_split_notify => :environment do
               puts 'Assigning to existing protocol'
               protocol = Protocol.where(sub_service_request_id: row['New SSR ID'].to_i).first
               line_item.update_attributes(protocol_id: protocol.id)
-              # csv << [row['Assigned or Created'], "#{protocol.sub_service_request_id}", row['Line Item Count'], "#{protocol.line_items.count}"]
+              csv << [row['Assigned or Created'], "#{protocol.sub_service_request_id}", row['Line Item Count'], "#{protocol.line_items.count}", ""]
             end
           else
             deleted_line_item = LineItem.with_deleted.where(sparc_id: row['Line Item ID'].to_i).first
 
             if deleted_line_item
-              csv << ["Line item #{row['Line Item ID']} deleted on cwf side"]
+              csv << ["","","","","Line item #{row['Line Item ID']} deleted on cwf side"]
               puts "Line item #{row['Line Item ID']} belonging to SSR #{row['New SSR ID']} deleted on cwf side"
             else
-              csv << ["No line item found for Line item ID #{row['Line Item ID']} belonging to SSR #{row['New SSR ID']}"]
+              csv << ["","","","","No line item found for Line item ID #{row['Line Item ID']} belonging to SSR #{row['New SSR ID']}"]
               puts "No line item found for Line item ID #{row['Line Item ID']} belonging to SSR #{row['New SSR ID']}"
             end
           end 
