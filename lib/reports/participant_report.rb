@@ -45,7 +45,7 @@ class ParticipantReport < Report
       participants = Participant.where(conditions).distinct
 
       if @protocols
-        participants = Participant.where(conditions).joins(:protocols_participants).where(protocol_id: @protocols).distinct
+        participants = Participant.where(conditions).joins(:protocols_participants).where(protocols_participants: { protocol_id: @protocols }).distinct
       end
 
       if @start_date || @gender
