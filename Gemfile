@@ -22,7 +22,7 @@ gem 'dotenv-rails'
 gem 'rails-erd'
 gem 'faye'
 gem 'gon'
-gem 'grape', '~> 1.2.5'
+gem 'grape', '~> 1.3.0'
 gem 'haml-rails'
 gem 'hashie-forbidden_attributes'
 gem 'jquery-rails'
@@ -65,7 +65,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 2.10.0'
+  gem 'faker', '~> 2.10.1'
   gem 'pry'
 end
 
@@ -89,8 +89,8 @@ group :test do
   gem 'rspec-collection_matchers'
   gem 'selenium-webdriver'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 4.1.2", require: false
+  gem 'shoulda-matchers', "~> 4.2.0", require: false
   gem 'timecop'
-  gem 'webmock', '~> 3.7.6'
+  gem 'webmock', '~> 3.8.0'
   gem 'vcr', '~> 5.0.0'
 end
