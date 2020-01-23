@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   resources :fulfillments do
     collection do
       put 'toggle_invoiced(/:id)', to: 'fulfillments#toggle_invoiced'
+      put 'toggle_credit(/:id)', to: 'fulfillments#toggle_credit'
     end
   end
 

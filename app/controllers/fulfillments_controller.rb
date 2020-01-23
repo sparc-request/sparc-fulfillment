@@ -20,7 +20,7 @@
 
 class FulfillmentsController < ApplicationController
 
-  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced]
+  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit]
 
   def index
     @line_item = LineItem.find(params[:line_item_id])
@@ -74,6 +74,12 @@ class FulfillmentsController < ApplicationController
   def toggle_invoiced
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
+    detect_changes_and_create_notes
+  end
+
+  def toggle_credit
+    persist_original_attributes_to_track_changes
+    @fulfillment.update_attributes(credited: fulfillment_params[:credited])
     detect_changes_and_create_notes
   end
 
@@ -143,7 +149,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :credited)
   end
 
   def find_fulfillment

@@ -51,6 +51,11 @@ class IdentityOrganizations
     Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: billing_manager_orgs + authorized_child_organizations(billing_manager_orgs)}).distinct
   end
 
+  def authorized_billing_manager_protocols_allow_credit
+    billing_manager_orgs ||= Organization.includes(:super_users).where(super_users: {identity_id: @id, billing_manager: true, allow_credit: true}).references(:super_users).distinct(:organizations)
+    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: billing_manager_orgs + authorized_child_organizations(billing_manager_orgs)}).distinct
+  end
+
   def fulfillment_organizations_with_protocols
     fetch_rights
     Organization.joins(:protocols).where(id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs).distinct

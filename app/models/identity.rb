@@ -42,6 +42,10 @@ class Identity < SparcDbBase
     IdentityOrganizations.new(id).authorized_billing_manager_protocols
   end
 
+  def billing_manager_protocols_allow_credit
+    IdentityOrganizations.new(id).authorized_billing_manager_protocols_allow_credit
+  end
+
   def protocols_full
     ##Includes relationship objects
     IdentityOrganizations.new(id).fulfillment_access_protocols

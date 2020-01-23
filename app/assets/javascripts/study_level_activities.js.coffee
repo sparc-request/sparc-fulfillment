@@ -33,6 +33,16 @@ $ ->
         fulfillment:
           invoiced: invoiced
 
+  $(document).on 'change', 'input.credit_toggle', ->
+    credited = $(this).prop('checked')
+    fulfillment_id = $(this).data('id')
+    $.ajax
+      type: 'PUT'
+      url: "/fulfillments/toggle_credit/#{fulfillment_id}"
+      data:
+        fulfillment:
+          credited: credited
+
   $(document).on 'click', ".otf_service_new", ->
     protocol_id = $('#protocol_id').val()
     data = protocol_id: protocol_id

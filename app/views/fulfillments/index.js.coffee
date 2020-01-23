@@ -29,7 +29,10 @@ exclude_from_export('fulfillments-table')
 
 $('#fulfillments-table').on 'load-success.bs.table', () ->
   $('input.invoice_toggle').bootstrapToggle()
+  $('input.credit_toggle').bootstrapToggle()
 
 $('#fulfillments-table').on 'column-switch.bs.table', (e, field, checked) ->
   if field == 'invoiced' && checked == true
     $('input.invoice_toggle').bootstrapToggle()
+  if field == 'credited' && checked == true
+    $('input.credit_toggle').bootstrapToggle()

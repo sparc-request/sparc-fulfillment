@@ -115,6 +115,10 @@ module StudyLevelActivitiesHelper
     (fulfillment.invoiced? ? "Yes" : "No")
   end
 
+  def credit_read_only(fulfillment)
+    (fulfillment.credited? ? "Yes" : "No")
+  end
+
   def fulfillment_grouper_formatter(fulfillment)
     fulfillment.fulfilled_at.strftime('%b %Y')
   end
@@ -136,6 +140,10 @@ module StudyLevelActivitiesHelper
 
   def invoice_toggle_button(fulfillment)
     content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced?, class: 'invoice_toggle')
+  end
+
+  def credit_toggle_button(fulfillment)
+    content_tag(:input, '', type: "checkbox", name: "credited", checked: fulfillment.credited?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.credited?, class: 'credit_toggle')
   end
 
   def note_list_item(params)
