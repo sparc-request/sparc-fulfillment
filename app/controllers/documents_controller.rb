@@ -104,8 +104,9 @@ class DocumentsController < ApplicationController
       format.js {
         mark_document_as_accessed if @document.last_accessed_at.nil?
         @document.destroy
-
-        flash[:alert] = t(:documents)[:flash_messages][:removed]
+        if @document.documentable_type != "LineItem"
+          flash[:alert] = t(:documents)[:flash_messages][:removed]
+        end
       }
     end
   end
