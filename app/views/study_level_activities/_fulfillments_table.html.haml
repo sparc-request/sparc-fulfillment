@@ -47,12 +47,10 @@
                     = t(:fulfillment)[:components]
                   %th{data: {class: 'options exclude_in_export', align: "center", field: "options"}}
                     = t(:actions)[:actions]
-                  - if line_item.fulfillments.any?{|fulfillment| fulfillment.invoiced == true} || current_identity.billing_manager_protocols.include?(line_item.protocol)
-                    %th{data: {class: 'invoiced exclude_in_export', align: "center", field: "invoiced"}}
-                      = t(:fulfillment)[:invoiced]
-                  - if current_identity.billing_manager_protocols_allow_credit.include?(line_item.protocol)
-                    %th{data: {class: 'credited exclude_in_export', align: "center", field: "credited"}}
-                      = t(:fulfillment)[:credited]
+                  %th{data: {class: 'invoiced exclude_in_export', align: "center", field: "invoiced"}}
+                    = t(:fulfillment)[:invoiced]
+                  %th{data: {class: 'credited exclude_in_export', align: "center", field: "credited"}}
+                    = t(:fulfillment)[:credited]
                   %th{data: {class: 'export_credited hidden', align: "center", field: "export_credited"}}
                     = t(:fulfillment)[:credited]
                   %th{data: {class: 'export_invoiced hidden', align: "center", field: "export_invoiced"}}

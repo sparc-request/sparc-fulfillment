@@ -194,39 +194,40 @@ class InvoiceReport < Report
 
                 appointment_group.group_by(&:service_name).each do |service_name, service_group|
                   procedure = service_group.first
+                  if !procedure.credited?
+                    data = []
+                    data << format_protocol_id_column(protocol)
+                    data << protocol.sub_service_request.ssr_id
+                    data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
+                    data << protocol.sparc_protocol.short_title
+                    data << procedure.funding_source
+                    data << formatted_status(protocol)
+                    data << (protocol.pi ? protocol.pi.full_name : nil)
+                    data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
+                                          protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
+                    data << protocol.billing_business_managers.map(&:full_name).join(',')
+                    data << org.name
+                    data << service_name
+                    data << format_date(procedure.completed_date)
+                    data << participant.full_name
+                    data << participant.label
+                    data << procedure.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
+                    data << appointment.name
+                    data << format_date(appointment.start_date)
+                    data << service_group.size
+                    data << procedure.service.current_effective_pricing_map.unit_type
+                    data << display_cost(procedure.service_cost)
+                    data << display_cost(service_group.size * procedure.service_cost.to_f)
+                    data << display_modified_rate_column(procedure)
+                    data << display_subsidy_percent(protocol) if protocol.sub_service_request.subsidy
+                    data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
-                  data = []
-                  data << format_protocol_id_column(protocol)
-                  data << protocol.sub_service_request.ssr_id
-                  data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
-                  data << protocol.sparc_protocol.short_title
-                  data << procedure.funding_source
-                  data << formatted_status(protocol)
-                  data << (protocol.pi ? protocol.pi.full_name : nil)
-                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
-                                        protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
-                  data << protocol.billing_business_managers.map(&:full_name).join(',')
-                  data << org.name
-                  data << service_name
-                  data << format_date(procedure.completed_date)
-                  data << participant.full_name
-                  data << participant.label
-                  data << procedure.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
-                  data << appointment.name
-                  data << format_date(appointment.start_date)
-                  data << service_group.size
-                  data << procedure.service.current_effective_pricing_map.unit_type
-                  data << display_cost(procedure.service_cost)
-                  data << display_cost(service_group.size * procedure.service_cost.to_f)
-                  data << display_modified_rate_column(procedure)
-                  data << display_subsidy_percent(protocol) if protocol.sub_service_request.subsidy
-                  data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
+                    csv << data
 
-                  csv << data
-
-                  service_cost = service_group.size * procedure.service_cost.to_f
-                  total += service_cost
-                  total_with_subsidy += protocol.sub_service_request.subsidy ? service_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : service_cost
+                    service_cost = service_group.size * procedure.service_cost.to_f
+                    total += service_cost
+                    total_with_subsidy += protocol.sub_service_request.subsidy ? service_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : service_cost
+                  end
                 end
               end
             end

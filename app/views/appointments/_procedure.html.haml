@@ -42,14 +42,18 @@
     = procedure_notes_formatter(procedure)
   - if current_identity.billing_manager_protocols.include?(procedure.protocol)
     %td.col-sm-1.invoiced
-      = check_box_tag :invoiced_procedure, '', procedure.invoiced?, class: 'toggle_invoice_procedure', disabled: procedure.invoiced? || procedure.credited?, data: { toggle: 'toggle', id: procedure.id, on: 'Yes', off: 'No' }
-    %td.col-sm-1.credited
-      = check_box_tag :credited_procedure, '', procedure.credited?, class: 'toggle_credit_procedure', disabled: procedure.invoiced? || procedure.credited?, data: { toggle: 'toggle', id: procedure.id, on: 'Yes', off: 'No' }
-  - elsif procedures_invoiced_or_credited?(procedure.appointment)
+      = check_box_tag :invoiced_procedure, '', procedure.invoiced?, class: 'toggle_invoice_procedure', disabled: !procedure.complete? || procedure.invoiced? || procedure.credited?, data: { toggle: 'toggle', id: procedure.id, on: 'Yes', off: 'No' }
+    - if current_identity.billing_manager_protocols_allow_credit.include?(procedure.protocol)
+      %td.col-sm-1.credited
+        = check_box_tag :credited_procedure, '', procedure.credited?, class: 'toggle_credit_procedure', disabled: !procedure.complete? || procedure.invoiced? || procedure.credited?, data: { toggle: 'toggle', id: procedure.id, on: 'Yes', off: 'No' }
+    - else
+      %td.col-sm-2.credited
+        = (procedure.credited? ? "Yes" : "No")
+    %td.col-sm-1.remove
+      %button.btn.btn-danger.delete{type: "button", disabled: procedure.invoiced? || procedure.credited?, aria: {label: "Remove Procedure"}}
+        %span.glyphicon.glyphicon-remove.disabled_tooltip{aria: {hidden: "true"}, title: procedure.invoiced? ? t(:appointment)[:procedure_disabled_invoiced] : procedure.credited? ? t(:appointment)[:procedure_disabled_credited] : ''}
+  - else
     %td.col-sm-2.invoiced
       = (procedure.invoiced? ? "Yes" : "No")
     %td.col-sm-2.credited
       = (procedure.credited? ? "Yes" : "No")
-  %td.col-sm-1.remove
-    %button.btn.btn-danger.delete{type: "button", disabled: procedure.invoiced? || procedure.credited?, aria: {label: "Remove Procedure"}}
-      %span.glyphicon.glyphicon-remove.disabled_tooltip{aria: {hidden: "true"}, title: procedure.invoiced? ? t(:appointment)[:procedure_disabled_invoiced] : procedure.credited? ? t(:appointment)[:procedure_disabled_credited] : ''}

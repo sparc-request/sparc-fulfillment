@@ -27,6 +27,7 @@ $(document).on 'change', 'input.toggle_invoice_procedure', ->
     data:
       procedure:
         invoiced: invoiced
+        credited: !invoiced
 
 $(document).on 'change', 'input.toggle_credit_procedure', ->
   credited = $(this).prop('checked')
@@ -37,3 +38,4 @@ $(document).on 'change', 'input.toggle_credit_procedure', ->
     data:
       procedure:
         credited: credited
+        invoiced: !credited

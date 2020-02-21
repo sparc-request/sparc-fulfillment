@@ -111,6 +111,14 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def toggle_credited(fulfillment)
+    if current_identity.billing_manager_protocols_allow_credit.include?(fulfillment.protocol)
+      credit_toggle_button(fulfillment)
+    else
+      credit_read_only(fulfillment)
+    end
+  end
+
   def invoice_read_only(fulfillment)
     (fulfillment.invoiced? ? "Yes" : "No")
   end
