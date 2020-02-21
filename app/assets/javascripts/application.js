@@ -67,3 +67,4 @@
 //= require visit_group_form
 //= require imports
 //= require fulfillments
+//= require procedures

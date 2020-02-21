@@ -18,35 +18,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.actions-button
-  text-align: left
-
-.available-actions-button
-  overflow: scroll
-
-td.wrap
-  word-break: break-all
-
-.center-block
-  text-align: center
-
-.fulfillment-date-for-klok-entry
-  margin: 0 5px
-
-#fulfillment-klok-description
-  margin-top: 10px
-  text-align: center
-
-.fulfillments-list
-  width: 100%
-  margin-left: 20%
-
-  div.modal-content
-    width: 60%
-    min-width: 1050px
-
-.blue-glyphicon
-  color: blue
-
-.invoiced .btn-group
-  width: 95px
+.disabled_tooltip {
+    padding: 6px 12px;
+    margin: -6px -12px;
+}

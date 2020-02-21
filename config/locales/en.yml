@@ -90,6 +90,9 @@ en:
     protocol_id: "Protocol ID"
     reason: "Reason"
     reset_visit: "Reset Visit"
+    reset_visit_disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
+    reset_visit_disabled_credited: "A procedure within this visit has been credited and cannot be altered."
+    reset_visit_disabled_credited_and_invoiced: "A procedure within this visit has been credited or invoiced and cannot be altered."
     service_error: 'Please choose the service that is desired to be added'
     srid: "SRID"
     start_date: "Start Date:"
@@ -98,6 +101,8 @@ en:
     visit_indications: "Visit Indications:"
     visit_type: "Type of Visit:"
     warning: "Please click 'Start Visit' and enter a start date to continue."
+    procedure_disabled_credited: "This item cannot be removed because it is credited."
+    procedure_disabled_invoiced: "This item cannot be removed because it is invoiced."
     procedure_invoiced_warning: "This procedure has been invoiced and cannot be altered."
     procedure_group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
 
@@ -301,6 +306,7 @@ en:
     object: "Procedure"
     complete: "Complete All"
     completed_date: "Completed Date"
+    credited: "Credited"
     edit_header: "Follow Up"
     followup: "Follow Up"
     follow_up_date: "Follow Up Date"

@@ -86,3 +86,6 @@ $("#modal_place").modal 'hide'
 swal("<%= @cost_error_message %>")
 <% end %>
 <% end %>
+
+$('input#invoiced_procedure').bootstrapToggle()
+$('input#credited_procedure').bootstrapToggle()

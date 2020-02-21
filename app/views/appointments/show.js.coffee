@@ -55,3 +55,6 @@ $('.row.appointment [data-toggle="tooltip"]').tooltip()
 <% if @refresh_dashboard %>
 $('table#completed-appointments-table').bootstrapTable('refresh', {url: "/appointments/completed_appointments.json?protocols_participant_id=<%= @appointment.protocols_participant_id %>", silent: "true"})
 <% end %>
+
+$('input#invoiced_procedure').bootstrapToggle()
+$('input#credited_procedure').bootstrapToggle()

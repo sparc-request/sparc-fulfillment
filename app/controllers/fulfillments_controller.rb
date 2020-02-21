@@ -74,12 +74,14 @@ class FulfillmentsController < ApplicationController
   def toggle_invoiced
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
+    @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
     detect_changes_and_create_notes
   end
 
   def toggle_credit
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(credited: fulfillment_params[:credited])
+    @fulfillment.update_attributes(invoiced: !fulfillment_params[:credited])
     detect_changes_and_create_notes
   end
 
