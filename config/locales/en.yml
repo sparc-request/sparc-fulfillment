@@ -123,6 +123,7 @@ en:
     object: "Document"
     documents: "Documents"
     date: "Date Requested"
+    delete: "Delete"
     date_created: "Date Created"
     date_time_formatter_ruby: "%m/%d/%Y %I:%M:%S %p"
     date_time_formatter_js:   "MM/DD/YYYY HH:mm:ss A"
