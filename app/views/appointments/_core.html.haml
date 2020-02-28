@@ -50,13 +50,13 @@
               = t(:procedure)[:invoiced]
             %th.credited
               = t(:procedure)[:credited]
-            %th.remove
-              = t(:procedure)[:remove]
           - else
             %th.invoiced
               = t(:procedure)[:invoiced]
             %th.credited
               = t(:procedure)[:credited]
+          %th.remove
+            = t(:procedure)[:remove]
 
         %tbody
           = render partial: 'appointments/procedure', collection: procedures, as: :procedure

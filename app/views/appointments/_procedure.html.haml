@@ -41,19 +41,19 @@
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
     = procedure_notes_formatter(procedure)
   - if current_identity.billing_manager_protocols.include?(procedure.protocol)
-    %td.col-sm-1.invoiced
+    %td.col-sm-1.invoiced_toggle
       = check_box_tag :invoiced_procedure, '', procedure.invoiced?, class: 'toggle_invoice_procedure', disabled: !procedure.complete? || procedure.invoiced? || procedure.credited?, data: { toggle: 'toggle', id: procedure.id, on: 'Yes', off: 'No' }
     - if current_identity.billing_manager_protocols_allow_credit.include?(procedure.protocol)
-      %td.col-sm-1.credited
+      %td.col-sm-1.credited_toggle
         = check_box_tag :credited_procedure, '', procedure.credited?, class: 'toggle_credit_procedure', disabled: !procedure.complete? || procedure.invoiced? || procedure.credited?, data: { toggle: 'toggle', id: procedure.id, on: 'Yes', off: 'No' }
     - else
-      %td.col-sm-2.credited
+      %td.col-sm-2.credited_view_only
         = (procedure.credited? ? "Yes" : "No")
-    %td.col-sm-1.remove
-      %button.btn.btn-danger.delete{type: "button", disabled: procedure.invoiced? || procedure.credited?, aria: {label: "Remove Procedure"}}
-        %span.glyphicon.glyphicon-remove.disabled_tooltip{aria: {hidden: "true"}, title: procedure.invoiced? ? t(:appointment)[:procedure_disabled_invoiced] : procedure.credited? ? t(:appointment)[:procedure_disabled_credited] : ''}
   - else
-    %td.col-sm-2.invoiced
+    %td.col-sm-2.invoiced_view_only
       = (procedure.invoiced? ? "Yes" : "No")
-    %td.col-sm-2.credited
+    %td.col-sm-2.credited_view_only
       = (procedure.credited? ? "Yes" : "No")
+  %td.col-sm-1.remove
+    %button.btn.btn-danger.delete{type: "button", disabled: procedure.invoiced? || procedure.credited?, aria: {label: "Remove Procedure"}}
+      %span.glyphicon.glyphicon-remove.disabled_tooltip{aria: {hidden: "true"}, title: procedure.invoiced? ? t(:appointment)[:procedure_disabled_invoiced] : procedure.credited? ? t(:appointment)[:procedure_disabled_credited] : ''}

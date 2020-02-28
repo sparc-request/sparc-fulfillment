@@ -23,17 +23,7 @@ require 'rails_helper'
 feature 'Identity removes a Procedure', js: true do
 
   before :each do
-    sub_service_request   = create(:sub_service_request_with_organization)
-    subsidy               = create(:subsidy, sub_service_request: sub_service_request)
-    @protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-    organization_provider = create(:organization_provider, name: "Provider")
-    organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-    organization          = sub_service_request.organization
-    organization.update_attributes(parent: organization_program, name: "Core")
-    create(:clinical_provider, identity: identity, organization: organization)
-    create(:project_role_pi, identity: identity, protocol: protocol)
-    create(:super_user, identity: identity, organization: organization_provider, billing_manager: true)
-
+    @protocol    = create_and_assign_protocol_to_me
     @protocols_participant = @protocol.protocols_participants.first
     @appointment = @protocols_participant.appointments.first
     @services    = @protocol.organization.inclusive_child_services(:per_participant)
