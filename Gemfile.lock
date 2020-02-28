@@ -128,7 +128,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.6)
     cookiejar (0.3.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -193,7 +193,7 @@ GEM
     factory_bot_rails (5.1.1)
       factory_bot (~> 5.1.0)
       railties (>= 4.2.0)
-    faker (2.10.1)
+    faker (2.10.2)
       i18n (>= 1.6, < 2)
     faye (1.2.4)
       cookiejar (>= 0.3.0)
@@ -519,7 +519,7 @@ DEPENDENCIES
   devise
   dotenv-rails
   factory_bot_rails
-  faker (~> 2.10.1)
+  faker (~> 2.10.2)
   faye
   foreman
   geckodriver-helper
