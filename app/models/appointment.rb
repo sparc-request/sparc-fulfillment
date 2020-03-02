@@ -21,7 +21,7 @@
 class Appointment < ApplicationRecord
 
   STATUSES = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window'].freeze
-  NOTABLE_REASONS = ['Other', 'Assessment not performed', 'SAE/Follow-up for SAE', 'Patient Visit Conflict', 'Study Visit Assessments Inconclusive'].freeze
+  NOTABLE_REASONS = ['Assessment not performed', 'SAE/Follow-up for SAE', 'Patient Visit Conflict', 'Study Visit Assessments Inconclusive', 'Other'].freeze
 
   default_scope {order(:position)}
 
