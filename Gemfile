@@ -89,8 +89,8 @@ group :test do
   gem 'rspec-collection_matchers'
   gem 'selenium-webdriver'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 4.2.0", require: false
+  gem 'shoulda-matchers', "~> 4.3.0", require: false
   gem 'timecop'
-  gem 'webmock', '~> 3.8.0'
-  gem 'vcr', '~> 5.0.0'
+  gem 'webmock', '~> 3.8.2'
+  gem 'vcr', '~> 5.1.0'
 end
