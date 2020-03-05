@@ -111,6 +111,14 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def toggle_credited(fulfillment)
+    if current_identity.billing_manager_protocols_allow_credit.include?(fulfillment.protocol)
+      credit_toggle_button(fulfillment)
+    else
+      credit_read_only(fulfillment)
+    end
+  end
+
   def invoice_read_only(fulfillment)
     (fulfillment.invoiced? ? "Yes" : "No")
   end
@@ -139,11 +147,11 @@ module StudyLevelActivitiesHelper
   private
 
   def invoice_toggle_button(fulfillment)
-    content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced?, class: 'invoice_toggle')
+    content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced? || fulfillment.credited?, class: 'invoice_toggle')
   end
 
   def credit_toggle_button(fulfillment)
-    content_tag(:input, '', type: "checkbox", name: "credited", checked: fulfillment.credited?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.credited?, class: 'credit_toggle')
+    content_tag(:input, '', type: "checkbox", name: "credited", checked: fulfillment.credited?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.credited? || fulfillment.invoiced?, class: 'credit_toggle')
   end
 
   def note_list_item(params)

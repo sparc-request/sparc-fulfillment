@@ -411,4 +411,3 @@ $ ->
   $(document).on 'click', '.disabled-status.btn-group .btn.disabled ', (e) ->
     e.stopPropagation()
     alert(I18n["appointment"]["procedure_invoiced_warning"])
-

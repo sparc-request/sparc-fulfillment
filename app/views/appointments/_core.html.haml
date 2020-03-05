@@ -45,10 +45,18 @@
             = t(:procedure)[:performed_by]
           %th.notes
             = t(:procedure)[:notes]
-          - if procedures_invoiced?(appointment)
+          - if current_identity.billing_manager_protocols.include?(appointment.protocol)
             %th.invoiced
               = t(:procedure)[:invoiced]
+            %th.credited
+              = t(:procedure)[:credited]
+          - else
+            %th.invoiced
+              = t(:procedure)[:invoiced]
+            %th.credited
+              = t(:procedure)[:credited]
           %th.remove
             = t(:procedure)[:remove]
+
         %tbody
           = render partial: 'appointments/procedure', collection: procedures, as: :procedure

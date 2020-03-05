@@ -32,3 +32,6 @@ $(".completed_date_field").datetimepicker
   ignoreReadonly: true
   
 update_complete_visit_button(<%= @appointment.can_finish? %>)
+
+$('input#invoiced_procedure').bootstrapToggle()
+$('input#credited_procedure').bootstrapToggle()

@@ -17,28 +17,25 @@
 # DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+ 
+$(document).on 'change', 'input.toggle_invoice_procedure', ->
+  invoiced = $(this).prop('checked')
+  procedure_id = $(this).data('id')
+  $.ajax
+    type: 'PUT'
+    url: "/procedures/#{procedure_id}.js"
+    data:
+      procedure:
+        invoiced: invoiced
+        credited: !invoiced
 
-$("#modal_area").html("<%= escape_javascript(render(:partial =>'study_level_activities/fulfillments_table', locals: {line_item: @line_item, header_text: 'Fulfillments List'})) %>");
-$("#fulfillments-table").bootstrapTable()
-$("#modal_place").modal(backdrop: 'static', keyboard: false)
-$("#modal_place").modal 'show'
-$('.fulfillments-list li').find("[data-field='docs']").closest('li').hide()
-$('.fulfillments-list li').find("[data-field='notes']").closest('li').hide()
-$('.fulfillments-list li').find("[data-field='export_invoiced']").closest('li').hide()
-exclude_from_export('fulfillments-table')
-
-$('#fulfillments-table').on 'load-success.bs.table', () ->
-  $('input.invoice_toggle').bootstrapToggle()
-  $('input.credit_toggle').bootstrapToggle()
-
-$('#fulfillments-table').on 'column-switch.bs.table', (e, field, checked) ->
-  if field == 'invoiced' && checked == true
-    $('input.invoice_toggle').bootstrapToggle()
-  if field == 'credited' && checked == true
-    $('input.credit_toggle').bootstrapToggle()
-
-$('.fulfillments-list .table-responsive').on 'show.bs.dropdown', ->
-	$('.table-responsive').css 'overflow', 'inherit'
-
-$('.fulfillments-list .table-responsive').on 'hide.bs.dropdown', ->
-	$('.table-responsive').css 'overflow', 'auto'
+$(document).on 'change', 'input.toggle_credit_procedure', ->
+  credited = $(this).prop('checked')
+  procedure_id = $(this).data('id')
+  $.ajax
+    type: 'PUT'
+    url: "/procedures/#{procedure_id}.js"
+    data:
+      procedure:
+        credited: credited
+        invoiced: !credited
