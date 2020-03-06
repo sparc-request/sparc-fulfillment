@@ -1,0 +1,22 @@
+When you want to delete a whole bunch of projects that you've created by running the test script:
+1) Run one manual delete but just before you click the final "Are you sure you want to delete this project button":
+	a) Open the developer console
+	b) Go to the Network pane
+	c) Click the "clear" button to empty the network history
+	d) And make sure the "preserve log" checkbox is checked
+2) Submit the delete and look in the network pane for a POST request to `http://localhost/redcap/redcap_v9.3.3/ProjectGeneral/delete_project.php?pid=<SOME_ID>`
+3) Right click on that request, go to Copy, copy as cURL
+4) Paste the copied url in a sublime text window
+5) Of the text you just pasted, copy everything starting from the first "-H" and ending after "--compressed"
+6) Replace the similar text in the below script with what you just copied
+7) In the browser, go to the "My Projects" home page and hover over the link for each project you want to delete
+	- In the bottom left corner of the browser a popup should appear with the url for the link you're hovering over
+8) Take note of the last `pid=<SOME_ID>` token in the url and replace the `<SOME_ID>` token in the script below with the target pid
+9) Copy the updated script and run it in an iTerm window and it'll delete that project
+10) Repeat steps 7-9 for each additional project you want to delete this way. (After some amount of time, the CSRF token in the script you copied will expire and you'll need to start from step 1 again, but it'll likely take 5-15 minutes for that to happen)
+
+
+
+curl "http://localhost/redcap/redcap_v9.3.3/ProjectGeneral/delete_project.php?pid=76" -H 'Connection: keep-alive' -H 'Accept: */*' -H 'Origin: http://localhost' -H 'X-Requested-With: XMLHttpRequest' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Sec-Fetch-Site: same-origin' -H 'Sec-Fetch-Mode: cors' -H 'Referer: http://localhost/redcap/redcap_v9.3.3/ProjectSetup/other_functionality.php?pid=74' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.9' -H 'Cookie: admin-tab=details-tab; __profilin=p%3Dt; _clinical_work_fulfillment_session=947324032298de3e5cd8481045c5beb7; _session_id=7354b1bc5332cc72ce084862c56d6b40; PHPSESSID=f729fb948725dbf143596b5a4131f640; survey=rg3t1an28krs9de0oqfmp85euq' --data 'action=delete&delete_now=0&super_user_request=0&redcap_csrf_token=ae50f1018a252f507b808d09825a92b6' --compressed
+
+<button type="button" class="ui-button ui-corner-all ui-widget">Delete the project</button>

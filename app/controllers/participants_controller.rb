@@ -20,10 +20,10 @@
 
 class ParticipantsController < ApplicationController
 
-  before_action :find_protocol, only: [:show, :update_arm, :destroy_protocols_participant, :update_status, :protocols_participants_in_protocol, :edit_arm, :associate_participants_to_protocol, :update_protocol_association, :search]
-  before_action :find_participant, only: [:show, :destroy_protocols_participant, :update_status, :details, :edit, :update, :destroy, :edit_arm, :update_arm, :update_protocol_association, :patient_registry_modal_details]
-  before_action :find_protocols_participant, only: [:show, :destroy_protocols_participant, :update_status, :edit_arm, :update_arm, :update_protocol_association, :assign_arm_if_only_one_arm]
-  before_action :note_old_protocols_participant_attributes, only: [:update_status, :update_arm]
+  before_action :find_protocol, only: [:show, :update_arm, :update_external_id, :destroy_protocols_participant, :update_status, :update_recruitment_source, :protocols_participants_in_protocol, :edit_arm, :edit_external_id, :associate_participants_to_protocol, :update_protocol_association, :search]
+  before_action :find_participant, only: [:show, :destroy_protocols_participant, :update_status, :update_recruitment_source, :details, :edit, :update, :destroy, :edit_arm, :edit_external_id, :update_arm, :update_external_id, :update_protocol_association, :patient_registry_modal_details]
+  before_action :find_protocols_participant, only: [:show, :destroy_protocols_participant, :update_status, :update_recruitment_source, :edit_arm, :edit_external_id, :update_arm, :update_external_id, :update_protocol_association, :assign_arm_if_only_one_arm]
+  before_action :note_old_protocols_participant_attributes, only: [:update_status, :update_recruitment_source, :update_arm, :update_external_id]
   before_action :authorize_protocol, only: [:show]
   before_action :authorize_patient_registrar, only: [:index]
   before_action :format_participant_name, only: [:create, :update]
@@ -118,7 +118,23 @@ class ParticipantsController < ApplicationController
     end
   end
 
+  def update_external_id
+    @protocols_participant.update_attributes(protocols_participant_params)
+    @protocols_participant.update_appointments_on_arm_change
+    note_successful_changes
+    flash[:success] = t(:participant)[:flash_messages][:updated]
+  end
+
   def update_status
+    if @protocols_participant.update_attributes(protocols_participant_params)
+      note_successful_changes
+      flash[:success] = t(:participant)[:flash_messages][:updated]
+    else
+      @errors = @participant.errors
+    end
+  end
+
+  def update_recruitment_source
     if @protocols_participant.update_attributes(protocols_participant_params)
       note_successful_changes
       flash[:success] = t(:participant)[:flash_messages][:updated]
@@ -198,8 +214,6 @@ class ParticipantsController < ApplicationController
          "participants.first_name #{order}"
       when 'mrn'
         "participants.mrn #{order}"
-      when 'recruitment_source'
-        "participants.recruitment_source #{order}"
       else
         "#{params[:sort]} #{order}"
       end
@@ -239,11 +253,11 @@ class ParticipantsController < ApplicationController
   end
 
   def participant_params
-    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn, :external_id,:date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :recruitment_source, :deidentified)
+    params.require(:participant).permit(:last_name, :first_name, :middle_initial, :mrn,:date_of_birth, :gender, :ethnicity, :race, :address, :city, :state, :zipcode, :phone, :deidentified)
   end
 
   def protocols_participant_params
-    params.require(:protocols_participant).permit(:protocol_id, :participant_id, :arm_id, :status)
+    params.require(:protocols_participant).permit(:protocol_id, :participant_id, :arm_id, :status, :recruitment_source, :external_id)
   end
 
   def find_participant

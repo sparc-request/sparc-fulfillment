@@ -37,6 +37,16 @@ class ProtocolsParticipant < ApplicationRecord
     procedures.where.not(status: 'unstarted').empty?
   end
 
+  def label
+    label = nil
+
+    if not external_id.blank?
+      label = "ID:#{external_id}"
+    end
+
+    label
+  end
+
   private
 
   def has_new_visit_groups?

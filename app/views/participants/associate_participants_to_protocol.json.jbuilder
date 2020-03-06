@@ -19,6 +19,5 @@ json.rows @participants do |participant|
     json.phone phoneNumberFormatter(participant)
     json.edit registry_edit_formatter(participant)
     json.associate associate_formatter(participant, @protocol)
-    json.recruitment_source truncated_formatter(participant.recruitment_source)
   end
 end

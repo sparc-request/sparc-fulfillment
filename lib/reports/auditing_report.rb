@@ -67,12 +67,13 @@ class AuditingReport < Report
         protocols.each do |protocol|
           protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
             appointment = procedure.appointment
-            participant = appointment.protocols_participant.participant
+            protocols_participant = appointment.protocols_participant
+            participant = protocols_participant.participant
 
             data = [ protocol.srid ]
             data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
             data << participant.full_name
-            data << participant.label
+            data << protocols_participant.label
             data << appointment.arm.name
             data << appointment.name
             data << format_date(procedure.completed_date.nil? ? nil : procedure.completed_date)

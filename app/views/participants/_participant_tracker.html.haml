@@ -40,11 +40,13 @@
         %th{data: {class: 'arm_name truncate', align: "left", field: "arm_name"}}
           = t(:participant)[:arm]
         %th{data: {class: 'status', align: "left", field: "statusDropdown"}}
-          = t(:participant)[:status]
+          = t(:protocols_participant)[:status]
         %th{data: {class: 'notes', align: "center", field: "notes"}}
           = t(:participant)[:notes]
-        %th{data: {class: 'recruitment_source', align: "left", sortable: "true", field: "recruitment_source", visible: "false"}}
-          = t(:participant)[:recruitment_source]
+        %th{data: {class: 'external_id', align: "center", field: "external_id"}}
+          = t(:protocols_participant)[:external_id]
+        %th{data: {class: 'recruitment_source', align: "left", sortable: "true", field: "recruitmentSourceDropdown"}}
+          = t(:protocols_participant)[:recruitment_source]
         %th{data: {class: 'details', align: "center", field: "details"}}
           = t(:actions)[:details]
         %th{data: {class: 'delete', align: "center", field: "delete"}}

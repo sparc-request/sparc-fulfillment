@@ -259,6 +259,12 @@ en:
     new_header: "Add Note"
     reason: "Reason *"
 
+  protocols_participant:
+    status: "Status"
+    recruitment_source: "Recruitment Source"
+    external_id: "External ID"
+    edit_external_id: "Edit External ID"
+
   participant:
     associate: "Associate"
     object: "Participant"
@@ -295,11 +301,9 @@ en:
     phone: "Phone"
     phone_num: "Phone #"
     race: "Race"
-    recruitment_source: "Recruitment Source"
     save_participant: "Save Participant"
     state: "State"
     stats: "Stats"
-    status: "Status"
     tracker: "Participant Tracker"
     zip: "Zip Code"
 

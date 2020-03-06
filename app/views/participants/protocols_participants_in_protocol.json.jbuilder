@@ -13,7 +13,7 @@ json.rows @participants do |participant|
     json.last_name truncated_formatter(participant.last_name)
     json.name truncated_formatter(participant.full_name)
     json.mrn truncated_formatter(participant.mrn)
-    json.external_id truncated_formatter(participant.external_id)
+    json.external_id external_id_formatter(participant, protocols_participant, @protocol.id)
     json.statusText protocols_participant.status
     json.statusDropdown statusFormatter(participant, protocols_participant, @protocol.id)
     json.notes notes_formatter(participant)
@@ -31,5 +31,6 @@ json.rows @participants do |participant|
     json.chg_arm changeArmFormatter(participant, protocols_participant)
     json.recruitment_source truncated_formatter(participant.recruitment_source)
     json.coordinators formatted_coordinators(@protocol.coordinators.map(&:full_name))
+    json.recruitmentSourceDropdown recruitmentSourceFormatter(participant, protocols_participant, @protocol.id)
   end
 end

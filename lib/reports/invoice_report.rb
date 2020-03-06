@@ -190,10 +190,12 @@ class InvoiceReport < Report
             org_group.group_by{|procedure| procedure.appointment.visit_group}.each do |visit_group, vg_group|
 
               vg_group.group_by(&:appointment).each do |appointment, appointment_group|
-                participant = appointment.protocols_participant.participant
+                protocols_participant = appointment.protocols_participant
+                participant = protocols_participant.participant
 
                 appointment_group.group_by(&:service_name).each do |service_name, service_group|
                   procedure = service_group.first
+
                   if !procedure.credited?
                     data = []
                     data << format_protocol_id_column(protocol)
@@ -210,7 +212,7 @@ class InvoiceReport < Report
                     data << service_name
                     data << format_date(procedure.completed_date)
                     data << participant.full_name
-                    data << participant.label
+                    data << protocols_participant.label
                     data << procedure.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
                     data << appointment.name
                     data << format_date(appointment.start_date)
