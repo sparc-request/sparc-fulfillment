@@ -55,7 +55,7 @@ gem 'will_paginate'
 gem 'yajl-ruby', require: 'yajl'
 gem 'dalli'
 group :deploy do
-  gem 'capistrano', '~> 3.11'
+  gem 'capistrano', '~> 3.12'
   gem 'capistrano-rvm'
   gem 'capistrano-rails', '~> 1.4'
   gem 'capistrano-passenger'
