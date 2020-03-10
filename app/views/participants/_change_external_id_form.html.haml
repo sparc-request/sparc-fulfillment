@@ -17,24 +17,21 @@
 -# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
-
-.row
-  .col-md-12
-    .fixed-table-container.bootstrap-table-dropdown-overflow
-      %table.participant.details.custom_striped{id: "participant-info", data: {toggle: 'table', url: "/participants/calendar.json?protocols_participant_id=#{protocols_participant.id}&protocol_id=#{protocol.id}&participant_id=#{participant.id}"}}
-        %thead
-          %tr
-            %th{data: {align: "left", field: "name"}}
-              = t(:participant)[:full_name]
-            %th{data: {align: "left", field: "mrn"}}
-              = t(:participant)[:mrn]
-            %th{data: {align: "left", field: "arm_name"}}
-              = t(:participant)[:arm]
-            %th{data: {align: "left", field: "statusText"}}
-              = t(:protocols_participant)[:status]
-            %th{data: {align: "left", field: "srid"}}
-              = t(:appointment)[:srid]
-            %th{data: {class: "coordinators", align: "left", field: "coordinators"}}
-              = t(:protocol)[:coordinators]
-            %th{data: {class: 'edit', align: "center", field: "edit", width: "5"}}
-              = t(:actions)[:edit]
+.modal-dialog
+  .modal-content
+    = form_for @protocols_participant, {url: "/participants/#{participant.id}/edit_external_id?protocol_id=#{@protocol.id}", remote: true, html: {class: "form-horizontal", role: "form", method: "post"}} do |p|
+      .modal-header
+        %button.close{type: 'button', data: {dismiss: 'modal'}}
+          %span{aria: {hidden:'true'}} &times;
+          %span.sr-only= t(:actions)[:close]
+        %h4#changeParticipantArm.modal-title.text-center= t(:protocols_participant)[:edit_external_id]
+        #modal_errors
+      .modal-body
+        .form-group
+          = p.label "external_id", t(:protocols_participant)[:external_id]+t(:actions)[:required], class: "col-sm-3 control-label"
+          .col-sm-8
+            = p.text_field :external_id, {class: 'form-control'}
+      .modal-footer
+        .center-block
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}

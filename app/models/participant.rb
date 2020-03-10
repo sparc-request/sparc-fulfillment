@@ -118,10 +118,6 @@ class Participant < ApplicationRecord
   def label
     label = nil
 
-    if not external_id.blank?
-      label = "ID:#{external_id}"
-    end
-
     if not mrn.blank?
       label = "MRN:#{mrn}"
     end

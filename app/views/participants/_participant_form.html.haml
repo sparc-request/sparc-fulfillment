@@ -52,9 +52,6 @@
               = p.label "mrn", t(:participant)[:mrn]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "mrn", {class: 'form-control'}
             .form-group
-              = p.label "external_id", t(:participant)[:id], class: "col-sm-4 control-label"
-              .col-sm-7= p.text_field "external_id", {class: 'form-control'}
-            .form-group
               = p.label "date_of_birth", t(:participant)[:dob]+t(:actions)[:required], class: "col-sm-4 control-label "
               .col-sm-7
                 = p.text_field "date_of_birth", {id: 'dob_time_picker', class: 'form-control datetimepicker', value: format_date(participant.date_of_birth), readonly: true}
@@ -84,9 +81,6 @@
             .form-group
               = p.label "phone", t(:participant)[:phone], class: "col-sm-4 control-label"
               .col-sm-7= p.text_field "phone", {class: 'form-control'}
-            .form-group
-              = p.label "recruitment_source", t(:participant)[:recruitment_source], class: "col-sm-4 control-label"
-              .col-sm-7= p.select "recruitment_source", Participant::RECRUITMENT_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
       .modal-footer
         .center-block
           %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
