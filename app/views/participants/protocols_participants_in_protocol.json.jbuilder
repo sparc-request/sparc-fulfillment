@@ -29,7 +29,7 @@ json.rows @participants do |participant|
     json.calendar calendarFormatter(protocols_participant)
     json.participant_report participant_report_formatter(protocols_participant)
     json.chg_arm changeArmFormatter(participant, protocols_participant)
-    json.recruitment_source truncated_formatter(participant.recruitment_source)
+    json.recruitment_source truncated_formatter(protocols_participant.recruitment_source)
     json.coordinators formatted_coordinators(@protocol.coordinators.map(&:full_name))
     json.recruitmentSourceDropdown recruitmentSourceFormatter(participant, protocols_participant, @protocol.id)
   end
