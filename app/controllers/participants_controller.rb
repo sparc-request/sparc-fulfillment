@@ -223,7 +223,6 @@ class ParticipantsController < ApplicationController
     if params[:search] && !params[:search].blank?
       search_term = params[:search]
       search_tokens = search_term.squish.split(" ")
-
       if search_tokens.count > 1
         first_token = "#{search_tokens[0]}%"
         second_token = "#{search_tokens[1]}%"
@@ -234,10 +233,12 @@ class ParticipantsController < ApplicationController
           first_token)
       else
         search_token = "%#{search_tokens[0]}%"
-        @participants = @participants.where("participants.mrn LIKE ? OR participants.first_name LIKE ? OR participants.last_name LIKE ?",
+        @participants = @participants.joins(:protocols_participants).where("participants.mrn LIKE ? OR participants.first_name LIKE ? OR participants.last_name LIKE ? OR protocols_participants.external_id LIKE ?",
+          search_token,
           search_token,
           search_token,
           search_token)
+        @participants = @participants.distinct
       end
       @total = @participants.count
     end
