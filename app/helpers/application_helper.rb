@@ -115,6 +115,15 @@ module ApplicationHelper
     ].join ""
   end
 
+  def truncated_formatter_external_id protocols_participants
+    external_ids = protocols_participants.map{ |protocols_participant| protocols_participant.external_id}.reject(&:blank?).join(', ')
+    [
+      "<div data-toggle='tooltip' data-placement='left' data-animation='false' title='#{external_ids}'>",
+      "#{external_ids}",
+      "</div>"
+    ].join ""
+  end
+
   def current_translations
     @translations ||= I18n.backend.send(:translations)
     @translations[I18n.locale].with_indifferent_access
