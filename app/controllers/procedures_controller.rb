@@ -30,7 +30,9 @@ class ProceduresController < ApplicationController
     service         = Service.find params[:service_id]
     performer_id    = params[:performer_id]
     @procedures     = []
-    funding_source = @appointment.protocol.sparc_funding_source
+    protocol        = @appointment.protocol
+    funding_source  = protocol.sparc_funding_source
+    percent_subsidy = protocol.sub_service_request.subsidy ? protocol.sub_service_request.subsidy.percent_subsidy : nil
 
     qty.times do
       @procedures << Procedure.create(appointment: @appointment,
@@ -40,7 +42,8 @@ class ProceduresController < ApplicationController
                                       billing_type: 'research_billing_qty',
                                       sparc_core_id: service.sparc_core_id,
                                       sparc_core_name: service.sparc_core_name,
-                                      funding_source: funding_source)
+                                      funding_source: funding_source,
+                                      percent_subsidy: percent_subsidy)
     end
   end
 
@@ -59,8 +62,12 @@ class ProceduresController < ApplicationController
     @procedure.update_attributes(procedure_params)
     @appointment = @procedure.appointment
     @statuses = @appointment.appointment_statuses.map{|x| x.status}
-
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
+    subsidy = @appointment.protocol.sub_service_request.subsidy
+    if subsidy
+      @procedure.percent_subsidy = subsidy.percent_subsidy
+      @procedure.save
+    end
   end
 
   def destroy
