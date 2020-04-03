@@ -31,12 +31,8 @@ class InvoiceReport < Report
     protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
   end
 
-  def display_subsidy_percent(protocol)
-    if protocol.sub_service_request.subsidy
-      "#{protocol.sub_service_request.subsidy.percent_subsidy * 100}%"
-    else
-      ""
-    end
+  def display_subsidy_percent(protocol, object)
+    "#{object.percent_subsidy * 100}%"
   end
 
   def display_modified_rate_column(procedure)
@@ -140,13 +136,13 @@ class InvoiceReport < Report
               data << display_cost(fulfillment.service_cost)
               data << display_cost(fulfillment.total_cost)
               data << (fulfillment.line_item.admin_rates.any? ? "Yes" : "No")
-              data << display_subsidy_percent(protocol) if protocol.sub_service_request.subsidy
+              data << display_subsidy_percent(protocol, fulfillment) if protocol.sub_service_request.subsidy
               data << (fulfillment.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
               csv << data
 
               total += fulfillment.total_cost
-              total_with_subsidy += protocol.sub_service_request.subsidy ? fulfillment.total_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : fulfillment.total_cost
+              total_with_subsidy += protocol.sub_service_request.subsidy ? fulfillment.total_cost * (1 - fulfillment.percent_subsidy) : fulfillment.total_cost
             end
           end
         end
@@ -221,14 +217,14 @@ class InvoiceReport < Report
                     data << display_cost(procedure.service_cost)
                     data << display_cost(service_group.size * procedure.service_cost.to_f)
                     data << display_modified_rate_column(procedure)
-                    data << display_subsidy_percent(protocol) if protocol.sub_service_request.subsidy
+                    data << display_subsidy_percent(protocol, procedure) if protocol.sub_service_request.subsidy
                     data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
                     csv << data
 
                     service_cost = service_group.size * procedure.service_cost.to_f
                     total += service_cost
-                    total_with_subsidy += protocol.sub_service_request.subsidy ? service_cost * (1 - protocol.sub_service_request.subsidy.percent_subsidy) : service_cost
+                    total_with_subsidy += protocol.sub_service_request.subsidy ? service_cost * (1 - procedure.percent_subsidy) : service_cost
                   end
                 end
               end

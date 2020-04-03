@@ -46,6 +46,7 @@ class FulfillmentsController < ApplicationController
     funding_source = @line_item.protocol.sparc_funding_source
     @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: @line_item.cost(funding_source), funding_source: funding_source }))
     if @fulfillment.valid?
+      perform_subsidy_check
       @fulfillment.save
       update_components_and_create_notes('create')
       flash[:success] = t(:fulfillment)[:flash_messages][:created]
@@ -63,6 +64,7 @@ class FulfillmentsController < ApplicationController
     persist_original_attributes_to_track_changes
     @line_item = @fulfillment.line_item
     if @fulfillment.update_attributes(fulfillment_params)
+      perform_subsidy_check(true)
       update_components_and_create_notes('update')
       detect_changes_and_create_notes
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
@@ -156,5 +158,14 @@ class FulfillmentsController < ApplicationController
 
   def find_fulfillment
     @fulfillment = Fulfillment.find(params[:id])
+  end
+
+  def perform_subsidy_check(update=false)
+    if @line_item.protocol.sub_service_request.subsidy
+      @fulfillment.percent_subsidy = @line_item.protocol.sub_service_request.subsidy.percent_subsidy
+      if update == true
+        @fulfillment.save
+      end
+    end
   end
 end
