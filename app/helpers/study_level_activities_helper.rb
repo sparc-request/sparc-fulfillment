@@ -51,13 +51,7 @@ module StudyLevelActivitiesHelper
   def sla_options_buttons(line_item)
     options = raw(
       note_list_item({object: line_item, has_notes: line_item.notes.any?})+
-      document_list_item({object: line_item, has_documents: line_item.documents.any?})+
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_edit'))
-      )+
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-remove", aria: {hidden: "true"}))+' Delete Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_delete'))
-      )
+      document_list_item({object: line_item, has_documents: line_item.documents.any?})
     )
 
     span = raw content_tag(:span, '', class: 'glyphicon glyphicon-triangle-bottom')
