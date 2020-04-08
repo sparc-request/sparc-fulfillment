@@ -84,7 +84,7 @@ GEM
     bootstrap3-datetimepicker-rails (4.17.47)
       momentjs-rails (>= 2.8.1)
     builder (3.2.4)
-    capistrano (3.12.1)
+    capistrano (3.13.0)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -503,7 +503,7 @@ DEPENDENCIES
   bootstrap-select-rails
   bootstrap-toggle-rails
   bootstrap3-datetimepicker-rails (~> 4.17.37)
-  capistrano (~> 3.12)
+  capistrano (~> 3.13)
   capistrano-passenger
   capistrano-rails (~> 1.4)
   capistrano-rvm
