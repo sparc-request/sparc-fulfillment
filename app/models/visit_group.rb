@@ -23,7 +23,8 @@ class VisitGroup < ApplicationRecord
 
   has_paper_trail
   acts_as_paranoid
-  acts_as_list scope: [:arm_id]
+  acts_as_list scope: [:arm_id, ]
+  acts_as_list scope: 'arm_id = #{arm_id} AND deleted_at IS NULL'
 
   belongs_to :arm
 
