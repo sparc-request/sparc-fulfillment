@@ -18,22 +18,8 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class HumanSubjectsInfo < SparcDbBase
-  self.table_name = self.table_name_prefix + 'human_subjects_info'
+class IrbRecord < SparcDbBase
+  # self.table_name = self.table_name_prefix + 'irb_records'
 
-  belongs_to :protocol, primary_key: :sparc_id
-
-  has_many :irb_records
-
-  def irb_approval_date
-    irb_records.first.try(:irb_approval_date)
-  end
-
-  def irb_expiration_date
-    irb_records.first.try(:irb_expiration_date)
-  end
-
-  def irb_number
-    irb_records.first.try(:pro_number)
-  end
+  belongs_to :human_subjects_info
 end

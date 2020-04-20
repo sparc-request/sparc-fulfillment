@@ -18,22 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class HumanSubjectsInfo < SparcDbBase
-  self.table_name = self.table_name_prefix + 'human_subjects_info'
+FactoryBot.define do
 
-  belongs_to :protocol, primary_key: :sparc_id
-
-  has_many :irb_records
-
-  def irb_approval_date
-    irb_records.first.try(:irb_approval_date)
-  end
-
-  def irb_expiration_date
-    irb_records.first.try(:irb_expiration_date)
-  end
-
-  def irb_number
-    irb_records.first.try(:pro_number)
+  factory :irb_record do
+    pro_number { Faker::Number.number(digits: 4) }
+    irb_approval_date { 1.day.from_now }
+    irb_expiration_date { 2.days.from_now }
   end
 end

@@ -30,6 +30,7 @@ class Protocol < ApplicationRecord
   belongs_to :sub_service_request
   belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
   has_one :human_subjects_info, primary_key: :sparc_id
+  has_many :irb_records, through: :human_subjects_info
   has_many :service_requests, primary_key: :sparc_id
   has_many :project_roles,    primary_key: :sparc_id
   has_many :arms,             dependent: :destroy
