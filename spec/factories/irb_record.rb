@@ -20,11 +20,9 @@
 
 FactoryBot.define do
 
-  factory :human_subjects_info do
-    protocol { nil }
-
-    after(:create) do |human_subjects_info, evaluator|
-      create(:irb_record, human_subjects_info_id: human_subjects_info.id)
-    end
+  factory :irb_record do
+    pro_number { Faker::Number.number(digits: 4) }
+    irb_approval_date { 1.day.from_now }
+    irb_expiration_date { 2.days.from_now }
   end
 end
