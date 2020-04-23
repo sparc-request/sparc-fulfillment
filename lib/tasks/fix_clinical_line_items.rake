@@ -8,7 +8,7 @@ task fix_clinical_line_items: :environment do
   CSV.open("tmp/fix_clinical_line_items_#{Time.now.strftime('%m%d%Y%H%M%S')}.csv", "wb") do |csv|
 
     csv << ["Line Item ID (in Fulfillment)", "Service ID", "Service Name", "Protocol ID (in SPARCRequest)", "Protocol ID (in Fulfillment)", "Sub Service Request ID", "Message"]
-
+    update_count = 0
     line_items.each do |fulfillment_line_item|
       begin
         service_id = fulfillment_line_item.service_id
@@ -17,11 +17,12 @@ task fix_clinical_line_items: :environment do
         fulfillment_line_item_with_sparc_id = request_line_item ? fulfillment_line_item.protocol.line_items.where(sparc_id: request_line_item.id).first : nil
 
         if fulfillment_line_item_with_sparc_id
+          update_count += 1
           puts "Would need to update sparc data"
-          csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{sub_service_request.id}", "#{new_request_line_item.id}", "A new SPARC Line Item and its related calendar data would need to be created here." ]
+          csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{sub_service_request.id}", "A new SPARC Line Item and its related calendar data would need to be created here." ]
         else
           puts "Just need to update the sparc id."
-          csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{sub_service_request.id}", "#{new_request_line_item.id}", "This line item exists on both sides and just the sparc id would need to be updated." ]
+          csv << [ "#{fulfillment_line_item.id}", "#{service_id}", "#{fulfillment_line_item.service.name}", "#{fulfillment_line_item.protocol.sparc_id}", "#{fulfillment_line_item.protocol.id}", "#{sub_service_request.id}", "This line item exists on both sides and just the sparc id would need to be updated." ]
         end
 
       rescue Exception => e
@@ -29,5 +30,6 @@ task fix_clinical_line_items: :environment do
         next
       end
     end
+    puts "The number of line items that need to be updated in sparc is #{update_count}"
   end
 end
