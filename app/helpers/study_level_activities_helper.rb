@@ -152,7 +152,8 @@ module StudyLevelActivitiesHelper
     content_tag(:li, raw(
       content_tag(:button,
         raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:has_notes] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
-        ' Notes', type: 'button', class: "btn btn-default form-control actions-button notes list", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
+        ' Notes' + show_notification_badge(params, 'notes'),
+        type: 'button', class: "btn btn-default form-control actions-button notes list", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
     )
   end
 
@@ -160,7 +161,17 @@ module StudyLevelActivitiesHelper
     content_tag(:li, raw(
       content_tag(:button,
         raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_documents", class: "glyphicon glyphicon-open-file #{params[:has_documents] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
-        ' Documents', type: 'button', class: "btn btn-default form-control actions-button documents list", data: {documentable_id: params[:object].id, documentable_type: params[:object].class.name}))
+        ' Documents' + show_notification_badge(params, 'documents'),
+        type: 'button', class: "btn btn-default form-control actions-button documents list", data: {documentable_id: params[:object].id, documentable_type: params[:object].class.name}))
     )
   end
+
+  def show_notification_badge(params, type)
+    if type == 'notes' && params[:has_notes]
+      raw(content_tag(:span, params[:object].notes.count, class:'notification orange-badge-notes'))
+    elsif type == 'documents' && params[:has_documents]
+      raw(content_tag(:span, params[:object].documents.count, class:'notification orange-badge-documents'))
+    end
+  end
+
 end
