@@ -207,6 +207,7 @@ en:
     create_project: "Create New Non-clinical Service"
     delete_line_item: "Delete line item"
     edit: "Edit Non-clinical Service"
+    edit_in_sparc: "All editing functions for non-clinical services should be done in SPARCDashboard"
     flash_messages:
       created: "Non-clinical Service Created"
       deleted: "Non-clinical Service Deleted"
