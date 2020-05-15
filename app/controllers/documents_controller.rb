@@ -74,6 +74,7 @@ class DocumentsController < ApplicationController
 
         create_document_file
         @selector = "#{@document.unique_selector}_documents"
+        @documentable = @document.documentable
         flash.now[:success] = t(:documents)[:flash_messages][:created]
       }
     end
@@ -103,10 +104,10 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.js {
         mark_document_as_accessed if @document.last_accessed_at.nil?
+        @documentable = @document.documentable
         @document.destroy
-        if @document.documentable_type != "LineItem"
-          flash[:alert] = t(:documents)[:flash_messages][:removed]
-        end
+
+        render :create ##Destroy action view js is IDENTICAL to create, so why duplicate views?
       }
     end
   end
