@@ -106,8 +106,6 @@ class DocumentsController < ApplicationController
         mark_document_as_accessed if @document.last_accessed_at.nil?
         @documentable = @document.documentable
         @document.destroy
-
-        render :create ##Destroy action view js is IDENTICAL to create, so why duplicate views?
       }
     end
   end

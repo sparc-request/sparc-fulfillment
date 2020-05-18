@@ -37,7 +37,6 @@ feature 'Identity manages Doucuments', js: true do
       when_i_click_on_line_item_documents_icon
       when_i_click_on_the_add_document_button
       when_i_upload_a_document
-      when_i_click_on_line_item_documents_icon
       then_i_should_see_the_document
     end
   end
