@@ -41,6 +41,18 @@ feature 'Identity manages Doucuments', js: true do
     end
   end
 
+  context 'User deletes document' do
+    scenario 'and does not see the document anymore' do
+      given_i_am_viewing_the_study_level_activities_tab
+      when_i_have_a_document_to_upload
+      when_i_click_on_line_item_documents_icon
+      when_i_click_on_the_add_document_button
+      when_i_upload_a_document
+      when_i_click_the_delete_icon
+      then_i_should_not_see_the_document
+    end
+  end
+
   def given_i_am_viewing_the_study_level_activities_tab
     protocol = create_and_assign_protocol_to_me
     sparc_protocol = protocol.sparc_protocol
@@ -85,5 +97,16 @@ feature 'Identity manages Doucuments', js: true do
 
   def then_i_should_see_the_document
     expect(page).to have_content('test_document.txt')
+  end
+
+  def when_i_click_the_delete_icon
+    first("div.delete a").click
+    accept_confirm
+    wait_for_ajax
+  end
+
+  def then_i_should_not_see_the_document
+    expect(page).to_not have_css("div.comment a")
+    expect(page).to have_text("This line item has no documents")
   end
 end
