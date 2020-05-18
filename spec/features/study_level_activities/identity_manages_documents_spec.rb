@@ -101,7 +101,6 @@ feature 'Identity manages Doucuments', js: true do
 
   def when_i_click_the_delete_icon
     first("div.delete a").click
-    accept_confirm
     wait_for_ajax
   end
 
