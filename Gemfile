@@ -57,7 +57,7 @@ gem 'dalli'
 group :deploy do
   gem 'capistrano', '~> 3.14'
   gem 'capistrano-rvm'
-  gem 'capistrano-rails', '~> 1.4'
+  gem 'capistrano-rails', '~> 1.5'
   gem 'capistrano-passenger'
   gem 'capistrano3-delayed-job', '~> 1.7'
 end
