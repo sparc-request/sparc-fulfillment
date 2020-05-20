@@ -49,10 +49,8 @@ class LineItem < ApplicationRecord
   validates :protocol_id, :service_id, presence: true
   validates :quantity_requested, presence: true, numericality: { greater_than_or_equal_to: 0 }, if: Proc.new { |li| li.one_time_fee }
 
-  after_create :create_line_item_components
   after_create :increment_sparc_service_counter
   after_destroy :decrement_sparc_service_counter
-  after_update :reset_components
 
   def set_name
     update_attributes(name: service.name)
@@ -115,22 +113,4 @@ class LineItem < ApplicationRecord
 
   private
 
-  def reset_components
-    if saved_change_to_service_id? && one_time_fee
-      if service.components.present?
-        components.each{|component| component.really_destroy!}
-        create_line_item_components
-      end
-    end
-  end
-
-  def create_line_item_components
-    if one_time_fee && service.components.present?
-      position = 0
-      service.components.split(',').each do |component|
-        Component.create(composable_type: 'LineItem', composable_id: id, component: component, position: position)
-        position += 1
-      end
-    end
-  end
 end
