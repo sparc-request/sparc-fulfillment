@@ -157,16 +157,6 @@ RSpec.describe LineItem, type: :model do
         expect(line_item.last_fulfillment).to eq(fill_3.fulfilled_at)
       end
     end
-
-    describe 'create_line_item_components' do
-
-      it 'should create components for the line_item after creation' do
-        service = create(:service_with_one_time_fee)
-        expect{
-          create(:line_item, service: service, protocol: create(:protocol))
-        }.to change(Component, :count).by(3)
-      end
-    end
   end
 
   context 'class methods' do
