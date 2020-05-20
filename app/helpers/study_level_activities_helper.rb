@@ -20,24 +20,6 @@
 
 module StudyLevelActivitiesHelper
 
-  def components_for_select(components)
-    if components.empty?
-      options_for_select(["This Service Has No Components"], disabled: "This Service Has No Components")
-    else
-      deleted_components = components.select{|c| c.deleted_at and c.selected } # deleted and selected
-      visible_components = deleted_components + components.select{ |c| not c.deleted_at } # (deleted and selected) or not deleted
-      options_from_collection_for_select( visible_components, 'id', 'component', selected: components.map{|c| c.id if c.selected}, disabled: deleted_components.map(&:id) )
-    end
-  end
-
-  def sla_components_select(line_item_id, components)
-    if components.any?
-      select_tag "sla_#{line_item_id}_components", components_for_select(components), class: "sla_components selectpicker form-control", title: "Please Select", multiple: "", data:{container: "body", id: line_item_id, width: '150px', 'selected-text-format' => 'count>2'}
-    else
-      '-'
-    end
-  end
-
   def notes(notes)
     bullet_point = notes.count > 1 ? "\u2022 " : ""
     notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + Identity.find(note.identity_id).full_name }.join("<br>")
