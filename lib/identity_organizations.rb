@@ -28,9 +28,9 @@ class IdentityOrganizations
     organization_ids = @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs
 
     Protocol.includes(
-      :human_subjects_info,
       :subsidy,
       :service_requests,
+      human_subjects_info: [:irb_records],
       project_roles: [:identity],
       sparc_protocol: [:service_requests],
       sub_service_request: [:owner, :service_requester, :service_request]
