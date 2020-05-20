@@ -76,9 +76,9 @@ class ProtocolsController < ApplicationController
       when 'pi'
         "identities.first_name #{order}, identities.last_name #{order}"
       when 'irb_approval_date'
-        "human_subjects_info.irb_approval_date #{order}"
+        "irb_records.irb_approval_date #{order}"
       when 'irb_expiration'
-        "human_subjects_info.irb_expiration_date #{order}"
+        "irb_records.irb_expiration_date #{order}"
       when 'organizations'
         "sub_service_requests.org_tree_display #{order}"
       else
