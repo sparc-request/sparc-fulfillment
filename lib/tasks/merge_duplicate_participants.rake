@@ -36,8 +36,9 @@ namespace :data do
       city = row['Patient City']
       state = row['Patient State']
       zipcode = row['Patient Zip Code']
-      
-      csv << ["Updated Participant", "", participant_to_retain.id, participant_to_retain.sparc_id, participant_to_retain.protocol_id, participant_to_retain.arm_id, participant_to_retain.first_name, participant_to_retain.last_name, participant_to_retain.mrn, participant_to_retain.status, participant_to_retain.date_of_birth, participant_to_retain.gender, participant_to_retain.ethnicity, participant_to_retain.race, participant_to_retain.address, participant_to_retain.phone, participant_to_retain.deleted_at, participant_to_retain.created_at, participant_to_retain.updated_at, participant_to_retain.total_cost, participant_to_retain.city, participant_to_retain.state, participant_to_retain.zipcode, participant_to_retain.middle_initial]
+      external_id = row['Patient External ID']
+
+      csv << ["Updated Participant", "", participant_to_retain.id, participant_to_retain.sparc_id, participant_to_retain.protocol_id, participant_to_retain.arm_id, participant_to_retain.first_name, participant_to_retain.last_name, participant_to_retain.mrn, participant_to_retain.status, participant_to_retain.date_of_birth, participant_to_retain.gender, participant_to_retain.ethnicity, participant_to_retain.race, participant_to_retain.address, participant_to_retain.phone, participant_to_retain.deleted_at, participant_to_retain.created_at, participant_to_retain.updated_at, participant_to_retain.total_cost, participant_to_retain.city, participant_to_retain.state, participant_to_retain.zipcode, participant_to_retain.middle_initial, participant_to_retain.recruitment_source, participant_to_retain.external_id]
 
       participant_to_retain.update_attributes(first_name: first_name, last_name: last_name, mrn: mrn, status: status, gender: gender, ethnicity: ethnicity, race: race, address: address, phone: phone, city: city, state: state, zipcode: zipcode)
       participant_to_retain.write_attribute(:date_of_birth, Date.strptime(dob, "%m/%d/%Y"))
