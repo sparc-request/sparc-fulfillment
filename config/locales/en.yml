@@ -90,6 +90,9 @@ en:
     protocol_id: "Protocol ID"
     reason: "Reason"
     reset_visit: "Reset Visit"
+    reset_visit_disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
+    reset_visit_disabled_credited: "A procedure within this visit has been credited and cannot be altered."
+    reset_visit_disabled_credited_and_invoiced: "A procedure within this visit has been credited or invoiced and cannot be altered."
     service_error: 'Please choose the service that is desired to be added'
     srid: "SRID"
     start_date: "Start Date:"
@@ -98,6 +101,8 @@ en:
     visit_indications: "Visit Indications:"
     visit_type: "Type of Visit:"
     warning: "Please click 'Start Visit' and enter a start date to continue."
+    procedure_disabled_credited: "This item cannot be removed because it is credited."
+    procedure_disabled_invoiced: "This item cannot be removed because it is invoiced."
     procedure_invoiced_warning: "This procedure has been invoiced and cannot be altered."
     procedure_group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
 
@@ -123,6 +128,7 @@ en:
     object: "Document"
     documents: "Documents"
     date: "Date Requested"
+    delete: "Delete"
     date_created: "Date Created"
     date_time_formatter_ruby: "%m/%d/%Y %I:%M:%S %p"
     date_time_formatter_js:   "MM/DD/YYYY HH:mm:ss A"
@@ -151,6 +157,7 @@ en:
     list_fulfillments: "List"
     components: "Fulfillment Components"
     invoiced: "Invoiced"
+    credited: "Credited"
     edit: "Edit Fulfillment"
     flash_messages:
       created: "Fulfillment Created"
@@ -207,6 +214,7 @@ en:
     create_project: "Create New Non-clinical Service"
     delete_line_item: "Delete line item"
     edit: "Edit Non-clinical Service"
+    edit_in_sparc: "All editing functions for non-clinical services should be done in SPARCDashboard"
     flash_messages:
       created: "Non-clinical Service Created"
       deleted: "Non-clinical Service Deleted"
@@ -252,6 +260,12 @@ en:
     new_header: "Add Note"
     reason: "Reason *"
 
+  protocols_participant:
+    status: "Status"
+    recruitment_source: "Recruitment Source"
+    external_id: "External ID"
+    edit_external_id: "Edit External ID"
+
   participant:
     associate: "Associate"
     object: "Participant"
@@ -288,11 +302,9 @@ en:
     phone: "Phone"
     phone_num: "Phone #"
     race: "Race"
-    recruitment_source: "Recruitment Source"
     save_participant: "Save Participant"
     state: "State"
     stats: "Stats"
-    status: "Status"
     tracker: "Participant Tracker"
     zip: "Zip Code"
 
@@ -300,6 +312,7 @@ en:
     object: "Procedure"
     complete: "Complete All"
     completed_date: "Completed Date"
+    credited: "Credited"
     edit_header: "Follow Up"
     followup: "Follow Up"
     follow_up_date: "Follow Up Date"
@@ -376,6 +389,7 @@ en:
     confirm_removal_part_1: "Are you sure you want to remove"
     confirm_removal_part_2: "from Patient Registry?"
     deidentified_patient: "De-identified Patient"
+    cannot_be_deidentified: "Patient cannot be de-identified because he/she is already associated to more than one protocol"
 
   reports:
     asc: "ASC"

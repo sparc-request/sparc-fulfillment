@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -20,24 +20,6 @@
 
 module StudyLevelActivitiesHelper
 
-  def components_for_select(components)
-    if components.empty?
-      options_for_select(["This Service Has No Components"], disabled: "This Service Has No Components")
-    else
-      deleted_components = components.select{|c| c.deleted_at and c.selected } # deleted and selected
-      visible_components = deleted_components + components.select{ |c| not c.deleted_at } # (deleted and selected) or not deleted
-      options_from_collection_for_select( visible_components, 'id', 'component', selected: components.map{|c| c.id if c.selected}, disabled: deleted_components.map(&:id) )
-    end
-  end
-
-  def sla_components_select(line_item_id, components)
-    if components.any?
-      select_tag "sla_#{line_item_id}_components", components_for_select(components), class: "sla_components selectpicker form-control", title: "Please Select", multiple: "", data:{container: "body", id: line_item_id, width: '150px', 'selected-text-format' => 'count>2'}
-    else
-      '-'
-    end
-  end
-
   def notes(notes)
     bullet_point = notes.count > 1 ? "\u2022 " : ""
     notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + Identity.find(note.identity_id).full_name }.join("<br>")
@@ -51,13 +33,7 @@ module StudyLevelActivitiesHelper
   def sla_options_buttons(line_item)
     options = raw(
       note_list_item({object: line_item, has_notes: line_item.notes.any?})+
-      document_list_item({object: line_item, has_documents: line_item.documents.any?})+
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_edit'))
-      )+
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-remove", aria: {hidden: "true"}))+' Delete Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_delete'))
-      )
+      document_list_item({object: line_item, has_documents: line_item.documents.any?})
     )
 
     span = raw content_tag(:span, '', class: 'glyphicon glyphicon-triangle-bottom')
@@ -111,8 +87,20 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def toggle_credited(fulfillment)
+    if current_identity.billing_manager_protocols_allow_credit.include?(fulfillment.protocol)
+      credit_toggle_button(fulfillment)
+    else
+      credit_read_only(fulfillment)
+    end
+  end
+
   def invoice_read_only(fulfillment)
     (fulfillment.invoiced? ? "Yes" : "No")
+  end
+
+  def credit_read_only(fulfillment)
+    (fulfillment.credited? ? "Yes" : "No")
   end
 
   def fulfillment_grouper_formatter(fulfillment)
@@ -135,14 +123,19 @@ module StudyLevelActivitiesHelper
   private
 
   def invoice_toggle_button(fulfillment)
-    content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced?, class: 'invoice_toggle')
+    content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced? || fulfillment.credited?, class: 'invoice_toggle')
+  end
+
+  def credit_toggle_button(fulfillment)
+    content_tag(:input, '', type: "checkbox", name: "credited", checked: fulfillment.credited?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.credited? || fulfillment.invoiced?, class: 'credit_toggle')
   end
 
   def note_list_item(params)
     content_tag(:li, raw(
       content_tag(:button,
         raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:has_notes] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
-        ' Notes', type: 'button', class: "btn btn-default form-control actions-button notes list", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
+        ' Notes' + show_notification_badge(params, 'notes'),
+        type: 'button', class: "btn btn-default form-control actions-button notes list", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
     )
   end
 
@@ -150,7 +143,17 @@ module StudyLevelActivitiesHelper
     content_tag(:li, raw(
       content_tag(:button,
         raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_documents", class: "glyphicon glyphicon-open-file #{params[:has_documents] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
-        ' Documents', type: 'button', class: "btn btn-default form-control actions-button documents list", data: {documentable_id: params[:object].id, documentable_type: params[:object].class.name}))
+        ' Documents' + show_notification_badge(params, 'documents'),
+        type: 'button', class: "btn btn-default form-control actions-button documents list", data: {documentable_id: params[:object].id, documentable_type: params[:object].class.name}))
     )
   end
+
+  def show_notification_badge(params, type)
+    if type == 'notes' && params[:has_notes]
+      raw(content_tag(:span, params[:object].notes.count, class:'notification orange-badge-notes'))
+    elsif type == 'documents' && params[:has_documents]
+      raw(content_tag(:span, params[:object].documents.count, class:'notification orange-badge-documents'))
+    end
+  end
+
 end

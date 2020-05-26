@@ -1,4 +1,4 @@
--# Copyright © 2011-2019 MUSC Foundation for Research Development~
+-# Copyright © 2011-2020 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -28,17 +28,13 @@
               = t(:participant)[:full_name]
             %th{data: {align: "left", field: "mrn"}}
               = t(:participant)[:mrn]
-            %th{data: {align: "left", field: "external_id"}}
-              = t(:participant)[:id]
             %th{data: {align: "left", field: "arm_name"}}
               = t(:participant)[:arm]
             %th{data: {align: "left", field: "statusText"}}
-              = t(:participant)[:status]
+              = t(:protocols_participant)[:status]
             %th{data: {align: "left", field: "srid"}}
               = t(:appointment)[:srid]
             %th{data: {class: "coordinators", align: "left", field: "coordinators"}}
               = t(:protocol)[:coordinators]
-            %th{data: {class: "coordinators", align: "left", field: "recruitment_source"}}
-              = t(:participant)[:recruitment_source]
             %th{data: {class: 'edit', align: "center", field: "edit", width: "5"}}
               = t(:actions)[:edit]

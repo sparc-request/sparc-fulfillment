@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -32,6 +32,16 @@ $ ->
       data:
         fulfillment:
           invoiced: invoiced
+
+  $(document).on 'change', 'input.credit_toggle', ->
+    credited = $(this).prop('checked')
+    fulfillment_id = $(this).data('id')
+    $.ajax
+      type: 'PUT'
+      url: "/fulfillments/toggle_credit/#{fulfillment_id}"
+      data:
+        fulfillment:
+          credited: credited
 
   $(document).on 'click', ".otf_service_new", ->
     protocol_id = $('#protocol_id').val()

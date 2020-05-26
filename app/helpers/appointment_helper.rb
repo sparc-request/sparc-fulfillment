@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -48,7 +48,15 @@ module AppointmentHelper
                   button_class: "#{procedure.appt_started? ? '' : 'disabled'}"})
   end
 
+  def procedures_invoiced_or_credited?(appointment)
+    appointment.procedures.any?{ |procedure| procedure.invoiced == true || procedure.credited == true }
+  end
+
   def procedures_invoiced?(appointment)
-    appointment.procedures.any?{|procedure| procedure.invoiced == true}
+    appointment.procedures.any?{ |procedure| procedure.invoiced == true }
+  end
+
+  def procedures_credited?(appointment)
+    appointment.procedures.any?{ |procedure| procedure.credited == true }
   end
 end

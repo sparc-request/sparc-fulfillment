@@ -1,4 +1,4 @@
--# Copyright © 2011-2019 MUSC Foundation for Research Development~
+-# Copyright © 2011-2020 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -45,10 +45,18 @@
             = t(:procedure)[:performed_by]
           %th.notes
             = t(:procedure)[:notes]
-          - if procedures_invoiced?(appointment)
+          - if current_identity.billing_manager_protocols.include?(appointment.protocol)
             %th.invoiced
               = t(:procedure)[:invoiced]
+            %th.credited
+              = t(:procedure)[:credited]
+          - else
+            %th.invoiced
+              = t(:procedure)[:invoiced]
+            %th.credited
+              = t(:procedure)[:credited]
           %th.remove
             = t(:procedure)[:remove]
+
         %tbody
           = render partial: 'appointments/procedure', collection: procedures, as: :procedure

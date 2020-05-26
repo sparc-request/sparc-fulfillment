@@ -27,7 +27,7 @@ before_script:
   - cd ..
   - git clone https://github.com/sparc-request/sparc-request.git
   - cd sparc-request
-  - git checkout v3.6.0
+  - git checkout v3.7.0
   - rvm use $(< .ruby-version) --install --binary --fuzzy
   - export BUNDLE_GEMFILE=$PWD/Gemfile
   - gem install bundler

@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -75,7 +75,6 @@ class ParticipantReport < Report
       header << "City"
       header << "State"
       header << "Zip"
-      header << "Recruitment Source"
       header << "Protocol(s)"
 
       csv << header
@@ -97,7 +96,6 @@ class ParticipantReport < Report
         data << participant.city
         data << participant.state
         data << participant.zipcode
-        data << participant.recruitment_source
         data << participant.protocols.map(&:sparc_id).map(&:inspect).join(', ')
 
         csv << data

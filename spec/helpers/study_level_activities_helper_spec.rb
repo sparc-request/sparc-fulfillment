@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,24 +21,6 @@
 require 'rails_helper'
 
 RSpec.describe StudyLevelActivitiesHelper do
-
-  describe "#components_for_select" do
-    it "should return components options" do
-      components = []
-      #No components
-      val = helper.components_for_select(components)
-      expect(val.include? 'value="This Service Has No Components"')
-
-      #Components
-      3.times do
-        components << create(:component)
-      end
-      val = helper.components_for_select(components)
-      expect(val.include? 'value="1"')
-      expect(val.include? 'value="2"')
-      expect(val.include? 'value="3"')
-    end
-  end
 
   describe "is protocol of type study?" do
     it "should return true" do

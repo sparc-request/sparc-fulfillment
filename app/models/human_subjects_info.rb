@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -23,7 +23,17 @@ class HumanSubjectsInfo < SparcDbBase
 
   belongs_to :protocol, primary_key: :sparc_id
 
+  has_many :irb_records
+
+  def irb_approval_date
+    irb_records.first.try(:irb_approval_date)
+  end
+
+  def irb_expiration_date
+    irb_records.first.try(:irb_expiration_date)
+  end
+
   def irb_number
-    pro_number
+    irb_records.first.try(:pro_number)
   end
 end

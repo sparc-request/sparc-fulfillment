@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -32,3 +32,6 @@ $(".completed_date_field").datetimepicker
   ignoreReadonly: true
   
 update_complete_visit_button(<%= @appointment.can_finish? %>)
+
+$('input#invoiced_procedure').bootstrapToggle()
+$('input#credited_procedure').bootstrapToggle()
