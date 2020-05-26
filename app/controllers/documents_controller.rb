@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -74,6 +74,7 @@ class DocumentsController < ApplicationController
 
         create_document_file
         @selector = "#{@document.unique_selector}_documents"
+        @documentable = @document.documentable
         flash.now[:success] = t(:documents)[:flash_messages][:created]
       }
     end
@@ -103,9 +104,8 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.js {
         mark_document_as_accessed if @document.last_accessed_at.nil?
+        @documentable = @document.documentable
         @document.destroy
-
-        flash[:alert] = t(:documents)[:flash_messages][:removed]
       }
     end
   end

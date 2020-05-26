@@ -8,7 +8,6 @@ json.rows @participants do |participant|
     json.last_name truncated_formatter(participant.last_name)
     json.name truncated_formatter(participant.full_name)
     json.mrn truncated_formatter(participant.mrn)
-    json.external_id truncated_formatter(participant.external_id)
     json.notes notes_formatter(participant)
     json.date_of_birth format_date(participant.date_of_birth)
     json.gender participant.gender
@@ -19,6 +18,5 @@ json.rows @participants do |participant|
     json.phone phoneNumberFormatter(participant)
     json.edit registry_edit_formatter(participant)
     json.associate associate_formatter(participant, @protocol)
-    json.recruitment_source truncated_formatter(participant.recruitment_source)
   end
 end

@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -74,7 +74,7 @@ feature 'User views Participant', js: true do
     expect(page).to have_css('#participant-info')
     expect(page).to have_content(@protocols_participant.participant.full_name)
     expect(page).to have_content(@protocols_participant.participant.mrn) unless @protocols_participant.participant.mrn.blank?
-    expect(page).to have_content(@protocols_participant.participant.external_id) unless @protocols_participant.participant.external_id.blank?
+    expect(page).to have_content(@protocols_participant.external_id) unless @protocols_participant.external_id.blank?
     expect(page).to have_content(@protocols_participant.arm.name) unless @protocols_participant.arm.blank?
     expect(page).to have_content(@protocols_participant.status)
     expect(page).to have_content(@protocol.id)

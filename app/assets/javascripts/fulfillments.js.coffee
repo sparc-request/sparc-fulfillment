@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -22,4 +22,3 @@ $(document).on 'click', '.otf_fulfillment_delete', ->
   $.ajax
     type: 'delete'
     url: "/fulfillments/#{$(this).data('id')}.js"
-

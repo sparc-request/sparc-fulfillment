@@ -1,4 +1,4 @@
--# Copyright © 2011-2019 MUSC Foundation for Research Development~
+-# Copyright © 2011-2020 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -26,8 +26,9 @@
         .col-xs-6
           = text_field_tag 'start_date', '', class: 'form-control', readonly: true
         .col-xs-1.reset_button
-          %button.btn.btn-warning.reset_visit{type: "button", class: hidden_class(procedures_invoiced?(appointment))}= t(:appointment)[:reset_visit]
-          / %button.btn.btn-warning.reset_visit{type: "button", class: "#{procedures_invoiced?(appointment) ? 'disabled' : ''}"}= t(:appointment)[:reset_visit]
+          %button.btn.btn-warning.reset_visit{type: "button", disabled: procedures_invoiced_or_credited?(appointment), data: {toggle: "tooltip", animation: 'false'} }
+            %span.disabled_tooltip{title: (procedures_invoiced?(appointment) && procedures_credited?(appointment)) ?  t(:appointment)[:reset_visit_disabled_credited_and_invoiced] : procedures_invoiced?(appointment) ? t(:appointment)[:reset_visit_disabled_invoiced] : procedures_credited?(appointment) ? t(:appointment)[:reset_visit_disabled_credited] : ''}
+              = t(:appointment)[:reset_visit]
 
   .start_date_btn{class: hidden_class(!appointment.start_date.blank?) }
     %button.btn.btn-success.start_visit= t(:appointment)[:start_visit]

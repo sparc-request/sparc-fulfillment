@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_25_154411) do
+ActiveRecord::Schema.define(version: 2020_05_19_191441) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "status"
@@ -113,6 +113,8 @@ ActiveRecord::Schema.define(version: 2019_11_25_154411) do
     t.integer "service_cost"
     t.integer "klok_entry_id"
     t.boolean "invoiced"
+    t.boolean "credited"
+    t.float "percent_subsidy"
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id"
     t.index ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id"
     t.index ["line_item_id"], name: "index_fulfillments_on_line_item_id"
@@ -207,8 +209,6 @@ ActiveRecord::Schema.define(version: 2019_11_25_154411) do
     t.string "city"
     t.string "state"
     t.string "zipcode"
-    t.string "recruitment_source"
-    t.string "external_id"
     t.string "middle_initial", limit: 1
     t.boolean "deidentified", default: false
     t.index ["deleted_at"], name: "index_participants_on_deleted_at"
@@ -234,6 +234,8 @@ ActiveRecord::Schema.define(version: 2019_11_25_154411) do
     t.datetime "incompleted_date"
     t.boolean "invoiced"
     t.string "funding_source"
+    t.boolean "credited"
+    t.float "percent_subsidy"
     t.index ["appointment_id"], name: "index_procedures_on_appointment_id"
     t.index ["completed_date"], name: "index_procedures_on_completed_date"
     t.index ["service_id"], name: "index_procedures_on_service_id"
@@ -260,7 +262,7 @@ ActiveRecord::Schema.define(version: 2019_11_25_154411) do
     t.index ["sub_service_request_id"], name: "index_protocols_on_sub_service_request_id"
   end
 
-  create_table "protocols_participants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+  create_table "protocols_participants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "protocol_id"
     t.bigint "participant_id"
     t.bigint "arm_id"
@@ -269,6 +271,8 @@ ActiveRecord::Schema.define(version: 2019_11_25_154411) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "external_id"
+    t.string "recruitment_source"
     t.index ["arm_id"], name: "index_protocols_participants_on_arm_id"
     t.index ["participant_id"], name: "index_protocols_participants_on_participant_id"
     t.index ["protocol_id", "participant_id"], name: "index_protocols_participants_on_protocol_id_and_participant_id"

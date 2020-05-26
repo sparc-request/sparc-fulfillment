@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   resources :fulfillments do
     collection do
       put 'toggle_invoiced(/:id)', to: 'fulfillments#toggle_invoiced'
+      put 'toggle_credit(/:id)', to: 'fulfillments#toggle_credit'
     end
   end
 
@@ -69,7 +70,10 @@ Rails.application.routes.draw do
       get 'search', to: 'participants#search'
       get 'calendar', to: 'participants#show'
     end
+    put 'change_recruitment_source(/:id)', to: 'participants#update_recruitment_source'
     put 'change_status(/:id)', to: 'participants#update_status'
+    get 'edit_external_id(/:id)', to: 'participants#edit_external_id'
+    post 'edit_external_id(/:id)', to: 'participants#update_external_id'
     get 'change_arm(/:id)', to: 'participants#edit_arm'
     post 'change_arm(/:id)', to: 'participants#update_arm'
     get 'details', to: 'participants#details'

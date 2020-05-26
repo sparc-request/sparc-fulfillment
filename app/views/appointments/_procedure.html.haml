@@ -1,4 +1,4 @@
--# Copyright © 2011-2019 MUSC Foundation for Research Development~
+-# Copyright © 2011-2020 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -19,7 +19,7 @@
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 %tr.procedure.new_service{ data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id, disabled: procedure.invoiced? ? 'true' : 'false' } }
-  %td.name{class: "#{procedures_invoiced?(procedure.appointment) ? 'col-sm-1' : 'col-sm-2'} #{procedure.invoiced? ? 'disabled-status' : ''}"}
+  %td.name{class: "#{procedures_invoiced_or_credited?(procedure.appointment) || current_identity.billing_manager_protocols.include?(procedure.protocol) ? 'col-sm-1' : 'col-sm-2'} #{procedure.invoiced? ? 'disabled-status' : ''}"}
     = service_name_display(procedure.service)
   %td.col-sm-1.billing
     = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: procedure.invoiced? ? "form-control billing_type selectpicker disable-select-box invoiced_disabled " : "form-control billing_type selectpicker", disabled: procedure.invoiced?
@@ -34,16 +34,26 @@
   %td.col-sm-1.completed-date
     .input-group.date{class: procedure.invoiced? ? "invoiced_disabled" : ""}
       %input.datetimepicker{type: "text", class: "form-control completed_date_field", disabled: !(procedure.appt_started? && procedure.complete?) || procedure.invoiced?, value: format_date(procedure.completed_date), readonly: true}
-  %td.performed-by{class: procedures_invoiced?(procedure.appointment) ? "col-sm-1" : "col-sm-2"}
+  %td.performed-by{class: procedures_invoiced_or_credited?(procedure.appointment) || current_identity.billing_manager_protocols.include?(procedure.protocol) ? "col-sm-1" : "col-sm-2"}
     = select_tag "performed-by-#{procedure.id}", options_for_select(procedure.performable_by, procedure.performer_id), include_blank: "N/A", class: procedure.invoiced? ? "performed-by-dropdown selectpicker disable-select-box invoiced_disabled" : "performed-by-dropdown selectpicker", data: { width: '125px' }, 'showIcon' => false, disabled: procedure.invoiced?
   %td.col-sm-1.notes
     -# div used for capturing click events when button is disabled
     .btn-group{ class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' }" }
     = procedure_notes_formatter(procedure)
-  - if procedures_invoiced?(procedure.appointment)
-    %td.col-sm-2.invoiced
+  - if current_identity.billing_manager_protocols.include?(procedure.protocol)
+    %td.col-sm-1.invoiced_toggle
+      = check_box_tag :invoiced_procedure, '', procedure.invoiced?, class: 'toggle_invoice_procedure', disabled: !procedure.complete? || procedure.invoiced? || procedure.credited?, data: { toggle: 'toggle', id: procedure.id, on: 'Yes', off: 'No' }
+    - if current_identity.billing_manager_protocols_allow_credit.include?(procedure.protocol)
+      %td.col-sm-1.credited_toggle
+        = check_box_tag :credited_procedure, '', procedure.credited?, class: 'toggle_credit_procedure', disabled: !procedure.complete? || procedure.invoiced? || procedure.credited?, data: { toggle: 'toggle', id: procedure.id, on: 'Yes', off: 'No' }
+    - else
+      %td.col-sm-2.credited_view_only
+        = (procedure.credited? ? "Yes" : "No")
+  - else
+    %td.col-sm-2.invoiced_view_only
       = (procedure.invoiced? ? "Yes" : "No")
-  - unless procedure.invoiced?
-    %td.col-sm-1.remove
-      %button.btn.btn-danger.delete{type: "button", aria: {label: "Remove Procedure"}}
-        %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}
+    %td.col-sm-2.credited_view_only
+      = (procedure.credited? ? "Yes" : "No")
+  %td.col-sm-1.remove
+    %button.btn.btn-danger.delete{type: "button", disabled: procedure.invoiced? || procedure.credited?, aria: {label: "Remove Procedure"}}
+      %span.glyphicon.glyphicon-remove.disabled_tooltip{aria: {hidden: "true"}, title: procedure.invoiced? ? t(:appointment)[:procedure_disabled_invoiced] : procedure.credited? ? t(:appointment)[:procedure_disabled_credited] : ''}

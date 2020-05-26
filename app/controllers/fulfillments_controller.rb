@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -20,7 +20,7 @@
 
 class FulfillmentsController < ApplicationController
 
-  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced]
+  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit]
 
   def index
     @line_item = LineItem.find(params[:line_item_id])
@@ -46,6 +46,7 @@ class FulfillmentsController < ApplicationController
     funding_source = @line_item.protocol.sparc_funding_source
     @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: @line_item.cost(funding_source), funding_source: funding_source }))
     if @fulfillment.valid?
+      perform_subsidy_check
       @fulfillment.save
       update_components_and_create_notes('create')
       flash[:success] = t(:fulfillment)[:flash_messages][:created]
@@ -63,6 +64,7 @@ class FulfillmentsController < ApplicationController
     persist_original_attributes_to_track_changes
     @line_item = @fulfillment.line_item
     if @fulfillment.update_attributes(fulfillment_params)
+      perform_subsidy_check(true)
       update_components_and_create_notes('update')
       detect_changes_and_create_notes
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
@@ -74,6 +76,14 @@ class FulfillmentsController < ApplicationController
   def toggle_invoiced
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
+    @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
+    detect_changes_and_create_notes
+  end
+
+  def toggle_credit
+    persist_original_attributes_to_track_changes
+    @fulfillment.update_attributes(credited: fulfillment_params[:credited])
+    @fulfillment.update_attributes(invoiced: !fulfillment_params[:credited])
     detect_changes_and_create_notes
   end
 
@@ -143,10 +153,19 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :credited)
   end
 
   def find_fulfillment
     @fulfillment = Fulfillment.find(params[:id])
+  end
+
+  def perform_subsidy_check(update=false)
+    if @line_item.protocol.sub_service_request.subsidy
+      @fulfillment.percent_subsidy = @line_item.protocol.sub_service_request.subsidy.percent_subsidy
+      if update == true
+        @fulfillment.save
+      end
+    end
   end
 end

@@ -22,11 +22,11 @@ gem 'dotenv-rails'
 gem 'rails-erd'
 gem 'faye'
 gem 'gon'
-gem 'grape', '~> 1.2.5'
+gem 'grape', '~> 1.3.2'
 gem 'haml-rails'
 gem 'hashie-forbidden_attributes'
 gem 'jquery-rails'
-gem 'jbuilder', '~> 2.9'
+gem 'jbuilder', '~> 2.10'
 gem 'letter_opener'
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'mysql2', '0.5.2'
@@ -42,7 +42,7 @@ gem 'remotipart'
 gem 'rest-client'
 gem 'rubyzip', '>= 1.2.1'
 gem 'sass-rails'
-gem 'sdoc', '~> 1.0.0', group: :doc
+gem 'sdoc', '~> 1.1.0', group: :doc
 gem 'sprockets-rails'
 gem 'slack-notifier', '~> 2.3'
 gem 'therubyracer'
@@ -55,9 +55,9 @@ gem 'will_paginate'
 gem 'yajl-ruby', require: 'yajl'
 gem 'dalli'
 group :deploy do
-  gem 'capistrano', '~> 3.11'
+  gem 'capistrano', '~> 3.14'
   gem 'capistrano-rvm'
-  gem 'capistrano-rails', '~> 1.4'
+  gem 'capistrano-rails', '~> 1.5'
   gem 'capistrano-passenger'
   gem 'capistrano3-delayed-job', '~> 1.7'
 end
@@ -65,7 +65,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 2.8.1'
+  gem 'faker', '~> 2.11.0'
   gem 'pry'
 end
 
@@ -89,8 +89,8 @@ group :test do
   gem 'rspec-collection_matchers'
   gem 'selenium-webdriver'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 4.1.2", require: false
+  gem 'shoulda-matchers', "~> 4.3.0", require: false
   gem 'timecop'
-  gem 'webmock', '~> 3.7.6'
-  gem 'vcr', '~> 5.0.0'
+  gem 'webmock', '~> 3.8.3'
+  gem 'vcr', '~> 5.1.0'
 end

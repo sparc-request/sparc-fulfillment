@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -29,7 +29,16 @@ exclude_from_export('fulfillments-table')
 
 $('#fulfillments-table').on 'load-success.bs.table', () ->
   $('input.invoice_toggle').bootstrapToggle()
+  $('input.credit_toggle').bootstrapToggle()
 
 $('#fulfillments-table').on 'column-switch.bs.table', (e, field, checked) ->
   if field == 'invoiced' && checked == true
     $('input.invoice_toggle').bootstrapToggle()
+  if field == 'credited' && checked == true
+    $('input.credit_toggle').bootstrapToggle()
+
+$('.fulfillments-list .table-responsive').on 'show.bs.dropdown', ->
+	$('.table-responsive').css 'overflow', 'inherit'
+
+$('.fulfillments-list .table-responsive').on 'hide.bs.dropdown', ->
+	$('.table-responsive').css 'overflow', 'auto'

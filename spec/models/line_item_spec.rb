@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -155,16 +155,6 @@ RSpec.describe LineItem, type: :model do
         fill_3 = create(:fulfillment_without_validations, line_item: line_item, fulfilled_at: "10/10/2015")
 
         expect(line_item.last_fulfillment).to eq(fill_3.fulfilled_at)
-      end
-    end
-
-    describe 'create_line_item_components' do
-
-      it 'should create components for the line_item after creation' do
-        service = create(:service_with_one_time_fee)
-        expect{
-          create(:line_item, service: service, protocol: create(:protocol))
-        }.to change(Component, :count).by(3)
       end
     end
   end

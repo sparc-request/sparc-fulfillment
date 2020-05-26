@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -111,6 +111,15 @@ module ApplicationHelper
     [
       "<div data-toggle='tooltip' data-placement='left' data-animation='false' title='#{data}'>",
       "#{data}",
+      "</div>"
+    ].join ""
+  end
+
+  def truncated_formatter_external_id protocols_participants
+    external_ids = protocols_participants.map{ |protocols_participant| protocols_participant.external_id}.reject(&:blank?).join(', ')
+    [
+      "<div data-toggle='tooltip' data-placement='left' data-animation='false' title='#{external_ids}'>",
+      "#{external_ids}",
       "</div>"
     ].join ""
   end

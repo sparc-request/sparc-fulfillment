@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -90,6 +90,15 @@ module ParticipantHelper
     ].join ""
   end
 
+  def external_id_formatter(participant, protocols_participant, protocol_id)
+    [
+      "<a class='edit edit_external_id' href='javascript:void(0)' title='Edit' #{protocols_participant.external_id} participant_id='#{participant.id}' protocol_id='#{protocol_id}'>",
+      "#{protocols_participant.external_id}  ",
+      "<i class='glyphicon glyphicon-edit'></i>",
+      "</a>"
+    ].join ""
+  end
+
   def deleteFormatter(participant, protocols_participant)
     protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
     protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
@@ -141,6 +150,10 @@ module ParticipantHelper
 
   def statusFormatter(participant, protocols_participant, protocol_id)
     select_tag "protocols_participant_status_#{protocols_participant.id}", options_for_select(Participant::STATUS_OPTIONS, protocols_participant.status), include_blank: true, class: "protocols_participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id, protocol_id: protocol_id}
+  end
+
+  def recruitmentSourceFormatter(participant, protocols_participant, protocol_id)
+    select_tag "recruitment_source", options_for_select(Participant::RECRUITMENT_OPTIONS, protocols_participant.recruitment_source), include_blank: true, class: "protocols_participant_recruitment_source selectpicker form-control", data:{container: "body", id: participant.id, protocol_id: protocol_id}
   end
 
   def notes_formatter(participant)

@@ -1,4 +1,4 @@
-# Copyright © 2011-2019 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -18,5 +18,12 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+<% if ["Identity", "Protocol"].include?(@document.documentable_type) %>
+##Document is a report, doesn't use modal window.
 $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
 refreshDocumentsTables()
+<% else %>
+$("#modal_area").html("<%= escape_javascript(render(partial: 'index', locals: { documents: @documentable.documents, documentable_type: @document.documentable_type, documentable_id: @documentable.id, documentable_sym: @document.documentable_type.downcase.to_sym})) %>")
+$("#modal_place").modal(backdrop: 'static', keyboard: false)
+$("#modal_place").modal 'show'
+<% end %>

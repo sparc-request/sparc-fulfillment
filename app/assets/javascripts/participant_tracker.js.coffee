@@ -1,4 +1,4 @@
-# Copyright © 2011-2018 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -59,6 +59,26 @@ $ ->
     $.ajax
       type: "PUT"
       url: "/participants/#{participant_id}/change_status"
+      data: data
+
+  ### *RECRUITMENT STATUS ###
+  $(document).on 'change', '.protocols_participant_recruitment_source.selectpicker', ->
+    participant_id = $(this).data("id")
+    protocol_id = $(this).data("protocol-id")
+    recruitment_source         = $(this).val()
+    data = 'protocols_participant': {'recruitment_source': recruitment_source}, 'protocol_id': protocol_id
+    $.ajax
+      type: "PUT"
+      url: "/participants/#{participant_id}/change_recruitment_source"
+      data: data
+
+  ### *EXTERNAL ID ###
+  $(document).on 'click', '.edit_external_id', ->
+    participant_id = $(this).attr('participant_id')
+    data = protocol_id: $(this).attr('protocol_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/edit_external_id"
       data: data
 
   ### *NOTES ###
