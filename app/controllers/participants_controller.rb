@@ -103,7 +103,7 @@ class ParticipantsController < ApplicationController
 
     if @participant.valid?
       @participant.save
-      
+
       flash[:success] = t(:participant)[:flash_messages][:created]
     else
       @errors = @participant.errors
@@ -143,7 +143,7 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def destroy_protocols_participant 
+  def destroy_protocols_participant
     @protocols_participant.destroy
     flash[:alert] = t(:participant)[:flash_messages][:removed]
   end
@@ -233,7 +233,7 @@ class ParticipantsController < ApplicationController
           first_token)
       else
         search_token = "%#{search_tokens[0]}%"
-        @participants = @participants.joins(:protocols_participants).where("participants.mrn LIKE ? OR participants.first_name LIKE ? OR participants.last_name LIKE ? OR protocols_participants.external_id LIKE ?",
+        @participants = @participants.left_outer_joins(:protocols_participants).where("participants.mrn LIKE ? OR participants.first_name LIKE ? OR participants.last_name LIKE ? OR protocols_participants.external_id LIKE ?",
           search_token,
           search_token,
           search_token,
