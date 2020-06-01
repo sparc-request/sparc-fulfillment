@@ -193,7 +193,7 @@ GEM
     factory_bot_rails (5.2.0)
       factory_bot (~> 5.2.0)
       railties (>= 4.2.0)
-    faker (2.11.0)
+    faker (2.12.0)
       i18n (>= 1.6, < 2)
     faye (1.2.5)
       cookiejar (>= 0.3.0)
@@ -517,7 +517,7 @@ DEPENDENCIES
   devise
   dotenv-rails
   factory_bot_rails
-  faker (~> 2.11.0)
+  faker (~> 2.12.0)
   faye
   foreman
   geckodriver-helper
