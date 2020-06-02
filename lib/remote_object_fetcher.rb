@@ -32,7 +32,7 @@ class RemoteObjectFetcher
   def self.fetch(url)
     authorized_url = RemoteRequestBuilder.authorize_and_decorate!(url)
 
-    RestClient::Resource.new(authorized_url, :verify_ssl => false).get({ accept: :json }) { |response, request, result, &block|
+    RestClient::Resource.new(authorized_url).get({ accept: :json }) { |response, request, result, &block|
       raise SparcApiError unless response.code == 200
 
       @response = response
