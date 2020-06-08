@@ -1,6 +1,6 @@
 json.total @total
 json.rows @participants do |participant|
-  json.cache! participant, expires_in: 5.minutes do
+  json.cache! [@protocol, participant], expires_in: 5.minutes do
     json.id participant.id
     json.first_middle truncated_formatter(participant.first_middle)
     json.first_name truncated_formatter(participant.first_name)

@@ -1,7 +1,7 @@
 json.total @total
 json.rows @participants do |participant|
   protocols_participant = ProtocolsParticipant.where(participant_id: participant.id, protocol_id: @protocol.id).first
-  json.cache! participant, expires_in: 5.minutes do
+  json.cache! protocols_participant, expires_in: 5.minutes do
     json.id participant.id
     json.protocol_id protocols_participant.protocol_id
     json.srid @protocol.srid
