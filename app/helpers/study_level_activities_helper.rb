@@ -33,6 +33,9 @@ module StudyLevelActivitiesHelper
   def sla_options_buttons(line_item)
     options = raw(
       note_list_item({object: line_item, has_notes: line_item.notes.any?})+
+      content_tag(:li, raw(
+        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_edit'))
+      )+
       document_list_item({object: line_item, has_documents: line_item.documents.any?})
     )
 
