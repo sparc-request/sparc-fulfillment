@@ -70,4 +70,8 @@ class Service < SparcDbBase
   def current_effective_pricing_setup(date = Time.current)
     organization.effective_pricing_setup_for_date(date)
   end
+
+  def components_list
+    components.nil? ? [] : components.split(',')
+  end
 end
