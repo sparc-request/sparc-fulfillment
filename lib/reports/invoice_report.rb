@@ -31,8 +31,8 @@ class InvoiceReport < Report
     protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
   end
 
-  def display_subsidy_percent(protocol, object)
-    "#{object.percent_subsidy * 100}%"
+  def display_subsidy_percent(object)
+    object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
   end
 
   def display_modified_rate_column(procedure)
@@ -136,7 +136,7 @@ class InvoiceReport < Report
               data << display_cost(fulfillment.service_cost)
               data << display_cost(fulfillment.total_cost)
               data << (fulfillment.line_item.admin_rates.any? ? "Yes" : "No")
-              data << display_subsidy_percent(protocol, fulfillment) if protocol.sub_service_request.subsidy
+              data << display_subsidy_percent(fulfillment) if protocol.sub_service_request.subsidy
               data << (fulfillment.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
               csv << data
@@ -217,7 +217,7 @@ class InvoiceReport < Report
                     data << display_cost(procedure.service_cost)
                     data << display_cost(service_group.size * procedure.service_cost.to_f)
                     data << display_modified_rate_column(procedure)
-                    data << display_subsidy_percent(protocol, procedure) if protocol.sub_service_request.subsidy
+                    data << display_subsidy_percent(procedure) if protocol.sub_service_request.subsidy
                     data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
 
                     csv << data
