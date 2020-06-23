@@ -97,6 +97,8 @@ class Appointment < ApplicationRecord
       ActiveRecord::Base.transaction do
         self.visit_group.arm.line_items.each do |li|
           visit = li.visits.where("visit_group_id = #{self.visit_group.id}").first
+          protocol = self.protocol
+          percent_subsidy = protocol.sub_service_request.subsidy ? protocol.sub_service_request.subsidy.percent_subsidy : nil
           if visit and visit.has_billing?
             attributes = {
               appointment_id: self.id,
@@ -105,7 +107,8 @@ class Appointment < ApplicationRecord
               service_id: li.service.id,
               sparc_core_id: li.service.sparc_core_id,
               sparc_core_name: li.service.sparc_core_name,
-              funding_source: li.protocol.sparc_funding_source
+              funding_source: li.protocol.sparc_funding_source,
+              percent_subsidy: percent_subsidy
             }
             visit.research_billing_qty.times do
               proc = Procedure.new(attributes)
