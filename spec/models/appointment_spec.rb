@@ -61,7 +61,8 @@ RSpec.describe Appointment, type: :model do
       before :each do
         service1 = create(:service, name: 'A')
         service2 = create(:service, name: 'B')
-        protocol = create(:protocol)
+        ssr = create(:sub_service_request)
+        protocol = create(:protocol, sub_service_request: ssr)
         arm = create(:arm, protocol: protocol)
         participant = create(:participant)
         protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
