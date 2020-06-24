@@ -36,6 +36,8 @@
           = t(:line_item)[:qty_type]
         %th{data: {class: 'qty_req', align: "left", sortable: "true", field: "quantity_requested"}}
           = t(:line_item)[:qty_req]
+        %th{data: {class: 'fulfilled', align: "left", sortable: "true", visible: 'false', field: "fulfilled"}}
+          = t(:line_item)[:fulfilled]
         %th{data: {class: 'qty_rem', align: "left", sortable: "true", field: "quantity_remaining"}}
           = t(:line_item)[:qty_rem]
         %th{data: {class: 'started', align: "left", sortable: "true", sorter: "dateSorter", field: "date_started"}}

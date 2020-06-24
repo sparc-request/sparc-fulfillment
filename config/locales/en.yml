@@ -226,6 +226,7 @@ en:
       service_id: "Service changed to "
       started_at: "Started At changed to "
     qty_req: "Requested"
+    fulfilled: "Fulfilled"
     qty_rem: "Remaining"
     qty_type: "Type"
     quantity: "Quantity"
