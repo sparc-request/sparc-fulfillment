@@ -64,7 +64,8 @@ class MultipleProceduresController < ApplicationController
 
     #Reload appointment to grab any calendar changes, then initialize procedures
     @appointment.reload
-    @appointment.initialize_procedures
+    procedure_creator = ProcedureCreator.new(@appointment)
+    procedure_creator.initialize_procedures
 
     @refresh_dashboard = true
 

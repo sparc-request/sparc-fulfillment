@@ -42,9 +42,10 @@ class AppointmentsController < ApplicationController
   def show
     @appointment = Appointment.find params[:id]
     @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    procedure_creator = ProcedureCreator.new(@appointment)
 
     if @appointment.procedures.with_deleted.empty?
-      @appointment.initialize_procedures
+      procedure_creator.initialize_procedures
     end
   end
 
