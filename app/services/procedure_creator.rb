@@ -23,14 +23,14 @@ class ProcedureCreator
               percent_subsidy: percent_subsidy
             }
             visit.research_billing_qty.times do
-              proc = Procedure.new(attributes)
-              proc.billing_type = 'research_billing_qty'
-              proc.save
+              procedure = Procedure.new(attributes)
+              procedure.billing_type = 'research_billing_qty'
+              procedure.save
             end
             visit.insurance_billing_qty.times do
-              proc = Procedure.new(attributes)
-              proc.billing_type = 'insurance_billing_qty'
-              proc.save
+              procedure = Procedure.new(attributes)
+              procedure.billing_type = 'insurance_billing_qty'
+              procedure.save
             end
           end
         end
