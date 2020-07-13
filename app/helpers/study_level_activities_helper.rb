@@ -123,6 +123,10 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def amount_fulfilled(line_item)
+    line_item.fulfillments.sum(:quantity)
+  end
+
   private
 
   def invoice_toggle_button(fulfillment)
