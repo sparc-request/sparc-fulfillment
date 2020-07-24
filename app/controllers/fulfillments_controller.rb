@@ -45,7 +45,7 @@ class FulfillmentsController < ApplicationController
     service = @line_item.service
     funding_source = @line_item.protocol.sparc_funding_source
     fulfilled_at = fulfillment_params[:fulfilled_at]
-    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: @line_item.cost(funding_source, fulfilled_at), funding_source: funding_source }))
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, service_cost: @line_item.cost(funding_source, Time.strptime(fulfilled_at, "%m/%d/%Y")), funding_source: funding_source }))
     if @fulfillment.valid?
       perform_subsidy_check
       @fulfillment.save
