@@ -44,6 +44,7 @@ class Fulfillment < ApplicationRecord
 
   after_create :update_line_item_name
   after_destroy :remove_line_item_name
+  before_update :recalculate_cost
 
   scope :fulfilled_in_date_range, ->(start_date, end_date) {
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
@@ -57,6 +58,12 @@ class Fulfillment < ApplicationRecord
   end
 
   private
+
+  def recalculate_cost
+    if fulfilled_at_changed?
+      write_attribute(:service_cost, line_item.cost(protocol.sparc_funding_source, fulfilled_at).to_i)
+    end
+  end
 
   def cost_available
     date = fulfilled_at ? fulfilled_at : Date.today
