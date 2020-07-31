@@ -30,13 +30,15 @@ namespace :data do
           current_price = fulfillment.service_cost
           calculated_price = fulfillment.line_item.cost(fulfillment.funding_source, fulfillment.fulfilled_at)
 
+          service = fulfillment.service ? fulfillment.service : fulfillment.line_item.service
+
           if current_price != calculated_price
-            csv << [fulfillment.id, fulfillment.line_item.id, fulfillment.service.id, fulfillment.service.name, fulfillment.fulfilled_at.strftime('%m/%d/%Y'), current_price, calculated_price]
+            csv << [fulfillment.id, fulfillment.line_item_id, service.try(:id), service.try(:name), fulfillment.fulfilled_at.strftime('%m/%d/%Y'), current_price, calculated_price]
           end
 
           bar.increment!
         rescue Exception => e
-          csv << ["fulfillment.id", "Error: #{e.message}"]
+          csv << [fulfillment.id, "Error: #{e.message}"]
           bar.increment!
         end
       end
