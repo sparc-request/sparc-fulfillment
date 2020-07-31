@@ -22,23 +22,23 @@ namespace :data do
   task check_fulfillment_pricing: :environment do
     CSV.open("tmp/bad_fulfillment_pricing.csv", "wb") do |csv|
 
-      csv << ["Fulfillment ID:", "Line Item ID:", "Service ID:", "Service Name:", "Fulfilled Date:", "Current (Incorrect) Price:", "Calculated (Correct) Price:"]
+      csv << ["Protocol ID:", "Saved Funding Source:", "Protocol Funding Source:", "Quantity:", "Invoiced:", "Fulfillment ID:", "Line Item ID:", "Service ID:", "Service Name:", "Fulfilled Date:", "Current (Incorrect) Price:", "Calculated (Correct) Price:", "Error:"]
       bar = ProgressBar.new(Fulfillment.count)
 
-      Fulfillment.includes(:line_item, :service).find_each do |fulfillment|
+      Fulfillment.includes(:service, line_item: :protocol).find_each do |fulfillment|
         begin
-          current_price = fulfillment.service_cost
           calculated_price = fulfillment.line_item.cost(fulfillment.funding_source, fulfillment.fulfilled_at)
-
           service = fulfillment.service ? fulfillment.service : fulfillment.line_item.service
 
-          if current_price != calculated_price
-            csv << [fulfillment.id, fulfillment.line_item_id, service.try(:id), service.try(:name), fulfillment.fulfilled_at.strftime('%m/%d/%Y'), current_price, calculated_price]
+          if fulfillment.service_cost != calculated_price
+            csv << [fulfillment.protocol.try(:srid), fulfillment.funding_source, fulfillment.protocol.try(:sparc_funding_source), fulfillment.quantity, (fulfillment.invoiced ? "Yes" : "No"), fulfillment.id, fulfillment.line_item_id, service.try(:id), service.try(:name), fulfillment.fulfilled_at.strftime('%m/%d/%Y'), fulfillment.service_cost, calculated_price, "N/A"]
           end
 
           bar.increment!
         rescue Exception => e
-          csv << [fulfillment.id, "Error: #{e.message}"]
+          service = fulfillment.service ? fulfillment.service : fulfillment.line_item.service
+
+          csv << ["#{fulfillment.protocol.try(:sparc_id)} - #{fulfillment.protocol.try(:sub_service_request).try(:ssr_id)}", fulfillment.funding_source, fulfillment.protocol.try(:sparc_funding_source), fulfillment.quantity, (fulfillment.invoiced ? "Yes" : "No"), fulfillment.id, fulfillment.line_item_id, service.try(:id), service.try(:name), fulfillment.fulfilled_at.strftime('%m/%d/%Y'), fulfillment.service_cost, "N/A", e.message]
           bar.increment!
         end
       end
