@@ -67,12 +67,16 @@ $ ->
 
       return this.find_group(group_id)
 
-    redraw_group: (group_id) ->
-      count = this.group_size(group_id)
-      group = this.find_group(group_id)
+    create_group_for_multiselects_only: (group_id) ->
+      [service_billing_type, service_id] = group_id.split('_')
+      rows              = this.find_rows(group_id)
+      title             = $(rows[0]).find('td.name').text()
+      row_count         = rows.length
+      procedures_table  = $(rows).first().parents('.procedures tbody')
 
-      $(group).find('span.count').text(count)
-      this.style_group(group)
+      $(procedures_table).prepend("<tr class='procedure-group' id='group-#{group_id}' data-group-id='#{group_id}' style='display:none'><td colspan='10'><button type='button' class='btn btn-xs btn-primary'><span class='count'>#{row_count}</span><span class='glyphicon glyphicon-chevron-right'></span></button>#{title} #{service_billing_type}</td></tr>")
+
+      return this.find_group(group_id)
 
     add_service_to_group: (service_row, service_group) ->
       row       = $(service_row).detach()
@@ -82,19 +86,6 @@ $ ->
         $(row).hide()
 
       $(service_group).after(row)
-
-    remove_service_from_group: (service_row) ->
-      procedures_table  = $(service_row).parents('.procedures tbody')
-      row               = $(service_row).detach()
-
-      $(procedures_table).append(row)
-      $(row).removeAttr('style').find('td.name').removeClass('muted')
-
-    destroy_group: (group_id) ->
-      row = this.find_rows(group_id)
-
-      this.remove_service_from_group(row)
-      this.find_group(group_id).remove()
 
     show_group: (group_id) ->
       rows        = this.find_rows(group_id)
@@ -159,90 +150,6 @@ $ ->
       $(multiselect).multiselect('rebuild')
       if $(multiselect).hasClass('disabled')
         $(multiselect).multiselect('disable')
-      
-  
-
-    destroy_row: (row) ->
-      group_id        = $(row).data('group-id')
-      core            = $(row).parents('.core')
-      group           = this.find_group(group_id)
-      group_siblings_count  = this.group_size(group_id) - 1
-      core_siblings_count  = $(core).find('tr.procedure').length - 1
-
-      if core_siblings_count == 0
-        $(core).remove()
-      else
-        if group_siblings_count == 1
-          $(row).remove()
-          this.destroy_group(group_id)
-        else
-          $(row).remove()
-          this.redraw_group(group_id)
-        this.build_core_multiselect_options(core)
-
-    remove_all_new_row_classes: () ->
-      $('tr.procedure.new_service').removeClass('new_service')
-
-    update_group_membership: (row, original_group_id) ->
-      group_id        = $(row).data('group-id')
-      group           = this.find_group(group_id)
-      original_group  = this.find_group(original_group_id)
-      self            = this
-
-      do_i_have_siblings = ->
-        self.group_size(group_id) > 1
-
-      does_my_group_exist = ->
-        group.length == 1
-
-      join_group = (group) ->
-        self.add_service_to_group(row, group)
-        self.redraw_group(group_id)
-        self.redraw_group(original_group_id)
-
-      create_a_group = ->
-        self.create_group(group_id)
-
-      wrangle_siblings = (group) ->
-        group_id = $(group).data('group-id')
-        siblings = self.find_rows(group_id)
-
-        self.add_service_to_group sibling, group for sibling in siblings
-        self.redraw_group(group_id)
-        self.show_group(group_id)
-
-      go_to_pasture = ->
-        self.remove_service_from_group(row)
-        self.redraw_group(original_group_id)
-
-      i_left_a_group = ->
-        group_id != original_group_id
-
-      does_original_group_have_1_member = ->
-        self.group_size(original_group_id) == 1
-
-      destroy_a_group = ->
-        self.destroy_group(original_group_id)
-
-      i_am_a_new_row = (row) ->
-        $(row).hasClass('new_service')
-
-      if do_i_have_siblings()
-        if does_my_group_exist()
-          join_group(group)
-        else
-          group = create_a_group()
-          join_group(group)
-          wrangle_siblings(group)
-      else
-        if !i_am_a_new_row(row)
-          go_to_pasture()
-
-      if i_left_a_group() && does_original_group_have_1_member()
-        destroy_a_group()
-
-      self.remove_all_new_row_classes()
-      self.build_core_multiselect_options($(row).parents('.core'))
 
     initialize_multiselect: (multiselect) ->
       $(multiselect).multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
@@ -251,6 +158,19 @@ $ ->
       multiselects = $('select.core_multiselect')
 
       this.initialize_multiselect multiselect for multiselect in multiselects
+
+    initialize_multiselects_only: ->
+      self = this
+
+      self.initialize_multiselects()
+
+      for core in this.cores
+        rows = $(core).find('tr.procedure')
+
+        for group_id in self.duplicate_group_ids(rows)
+          group = self.create_group_for_multiselects_only(group_id)
+
+        self.build_core_multiselect_options(core)
 
     initialize: ->
       self = this
@@ -272,6 +192,5 @@ $ ->
           self.hide_group(group_id)
 
         self.build_core_multiselect_options(core)
-        self.remove_all_new_row_classes()
 
   window.ProcedureGrouper = ProcedureGrouper

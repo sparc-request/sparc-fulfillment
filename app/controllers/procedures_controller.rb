@@ -23,28 +23,32 @@ class ProceduresController < ApplicationController
   before_action :find_procedure, only: [:edit, :update, :destroy]
   before_action :save_original_procedure_status, only: [:update]
   before_action :create_note_before_update, only: [:update]
+  before_action :set_appointment_style, only: [:create, :update, :destroy]
 
   def create
     @appointment = Appointment.find params[:appointment_id]
     qty             = params[:qty].to_i
     service         = Service.find params[:service_id]
     performer_id    = params[:performer_id]
-    @procedures     = []
     protocol        = @appointment.protocol
     funding_source  = protocol.sparc_funding_source
     percent_subsidy = protocol.sub_service_request.subsidy ? protocol.sub_service_request.subsidy.percent_subsidy : nil
 
     qty.times do
-      @procedures << Procedure.create(appointment: @appointment,
-                                      service_id: service.id,
-                                      service_name: service.name,
-                                      performer_id: performer_id,
-                                      billing_type: 'research_billing_qty',
-                                      sparc_core_id: service.sparc_core_id,
-                                      sparc_core_name: service.sparc_core_name,
-                                      funding_source: funding_source,
-                                      percent_subsidy: percent_subsidy)
+      Procedure.create(appointment: @appointment,
+                       service_id: service.id,
+                       service_name: service.name,
+                       performer_id: performer_id,
+                       billing_type: 'research_billing_qty',
+                       sparc_core_id: service.sparc_core_id,
+                       sparc_core_name: service.sparc_core_name,
+                       funding_source: funding_source,
+                       percent_subsidy: percent_subsidy)
     end
+
+    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+
+    render 'appointments/show'
   end
 
   def edit
@@ -71,7 +75,12 @@ class ProceduresController < ApplicationController
   end
 
   def destroy
+    @appointment = @procedure.appointment
+    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+
     @procedure.destroy
+
+    render 'appointments/show'
   end
 
   private

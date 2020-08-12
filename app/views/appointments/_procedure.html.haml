@@ -18,7 +18,7 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-%tr.procedure.new_service{ data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id, disabled: procedure.invoiced? ? 'true' : 'false' } }
+%tr.procedure{data: { id: procedure.id, service_id: procedure.service_id, billing_type: procedure.billing_type, group_id: procedure.group_id, disabled: procedure.invoiced? ? 'true' : 'false' } }
   %td.name{class: "#{procedures_invoiced_or_credited?(procedure.appointment) || current_identity.billing_manager_protocols.include?(procedure.protocol) ? 'col-sm-1' : 'col-sm-2'} #{procedure.invoiced? ? 'disabled-status' : ''}"}
     = service_name_display(procedure.service)
   %td.col-sm-1.billing

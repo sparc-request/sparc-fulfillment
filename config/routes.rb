@@ -91,6 +91,7 @@ Rails.application.routes.draw do
       get 'completed_appointments'
     end
     put 'update_statuses'
+    put 'change_appointment_style'
   end
 
 
