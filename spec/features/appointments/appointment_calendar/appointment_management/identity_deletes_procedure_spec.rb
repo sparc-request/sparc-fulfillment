@@ -25,6 +25,7 @@ feature 'Delete Procedure', js: true do
   context 'User deletes a core' do
     scenario 'and does not see the core' do
       given_i_am_viewing_a_core_with_n_procedures_such_that_n_is '1'
+      and_i_unroll_the_group
       when_i_delete_the_first_procedure
       then_i_should_not_see_the_core
     end
@@ -57,12 +58,14 @@ feature 'Delete Procedure', js: true do
   end
 
   def when_i_delete_the_first_procedure
-    find('tr.procedure-group button').click
-    wait_for_ajax
-
     accept_confirm do
       first('.procedure button.delete').click
     end
+    wait_for_ajax
+  end
+
+  def and_i_unroll_the_group
+    find('tr.procedure-group button').click
     wait_for_ajax
   end
 

@@ -32,6 +32,8 @@ class Procedure < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
+  acts_as_list scope: [:appointment_id, :sparc_core_id]
+
   belongs_to :appointment
   belongs_to :visit
   belongs_to :service
