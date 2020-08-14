@@ -68,6 +68,9 @@ feature 'Identity adds multiple Procedures', js: true do
   end
 
   def then_i_should_see_one_group_with_four_procedures
+    find('tr.procedure-group button').click
+    wait_for_ajax
+
     group_id = Procedure.first.group_id
 
     expect(page).to have_css("tr.procedure[data-group-id='#{group_id}']", count: 4)

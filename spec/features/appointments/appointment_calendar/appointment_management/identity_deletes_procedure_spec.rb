@@ -57,6 +57,9 @@ feature 'Delete Procedure', js: true do
   end
 
   def when_i_delete_the_first_procedure
+    find('tr.procedure-group button').click
+    wait_for_ajax
+
     accept_confirm do
       first('.procedure button.delete').click
     end
