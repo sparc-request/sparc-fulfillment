@@ -20,10 +20,10 @@
 
 class ProceduresController < ApplicationController
 
-  before_action :find_procedure, only: [:edit, :update, :destroy]
+  before_action :find_procedure, only: [:edit, :update, :destroy, :change_procedure_position]
   before_action :save_original_procedure_status, only: [:update]
   before_action :create_note_before_update, only: [:update]
-  before_action :set_appointment_style, only: [:create, :update, :destroy]
+  before_action :set_appointment_style, only: [:create, :update, :destroy, :change_procedure_position]
 
   def create
     @appointment = Appointment.find params[:appointment_id]
@@ -79,6 +79,16 @@ class ProceduresController < ApplicationController
     @statuses = @appointment.appointment_statuses.map{|x| x.status}
 
     @procedure.destroy
+
+    render 'appointments/show'
+  end
+
+  def change_procedure_position
+    @appointment = @procedure.appointment
+    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @movement_type = params[:movement_type]
+
+    @procedure.send("move_#{@movement_type}")
 
     render 'appointments/show'
   end

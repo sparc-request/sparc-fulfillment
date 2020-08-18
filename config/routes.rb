@@ -29,7 +29,6 @@ Rails.application.routes.draw do
   resources :protocols
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
-  resources :procedures, only: [:create, :edit, :update, :destroy]
   resources :notes, only: [:index, :new, :create]
   resources :documents
   resources :line_items
@@ -40,6 +39,12 @@ Rails.application.routes.draw do
   resources :reports, only: [:new, :create] do
     collection do
       get 'update_protocols_dropdown'
+    end
+  end
+
+  resources :procedures, only: [:create, :edit, :update, :destroy] do
+    collection do
+      put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position'
     end
   end
 
