@@ -420,6 +420,8 @@ en:
     service_type: "Service Type"
     sort_by: "Sort By"
     sort_order: "Sort Order"
+    subsidy_date_from: "Subsidy Approval Date From"
+    subsidy_date_to: "Subsidy Approval Date To"
     subsidy_report: "Subsidy Report"
     start_date: "Start Date"
     visit_report: "Visit Report"
