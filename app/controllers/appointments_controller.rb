@@ -42,7 +42,7 @@ class AppointmentsController < ApplicationController
 
   def show
     @appointment = Appointment.find params[:id]
-    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @statuses = @appointment.appointment_statuses.pluck(:status)
 
     if @appointment.procedures.with_deleted.empty?
       @appointment.initialize_procedures
@@ -81,7 +81,7 @@ class AppointmentsController < ApplicationController
     session[:appointment_style] = @appointment_style
 
     @appointment = Appointment.find params[:appointment_id]
-    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @statuses = @appointment.appointment_statuses.pluck(:status)
 
     render :show
   end

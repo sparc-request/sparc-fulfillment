@@ -46,7 +46,7 @@ class ProceduresController < ApplicationController
                        percent_subsidy: percent_subsidy)
     end
 
-    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @statuses = @appointment.appointment_statuses.pluck(:status)
 
     render 'appointments/show'
   end
@@ -65,7 +65,7 @@ class ProceduresController < ApplicationController
   def update
     @procedure.update_attributes(procedure_params)
     @appointment = @procedure.appointment
-    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @statuses = @appointment.appointment_statuses.pluck(:status)
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
     subsidy = @appointment.protocol.sub_service_request.subsidy
     if subsidy
@@ -76,7 +76,7 @@ class ProceduresController < ApplicationController
 
   def destroy
     @appointment = @procedure.appointment
-    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @statuses = @appointment.appointment_statuses.pluck(:status)
 
     @procedure.destroy
 
@@ -85,7 +85,7 @@ class ProceduresController < ApplicationController
 
   def change_procedure_position
     @appointment = @procedure.appointment
-    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @statuses = @appointment.appointment_statuses.pluck(:status)
     @movement_type = params[:movement_type]
 
     @procedure.send("move_#{@movement_type}")

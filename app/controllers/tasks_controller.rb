@@ -93,7 +93,7 @@ class TasksController < ApplicationController
   def create_note
     if create_procedure_note?
       @appointment = @procedure.present? ? @procedure.appointment : Procedure.find(task_params[:notes][:notable_id]).appointment
-      @statuses = @appointment.appointment_statuses.map{|x| x.status}
+      @statuses = @appointment.appointment_statuses.pluck(:status)
 
       notes_params = task_params[:notes]
       notes_params[:identity] = current_identity
