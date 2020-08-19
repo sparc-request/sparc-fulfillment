@@ -25,7 +25,7 @@ class SubsidyReport < Report
 
   require 'csv'
 
-  def sprotocols_for_date_range(protocols)
+  def protocols_for_date_range(protocols)
     filtered_protocols = []
     protocols.each do |protocol|
       subsidy_date = protocol.sub_service_request.subsidy.approved_at
