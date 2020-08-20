@@ -71,14 +71,7 @@ $ ->
         type: 'POST'
         url:  "/procedures.js"
         data: data
-        success: ->
-          new_rows    = $('tr.procedure.new_service')
-          core        = $(new_rows).first().parents('.core')
-          multiselect = $(core).find('select.core_multiselect')
-          pg          = new ProcedureGrouper()
 
-          pg.update_group_membership new_row for new_row in new_rows
-          pg.initialize_multiselect(multiselect)
       $('#service_list').val('').trigger('change')
 
   $(document).on 'click', '.start_visit', ->
@@ -119,6 +112,14 @@ $ ->
         type: 'PUT'
         url: "/multiple_procedures/reset_procedures.js"
         data: data
+
+  $(document).on 'click', '.appointment_style_button button', ->
+    data = appointment_style: $(this).data('appointment-style')
+    appointment_id = $(this).parents('.row.appointment').data('id')
+    $.ajax
+      type: 'PUT'
+      data: data
+      url: "/appointments/#{appointment_id}/change_appointment_style.js"
 
   $(document).on 'click', '.uncomplete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -166,12 +167,6 @@ $ ->
       type: 'PUT'
       url: "/procedures/#{procedure_id}.js"
       data: data
-      success: ->
-        procedure    = $("tr.procedure[data-id='#{procedure_id}']")
-        group_id     = $(procedure).data('group-id')
-        pg           = new ProcedureGrouper()
-
-        pg.update_group_membership(procedure, original_group_id)
 
   $(document).on 'click', 'label.status.complete', ->
     if !$(this).hasClass('disabled')
@@ -290,11 +285,6 @@ $ ->
         url:  "/procedures/#{procedure_id}.js"
         error: ->
           alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
-        success: ->
-          pg  = new ProcedureGrouper()
-          row = $("tr.procedure[data-id='#{procedure_id}']")
-
-          pg.destroy_row(row)
 
   $(document).on 'change', '#appointment_content_indications', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
@@ -395,7 +385,7 @@ $ ->
 
   # Display a helpful message when user clicks on a disabled UI element
   $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
-    alert(I18n["appointment"]["warning"])   
+    alert(I18n["appointment"]["warning"])
 
   $(document).on 'click', '.invoiced_disabled, .complete-all-container.invoiced_disabled, .incomplete-all-container.invoiced_disabled', ->
     alert(I18n["appointment"]["procedure_invoiced_warning"])

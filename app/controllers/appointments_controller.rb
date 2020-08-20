@@ -21,6 +21,7 @@
 class AppointmentsController < ApplicationController
 
   respond_to :json, :html
+  before_action :set_appointment_style, only: [:create, :show, :update]
 
   #### BEGIN CUSTOM APPOINTMENTS ####
 
@@ -41,7 +42,7 @@ class AppointmentsController < ApplicationController
 
   def show
     @appointment = Appointment.find params[:id]
-    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @statuses = @appointment.appointment_statuses.pluck(:status)
 
     if @appointment.procedures.with_deleted.empty?
       @appointment.initialize_procedures
@@ -73,6 +74,16 @@ class AppointmentsController < ApplicationController
     end
 
     render body: nil
+  end
+
+  def change_appointment_style
+    @appointment_style = params[:appointment_style]
+    session[:appointment_style] = @appointment_style
+
+    @appointment = Appointment.find params[:appointment_id]
+    @statuses = @appointment.appointment_statuses.pluck(:status)
+
+    render :show
   end
 
   private

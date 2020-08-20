@@ -73,6 +73,9 @@ feature 'Identity removes a Procedure', js: true do
   end
 
   def when_i_remove_the_first_procedure
+    find("tr.procedure-group button").click
+    wait_for_ajax
+
     procedure = Procedure.first
 
     accept_confirm do
@@ -82,6 +85,9 @@ feature 'Identity removes a Procedure', js: true do
   end
 
   def then_i_should_no_longer_see_that_procedure
+    find("tr.procedure-group button").click
+    wait_for_ajax
+
     expect(page).to have_css('.procedure', count: 2)
   end
 
