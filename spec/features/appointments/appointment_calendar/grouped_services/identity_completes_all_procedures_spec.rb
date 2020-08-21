@@ -69,6 +69,9 @@ feature 'Identity completes all Services', js: true do
   end
 
   def then_i_should_see_all_selected_procedures_completed
+    find('tr.procedure-group button').click
+    wait_for_ajax
+
     expect(page).to have_css('label.status.complete.active', count: 2)
     expect(Procedure.where(service_id: @services.last.id).first.status).to eq("complete")
     expect(Procedure.where(service_id: @services.last.id).last.status).to eq("complete")
@@ -92,6 +95,9 @@ feature 'Identity completes all Services', js: true do
   end
 
   def then_i_should_see_all_procedures_completed
+    find('tr.procedure-group button').click
+    wait_for_ajax
+    
     expect(page).to have_css('label.status.complete.active', count: 3)
     expect(Procedure.where(service_id: @services.last.id).first.status).to eq("complete")
     expect(Procedure.where(service_id: @services.last.id).last.status).to eq("complete")

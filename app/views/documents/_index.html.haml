@@ -43,7 +43,12 @@
         .text-center= t(:documents)[documentable_sym][:none]
     .modal-footer
       .center-block
-        %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+        - if documentable_type == "Fulfillment"
+          %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: @documentable.line_item_id}}
+            = t(:actions)[:close]
+        - else
+          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+
         = link_to new_document_path(document: { documentable_id: documentable_id, documentable_type: documentable_type }, format: :js), remote: true, class: 'btn btn-primary document new' do
           %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
           = t(:documents)[:upload_button]
