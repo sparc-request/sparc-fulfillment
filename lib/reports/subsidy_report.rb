@@ -40,13 +40,8 @@ class SubsidyReport < Report
   def total_cost(protocol, invoiced)
     total = 0
 
-    if invoiced
-      fulfillments = protocol.fulfillments.select{|x| x.invoiced == true}
-      procedures = protocol.procedures.select{|x| x.invoiced == true}
-    else
-      fulfillments = protocol.fulfillments
-      procedures = protocol.procedures
-    end
+    fulfillments = (invoiced ? protocol.fulfillments.select{|x| x.invoiced == true} : protocol.fulfillments)
+    procedures = (invoiced ? protocol.procedures.select{|x| x.invoiced == true} : protocol.procedures)
 
     fulfillments.each do |fulfillment|
       total += fulfillment.total_cost
@@ -62,6 +57,7 @@ class SubsidyReport < Report
   end
 
   def generate(document)
+    # Dates are optional in this report and defaults to all subsidy protocols if both dates not given
     has_dates = ((@params[:start_date] != "") && (@params[:end_date] != ""))
 
     if has_dates
@@ -113,10 +109,10 @@ class SubsidyReport < Report
       csv << header
 
       protocols.each do |protocol|
-        puts protocol.inspect
         total_fulfilled = total_cost(protocol, false)
         ssr = protocol.sub_service_request
         subsidy = ssr.subsidy
+        pi = protocol.pi
 
         data = []
         data << protocol.sparc_id
@@ -125,14 +121,14 @@ class SubsidyReport < Report
         data << protocol.sparc_protocol.short_title
         data << protocol.sparc_protocol.funding_source
         data << formatted_status(protocol)
-        data << (protocol.pi ? protocol.pi.full_name : nil)
-        data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
-                                protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil)
+        data << (pi ? pi.full_name : nil)
+        data << (pi ? [pi.professional_org_lookup("institution"), pi.professional_org_lookup("college"),
+                                pi.professional_org_lookup("department"), pi.professional_org_lookup("division")].compact.join("/") : nil)
         data << format_date(protocol.start_date)
         data << format_date(protocol.end_date)
         data << display_cost(subsidy.total_at_approval)
         data << "#{subsidy.percent_subsidy * 100}%"
-        data << subsidy.approved_at
+        data << format_date(subsidy.approved_at)
         data << display_cost(total_fulfilled)
         data << display_cost(total_cost(protocol, true))
         data << display_cost(subsidy.total_at_approval - total_fulfilled)
