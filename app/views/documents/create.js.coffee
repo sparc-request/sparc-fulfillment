@@ -22,6 +22,11 @@
 $('#doc_modal_errors').empty().append("<div class='alert alert-danger'><%= @error %></div>")
 <% else %>
 $("#modal_area").html("<%= escape_javascript(render(partial: 'index', locals: { documents: @documentable.documents, documentable_type: @document.documentable_type, documentable_id: @documentable.id, documentable_sym: @document.documentable_type.downcase.to_sym})) %>")
+
+<% if @document.documentable_type == "LineItem" %>
+$('#study-level-activities-table').bootstrapTable('refresh', {silent: "true"})
+<% end %>
+
 $("#modal_place").modal(backdrop: 'static', keyboard: false)
 $("#modal_place").modal 'show'
 <% end %>
