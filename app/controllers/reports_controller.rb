@@ -38,8 +38,6 @@ class ReportsController < ApplicationController
       @reports_params = reports_params
       @documentable.documents.push @document
       ReportJob.perform_later(@document, reports_params.to_h)
-    else
-      puts @errors
     end
   end
 
