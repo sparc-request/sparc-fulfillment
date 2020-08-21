@@ -66,12 +66,14 @@ feature 'Identity incompletes all Services', js: true do
     scenario 'selects all grouped procedures' do
       when_i_select_all_grouped_procedures_in_the_core_dropdown
       and_i_click_incomplete_all_and_give_a_reason
+      and_i_unroll_accordion
       then_the_selected_procedures_should_be_incompleted
     end
 
     scenario 'selects all procedures' do
       when_i_select_all_procedures_in_the_core_dropdown
       and_i_click_incomplete_all_and_give_a_reason
+      and_i_unroll_accordion
       then_the_selected_procedures_should_be_incompleted
     end
   end
