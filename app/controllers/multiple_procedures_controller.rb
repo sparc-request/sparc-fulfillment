@@ -50,11 +50,11 @@ class MultipleProceduresController < ApplicationController
   def reset_procedures
     @appointment = Appointment.find(params[:appointment_id])
     #Status is used by the 'show' re-render
-    @statuses = @appointment.appointment_statuses.map{|x| x.status}
+    @statuses = @appointment.appointment_statuses.pluck(:status)
 
     #Reset parent appointment
     @appointment.update_attributes(start_date: nil, completed_date: nil)
- 
+
     #Reset all procedures under appointment so they can be destroyed
     @appointment.procedures.each{|procedure| procedure.reset}
     #Destroy all procedures
@@ -64,7 +64,8 @@ class MultipleProceduresController < ApplicationController
 
     #Reload appointment to grab any calendar changes, then initialize procedures
     @appointment.reload
-    @appointment.initialize_procedures
+    procedure_creator = ProcedureCreator.new(@appointment)
+    procedure_creator.initialize_procedures
 
     @refresh_dashboard = true
 
@@ -91,7 +92,7 @@ class MultipleProceduresController < ApplicationController
                               kind: 'log')
         procedure.notes.create(identity: current_identity,
                                 comment: params[:comment],
-                                kind: 'reason', 
+                                kind: 'reason',
                                 reason: params[:reason])
       end
     elsif change_in_completed_date_detected?

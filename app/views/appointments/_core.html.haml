@@ -22,7 +22,7 @@
   .panel.panel-default
     .panel-heading
       %h3.panel-title
-        = procedures.first.sparc_core_name  
+        = procedures.first.sparc_core_name
       .row
         .btn-group.align-select-menu
           = select_tag 'core_multiselect', nil, class: "core_multiselect #{disabled_class(!appointment.started?)}", style: 'display: inline-block', multiple: true
@@ -45,18 +45,12 @@
             = t(:procedure)[:performed_by]
           %th.notes
             = t(:procedure)[:notes]
-          - if current_identity.billing_manager_protocols.include?(appointment.protocol)
-            %th.invoiced
-              = t(:procedure)[:invoiced]
-            %th.credited
-              = t(:procedure)[:credited]
-          - else
-            %th.invoiced
-              = t(:procedure)[:invoiced]
-            %th.credited
-              = t(:procedure)[:credited]
-          %th.remove
-            = t(:procedure)[:remove]
+          %th.invoiced
+            = t(:procedure)[:invoiced]
+          %th.credited
+            = t(:procedure)[:credited]
+          %th.actions
+            = t(:procedure)[:actions]
 
         %tbody
           = render partial: 'appointments/procedure', collection: procedures, as: :procedure

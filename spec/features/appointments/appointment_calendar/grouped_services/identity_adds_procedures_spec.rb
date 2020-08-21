@@ -51,6 +51,9 @@ feature 'Identity adds Procedure', js: true do
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar
+    find('tr.procedure-group button').click
+    wait_for_ajax
+    
     expect(page).to have_css('.procedures .procedure', count: 2)
   end
 end

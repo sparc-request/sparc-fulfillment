@@ -37,7 +37,13 @@ update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 $('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
 
 pg = new ProcedureGrouper()
+
+<% if @appointment_style == "grouped" %>
 pg.initialize()
+<% else %>
+# $("select.core_multiselect").multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
+pg.initialize_multiselects_only()
+<% end %>
 
 if !$('.start_date_input').hasClass('hidden')
   start_date_init("<%= format_datetime(@appointment.start_date) %>")

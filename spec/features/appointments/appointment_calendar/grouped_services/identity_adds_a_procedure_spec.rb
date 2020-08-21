@@ -136,12 +136,18 @@ feature 'Identity adds a Procedure', js: true do
   end
 
   def then_i_should_see_two_procedures_in_the_group
+    find('tr.procedure-group button').click
+    wait_for_ajax
+    
     group_id = Procedure.first.group_id
 
     expect(page).to have_css("tr.procedure[data-group-id='#{group_id}']", count: 2)
   end
 
   def then_i_should_see_three_procedures_in_the_group
+    find('tr.procedure-group button').click
+    wait_for_ajax
+
     group_id = Procedure.first.group_id
 
     expect(page).to have_css("tr.procedure[data-group-id='#{group_id}']", count: 3)
