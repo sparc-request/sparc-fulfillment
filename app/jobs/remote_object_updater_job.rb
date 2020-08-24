@@ -44,7 +44,7 @@ class RemoteObjectUpdaterJob < ActiveJob::Base
   def local_object_siblings(local_object)
     siblings = [local_object]
 
-    if local_object.is_a? Protocol
+    if (local_object.is_a? Protocol && local_object.sub_service_request_id)
       Protocol.where(sub_service_request_id: local_object.sub_service_request_id).each do |protocol|
         siblings.push protocol
       end
