@@ -18,28 +18,18 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# Use this file to easily define all of your cron jobs.
-#
-# It's helpful, but not entirely necessary to understand cron before proceeding.
-# http://en.wikipedia.org/wiki/Cron
+require 'open3'
 
-# Example:
-#
-# set :output, "/path/to/my/cron_log.log"
-#
-# every 2.hours do
-#   command "/usr/bin/some_great_command"
-#   runner "MyModel.some_method"
-#   rake "some:great:rake:task"
-# end
-#
-# every 4.days do
-#   runner "AnotherModel.prune_old_records"
-# end
+task faye_monitor: :environment do
 
-# Learn more: http://github.com/javan/whenever
-
-every 15.minutes, :roles => [:app] do
-  rake 'delayed_job_monitor'
-  rake 'faye_monitor'
+  begin
+    faye_pid_file = File.open Rails.root.join 'tmp/pids/fulfillment_faye_thin.9292.pid'
+    faye_pid = faye_pid_file.read.to_i
+    Process.getpgid(faye_pid)
+    Rails.logger.info "Faye OK"
+  rescue
+    # restart faye because it has crashed
+    stdout, stderr, status = Open3.capture3("RAILS_ENV=#{Rails.env} bundle exec thin -C config/faye.yml restart")
+    Rails.logger.error "Faye restarted"
+  end
 end
