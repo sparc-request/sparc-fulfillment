@@ -81,7 +81,7 @@ group :test do
   gem 'capybara'
   gem 'climate_control'
   gem 'database_cleaner'
-  gem 'geckodriver-helper'
+  gem 'geckodriver-helper', git: 'https://github.com/DevicoSolutions/geckodriver-helper.git', ref: "refs/pull/17/head"
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec-activejob', '~> 0.6.1'
