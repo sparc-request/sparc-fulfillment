@@ -126,12 +126,12 @@ class SubsidyReport < Report
                                 pi.professional_org_lookup("department"), pi.professional_org_lookup("division")].compact.join("/") : nil)
         data << format_date(protocol.start_date)
         data << format_date(protocol.end_date)
-        data << display_cost(subsidy.total_at_approval)
+        data << display_cost(subsidy.subsidy_committed)
         data << "#{subsidy.percent_subsidy * 100}%"
         data << format_date(subsidy.approved_at)
         data << display_cost(total_fulfilled)
         data << display_cost(total_cost(protocol, true))
-        data << display_cost(subsidy.total_at_approval - total_fulfilled)
+        data << display_cost(subsidy.subsidy_committed - total_fulfilled)
 
         csv << data
       end
