@@ -91,6 +91,6 @@ group :test do
   gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', "~> 4.4.1", require: false
   gem 'timecop'
-  gem 'webmock', '~> 3.8.3'
+  gem 'webmock', '~> 3.9.1'
   gem 'vcr', '~> 6.0.0'
 end
