@@ -124,8 +124,8 @@ class SubsidyReport < Report
         data << (pi ? pi.full_name : nil)
         data << (pi ? [pi.professional_org_lookup("institution"), pi.professional_org_lookup("college"),
                                 pi.professional_org_lookup("department"), pi.professional_org_lookup("division")].compact.join("/") : nil)
-        data << format_date(protocol.start_date)
-        data << format_date(protocol.end_date)
+        data << format_date(protocol.sparc_protocol.start_date)
+        data << format_date(protocol.sparc_protocol.end_date)
         data << display_cost(subsidy.subsidy_committed)
         data << "#{subsidy.percent_subsidy * 100}%"
         data << format_date(subsidy.approved_at)
