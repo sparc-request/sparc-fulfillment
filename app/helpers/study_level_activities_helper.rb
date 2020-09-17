@@ -48,12 +48,19 @@ module StudyLevelActivitiesHelper
 
     
   def sla_notes_button(line_item)
-    button = raw content_tag(:button, 'Notes', id: "note-#{line_item.id}", class: 'btn btn-success button notes list', title: 'Notes', type: "button", aria: {label: "List Notes"}, data: {'notable-id' => line_item.id, 'notable-type' => 'LineItem'})
+    span = raw(content_tag(:span, line_item.notes.count, class: 'badge badge-light'))
+    button = raw(content_tag(:button, raw(content_tag(:span, '', id: "line_item-#{line_item.id}")) + 'Notes ' + raw(span), type: 'button', class: 'btn btn-success button notes list', data: {'notable-id' => line_item.id, 'notable-type' => 'LineItem'}))
+
+    button
   end
 
   def sla_docs_button(line_item)
 
     raw content_tag(:div, button + ul, class: 'btn-group overflow_webkit_button')
+  end
+
+  def sla_edit_button(line_item)
+    
   end
 
   def fulfillments_drop_button(line_item)
