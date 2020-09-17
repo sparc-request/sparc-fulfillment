@@ -28,11 +28,12 @@ class RemoteRequestBuilder
     @query    = query
   end
 
-  def self.authorize_and_decorate!(uri)
-    url = Addressable::URI.parse uri
+  def self.token_url
+    "#{scheme}://#{host}/api/token.json"
+  end
 
-    url.user     = ENV.fetch('SPARC_API_USERNAME')
-    url.password = ENV.fetch('SPARC_API_PASSWORD')
+  def self.decorate(uri)
+    url = Addressable::URI.parse uri
 
     if url.query_values.nil?
       url.query_values = DEFAULT_DEPTH
@@ -43,45 +44,44 @@ class RemoteRequestBuilder
     url.to_s
   end
 
-  def build
-    url = Addressable::URI.parse "#{scheme}://#{host}/#{segments}.json"
-
-    if @query.any? || @ids.is_a?(Array)
-      url.query_values = query_values
-    end
-
-    url.to_s
-  end
-
-  def build_and_authorize
-    url = Addressable::URI.parse "#{scheme}://#{host}/#{segments}.json"
-
-    url.user     = ENV.fetch('SPARC_API_USERNAME')
-    url.password = ENV.fetch('SPARC_API_PASSWORD')
-
-    if @query.any? || @ids.is_a?(Array)
-      url.query_values = query_values
-    end
-
+  def build(type=nil)
+    url = Addressable::URI.parse "#{scheme}://#{host}/api/#{segments}.json"
+    url.query_values = query_values if @query.any? || @ids.is_a?(Array)
     url.to_s
   end
 
   private
 
-  def site
+  def self.site
     [scheme, host].join
   end
 
-  def scheme
+  def self.scheme
     ENV.fetch('GLOBAL_SCHEME')
   end
 
-  def host
+  def self.host
     ENV.fetch('SPARC_API_HOST')
   end
 
-  def version
+  def self.version
     ENV.fetch('SPARC_API_VERSION')
+  end
+
+  def site
+    self.class.site
+  end
+
+  def scheme
+    self.class.scheme
+  end
+
+  def host
+    self.class.host
+  end
+
+  def version
+    self.class.version
   end
 
   def segments

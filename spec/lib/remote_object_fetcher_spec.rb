@@ -22,8 +22,27 @@ require 'rails_helper'
 
 RSpec.describe RemoteObjectFetcher do
 
-  describe '#fetch' do
+  describe '#self.fetch(url)' do
+    it 'should authorize the request and fetch the requested URL' do
+      protocol  = create(:sparc_protocol)
+      url       = "#{ENV.fetch('GLOBAL_SCHEME')}://#{ENV.fetch('SPARC_API_HOST')}/api/#{ENV.fetch('SPARC_API_VERSION')}/protocols/#{protocol.id}.json?depth=full"
 
+      stub_request(:get, url).to_return(status: 200, body: protocol.to_json)
 
+      expect(RemoteObjectFetcher).to receive(:authorize).and_return('some_token')
+      expect(RemoteObjectFetcher.fetch(url)).to eq(Yajl::Parser.parse protocol.to_json)
+    end
+  end
+
+  describe '#build_and_fetch' do
+    it 'should build a URL and fetch the requested resource(s)' do
+      protocol  = create(:sparc_protocol)
+      url       = "#{ENV.fetch('GLOBAL_SCHEME')}://#{ENV.fetch('SPARC_API_HOST')}/api/#{ENV.fetch('SPARC_API_VERSION')}/protocols/#{protocol.id}.json?depth=full"
+
+      stub_request(:get, url).to_return(status: 200, body: protocol.to_json)
+
+      expect(RemoteObjectFetcher).to receive(:authorize).and_return('some_token')
+      expect(RemoteObjectFetcher.new('protocols', protocol.id, {}).build_and_fetch).to eq(Yajl::Parser.parse protocol.to_json)
+    end
   end
 end
