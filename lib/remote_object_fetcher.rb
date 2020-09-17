@@ -55,7 +55,7 @@ class RemoteObjectFetcher
     RestClient.post(url, { client_id: ENV.fetch('SPARC_API_CLIENT_ID'), client_secret: ENV.fetch('SPARC_API_CLIENT_SECRET') }) do |response, request, result, &block|
       raise SparcApiError unless response.code == 200
 
-      @token = Yajl::Parse.parse(response)['access_token']
+      @token = Yajl::Parser.parse(response)['access_token']
     end
 
     @token
