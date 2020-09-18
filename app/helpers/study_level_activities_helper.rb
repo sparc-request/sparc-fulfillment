@@ -55,8 +55,10 @@ module StudyLevelActivitiesHelper
   end
 
   def sla_docs_button(line_item)
+    span = raw(content_tag(:span, line_item.documents.count, class: 'badge badge-light'))
+    button = raw(content_tag(:button, raw(content_tag(:span, '', id: "line_item-#{line_item.id}")) + 'Documents ' + raw(span), type: 'button', class: 'btn btn-success button documents list', data: {'documentable-id' => line_item.id, 'documentable-type' => 'LineItem'}))
 
-    raw content_tag(:div, button + ul, class: 'btn-group overflow_webkit_button')
+    button
   end
 
   def sla_edit_button(line_item)
