@@ -62,7 +62,9 @@ module StudyLevelActivitiesHelper
   end
 
   def sla_edit_button(line_item)
-    
+    button = raw(content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-success form-control actions-button otf_edit'))
+
+    button
   end
 
   def fulfillments_drop_button(line_item)
