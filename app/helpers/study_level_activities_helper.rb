@@ -29,23 +29,6 @@ module StudyLevelActivitiesHelper
     bullet_point = documents.count > 1 ? "\u2022 " : ""
     documents.map{ |document| bullet_point + document.original_filename }.join("<br>")
   end
-
-  def sla_options_buttons(line_item)
-    options = raw(
-      note_list_item({object: line_item, has_notes: line_item.notes.any?})+
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_edit'))
-      )+
-      document_list_item({object: line_item, has_documents: line_item.documents.any?})
-    )
-
-    span = raw content_tag(:span, '', class: 'glyphicon glyphicon-triangle-bottom')
-    button = raw content_tag(:button, raw(span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control available-actions-button', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
-    ul = raw content_tag(:ul, options, class: 'dropdown-menu', role: 'menu')
-
-    raw content_tag(:div, button + ul, class: 'btn-group overflow_webkit_button')
-  end
-
     
   def sla_notes_button(line_item)
     span = raw(content_tag(:span, line_item.notes.count, class: 'badge badge-light'))
