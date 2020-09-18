@@ -58,11 +58,11 @@ class SubsidyReport < Report
 
   def generate(document)
     # Dates are optional in this report and defaults to all subsidy protocols if both dates not given
-    has_dates = ((@params[:start_date] != "") && (@params[:end_date] != ""))
+    no_dates = ((@params[:start_date] == "") && (@params[:end_date] == ""))
 
-    if has_dates
-      @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc
-      @end_date = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
+    if !no_dates
+      @start_date = (@params[:start_date] == "") ? Time.strptime("1/01/2012", "%m/%d/%Y").utc : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
+      @end_date = (@params[:end_date] == "") ? Time.now.utc : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
       protocols = protocols_for_date_range(Protocol.joins(sub_service_request: :subsidy))
     else
       protocols = Protocol.joins(sub_service_request: :subsidy)
@@ -73,8 +73,8 @@ class SubsidyReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, 'wb') do |csv|
-      if has_dates
-        csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
+      if !no_dates
+        csv << ["From", format_date(@start_date), "To", format_date(@end_date)]
         csv << [""]
       end
 
