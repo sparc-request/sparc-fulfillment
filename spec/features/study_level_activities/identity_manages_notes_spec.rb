@@ -57,9 +57,7 @@ feature 'Notes', js: true do
   end
 
   def when_i_open_up_a_new_line_item_note
-    first("#study-level-activities-table .available-actions-button").click
-    wait_for_ajax
-    first('.notes.list[data-notable-type="LineItem"]').click
+    first('.notes.list').click
     wait_for_ajax
     find('.note.new').click
     wait_for_ajax
