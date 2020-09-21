@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/v1/service_level_components/1.json?depth=full_with_shallow_reflections
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@localhost:5000/api/v1/service_level_components/1.json?depth=full_with_shallow_reflections
     body:
       encoding: US-ASCII
       string: ''
@@ -38,12 +38,12 @@ http_interactions:
       - thin 1.5.1 codename Straight Razor
     body:
       encoding: UTF-8
-      string: '{"service_level_component":{"sparc_id":1,"callback_url":"http://127.0.0.1:5000/v1/service_level_components/7.json","component":"slc5","position":5,"service":{"sparc_id":3547,"callback_url":"http://127.0.0.1:5000/v1/services/3547.json"}}}'
+      string: '{"service_level_component":{"sparc_id":1,"callback_url":"http://127.0.0.1:5000/api/v1/service_level_components/7.json","component":"slc5","position":5,"service":{"sparc_id":3547,"callback_url":"http://127.0.0.1:5000/api/v1/services/3547.json"}}}'
     http_version:
   recorded_at: Wed, 29 Apr 2015 14:51:48 GMT
 - request:
     method: get
-    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@127.0.0.1:5000/v1/services/3547.json?depth=full
+    uri: http://iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0:qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek@127.0.0.1:5000/api/v1/services/3547.json?depth=full
     body:
       encoding: US-ASCII
       string: ''
@@ -79,8 +79,8 @@ http_interactions:
       - thin 1.5.1 codename Straight Razor
     body:
       encoding: UTF-8
-      string: '{"service":{"sparc_id":3547,"callback_url":"http://127.0.0.1:5000/v1/services/3547.json","name":"New
-        Service","abbreviation":"New Service","order":1,"description":"xxx","is_available":true,"service_center_cost":null,"cpt_code":"","charge_code":"","revenue_code":"","organization_id":84,"send_to_epic":false,"revenue_code_range_id":null,"service_level_components_count":1,"process_ssrs_organization":{"sparc_id":84,"callback_url":"http://127.0.0.1:5000/v1/programs/84.json","name":"Test
+      string: '{"service":{"sparc_id":3547,"callback_url":"http://127.0.0.1:5000/api/v1/services/3547.json","name":"New
+        Service","abbreviation":"New Service","order":1,"description":"xxx","is_available":true,"service_center_cost":null,"cpt_code":"","charge_code":"","revenue_code":"","organization_id":84,"send_to_epic":false,"revenue_code_range_id":null,"service_level_components_count":1,"process_ssrs_organization":{"sparc_id":84,"callback_url":"http://127.0.0.1:5000/api/v1/programs/84.json","name":"Test
         Program"}}}'
     http_version:
   recorded_at: Wed, 29 Apr 2015 14:51:49 GMT

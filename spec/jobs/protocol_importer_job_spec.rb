@@ -25,7 +25,7 @@ RSpec.describe ProtocolImporterJob, type: :job do
   describe '#enqueue' do
 
     it 'should create a Active::Job' do
-      callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
+      callback_url = "http://#{ENV['SPARC_API_HOST']}/api/v1/sub_service_requests/6213.json"
 
       ProtocolImporterJob.perform_later(6213, callback_url, 'create')
       
@@ -42,7 +42,7 @@ RSpec.describe ProtocolImporterJob, type: :job do
 #      allow(Service).to receive(:find).and_return(service)
 #      allow(Identity).to receive(:find).and_return(@identity)
 #
-#      callback_url = "http://#{ENV['SPARC_API_USERNAME']}:#{ENV['SPARC_API_PASSWORD']}@#{ENV['SPARC_API_HOST']}/v1/sub_service_requests/6213.json"
+#      callback_url = "http://#{ENV['SPARC_API_HOST']}/api/v1/sub_service_requests/6213.json"
 #      protocol_job = ProtocolImporterJob.perform_later(6213, callback_url, 'update')
 #    end
 #
