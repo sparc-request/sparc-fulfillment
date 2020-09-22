@@ -33,7 +33,7 @@ class RemoteObjectFetcher
     token     = authorize()
     full_url  = RemoteRequestBuilder.decorate(url)
 
-    RestClient::Resource.new(full_url, { access_token: token }).get({ accept: :json }) do |response, request, result, &block|
+    RestClient::Resource.new(full_url).get({ 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{token}" }) do |response, request, result, &block|
       raise SparcApiError unless response.code == 200
 
       @response = Yajl::Parser.parse response
