@@ -19,9 +19,8 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module SparcHelper
-
   def sparc_sends_notification_post(params=valid_params)
-    http_login(ENV['SPARC_API_USERNAME'], ENV['SPARC_API_PASSWORD'])
+    http_login(ENV['CWF_API_USERNAME'], ENV['CWF_API_PASSWORD'])
     post '/v1/notifications.json', params: params , headers: @env
   end
 

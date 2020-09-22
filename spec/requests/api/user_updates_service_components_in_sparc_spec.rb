@@ -41,7 +41,7 @@ RSpec.describe 'User updates Service Components in SPARC', type: :request, enque
         sparc_id: notification.sparc_id,
         kind: notification.kind,
         action: notification.action,
-        callback_url: "http://localhost:5000/v1/services/1.json"
+        callback_url: "http://localhost:5000/api/v1/services/1.json"
       }
     }
     sparc_sends_notification_post params

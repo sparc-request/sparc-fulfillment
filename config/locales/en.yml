@@ -213,7 +213,9 @@ en:
     create: "Create New Non-clinical Service"
     create_project: "Create New Non-clinical Service"
     delete_line_item: "Delete line item"
+    documents: "Documents"
     edit: "Edit Non-clinical Service"
+    edit_from_table: "Edit"
     edit_in_sparc: "Only Account and Contact fields can be edited for non-clinical services. All other editing should be done in SPARCDashboard"
     flash_messages:
       created: "Non-clinical Service Created"
@@ -225,6 +227,7 @@ en:
       quantity_requested: "Quantity Requested changed to "
       service_id: "Service changed to "
       started_at: "Started At changed to "
+    notes: "Notes"
     qty_req: "Requested"
     fulfilled: "Fulfilled"
     qty_rem: "Remaining"
