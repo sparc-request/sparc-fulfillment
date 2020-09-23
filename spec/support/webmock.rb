@@ -21,6 +21,10 @@
 WebMock.disable_net_connect!(allow_localhost: true)
 
 RSpec.configure do |config|
+  config.before(:each) do
+    stub_request(:post, RemoteRequestBuilder.token_url).with(body: { client_id: ENV.fetch('SPARC_API_CLIENT_ID'), client_secret: ENV.fetch('SPARC_API_CLIENT_SECRET') }).
+      to_return(status: 200, body: { access_token: "some_token", expires_in: "300" }.to_json)
+  end
 
   config.after(:each) do
     WebMock.reset!

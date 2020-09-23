@@ -22,7 +22,7 @@ gem 'dotenv-rails'
 gem 'rails-erd'
 gem 'faye'
 gem 'gon'
-gem 'grape', '~> 1.3.2'
+gem 'grape', '~> 1.4.0'
 gem 'haml-rails'
 gem 'hashie-forbidden_attributes'
 gem 'jquery-rails'
@@ -33,7 +33,7 @@ gem 'mysql2', '0.5.2'
 gem 'net-ldap'
 gem 'omniauth'
 gem 'paperclip', '~> 6.1'
-gem 'paper_trail', '~> 10.3.1'
+gem 'paper_trail', '~> 11.0.0'
 gem 'paranoia', '~> 2.4'
 gem 'progress_bar'
 gem 'puma'
@@ -57,7 +57,7 @@ gem 'dalli'
 group :deploy do
   gem 'capistrano', '~> 3.14'
   gem 'capistrano-rvm'
-  gem 'capistrano-rails', '~> 1.5'
+  gem 'capistrano-rails', '~> 1.6'
   gem 'capistrano-passenger'
   gem 'capistrano3-delayed-job', '~> 1.7'
 end
@@ -65,7 +65,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 2.13.0'
+  gem 'faker', '~> 2.14.0'
   gem 'pry'
 end
 
@@ -81,7 +81,7 @@ group :test do
   gem 'capybara'
   gem 'climate_control'
   gem 'database_cleaner'
-  gem 'geckodriver-helper'
+  gem 'geckodriver-helper', git: 'https://github.com/DevicoSolutions/geckodriver-helper.git', ref: "refs/pull/17/head"
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec-activejob', '~> 0.6.1'
@@ -89,8 +89,8 @@ group :test do
   gem 'rspec-collection_matchers'
   gem 'selenium-webdriver'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 4.3.0", require: false
+  gem 'shoulda-matchers', "~> 4.4.1", require: false
   gem 'timecop'
-  gem 'webmock', '~> 3.8.3'
+  gem 'webmock', '~> 3.9.1'
   gem 'vcr', '~> 6.0.0'
 end

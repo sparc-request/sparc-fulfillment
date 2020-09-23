@@ -17,7 +17,7 @@
 # DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
- 
+
 $(document).on 'change', 'input.toggle_invoice_procedure', ->
   invoiced = $(this).prop('checked')
   procedure_id = $(this).data('id')
@@ -39,3 +39,12 @@ $(document).on 'change', 'input.toggle_credit_procedure', ->
       procedure:
         credited: credited
         invoiced: !credited
+
+$(document).on 'click', '.procedure_move_button',  ->
+  id = $(this).data('procedure-id')
+  movement_type = $(this).data('movement-type')
+  $.ajax
+    type: 'PUT'
+    data:
+      movement_type: movement_type
+    url: "/procedures/change_procedure_position/#{id}.js"

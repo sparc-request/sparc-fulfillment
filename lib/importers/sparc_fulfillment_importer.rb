@@ -40,7 +40,7 @@ class SparcFulfillmentImporter
     Sparc::SubServiceRequest.where(in_work_fulfillment: true, status: 'ctrc_approved').each do |ssr|
       next if ignored.include?(ssr.id)
       begin
-        base_url = "#{ENV.fetch('GLOBAL_SCHEME')}://#{ENV.fetch('SPARC_API_HOST')}/#{ENV.fetch('SPARC_API_VERSION')}"
+        base_url = "#{ENV.fetch('GLOBAL_SCHEME')}://#{ENV.fetch('SPARC_API_HOST')}/api/#{ENV.fetch('SPARC_API_VERSION')}"
         SparcFulfillmentImporter.new("#{base_url}/sub_service_requests/#{ssr.id}.json").create
         processed << ssr.id
         puts "*"*50

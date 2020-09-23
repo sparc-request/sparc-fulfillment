@@ -29,21 +29,25 @@ module StudyLevelActivitiesHelper
     bullet_point = documents.count > 1 ? "\u2022 " : ""
     documents.map{ |document| bullet_point + document.original_filename }.join("<br>")
   end
+    
+  def sla_notes_button(line_item)
+    span = raw(content_tag(:span, line_item.notes.count, class: 'badge badge-light'))
+    button = raw(content_tag(:button, raw(content_tag(:span, '', id: "line_item-#{line_item.id}")) + 'Notes ' + raw(span), type: 'button', class: 'btn btn-success button notes list', data: {'notable-id' => line_item.id, 'notable-type' => 'LineItem'}))
 
-  def sla_options_buttons(line_item)
-    options = raw(
-      note_list_item({object: line_item, has_notes: line_item.notes.any?})+
-      content_tag(:li, raw(
-        content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-default form-control actions-button otf_edit'))
-      )+
-      document_list_item({object: line_item, has_documents: line_item.documents.any?})
-    )
+    button
+  end
 
-    span = raw content_tag(:span, '', class: 'glyphicon glyphicon-triangle-bottom')
-    button = raw content_tag(:button, raw(span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control available-actions-button', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
-    ul = raw content_tag(:ul, options, class: 'dropdown-menu', role: 'menu')
+  def sla_docs_button(line_item)
+    span = raw(content_tag(:span, line_item.documents.count, class: 'badge badge-light'))
+    button = raw(content_tag(:button, raw(content_tag(:span, '', id: "line_item-#{line_item.id}")) + 'Documents ' + raw(span), type: 'button', class: 'btn btn-success button documents list', data: {'documentable-id' => line_item.id, 'documentable-type' => 'LineItem'}))
 
-    raw content_tag(:div, button + ul, class: 'btn-group overflow_webkit_button')
+    button
+  end
+
+  def sla_edit_button(line_item)
+    button = raw(content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-success form-control actions-button otf_edit'))
+
+    button
   end
 
   def fulfillments_drop_button(line_item)
@@ -123,6 +127,10 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def amount_fulfilled(line_item)
+    line_item.fulfillments.sum(:quantity)
+  end
+
   private
 
   def invoice_toggle_button(fulfillment)
@@ -138,7 +146,7 @@ module StudyLevelActivitiesHelper
       content_tag(:button,
         raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:has_notes] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
         ' Notes' + show_notification_badge(params, 'notes'),
-        type: 'button', class: "btn btn-default form-control actions-button notes list", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
+        type: 'button', class: "btn btn-default form-control actions-button notes list", style: 'position: relative', data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
     )
   end
 
@@ -147,7 +155,7 @@ module StudyLevelActivitiesHelper
       content_tag(:button,
         raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_documents", class: "glyphicon glyphicon-open-file #{params[:has_documents] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
         ' Documents' + show_notification_badge(params, 'documents'),
-        type: 'button', class: "btn btn-default form-control actions-button documents list", data: {documentable_id: params[:object].id, documentable_type: params[:object].class.name}))
+        type: 'button', class: "btn btn-default form-control actions-button documents list", style: 'position: relative', data: {documentable_id: params[:object].id, documentable_type: params[:object].class.name}))
     )
   end
 

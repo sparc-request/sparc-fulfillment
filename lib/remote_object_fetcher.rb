@@ -30,21 +30,35 @@ class RemoteObjectFetcher
   end
 
   def self.fetch(url)
-    authorized_url = RemoteRequestBuilder.authorize_and_decorate!(url)
+    token     = authorize()
+    full_url  = RemoteRequestBuilder.decorate(url)
 
-    RestClient::Resource.new(authorized_url).get({ accept: :json }) { |response, request, result, &block|
+    RestClient::Resource.new(full_url).get({ 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{token}" }) do |response, request, result, &block|
       raise SparcApiError unless response.code == 200
 
-      @response = response
-    }
+      @response = Yajl::Parser.parse response
+    end
 
-    Yajl::Parser.parse @response
+    @response
   end
 
   def build_and_fetch
-    url = build_request
+    url = build_request()
+    RemoteObjectFetcher.fetch(url)
+  end
 
-    RemoteObjectFetcher.fetch url
+  private
+
+  def self.authorize
+    url = RemoteRequestBuilder.token_url
+
+    RestClient.post(url, { client_id: ENV.fetch('SPARC_API_CLIENT_ID'), client_secret: ENV.fetch('SPARC_API_CLIENT_SECRET') }) do |response, request, result, &block|
+      raise SparcApiError unless response.code == 200
+
+      @token = Yajl::Parser.parse(response)['access_token']
+    end
+
+    @token
   end
 
   def build_request

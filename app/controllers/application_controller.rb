@@ -47,6 +47,10 @@ class ApplicationController < ActionController::Base
     gon.push({current_identity_id: current_identity.id})
   end
 
+  def set_appointment_style
+    @appointment_style = session[:appointment_style] || "grouped"
+  end
+
   private
 
   def breadcrumbs

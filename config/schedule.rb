@@ -41,4 +41,5 @@
 
 every 15.minutes, :roles => [:app] do
   rake 'delayed_job_monitor'
+  rake 'faye_monitor'
 end
