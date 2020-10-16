@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 <% if @valid %>
-$('#modal_place').modal('hide')
+$('#modalContainer').modal('hide')
 $('.imports').bootstrapTable('refresh')
 swal('Success', 'Klok File Uploaded', 'success')
 <% else %>

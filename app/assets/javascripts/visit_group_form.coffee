@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
-  $('#modal_place').on 'shown.bs.modal', ->
+  $('#modalContainer').on 'shown.bs.modal', ->
     $('.add-visit').prop('disabled', true)
     $('.add-visit-wrapper').tooltip()
     $(document).on 'change', '.visit-group-position', ->

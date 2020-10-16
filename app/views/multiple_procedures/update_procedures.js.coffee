@@ -40,7 +40,7 @@ $("tr.procedure[data-id='<%= procedure.id %>'] td.status .complete").removeClass
 $("tr.procedure[data-id='<%= procedure.id %>'] .completed_date_field").val("").prop('disabled', true)
 $("tr.procedure[data-id='<%= procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= @performed_by %>")
 <% if procedure.notes.any? %>
-$('#modal_place').modal 'hide'
+$('#modalContainer').modal 'hide'
 <% end %>
 
 <% elsif procedure.complete? %>
@@ -49,7 +49,7 @@ $("tr.procedure[data-id='<%= procedure.id %>'] td.status .incomplete").removeCla
 $("tr.procedure[data-id='<%= procedure.id %>'] .completed-date .completed_date_field.datetimepicker").val("<%= @completed_date %>").removeAttr("disabled")
 $("tr.procedure[data-id='<%= procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= @performed_by %>")
 <% if procedure.notes.any? %>
-$("#modal_place").modal('hide')
+$("#modalContainer").modal('hide')
 <% end %>
 <% end %>
 <% end %>

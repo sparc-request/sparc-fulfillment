@@ -18,54 +18,59 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-////////////////////////
-/// Require Packages ///
-////////////////////////
+$provider-map: (
+  "blue":       "primary",
+  "green":      "success",
+  "orange":     "warning",
+  "red":        "danger",
+  "light-blue": "info"
+);
 
-@import 'custom/bootstrap-variables-custom';
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-select/dist/css/bootstrap-select.min';
-@import 'bootstrap-table/dist/bootstrap-table.min';
-@import 'bootstrap4-toggle/css/bootstrap4-toggle.min';
-@import 'sweetalert2/dist/sweetalert2.min';
-@import '@sweetalert2/theme-bootstrap-4/bootstrap-4.min';
-@import 'tempusdominus-bootstrap-4/src/sass/_tempusdominus-bootstrap-4';
+@each $color, $theme in $provider-map {
+  div.#{$color}-provider {
+    @extend .bg-#{$theme};
+  }
 
-@import 'font-awesome-sprockets';
-@import 'font-awesome';
+  .btn.#{$color}-provider {
+    @extend .btn-#{$theme};
+  }
+}
 
-/////////////////////////////////////
-/// Require Package Customization ///
-/////////////////////////////////////
+$text-map: (
+  "institution":  "info",
+  "provider":     "success",
+  "program":      "warning",
+  "core":         "primary",
+  "service":      "info"
+);
 
-@import 'custom/nprogress-custom';
-@import 'custom/bootstrap-custom';
-@import 'custom/bootstrap-select-custom';
-@import 'custom/bootstrap-table-custom';
-@import 'custom/bootstrap-toggle-custom';
-@import 'custom/sweetalert-custom';
-@import 'custom/tempusdominus-custom';
-@import 'custom/typeahead-custom';
+@each $color, $theme in $text-map {
+  .text-#{$color} {
+    @extend .text-#{$theme};
+  }
+}
 
-/////////////////////////////////////
-/// Require All Other Stylesheets ///
-/////////////////////////////////////
+.locked {
+  @extend .alert-danger;
+}
 
-@import 'utilities';
-@import 'layout';
-@import 'header';
-@import 'navbar';
-@import 'footer';
-@import 'components';
+@for $i from 1 through 99 {
+  @if not ($i == 25 or $i == 50 or $i == 75) {
+    .w-#{$i} {
+      width: calc(#{$i} * 1%);
+    }
+  }
+}
 
-@import "animation";
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
-@import "protocols";
-@import "participants";
-@import "tasks";
-@import "notifications";
-@import "study_schedule";
-@import "study_level_activities";
-@import 'reports';
-@import 'imports';
-@import 'appointments';
+.rotate {
+  animation: rotate 3s linear infinite;
+}
+
+.pointer-none {
+  pointer-events: none;
+}

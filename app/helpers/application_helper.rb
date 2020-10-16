@@ -85,12 +85,6 @@ module ApplicationHelper
     tag.to_s.gsub(/\s/, "_").gsub(/[^-\w]/, "").downcase
   end
 
-  def body_class
-    qualified_controller_name = controller.controller_path.gsub('/','-')
-
-    "#{qualified_controller_name} #{qualified_controller_name}-#{controller.action_name}"
-  end
-
   ##Sets css bootstrap classes for rails flash message types##
   def twitterized_type type
     case type.to_sym

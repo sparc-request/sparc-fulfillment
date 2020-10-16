@@ -18,54 +18,50 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-////////////////////////
-/// Require Packages ///
-////////////////////////
+header#siteHeader {
+  .logo-container {
+    .header-logo {
+      max-width: 100%;
+    }
 
-@import 'custom/bootstrap-variables-custom';
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-select/dist/css/bootstrap-select.min';
-@import 'bootstrap-table/dist/bootstrap-table.min';
-@import 'bootstrap4-toggle/css/bootstrap4-toggle.min';
-@import 'sweetalert2/dist/sweetalert2.min';
-@import '@sweetalert2/theme-bootstrap-4/bootstrap-4.min';
-@import 'tempusdominus-bootstrap-4/src/sass/_tempusdominus-bootstrap-4';
+    #orgLogo {
+      height: 110px;
+    }
 
-@import 'font-awesome-sprockets';
-@import 'font-awesome';
+    #sparcLogo {
+      height: 110px;
+    }
 
-/////////////////////////////////////
-/// Require Package Customization ///
-/////////////////////////////////////
+    #institutionLogo {
+      height: 110px;
+    }
+  }
+}
 
-@import 'custom/nprogress-custom';
-@import 'custom/bootstrap-custom';
-@import 'custom/bootstrap-select-custom';
-@import 'custom/bootstrap-table-custom';
-@import 'custom/bootstrap-toggle-custom';
-@import 'custom/sweetalert-custom';
-@import 'custom/tempusdominus-custom';
-@import 'custom/typeahead-custom';
+@include media-breakpoint-down(lg) {
+  header#siteHeader {
+    .logo-container .header-logo {
+      height: 100px;
+    }
+  }
+}
 
-/////////////////////////////////////
-/// Require All Other Stylesheets ///
-/////////////////////////////////////
+@include media-breakpoint-down(md) {
+  header#siteHeader {
+    .logo-container {
+      padding: 0;
 
-@import 'utilities';
-@import 'layout';
-@import 'header';
-@import 'navbar';
-@import 'footer';
-@import 'components';
+      #sparcLogo {
+        height: 80px;
+      }
+    }
+  }
+}
 
-@import "animation";
-
-@import "protocols";
-@import "participants";
-@import "tasks";
-@import "notifications";
-@import "study_schedule";
-@import "study_level_activities";
-@import 'reports';
-@import 'imports';
-@import 'appointments';
+@include media-breakpoint-down(sm) {
+  header#siteHeader {
+    .logo-container #sparcLogo {
+      height: 65px;
+    }
+  }
+}

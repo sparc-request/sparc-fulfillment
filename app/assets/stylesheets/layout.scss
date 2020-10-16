@@ -18,54 +18,93 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-////////////////////////
-/// Require Packages ///
-////////////////////////
+html {
+  position: relative;
 
-@import 'custom/bootstrap-variables-custom';
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-select/dist/css/bootstrap-select.min';
-@import 'bootstrap-table/dist/bootstrap-table.min';
-@import 'bootstrap4-toggle/css/bootstrap4-toggle.min';
-@import 'sweetalert2/dist/sweetalert2.min';
-@import '@sweetalert2/theme-bootstrap-4/bootstrap-4.min';
-@import 'tempusdominus-bootstrap-4/src/sass/_tempusdominus-bootstrap-4';
+  &.ready {
+    body {
+      opacity: 1;
+    }
+  }
 
-@import 'font-awesome-sprockets';
-@import 'font-awesome';
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: 0.5s opacity ease-in-out;
+  }
+}
 
-/////////////////////////////////////
-/// Require Package Customization ///
-/////////////////////////////////////
+.event {
+  .event-date-display {
+    width: 40px;
+    height: 40px;
+  }
+}
 
-@import 'custom/nprogress-custom';
-@import 'custom/bootstrap-custom';
-@import 'custom/bootstrap-select-custom';
-@import 'custom/bootstrap-table-custom';
-@import 'custom/bootstrap-toggle-custom';
-@import 'custom/sweetalert-custom';
-@import 'custom/tempusdominus-custom';
-@import 'custom/typeahead-custom';
+subheader#siteSubheader {
+  margin-top: -1rem;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  border-bottom: $border-width solid $border-color;
+  background: white;
+  flex: 0;
+}
 
-/////////////////////////////////////
-/// Require All Other Stylesheets ///
-/////////////////////////////////////
+#flashContainer {
+  position: fixed;
+  width: 90%;
+  top: 1rem;
+  z-index: 1041;
+  left: 1rem;
+  right: 1rem;
+}
 
-@import 'utilities';
-@import 'layout';
-@import 'header';
-@import 'navbar';
-@import 'footer';
-@import 'components';
+#contentContainer {
+  margin-bottom: calc(#{$grid-gutter-width} / 2);
+  flex: 1 auto;
+}
 
-@import "animation";
+#siteSubheader, #contentContainer, #siteFooter {
+  position: relative;
+  width: 100%;
+  padding-left: calc(5% + #{$grid-gutter-width} / 2);
+  padding-right: calc(5% + #{$grid-gutter-width} / 2);
+  display: flex;
+  flex-wrap: wrap;
+}
 
-@import "protocols";
-@import "participants";
-@import "tasks";
-@import "notifications";
-@import "study_schedule";
-@import "study_level_activities";
-@import 'reports';
-@import 'imports';
-@import 'appointments';
+#backToTop {
+  position: fixed;
+  bottom: 5rem;
+  right: calc(5% + 1rem);
+  opacity: 1;
+  transition: $transition-base;
+  pointer-events: all;
+  z-index: 1039;
+
+  &.hide {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1679.98px) {
+  html {
+    font-size: 80%;
+  }
+}
+
+@media (min-width: 1680px) and (max-width: 1919.98px) {
+  html {
+    font-size: 87.5%;
+  }
+}
+
+@media (max-width: 3839.98px) {
+  #siteHeader, #siteNav, #siteSubheader, #contentContainer, #siteFooter {
+    .container-fluid {
+      max-width: 1920px;
+    }
+  }
+}

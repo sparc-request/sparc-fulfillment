@@ -19,5 +19,5 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modal_area").html("<%= j render 'study_schedule/management/manage_services/remove_line_items_form', line_items: @line_items %>");
-$("#modal_place").modal 'show'
+$("#modalContainer").modal 'show'
 $(".selectpicker").selectpicker()

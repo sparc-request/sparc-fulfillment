@@ -18,17 +18,38 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if ["Identity", "Protocol"].include?(@document.documentable_type) %>
-##Document is a report, doesn't use modal window.
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
-refreshDocumentsTables()
-<% else %>
-$("#modal_area").html("<%= escape_javascript(render(partial: 'index', locals: { documents: @documentable.documents, documentable_type: @document.documentable_type, documentable_id: @documentable.id, documentable_sym: @document.documentable_type.downcase.to_sym})) %>")
+class Sparc::Setting < SparcDbBase
+  def self.preload_values
+    # Cache settings for the current request thread for the current request
+    RequestStore.store[:settings_map] ||= Setting.all.map{ |s| [s.key, { value: s.read_attribute(:value), data_type: s.data_type }] }.to_h
+  end
 
-<% if @document.documentable_type == "LineItem" %>
-$('#study-level-activities-table').bootstrapTable('refresh', {silent: "true"})
-<% end %>
+  def self.get_value(key)
+    if RequestStore.store[:settings_map] && RequestStore.store[:settings_map][key]
+      converted_value(RequestStore.store[:settings_map][key][:value], RequestStore.store[:settings_map][key][:data_type])
+    else
+      Setting.find_by_key(key).value rescue nil
+    end
+  end
 
-$("#modalContainer").modal(backdrop: 'static', keyboard: false)
-$("#modalContainer").modal 'show'
-<% end %>
+  def value
+    Setting.converted_value(read_attribute(:value), self.data_type)
+  end
+
+  private
+
+  def self.converted_value(val, data_type)
+    case data_type
+    when 'boolean'
+      val == 'true'
+    when 'json'
+      begin
+        JSON.parse(val.gsub("=>", ": "))
+      rescue
+        nil
+      end
+    else
+      val
+    end
+  end
+end

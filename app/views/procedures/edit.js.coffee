@@ -19,10 +19,10 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modal_area").html("<%= escape_javascript(render(partial: 'edit', locals: { procedure: @procedure, task: @task, clinical_providers: @clinical_providers})) %>")
-$("#modal_place").modal(backdrop: 'static', keyboard: false)
+$("#modalContainer").modal(backdrop: 'static', keyboard: false)
 $("#follow_up_procedure_datepicker").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
-$("#modal_place").modal 'show'
+$("#modalContainer").modal 'show'
 
 $(".selectpicker").selectpicker()

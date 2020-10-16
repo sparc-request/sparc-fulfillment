@@ -19,8 +19,8 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modal_area").html("<%= escape_javascript(render(:partial =>'participants/participant_form', locals: {protocol: @protocol, participant: @participant, header_text: 'Create New Participant'})) %>")
-$("#modal_place").modal(backdrop: 'static', keyboard: false)
-$("#modal_place").modal 'show'
+$("#modalContainer").modal(backdrop: 'static', keyboard: false)
+$("#modalContainer").modal 'show'
 $("#dob_time_picker").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true

@@ -18,54 +18,58 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-////////////////////////
-/// Require Packages ///
-////////////////////////
+a, .btn-link {
+  outline: none !important;
+  text-decoration: none !important;
+  @include transition($btn-transition);
 
-@import 'custom/bootstrap-variables-custom';
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-select/dist/css/bootstrap-select.min';
-@import 'bootstrap-table/dist/bootstrap-table.min';
-@import 'bootstrap4-toggle/css/bootstrap4-toggle.min';
-@import 'sweetalert2/dist/sweetalert2.min';
-@import '@sweetalert2/theme-bootstrap-4/bootstrap-4.min';
-@import 'tempusdominus-bootstrap-4/src/sass/_tempusdominus-bootstrap-4';
+  &.active {
+    color: $link-hover-color;
+  }
+}
 
-@import 'font-awesome-sprockets';
-@import 'font-awesome';
+span[data-toggle=tooltip]:not(.tooltip-wrapper), label[data-toggle=tooltip],
+th[data-toggle=tooltip] > span, td[data-toggle=tooltip] > span,
+th[data-toggle=tooltip] > label, td[data-toggle=tooltip] > label {
+  border-bottom: 1px dashed theme-color('info');
+  cursor: pointer;
+}
 
-/////////////////////////////////////
-/// Require Package Customization ///
-/////////////////////////////////////
+.col-form-label[data-toggle='tooltip'] {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: calc(#{$input-padding-y} + #{$input-border-width});
+  margin-bottom: calc(#{$input-padding-y} + #{$input-border-width});
+}
 
-@import 'custom/nprogress-custom';
-@import 'custom/bootstrap-custom';
-@import 'custom/bootstrap-select-custom';
-@import 'custom/bootstrap-table-custom';
-@import 'custom/bootstrap-toggle-custom';
-@import 'custom/sweetalert-custom';
-@import 'custom/tempusdominus-custom';
-@import 'custom/typeahead-custom';
+.copy-action-btn {
+  position: relative;
+  @extend .btn-primary;
 
-/////////////////////////////////////
-/// Require All Other Stylesheets ///
-/////////////////////////////////////
+  .copy-action-content {
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 
-@import 'utilities';
-@import 'layout';
-@import 'header';
-@import 'navbar';
-@import 'footer';
-@import 'components';
+    .copy-action {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .075s, visibility .075s;
 
-@import "animation";
+      &.copy-action-alt {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
 
-@import "protocols";
-@import "participants";
-@import "tasks";
-@import "notifications";
-@import "study_schedule";
-@import "study_level_activities";
-@import 'reports';
-@import 'imports';
-@import 'appointments';
+      &.copy-action-hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+}
