@@ -24,10 +24,8 @@
     %meta{ charset: 'utf-8' }
     %meta{ "http-equiv"=>"X-UA-Compatible", "content"=>"IE=edge"}
     %title= t('default_title') 
-    :javascript
-      window.I18n = #{current_translations.to_json.html_safe}
-    = javascript_include_tag 'libraries'
-    = stylesheet_link_tag    'application', media: 'all'
+    = stylesheet_link_tag 'application', media: 'all'
+    = javascript_include_tag 'application'
     = csrf_meta_tags
     = include_gon
   %body{class: body_class}
