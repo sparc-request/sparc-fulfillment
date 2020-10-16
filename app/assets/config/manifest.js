@@ -22,6 +22,5 @@
 //= link application.css
 //= link_tree ../images/
 
-//= link libraries.js
 //= link imports.js
 //= link show_task.js

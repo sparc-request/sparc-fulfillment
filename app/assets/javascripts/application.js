@@ -74,23 +74,6 @@
 
 /// Replace with //= require_tree . when finished! ///
 
-//= require bootstrap-toggle
-//= require bootstrap-table-export
-//= require bootstrap-table-custom
-//= require xlsx.core.min
-//= require tableExport
-//= require jquery.base64
-//= require moment
-//= require moment/en-gb
-//= require bootstrap-datetimepicker
-//= require jquery.remotipart
-//= require nprogress
-//= require underscore
-//= require bootstrap-multiselect
-//= require bootstrap-contextmenu
-//= require bootstrap-table-cookie
-//= require sweetalert.min
-
 //= require global
 //= require protocols
 //= require protocols_show
@@ -105,7 +88,6 @@
 //= require documents
 //= require study_level_activities
 //= require remote_document_handler
-//= require ajax_progress_bar
 //= require procedure_grouper
 //= require faye
 //= require visit_group_form

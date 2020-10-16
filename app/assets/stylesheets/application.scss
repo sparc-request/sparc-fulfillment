@@ -26,7 +26,7 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-select/dist/css/bootstrap-select.min';
 @import 'bootstrap-table/dist/bootstrap-table.min';
-@import 'bootstrap4-toggle/css/bootstrap4-toggle';
+@import 'bootstrap4-toggle/css/bootstrap4-toggle.min';
 @import 'sweetalert2/dist/sweetalert2.min';
 @import '@sweetalert2/theme-bootstrap-4/bootstrap-4.min';
 @import 'tempusdominus-bootstrap-4/src/sass/_tempusdominus-bootstrap-4';
@@ -51,17 +51,17 @@
 /// Require All Other Stylesheets ///
 /////////////////////////////////////
 
-@import "animation"
+@import "animation";
 
-@import "nav"
-@import "protocols"
-@import "participants"
-@import "tasks"
-@import "notifications"
-@import "study_schedule"
-@import "study_level_activities"
-@import "customize"
-@import 'reports'
-@import 'header'
-@import 'imports'
-@import 'appointments'
+@import "nav";
+@import "protocols";
+@import "participants";
+@import "tasks";
+@import "notifications";
+@import "study_schedule";
+@import "study_level_activities";
+@import "customize";
+@import 'reports';
+@import 'header';
+@import 'imports';
+@import 'appointments';
