@@ -24,47 +24,51 @@ namespace :data do
   task :fix_broken_service_ids => :environment do
 
     CSV.open("tmp/broken_service_ids.csv", "wb+") do |csv|
-      csv << ["Procedure ID:", "Procedure Service ID:", "Visit => Line Item Service ID:", "Procedure Service Price:"]
       @bar = ProgressBar.new(Procedure.count)
 
+      unlinked_procedures = []
+      corrected_line_items = []
 
-      csv << ["Procedures that HAVE been completed"]
-      csv << ["(Service cost has been saved locally)"]
-      csv << ["Procedure ID:", "New (correct) Service ID:", "Old (incorrect) Service ID From Line Item:", "Saved Service Cost:"]
+      ##Completed Procedures (Have a saved cost)
+      Procedure.complete.includes(visit: [:line_item]).find_each do |procedure|
+        if procedure.visit && procedure.visit.line_item
+          line_item = procedure.visit.line_item
 
-      completed_procedures = []
-      Procedure.where.not(service_cost: nil).includes(visit: [:line_item]).find_each do |procedure|
-        process_procedure(procedure, completed_procedures)
+          if procedure.service_id != line_item.service_id
+            line_item.update_attributes(service_id: procedure.service_id)
+            procedure.update_attributes(visit_id: nil)
+            unlinked_procedures << procedure
+            corrected_line_items << line_item
+          end
+        end
+
         @bar.increment!
       end
 
-      completed_procedures.sort_by{|procedure| [procedure.service_id, procedure.visit.line_item.service_id]}.each do |procedure|
-        csv << [procedure.id, procedure.service_id, procedure.visit.line_item.service_id, procedure.service_cost]
-      end
+      Procedure.where.not(status: "complete").includes(visit: [:line_item]).find_each do |procedure|
+        if procedure.visit && procedure.visit.line_item
+          line_item = procedure.visit.line_item
 
-
-      csv << ["Procedures that have NOT been completed"]
-      csv << ["(Do not have a service cost saved on them locally)"]
-      csv << ["Procedure ID:", "New (correct) Service ID:", "Old (incorrect) Service ID From Line Item:"]
-
-      non_completed_procedures = []
-      Procedure.where(service_cost: nil).includes(visit: [:line_item]).find_each do |procedure|
-        process_procedure(procedure, non_completed_procedures)
+          if procedure.service_id != line_item.service_id
+            line_item.update_attributes(service_id: procedure.service_id)
+            corrected_line_items << line_item
+          end
+        end
         @bar.increment!
       end
 
-      non_completed_procedures.sort_by{|procedure| [procedure.service_id, procedure.visit.line_item.service_id]}.each do |procedure|
-        csv << [procedure.id, procedure.service_id, procedure.visit.line_item.service_id]
+      csv << ["Completed Procedures that have been un-linked from a visit:"]
+      csv << ["Procedure ID:", "New (correct) Service ID:", "Saved Service Cost:"]
+      unlinked_procedures.each do |procedure|
+        csv << [procedure.id, procedure.service_id, procedure.service_cost]
       end
-    end
-  end
-end
 
 
-def process_procedure(procedure, list)
-  if procedure.visit && procedure.visit.line_item
-    if procedure.service_id != procedure.visit.line_item.service_id
-      list << procedure
+      csv << ["List of Corrected Line Items:"]
+      csv << ["Line Item ID:", "New (correct) Service ID:"]
+      corrected_line_items.each do |line_item|
+        csv << [line_item.id, line_item.service_id]
+      end
     end
   end
 end
