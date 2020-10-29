@@ -21,7 +21,7 @@
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
 <% unless @errors %>
 $("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'
 
 # update dropdown to page visit groups
 $("#select_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_group_page_select', locals: {arm: @arm, page: @current_page.to_i}) %>")

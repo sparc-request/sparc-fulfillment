@@ -26,7 +26,7 @@ if !$('.notification.task-notifications').length
 $(".notification.task-notifications").empty().append("<%= current_identity.reload.tasks_count %>")
 $("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
 $('#task-list').bootstrapTable('refresh', {silent: "true"})
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'
 
 <% if @procedure.present? %>
 $("#follow_up_<%= @procedure.id %>").html("<%= escape_javascript(render(:partial =>'appointments/followup_calendar', locals: {procedure: @procedure})) %>")

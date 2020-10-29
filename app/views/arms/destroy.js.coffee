@@ -22,5 +22,5 @@ $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', l
 <% unless @errors %>
 $(".study_schedule.service.arm_<%= @arm.id %>").remove()
 $("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'
 <% end %>

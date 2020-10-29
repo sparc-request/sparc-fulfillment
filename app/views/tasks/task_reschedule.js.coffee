@@ -19,10 +19,10 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modal_area").html("<%= escape_javascript(render(:partial =>'task_reschedule_modal', locals: {task: @task})) %>")
-$("#modal_place").modal(backdrop: 'static', keyboard: false)
+$("#modalContainer").modal(backdrop: 'static', keyboard: false)
 $("#reschedule_datepicker").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
-$("#modal_place").modal 'show'
+$("#modalContainer").modal 'show'
 
 $(".selectpicker").selectpicker()

@@ -1,0 +1,64 @@
+-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+-# All rights reserved.~
+
+-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+-# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+-# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+-# derived from this software without specific prior written permission.~
+
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+-# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+-# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
+%nav.navbar.navbar-expand-xl.navbar-dark.bg-primary.p-0.mb-3#siteNav
+  .container-fluid
+    .collapse.navbar-collapse.order-last.order-xl-first#navbarLinks
+      .navbar-nav.mr-auto
+        .nav-item
+          = link_to root_path, class: 'nav-link' do
+            = icon('fas', 'home fa-2x')
+        - if identity_signed_in?
+          .nav-item
+            = link_to tasks_path, class: 'tasks' do
+              %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
+              = t(:navbar)[:tasks_link]
+              - if current_identity.tasks_count > 0
+                %span.notification.task-notifications
+                  = current_identity.tasks_count
+          .nav-item
+            = link_to documents_path, class: 'documents' do
+              %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
+              = t(:navbar)[:reports_link]
+              - if current_identity.unaccessed_documents_count > 0
+                %span.notification.identity_report_notifications
+                  = current_identity.unaccessed_documents_count
+          .nav-item
+            = link_to imports_path, class: 'imports' do
+              %span.glyphicon.glyphicon-import{aria: {hidden: "true"}}
+              = t(:navbar)[:imports_link]
+          - if current_identity.is_a_patient_registrar? && (ENV.fetch('CLINICAL_SERVICES') == 'true')
+            .nav-item
+              = link_to participants_path, class: 'patient_registry' do
+                %span.glyphicon.glyphicon-user{aria: {hidden: "true"}}
+                = t(:navbar)[:patient_registry_link]
+      %button.btn.btn-primary.navbar-toggler.p-0.border-0.text-light{ type: 'button', data: { toggle: 'collapse', target: '#navbarLinks' }, aria: { controls: 'navbarLinks', expanded: 'false', label: t('layout.navigation.toggle') } }
+        = icon('fas', 'bars fa-2x')
+    .navbar-nav#navbarUtilities
+      .nav-item
+        - if session[:breadcrumbs] && session[:breadcrumbs].present?
+          = link_to back_link(session[:breadcrumbs].last), id: 'history-back', title: generate_history_text(session[:breadcrumbs].last), aria: {label: "Go Back"}, data: {toggle: "tooltip", animation: 'false'} do
+            = icon('fas', 'arrow-left')
+            = "Back"
+            #history-menu
+              %ul.dropdown-menu{role: 'menu'}
+                - session[:breadcrumbs].reverse.each do |url|
+                  .nav-item= link_to generate_history_text(url), url
+      = render 'layouts/profile'

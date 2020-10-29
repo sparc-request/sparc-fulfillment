@@ -26,5 +26,5 @@ if core_header.next().attr('id') == "arm_<%= li.arm_id %>_end_of_core_<%= li.ser
   core_header.remove()
 <% end %>
 
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'
 $("#flashes_container").html("<%= j render 'flash' %>")

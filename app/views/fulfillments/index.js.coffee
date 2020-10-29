@@ -20,8 +20,8 @@
 
 $("#modal_area").html("<%= escape_javascript(render(:partial =>'study_level_activities/fulfillments_table', locals: {line_item: @line_item, header_text: 'Fulfillments List'})) %>");
 $("#fulfillments-table").bootstrapTable()
-$("#modal_place").modal(backdrop: 'static', keyboard: false)
-$("#modal_place").modal 'show'
+$("#modalContainer").modal(backdrop: 'static', keyboard: false)
+$("#modalContainer").modal 'show'
 $('.fulfillments-list li').find("[data-field='docs']").closest('li').hide()
 $('.fulfillments-list li').find("[data-field='notes']").closest('li').hide()
 $('.fulfillments-list li').find("[data-field='export_invoiced']").closest('li').hide()
