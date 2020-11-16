@@ -62,6 +62,7 @@ group :development, :test, :testing do
   gem "factory_bot_rails"
   gem 'faker', '~> 2.14.0'
   gem 'pry'
+  gem 'progress_bar'
 end
 
 group :development do
