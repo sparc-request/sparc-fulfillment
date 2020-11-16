@@ -19,16 +19,15 @@
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 - if identity_signed_in?
-  %subheader.mb-3#siteSubheader
-    .container-fluid
-      .w-100.d-flex.justify-content-between.align-items-center.h4.mb-0
-        - if session[:breadcrumbs].nil? || (controller_name == 'protocols' && action_name == 'index')
-          = link_to t('layout.subheader.home'), root_path
-        - else
-          = link_to back_link(session[:breadcrumbs].last), id: 'history-back', title: generate_history_text(session[:breadcrumbs].last), aria: {label: "Go Back"}, data: {toggle: "tooltip", animation: 'false'} do
-            = icon('fas', 'arrow-left')
-            = t('layout.subheader.back')
-            #history-menu
-              %ul.dropdown-menu{role: 'menu'}
-                - session[:breadcrumbs].reverse.each do |url|
-                  .nav-item= link_to generate_history_text(url), url
+  %subheader.container-fluid.mb-3#siteSubheader
+    .w-100.d-flex.justify-content-between.align-items-center.h4.mb-0
+      - if session[:breadcrumbs].nil? || (controller_name == 'protocols' && action_name == 'index')
+        = link_to t('layout.subheader.home'), root_path
+      - else
+        = link_to back_link(session[:breadcrumbs].last), id: 'history-back', title: generate_history_text(session[:breadcrumbs].last), aria: {label: "Go Back"}, data: {toggle: "tooltip", animation: 'false'} do
+          = icon('fas', 'arrow-left')
+          = t('layout.subheader.back')
+          #history-menu
+            %ul.dropdown-menu{role: 'menu'}
+              - session[:breadcrumbs].reverse.each do |url|
+                .nav-item= link_to generate_history_text(url), url
