@@ -37,10 +37,11 @@
         = Rails.env.capitalize
     = render 'layouts/header'
     = render 'layouts/navbar'
-    #contentContainer
-      .container-fluid
-        - unless content_for?(:flash)
-          = render 'layouts/flash'
-        = content_for?(:content) ? yield(:content) : yield
+    = render 'layouts/subheader'
+    .container-fluid#contentContainer
+      - unless content_for?(:flash)
+        = render 'layouts/flash'
+      = content_for?(:content) ? yield(:content) : yield
     = render 'layouts/footer'
+    = render 'layouts/back_to_top'
     = render 'layouts/modal'

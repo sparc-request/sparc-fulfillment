@@ -49,7 +49,7 @@ feature "Identity views Protocols by status", js: true do
   end
 
   def then_i_should_only_see_protocols_in_the_complete_status
-    expect(page.body).to have_css("table#protocol-list", text: "Slappy")
-    expect(page.body).to_not have_css("table#protocol-list", text: "Swanson")
+    expect(page.body).to have_css("table#protocols", text: "Slappy")
+    expect(page.body).to_not have_css("table#protocols", text: "Swanson")
   end
 end

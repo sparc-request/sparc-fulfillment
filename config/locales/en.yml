@@ -52,6 +52,10 @@ en:
         fulfilled_at: "Fulfillment Date"
       identity:
         ldap_uid: "Login"
+      irb_record:
+        irb_approval_date: "IRB Approval Date"
+        irb_expiration_date: "IRB Expiration"
+        pro_number: "IRB #"
       line_item:
         quantity_requested: "Quantity"
       notes:
@@ -59,6 +63,21 @@ en:
       participant:
         mrn: "MRN"
         zipcode: "Zip Code"
+      protocol:
+        coordinators: "Coordinators"
+        end_date: "Study End Date"
+        organizations: "Provider/Program/Core"
+        owner: "Owner"
+        principal_investigator: "Principal Investigator"
+        requester: "Service Requester"
+        rmid: "RMID"
+        short_title: "Short Title"
+        srid: "SRID"
+        status: "Status"
+        start_date: "Study Start Date"
+        subsidy_amount: "Percent Subsidy"
+        subsidy_committed: "Subsidy Amount"
+        total_at_approval: "Cost at Approval"
       task:
         due_at: "Date"
       visit_group:
@@ -203,14 +222,19 @@ en:
       brand_logo_alt: "SPARCFulfillment Logo"
       institution_logo_alt: "MUSC Logo"
     navigation:
+      reports: 'Reports'
+      tasks: 'Tasks'
+      imports: 'Imports'
+      patient_registry: 'Patient Registry'
       toggle: "Toggle Navigation"
-      sign_in_up: "Sign In"
-      sign_out: "Sign Out"
       sign_in: "SIGN IN"
-      sign_up: "SIGN UP"
+      sign_out: "Sign Out"
       profile:
         messages: "Messages"
         edit: "Edit Profile"
+    subheader:
+      home: "Home"
+      back: "Back"
     footer:
       version: "SPARCFulfillment %{version}"
       copyright: "&copy; 2011-2020 MUSC Foundation for Research Development"
@@ -250,6 +274,7 @@ en:
         safari: "Safari"
         edge: "Edge"
         ie11: "Internet Explorer 11+"
+    back_to_top: "Go to Top"
 
   line_item:
     object: "Line Item"
@@ -293,13 +318,6 @@ en:
     completed_date: "Completed Date *"
     performed_by: "Performed By *"
     reason: "Reason *"
-
-  navbar:
-    logged_in_msg: "Logged in as"
-    reports_link: 'All Reports'
-    tasks_link: 'All Tasks'
-    imports_link: 'Imports'
-    patient_registry_link: 'Patient Registry'
 
   notes:
     object: "Note"
@@ -387,35 +405,21 @@ en:
     invoiced: "Invoiced"
     actions: "Actions"
 
+  protocols:
+    table:
+      header: "Protocols"
+
   protocol:
     object: "Protocol"
     admin_portal_link: "SPARCDashboard"
     admin_portal_link_tooltip: "Back to SPARCDashboard"
-    coordinators: "Coordinators"
-    end_date: "Study End Date"
     flash_messages:
       not_found: "Protocol Not Found"
       unauthorized: "Authorization Failure"
     id: "Protocol ID"
-    irb_approval_date: "IRB Approval Date"
-    irb_expiration_date: "IRB Expiration"
-    irb_number: "IRB #"
-    organizations: "Provider/Program/Core"
-    owner: "Owner"
-    principal_investigator: "Principal Investigator"
-    requester: "Service Requester"
-    rmid: "RMID"
-    short_title: "Short Title"
     sparc_id: "SPARC ID"
-    srid: "SRID"
-    start_date: "Study Start Date"
-    status: "Status"
     study_cost: "Total Cost"
-    total_at_approval: "Cost at Approval"
     study_schedule_report: "Export"
-    subsidy_amount: "Percent Subsidy"
-    subsidy_committed: "Subsidy Amount"
-    subsidy_expended: "Subsidy Expended"
     study_schedule:
       add_arm: "Add Arm"
       add_service: "Add Service"
@@ -442,7 +446,6 @@ en:
       project_schedule: "Clinical Services"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
-    back_to_top: 'Back to Top'
 
   patient:
     registry: "Patient Registry"
@@ -502,7 +505,7 @@ en:
 
   sub_service_request:
     statuses:
-      all: 'All'
+      all: 'Any Status'
       ctrc_approved: 'Active'
       administrative_review: 'Administrative Review'
       approved: 'Approved'

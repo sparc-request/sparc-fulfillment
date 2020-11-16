@@ -20,6 +20,23 @@
 
 $ ->
   $('html').addClass('ready')
+
+  # Back To Top button scroll
+  $(window).scroll ->
+    if $(this).scrollTop() > 50
+      $('#backToTop').removeClass('hide')
+    else
+      $('#backToTop').addClass('hide')
+
+  $(document).on 'click', '#backToTop', ->
+    $('html, body').animate({ scrollTop: 0 }, 'slow')
+
+
+
+
+
+
+
   $('[data-toggle="tooltip"]').tooltip()
   $("input[placeholder='Search']").wrap("<div class='input-group search-bar'/>")
   $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))

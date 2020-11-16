@@ -18,53 +18,43 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.fixed-table-container thead th .th-inner
-  white-space: normal
+#protocolsTableToolbar {
+  .dropdown-toggle {
+    width: 200px;
+  }
+}
 
-body.protocols
+#protocols {
+  .srid {
+    width: 120px;
+  }
+}
 
-  &.protocols-index
 
-    .fixed-table-container.protocol-management-and-financial-view
-      overflow-x: auto
+// .protocols-show
 
-    .fixed-table-toolbar .columns label
-      padding: 6px 12px
-      clear: right
+//   span.r-label, span.t-label
+//     display: inline-block
 
-    .srid
-      width: 200px
-      min-width: 120px
+//   .bootstrap-table-dropdown-overflow
+//     margin-bottom: 20px
 
-    .back-to-top
-      position: fixed
-      right: 20px
-      bottom: 20px
+//   .nav-tabs
+//     li.active a
+//       background-color: #337ab7
+//       color: #fff
+//     li.custom-tab a
+//       border-color: #2e6da4
 
-  &.protocols-show
+//   #study_schedule_buttons
+//     .row
+//       margin-top: 20px
+//     .col-md-4
+//       font-size: 20px
+//       div
+//         margin-top: 5px
 
-    span.r-label, span.t-label
-      display: inline-block
-
-    .bootstrap-table-dropdown-overflow
-      margin-bottom: 20px
-
-    .nav-tabs
-      li.active a
-        background-color: #337ab7
-        color: #fff
-      li.custom-tab a
-        border-color: #2e6da4
-
-    #study_schedule_buttons
-      .row
-        margin-top: 20px
-      .col-md-4
-        font-size: 20px
-        div
-          margin-top: 5px
-
-    .modal-dialog
-      .scrolling_div
-        overflow: auto
-        max-height: 250px
+//   .modal-dialog
+//     .scrolling_div
+//       overflow: auto
+//       max-height: 250px

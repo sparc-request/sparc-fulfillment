@@ -19,64 +19,56 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
-
-  if $("body.protocols-index").length > 0
-
+  if $("#protocols").length
     # Delete Protocol tab-remembering cookie
-    $.removeCookie("active-protocol-tab")
+    Cookies.remove("active-protocol-tab")
     # Delete Study Schedule tab-remembering cookie
-    $.removeCookie("active-schedule-tab")
+    Cookies.remove("active-schedule-tab")
 
-    $(".bootstrap-table .fixed-table-toolbar").
-      prepend('<div class="columns btn-group pull-right financial--view" data-toggle="buttons"><label class="btn btn-default financial" title="Financial View"><input type="radio" autocomplete="off" value="financial"><i class="glyphicon glyphicon-usd"></i></label><label class="btn btn-default management" title="Management View"><input type="radio" autocomplete="off" value="management"><i class="glyphicon glyphicon-book"></i></label></div>')
-
-    $('table.protocols').on 'click', 'td:not(td.coordinators)', ->
-      if $(this).find("div.card-view").length == 0
-        row_index   = $(this).parents("tr").data("index")
-        protocol_id = $(this).parents("table").bootstrapTable("getData")[row_index].id
-
-        window.location = "/protocols/#{protocol_id}"
+    $(".fixed-table-toolbar").prepend('
+      <div class="btn-group float-left financial--view mr-1" data-toggle="buttons">
+        <button class="btn btn-light mb-0 active management" title="Management View" data-toggle="tooltip">
+          <input type="radio" autocomplete="off" class="d-none" value="management">
+          <i class="fas fa-book"></i> Management
+        </button>
+        <button class="btn btn-light mb-0 financial" title="Financial View" data-toggle="tooltip">
+          <input type="radio" autocomplete="off" class="d-none" value="financial">
+          <i class="fas fa-dollar-sign"></i> Financial
+        </button>
+      </div>
+    ')
 
     #Index table events
-    $(document).on 'change', '#index_selectpicker', ->
+    $(document).on 'change', '#protocol_status_filter', ->
       status = $(this).val()
-      $('#protocol-list').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
+      $('#protocols').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
-    $(document).on 'click', '.financial', ->
+    $(document).on 'click', '.financial:not(.active)', ->
       $(this).addClass('active')
       $('.management').removeClass('active')
-      $('#protocol-list').removeClass('custom_striped')
-      $('#protocol-list').addClass('custom_striped_financial')
-      $('#protocol-list').bootstrapTable('hideColumn', 'status')
-      $('#protocol-list').bootstrapTable('hideColumn', 'short_title')
-      $('#protocol-list').bootstrapTable('hideColumn', 'coordinators')
-      $('#protocol-list').bootstrapTable('hideColumn', 'irb_approval_date')
-      $('#protocol-list').bootstrapTable('showColumn', 'start_date')
-      $('#protocol-list').bootstrapTable('showColumn', 'end_date')
-      $('#protocol-list').bootstrapTable('showColumn', 'total_at_approval')
-      $('#protocol-list').bootstrapTable('showColumn', 'percent_subsidy')
-      $('#protocol-list').bootstrapTable('showColumn', 'subsidy_committed')
+      $('#protocols').
+        bootstrapTable('hideColumn', 'status').
+        bootstrapTable('hideColumn', 'short_title').
+        bootstrapTable('hideColumn', 'coordinators').
+        bootstrapTable('hideColumn', 'irb_approval_date').
+        bootstrapTable('showColumn', 'start_date').
+        bootstrapTable('showColumn', 'end_date').
+        bootstrapTable('showColumn', 'total_at_approval').
+        bootstrapTable('showColumn', 'percent_subsidy').
+        bootstrapTable('showColumn', 'subsidy_committed')
 
-    $(document).on 'click', '.management', ->
+    $(document).on 'click', '.management:not(.active)', ->
       $(this).addClass('active')
       $('.financial').removeClass('active')
-      $('#protocol-list').addClass('custom_striped')
-      $('#protocol-list').removeClass('custom_striped_financial')
-      $('#protocol-list').bootstrapTable('showColumn', 'status')
-      $('#protocol-list').bootstrapTable('showColumn', 'short_title')
-      $('#protocol-list').bootstrapTable('showColumn', 'coordinators')
-      $('#protocol-list').bootstrapTable('showColumn', 'irb_approval_date')
-      $('#protocol-list').bootstrapTable('hideColumn', 'start_date')
-      $('#protocol-list').bootstrapTable('hideColumn', 'end_date')
-      $('#protocol-list').bootstrapTable('hideColumn', 'total_at_approval')
-      $('#protocol-list').bootstrapTable('hideColumn', 'percent_subsidy')
-      $('#protocol-list').bootstrapTable('hideColumn', 'subsidy_committed')
-
-    $(window).scroll ->
-      if $(this).scrollTop() > 50
-        $('.back-to-top').removeClass('hidden')
-      else
-        $('.back-to-top').addClass('hidden')
+      $('#protocols').bootstrapTable('showColumn', 'status').
+        bootstrapTable('showColumn', 'short_title').
+        bootstrapTable('showColumn', 'coordinators').
+        bootstrapTable('showColumn', 'irb_approval_date').
+        bootstrapTable('hideColumn', 'start_date').
+        bootstrapTable('hideColumn', 'end_date').
+        bootstrapTable('hideColumn', 'total_at_approval').
+        bootstrapTable('hideColumn', 'percent_subsidy').
+        bootstrapTable('hideColumn', 'subsidy_committed')
 
 (exports ? this).number_to_percent = (value) ->
   value + '%'

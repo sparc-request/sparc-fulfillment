@@ -86,23 +86,17 @@ module ProtocolHelper
     html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
-  def formatted_coordinators coordinators=Array.new
-    html = '-'
-
+  def formatted_coordinators(coordinators=Array.new)
     if coordinators.any?
-      li = Array.new
-
-      span = raw content_tag(:span, '', class: 'caret')
-      button = raw content_tag(:button, raw('Coordinators ' + span), type: 'button', class: 'btn btn-default btn-xs dropdown-toggle', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
-      coordinators.each do |coordinator|
-        li.push raw(content_tag(:li, raw(content_tag(:a, coordinator, href: 'javascript:;'))))
+      content_tag :div, class: 'dropdown' do
+        content_tag(:button, 'Coordinators', type: 'button', class: 'btn btn-light dropdown-toggle', data: { toggle: 'dropdown', boundary: 'window' }, aria: { expanded: 'false' }) +
+        content_tag(:div, class: 'dropdown-menu') do
+          coordinators.map do |co|
+            link_to co, 'javascript:void(0)', class: 'dropdown-item'
+          end.join('').html_safe
+        end
       end
-      ul = raw content_tag(:ul, raw(li.join), class: 'dropdown-menu', role: 'menu')
-
-      html = raw content_tag(:div, button + ul, class: 'btn-group')
     end
-
-    html
   end
 
   def arm_per_participant_line_items_by_core arm, consolidated=false
