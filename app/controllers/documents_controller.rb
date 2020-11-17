@@ -27,7 +27,10 @@ class DocumentsController < ApplicationController
 
   def index
     respond_to do |format|
-      format.html { render }
+      format.html {
+        session[:breadcrumbs].clear.set_base(:documents, documents_path)
+        render
+      }
       format.js {
         find_documentable
 

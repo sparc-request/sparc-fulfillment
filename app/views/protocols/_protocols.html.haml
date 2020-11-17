@@ -18,44 +18,44 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-%main.card
+%main.card.w-100
   .card-header.bg-primary.text-white
     %h3.mb-0
       = t('protocols.table.header')
   #protocolsTableToolbar
     = select_tag 'protocol_status_filter', options_for_select((t(:sub_service_request)[:statuses].values.zip t(:sub_service_request)[:statuses].keys), 'Any Status'), class: 'selectpicker'
-  %table.table-interactive.table-striped#protocols{ data: { toggle: 'table', url: protocols_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: @limit, pagination: 'true', side_pagination: 'server', sort_name: 'sparc_id', sort_order: 'asc', cookie: 'true', cookie_id_table: 'protocols', striped: 'true', toolbar: '#protocolsTableToolbar', show_export: 'true', export_types: ['excel']} }
+  %table.table-interactive.table-striped#protocols{ data: { toggle: 'table', url: protocols_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 50, pagination: 'true', side_pagination: 'server', sort_name: 'sparc_id', sort_order: 'asc', cookie: 'true', cookie_id_table: 'protocols', striped: 'true', toolbar: '#protocolsTableToolbar', show_export: 'true', export_types: ['excel']} }
     %thead.bg-light
       %tr
         %th.srid{ data: { field: 'srid', align: 'left', sortable: 'true' } }
           = Protocol.human_attribute_name(:srid)
-        %th{ data: { field: 'rmid', align: 'left', sortable: 'true', visible: Sparc::Setting.get_value('research_master_enabled').to_s } }
+        %th.rmid{ data: { field: 'rmid', align: 'left', sortable: 'true', visible: Sparc::Setting.get_value('research_master_enabled').to_s } }
           = Protocol.human_attribute_name(:rmid)
-        %th{ data: { field: 'status', align: 'left', sortable: 'true' } }
+        %th.status{ data: { field: 'status', align: 'left', sortable: 'true' } }
           = Protocol.human_attribute_name(:status)
-        %th{ data: { field: 'short_title', align: 'left', sortable: 'true' } }
+        %th.short-title{ data: { field: 'short_title', align: 'left', sortable: 'true' } }
           = Protocol.human_attribute_name(:short_title)
-        %th{ data: { field: 'pi', align: 'left', sortable: 'true' } }
+        %th.pi{ data: { field: 'pi', align: 'left', sortable: 'true' } }
           = Protocol.human_attribute_name(:principal_investigator)
-        %th{ data: { field: 'coordinators', align: 'center' } }
+        %th.coordinators{ data: { field: 'coordinators', align: 'center' } }
           = Protocol.human_attribute_name(:coordinators)
-        %th{ data: { field: 'irb_approval_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
-          = IrbRecord.human_attribute_name(:irb_approval_date)
-        %th{ data: { field: 'irb_expiration_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
-          = IrbRecord.human_attribute_name(:irb_expiration_date)
-        %th{ data: { field: 'start_date', align: 'center', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
-          = Protocol.human_attribute_name(:start_date)
-        %th{ data: { field: 'end_date', align: 'center', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
-          = Protocol.human_attribute_name(:end_date)
-        %th{ data: { field: 'total_at_approval', align: 'right', visible: 'false' } }
-          = Protocol.human_attribute_name(:total_at_approval)
-        %th{ data: { field: 'percent_subsidy', align: 'right', formatter: 'number_to_percent', visible: 'false' } }
-          = Protocol.human_attribute_name(:subsidy_amount)
-        %th{ data: { field: 'subsidy_committed', align: 'right', visible: 'false' } }
-          = Protocol.human_attribute_name(:subsidy_committed)
-        %th{ data: { field: 'owner', align: 'right', visible: 'false' } }
+        %th.owner{ data: { field: 'owner', align: 'left', visible: 'false' } }
           = Protocol.human_attribute_name(:owner)
-        %th{ data: { field: 'requester', align: 'right', visible: 'false' } }
+        %th.requester{ data: { field: 'requester', align: 'left', visible: 'false' } }
           = Protocol.human_attribute_name(:requester)
-        %th{ data: { field: 'organizations', align: 'left', sortable: 'true', visible: 'false' } }
+        %th.irb-approval{ data: { field: 'irb_approval_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
+          = IrbRecord.human_attribute_name(:irb_approval_date)
+        %th.irb-expiration{ data: { field: 'irb_expiration_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
+          = IrbRecord.human_attribute_name(:irb_expiration_date)
+        %th.organizations{ data: { field: 'organizations', align: 'left', sortable: 'true' } }
           = Protocol.human_attribute_name(:organizations)
+        %th.start-date{ data: { field: 'start_date', align: 'center', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
+          = Protocol.human_attribute_name(:start_date)
+        %th.end-date{ data: { field: 'end_date', align: 'center', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
+          = Protocol.human_attribute_name(:end_date)
+        %th.total-at-approval{ data: { field: 'total_at_approval', align: 'right', visible: 'false' } }
+          = Protocol.human_attribute_name(:total_at_approval)
+        %th.percent-subsidy{ data: { field: 'percent_subsidy', align: 'right', formatter: 'number_to_percent', visible: 'false' } }
+          = Protocol.human_attribute_name(:subsidy_amount)
+        %th.subsidy-committed{ data: { field: 'subsidy_committed', align: 'right', visible: 'false' } }
+          = Protocol.human_attribute_name(:subsidy_committed)

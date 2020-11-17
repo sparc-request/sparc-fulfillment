@@ -736,12 +736,8 @@ nav.navbar {
     }
   }
 
-  &.table-interactive tbody tr {
-    transition: $btn-transition;
-
-    &:hover {
-      cursor: pointer;
-    }
+  &.table-interactive tbody tr:hover {
+    cursor: pointer;
   }
 
   &.table-fixed {
@@ -750,6 +746,10 @@ nav.navbar {
 
   thead th {
     border-bottom: 0;
+  }
+
+  tbody tr {
+    transition: $btn-transition;
   }
 }
 

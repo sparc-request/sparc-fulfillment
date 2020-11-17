@@ -18,16 +18,8 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class SubServiceRequest < SparcDbBase
-  has_one :protocol
-  has_one :subsidy, :dependent => :destroy
+$('#protocolTabs').replaceWith("<%= j render 'protocols/tabs', protocol: @protocol, tab: @tab %>")
+$('#requestLoading').removeClass('active show')
+$("#<%= @tab.camelize(:lower) %>Tab").html('<%= j render "protocols/#{@tab}", protocol: @protocol %>').addClass('active show')
 
-  belongs_to :service_requester, class_name: "Identity", foreign_key: "service_requester_id"
-  belongs_to :owner, class_name: 'Identity'
-  belongs_to :organization
-  belongs_to :service_request
-
-  def label
-    "(#{self.ssr_id}) #{self.organization.label}"
-  end
-end
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

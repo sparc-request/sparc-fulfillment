@@ -16,29 +16,31 @@
 -# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
 -# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
--# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF eSUCH DAMAGE.~
 
-.fixed-table-container.bootstrap-table-dropdown-overflow
-  %table.protocol.details.custom_striped{ id: dom_id(protocol), data: { toggle: 'table', url: protocol_path(protocol, format: :json) } }
-    %thead
+.card.w-100
+  .card-header.bg-primary.text-white.justify-content-between
+    %h3.mb-0<
+      = "#{protocol.organization.name} (#{protocol.srid})"
+    .protocol-links.d-flex
+      = dashboard_link(protocol)
+      = formatted_study_schedule_report(protocol)
+  %table{ id: dom_id(protocol), data: { toggle: 'table', url: protocol_path(protocol, format: :json) } }
+    %thead.bg-light
       %tr
-        %th{ data: { class: 'srid', align: 'left', field: 'srid' } }
-          = t(:protocol)[:srid]
-        %th{ data: { class: 'pi', align: 'left', field: 'pi' } }
-          = t(:protocol)[:principal_investigator]
-        %th{ data: { class: 'coordinators', align: 'center', field: 'coordinators' } }
-          = t(:protocol)[:coordinators]
-        %th{ data: { class: 'short_title', align: 'left', field: 'short_title' } }
-          = t(:protocol)[:short_title]
-        %th{ data: { class: 'irb_number', align: 'left', field: 'irb_number' } }
-          = t(:protocol)[:irb_number]
-        %th{ data: { class: 'irb_expiration_date', align: 'center', field: 'irb_expiration_date' } }
-          = t(:protocol)[:irb_expiration_date]
-        %th{ data: { class: 'study_schedule_report', align: 'center', field: 'study_schedule_report' } }
-          = t(:protocol)[:study_schedule_report]
-        %th{ data: { class: 'admin_portal_link', align: 'center', field: 'admin_portal_link' } }
-          = t(:protocol)[:admin_portal_link]
-        %th{ data: { align: 'center', field: 'organization_cost' } }
+        %th.rmid{ data: { field: 'rmid', align: 'center', sortable: 'true', visible: Sparc::Setting.get_value('research_master_enabled').to_s } }
+          = Protocol.human_attribute_name(:rmid)
+        %th.status{ data: { field: 'status', align: 'center', sortable: 'true' } }
+          = Protocol.human_attribute_name(:status)
+        %th.pi{ data: { field: 'pi', align: 'center' } }
+          = Protocol.human_attribute_name(:principal_investigator)
+        %th.coordinators{ data: { field: 'coordinators', align: 'center' } }
+          = Protocol.human_attribute_name(:coordinators)
+        %th.irb-number{ data: { field: 'irb_number', align: 'center' } }
+          = IrbRecord.human_attribute_name(:pro_number)
+        %th.irb-expiration{ data: { field: 'irb_expiration_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
+          = IrbRecord.human_attribute_name(:irb_expiration_date)
+        %th.organization-cost{ data: { field: 'organization_cost', align: 'center' } }
           = format_organization_name(protocol.sub_service_request)
-        %th{ data: { align: 'center', field: 'study_cost' } }
+        %th.study-cost{ data: { field: 'study_cost', align: 'center' } }
           = t(:protocol)[:study_cost]

@@ -18,16 +18,51 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class SubServiceRequest < SparcDbBase
-  has_one :protocol
-  has_one :subsidy, :dependent => :destroy
+class Breadcrumber
+  include ActionView::Helpers::TagHelper
+  include Rails.application.routes.url_helpers
 
-  belongs_to :service_requester, class_name: "Identity", foreign_key: "service_requester_id"
-  belongs_to :owner, class_name: 'Identity'
-  belongs_to :organization
-  belongs_to :service_request
+  def initialize
+    clear
+  end
 
-  def label
-    "(#{self.ssr_id}) #{self.organization.label}"
+  def clear(opts={})
+    if opts[:crumb]
+      @crumbs.delete(opts[:crumb])
+    else
+      @base   = { key: :requests, url: root_path }
+      @crumbs = Array.new
+    end
+    self
+  end
+
+  def set_base(key, url)
+    @base = { key: key, url: url }
+    self
+  end
+
+  def add_crumbs(crumbs)
+    crumbs.each do |crumb|
+      add_crumb(crumb)
+    end
+    self
+  end
+
+  def add_crumb(crumb)
+    @crumbs << crumb
+    self
+  end
+
+  def breadcrumbs
+    crumbs = [content_tag(:li, content_tag(:a, I18n.t("layout.navigation.#{@base[:key]}"), href: @base[:url]))]
+    @crumbs.each do |crumb|
+      crumbs <<
+        if crumb[:url]
+          content_tag(:li, content_tag(:a, crumb[:label], href: crumb[:url]))
+        else
+          content_tag(:li, crumb[:label])
+        end
+    end
+    crumbs.join(content_tag(:li, '/', class: 'px-2')).html_safe
   end
 end

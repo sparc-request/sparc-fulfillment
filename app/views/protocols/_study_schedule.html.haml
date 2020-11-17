@@ -18,8 +18,11 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+- page  ||= 1
+- tab     = cookies["active-schedule-tab".to_sym].present? ? cookies["active-schedule-tab".to_sym] : 'template'
+
 = hidden_field_tag :current_tab, tab
-= render :partial => 'study_schedule/management/schedule_edit_buttons', locals: {protocol: protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group}
+= render 'study_schedule/management/schedule_edit_buttons', protocol: protocol, selected_arm: @selected_arm, services: @services, selected_visit_group: @selected_visit_group
 %br
 %br
 %div{role: 'tabpanel'}
@@ -32,4 +35,4 @@
       - protocol.arms.each do |arm|
         = render partial: 'study_schedule/arm', locals: {arm: arm, page: page, tab: tab}
     .study_level_activities_display{hidden: tab == 'consolidated' ? false : true}
-      = render partial: 'study_schedule/study_level_activities', locals: {protocol: protocol}
+      = render 'study_schedule/study_level_activities', protocol: protocol

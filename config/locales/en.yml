@@ -30,11 +30,10 @@ en:
     delete: "Delete"
     details: "Details"
     edit: "Edit"
+    export: "Export"
     n_a: "N/A"
     options: "Options"
     remove: "Remove"
-    add: "Add"
-    actions: "Actions"
     required: " * "
     required_message: "Fields marked with an asterisk ( * ) are required to continue."
     save: "Save"
@@ -53,7 +52,7 @@ en:
       identity:
         ldap_uid: "Login"
       irb_record:
-        irb_approval_date: "IRB Approval Date"
+        irb_approval_date: "IRB Approval"
         irb_expiration_date: "IRB Expiration"
         pro_number: "IRB #"
       line_item:
@@ -145,6 +144,40 @@ en:
     subject_count: "Subject Count"
     visit_count: "Visit Count"
 
+  constants:
+    currency: "$"
+    yes_select: "Yes"
+    no_select: "No"
+    na: "N/A"
+    prompts:
+      any: "- Any -"
+      check_all: "Check all that apply"
+      none: "Nothing Selected"
+      please_specify: "Please Specify"
+      search_for_user: "Search for a user"
+      select: "---Please Select---"
+      select_action: "Select an action"
+      select_one: "Select One"
+    add_as_last: "Last Visit"
+    other: "Other"
+    show: "Show Details"
+    hide: "Hide Details"
+    more: "More..."
+    less: "Less..."
+    max: "Max: %{max}"
+    min: "Min: %{min}"
+    phone:
+      placeholder: "(XXX) XXX-XXXX"
+      note: "For extensions add ext XXXXX"
+      extension: "ext"
+    required_fields:
+      indicator: "*"
+      message: "required fields"
+      required: "Required"
+    search:
+      loading: "Loading..."
+      no_results: "No Results"
+
   documents:
     object: "Document"
     documents: "Documents"
@@ -222,19 +255,17 @@ en:
       brand_logo_alt: "SPARCFulfillment Logo"
       institution_logo_alt: "MUSC Logo"
     navigation:
-      reports: 'Reports'
-      tasks: 'Tasks'
-      imports: 'Imports'
-      patient_registry: 'Patient Registry'
+      requests: "Requests"
+      documents: "Reports"
+      tasks: "Tasks"
+      imports: "Imports"
+      patient_registry: "Patient Registry"
       toggle: "Toggle Navigation"
       sign_in: "SIGN IN"
       sign_out: "Sign Out"
       profile:
         messages: "Messages"
         edit: "Edit Profile"
-    subheader:
-      home: "Home"
-      back: "Back"
     footer:
       version: "SPARCFulfillment %{version}"
       copyright: "&copy; 2011-2020 MUSC Foundation for Research Development"
@@ -406,8 +437,9 @@ en:
     actions: "Actions"
 
   protocols:
+    sparc_link: "SPARCDashboard"
     table:
-      header: "Protocols"
+      header: "Requests Received from SPARCRequest"
 
   protocol:
     object: "Protocol"
@@ -443,7 +475,6 @@ en:
       study_level_activities: "Non-clinical Services"
       project_level_activities: "Non-clinical Services"
       study_schedule: "Clinical Services"
-      project_schedule: "Clinical Services"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
 

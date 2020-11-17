@@ -26,7 +26,12 @@ Rails.application.routes.draw do
     devise_for :identities, :controllers => { :omniauth_callbacks => "identities/omniauth_callbacks" }
   end
 
-  resources :protocols
+  resources :protocols, only: [:index, :show] do
+    member do
+      get :refresh_tab
+    end
+  end
+
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
   resources :notes, only: [:index, :new, :create]

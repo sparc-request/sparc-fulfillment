@@ -25,31 +25,31 @@
         .nav-item
           = link_to root_path, class: 'nav-link' do
             = icon('fas', 'home fa-2x mr-1')
-            = 'Home'
+            = t('layout.navigation.requests')
         - if identity_signed_in?
           .nav-item
             = link_to tasks_path, class: 'nav-link' do
-              = icon('fas', 'list-alt fa-2x mr-1')
-              = t('navbar.tasks')
+              = icon('fas', 'tasks fa-2x mr-1')
+              = t('layout.navigation.tasks')
               - if current_identity.tasks_count > 0
                 %span.badge.badge-pill.badge-c.badge-danger.notification-badge<
                   = current_identity.tasks_count
           .nav-item
             = link_to documents_path, class: 'nav-link' do
               = icon('fas', 'file-alt fa-2x mr-1')
-              = t('navbar.reports')
+              = t('layout.navigation.documents')
               - if current_identity.unaccessed_documents_count > 0
                 %span.badge.badge-pill.badge-c.badge-danger.notification-badge<
                   = current_identity.unaccessed_documents_count
           .nav-item
             = link_to imports_path, class: 'nav-link' do
               = icon('fas', 'upload fa-2x mr-1')
-              = t('navbar.imports')
+              = t('layout.navigation.imports')
           - if current_identity.is_a_patient_registrar? && (ENV.fetch('CLINICAL_SERVICES') == 'true')
             .nav-item
               = link_to participants_path, class: 'nav-link' do
                 = icon('fas', 'users fa-2x mr-1')
-                = t('navbar.patient_registry')
+                = t('layout.navigation.patient_registry')
       %button.btn.btn-primary.navbar-toggler.p-0.border-0.text-light{ type: 'button', data: { toggle: 'collapse', target: '#navbarLinks' }, aria: { controls: 'navbarLinks', expanded: 'false', label: t('layout.navigation.toggle') } }
         = icon('fas', 'bars fa-2x')
     .navbar-nav#navbarUtilities

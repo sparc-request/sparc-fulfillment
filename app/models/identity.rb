@@ -34,6 +34,10 @@ class Identity < SparcDbBase
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
+  def self.arel_full_name
+    Identity.arel_table[:first_name].concat(Arel::Nodes.build_quoted(' ')).concat(Identity.arel_table[:last_name])
+  end
+
   def protocols
     IdentityOrganizations.new(id).authorized_protocols
   end

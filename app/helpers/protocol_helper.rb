@@ -19,10 +19,17 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ProtocolHelper
+  def protocol_label(protocol)
+    protocol.label.truncate(50)
+  end
 
-  def admin_portal_link(protocol)
-    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-default btn-xs admin_portal_link', title: t(:protocol)[:admin_portal_link_tooltip], aria: { expanded: 'false' }) do
-      content_tag(:span, '', class: 'glyphicon glyphicon-link')
+  def request_label(protocol)
+    protocol.sub_service_request.label.truncate(50)
+  end
+
+  def dashboard_link(protocol)
+    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-light mr-2', title: t(:protocol)[:admin_portal_link_tooltip], aria: { expanded: 'false' }) do
+      icon('fas', 'link mr-2') + t('protocols.sparc_link')
     end
   end
 
@@ -71,7 +78,6 @@ module ProtocolHelper
   end
 
   def formatted_requester protocol
-
     if protocol.sub_service_request.present? && protocol.sub_service_request.service_request.present? && protocol.service_requester.present?
       protocol.service_requester.full_name
     else
@@ -80,10 +86,16 @@ module ProtocolHelper
   end
 
   def formatted_study_schedule_report protocol
-    icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
-    button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button study_schedule_report dropdown-toggle', id: "study_schedule_report_#{protocol.id.to_s}", 'aria-expanded' => 'false', title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-protocol_id' => protocol.id)
-    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_study_schedule_report_#{protocol.id.to_s}", role: 'menu')
-    html      = raw content_tag(:div, button + ul, class: 'btn-group')
+    content_tag :div, class: 'dropdown no-caret' do
+      content_tag :button, class: 'btn btn-secondary dropdown-toggle' do
+        icon('fas', 'file-download mr-2') + t('actions.export')
+      end
+    end
+
+  #   icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
+  #   button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button study_schedule_report dropdown-toggle', id: "study_schedule_report_#{protocol.id.to_s}", 'aria-expanded' => 'false', title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-protocol_id' => protocol.id)
+  #   ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_study_schedule_report_#{protocol.id.to_s}", role: 'menu')
+  #   html      = raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
   def formatted_coordinators(coordinators=Array.new)

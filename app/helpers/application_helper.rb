@@ -45,16 +45,12 @@ module ApplicationHelper
   def format_date date
     if date.present?
       date.strftime('%m/%d/%Y')
-    else
-      ''
     end
   end
 
   def format_datetime date
     if date.present?
       date.strftime('%F %H:%M')
-    else
-      ''
     end
   end
 
