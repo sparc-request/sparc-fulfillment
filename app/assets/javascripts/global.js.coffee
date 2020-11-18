@@ -20,6 +20,24 @@
 
 $ ->
   $('html').addClass('ready')
+  initializeSelectpickers()
+  initializeDateTimePickers()
+  initializeTooltips()
+  initializePopovers()
+  initializeToggles()
+  initializeTables()
+  setRequiredFields()
+
+  stickybits('.position-sticky, .sticky-top')
+
+  $(document).on 'load-success.bs.table search.bs.table sort.bs.table column-switch.bs.table ajax:complete', (e) ->
+    initializeSelectpickers()
+    initializeDateTimePickers()
+    initializeTooltips()
+    initializePopovers()
+    initializeToggles()
+    initializeTables()
+    setRequiredFields()
 
   # Back To Top button scroll
   $(window).scroll ->
@@ -122,6 +140,32 @@ $ ->
       url: '/documents/new.js'
       data: data
 
+(exports ? this).initializeSelectpickers = () ->
+  $('.selectpicker').each ->
+    $(this).selectpicker() if $(this).siblings('.dropdown-toggle').length == 0
+
+(exports ? this).initializeDateTimePickers = () ->
+  $('.datetimepicker.date:not(.time)').datetimepicker({ format: 'L' })
+  $('.datetimepicker.time:not(.date)').datetimepicker({ format: 'LT' })
+  $('.datetimepicker.date.time').datetimepicker()
+
+(exports ? this).initializeTooltips = () ->
+  $('.tooltip').tooltip('hide')
+  $('[data-toggle=tooltip]').tooltip({ delay: { show: 250 }, animation: false })
+
+(exports ? this).initializePopovers = () ->
+  $('[data-toggle=popover]').popover()
+
+(exports ? this).initializeToggles = () ->
+  $('input[data-toggle=toggle]').bootstrapToggle()
+
+(exports ? this).initializeTables = () ->
+  $('[data-toggle=table]').bootstrapTable()
+
+(exports ? this).setRequiredFields = () ->
+  $('.required:not(.has-indicator)').addClass('has-indicator').append("<span class='required-indicator text-danger ml-1'>#{I18n.t('constants.required_fields.indicator')}</span>")
+  $('.has-indicator:not(.required)').removeClass('has-indicator').children('.required-indicator').remove()
+  
 # Add a tooltip to elt (e.g., "#visits_219_insurance_billing_qty")
 # containing content, which disappears after about 3 seconds.
 (exports ? this).error_tooltip_on = (elt, content) ->

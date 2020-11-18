@@ -43,18 +43,23 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    respond_to :html
-    gon.push({ protocol_id: @protocol.id })
-    session[:breadcrumbs].clear.set_base(:requests, root_url).add_crumbs([
-      { label: helpers.protocol_label(@protocol) },
-      { label: helpers.request_label(@protocol) }
-    ])
-    get_current_protocol_tab
+    respond_to do |format|
+      format.html {
+        gon.push({ protocol_id: @protocol.id })
+        session[:breadcrumbs].clear.set_base(:requests, root_url).add_crumbs([
+          { label: helpers.protocol_label(@protocol) },
+          { label: helpers.request_label(@protocol) }
+        ])
+        get_current_protocol_tab
+      }
+      format.json
+    end
   end
 
   def refresh_tab
     respond_to :js
     @tab = params[:tab]
+    cookies['active-protocol-tab'.to_sym] = @tab
   end
 
   private

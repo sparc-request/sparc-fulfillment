@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_area").html("<%= escape_javascript(render(partial: 'index', locals: { notable: @notable, notes: @notes, notable_id: @notable_id, notable_type: @notable_type })) %>")
+$("#modalContainer").html("<%= escape_javascript(render(partial: 'index', locals: { notable: @notable, notes: @notes, notable_id: @notable_id, notable_type: @notable_type })) %>")
 
 <% if @notable_type == "Participant" %>
 $('#participant-tracker-table').bootstrapTable('refresh', {silent: "true"})

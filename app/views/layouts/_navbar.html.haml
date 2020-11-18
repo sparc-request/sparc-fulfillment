@@ -22,11 +22,11 @@
   .container-fluid
     .collapse.navbar-collapse.order-last.order-xl-first#navbarLinks
       .navbar-nav.mr-auto
-        .nav-item
-          = link_to root_path, class: 'nav-link' do
-            = icon('fas', 'home fa-2x mr-1')
-            = t('layout.navigation.requests')
         - if identity_signed_in?
+          .nav-item
+            = link_to root_path, class: 'nav-link' do
+              = icon('fas', 'home fa-2x mr-1')
+              = t('layout.navigation.requests')
           .nav-item
             = link_to tasks_path, class: 'nav-link' do
               = icon('fas', 'tasks fa-2x mr-1')

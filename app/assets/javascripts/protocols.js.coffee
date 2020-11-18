@@ -70,5 +70,14 @@ $ ->
         bootstrapTable('hideColumn', 'percent_subsidy').
         bootstrapTable('hideColumn', 'subsidy_committed')
 
+  # Load tab on page load
+  if $('#protocolTabs').length
+    $.ajax
+      method: 'get'
+      dataType: 'script'
+      url: $('#protocolTabs .nav-tabs .nav-link.active').attr('href')
+      success: ->
+        $('#requestLoading').removeClass('show active')
+
 (exports ? this).number_to_percent = (value) ->
   value + '%'

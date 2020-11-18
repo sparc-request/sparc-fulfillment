@@ -18,8 +18,7 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-%h3 Reports
-.bootstrap-table-dropdown-overflow
+.card.w-100
   %table.protocol_reports#reports_table{data: {toggle: 'table', search: "true", url: documents_path(document: { documentable_type: 'Protocol', documentable_id: @protocol.id }, format: :json), show: {columns: "true", refresh: "true", toggle: "true"}, striped: "true", "sort-name" => "created_at", "sort-order" => 'desc', pagination: 'true', 'page-size' => 20}}
     %thead.primary-header
       %tr
