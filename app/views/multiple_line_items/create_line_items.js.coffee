@@ -31,6 +31,6 @@ $("#arm_<%= arm_id %>_end_of_core_<%= @service.sparc_core_id %>").before("<%= es
 $('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
 $(".selectpicker").selectpicker()
 $("#modalContainer").modal 'hide'
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
+$("#flashContainer").html("<%= escape_javascript(render('flash')) %>");
 
 <% end %>

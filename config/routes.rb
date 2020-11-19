@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   resources :components, only: [:update]
   resources :notes, only: [:index, :new, :create]
   resources :documents
-  resources :line_items
+  resources :line_items, only: [:index, :edit, :update]
   resources :visits, only: [:update]
   resources :custom_appointments, controller: :appointments
   resources :imports

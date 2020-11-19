@@ -1,3 +1,5 @@
+json.(protocol)
+
 json.id                   protocol.id
 json.srid                 protocol.srid + link_to('', protocol_path(protocol), class: 'd-none')
 json.status               formatted_status(protocol)

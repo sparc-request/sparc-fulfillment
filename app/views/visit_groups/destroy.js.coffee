@@ -20,7 +20,7 @@
 
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
 <% unless @errors %>
-$("#flashes_container").html("<%= escape_javascript(render('application/flash')) %>")
+$("#flashContainer").html("<%= escape_javascript(render('application/flash')) %>")
 $("#modalContainer").modal 'hide'
 
 # update dropdown to page visit groups

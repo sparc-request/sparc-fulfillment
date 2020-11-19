@@ -19,7 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module StudyLevelActivitiesHelper
-
   def notes(notes)
     bullet_point = notes.count > 1 ? "\u2022 " : ""
     notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + Identity.find(note.identity_id).full_name }.join("<br>")
@@ -29,12 +28,11 @@ module StudyLevelActivitiesHelper
     bullet_point = documents.count > 1 ? "\u2022 " : ""
     documents.map{ |document| bullet_point + document.original_filename }.join("<br>")
   end
-    
-  def sla_notes_button(line_item)
-    span = raw(content_tag(:span, line_item.notes.count, class: 'badge badge-light'))
-    button = raw(content_tag(:button, raw(content_tag(:span, '', id: "line_item-#{line_item.id}")) + 'Notes ' + raw(span), type: 'button', class: 'btn btn-success button notes list', data: {'notable-id' => line_item.id, 'notable-type' => 'LineItem'}))
 
-    button
+  def sla_notes_button(line_item)
+    link_to notes_path(note: { notable_id: line_item.id, notable_type: LineItem.name }), remote: true, class: 'btn btn-sq btn-light position-relative' do
+      raw(icon('far', 'sticky-note fa-lg') + content_tag(:span, format_count(line_item.notes.length, 1), class: ['badge badge-pill badge-c notification-badge', line_item.notes.length > 1 ? 'badge-warning ' : 'badge-secondary']))
+    end
   end
 
   def sla_docs_button(line_item)
@@ -42,16 +40,28 @@ module StudyLevelActivitiesHelper
     button = raw(content_tag(:button, raw(content_tag(:span, '', id: "line_item-#{line_item.id}")) + 'Documents ' + raw(span), type: 'button', class: 'btn btn-success button documents list', data: {'documentable-id' => line_item.id, 'documentable-type' => 'LineItem'}))
 
     button
+
+    link_to documents_path(document: { documentable_id: line_item.id, documentable_type: LineItem.name }), remote: true, class: 'btn btn-sq btn-light position-relative' do
+      raw(icon('far', 'file-alt fa-lg') + content_tag(:span, format_count(line_item.documents.length, 1), class: ['badge badge-pill badge-c notification-badge', line_item.documents.length > 1 ? 'badge-warning ' : 'badge-secondary']))
+    end
   end
 
-  def sla_edit_button(line_item)
-    button = raw(content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Activity', type: 'button', class: 'btn btn-success form-control actions-button otf_edit'))
-
-    button
+  def sla_fulfillments_button(line_item)
+    link_to fulfillments_path(line_item_id: line_item.id), remote: true, class: 'btn btn-sq btn-primary position-relative' do
+      raw(icon('fas', 'list') + content_tag(:span, format_count(line_item.fulfillments.length, 1), class: ['badge badge-pill badge-c notification-badge', line_item.fulfillments.length > 1 ? 'badge-warning ' : 'badge-secondary']))
+    end
   end
 
-  def fulfillments_drop_button(line_item)
-    button = raw content_tag(:button, 'List', id: "list-#{line_item.id}", class: 'btn btn-success otf-fulfillment-list', title: 'List', type: "button", aria: {label: "List Fulfillments"}, data: {line_item_id: line_item.id})
+  def sla_account_number(line_item)
+    link_to edit_line_item_path(line_item, field: 'account_number'), remote: true, class: "edit-account_number-#{line_item.id}" do
+      line_item.account_number.present? ? line_item.account_number : t('constants.na')
+    end
+  end
+
+  def sla_contact(line_item)
+    link_to edit_line_item_path(line_item, field: 'contact_name'), remote: true, class: "edit-contact_name-#{line_item.id}" do
+      line_item.contact_name.present? ? line_item.contact_name : t('constants.na')
+    end
   end
 
   def is_protocol_type_study?(protocol)

@@ -26,7 +26,7 @@ $("#visit_group_<%= @visit_group.id %>").val("<%= @visit_group.reload.name %>")
 <% end %>
 
 <% unless @errors %>
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
+$("#flashContainer").html("<%= escape_javascript(render('flash')) %>")
 $("#modalContainer").modal 'hide'
 
 # reload calendar

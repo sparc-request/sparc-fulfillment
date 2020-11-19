@@ -40,7 +40,7 @@
           = IrbRecord.human_attribute_name(:pro_number)
         %th.irb-expiration{ data: { field: 'irb_expiration_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
           = IrbRecord.human_attribute_name(:irb_expiration_date)
-        %th.organization-cost{ data: { field: 'organization_cost', align: 'center' } }
+        %th.organization-cost.col-2{ data: { field: 'organization_cost', align: 'center' } }
           = format_organization_name(protocol.sub_service_request)
-        %th.study-cost{ data: { field: 'study_cost', align: 'center' } }
+        %th.study-cost.col-2{ data: { field: 'study_cost', align: 'center' } }
           = t(:protocol)[:study_cost]

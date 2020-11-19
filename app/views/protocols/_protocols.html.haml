@@ -47,8 +47,6 @@
           = IrbRecord.human_attribute_name(:irb_approval_date)
         %th.irb-expiration{ data: { field: 'irb_expiration_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
           = IrbRecord.human_attribute_name(:irb_expiration_date)
-        %th.organizations{ data: { field: 'organizations', align: 'left', sortable: 'true' } }
-          = Protocol.human_attribute_name(:organizations)
         %th.start-date{ data: { field: 'start_date', align: 'center', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
           = Protocol.human_attribute_name(:start_date)
         %th.end-date{ data: { field: 'end_date', align: 'center', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
@@ -59,3 +57,5 @@
           = Protocol.human_attribute_name(:subsidy_amount)
         %th.subsidy-committed{ data: { field: 'subsidy_committed', align: 'right', visible: 'false' } }
           = Protocol.human_attribute_name(:subsidy_committed)
+        %th.organizations{ data: { field: 'organizations', align: 'left', sortable: 'true' } }
+          = Protocol.human_attribute_name(:organizations)

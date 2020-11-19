@@ -37,6 +37,7 @@ en:
     required: " * "
     required_message: "Fields marked with an asterisk ( * ) are required to continue."
     save: "Save"
+    submit: "Submit"
 
   activerecord:
     attributes:
@@ -56,7 +57,14 @@ en:
         irb_expiration_date: "IRB Expiration"
         pro_number: "IRB #"
       line_item:
-        quantity_requested: "Quantity"
+        account_number: "Account #"
+        contact_name: "Contact"
+        last_fulfillment: "Last Fulfilled"
+        quantity_fulfilled: "Qty Fulfilled"
+        quantity_remaining: "Qty Remaining"
+        quantity_requested: "Qty Quantity"
+        quantity_type: "Qty Type"
+        started_at: "Started"
       notes:
         reason: "Reason"
       participant:
@@ -64,7 +72,7 @@ en:
         zipcode: "Zip Code"
       protocol:
         coordinators: "Coordinators"
-        end_date: "Study End Date"
+        end_date: "End Date"
         organizations: "Provider/Program/Core"
         owner: "Owner"
         principal_investigator: "Principal Investigator"
@@ -73,7 +81,7 @@ en:
         short_title: "Short Title"
         srid: "SRID"
         status: "Status"
-        start_date: "Study Start Date"
+        start_date: "Start Date"
         subsidy_amount: "Percent Subsidy"
         subsidy_committed: "Subsidy Amount"
         total_at_approval: "Cost at Approval"
@@ -320,7 +328,6 @@ en:
     delete_line_item: "Delete line item"
     documents: "Documents"
     edit: "Edit Non-clinical Service"
-    edit_from_table: "Edit"
     edit_in_sparc: "Only Account and Contact fields can be edited for non-clinical services. All other editing should be done in SPARCDashboard"
     flash_messages:
       created: "Non-clinical Service Created"

@@ -24,7 +24,7 @@ $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', l
 if !$('.notification.task-notifications').length
   $('<span class="notification task-notifications"></span>').appendTo($('a.tasks'))
 $(".notification.task-notifications").empty().append("<%= current_identity.reload.tasks_count %>")
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
+$("#flashContainer").html("<%= escape_javascript(render('flash')) %>")
 $('#task-list').bootstrapTable('refresh', {silent: "true"})
 $("#modalContainer").modal 'hide'
 

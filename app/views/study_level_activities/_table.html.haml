@@ -18,34 +18,33 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-#sla-custom-toolbar
-  %p= t(:line_item)[:edit_in_sparc]
-  / %button.btn.btn-success.otf_service_new{type: "button", aria: {label: "Add Line Item"}}= t(:line_item)[(is_protocol_type_study? (@protocol)) ? :add_line_item_study : :add_line_item_project]
-%table.study_level_activities{id: "study-level-activities-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggleOn" => "true", cookie: "true", "cookie-id-table" => "study-level-activities-table", url: line_items_path(format: :json, protocol_id: protocol.id), striped: "true", toolbar: "#sla-custom-toolbar", "show-export" => "true", "export-types" => ['xlsx'], "export-options" => "{\"ignoreColumn\": [], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}"}}
-  %thead.primary-header
+.alert.alert-warning.mb-0.rounded-0.border-bottom
+  %p.text-warning.mb-0
+    = t(:line_item)[:edit_in_sparc]
+%table.table-interactive#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', 'cookie-id-table' => 'study-level-activities-table', striped: 'true', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['excel'], export_options: "{\"ignoreColumn\": [1,2,3], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}" } }
+  %thead.bg-light
     %tr
-      %th{data: {class: 'fulfillments_button exclude_in_export', align: "left", switchable: "false", field: "fulfillments_button"}}
-      %th{data: {class: 'service', align: "left", field: "service"}}
-        = t(:line_item)[:service]
-      %th{data: {class: 'act_num wrap', align: "left", sortable: "true", field: "account_number"}}
-        = t(:line_item)[:account_number]
-      %th{data: {class: 'contact wrap', align: "left", sortable: "true", field: "contact"}}
-        = t(:line_item)[:contact]
-      %th{data: {class: 'qty_type', align: "left", field: "quantity_type"}}
-        = t(:line_item)[:qty_type]
-      %th{data: {class: 'qty_req', align: "left", sortable: "true", field: "quantity_requested"}}
-        = t(:line_item)[:qty_req]
-      %th{data: {class: 'fulfilled', align: "left", sortable: "true", visible: 'false', field: "fulfilled"}}
-        = t(:line_item)[:fulfilled]
-      %th{data: {class: 'qty_rem', align: "left", sortable: "true", field: "quantity_remaining"}}
-        = t(:line_item)[:qty_rem]
-      %th{data: {class: 'started', align: "left", sortable: "true", sorter: "dateSorter", field: "date_started"}}
-        = t(:line_item)[:started]
-      %th{data: {class: 'last_fulfillment', align: "left", sortable: "true", sorter: "dateSorter", field: "last_fulfillment"}}
-        = t(:line_item)[:last_fulfillment]
-      %th{data: {class: 'notes_button exclude_from_export', align: "center", field: "notes"}}
-        = t(:line_item)[:notes]
-      %th{data: {class: 'docs_button exclude_from_export', align: "center", field: "docs"}}
-        = t(:line_item)[:documents]
-      %th{data: {class: 'edit_button exclude_from_export', align: "center", field: "edit"}}
-        = t(:line_item)[:edit_from_table]
+      %th.service{ data: { field: 'service', align: 'left' } }
+        = Service.model_name.human
+      %th.fulfillments{ data: { field: 'fulfillments', align: 'center', switchable: 'false' } }
+        = Fulfillment.model_name.plural.capitalize
+      %th.notes{ data: { field: 'notes', align: 'center' } }
+        = Note.model_name.plural.capitalize
+      %th.documents{ data: { field: 'documents', align: 'center' } }
+        = Document.model_name.plural.capitalize
+      %th.account-number.editable.text-wrap{ data: { field: 'account_number', align: 'center', sortable: 'true' } }
+        = LineItem.human_attribute_name(:account_number)
+      %th.contact.editable.text-wrap{ data: { field: 'contact', align: 'center', sortable: 'true' } }
+        = LineItem.human_attribute_name(:contact_name)
+      %th.qty-requested{ data: { field: 'quantity_requested', align: 'center', sortable: 'true' } }
+        = LineItem.human_attribute_name(:quantity_requested)
+      %th.qty-type{ data: { field: 'quantity_type', align: 'center' } }
+        = LineItem.human_attribute_name(:quantity_type)
+      %th.qty-fulfilled{ data: { field: 'quantity_fulfilled', align: 'center', sortable: 'true', visible: 'false' } }
+        = LineItem.human_attribute_name(:quantity_fulfilled)
+      %th.qty-remaining{ data: { field: 'quantity_remaining', align: 'center', sortable: 'true' } }
+        = LineItem.human_attribute_name(:quantity_remaining)
+      %th.date-started{ data: { field: 'date_started', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
+        = LineItem.human_attribute_name(:started_at)
+      %th.last-fulfillment{ data: { field: 'last_fulfillment', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
+        = LineItem.human_attribute_name(:last_fulfillment)

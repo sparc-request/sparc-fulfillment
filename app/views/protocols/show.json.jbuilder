@@ -1,3 +1,1 @@
-json.rows [@protocol] do |protocol|
-  json.partial! 'protocol', protocol: protocol
-end
+json.partial! 'protocol', collection: [@protocol], as: :protocol

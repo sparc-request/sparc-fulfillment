@@ -49,7 +49,18 @@ $ ->
   $(document).on 'click', '#backToTop', ->
     $('html, body').animate({ scrollTop: 0 }, 'slow')
 
+  $(document).on('mouseenter focus', '.editable:not(.active)', ->
+    $(this).find('a').addClass('active')
+  ).on('mouseleave focusout', '.editable:not(.active)', ->
+    $(this).find('a').removeClass('active')
+  )
 
+  $(document).on 'click', '.editable', ->
+    if $link = $(this).find('a')
+      $.ajax
+        method: 'GET'
+        dataType: 'script'
+        url: $link.attr('href')
 
 
 

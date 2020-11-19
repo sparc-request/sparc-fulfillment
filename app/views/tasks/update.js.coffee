@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
+$("#flashContainer").html("<%= escape_javascript(render('flash')) %>")
 $('#task-list').bootstrapTable('refresh', {silent: "true"})
 $(".notification.task-notifications").empty().append("<%= current_identity.reload.tasks_count %>")
 notification_bubble = $('.notification.task-notifications')

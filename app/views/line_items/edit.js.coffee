@@ -19,14 +19,19 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 <% if @otf %> # study level activities line item edit
-$("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_level_activities/study_level_activity_form', locals: {protocol: @protocol, line_item: @line_item, header_text: t(:line_item)[:edit]})) %>")
-$("#modalContainer").modal(backdrop: 'static', keyboard: false)
-$("#date_started_field").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
+$('.popover').popover('hide')
+if !$(".line-item-<%= @line_item.id %>-<%= @field %>-popover").length
+  $(".edit-<%= @field %>-<%= @line_item.id %>").popover(
+    title:      "#{I18n.t('actions.edit')} <%= LineItem.human_attribute_name(@field) %> <a href='#' class='close' data-dismiss='alert'>&times;</a>"
+    content:    $("<%= j render 'form', line_item: @line_item, field: @field %>")
+    template:   '<div class="popover line-itme-popover line-item-<%= @line_item.id %>-<%= @field %>-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+    html:       true
+    trigger:    'manual'
+    placement:  'top'
+    boundary:   'window'
+  ).popover('show')
 <% else %> # study schedule line item edit
 $("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_schedule/management/manage_services/change_service_form', locals: {line_item: @line_item})) %>")
 $("#modalContainer").modal(backdrop: 'static', keyboard: false)
-<% end %>
-$(".selectpicker").selectpicker()
 $("#modalContainer").modal 'show'
+<% end %>

@@ -54,6 +54,14 @@ module ApplicationHelper
     end
   end
 
+  def format_count(value, digits=1)
+    if value >= 10.pow(digits)
+      "#{value - (value - (10.pow(digits) - 1))}+"
+    else
+      value
+    end
+  end
+
   def display_cost cost
     dollars = (cost / 100.0) rescue nil
     dollar, cent = dollars.to_s.split('.')

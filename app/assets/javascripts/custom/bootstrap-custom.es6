@@ -72,7 +72,7 @@
         $link   = $(el).find('a:not(.dropdown-item)').first(),
         href    = $link.attr('href'),
         remote  = $link.data('remote') || false;
-      } else if (el.tagName != 'a' && $(el).parents('tr').find('a:not(.dropdown-item)').length) {
+      } else if (el.tagName != 'a' && !el.classList.contains('editable') && $(el).parents('tr').find('a:not(.dropdown-item)').length) {
         $link = $(el).parents('tr').find('a:not(.dropdown-item)').first(),
         href    = $link.attr('href'),
         remote  = $link.data('remote') || false;

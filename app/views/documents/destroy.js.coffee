@@ -20,7 +20,7 @@
 
 <% if ["Identity", "Protocol"].include?(@document.documentable_type) %>
 ##Document is a report, doesn't use modal window.
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
+$("#flashContainer").html("<%= escape_javascript(render('flash')) %>");
 refreshDocumentsTables()
 <% else %>
 $("#modalContainer").html("<%= escape_javascript(render(partial: 'index', locals: { documents: @documentable.documents, documentable_type: @document.documentable_type, documentable_id: @documentable.id, documentable_sym: @document.documentable_type.downcase.to_sym})) %>")

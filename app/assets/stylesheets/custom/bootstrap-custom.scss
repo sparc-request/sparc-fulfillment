@@ -853,3 +853,25 @@ a.text-white:hover {
     top: 1rem !important;
   }
 }
+
+/////////////////////////////
+/// Editable Table Fields ///
+/////////////////////////////
+
+table:not(.table) th.editable, td.editable {
+  transition: $btn-transition;
+
+  &:hover, &:focus, &.active {
+    cursor: pointer;
+    background: theme-color-level('light', 0.5);
+    outline: 0;
+  }
+}
+
+table.table-interactive {
+  td.editable {
+    &:hover, &:focus, &.active {
+      background: theme-color-level('light', 1.5);
+    }
+  }
+}
