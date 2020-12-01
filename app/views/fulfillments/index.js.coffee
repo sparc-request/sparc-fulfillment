@@ -18,9 +18,10 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_level_activities/fulfillments_table', locals: {line_item: @line_item, header_text: 'Fulfillments List'})) %>");
-$("#modalContainer").modal(backdrop: 'static', keyboard: false)
-$("#modalContainer").modal 'show'
+$("#modalContainer").
+  html("<%= j render 'study_level_activities/fulfillments_table', line_item: @line_item, header_text: 'Fulfillments List' %>").
+  modal('show')
+
 $('.fulfillments-list li').find("[data-field='docs']").closest('li').hide()
 $('.fulfillments-list li').find("[data-field='notes']").closest('li').hide()
 $('.fulfillments-list li').find("[data-field='export_invoiced']").closest('li').hide()

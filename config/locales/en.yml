@@ -358,23 +358,12 @@ en:
     reason: "Reason *"
 
   notes:
-    object: "Note"
-    action: "Action"
-    add_button: "Add Note"
-    header:
-      title: " Notes"
-    index:
-      none_message1: "This "
-      none_message2: " currently has no notes"
-    comment: "Comment"
-    date: "Date"
-    followup: "Follow up"
-    identity: "User"
-    incomplete_header: "Reason for Incompletion"
-    lineitem:
-      edit: "Edit Line Item"
-    new_header: "Add Note"
-    reason: "Reason *"
+    header: "%{notable_type} Notes"
+    add: "Leave Note"
+    update: "Update Note"
+    none: "This %{notable_type} doesn't have any notes."
+    placeholder: "Type a note..."
+    edited: "(Edited)"
 
   protocols_participant:
     status: "Status"

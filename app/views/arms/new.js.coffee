@@ -19,6 +19,5 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_schedule/management/manage_arms/add_arm_form', locals: {protocol: @protocol, arm: @arm, current_page: @current_page, services: @services, schedule_tab: @schedule_tab})) %>");
-$("#modalContainer").modal(backdrop: 'static', keyboard: false)
 $(".selectpicker").selectpicker()
 $("#modalContainer").modal 'show'

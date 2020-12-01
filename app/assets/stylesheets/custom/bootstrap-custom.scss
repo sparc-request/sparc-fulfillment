@@ -867,11 +867,3 @@ table:not(.table) th.editable, td.editable {
     outline: 0;
   }
 }
-
-table.table-interactive {
-  td.editable {
-    &:hover, &:focus, &.active {
-      background: theme-color-level('light', 1.5);
-    }
-  }
-}

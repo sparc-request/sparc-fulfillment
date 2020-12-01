@@ -32,6 +32,5 @@ if !$(".line-item-<%= @line_item.id %>-<%= @field %>-popover").length
   ).popover('show')
 <% else %> # study schedule line item edit
 $("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_schedule/management/manage_services/change_service_form', locals: {line_item: @line_item})) %>")
-$("#modalContainer").modal(backdrop: 'static', keyboard: false)
 $("#modalContainer").modal 'show'
 <% end %>

@@ -34,7 +34,7 @@ Rails.application.routes.draw do
 
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
   resources :components, only: [:update]
-  resources :notes, only: [:index, :new, :create]
+  resources :notes, only: [:index, :create, :edit, :update, :destroy]
   resources :documents
   resources :line_items, only: [:index, :edit, :update]
   resources :visits, only: [:update]

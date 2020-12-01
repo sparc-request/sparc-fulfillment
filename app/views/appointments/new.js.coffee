@@ -19,6 +19,5 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modalContainer").html("<%= escape_javascript(render(partial: 'form', locals: {appointment: @appointment, note: @note})) %>")
-$("#modalContainer").modal(backdrop: 'static', keyboard: false)
 $("#modalContainer").modal("show")
 $(".selectpicker").selectpicker()

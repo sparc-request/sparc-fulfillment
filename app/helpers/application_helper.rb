@@ -42,15 +42,27 @@ module ApplicationHelper
     end
   end
 
-  def format_date date
+  def format_date(date, opts={})
     if date.present?
-      date.strftime('%m/%d/%Y')
+      if opts[:html]
+        content_tag :span do
+          raw date.strftime('%m/%d/%Y')
+        end
+      else
+        date.strftime('%m/%d/%Y')
+      end
     end
   end
 
-  def format_datetime date
-    if date.present?
-      date.strftime('%F %H:%M')
+  def format_datetime(datetime, opts={})
+    if datetime.present?
+      if opts[:html]
+        content_tag :span do
+          raw datetime.strftime('%m/%d/%Y %l:%M') + content_tag(:span, datetime.strftime(':%S'), class: 'd-none') + datetime.strftime(' %p')
+        end
+      else
+        datetime.strftime('%m/%d/%Y %l:%M:%S %p')
+      end
     end
   end
 

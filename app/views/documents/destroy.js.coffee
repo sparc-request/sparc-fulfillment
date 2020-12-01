@@ -29,6 +29,5 @@ $("#modalContainer").html("<%= escape_javascript(render(partial: 'index', locals
 $('#study-level-activities-table').bootstrapTable('refresh', {silent: "true"})
 <% end %>
 
-$("#modalContainer").modal(backdrop: 'static', keyboard: false)
 $("#modalContainer").modal 'show'
 <% end %>

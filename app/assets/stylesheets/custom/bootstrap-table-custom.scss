@@ -78,6 +78,10 @@
       }
     }
   }
+
+  tbody tr td.editable:hover {
+    background: theme-color-level('light', 1.5);
+  }
 }
 
 .bootstrap-table-nav-spacer {

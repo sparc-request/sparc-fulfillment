@@ -18,6 +18,6 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modalContainer").html("<%= escape_javascript(render(partial: 'index', locals: { notes: @notes, notable_type: @notable_type})) %>")
-$("#modalContainer").modal(backdrop: 'static', keyboard: false)
-$("#modalContainer").modal 'show'
+$("#modalContainer").
+  html("<%= j render 'index', notes: @notes, note: @note, notable_id: @notable_id, notable_type: @notable_type, notable: @notable %>").
+  modal('show')

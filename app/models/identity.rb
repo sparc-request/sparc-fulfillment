@@ -26,6 +26,7 @@ class Identity < SparcDbBase
 
   has_many :documents, as: :documentable
   has_many :project_roles
+  has_many :notes, dependent: :destroy
   has_many :tasks, as: :assignable
   has_many :reports
   has_many :clinical_providers

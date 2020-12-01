@@ -21,16 +21,16 @@
 .alert.alert-warning.mb-0.rounded-0.border-bottom
   %p.text-warning.mb-0
     = t(:line_item)[:edit_in_sparc]
-%table.table-interactive#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', 'cookie-id-table' => 'study-level-activities-table', striped: 'true', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['excel'], export_options: "{\"ignoreColumn\": [1,2,3], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}" } }
+%table#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', 'cookie-id-table' => 'study-level-activities-table', striped: 'true', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['excel'], export_options: "{\"ignoreColumn\": [1,2,3], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}" } }
   %thead.bg-light
     %tr
       %th.service{ data: { field: 'service', align: 'left' } }
         = Service.model_name.human
-      %th.fulfillments{ data: { field: 'fulfillments', align: 'center', switchable: 'false' } }
+      %th.fulfillments.editable{ data: { field: 'fulfillments', align: 'center', switchable: 'false' } }
         = Fulfillment.model_name.plural.capitalize
-      %th.notes{ data: { field: 'notes', align: 'center' } }
+      %th.notes.editable{ data: { field: 'notes', align: 'center' } }
         = Note.model_name.plural.capitalize
-      %th.documents{ data: { field: 'documents', align: 'center' } }
+      %th.documents.editable{ data: { field: 'documents', align: 'center' } }
         = Document.model_name.plural.capitalize
       %th.account-number.editable.text-wrap{ data: { field: 'account_number', align: 'center', sortable: 'true' } }
         = LineItem.human_attribute_name(:account_number)

@@ -19,13 +19,13 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class NotesController < ApplicationController
-
-  respond_to :json, :html
-
-  before_action :find_notable, only: [:index, :create]
+  before_action :find_note,     only: [:edit, :update, :destroy]
+  before_action :find_notable
 
   def index
-    @notes = @notable.notes
+    respond_to :js
+    @notes  = @notable.notes
+    @note   = current_identity.notes.new(note_params)
   end
 
   def new
@@ -38,6 +38,33 @@ class NotesController < ApplicationController
       @selector = "#{@note.unique_selector}_notes"
     end
     @notes = @notable.notes
+  end
+
+  def edit
+    respond_to :js
+  end
+
+  def update
+    @notes = @notable.notes
+
+    if @note.update_attributes(note_params)
+      @notes  = @notable.notes
+      @note   = current_user.notes.new(notable_id: @notable_id, notable_type: @notable_type)
+    else
+      @errors = @note.errors
+    end
+
+    respond_to :js
+  end
+
+  def destroy
+    @selector = @note.unique_selector
+    @note.destroy
+    @notes    = @notable.notes
+    @note     = current_user.notes.new(notable_id: @notable_id, notable_type: @notable_type)
+    @count    = helpers.format_count(@notes.count, 1)
+
+    respond_to :js
   end
 
   private
