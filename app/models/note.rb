@@ -77,6 +77,6 @@ class Note < ApplicationRecord
   end
 
   def unique_selector
-    "#{notable_type.downcase}_#{notable_id}"
+    "#{notable_type.downcase}#{notable_id}"
   end
 end

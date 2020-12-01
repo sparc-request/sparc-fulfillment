@@ -30,7 +30,7 @@ module StudyLevelActivitiesHelper
   end
 
   def sla_notes_button(line_item)
-    link_to notes_path(note: { notable_id: line_item.id, notable_type: LineItem.name }), remote: true, class: 'btn btn-sq btn-light position-relative' do
+    link_to notes_path(note: { notable_id: line_item.id, notable_type: LineItem.name }), remote: true, id: "#{line_item.class.name.downcase}#{line_item.id}Notes", class: 'btn btn-sq btn-light position-relative' do
       raw(icon('far', 'sticky-note fa-lg') + content_tag(:span, format_count(line_item.notes.length, 1), class: ['badge badge-pill badge-c notification-badge', line_item.notes.length > 1 ? 'badge-warning ' : 'badge-secondary']))
     end
   end
