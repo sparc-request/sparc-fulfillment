@@ -295,4 +295,8 @@ class ParticipantsController < ApplicationController
       @participant.notes.create(identity: current_identity, comment: "Arm changed from #{old_arm} to #{new_arm}")
     end
   end
+
+  def set_highlighted_link
+    @highlighted_link ||= 'participants'
+  end
 end

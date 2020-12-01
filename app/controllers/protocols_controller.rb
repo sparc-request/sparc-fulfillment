@@ -74,4 +74,8 @@ class ProtocolsController < ApplicationController
   def get_current_protocol_tab
     @tab = cookies['active-protocol-tab'.to_sym] ? cookies['active-protocol-tab'.to_sym] : (@services_present ? "study_schedule" : "study_level_activities")
   end
+
+  def set_highlighted_link
+    @highlighted_link ||= 'requests'
+  end
 end

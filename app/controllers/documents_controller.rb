@@ -172,4 +172,8 @@ class DocumentsController < ApplicationController
   def document_params
     params.require(:document).permit(:documentable_type, :documentable_id, :title)
   end
+
+  def set_highlighted_link
+    @highlighted_link ||= 'documents'
+  end
 end

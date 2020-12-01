@@ -74,5 +74,8 @@ class ImportsController < ApplicationController
   def import_params
     params.require(:import).permit(:xml_file, :title, :file)
   end
-end
 
+  def set_highlighted_link
+    @highlighted_link ||= 'imports'
+  end
+end

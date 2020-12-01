@@ -19,7 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class TasksController < ApplicationController
-
   before_action :find_task, only: [:show, :update, :task_reschedule]
 
   respond_to :json, :html
@@ -138,9 +137,8 @@ class TasksController < ApplicationController
       end
     end
   end
+
+  def set_highlighted_link
+    @highlighted_link ||= 'tasks'
+  end
 end
-
-
-
-
-

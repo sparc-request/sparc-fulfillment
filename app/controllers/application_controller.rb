@@ -24,8 +24,10 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_identity!
   before_action :establish_bradcrumber
-  around_action :set_time_zone, if: :identity_signed_in?
+  before_action :set_highlighted_link
   before_action :push_user_to_gon, if: :identity_signed_in?
+
+  around_action :set_time_zone, if: :identity_signed_in?
 
   def set_time_zone(&block)
     time_zone = current_identity.time_zone
@@ -39,8 +41,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def user_for_paper_trail
-    identity_signed_in? ? current_identity.id : 'Unauthenticated User'
+  def set_highlighted_link  # default value, override inside controllers
+    @highlighted_link ||= ''
   end
 
   def push_user_to_gon
