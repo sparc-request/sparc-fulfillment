@@ -152,6 +152,20 @@ en:
     subject_count: "Subject Count"
     visit_count: "Visit Count"
 
+  ##############################
+  # Confirms (via Sweet Alert) #
+  ##############################
+
+  # These are the default values used by SweetAlert Confirms
+  # denoted by elements with the `data-confirm-swal` property.
+  # See `sweetalert-integration.js`
+
+  confirm:
+    title: "Are you sure?"
+    text: "This action cannot be undone."
+    confirm: "Yes"
+    cancel: "No"
+
   constants:
     currency: "$"
     yes_select: "Yes"

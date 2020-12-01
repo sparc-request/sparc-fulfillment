@@ -28,6 +28,8 @@ class Note < ApplicationRecord
   belongs_to :notable, polymorphic: true
   belongs_to :identity
 
+  validates :comment, presence: true
+
   validates_inclusion_of :kind, in: KIND_TYPES
 
   validates :reason, presence: true, if: Proc.new { |note| ((note.notable_type == 'Procedure') || (note.notable_type == 'Appointment')) && note.kind == 'reason' }

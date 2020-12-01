@@ -18,16 +18,17 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modalContainer").html("<%= escape_javascript(render(partial: 'index', locals: { notable: @notable, notes: @notes, notable_id: @notable_id, notable_type: @notable_type })) %>")
+<% if @errors %>
+$("[name^='note']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
 
-<% if @notable_type == "Participant" %>
-$('#participant-tracker-table').bootstrapTable('refresh', {silent: "true"})
-
-<% elsif @notable_type == "LineItem" %>
-$('#study-level-activities-table').bootstrapTable('refresh', {silent: "true"})
-
-<% elsif @notable_type == "Procedure" or @notable_type == "Appointment" %>
-unless $("span#<%= @selector %>.glyphicon").hasClass("blue-glyphicon")
-  $("span#<%= @selector %>.glyphicon").addClass("blue-glyphicon")
-
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='note[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+<% else %>
+$("[id=<%= @note.unique_selector %>Notes]:visible").find('span.badge').removeClass('badge-secondary').addClass('badge-warning').html("<%= @count %>")
+$("#modalContainer").html("<%= j render 'index', notes: @notes, note: @note, notable_id: @notable_id, notable_type: @notable_type, notable: @notable, disabled: false %>")
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
 <% end %>

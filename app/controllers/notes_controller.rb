@@ -22,8 +22,9 @@ class NotesController < ApplicationController
   before_action :find_note,     only: [:edit, :update, :destroy]
   before_action :find_notable
 
+  respond_to :js
+
   def index
-    respond_to :js
     @notes  = @notable.notes
     @note   = current_identity.notes.new(note_params)
   end
@@ -33,38 +34,35 @@ class NotesController < ApplicationController
   end
 
   def create
-    if note_params[:comment].present? # don't create empty notes
-      @note = Note.create(note_params.merge!({ identity: current_identity }))
-      @selector = "#{@note.unique_selector}_notes"
+    @note = current_identity.notes.new(note_params)
+    if @note.save
+      @notes  = @notable.notes
+      @note   = current_identity.notes.new(notable_id: @notable_id, notable_type: @notable_type)
+      @count  = helpers.format_count(@notes.count, 1)
+    else
+      @errors = @note.errors
     end
-    @notes = @notable.notes
   end
 
   def edit
-    respond_to :js
   end
 
   def update
     @notes = @notable.notes
-
     if @note.update_attributes(note_params)
       @notes  = @notable.notes
-      @note   = current_user.notes.new(notable_id: @notable_id, notable_type: @notable_type)
+      @note   = current_identity.notes.new(notable_id: @notable_id, notable_type: @notable_type)
     else
       @errors = @note.errors
     end
-
-    respond_to :js
   end
 
   def destroy
     @selector = @note.unique_selector
     @note.destroy
     @notes    = @notable.notes
-    @note     = current_user.notes.new(notable_id: @notable_id, notable_type: @notable_type)
+    @note     = current_identity.notes.new(notable_id: @notable_id, notable_type: @notable_type)
     @count    = helpers.format_count(@notes.count, 1)
-
-    respond_to :js
   end
 
   private
@@ -74,8 +72,12 @@ class NotesController < ApplicationController
   end
 
   def find_notable
-    @notable_id = params[:note][:notable_id]
-    @notable_type = params[:note][:notable_type]
-    @notable = params[:note][:notable_type].constantize.find(@notable_id)
+    @notable_id   = @note ? @note.notable_id    : note_params[:notable_id]
+    @notable_type = @note ? @note.notable_type  : note_params[:notable_type]
+    @notable      = @note ? @note.notable       : @notable_type.constantize.find(@notable_id)
+  end
+
+  def find_note
+    @note = Note.find(params[:id])
   end
 end

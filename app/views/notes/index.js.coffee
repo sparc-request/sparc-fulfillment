@@ -21,3 +21,4 @@
 $("#modalContainer").
   html("<%= j render 'index', notes: @notes, note: @note, notable_id: @notable_id, notable_type: @notable_type, notable: @notable %>").
   modal('show')
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
