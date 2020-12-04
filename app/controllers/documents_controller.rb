@@ -19,18 +19,13 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class DocumentsController < ApplicationController
-  layout nil
-
   before_action :find_document, only: [:show, :destroy]
   before_action :authorize_document_access, only: [:show]
   before_action :validate_presence_of_upload, only: [:create]
 
   def index
     respond_to do |format|
-      format.html {
-        session[:breadcrumbs].clear.set_base(:documents, documents_path)
-        render
-      }
+      format.html
       format.js {
         find_documentable
 

@@ -18,22 +18,29 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.w-100
+.w-20
   .card
     .card-header.bg-primary.text-white
       %h3.mb-0
-        = "Klok Imports"
-    #importsToolbar
-      = link_to new_import_path, remote: true, class: "button btn-lg btn-block btn btn-success" do
-        = succeed t('imports.klok_import') do
-          = icon('far', 'clock mr-2')
-    %table.imports.custom_striped#importsTable{data: {pagination: 'true', 'page-size' => 20, toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", toolbar: '#importsToolbar', url: imports_path(format: :json), striped: "true", show: {columns: "true", refresh: "true", toggle: "true"}, "sort-name" => "created_at", "sort-order" => 'desc'}}
-      %thead
-        %tr
-          %th{data: {class: 'title', align: 'center', sortable: "true", field: 'title'}}
-            = t(:imports)[:title]
-          %th{data: {class: 'created_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'created_at'}}
-            = t(:imports)[:date_created]
-          %th{data: {class: 'file', align: 'center', field: 'file'}}
-            = t(:imports)[:file]
-
+        = "Reports"
+    .card-body
+      = link_to new_report_path(report_type: 'invoice_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary text-left" do
+        = succeed "Invoice Report" do
+          = icon('fas', 'file-alt mr-2')
+      = link_to new_report_path(report_type: 'auditing_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+        = succeed "Auditing Report" do
+          = icon('fas', 'file-alt mr-2')
+      = link_to new_report_path(report_type: 'project_summary_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+        = succeed "Project Summary Report" do
+          = icon('fas', 'file-alt mr-2')
+      = link_to new_report_path(report_type: 'subsidy_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+        = succeed "Subsidy Report" do
+          = icon('fas', 'file-alt mr-2')
+      - if ENV.fetch('CLINICAL_SERVICES') == 'true'
+        = link_to new_report_path(report_type: 'visit_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+          = succeed "Visit Report" do
+            = icon('fas', 'file-alt mr-2')
+        - if current_identity.is_a_patient_registrar?
+          = link_to new_report_path(report_type: 'participant_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+            = succeed "Participant Report" do
+              = icon('fas', 'file-alt mr-2')

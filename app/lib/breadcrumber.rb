@@ -30,7 +30,7 @@ class Breadcrumber
     if opts[:crumb]
       @crumbs.delete(opts[:crumb])
     else
-      @base   = { key: :requests, url: root_path }
+      @base   = Hash.new
       @crumbs = Array.new
     end
     self
@@ -54,15 +54,17 @@ class Breadcrumber
   end
 
   def breadcrumbs
-    crumbs = [content_tag(:li, content_tag(:a, I18n.t("layout.navigation.#{@base[:key]}"), href: @base[:url]))]
-    @crumbs.each do |crumb|
-      crumbs <<
-        if crumb[:url]
-          content_tag(:li, content_tag(:a, crumb[:label], href: crumb[:url]))
-        else
-          content_tag(:li, crumb[:label])
-        end
+    if @base.any?
+      crumbs = [content_tag(:li, content_tag(:a, I18n.t("layout.navigation.#{@base[:key]}"), href: @base[:url]))]
+      @crumbs.each do |crumb|
+        crumbs <<
+          if crumb[:url]
+            content_tag(:li, content_tag(:a, crumb[:label], href: crumb[:url]))
+          else
+            content_tag(:li, crumb[:label])
+          end
+      end
+      crumbs.join(content_tag(:li, '/', class: 'px-2')).html_safe
     end
-    crumbs.join(content_tag(:li, '/', class: 'px-2')).html_safe
   end
 end

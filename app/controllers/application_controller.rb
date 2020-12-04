@@ -58,6 +58,8 @@ class ApplicationController < ActionController::Base
   def establish_bradcrumber
     if !session[:breadcrumbs] || !session[:breadcrumbs].is_a?(Breadcrumber)
       session[:breadcrumbs] = Breadcrumber.new
+    else
+      session[:breadcrumbs].clear
     end
   end
 end

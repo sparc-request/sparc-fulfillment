@@ -22,9 +22,7 @@ class ImportsController < ApplicationController
   def index
     @imports = Import.all
     respond_to do |format|
-      format.html {
-        session[:breadcrumbs].clear.set_base(:imports, imports_path)
-      }
+      format.html
       format.json
     end
   end

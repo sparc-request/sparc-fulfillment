@@ -25,7 +25,6 @@ class ProtocolsController < ApplicationController
   def index
     respond_to do |format|
       format.html {
-        session[:breadcrumbs].clear.set_base(:requests, root_url)
         if cookies['protocols.bs.table.columns'].blank? && !ENV['DEFAULT_HOME_COLUMNS'].blank?
           cookies['protocols.bs.table.columns'] = {
             value:    ENV['DEFAULT_HOME_COLUMNS'].split(',').to_json,
@@ -46,7 +45,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.html {
         gon.push({ protocol_id: @protocol.id })
-        session[:breadcrumbs].clear.set_base(:requests, root_url).add_crumbs([
+        session[:breadcrumbs].set_base(:requests, root_url).add_crumbs([
           { label: helpers.protocol_label(@protocol) },
           { label: helpers.request_label(@protocol) }
         ])

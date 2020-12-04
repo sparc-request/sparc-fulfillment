@@ -27,14 +27,11 @@ class TasksController < ApplicationController
     @task_id = params[:id]
 
     respond_to do |format|
-      format.html {
-        session[:breadcrumbs].clear.set_base(:tasks, tasks_path)
-        render
-      }
-      format.json do
+      format.html
+      format.json {
         @tasks = scoped_tasks
         render
-      end
+      }
     end
   end
 

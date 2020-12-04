@@ -255,7 +255,7 @@ en:
     klok_description: "Imported via Klok"
 
   imports:
-    klok_import: "Klok Import"
+    klok_import: "New Klok Import"
     klok_import_info: "Click here to learn more about Klok"
     file_select: "File Select:"
     file_select_info: "requires *.xml file format"
