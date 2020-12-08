@@ -49,7 +49,12 @@ en:
         name: "Visit Name"
         position: ""
       fulfillment:
+        credited: "Credited"
         fulfilled_at: "Fulfillment Date"
+        invoiced: "Invoiced"
+        performer: "Performed By"
+        quantity: "Qty"
+        quantity_type: "Qty Type"
       identity:
         ldap_uid: "Login"
       irb_record:
@@ -62,7 +67,7 @@ en:
         last_fulfillment: "Last Fulfilled"
         quantity_fulfilled: "Qty Fulfilled"
         quantity_remaining: "Qty Remaining"
-        quantity_requested: "Qty Quantity"
+        quantity_requested: "Qty"
         quantity_type: "Qty Type"
         started_at: "Started"
       notes:
@@ -230,10 +235,7 @@ en:
   fulfillment:
     object: "Fulfillment"
     add_fulfillment: "Add Fulfillment"
-    list_fulfillments: "List"
     components: "Fulfillment Components"
-    invoiced: "Invoiced"
-    credited: "Credited"
     edit: "Edit Fulfillment"
     flash_messages:
       created: "Fulfillment Created"
@@ -248,9 +250,6 @@ en:
       performer_id: "Performed By changed to "
       invoiced: "Invoiced changed to "
     no_components: "Fulfillment Has No Components"
-    performed_by: "Performed By"
-    qty_type: "Quantity Type"
-    quantity: "Quantity"
     view: "View Fulfillment Buttons"
     klok_description: "Imported via Klok"
 

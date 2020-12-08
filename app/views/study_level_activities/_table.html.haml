@@ -19,7 +19,8 @@
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 .alert.alert-warning.mb-0.rounded-0.border-bottom
-  %p.text-warning.mb-0
+  %p.text-warning.mb-0<
+    = icon('fas', 'exclamation-circle mr-1')
     = t(:line_item)[:edit_in_sparc]
 %table#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', 'cookie-id-table' => 'study-level-activities-table', striped: 'true', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['excel'], export_options: "{\"ignoreColumn\": [1,2,3], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}" } }
   %thead.bg-light

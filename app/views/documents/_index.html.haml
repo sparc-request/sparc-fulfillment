@@ -18,13 +18,13 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.modal-dialog.modal-lg
+.modal-dialog.modal-lg{ role: 'document' }
   .modal-content
     .modal-header
-      %button.close{type: 'button', data: {dismiss: 'modal'}}
-        %span{aria: {hidden:'true'}} &times;
-        %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= t(:documents)[documentable_sym][:index_header]
+      %h3.modal-title
+        = t(:documents)[documentable_sym][:index_header]
+      %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+        %span{ aria: { hidden: 'true' } } &times;
     .modal-body
       - if documents.any?
         .details-table
@@ -42,13 +42,13 @@
       -else
         .text-center= t(:documents)[documentable_sym][:none]
     .modal-footer
-      .center-block
-        - if documentable_type == "Fulfillment"
-          %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: @documentable.line_item_id}}
-            = t(:actions)[:close]
-        - else
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+      - if documentable_type == "Fulfillment"
+        %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: @documentable.line_item_id}}
+          = t(:actions)[:close]
+      - else
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t('actions.close')
 
-        = link_to new_document_path(document: { documentable_id: documentable_id, documentable_type: documentable_type }, format: :js), remote: true, class: 'btn btn-primary document new' do
-          %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
-          = t(:documents)[:upload_button]
+      = link_to new_document_path(document: { documentable_id: documentable_id, documentable_type: documentable_type }, format: :js), remote: true, class: 'btn btn-primary document new' do
+        %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
+        = t(:documents)[:upload_button]

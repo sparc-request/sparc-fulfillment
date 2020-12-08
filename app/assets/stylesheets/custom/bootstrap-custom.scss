@@ -156,21 +156,6 @@
     padding: 1rem;
   }
 
-  .card-title {
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-
-    i {
-      width: 20px;
-      height: 20px;
-      margin-right: 0.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
   &-callout {
     @extend .card;
 

@@ -22,9 +22,9 @@
   .card-header.bg-primary.text-white
     %h3.mb-0
       = t('protocols.table.header')
-  #protocolsTableToolbar
+  #protocolsToolbar
     = select_tag 'protocol_status_filter', options_for_select((t(:sub_service_request)[:statuses].values.zip t(:sub_service_request)[:statuses].keys), 'Any Status'), class: 'selectpicker'
-  %table.table-interactive.table-striped#protocols{ data: { toggle: 'table', url: protocols_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 50, pagination: 'true', side_pagination: 'server', sort_name: 'sparc_id', sort_order: 'asc', cookie: 'true', cookie_id_table: 'protocols', striped: 'true', toolbar: '#protocolsTableToolbar', show_export: 'true', export_types: ['excel']} }
+  %table.table-interactive.table-striped#protocols{ data: { toggle: 'table', url: protocols_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 50, pagination: 'true', side_pagination: 'server', sort_name: 'sparc_id', sort_order: 'asc', cookie: 'true', cookie_id_table: 'protocols', striped: 'true', toolbar: '#protocolsToolbar', show_export: 'true', export_types: ['excel']} }
     %thead.bg-light
       %tr
         %th.srid{ data: { field: 'srid', align: 'left', sortable: 'true' } }
