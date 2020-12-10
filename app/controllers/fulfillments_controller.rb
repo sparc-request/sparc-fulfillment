@@ -42,10 +42,11 @@ class FulfillmentsController < ApplicationController
 
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
+    protocol = @line_item.protocol
     service = @line_item.service
-    funding_source = @line_item.protocol.sparc_funding_source
+    funding_source = protocol.sparc_funding_source
     fulfilled_at = fulfillment_params[:fulfilled_at]
-    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, funding_source: funding_source, percent_subsidy: @line_item.protocol.percent_subsidy }))
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, funding_source: funding_source, percent_subsidy: protocol.percent_subsidy }))
     if @fulfillment.valid?
       @fulfillment.service_cost = @line_item.cost(funding_source, Time.strptime(fulfilled_at, "%m/%d/%Y"))
       @fulfillment.save
