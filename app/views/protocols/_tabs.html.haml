@@ -27,10 +27,11 @@
       = link_to t('protocol.tabs.participant_tracker'), refresh_tab_protocol_path(protocol, tab: 'participant_tracker'), remote: true, id: 'participantTrackerTabLink', class: ['nav-link nav-item h4 mb-0', tab == 'participant_tracker' ? 'active' : ''], role: 'tab', data: { toggle: 'tab' }, aria: { controls: 'participantTrackerTab', selected: (tab == 'participant_tracker').to_s }
     = link_to t('protocol.tabs.study_level_activities'), refresh_tab_protocol_path(protocol, tab: 'study_level_activities'), remote: true, id: 'studyLevelActivitiesTabLink', class: ['nav-link nav-item h4 mb-0', tab == 'study_level_activities' ? 'active' : ''], role: 'tab', data: { toggle: 'tab' }, aria: { controls: 'studyLevelActivitiesTab', selected: (tab == 'study_level_activities').to_s }
     = link_to refresh_tab_protocol_path(protocol, tab: 'reports'), remote: true, id: 'reportsTabLink', class: ['nav-link nav-item h4 mb-0', tab == 'reports' ? 'active' : ''], role: 'tab', data: { toggle: 'tab' }, aria: { controls: 'reportsTab', selected: (tab == 'reports').to_s } do
-      = t('protocol.tabs.reports')
-      - if protocol.unaccessed_documents_count > 0
-        %span.badge.badge-secondary
-          = protocol.unaccessed_documents_count
+      %span.position-relative<
+        = t('protocol.tabs.reports')
+        - if protocol.unaccessed_documents_count <= 0
+          %span.badge.badge-pill.badge-c.badge-danger.notification-badge.reports-tab-badge<
+            = format_count(protocol.unaccessed_documents_count)
 
   .tab-content
     .tab-pane.fade#studyScheduleTab{ role: 'tabpanel', class: tab == 'study_schedule' ? 'show active' : '', aria: { labelledby: 'studyScheduleTabLink' } }

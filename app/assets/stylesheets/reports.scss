@@ -18,31 +18,8 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-/************REPORTS STYLING************/
-
-//TABLE STYLING
-#reports_index
-  table.custom_striped
-    tbody tr:hover
-      cursor: auto
-
-//MODAL STYLING
-#organization_select + .btn-group
-  .multiselect
-    padding-right: 23px
-    padding-bottom: 2px
-
-  .multiselect-selected-text
-    display: inline-block
-    overflow: hidden
-    width: 100%
-    text-align: left
-
-  .multiselect b.caret
-    margin-bottom: 12px
-
-#protocol_section .dropdown-glyphicon
-  top: 7px
-
-.new_report
-  margin-top: 10px
+.reports-tab-badge {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  right: -1.5rem !important;
+}
