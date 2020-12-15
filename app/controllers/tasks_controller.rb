@@ -76,13 +76,19 @@ class TasksController < ApplicationController
   end
 
   def update
+    respond_to :js
+
     if @task.update_attributes(task_params)
       flash[:success] = t(:task)[:flash_messages][:updated]
+    else
+      @errors = @task.errors
     end
   end
 
   def task_reschedule
     # this pops up the modal to change the date for a task
+    # change this to edit?
+    respond_to :js
   end
 
   private

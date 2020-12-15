@@ -20,18 +20,21 @@
 
 .modal-dialog
   .modal-content
-    = form_for task, {remote: true, html: {class: "form-horizontal", role: "form"}} do |t|
+    = form_for task, remote: true do |f|
       .modal-header
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only= t(:actions)[:close]
-        %h4.modal-title.text-center= t(:task)[:reschedule]
+        %h4.modal-title
+          = t('task.reschedule')
+        %button.close{ type: 'button', value: '', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+          %span{ aria: { hidden: 'true' } } &times;
       .modal-body
         .form-group
-          = t.label "due_at", t(:task)[:due_at], class: "col-sm-4 control-label"
-          .col-sm-7
-            = t.text_field "due_at", {id: 'reschedule_datepicker', class: 'form-control datetimepicker', value: format_date(task.due_at), readonly: true}
+          = f.label 'due_at', t('task.due_at'), class: 'required'
+          .input-group.datetimepicker.date{ id: 'dueAtDatePicker', data: { target_input: 'nearest' } }
+            = f.text_field :due_at, class: 'datetimepicker-input form-control', data: { target: '#dueAtDatePicker' }
+            .input-group-append{ data: { toggle: 'datetimepicker', target: '#dueAtDatePicker' } }
+              %span.input-group-text
+                = icon('fas', 'calendar-alt')
       .modal-footer
-        .center-block
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-          %button.btn.btn-primary{type: 'submit'}=t(:actions)[:save]
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t(:actions)[:close]
+        = f.submit t('actions.submit'), class: 'btn btn-primary'

@@ -20,12 +20,8 @@
 
 module TaskHelper
 
-  def format_reschedule task_id
-    html = '-'
-    icon = raw content_tag(:i, '', class: "glyphicon glyphicon-calendar")
-    html = raw content_tag(:a, raw(icon), class: 'task-reschedule', href: 'javascript:void(0)', task_id: task_id)
-
-    html
+  def format_reschedule(task_id)
+    link_to icon('fas', 'calendar-alt'), task_reschedule_task_path(task_id), remote: true, class: 'btn btn-primary reschedule-task'
   end
 
   def format_checkbox task

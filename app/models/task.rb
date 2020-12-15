@@ -42,10 +42,6 @@ class Task < ApplicationRecord
   scope :mine, -> (identity) { where(["identity_id = ? OR assignee_id = ?", identity.id, identity.id]) }
   scope :json_info, -> { includes(:identity, procedure: [protocol: [:sub_service_request], core: [:parent]]) }
 
-  def due_at=(due_date)
-    write_attribute(:due_at, Time.strptime(due_date, "%m/%d/%Y")) if due_date.present?
-  end
-
   private
 
   def increment_assignee_counter
