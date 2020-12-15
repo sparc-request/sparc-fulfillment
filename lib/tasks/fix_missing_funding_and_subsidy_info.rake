@@ -24,6 +24,7 @@ namespace :data do
 
     CSV.open("tmp/fix_funding_and_subsidy_info_report.csv", "wb") do |csv|
 
+      @errors = []
 
       #Looking for procedures with missing subsidy percent info:
       puts "Finding protocols with Subsidy, and grabbing procedures and fulfillments under them that are missing a subsidy percent"
@@ -35,13 +36,11 @@ namespace :data do
       protocols_with_subsidy.each do |protocol|
         protocol.procedures.complete.where(percent_subsidy: nil).each do |procedure|
           procedures_missing_subsidies << procedure
-          ##Fix Them Here:
-          ##
+          procedure.update_attributes(percent_subsidy: protocol.percent_subsidy)
         end
         protocol.fulfillments.where(percent_subsidy: nil).each do |fulfillment|
           fulfillments_missing_subsidies << fulfillment
-          ##Fix Them Here:
-          ##
+          fulfillment.update_attributes(percent_subsidy: protocol.percent_subsidy)
         end
 
         bar1.increment!
@@ -54,25 +53,29 @@ namespace :data do
       bar2 = ProgressBar.new(Procedure.complete.where(funding_source: nil).count)
 
       Procedure.complete.where(funding_source: nil).each do |procedure|
-        ##Fix Them Here:
-        ##
         procedures_missing_funding_source << procedure
+        procedure.update_attributes(funding_source: procedure.protocol.sparc_funding_source)
         bar2.increment!
       end
 
 
-      #Looking for fulfillments with missing funding source info:
-      # puts "Finding Fulfillments with missing funding source"
-      # fulfillments_missing_funding_source = []
-      # bar3 = ProgressBar.new(Fulfillment.where(funding_source: nil).count)
+      # Looking for fulfillments with missing funding source info:
+      puts "Finding Fulfillments with missing funding source"
+      fulfillments_missing_funding_source_count = Fulfillment.where(funding_source: nil).count
+      bar3 = ProgressBar.new(fulfillments_missing_funding_source_count)
 
-      # Fulfillment.where(funding_source: nil).find_each do |fulfillment|
-      #   ##Fix Them Here
-      #   ##
-      #   fulfillments_missing_funding_source << fulfillment
-      #   bar3.increment!
-      # end
+      Fulfillment.includes(:protocol).where(funding_source: nil).find_each do |fulfillment|
+        protocol = fulfillment.protocol
+        if protocol
+          fulfillment.update_attributes(funding_source: protocol.sparc_funding_source)
+        else
+          @errors << ["Fulfillment: #{fulfillment.id}", "Has No Protocol"]
+        end
+        bar3.increment!
+      end
 
+
+      puts "Generating Report CSV"
 
       procedures_missing_both = procedures_missing_funding_source & procedures_missing_subsidies
       procedures_missing_only_funding_source = procedures_missing_funding_source - procedures_missing_subsidies
@@ -108,6 +111,14 @@ namespace :data do
         protocol = fulfillment.protocol
         csv << [fulfillment.id, protocol.sub_service_request.ssr_id, protocol.short_title, protocol.sparc_funding_source, protocol.sub_service_request.status, protocol.pi.full_name]
       end
+
+      csv << ["Fulfillments Missing Funding Source Fixed:", fulfillments_missing_funding_source_count]
+
+      @errors.each do |error|
+        csv << ["Error:", error.first, error.last]
+      end
+
+      puts "Report Complete"
 
     end
 
