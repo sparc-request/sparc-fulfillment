@@ -53,6 +53,8 @@ class TasksController < ApplicationController
   end
 
   def create
+    respond_to :js
+
     task_parameters = task_params.except("notes")
     if task_params[:notes]
       task_parameters[:body] = task_params[:notes][:comment]

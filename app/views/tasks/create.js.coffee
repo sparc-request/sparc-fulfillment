@@ -18,15 +18,21 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @errors.present? %>
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
+<% if @errors %>
+$("[name^='task']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='task[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
 <% else %>
-if !$('.notification.task-notifications').length
-  $('<span class="notification task-notifications"></span>').appendTo($('a.tasks'))
-$(".notification.task-notifications").empty().append("<%= current_identity.reload.tasks_count %>")
-$("#flashContainer").html("<%= escape_javascript(render('flash')) %>")
-$('#task-list').bootstrapTable('refresh', {silent: "true"})
-$("#modalContainer").modal 'hide'
+$("#documentsTable").bootstrapTable('refresh')
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
+$("#modalContainer").modal('hide')
+<% end %>
+
+# JS related to appointments and procedures, this will be refactored later
 
 <% if @procedure.present? %>
 $("#follow_up_<%= @procedure.id %>").html("<%= escape_javascript(render(:partial =>'appointments/followup_calendar', locals: {procedure: @procedure})) %>")
@@ -73,4 +79,3 @@ $('.row.appointment [data-toggle="tooltip"]').tooltip()
 <% end %>
 
 $(".followup_procedure_datepicker").datetimepicker(format: 'MM/DD/YYYY')
-<% end %>
