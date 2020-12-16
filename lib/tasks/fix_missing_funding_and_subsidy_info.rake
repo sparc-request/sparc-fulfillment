@@ -74,6 +74,14 @@ namespace :data do
         bar3.increment!
       end
 
+      puts "Cleaning up incomplete procedures that should not have funding source"
+      Procedure.non_complete.where.not(funding_source: nil).update_all(funding_source: nil)
+      puts "Done"
+
+      puts "Cleaning up incomplete procedures that should not have subsidy"
+      Procedure.non_complete.where.not(percent_subsidy: nil).update_all(percent_subsidy: nil)
+      puts "Done"
+
 
       puts "Generating Report CSV"
 
