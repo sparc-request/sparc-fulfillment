@@ -51,6 +51,7 @@
 //= require bootstrap/dist/js/bootstrap.min
 //= require bootstrap-select/dist/js/bootstrap-select.min
 //= require bootstrap-table/dist/bootstrap-table.min
+//= require bootstrap-table/dist/extensions/cookie/bootstrap-table-cookie.min
 //= require bootstrap-table/dist/extensions/export/bootstrap-table-export.min
 //= require bootstrap4-toggle/js/bootstrap4-toggle.min
 //= require corejs-typeahead/dist/typeahead.bundle.min

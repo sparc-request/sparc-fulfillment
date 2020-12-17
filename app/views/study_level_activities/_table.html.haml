@@ -22,30 +22,30 @@
   %p.text-warning.mb-0<
     = icon('fas', 'exclamation-circle mr-1')
     = t(:line_item)[:edit_in_sparc]
-%table#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', 'cookie-id-table' => 'study-level-activities-table', striped: 'true', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['excel'], export_options: "{\"ignoreColumn\": [1,2,3], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}" } }
+%table#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', 'cookie-id-table' => 'study-level-activities-table', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['excel'], export_options: "{\"ignoreColumn\": [1,2,3], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}" } }
   %thead.bg-light
     %tr
-      %th.service{ data: { field: 'service', align: 'left' } }
-        = Service.model_name.human
       %th.fulfillments.editable{ data: { field: 'fulfillments', align: 'center', switchable: 'false' } }
         = Fulfillment.model_name.plural.capitalize
+      %th.service{ data: { field: 'service', align: 'left' } }
+        = Service.model_name.human
+      %th.qty-requested{ data: { field: 'quantity_requested', align: 'left', sortable: 'true' } }
+        = LineItem.human_attribute_name(:quantity_requested)
+      %th.qty-type{ data: { field: 'quantity_type', align: 'left' } }
+        = LineItem.human_attribute_name(:quantity_type)
+      %th.qty-fulfilled{ data: { field: 'quantity_fulfilled', align: 'left', sortable: 'true', visible: 'false' } }
+        = LineItem.human_attribute_name(:quantity_fulfilled)
+      %th.qty-remaining{ data: { field: 'quantity_remaining', align: 'left', sortable: 'true' } }
+        = LineItem.human_attribute_name(:quantity_remaining)
+      %th.date-started{ data: { field: 'date_started', align: 'left', sortable: 'true', sorter: 'dateSorter' } }
+        = LineItem.human_attribute_name(:started_at)
+      %th.last-fulfillment{ data: { field: 'last_fulfillment', align: 'left', sortable: 'true', sorter: 'dateSorter' } }
+        = LineItem.human_attribute_name(:last_fulfillment)
+      %th.account-number.editable.text-wrap{ data: { field: 'account_number', align: 'left', sortable: 'true' } }
+        = LineItem.human_attribute_name(:account_number)
+      %th.contact.editable.text-wrap{ data: { field: 'contact', align: 'left', sortable: 'true' } }
+        = LineItem.human_attribute_name(:contact_name)
       %th.notes.editable{ data: { field: 'notes', align: 'center' } }
         = Note.model_name.plural.capitalize
       %th.documents.editable{ data: { field: 'documents', align: 'center' } }
         = Document.model_name.plural.capitalize
-      %th.account-number.editable.text-wrap{ data: { field: 'account_number', align: 'center', sortable: 'true' } }
-        = LineItem.human_attribute_name(:account_number)
-      %th.contact.editable.text-wrap{ data: { field: 'contact', align: 'center', sortable: 'true' } }
-        = LineItem.human_attribute_name(:contact_name)
-      %th.qty-requested{ data: { field: 'quantity_requested', align: 'center', sortable: 'true' } }
-        = LineItem.human_attribute_name(:quantity_requested)
-      %th.qty-type{ data: { field: 'quantity_type', align: 'center' } }
-        = LineItem.human_attribute_name(:quantity_type)
-      %th.qty-fulfilled{ data: { field: 'quantity_fulfilled', align: 'center', sortable: 'true', visible: 'false' } }
-        = LineItem.human_attribute_name(:quantity_fulfilled)
-      %th.qty-remaining{ data: { field: 'quantity_remaining', align: 'center', sortable: 'true' } }
-        = LineItem.human_attribute_name(:quantity_remaining)
-      %th.date-started{ data: { field: 'date_started', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
-        = LineItem.human_attribute_name(:started_at)
-      %th.last-fulfillment{ data: { field: 'last_fulfillment', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
-        = LineItem.human_attribute_name(:last_fulfillment)

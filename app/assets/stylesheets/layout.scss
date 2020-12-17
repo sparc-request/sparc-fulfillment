@@ -59,6 +59,7 @@ subheader#siteSubheader {
   z-index: 1041;
   left: 1rem;
   right: 1rem;
+  z-index: 1060 // Puts it in front of modals @ > 1050
 }
 
 #contentContainer {

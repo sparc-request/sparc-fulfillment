@@ -861,7 +861,7 @@ a.text-white:hover {
 table:not(.table) th.editable, td.editable {
   transition: $btn-transition;
 
-  &:hover, &:focus, &.active {
+  &.active {
     cursor: pointer;
     background: theme-color-level('light', 0.5);
     outline: 0;

@@ -20,13 +20,6 @@
 
 $ ->
 
-  ### SEARCH PARTICIPANTS ###
-  $(document).on 'click', '.search-participants', ->
-    $.ajax
-      type: 'GET'
-      url: "/participants/associate_participants_to_protocol.js"
-      data: 'protocol_id' : $(this).data('protocol-id')
-
   ### *CALENDAR ### 
   $(document).on 'click', '.participant-calendar', ->
     protocols_participant_id = $(this).attr('protocols_participant_id')

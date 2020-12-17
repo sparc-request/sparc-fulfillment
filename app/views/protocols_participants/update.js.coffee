@@ -18,25 +18,6 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# Be sure to restart your server when you modify this file.
-#
-# This file contains migration options to ease your Rails 5.0 upgrade.
-#
-# Once upgraded flip defaults one by one to migrate to the new default.
-#
-# Read the Rails 5.0 release notes for more info on each option.
-
-# Enable per-form CSRF tokens. Previous versions had false.
-Rails.application.config.action_controller.per_form_csrf_tokens = true
-
-# Enable origin-checking CSRF mitigation. Previous versions had false.
-Rails.application.config.action_controller.forgery_protection_origin_check = true
-
-# Make Ruby 2.4 preserve the timezone of the receiver when calling `to_time`.
-# Previous versions had false.
-ActiveSupport.to_time_preserves_timezone = false
-
-# Require `belongs_to` associations by default. Previous versions had false.
-Rails.application.config.active_record.belongs_to_required_by_default = true
-
-Rails.application.config.action_view.form_with_generates_remote_forms = false
+$('.popover').popover('hide')
+$("#flashContainer").html("<%= j render 'layouts/flash' %>")
+$('#participantTrackerTable').bootstrapTable('refresh', silent: true)

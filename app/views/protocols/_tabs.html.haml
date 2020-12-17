@@ -29,7 +29,7 @@
     = link_to refresh_tab_protocol_path(protocol, tab: 'reports'), remote: true, id: 'reportsTabLink', class: ['nav-link nav-item h4 mb-0', tab == 'reports' ? 'active' : ''], role: 'tab', data: { toggle: 'tab' }, aria: { controls: 'reportsTab', selected: (tab == 'reports').to_s } do
       %span.position-relative<
         = t('protocol.tabs.reports')
-        - if protocol.unaccessed_documents_count <= 0
+        - if protocol.unaccessed_documents_count > 0
           %span.badge.badge-pill.badge-c.badge-danger.notification-badge.reports-tab-badge<
             = format_count(protocol.unaccessed_documents_count)
 

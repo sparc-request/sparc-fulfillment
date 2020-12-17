@@ -49,19 +49,59 @@ $ ->
   $(document).on 'click', '#backToTop', ->
     $('html, body').animate({ scrollTop: 0 }, 'slow')
 
-  $(document).on('mouseenter focus', '.editable:not(.active)', ->
-    $(this).find('a').addClass('active')
-  ).on('mouseleave focusout', '.editable:not(.active)', ->
-    $(this).find('a').removeClass('active')
+  $(document).on('mouseenter', '.editable:not(.active)', ->
+    # Apply hover styles for editable table cells
+    $anchor = $(this).find('a')
+    if !$anchor.hasClass('disabled')
+      $(this).addClass('active')
+      $anchor.addClass('active')
+      # If the anchor has a toggle like tooltip on hover, show it
+      if (toggle = $anchor.data('toggle')) && !($anchor.data('trigger') == 'manual' || $anchor.data('trigger') == 'click')
+        $("[data-toggle=#{toggle}").not($anchor)[toggle]('hide')
+        $anchor[toggle]('toggle')
+  ).on('mouseleave', '.editable.active', ->
+    # Remove hover styles for editable table cells
+    $anchor = $(this).find('a')
+    $(this).removeClass('active focus')
+    $anchor.removeClass('active focus')
+    # If the anchor has a toggle like tooltip on hover, hide it
+    if (toggle = $anchor.data('toggle')) && !($anchor.data('trigger') == 'manual' || $anchor.data('trigger') == 'click')
+      $anchor[toggle]('hide')
+  ).on('mousedown focus', '.editable:not(.focus)', ->
+    # Apply focus styles for editable table cells
+    $anchor = $(this).find('a')
+    if !$anchor.hasClass('disabled')
+      $(this).addClass('focus')
+      $anchor.addClass('focus')
+  ).on('mouseup focusout', '.editable.focus', ->
+    # Remove focus styles for editable table cells
+    $anchor = $(this).find('a')
+    $(this).removeClass('focus')
+    $anchor.removeClass('focus')
   )
 
-  $(document).on 'click', '.editable', ->
-    if $link = $(this).find('a')
-      $.ajax
-        method: 'GET'
-        dataType: 'script'
-        url: $link.attr('href')
-
+  $(document).on 'click', '.editable', (event) ->
+    # Perform requests when clicking editable table cells with anchors
+    if ($anchor = $(this).find('a')).length
+      # Anchor has an href to perform a request
+      if !$anchor.hasClass('disabled') && $anchor.attr('href') != 'javascript:void(0)'
+        $(this).addClass('disabled')
+        $anchor.addClass('disabled')
+        # If the requst should be remote, send an AJAX request
+        if $anchor.data('remote')
+          $anchor.prop('disabled', true)
+          $.ajax
+            method:   $anchor.data('method') || 'GET'
+            dataType: 'script'
+            url:      $anchor.attr('href')
+            success:  $anchor.prop('disabled', false)
+        # Else change the page location
+        else
+          window.location.href = $anchor.attr('href')
+      # Anchor has a toggle instead of an href
+      else if toggle = $anchor.data('toggle')
+        $("[data-toggle=#{toggle}").not($anchor)[toggle]('hide')
+        $anchor[toggle]('toggle')
 
 
 

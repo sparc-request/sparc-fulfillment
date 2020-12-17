@@ -29,12 +29,6 @@ module StudyLevelActivitiesHelper
     documents.map{ |document| bullet_point + document.original_filename }.join("<br>")
   end
 
-  def sla_notes_button(line_item)
-    link_to notes_path(note: { notable_id: line_item.id, notable_type: LineItem.name }), remote: true, id: "#{line_item.class.name.downcase}#{line_item.id}Notes", class: 'btn btn-sq btn-light position-relative' do
-      raw(icon('far', 'sticky-note fa-lg') + content_tag(:span, format_count(line_item.notes.length, 1), class: ['badge badge-pill badge-c notification-badge', line_item.notes.length > 1 ? 'badge-warning ' : 'badge-secondary']))
-    end
-  end
-
   def sla_docs_button(line_item)
     span = raw(content_tag(:span, line_item.documents.count, class: 'badge badge-light'))
     button = raw(content_tag(:button, raw(content_tag(:span, '', id: "line_item-#{line_item.id}")) + 'Documents ' + raw(span), type: 'button', class: 'btn btn-success button documents list', data: {'documentable-id' => line_item.id, 'documentable-type' => 'LineItem'}))

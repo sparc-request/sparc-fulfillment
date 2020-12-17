@@ -24,7 +24,7 @@
       = t('protocols.table.header')
   #protocolsToolbar
     = select_tag 'protocol_status_filter', options_for_select((t(:sub_service_request)[:statuses].values.zip t(:sub_service_request)[:statuses].keys), 'Any Status'), class: 'selectpicker'
-  %table.table-interactive.table-striped#protocols{ data: { toggle: 'table', url: protocols_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 50, pagination: 'true', side_pagination: 'server', sort_name: 'sparc_id', sort_order: 'asc', cookie: 'true', cookie_id_table: 'protocols', striped: 'true', toolbar: '#protocolsToolbar', show_export: 'true', export_types: ['excel']} }
+  %table.table-interactive#protocols{ data: { toggle: 'table', url: protocols_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 50, pagination: 'true', side_pagination: 'server', sort_name: 'sparc_id', sort_order: 'asc', cookie: 'true', cookie_id_table: 'protocols', toolbar: '#protocolsToolbar', show_export: 'true', export_types: ['excel']} }
     %thead.bg-light
       %tr
         %th.srid{ data: { field: 'srid', align: 'left', sortable: 'true' } }
@@ -37,19 +37,19 @@
           = Protocol.human_attribute_name(:short_title)
         %th.pi{ data: { field: 'pi', align: 'left', sortable: 'true' } }
           = Protocol.human_attribute_name(:principal_investigator)
-        %th.coordinators{ data: { field: 'coordinators', align: 'center' } }
+        %th.coordinators{ data: { field: 'coordinators', align: 'left' } }
           = Protocol.human_attribute_name(:coordinators)
         %th.owner{ data: { field: 'owner', align: 'left', visible: 'false' } }
           = Protocol.human_attribute_name(:owner)
         %th.requester{ data: { field: 'requester', align: 'left', visible: 'false' } }
           = Protocol.human_attribute_name(:requester)
-        %th.irb-approval{ data: { field: 'irb_approval_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
+        %th.irb-approval{ data: { field: 'irb_approval_date', align: 'left', sortable: 'true', sorter: 'dateSorter' } }
           = IrbRecord.human_attribute_name(:irb_approval_date)
-        %th.irb-expiration{ data: { field: 'irb_expiration_date', align: 'center', sortable: 'true', sorter: 'dateSorter' } }
+        %th.irb-expiration{ data: { field: 'irb_expiration_date', align: 'left', sortable: 'true', sorter: 'dateSorter' } }
           = IrbRecord.human_attribute_name(:irb_expiration_date)
-        %th.start-date{ data: { field: 'start_date', align: 'center', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
+        %th.start-date{ data: { field: 'start_date', align: 'left', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
           = Protocol.human_attribute_name(:start_date)
-        %th.end-date{ data: { field: 'end_date', align: 'center', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
+        %th.end-date{ data: { field: 'end_date', align: 'left', sortable: 'true', sorter: 'dateSorter', visible: 'false' } }
           = Protocol.human_attribute_name(:end_date)
         %th.total-at-approval{ data: { field: 'total_at_approval', align: 'right', visible: 'false' } }
           = Protocol.human_attribute_name(:total_at_approval)

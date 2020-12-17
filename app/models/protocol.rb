@@ -50,6 +50,7 @@ class Protocol < ApplicationRecord
   has_many :subsidies,              through: :sub_service_requests
   has_many :clinical_providers,     through: :organization
   has_many :super_users,            through: :organization
+  has_many :participants,           through: :protocols_participants
   has_many :appointments,           through: :protocols_participants
   has_many :procedures,             through: :appointments
   has_many :fulfillments,           through: :line_items
@@ -109,7 +110,7 @@ class Protocol < ApplicationRecord
 
     case sort
     when 'srid'
-      order(Protocol.arel_table[:sparc_id].send(:order), SubServiceRequest.arel_table[:ssr_id].send(order))
+      order(Protocol.arel_table[:sparc_id].send(order), SubServiceRequest.arel_table[:ssr_id].send(order))
     when 'rmid'
       order(Protocol.arel_table[:research_master_id].send(order))
     when 'pi'
