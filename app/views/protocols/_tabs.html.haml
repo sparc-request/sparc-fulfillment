@@ -31,7 +31,8 @@
         = t('protocol.tabs.reports')
         - if protocol.unaccessed_documents_count > 0
           %span.badge.badge-pill.badge-c.badge-danger.notification-badge.reports-tab-badge<
-            = format_count(protocol.unaccessed_documents_count)
+            %small
+              = format_count(protocol.unaccessed_documents_count)
 
   .tab-content
     .tab-pane.fade#studyScheduleTab{ role: 'tabpanel', class: tab == 'study_schedule' ? 'show active' : '', aria: { labelledby: 'studyScheduleTabLink' } }

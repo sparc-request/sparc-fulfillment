@@ -19,21 +19,21 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
-    $(document).on 'click', '.edit-document', ->
-      document_id = $(this).data('document_id')
-      $.ajax
-        type: 'GET'
-        url: "/documents/#{document_id}/edit.js"
+  $(document).on 'click', '.edit-document', ->
+    document_id = $(this).data('document_id')
+    $.ajax
+      type: 'GET'
+      url: "/documents/#{document_id}/edit.js"
 
-    $(document).on 'click', 'a.remove-document', ->
-      document_id = $(this).data('document_id')
-      del = confirm "Are you sure you want to delete this document?"
-      if del
-        if $(this).parent().siblings("td.viewed_at").text() == ""
-          add_to_report_notification_count($(this).data('documentable_type'), -1)
-        $.ajax
-          type: 'DELETE'
-          url: "/documents/#{document_id}.js"
+  $(document).on 'click', 'a.remove-document', ->
+    document_id = $(this).data('document_id')
+    del = confirm "Are you sure you want to delete this document?"
+    if del
+      if $(this).parent().siblings("td.viewed_at").text() == ""
+        add_to_report_notification_count($(this).data('documentable_type'), -1)
+      $.ajax
+        type: 'DELETE'
+        url: "/documents/#{document_id}.js"
 
   if $("body.documents-index").length > 0
     $(document).on 'click', 'a.attached_file', ->

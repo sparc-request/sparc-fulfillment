@@ -106,23 +106,8 @@ $ ->
 
 
 
-  $('[data-toggle="tooltip"]').tooltip()
-  $("input[placeholder='Search']").wrap("<div class='input-group search-bar'/>")
-  $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))
-  $(".selectpicker").selectpicker()
-
   stickybits('.position-sticky, .sticky-top')
 
-  $('#history-back').contextmenu
-    target: '#history-menu',
-    onItem: (context, e) ->
-      window.location.href = $(e.target).attr('href')
-
-  $('#history-back').tooltip()
-
-  $(document).on 'all.bs.table', 'table', ->
-    $(".selectpicker").selectpicker()
-    $('[data-toggle="tooltip"]').tooltip()
 
   $(document).on 'search.bs.table', "table", (event, input)->
     unless input == ''

@@ -88,7 +88,7 @@
 //= require tasks
 //= require documents
 //= require study_level_activities
-//= require remote_document_handler
+//= require reports
 //= require procedure_grouper
 //= require visit_group_form
 //= require imports

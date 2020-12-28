@@ -41,7 +41,7 @@ module ProtocolsParticipantHelper
     disabled              = !protocols_participant.can_be_destroyed?
     url                   = associated ? protocol_participant_path(protocols_participant, protocol_id: protocol.id) : protocol_participants_path(protocol_id: protocol.id, participant_id: participant.id)
     ajax_method           = associated ? :delete : :post
-    klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger' : 'btn-success']
+    klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger remove-participant' : 'btn-success add-participant']
     icon_klass            = associated ? 'times' : 'check'
     tooltip               = disabled ? 'cant_delete' : (associated ? 'remove' : 'add')
 
@@ -62,14 +62,14 @@ module ProtocolsParticipantHelper
   def protocols_participant_delete_button(protocols_participant)
     disabled = !protocols_participant.can_be_destroyed?
     content_tag(:div, class: 'tooltip-wrapper', title: disabled ? t('protocols_participants.tooltips.cant_delete') : t('actions.delete'), data: { toggle: 'tooltip', boundary: 'window' }) do
-      link_to protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :delete, remote: true, class: ['btn btn-sq btn-danger', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' } do
+      link_to protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :delete, remote: true, class: ['btn btn-sq btn-danger remove-participant', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' } do
         icon('fas', 'trash')
       end
     end
   end
 
   def protocols_participant_details_button(protocols_participant)
-    link_to protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), remote: true, class: 'btn btn-sq btn-info mr-1', title: t('actions.details'), data: { toggle: 'tooltip' } do
+    link_to protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), remote: true, class: 'btn btn-sq btn-info mr-1 participant-details', title: t('actions.details'), data: { toggle: 'tooltip' } do
       icon('fas', 'eye')
     end
   end
@@ -80,8 +80,10 @@ module ProtocolsParticipantHelper
   end
 
   def protocols_participant_report_button(protocols_participant)
-    link_to reports_path(report_type: 'participant_report', title: t('reports.participant_report'), documentable_id: protocols_participant.protocol_id, documentable_type: Protocol.name, protocols_participant_id: protocols_participant.id), method: :post, remote: true, class: 'btn btn-sq btn-secondary mr-1', title: t('reports.participant_report'), data: { toggle: 'tooltip' } do
-      icon('fas', 'file-alt mr-1')
+    content_tag(:div, class: 'tooltip-wrapper', title: t('reports.participant_report'), data: { toggle: 'tooltip' }) do
+      content_tag(:button, class: 'btn btn-sq btn-secondary mr-1 participant-report report-button', data: { url: reports_path(report_type: 'participant_report', title: t('reports.participant_report'), documentable_id: protocols_participant.protocol_id, documentable_type: Protocol.name) }) do
+        icon('fas', 'file-alt mr-1')
+      end
     end
   end
 

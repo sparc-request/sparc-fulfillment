@@ -516,6 +516,8 @@ en:
     cannot_be_deidentified: "Patient cannot be de-identified because he/she is already associated to more than one protocol"
 
   reports:
+    download: "Download Report"
+    regenerate: "Generate New Report"
     asc: "ASC"
     ascending: "Ascending"
     auditing_report: "Auditing Report"
@@ -543,6 +545,7 @@ en:
     service_type: "Service Type"
     sort_by: "Sort By"
     sort_order: "Sort Order"
+    study_schedule_report: "Study Schedule Report"
     subsidy_date_from: "Subsidy Approval Date From"
     subsidy_date_to: "Subsidy Approval Date To"
     subsidy_report: "Subsidy Report"

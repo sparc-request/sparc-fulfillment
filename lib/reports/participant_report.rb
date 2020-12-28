@@ -39,14 +39,14 @@ class ParticipantReport < Report
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
-
       conditions = {:mrn => @mrns, :gender => @gender, :date_of_birth => @start_date..@end_date}
       conditions.delete_if {|k,v| !v.present? || v.to_s == ".." }
-      participants = Participant.where(conditions).distinct
-
-      if @protocols
-        participants = Participant.where(conditions).joins(:protocols_participants).where(protocols_participants: { protocol_id: @protocols }).distinct
-      end
+      participants = 
+        if @protocols
+          Participant.eager_load(:protocols).joins(:protocols_participants).where(conditions).where(protocols_participants: { protocol_id: @protocols }).distinct
+        else
+          Participant.eager_load(:protocols).where(conditions).distinct
+        end
 
       if @start_date || @gender
         csv << ["Chosen Filters:"]
@@ -78,7 +78,7 @@ class ParticipantReport < Report
       header << "Protocol(s)"
 
       csv << header
-      participants.find_each do |participant|
+      participants.each do |participant|
         deidentified = participant.deidentified == false ? "No" : participant.deidentified == true ? "Yes" : "N/A"
 
         data = [participant.id]
