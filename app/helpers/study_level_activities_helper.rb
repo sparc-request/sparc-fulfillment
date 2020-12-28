@@ -47,15 +47,13 @@ module StudyLevelActivitiesHelper
   end
 
   def sla_account_number(line_item)
-    link_to edit_line_item_path(line_item, field: 'account_number'), remote: true, class: "edit-account_number-#{line_item.id}" do
-      line_item.account_number.present? ? line_item.account_number : t('constants.na')
-    end
+    popover = render('study_level_activities/edit_form.html', line_item: line_item, field: :account_number)
+    link_to line_item.account_number || t('constants.na'), 'javascript:void(0)', class: "edit-account_number-#{line_item.id}", data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
   end
 
   def sla_contact(line_item)
-    link_to edit_line_item_path(line_item, field: 'contact_name'), remote: true, class: "edit-contact_name-#{line_item.id}" do
-      line_item.contact_name.present? ? line_item.contact_name : t('constants.na')
-    end
+    popover = render('study_level_activities/edit_form.html', line_item: line_item, field: :contact_name)
+    link_to line_item.contact_name || t('constants.na'), 'javascript:void(0)', class: "edit-contact_name-#{line_item.id}", data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
   end
 
   def is_protocol_type_study?(protocol)

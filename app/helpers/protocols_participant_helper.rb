@@ -76,7 +76,7 @@ module ProtocolsParticipantHelper
 
   def protocols_participant_external_id(protocols_participant)
     popover = render('external_id_form.html', protocols_participant: protocols_participant)
-    link_to protocols_participant.external_id || 'N/A', 'javascript:void(0)', data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
+    link_to protocols_participant.external_id || t('constants.na'), 'javascript:void(0)', data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
   end
 
   def protocols_participant_report_button(protocols_participant)

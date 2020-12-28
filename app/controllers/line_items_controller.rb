@@ -29,7 +29,6 @@ class LineItemsController < ApplicationController
 
   def edit
     respond_to :js
-    @otf    = @line_item.one_time_fee
     @field  = params[:field]
   end
 
@@ -67,5 +66,4 @@ class LineItemsController < ApplicationController
   def find_line_item
     @line_item = LineItem.find params[:id]
   end
-
 end

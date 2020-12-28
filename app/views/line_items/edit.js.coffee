@@ -18,19 +18,6 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @otf %> # study level activities line item edit
-$('.popover').popover('hide')
-if !$(".line-item-<%= @line_item.id %>-<%= @field %>-popover").length
-  $(".edit-<%= @field %>-<%= @line_item.id %>").popover(
-    title:      "#{I18n.t('actions.edit')} <%= LineItem.human_attribute_name(@field) %> <a href='#' class='close' data-dismiss='alert'>&times;</a>"
-    content:    $("<%= j render 'form', line_item: @line_item, field: @field %>")
-    template:   '<div class="popover line-itme-popover line-item-<%= @line_item.id %>-<%= @field %>-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
-    html:       true
-    trigger:    'manual'
-    placement:  'top'
-    boundary:   'window'
-  ).popover('show')
-<% else %> # study schedule line item edit
+# study schedule line item edit
 $("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_schedule/management/manage_services/change_service_form', locals: {line_item: @line_item})) %>")
 $("#modalContainer").modal 'show'
-<% end %>

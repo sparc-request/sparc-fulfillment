@@ -39,6 +39,9 @@ $ ->
     initializeTables()
     setRequiredFields()
 
+  $(document).on 'refresh.bs.table', ->
+    $('.popover').popover('hide')
+
   # Back To Top button scroll
   $(window).scroll ->
     if $(this).scrollTop() > 50
