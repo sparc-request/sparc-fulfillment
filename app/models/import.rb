@@ -87,8 +87,7 @@ class Import < ApplicationRecord
           fulfillment = Fulfillment.where(klok_entry_id: entry.entry_id, line_item: line_item).first_or_initialize
 
           fulfillment.assign_attributes(fulfilled_at: entry.date.strftime('%m/%d/%Y').to_s, quantity: entry.decimal_duration, creator_id: local_identity.id, performer_id: local_identity.id,
-                                        service: service, service_name: service.name, service_cost: line_item.cost(local_protocol.sparc_funding_source, entry.start_time_stamp), funding_source: local_protocol.sparc_funding_source,
-                                        percent_subsidy: local_protocol.percent_subsidy)
+                                        service: service, service_name: service.name, service_cost: line_item.cost(local_protocol.sparc_funding_source, entry.start_time_stamp))
 
           ### build out components
           fulfillment.components.build(component: entry.klok_project.name) if entry.klok_project.name && fulfillment.components.select{|x| x.component == entry.klok_project.name}.empty?
@@ -98,7 +97,8 @@ class Import < ApplicationRecord
 
           if fulfillment.valid?
             unless proof_report
-              fulfillment.save
+              fulfillment.funding_source = line_item.protocol.sparc_funding_source
+              fulfillment.save(validate: false)
             end
             csv << ["SRID: #{fulfillment.protocol.srid}", "Success (Fulfillment ID: #{fulfillment.id})"] + entry.attributes.values
           else
