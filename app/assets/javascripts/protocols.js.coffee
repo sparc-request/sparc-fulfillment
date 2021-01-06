@@ -70,6 +70,9 @@ $ ->
         bootstrapTable('hideColumn', 'percent_subsidy').
         bootstrapTable('hideColumn', 'subsidy_committed')
 
+    $(document).on 'click', '#coordinator-menu', (e) ->
+      e.stopPropagation()
+
   # Load tab on page load
   if $('#protocolTabs').length
     $.ajax
