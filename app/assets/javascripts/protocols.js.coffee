@@ -19,6 +19,14 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+
+  $('#protocolsList .export button').addClass('no-caret').siblings('.dropdown-menu').addClass('d-none')
+
+  $(document).on 'click', '#protocolsList .export button', ->
+    url = new URL($('#protocols').data('url'), window.location.origin)
+    url.pathname = url.pathname.replace('json', 'csv')
+    window.location = url
+
   if $("#protocols").length
     # Delete Protocol tab-remembering cookie
     Cookies.remove("active-protocol-tab")
