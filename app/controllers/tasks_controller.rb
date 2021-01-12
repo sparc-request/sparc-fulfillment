@@ -122,9 +122,12 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.
-      require(:task).
-      permit(:complete, :body, :due_at, :assignee_id, :assignable_type, :assignable_id, notes: [:kind, :comment, :notable_type, :notable_id])
+    # sanitize date params
+    params[:task][:due_at] = sanitize_date params[:task][:due_at]
+
+    params.require(:task).permit(
+      :complete, :body, :due_at, :assignee_id, :assignable_type, :assignable_id,
+      notes: [:kind, :comment, :notable_type, :notable_id])
   end
 
   def scoped_tasks
