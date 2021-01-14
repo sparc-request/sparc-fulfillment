@@ -73,6 +73,7 @@ en:
       protocol:
         coordinators: "Coordinators"
         end_date: "End Date"
+        id: "Protocol ID"
         organizations: "Provider/Program/Core"
         owner: "Owner"
         principal_investigator: "Principal Investigator"
@@ -86,7 +87,8 @@ en:
         subsidy_committed: "Subsidy Amount"
         total_at_approval: "Cost at Approval"
       task:
-        due_at: "Date"
+        body: "Task"
+        due_at: "Due Date"
       visit_group:
         name: "Visit Name"
         day: "Visit Day"
@@ -565,6 +567,8 @@ en:
       withdrawn: 'Withdrawn'
 
   task:
+    table:
+      header: "Tasks"
     object: "Task"
     all_tasks: "All Tasks "
     my_tasks: "My Tasks "
@@ -572,7 +576,6 @@ en:
     assignee_name: "Assigned to"
     completed: "Completed"
     create_task: "Create Task"
-    due_at: "Due Date"
     emails:
       assigned_new_task: "You have been assigned a new task"
       content: "Task Content: "
