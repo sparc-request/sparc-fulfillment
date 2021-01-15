@@ -33,17 +33,17 @@
               = t('layout.navigation.tasks')
               - if current_identity.tasks_count > 0
                 %span.badge.badge-pill.badge-c.badge-danger.notification-badge.task-notifications<
-                  = current_identity.tasks_count
+                  = format_count(current_identity.tasks_count)
           .nav-item
             = link_to documents_path, class: ['nav-link', @highlighted_link == 'documents' ? 'active' : ''] do
-              = icon('fas', 'spinner fa-2x mr-1')
+              = icon('fas', 'file-alt fa-2x mr-1')
               = t('layout.navigation.documents')
               - if current_identity.unaccessed_documents_count > 0
                 %span.badge.badge-pill.badge-c.badge-danger.notification-badge<
-                  = current_identity.unaccessed_documents_count
+                  = format_count(current_identity.unaccessed_documents_count)
           .nav-item
             = link_to imports_path, class: ['nav-link', @highlighted_link == 'imports' ? 'active' : ''] do
-              = icon('fas', 'file-import fa-2x mr-1')
+              = icon('fas', 'clock fa-2x mr-1')
               = t('layout.navigation.imports')
           - if current_identity.is_a_patient_registrar? && (ENV.fetch('CLINICAL_SERVICES') == 'true')
             .nav-item

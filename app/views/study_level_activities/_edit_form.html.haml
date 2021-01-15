@@ -18,24 +18,12 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-
-.modal-dialog
-  .modal-content
-    = form_for @protocols_participant, {url: "/participants/#{participant.id}/change_arm?protocol_id=#{@protocol.id}", remote: true, html: {class: "form-horizontal", role: "form", method: "post"}} do |p|
-      .modal-header
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only= t(:actions)[:close]
-        %h4#changeParticipantArm.modal-title.text-center= t(:arm)[:change_arm]
-        #modal_errors
-      .modal-body
-        .row
-          .col-md-12
-            .form-group
-              = p.label "arm_id", t(:participant)[:arm], class: "col-sm-4 control-label"
-              .col-sm-7
-                = p.select "arm_id", options_from_collection_for_select(@protocol.arms, "id", "name", @protocols_participant.arm_id), {include_blank: true}, class: "form-control selectpicker"
-      .modal-footer
-        .center-block
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}
+= form_for line_item, url: line_item_path(line_item), method: :put, remote: true do |f|
+  = hidden_field_tag :field, field
+  .form-group.mb-0
+    = f.label field, class: 'h6 font-weight-bold'
+    .input-group
+      = f.text_field field, class: 'form-control mb-0'
+      .input-group-append
+        %button.btn.btn-primary
+          = icon('fas', 'check')

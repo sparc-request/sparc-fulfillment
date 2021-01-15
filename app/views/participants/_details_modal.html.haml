@@ -17,47 +17,68 @@
 -# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
-.modal-dialog
+
+.modal-dialog{ role: 'document' }
   .modal-content
     .modal-header
-      %button.close{type: 'button', data: {dismiss: 'modal'}}
-        %span{aria: {hidden:'true'}} &times;
-        %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= t(:participant)[:details]
-    .modal-body
-      .details-table
-        .details-header.text-center
-          .col-xs-12= participant.full_name
-        .detail
-          .field.col-xs-4= t(:participant)[:mrn]
-          .col-xs-8= participant.mrn
-        .detail
-          .field.col-xs-4= t(:participant)[:dob]
-          .col-xs-8= format_date(participant.date_of_birth)
-        .detail
-          .field.col-xs-4= t(:participant)[:gender]
-          .col-xs-8= participant.gender
-        .detail
-          .field.col-xs-4= t(:participant)[:ethnicity]
-          .col-xs-8= participant.ethnicity
-        .detail
-          .field.col-xs-4= t(:participant)[:race]
-          .col-xs-8= participant.race
-        .detail
-          .field.col-xs-4= t(:participant)[:address]
-          .col-xs-8= participant.address
-        .detail
-          .field.col-xs-4= t(:participant)[:city]
-          .col-xs-8= participant.city
-        .detail
-          .field.col-xs-4= t(:participant)[:state]
-          .col-xs-8= participant.state
-        .detail
-          .field.col-xs-4= t(:participant)[:zip]
-          .col-xs-8= participant.zipcode
-        .detail
-          .field.col-xs-4= t(:participant)[:phone]
-          .col-xs-8= participant.phone
+      %h3.modal-title
+        = participant.full_name
+      %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+        %span{ aria: { hidden: 'true' } } &times;
+    .modal-body.py-0
+      .row
+        %table.table.mb-0
+          %tbody
+            %tr.d-flex
+              %td.col-3.d-inline-block.border-top-0
+                = Participant.human_attribute_name(:mrn)
+              %td.col-9.d-inline-block.border-top-0
+                = participant.mrn
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:date_of_birth)
+              %td.col-9.d-inline-block
+                = format_date(participant.date_of_birth)
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:gender)
+              %td.col-9.d-inline-block
+                = participant.gender
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:ethnicity)
+              %td.col-9.d-inline-block
+                = participant.ethnicity
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:race)
+              %td.col-9.d-inline-block
+                = participant.race
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:address)
+              %td.col-9.d-inline-block
+                = participant.address
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:city)
+              %td.col-9.d-inline-block
+                = participant.city
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:state)
+              %td.col-9.d-inline-block
+                = participant.state
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:zipcode)
+              %td.col-9.d-inline-block
+                = participant.zipcode
+            %tr.d-flex
+              %td.col-3.d-inline-block
+                = Participant.human_attribute_name(:phone)
+              %td.col-9.d-inline-block
+                = participant.phone
     .modal-footer
-      .center-block
-        %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+      %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+        = t('actions.close')

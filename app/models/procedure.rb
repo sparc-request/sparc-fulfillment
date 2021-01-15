@@ -48,7 +48,7 @@ class Procedure < ApplicationRecord
   has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
-  before_update :set_save_dependencies
+  before_update :set_save_dependencies, :set_subsidy_and_funding_source
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
@@ -57,10 +57,11 @@ class Procedure < ApplicationRecord
 
   accepts_nested_attributes_for :notes
 
-  scope :untouched,   -> { where(status: 'unstarted') }
-  scope :incomplete,  -> { where(status: 'incomplete') }
-  scope :complete,    -> { where(status: 'complete') }
-  scope :touched,     -> { where.not(status: 'unstarted') }
+  scope :untouched,    -> { where(status: 'unstarted') }
+  scope :incomplete,   -> { where(status: 'incomplete') }
+  scope :complete,     -> { where(status: 'complete') }
+  scope :touched,      -> { where.not(status: 'unstarted') }
+  scope :non_complete, -> { where.not(status: 'complete') }
 
   # select Procedures that belong to an Appointment without a start date
   scope :belonging_to_unbegun_appt, -> { joins(:appointment).where('appointments.start_date IS NULL') }
@@ -252,6 +253,15 @@ class Procedure < ApplicationRecord
 
     if completed_date_changed? && !completed_date_changed?(to: nil)
       write_attribute(:service_cost, new_cost(protocol.sparc_funding_source, completed_date))
+    end
+  end
+
+  def set_subsidy_and_funding_source
+    if status_changed?(to: 'complete')
+      protocol = appointment.protocol
+      subsidy = protocol.sub_service_request.subsidy
+      write_attribute(:funding_source, protocol.sparc_funding_source)
+      write_attribute(:percent_subsidy, subsidy.percent_subsidy) if subsidy
     end
   end
 end

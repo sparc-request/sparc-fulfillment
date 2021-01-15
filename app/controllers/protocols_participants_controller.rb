@@ -18,52 +18,62 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class LineItemsController < ApplicationController
-  before_action :find_line_item, only: [:edit, :update]
+class ProtocolsParticipantsController < ApplicationController
+  before_action :find_protocol,               only: [:index, :show, :new, :create, :update, :destroy]
+  before_action :find_protocols_participant,  only: [:show, :update, :destroy]
 
   def index
-    respond_to :json
-    @protocol = Protocol.find(params[:protocol_id])
-    @line_items = @protocol.one_time_fee_line_items
+    respond_to do |format|
+      format.json {
+        @protocols_participants = @protocol.protocols_participants.search(params[:search])
+        @total                  = @protocols_participants.length
+        @protocols_participants = @protocols_participants.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0)
+      }
+    end
   end
 
-  def edit
+  def show
+    respond_to :html, :js
+  end
+
+  def new
     respond_to :js
-    @field  = params[:field]
+  end
+
+  def create
+    respond_to :js
+    @protocol.protocols_participants.create(participant_id: params[:participant_id])
+    flash[:success] = t('protocols_participants.flash.updated')
   end
 
   def update
     respond_to :js
-    @otf    = @line_item.one_time_fee
-    @field  = params[:field]
-    if @line_item.update_attributes(line_item_params)
-      unless @otf
-        update_line_item_procedures_service # study schedule line item service change
-      end
-      flash[:success] = t(:line_item)[:flash_messages][:updated]
-    else
-      @errors = @line_item.errors
-    end
+    @protocols_participant.update_attributes(protocols_participant_params)
+    flash[:success] = t('protocols_participants.flash.updated')
+  end
+
+  def destroy
+    respond_to :js
+    @protocols_participant.destroy
+    flash[:alert] = t('protocols_participants.flash.destroyed')
   end
 
   private
 
-  def update_line_item_procedures_service
-    # Need to change any procedures that haven't been completed to the new service
-    service = @line_item.service
-    service_name = service.name
-    @line_item.visits.each do |v|
-      v.procedures.select{ |p| not(p.appt_started? or p.complete?) }.each do |p|
-        p.update_attributes(service_id: service.id, service_name: service_name)
-      end
-    end
+  def find_protocol
+    @protocol = Protocol.find(params[:protocol_id])
   end
 
-  def line_item_params
-    params.require(:line_item).permit(:protocol_id, :quantity_requested, :service_id, :started_at, :account_number, :contact_name)
+  def find_protocols_participant
+    @protocols_participant = @protocol.protocols_participants.find(params[:id])
   end
 
-  def find_line_item
-    @line_item = LineItem.find params[:id]
+  def protocols_participant_params
+    params.require(:protocols_participant).permit(
+      :arm_id,
+      :external_id,
+      :recruitment_source,
+      :status
+    )
   end
 end

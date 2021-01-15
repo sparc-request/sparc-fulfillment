@@ -18,6 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+$('.popover').popover('hide')
 $('#protocolTabs').replaceWith("<%= j render 'protocols/tabs', protocol: @protocol, tab: @tab %>")
 $('#requestLoading').removeClass('active show')
 $("#<%= @tab.camelize(:lower) %>Tab").html('<%= j render "protocols/#{@tab}", protocol: @protocol %>').addClass('active show')

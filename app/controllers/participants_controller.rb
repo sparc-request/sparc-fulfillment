@@ -19,74 +19,31 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ParticipantsController < ApplicationController
-
-  before_action :find_protocol, only: [:show, :update_arm, :update_external_id, :destroy_protocols_participant, :update_status, :update_recruitment_source, :protocols_participants_in_protocol, :edit_arm, :edit_external_id, :associate_participants_to_protocol, :update_protocol_association, :search]
-  before_action :find_participant, only: [:show, :destroy_protocols_participant, :update_status, :update_recruitment_source, :details, :edit, :update, :destroy, :edit_arm, :edit_external_id, :update_arm, :update_external_id, :update_protocol_association, :patient_registry_modal_details]
-  before_action :find_protocols_participant, only: [:show, :destroy_protocols_participant, :update_status, :update_recruitment_source, :edit_arm, :edit_external_id, :update_arm, :update_external_id, :update_protocol_association, :assign_arm_if_only_one_arm]
+  before_action :find_protocol, only: [:index, :new, :show, :update_arm, :update_external_id, :update_status, :update_recruitment_source, :protocols_participants_in_protocol, :edit_arm, :edit_external_id, :update_protocol_association, :search]
+  before_action :find_participant, only: [:show, :update_status, :update_recruitment_source, :details, :edit, :update, :destroy, :edit_arm, :edit_external_id, :update_arm, :update_external_id, :update_protocol_association, :patient_registry_modal_details]
+  before_action :find_protocols_participant, only: [:show, :update_status, :update_recruitment_source, :edit_arm, :edit_external_id, :update_arm, :update_external_id, :update_protocol_association, :assign_arm_if_only_one_arm]
   before_action :note_old_protocols_participant_attributes, only: [:update_status, :update_recruitment_source, :update_arm, :update_external_id]
   before_action :authorize_protocol, only: [:show]
   before_action :authorize_patient_registrar, only: [:index]
   before_action :format_participant_name, only: [:create, :update]
 
   def index
+    respond_to do |format|
+      format.html
+      format.json {
+        @participants = Participant.search(params[:search])
+        @total        = @participants.length
+        @participants = @participants.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0)
+      }
+    end
+
     @page = params[:page]
     @status = params[:status] || 'all'
     @offset = params[:offset] || 0
     @limit = params[:limit] || 25
 
     @sort = determine_patient_sort
-    find_participants(action_name)
 
-    respond_to do |format|
-      format.html
-      format.json
-    end
-  end
-
-  def format_participant_name
-    params[:participant][:first_name] = params[:participant][:first_name].upcase.squish
-    params[:participant][:last_name] = params[:participant][:last_name].upcase.squish
-    params[:participant][:middle_initial] = params[:participant][:middle_initial].upcase.squish
-  end
-
-  def find_participants(action_name)
-    if action_name == "protocols_participants_in_protocol"
-      @participants = Participant.by_protocol_id(@protocol.id)
-    elsif action_name == "associate_participants_to_protocol"
-      @participants = Participant.able_to_be_associated
-    else
-      @participants = Participant.all
-    end
-    @total = @participants.count
-    @participants = @participants.order(Arel.sql("#{@sort}")) if @sort
-    search_participant_attrs
-    @participants = @participants.limit(@limit).offset(@offset)
-  end
-
-  def update_protocol_association
-    if params[:checked] == 'true'
-      @protocols_participant = ProtocolsParticipant.new(protocol_id: @protocol.id, participant_id: @participant.id)
-      assign_arm_if_only_one_arm
-      if @protocols_participant.valid?
-        @protocols_participant.save
-        flash[:success] = t(:participant)[:flash_messages][:added_to_protocol]
-      end
-    else
-      @protocols_participant.destroy
-      flash[:success] = t(:participant)[:flash_messages][:removed_from_protocol]
-    end
-  end
-
-  def new
-    respond_to do |format|
-      format.js {
-        @participant = Participant.new()
-      }
-    end
-  end
-
-  def search
-    find_participants(action_name)
     respond_to do |format|
       format.html
       format.json
@@ -96,6 +53,11 @@ class ParticipantsController < ApplicationController
   def show
     @protocols_participant.build_appointments
     gon.push({appointment_id: params[:appointment_id]})
+  end
+
+  def new
+    respond_to :js
+    @participant = Participant.new unless @protocol.present?
   end
 
   def create
@@ -115,6 +77,46 @@ class ParticipantsController < ApplicationController
       flash[:success] = t(:participant)[:flash_messages][:updated]
     else
       @errors = @participant.errors
+    end
+  end
+
+  def destroy
+    @participant.destroy
+    flash[:alert] = t(:participant)[:flash_messages][:removed]
+  end
+
+  def format_participant_name
+    params[:participant][:first_name] = params[:participant][:first_name].upcase.squish
+    params[:participant][:last_name] = params[:participant][:last_name].upcase.squish
+    params[:participant][:middle_initial] = params[:participant][:middle_initial].upcase.squish
+  end
+
+  def find_participants(action_name)
+    @participants = Participant.search(params[:search])
+    @total = @participants.count
+    @participants = @participants.order(Arel.sql("#{@sort}")) if @sort
+    @participants = @participants.limit(@limit).offset(@offset)
+  end
+
+  def update_protocol_association
+    if params[:checked] == 'true'
+      @protocols_participant = ProtocolsParticipant.new(protocol_id: @protocol.id, participant_id: @participant.id)
+      assign_arm_if_only_one_arm
+      if @protocols_participant.valid?
+        @protocols_participant.save
+        flash[:success] = t(:participant)[:flash_messages][:added_to_protocol]
+      end
+    else
+      @protocols_participant.destroy
+      flash[:success] = t(:participant)[:flash_messages][:removed_from_protocol]
+    end
+  end
+
+  def search
+    find_participants(action_name)
+    respond_to do |format|
+      format.html
+      format.json
     end
   end
 
@@ -143,16 +145,6 @@ class ParticipantsController < ApplicationController
     end
   end
 
-  def destroy_protocols_participant
-    @protocols_participant.destroy
-    flash[:alert] = t(:participant)[:flash_messages][:removed]
-  end
-
-  def destroy
-    @participant.destroy
-    flash[:alert] = t(:participant)[:flash_messages][:removed]
-  end
-
   def update_arm
     @protocols_participant.update_attributes(protocols_participant_params)
     @protocols_participant.update_appointments_on_arm_change
@@ -174,21 +166,6 @@ class ParticipantsController < ApplicationController
       format.json {
         render
       }
-    end
-  end
-
-  def associate_participants_to_protocol
-    page = params[:page]
-    @status = params[:status] || 'all'
-    @offset = params[:offset] || 0
-    @limit = params[:limit] || 25
-
-    @sort = determine_patient_sort
-    find_participants(action_name)
-
-    respond_to do |format|
-      format.json
-      format.js
     end
   end
 
@@ -219,33 +196,8 @@ class ParticipantsController < ApplicationController
       end
   end
 
-  def search_participant_attrs
-    if params[:search] && !params[:search].blank?
-      search_term = params[:search]
-      search_tokens = search_term.squish.split(" ")
-      if search_tokens.count > 1
-        first_token = "#{search_tokens[0]}%"
-        second_token = "#{search_tokens[1]}%"
-        @participants = @participants.where("(participants.first_name LIKE ? AND participants.last_name LIKE ?) OR (participants.first_name LIKE ? AND participants.last_name LIKE ?)",
-          first_token,
-          second_token,
-          second_token,
-          first_token)
-      else
-        search_token = "%#{search_tokens[0]}%"
-        @participants = @participants.left_outer_joins(:protocols_participants).where("participants.mrn LIKE ? OR participants.first_name LIKE ? OR participants.last_name LIKE ? OR protocols_participants.external_id LIKE ?",
-          search_token,
-          search_token,
-          search_token,
-          search_token)
-        @participants = @participants.distinct
-      end
-      @total = @participants.count
-    end
-  end
-
   def find_protocol
-    @protocol = Protocol.find(params[:protocol_id])
+    @protocol = Protocol.find(params[:protocol_id]) if params[:protocol_id]
   end
 
   def find_protocols_participant

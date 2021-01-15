@@ -87,15 +87,6 @@ $ ->
 
   # Fulfillment Bindings
 
-  $(document).on 'click', '.otf_fulfillment_new', ->
-    allowSubmit = true
-    line_item_id = $(this).data('line-item-id')
-    data = line_item_id: line_item_id
-    $.ajax
-      type: 'GET'
-      url: "/fulfillments/new"
-      data: data
-
   $(document).on 'click', '.otf-fulfillment-list', ->
     line_item_id = $(this).data('line-item-id')
     data = line_item_id: line_item_id

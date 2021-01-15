@@ -29,12 +29,6 @@ module StudyLevelActivitiesHelper
     documents.map{ |document| bullet_point + document.original_filename }.join("<br>")
   end
 
-  def sla_notes_button(line_item)
-    link_to notes_path(note: { notable_id: line_item.id, notable_type: LineItem.name }), remote: true, id: "#{line_item.class.name.downcase}#{line_item.id}Notes", class: 'btn btn-sq btn-light position-relative' do
-      raw(icon('far', 'sticky-note fa-lg') + content_tag(:span, format_count(line_item.notes.length, 1), class: ['badge badge-pill badge-c notification-badge', line_item.notes.length > 1 ? 'badge-warning ' : 'badge-secondary']))
-    end
-  end
-
   def sla_docs_button(line_item)
     span = raw(content_tag(:span, line_item.documents.count, class: 'badge badge-light'))
     button = raw(content_tag(:button, raw(content_tag(:span, '', id: "line_item-#{line_item.id}")) + 'Documents ' + raw(span), type: 'button', class: 'btn btn-success button documents list', data: {'documentable-id' => line_item.id, 'documentable-type' => 'LineItem'}))
@@ -53,15 +47,13 @@ module StudyLevelActivitiesHelper
   end
 
   def sla_account_number(line_item)
-    link_to edit_line_item_path(line_item, field: 'account_number'), remote: true, class: "edit-account_number-#{line_item.id}" do
-      line_item.account_number.present? ? line_item.account_number : t('constants.na')
-    end
+    popover = render('study_level_activities/edit_form.html', line_item: line_item, field: :account_number)
+    link_to line_item.account_number || t('constants.na'), 'javascript:void(0)', class: "edit-account_number-#{line_item.id}", data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
   end
 
   def sla_contact(line_item)
-    link_to edit_line_item_path(line_item, field: 'contact_name'), remote: true, class: "edit-contact_name-#{line_item.id}" do
-      line_item.contact_name.present? ? line_item.contact_name : t('constants.na')
-    end
+    popover = render('study_level_activities/edit_form.html', line_item: line_item, field: :contact_name)
+    link_to line_item.contact_name || t('constants.na'), 'javascript:void(0)', class: "edit-contact_name-#{line_item.id}", data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
   end
 
   def is_protocol_type_study?(protocol)

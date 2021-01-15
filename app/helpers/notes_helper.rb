@@ -19,6 +19,19 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module NotesHelper
+  # List of opts
+  #   <disabled>  - (Boolean) - disables the button
+  #   <model>     - (String/ActiveRecord Object) - An optional model name to add to the button as text
+  #   <tooltip>   - (String) - An optional tooltip on the button
+  def notes_button(notable, opts={})
+    has_notes     = notable.notes.length > 0
+    notable_type  = notable.class.name
+
+    link_to notes_path(note: { notable_id: notable.id, notable_type: notable_type }, protocol_id: opts[:protocol_id], disabled: opts[:disabled]), remote: true, id: "#{notable_type.downcase}#{notable.id}Notes", class: ['btn btn-light position-relative', opts[:class], opts[:model] ? '' : 'btn-sq'], title: opts[:tooltip], data: { toggle: opts[:tooltip] ? 'tooltip' : '' } do
+      raw(icon('far', 'sticky-note fa-lg') + content_tag(:span, format_count(notable.notes.length, 1), class: ['badge badge-pill badge-c notification-badge', has_notes ? 'badge-warning ' : 'badge-secondary'])) + (opts[:model] ? content_tag(:span, (opts[:model].is_a?(String) ? opts[:model] : opts[:model].model_name.human) + " " + Note.model_name.plural.capitalize, class: 'ml-2') : '')
+    end
+  end
+
   def edit_note_button(note, opts={})
     link_to icon('far', 'edit'), edit_note_path(note, note: { notable_id: note.notable_id, notable_type: note.notable_type }), remote: true, class: ['edit-note', opts[:button] ? 'btn btn-warning mr-1' : 'text-warning mr-2', note.identity_id == current_identity.id ? '' : 'disabled'], title: t('actions.edit'), data: { toggle: 'tooltip' }
   end

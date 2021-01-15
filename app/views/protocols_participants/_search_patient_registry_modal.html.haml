@@ -1,4 +1,4 @@
--# Copyright © 2011-2020 MUSC Foundation for Research Development~
+-# Copyright © 2011-2020 MUSC Foundation for Research Development
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -22,33 +22,27 @@
   .modal-content
     .modal-header
       %h3.modal-title
-        = t(:documents)[documentable_sym][:index_header]
+        = t('protocols_participants.registry.header')
       %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
         %span{ aria: { hidden: 'true' } } &times;
     .modal-body
-      - if documents.any?
-        .details-table
-          .details-header.text-center
-            .col-xs-2= t(:documents)[:date]
-            .col-xs-8= t(:documents)[:object]
-            .col-xs-2= t(:documents)[:delete]
-          - documents.each do |document|
-            .detail
-              .col-xs-2.created-at= format_datetime(document.created_at)
-              .col-xs-8.comment= link_to document.original_filename, document_path(document), target: "_blank"
-              .col-xs-2.delete.text-center
-                = link_to(document_path(document, format: :js), remote: true, method: :delete) do
-                  %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}
-      -else
-        .text-center= t(:documents)[documentable_sym][:none]
+      %table#participantRegistryModalTable{ data: { toggle: 'table', url: participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'patient-registry-modal', show_export: 'true', export_types: ['excel'] } }
+        %thead.bg-light
+          %tr
+            %th.associate.editable{ data: { field: 'associate', align: 'center' } }
+              = t('protocols_participants.registry.associate')
+            %th.last-name{ data: { field: 'last_name', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:last_name)
+            %th.first-name{ data: { field: 'first_middle', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:first_name)
+            %th.mrn{ data: { field: 'mrn', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:mrn)
+            %th.dob{ data: { field: 'date_of_birth', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:date_of_birth)
+            %th.deidentified{ data: { field: 'deidentified', align: 'left', sortable: 'true' } }
+              = t(:participant)[:deidentified] 
+            %th.phone{ data: { field: 'phone', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:phone)
     .modal-footer
-      - if documentable_type == "Fulfillment"
-        %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: @documentable.line_item_id}}
-          = t(:actions)[:close]
-      - else
-        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
-          = t('actions.close')
-
-      = link_to new_document_path(document: { documentable_id: documentable_id, documentable_type: documentable_type }, format: :js), remote: true, class: 'btn btn-primary document new' do
-        %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
-        = t(:documents)[:upload_button]
+      %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+        = t('actions.close')

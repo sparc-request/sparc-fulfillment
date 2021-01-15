@@ -20,6 +20,7 @@
 
 (function($) {
   $.extend($.fn.modal.Constructor.Default, { backdrop: 'static' });
+  $.extend($.fn.popover.Constructor.Default, { sanitize: false });
 
   $(document).ready( function() {
     // Prevent form multi-submit during a modal closing
