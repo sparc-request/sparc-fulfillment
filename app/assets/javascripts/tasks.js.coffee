@@ -40,19 +40,10 @@ $ ->
       url: "/tasks/#{task_id}.js"
       data: data
 
-  $(document).on 'click', '.task-reschedule', ->
-    task_id = $(this).attr('task_id')
+  $(document).on "change", "#completeToggle, #allTasksToggle", ->
+    console.log("clicked")
+    scope = if $("#allTasksToggle").prop("checked") then "all" else "mine"
+    status = if $("#completeToggle").prop("checked") then "complete" else "incomplete"
 
-    $.ajax
-      type: 'GET'
-      url: "/tasks/#{task_id}/task_reschedule"
+    $('#tasksTable').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
 
-  - if $("body.tasks-index").length > 0
-
-    $("table.tasks").bootstrapTable('hideColumn', 'protocol_id')
-
-    $(document).on "change", "#complete, #all_tasks", ->
-      scope = if $("#all_tasks").prop("checked") then "all" else "mine"
-      status = if $("#complete").prop("checked") then "complete" else "incomplete"
-
-      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})

@@ -25,10 +25,12 @@ module TaskHelper
   end
 
   def format_checkbox task
-    html = '-'
-    html = raw content_tag(:input, '', class: 'complete', name: 'complete', type: 'checkbox', task_id: task.id, checked: task.complete? ? "checked" : nil)
-
-    html
+    content_tag :div, nil, class: 'form-check' do
+      raw([
+        content_tag(:input, nil, type: 'checkbox', class: 'form-check-input complete-checkbox complete', id: "completeTask#{task.id}", task_id: task.id, checked: task.complete? ? "checked" : nil),
+        content_tag(:label, nil, class: 'form-check-label', for: "completeTask#{task.id}")
+      ].join(''))
+    end
   end
 
   def format_task_type task

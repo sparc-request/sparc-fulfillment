@@ -30,7 +30,6 @@ class TasksController < ApplicationController
       format.html
       format.json {
         @tasks = scoped_tasks
-        render
       }
     end
   end
@@ -77,7 +76,6 @@ class TasksController < ApplicationController
 
   def update
     respond_to :js
-
     if @task.update_attributes(task_params)
       flash[:success] = t(:task)[:flash_messages][:updated]
     else
@@ -123,7 +121,7 @@ class TasksController < ApplicationController
 
   def task_params
     # sanitize date params
-    params[:task][:due_at] = sanitize_date params[:task][:due_at]
+    params[:task][:due_at] = sanitize_date(params[:task][:due_at]) if params[:task][:due_at]
 
     params.require(:task).permit(
       :complete, :body, :due_at, :assignee_id, :assignable_type, :assignable_id,
