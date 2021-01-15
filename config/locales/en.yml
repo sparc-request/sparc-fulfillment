@@ -574,6 +574,9 @@ en:
     my_tasks: "My Tasks "
     assignable_type: "Type"
     assignee_name: "Assigned to"
+    complete:
+      true: "Complete"
+      false: "Incomplete"
     completed: "Completed"
     create_task: "Create Task"
     emails:

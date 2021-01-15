@@ -28,17 +28,17 @@
     .modal-body
       .row.mb-1
         %strong.col-4
-          = t(:task)[:identity_name]
+          = t('task.identity_name')
         .col-8
           = task.identity.full_name
       .row.mb-1
         %strong.col-4
-          = t(:task)[:assignee_name]
+          = t('task.assignee_name')
         .col-8
           = task.assignee.full_name
       .row.mb-1
         %strong.col-4
-          = t(:task)[:assignable_type]
+          = t('task.assignable_type')
         .col-8
           = task.assignable_type
       .row.mb-1
@@ -48,14 +48,14 @@
           = format_date(task.due_at)
       .row.mb-1
         %strong.col-4
-          = t(:task)[:completed]
+          = t('task.completed')
         .col-8
-          = task.complete
+          = t("task.complete.#{task.complete.to_s}")
       .row
         %strong.col-4
-          = t(:task)[:object]
+          = t('task.object')
         .col-8
           = task.body
     .modal-footer
       %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
-        = t(:actions)[:close]
+        = t('actions.close')

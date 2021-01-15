@@ -48,9 +48,9 @@
             = Task.human_attribute_name(:body)
           %th.w-10{ data: { field: 'due_at', align: 'left', sortable: 'true', sorter: 'dueDateSorter' } }
             = Task.human_attribute_name(:due_at)
-          %th.w-5{ data: { field: 'complete', align: 'center' } }
+          %th.w-5.complete{ data: { field: 'complete', align: 'center' } }
             = t('task.completed')
-          %th.w-5{ data: { field: 'reschedule', align: 'center' } }
+          %th.w-5.reschedule{ data: { field: 'reschedule', align: 'center' } }
             = t('task.reschedule')
           %th{ data: { field: 'organization', align: 'left', visible: 'false', sortable: 'true' } }
             = t('procedure.prog_core')
