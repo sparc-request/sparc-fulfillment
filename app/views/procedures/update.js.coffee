@@ -18,9 +18,24 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @procedure.errors.present? && !@cost_error_message %>
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
+<% if @errors %>
+$("[name^='procedure']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='procedure[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+
+<% @procedure.notes.last.errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='procedure[notes_attributes][0][<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
 <% else %>
+$("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
+$("#modalContainer").modal('hide')
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 
@@ -46,7 +61,7 @@ $("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .se
 
 <% end %>
 
-$('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
+# $('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
 
 pg = new ProcedureGrouper()
 
@@ -72,9 +87,6 @@ statuses = []
 statuses[statuses.length] =  "<%= status %>"
 <% end %>
 
-$('#appointment_indications').selectpicker()
-$('#appointment_indications').selectpicker('val', statuses)
-
 $(".followup_procedure_datepicker").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
@@ -83,10 +95,7 @@ $(".completed_date_field").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
 
-$('.row.appointment [data-toggle="tooltip"]').tooltip()
-
 $("#group-<%= @procedure.group_id %> button").trigger('click')
-$("#modalContainer").modal 'hide'
 
 <% if @cost_error_message %>
 swal("<%= @cost_error_message %>")

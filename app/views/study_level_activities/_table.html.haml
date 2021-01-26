@@ -45,7 +45,7 @@
         = LineItem.human_attribute_name(:account_number)
       %th.contact.editable.text-wrap{ data: { field: 'contact', align: 'left', sortable: 'true' } }
         = LineItem.human_attribute_name(:contact_name)
-      %th.notes.editable{ data: { field: 'notes', align: 'center' } }
+      %th.notes{ data: { field: 'notes', align: 'center' } }
         = Note.model_name.plural.capitalize
-      %th.documents.editable{ data: { field: 'documents', align: 'center' } }
+      %th.documents{ data: { field: 'documents', align: 'center' } }
         = Document.model_name.plural.capitalize

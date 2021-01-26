@@ -19,14 +19,19 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ProceduresController < ApplicationController
-
+  before_action :find_appointment, only: [:index, :create, :edit, :update, :destroy]
   before_action :find_procedure, only: [:edit, :update, :destroy, :change_procedure_position]
   before_action :save_original_procedure_status, only: [:update]
   before_action :create_note_before_update, only: [:update]
   before_action :set_appointment_style, only: [:create, :update, :destroy, :change_procedure_position]
 
+  def index
+    respond_to :json
+
+    @procedures = @appointment.procedures.eager_load(:notes, :task).preload(:protocol, :service).where(sparc_core_id: params[:core_id])
+  end
+
   def create
-    @appointment = Appointment.find params[:appointment_id]
     qty             = params[:qty].to_i
     service         = Service.find params[:service_id]
     performer_id    = params[:performer_id]
@@ -53,20 +58,20 @@ class ProceduresController < ApplicationController
       @note = @procedure.notes.new(kind: 'reason')
       render params[:partial]
     else
-      @clinical_providers = ClinicalProvider.where(organization_id: current_identity.protocols.map{|p| p.sub_service_request.organization_id })
       render
     end
   end
 
   def update
-    @procedure.update_attributes(procedure_params)
-    @appointment = @procedure.appointment
+    unless @procedure.update_attributes(procedure_params)
+      @errors = @procedure.errors
+    end
+
     @statuses = @appointment.appointment_statuses.pluck(:status)
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
   end
 
   def destroy
-    @appointment = @procedure.appointment
     @statuses = @appointment.appointment_statuses.pluck(:status)
 
     @procedure.destroy
@@ -85,6 +90,14 @@ class ProceduresController < ApplicationController
   end
 
   private
+
+  def find_appointment
+    @appointment = Appointment.find(params[:appointment_id])
+  end
+
+  def find_procedure
+    @procedure = @appointment.procedures.find(params[:id])
+  end
 
   def save_original_procedure_status
     @original_procedure_status = @procedure.status
@@ -152,9 +165,5 @@ class ProceduresController < ApplicationController
              :credited,
              notes_attributes: [:comment, :kind, :identity_id, :reason],
              tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
-  end
-
-  def find_procedure
-    @procedure = Procedure.find params[:id]
   end
 end

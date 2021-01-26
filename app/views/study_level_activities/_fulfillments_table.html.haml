@@ -37,18 +37,22 @@
               = t(:fulfillment)[:fulfillment_grouper]
             %th.fulfillment-date{ data: { field: 'fulfillment_date', align: 'left', sortable: 'true', sorter: 'fulfillmentDateSorter' } }
               = Fulfillment.human_attribute_name(:fulfilled_at)
-            %th.qty{ data: { field: 'quantity', align: 'center', sortable: 'true' } }
+            %th.qty{ data: { field: 'quantity', align: 'left', sortable: 'true' } }
               = Fulfillment.human_attribute_name(:quantity)
-            %th.qty-type{ data: { field: 'quantity_type', align: 'center', sortable: 'true' } }
+            %th.qty-type{ data: { field: 'quantity_type', align: 'left', sortable: 'true' } }
               = Fulfillment.human_attribute_name(:quantity_type)
             %th.performed-by{ data: { field: 'performed_by', align: 'left', sortable: 'true' } }
               = Fulfillment.human_attribute_name(:performer)
             %th.components{ data: { field: 'components', align: 'left' } }
               = Component.model_name.plural.capitalize
-            %th.invoiced{ data: { field: 'invoiced', align: 'center' } }
+            %th.invoiced{ data: { field: 'invoiced', align: 'left' } }
               = Fulfillment.human_attribute_name(:invoiced)
-            %th.credited{ data: { field: 'credited', align: 'center' } }
+            %th.credited{ data: { field: 'credited', align: 'left' } }
               = Fulfillment.human_attribute_name(:credited)
+            %th.notes{ data: { field: 'notes', align: 'center' } }
+              = Note.model_name.plural.capitalize
+            %th.documents{ data: { field: 'documents', align: 'center' } }
+              = Document.model_name.plural.capitalize
             %th.actions{ data: { field: 'actions', align: 'center' } }
               = t(:actions)[:actions]
       %p.text-center.text-muted.mt-3.mb-0<

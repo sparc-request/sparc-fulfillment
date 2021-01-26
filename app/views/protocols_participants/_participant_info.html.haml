@@ -18,23 +18,24 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.row
-  .col-md-12
-    .fixed-table-container.bootstrap-table-dropdown-overflow
-      %table.participant.details.custom_striped{id: "participant-info", data: {toggle: 'table', url: "/participants/calendar.json?protocols_participant_id=#{protocols_participant.id}&protocol_id=#{protocol.id}&participant_id=#{participant.id}"}}
-        %thead
-          %tr
-            %th{data: {align: "left", field: "name"}}
-              = t(:participant)[:full_name]
-            %th{data: {align: "left", field: "mrn"}}
-              = t(:participant)[:mrn]
-            %th{data: {align: "left", field: "arm_name"}}
-              = t(:participant)[:arm]
-            %th{data: {align: "left", field: "statusText"}}
-              = t(:protocols_participant)[:status]
-            %th{data: {align: "left", field: "srid"}}
-              = t(:appointment)[:srid]
-            %th{data: {class: "coordinators", align: "left", field: "coordinators"}}
-              = t(:protocol)[:coordinators]
-            %th{data: {class: 'edit', align: "center", field: "edit", width: "5"}}
-              = t(:actions)[:edit]
+.card.w-100
+  .card-header.bg-primary.text-white
+    %h3.mb-0<
+      = protocols_participant.full_name
+  %table#participantDetailsTable{ data: { toggle: 'table', url: calendar_protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id, format: :json) } }
+    %thead.bg-light
+      %tr
+        %th.mrn{ data: { field: 'mrn', align: 'center' } }
+          = Participant.human_attribute_name(:mrn)
+        %th.external-id.editable{ data: { field: 'external_id_read', align: 'center' } }
+          = ProtocolsParticipant.human_attribute_name(:external_id)
+        %th.arm{ data: { field: 'arm_reaed', align: 'center' } }
+          = ProtocolsParticipant.human_attribute_name(:arm)
+        %th.status{ data: { field: 'status_read', align: 'center' } }
+          = ProtocolsParticipant.human_attribute_name(:status)
+        %th.recruitment-source{ data: { field: 'recruitment_source_read', align: 'center' } }
+          = ProtocolsParticipant.human_attribute_name(:recruitment_source)
+        %th.notes{ data: { field: 'notes', align: 'center' } }
+          = Note.model_name.plural.capitalize
+        %th.actions{ data: { field: 'actions', align: 'center' } }
+          = t('actions.actions')

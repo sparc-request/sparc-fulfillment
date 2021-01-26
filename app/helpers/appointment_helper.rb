@@ -19,45 +19,51 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module AppointmentHelper
+  def appointment_context_icon(appointment)
+    if appointment.completed?
+      icon('fas', 'check fa-lg text-success', title: t('appointments.tooltips.state.completed'), data: { toggle: 'tooltip' })
+    elsif appointment.started?
+      icon('far', 'clock fa-lg text-warning', title: t('appointments.tooltips.state.started', date: format_date(appointment.start_date)), data: { toggle: 'tooltip' })
+    else
+      icon('fas', 'times fa-lg text-secondary', title: t('appointments.tooltips.state.unstarted', date: format_date(appointment.completed_date)), data: { toggle: 'tooltip' })
+    end
+  end
 
-  def historical_statuses statuses
-    old_statuses = []
-    statuses.each do |status|
-      unless Appointment::STATUSES.include? status
-        old_statuses << status
+  def start_appointment_button(appointment)
+    content_tag :button, t('appointments.start_visit'), class: 'btn btn-primary start-appointment mr-1', data: { url: appointment_path(appointment) }
+  end
+
+  def reset_appointment_button(appointment)
+    tooltip =
+      if appointment.has_invoiced_procedures? && appointment.has_credited_procedures?
+        t('appointment.tooltips.reset_visit.disabled_credited_and_invoiced')
+      elsif appointment.has_invoiced_procedures?
+        t('appointment.tooltips.reset_visit.disabled_invoiced')
+      elsif appointment.has_credited_procedures?
+        t('appointment.tooltips.reset_visit.disabled_credited')
+      end
+
+    content_tag :div, class: 'tooltip-wrapper mx-1', title: tooltip, data: { toggle: 'tooltip' } do
+      link_to reset_procedures_appointment_multiple_procedures_path(appointment_id: appointment.id), remote: true, method: :put, class: ['btn btn-warning reset-appointment', appointment.has_invoiced_procedures? || appointment.has_credited_procedures? ? 'disabled' : ''], data: { confirm_swal: 'true', html: t('appointments.confirms.reset_visit.text') } do
+        icon('fas', 'sync mr-1') + t('appointments.reset_visit')
       end
     end
+  end
 
-    old_statuses
+  def complete_appointment_buttons(appointment)
+    content_tag :div, class: 'tooltip-wrapper', title: appointment.can_finish? ? '' : t('appointments.tooltips.complete_visit.disabled'), data: { toggle: 'tooltip' } do
+      content_tag :button, class: ['btn btn-success complete-appointment', appointment.can_finish? ? '' : 'disabled'], data: { url: appointment_path(appointment), confirm_swal: true } do
+        icon('fas', 'check mr-1') + t('appointments.complete_visit')
+      end
+    end
   end
 
   def app_add_as_last_option(appointment)
     content_tag(:option, "Add as last", value: '')
   end
 
-  def appointment_notes_formatter(appointment)
-    notes_button({object: appointment,
-                  title: t(:appointment)[:notes],
-                  has_notes: appointment.notes.any?})
-  end
-
   def procedure_notes_formatter(procedure)
-    notes_button({object: procedure,
-                  title: t(:participant)[:notes],
-                  has_notes: procedure.notes.any?,
-                  button_class: "#{procedure.appt_started? ? '' : 'disabled pre_start_disabled'}"})
-  end
-
-  def procedures_invoiced_or_credited?(appointment)
-    appointment.procedures.any?{ |procedure| procedure.invoiced == true || procedure.credited == true }
-  end
-
-  def procedures_invoiced?(appointment)
-    appointment.procedures.any?{ |procedure| procedure.invoiced == true }
-  end
-
-  def procedures_credited?(appointment)
-    appointment.procedures.any?{ |procedure| procedure.credited == true }
+    notes_button(procedure, title: t(:participant)[:notes], button_class: "#{procedure.appt_started? ? '' : 'disabled pre_start_disabled'}")
   end
 
   def position_options_button(procedure)

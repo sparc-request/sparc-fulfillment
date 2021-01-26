@@ -18,39 +18,32 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.core{ data: { core: { id: core_id } } }
-  .panel.panel-default
-    .panel-heading
-      %h3.panel-title
-        = procedures.first.sparc_core_name
-      .row
-        .btn-group.align-select-menu
-          = select_tag 'core_multiselect', nil, class: "core_multiselect #{disabled_class(!appointment.started?)}", style: 'display: inline-block', multiple: true
-          %button.btn.btn-default.btn-primary.multiselect.complete_all.disabled{ type: 'button', id: "core_#{core_id}_multiselect_complete_all", class: disabled_class(!appointment.started?) } Complete
-          %button.btn.btn-default.btn-warning.multiselect.incomplete_all.disabled{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete
-    .panel-body
-      %table.table.table-bordered.procedures
-        %thead
-          %th.name
-            = t(:procedure)[:object]
-          %th.r-t
-            = t(:procedure)[:r_t]
-          %th.status
-            = t(:procedure)[:status]
-          %th.followup
-            = t(:procedure)[:followup]
-          %th.completed-date
-            = t(:procedure)[:completed_date]
-          %th.performed-by
-            = t(:procedure)[:performed_by]
-          %th.notes
-            = t(:procedure)[:notes]
-          %th.invoiced
-            = t(:procedure)[:invoiced]
-          %th.credited
-            = t(:procedure)[:credited]
-          %th.actions
-            = t(:procedure)[:actions]
-
-        %tbody
-          = render partial: 'appointments/procedure', collection: procedures, as: :procedure
+.card-header.flex-wrap.border-top.border-bottom-0
+  %h3.w-100
+    = core.name
+  .d-flex.service-multiselect-container
+    = select_tag 'core_multiselect', nil, class: "selectpicker #{disabled_class(!appointment.started?)}", multiple: true
+    %button.btn.btn-default.btn-primary.multiselect.complete_all.disabled{ type: 'button', id: "core_#{core.id}_multiselect_complete_all", class: disabled_class(!appointment.started?) } Complete
+    %button.btn.btn-default.btn-warning.multiselect.incomplete_all.disabled{ type: 'button', id: "core_#{core.id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete
+%table.table-hover{ id: "core-#{core.id}-procedures", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
+  %thead.bg-light
+    %th.w-20.name{ data: { field: 'name' } }
+      = Procedure.model_name.human
+    %th.billing-type{ data: { field: 'billing_type' } }
+      = Procedure.human_attribute_name(:billing_type)
+    %th.status{ data: { field: 'status', align: 'center', halign: 'left' } }
+      = Procedure.human_attribute_name(:status)
+    %th.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
+      = Procedure.human_attribute_name(:followup)
+    %th.completed-date{ data: { field: 'completed_date' } }
+      = Procedure.human_attribute_name(:completed_date)
+    %th.performer{ data: { field: 'performer' } }
+      = Procedure.human_attribute_name(:performer)
+    %th.invoiced{ data: { field: 'invoiced' } }
+      = Procedure.human_attribute_name(:invoiced)
+    %th.credited{ data: { field: 'credited' } }
+      = Procedure.human_attribute_name(:credited)
+    %th.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
+      = Note.model_name.plural.capitalize
+    %th.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
+      = t('actions.actions')

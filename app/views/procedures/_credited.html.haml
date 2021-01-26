@@ -18,18 +18,14 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.row
-  .col-md-12
-    .dashboard_link.active -- Hide Dashboard --
-    %br
-    #dashboard_container
-      #dashboard
-        %table.visits#completed-appointments-table{ data: {height: 300, toggle: 'table', url: completed_appointments_appointments_path(participant_id: participant.id, protocols_participant_id: protocols_participant.id, format: :json), striped: 'true', 'sort-name' => 'completed_date', 'sort-order' => 'asc' } }
-          %thead
-            %tr
-              %th{ data: { align: 'left', field: 'name' } }
-                = t(:appointment)[:completed]
-              %th{ data: { align: 'left', field: 'completed_date', sortable: 'true', sorter: 'visitSorter' } }
-                = t(:appointment)[:date_of_visit]
-              %th{ data: { align: 'left', field: 'arm' } }
-                = t(:arm)[:name]
+- disabled = !procedure.complete? || procedure.invoiced? || procedure.credited?
+- if procedure.invoiced?
+  - tooltip = t('procedures.tooltips.invoiced_warning')
+- elsif !procedure.appointment.started?
+  - tooltip = t('procedures.tooltips.unstarted_appointment')
+
+- if current_identity.billing_manager_protocols.include?(procedure.protocol) && current_identity.billing_manager_protocols_allow_credit.include?(procedure.protocol)
+  = form_for procedure, appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
+    = f.check_box :credited, procedure.credited?, disabled: , data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select') }
+- else
+  = procedure.credited? ? t('constants.yes_select') : t('constants.no_select')

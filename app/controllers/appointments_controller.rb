@@ -19,9 +19,20 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class AppointmentsController < ApplicationController
-
-  respond_to :json, :html
+  respond_to :json, :html, :js
+  before_action :find_appointment, only: [:show, :update, :update_statuses]
   before_action :set_appointment_style, only: [:create, :show, :update]
+
+  def index
+  end
+
+  def show
+    procedure_creator = ProcedureCreator.new(@appointment)
+
+    if @appointment.procedures.with_deleted.empty?
+      procedure_creator.initialize_procedures
+    end
+  end
 
   #### BEGIN CUSTOM APPOINTMENTS ####
 
@@ -40,16 +51,6 @@ class AppointmentsController < ApplicationController
 
   #### END CUSTOM APPOINTMENTS ####
 
-  def show
-    @appointment = Appointment.find params[:id]
-    @statuses = @appointment.appointment_statuses.pluck(:status)
-    procedure_creator = ProcedureCreator.new(@appointment)
-
-    if @appointment.procedures.with_deleted.empty?
-      procedure_creator.initialize_procedures
-    end
-  end
-
   def completed_appointments
     protocols_participant = ProtocolsParticipant.find(params[:protocols_participant_id])
     @appointments = protocols_participant.appointments.completed
@@ -57,21 +58,17 @@ class AppointmentsController < ApplicationController
   end
 
   def update
-    @appointment = Appointment.find params[:id]
     @field = params[:field]
 
     @appointment.update_attributes(appointment_params)
   end
 
   def update_statuses
-    @appointment = Appointment.find params[:appointment_id]
-    new_statuses = params[:statuses]
-    @appointment.appointment_statuses.destroy_all
+    respond_to :js
 
-    if params[:statuses].present?
-      new_statuses.each do |status|
-        @appointment.appointment_statuses.create(status: status)
-      end
+    @appointment.appointment_statuses.where.not(status: params[:statuses]).destroy_all
+    (params[:statuses] - @appointment.appointment_statuses.pluck(:status)).each do |status|
+      @appointment.appointment_statuses.create(status: status)
     end
 
     render body: nil
@@ -87,7 +84,14 @@ class AppointmentsController < ApplicationController
     render :show
   end
 
+  def reset_procedures
+  end
+
   private
+
+  def find_appointment
+    @appointment = Appointment.find(params[:id])
+  end
 
   def show_time in_time
     in_time.blank? ? Time.now : in_time

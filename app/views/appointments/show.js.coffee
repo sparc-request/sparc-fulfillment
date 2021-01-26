@@ -18,35 +18,20 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
-$(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {protocols_participant: @appointment.protocols_participant})) %>")
+$('#appointmentsList').replaceWith("<%= j render 'protocols_participants/appointments', protocols_participant: @appointment.protocols_participant, selected: @appointment %>")
+$('#appointmentLoadingContainer').addClass('d-none')
+$('#appointmentContainer').
+  html("<%= j render '/appointments/calendar', appointment: @appointment %>").
+  removeClass('d-none')
 
-pg = new ProcedureGrouper()
+# pg = new ProcedureGrouper()
 
 <% if @appointment_style == "grouped" %>
-pg.initialize()
+# pg.initialize()
 <% else %>
 # $("select.core_multiselect").multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
-pg.initialize_multiselects_only()
+# pg.initialize_multiselects_only()
 <% end %>
-
-if !$('.start_date_input').hasClass('hidden')
-  start_date_init("<%= format_datetime(@appointment.start_date) %>")
-
-if !$('.completed_date_input').hasClass('hidden')
-  completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
-
-$('#appointment_content_indications').selectpicker()
-$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
-$(".selectpicker").selectpicker()
-
-statuses = []
-<% @statuses.each do |status| %>
-statuses[statuses.length] =  "<%= status %>"
-<% end %>
-
-$('#appointment_indications').selectpicker()
-$('#appointment_indications').selectpicker('val', statuses)
 
 $(".followup_procedure_datepicker").datetimepicker
   format: 'MM/DD/YYYY'
@@ -64,3 +49,5 @@ $('table#completed-appointments-table').bootstrapTable('refresh', {url: "/appoin
 
 $('input#invoiced_procedure').bootstrapToggle()
 $('input#credited_procedure').bootstrapToggle()
+
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

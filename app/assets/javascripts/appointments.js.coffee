@@ -19,6 +19,48 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+  if $('#appointmentContainer').length
+    $.ajax
+      method: 'GET'
+      dataType: 'script'
+      url: $('.appointment-link').first().prop('href')
+
+  $(document).on 'ajax:beforeSend', '.appointment-link', ->
+    $('.appointment-link.active').removeClass('active')
+    $(this).addClass('active')
+    $('#appointmentContainer').addClass('d-none')
+    $('#appointmentLoadingContainer').removeClass('d-none')
+
+  $(document).on 'click', '.start-appointment', ->
+    $.ajax
+      method: 'PUT'
+      dataType: 'script'
+      url: $(this).data('url')
+      data:
+        appointment:
+          start_date: new Date($.now()).toUTCString()
+
+  $(document).on 'click', '.complete-appointment:not(.disabled)', ->
+    start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
+    end_date = new Date($.now())
+
+    if start_date > end_date
+      data = field: "completed_date", appointment: completed_date: start_date.toUTCString()
+    else
+      data = field: "completed_date", appointment: completed_date: end_date.toUTCString()
+
+    appointment_id = $(this).parents('.row.appointment').data('id')
+    $.ajax
+      type: 'PUT'
+      data: data
+      url:  "/appointments/#{appointment_id}.js"
+
+
+
+
+
+
+
 
   window.reset_multiselect_after_update = (element) ->
     multiselect = $(element).siblings('#core_multiselect')
@@ -39,24 +81,6 @@ $ ->
     else
       pg.hide_group(group_id)
 
-  $(document).on 'click', '.dashboard_link', ->
-    if $(this).hasClass('active')
-      $(this).removeClass('active')
-      $(this).text("-- Show Dashboard --")
-    else
-      $(this).addClass('active')
-      $(this).text("-- Hide Dashboard --")
-
-    $('#dashboard').slideToggle()
-
-  $(document).on 'change', '#appointment_select', (event) ->
-    id = $(this).val()
-
-    if id != "-1"
-      $.ajax
-        type: 'GET'
-        url: "/appointments/#{id}.js"
-
   $(document).on 'click', '.add_service', ->
     if $('#service_list').val() == ''
       $('.service-error').removeClass('hidden')
@@ -73,45 +97,6 @@ $ ->
         data: data
 
       $('#service_list').val('').trigger('change')
-
-  $(document).on 'click', '.start_visit', ->
-    appointment_id = $(this).parents('.row.appointment').data('id')
-    data = field: "start_date", appointment: start_date: new Date($.now()).toUTCString()
-    $.ajax
-      type: 'PUT'
-      data: data
-      url:  "/appointments/#{appointment_id}.js"
-      success: ->
-        # reload table of procedures, so that UI elements disabled
-        # before start of appointment can be reenabled
-        $.ajax
-          type: 'GET'
-          data: data
-          url: "/appointments/#{appointment_id}.js"
-
-  $(document).on 'click', '.complete_visit', ->
-    unless $(this).hasClass('disabled')
-      start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
-      end_date = new Date($.now())
-
-      if start_date > end_date
-        data = field: "completed_date", appointment: completed_date: start_date.toUTCString()
-      else
-        data = field: "completed_date", appointment: completed_date: end_date.toUTCString()
-
-      appointment_id = $(this).parents('.row.appointment').data('id')
-      $.ajax
-        type: 'PUT'
-        data: data
-        url:  "/appointments/#{appointment_id}.js"
-
-  $(document).on 'click', '.reset_visit', ->
-    data = appointment_id: $(this).parents('.row.appointment').data('id')
-    if confirm("Resetting this appointment will delete all data which has been recorded for this appointment, are you sure you wish to continue?")
-      $.ajax
-        type: 'PUT'
-        url: "/multiple_procedures/reset_procedures.js"
-        data: data
 
   $(document).on 'click', '.appointment_style_button button', ->
     data = appointment_style: $(this).data('appointment-style')
@@ -315,39 +300,39 @@ $ ->
       data: data
       url: "/procedures/#{procedure_id}.js"
 
-  window.start_date_init = (date) ->
-    $('#start_date').datetimepicker
-      format: 'MM/DD/YYYY h:mm a'
-      defaultDate: date
-      ignoreReadonly: true
-    $('#start_date').on 'dp.hide', (e) ->
-      appointment_id = $(this).parents('.row.appointment').data('id')
-      data = appointment: start_date: e.date.toDate().toUTCString()
-      $.ajax
-        type: 'PUT'
-        data: data
-        url:  "/appointments/#{appointment_id}.js"
-        success: ->
-          if !$('.completed_date_input').hasClass('hidden')
-            $('#completed_date').data("DateTimePicker").minDate(e.date)
+  # window.start_date_init = (date) ->
+  #   $('#start_date').datetimepicker
+  #     format: 'MM/DD/YYYY h:mm a'
+  #     defaultDate: date
+  #     ignoreReadonly: true
+  #   $('#start_date').on 'dp.hide', (e) ->
+  #     appointment_id = $(this).parents('.row.appointment').data('id')
+  #     data = appointment: start_date: e.date.toDate().toUTCString()
+  #     $.ajax
+  #       type: 'PUT'
+  #       data: data
+  #       url:  "/appointments/#{appointment_id}.js"
+  #       success: ->
+  #         if !$('.completed_date_input').hasClass('hidden')
+  #           $('#completed_date').data("DateTimePicker").minDate(e.date)
 
-  window.completed_date_init = (date) ->
-    $('#completed_date').datetimepicker
-      format: 'MM/DD/YYYY h:mm a'
-      defaultDate: date
-      ignoreReadonly: true
-    $('#start_date').data("DateTimePicker").maxDate($('#completed_date').data("DateTimePicker").date())
-    $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
-    $('#completed_date').on 'dp.hide', (e) ->
-      appointment_id = $(this).parents('.row.appointment').data('id')
-      data = appointment: completed_date: e.date.toDate().toUTCString()
-      $.ajax
-        type: 'PUT'
-        data: data
-        url:  "/appointments/#{appointment_id}.js"
-        success: ->
-          $('#completed-appointments-table').bootstrapTable('refresh', {silent: "true"})
-          $('#start_date').data("DateTimePicker").maxDate(e.date)
+  # window.completed_date_init = (date) ->
+  #   $('#completed_date').datetimepicker
+  #     format: 'MM/DD/YYYY h:mm a'
+  #     defaultDate: date
+  #     ignoreReadonly: true
+  #   $('#start_date').data("DateTimePicker").maxDate($('#completed_date').data("DateTimePicker").date())
+  #   $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
+  #   $('#completed_date').on 'dp.hide', (e) ->
+  #     appointment_id = $(this).parents('.row.appointment').data('id')
+  #     data = appointment: completed_date: e.date.toDate().toUTCString()
+  #     $.ajax
+  #       type: 'PUT'
+  #       data: data
+  #       url:  "/appointments/#{appointment_id}.js"
+  #       success: ->
+  #         $('#completed-appointments-table').bootstrapTable('refresh', {silent: "true"})
+  #         $('#start_date').data("DateTimePicker").maxDate(e.date)
 
   # If enable_it true, enable Complete Visit button; otherwise, disable it.
   # Also, add the contains_disabled class to the containing div whenever
@@ -394,9 +379,6 @@ $ ->
     if $(this).parent().hasClass('disable-select-box')
       alert(I18n["appointment"]["procedure_invoiced_warning"])
       $(this).blur()
-
-  $(document).on 'click', '.completed_date_btn.contains_disabled', ->
-    alert("After clicking Start Visit, please either complete, incomplete, or assign a follow up date for each procedure before completing visit.")
 
   $(document).on 'click', '.disabled-status.btn-group .btn.disabled ', (e) ->
     e.stopPropagation()

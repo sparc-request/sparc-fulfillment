@@ -19,8 +19,8 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class Appointment < ApplicationRecord
-
-  STATUSES = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window'].freeze
+  VISIT_TYPES     = ['Lab Only', 'Space Only', 'PFT Only'].freeze
+  STATUSES        = ['Skipped Visit', 'Visit happened elsewhere', 'Patient missed visit', 'No show', 'Visit happened outside of window'].freeze
   NOTABLE_REASONS = ['Assessment not performed', 'SAE/Follow-up for SAE', 'Patient Visit Conflict', 'Study Visit Assessments Inconclusive', 'Other'].freeze
 
   default_scope {order(:position)}
@@ -52,6 +52,10 @@ class Appointment < ApplicationRecord
 
   accepts_nested_attributes_for :notes
 
+  def cores
+    Organization.where(id: self.procedures.pluck(:sparc_core_id))
+  end
+
   # Can appointment be finished? It must have a start date, and
   # all its procedures must either be complete, incomplete, or
   # have a follow up date assigned to it.
@@ -60,12 +64,24 @@ class Appointment < ApplicationRecord
     start_date.present?
   end
 
+  def completed?
+    self.completed_date.present?
+  end
+
   def can_finish?
     !start_date.blank? && (procedures.all? { |proc| !proc.unstarted? })
   end
 
   def has_completed_procedures?
     procedures.any?(&:completed_date)
+  end
+
+  def has_invoiced_procedures?
+    procedures.any?(&:invoiced?)
+  end
+
+  def has_credited_procedures?
+    procedures.any?(&:credited?)
   end
 
   def procedures_grouped_by_core

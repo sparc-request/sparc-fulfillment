@@ -66,12 +66,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :procedures, only: [:create, :edit, :update, :destroy] do
-    collection do
-      put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position'
-    end
-  end
-
   resources :fulfillments do
     collection do
       put 'toggle_invoiced(/:id)', to: 'fulfillments#toggle_invoiced'
@@ -98,11 +92,30 @@ Rails.application.routes.draw do
   end
 
   resources :appointments do
+    member do
+      put :update_statuses
+    end
+
     collection do
       get 'completed_appointments'
     end
-    put 'update_statuses'
+
     put 'change_appointment_style'
+
+    resources :procedures, only: [:index, :create, :edit, :update, :destroy] do
+      collection do
+        put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position'
+      end
+    end
+
+    resources :multiple_procedures, only: [] do
+      collection do
+        get 'incomplete_all'
+        get 'complete_all'
+        put 'update_procedures'
+        put 'reset_procedures'
+      end
+    end
   end
 
 
@@ -112,15 +125,6 @@ Rails.application.routes.draw do
       put 'create_line_items'
       get 'edit_line_items'
       put 'destroy_line_items'
-    end
-  end
-
-  resources :multiple_procedures, only: [] do
-    collection do
-      get 'incomplete_all'
-      get 'complete_all'
-      put 'update_procedures'
-      put 'reset_procedures'
     end
   end
 

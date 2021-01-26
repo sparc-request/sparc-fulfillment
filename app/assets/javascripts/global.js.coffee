@@ -97,7 +97,9 @@ $ ->
             method:   $anchor.data('method') || 'GET'
             dataType: 'script'
             url:      $anchor.attr('href')
-            success:  $anchor.prop('disabled', false)
+            success: ->
+              $(this).removeClass('disabled')
+              $anchor.removeClass('disabled')
         # Else change the page location
         else
           window.location.href = $anchor.attr('href')

@@ -4,4 +4,3 @@ json.rows @protocols do |protocol|
     json.partial! 'protocol', protocol: protocol
   end
 end
-

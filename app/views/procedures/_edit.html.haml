@@ -18,6 +18,8 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+- clinical_providers = ClinicalProvider.includes(:identity).where(organization_id: current_identity.protocols.map{|p| p.sub_service_request.organization_id }).order('identities.last_name')
+
 #edit_modal.modal-dialog
   .modal-content
     = form_for task, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|

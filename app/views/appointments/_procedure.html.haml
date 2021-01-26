@@ -24,9 +24,6 @@
   %td.col-sm-3.name{class: "#{procedure.invoiced? ? 'disabled-status' : ''}"}
     = service_name_display(procedure.service)
 
-  %td.col-sm-1.billing
-    = select_tag "quantity_type_#{procedure.id}", options_for_select(Procedure.billing_display, procedure.billing_type), class: procedure.invoiced? ? "form-control billing_type selectpicker disable-select-box invoiced_disabled " : "form-control billing_type selectpicker", disabled: procedure.invoiced?
-
   %td.col-sm-3.status
     .btn-group{data: {toggle: "buttons"}, class: "#{ procedure.appt_started? ? '' : 'pre_start_disabled' } #{procedure.invoiced? ? 'disabled-status' : ''}"}
       %label.status.complete{class: "btn btn-default #{procedure.complete? ? 'selected_before active' : 'inactive'} #{ !procedure.appt_started? ? 'disabled' : procedure.invoiced? ? 'disabled' : '' }", data: {core_id: "#{procedure.sparc_core_id}"}}

@@ -18,8 +18,12 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-= render 'participants/participant_info', protocol: @protocol, participant: @participant, protocols_participant: @protocols_participant
-= render 'participants/dashboard', protocol: @protocol, participant: @participant, protocols_participant: @protocols_participant
-.row.appointment-select
-  = render 'participants/dropdown', protocols_participant: @protocols_participant
-.row.appointments
+= render 'participant_info', protocol: @protocol, participant: @participant, protocols_participant: @protocols_participant
+
+= render 'appointments', protocols_participant: @protocols_participant
+.w-80
+  #appointmentContainer
+  .card#appointmentLoadingContainer
+    .card-body
+      %h3.mb-0.text-center
+        = "Loading..."

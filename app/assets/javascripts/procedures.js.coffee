@@ -18,6 +18,50 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+$ ->
+  $(document).on('mouseenter', '.appointment-status-buttons button', ->
+    $(this).siblings('.active').removeClass('active')
+    $(this).addClass('active')
+  ).on('mouseleave', '.appointment-status-buttons', ->
+    selected = $(this).data('selected')
+    $(this).find('.active').removeClass('active')
+    $(this).find("button[data-status=#{selected}]").addClass('active')
+  )
+
+  $(document).on 'click', '.appointment-status-buttons button:not(.disabled)', ->
+    $btn        = $(this)
+    status      = $btn.data('status')
+    url         = $btn.data('url')
+    old_status  = $btn.parents('.appointment-status-buttons').data('selected')
+
+    if status != old_status
+      $btn.parents('.appointment-status-buttons').data('selected', status)
+
+      if status == 'complete' || status == 'unstarted'
+        $.ajax
+          method: 'PUT'
+          dataType: 'script'
+          url: url
+      else
+        $.ajax
+          method: 'GET'
+          dataType: 'script'
+          url: url
+          data:
+            partial: 'incomplete'
+          success: ->
+            $('#modalContainer').one 'hide.bs.modal', ->
+              $btn.parents('.appointment-status-buttons').data('selected', old_status)
+              $btn.removeClass('active')
+              $btn.siblings("button[data-status=#{old_status}]").addClass('active')
+
+
+
+
+
+
+
+
 $(document).on 'change', 'input.toggle_invoice_procedure', ->
   invoiced = $(this).prop('checked')
   procedure_id = $(this).data('id')

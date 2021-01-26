@@ -18,40 +18,19 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.col-xs-5.start-col
-  .start_date_input{class: hidden_class(appointment.start_date.blank?)}
-    %form.form-horizontal
-      .form-group
-        %label.col-xs-1.control-label#start-date-label{for: 'start_date'}= t(:appointment)[:start_date]
-        .col-xs-6
-          = text_field_tag 'start_date', '', class: 'form-control', readonly: true
-
-        .col-xs-2.reset_button
-          %button.btn.btn-warning.reset_visit{type: "button", disabled: procedures_invoiced_or_credited?(appointment), data: {toggle: "tooltip", animation: 'false'} }
-            %span.disabled_tooltip{title: (procedures_invoiced?(appointment) && procedures_credited?(appointment)) ?  t(:appointment)[:reset_visit_disabled_credited_and_invoiced] : procedures_invoiced?(appointment) ? t(:appointment)[:reset_visit_disabled_invoiced] : procedures_credited?(appointment) ? t(:appointment)[:reset_visit_disabled_credited] : ''}
-              = t(:appointment)[:reset_visit]
-
-  .start_date_btn{class: hidden_class(!appointment.start_date.blank?) }
-    %button.btn.btn-success.start_visit= t(:appointment)[:start_visit]
-
-.col-xs-4.col-xs-offset-2.complete-col
-  .completed_date_input{class: hidden_class(appointment.completed_date.blank?)}
-    %form.form-horizontal
-      .form-group
-        %label.col-xs-1.control-label#completed-date-label{for: 'completed_date'}= t(:appointment)[:completed_date]
-        .col-xs-6
-          = text_field_tag 'completed_date', '', class: 'form-control', readonly: true
-        .col-xs-1#remove_completed_date_button
-          %button.btn.btn-danger.uncomplete_visit{type: "button"}
-            %span.glyphicon.glyphicon-remove
-
-  .completed_date_btn{class: [hidden_class(!appointment.completed_date.blank?), contains_disabled_class(!appointment.can_finish?)].join(' ')}
-    %button.btn.btn-danger.complete_visit{class: disabled_class(!appointment.can_finish?) }= t(:appointment)[:complete_visit]
-
-.col-xs-1.appointment_style_button.text-right
-  - if @appointment_style == "grouped"
-    %button.btn.btn-default{type: "button", data: {appointment_style: "custom", toggle: "tooltip", animation: 'false', container: '#custom_tooltip_container'}, title: "Switch to Custom Ordered View"}
-      %span.glyphicon.glyphicon-list
-  - else
-    %button.btn.btn-default{type: "button", data: {appointment_style: "grouped", toggle: "tooltip", animation: 'false', container: '#custom_tooltip_container'}, title: "Switch to Grouped View"}
-      %span.glyphicon.glyphicon-th-list
+.col-3#appointmentStartDateContainer{ class: !appointment.started? ? 'd-none' : '' }
+  = form_for appointment, url: appointment_path(appointment), remote: true, method: :put do |f|
+    = f.label :start_date
+    .input-group.datetimepicker.date#appointmentStartDatePicker{ data: { target_input: 'nearest' } }
+      = f.text_field :start_date, class: 'datetimepicker-input form-control', value: format_date(appointment.start_date), onchange: "Rails.fire(this.form, 'submit')", data: { target: '#appointmentStartDatePicker' }
+      .input-group-append{ data: { toggle: 'datetimepicker', target: '#appointmentStartDatePicker' } }
+        %span.input-group-text
+          = icon('fas', 'calendar-alt')
+.col-3#appointmentCompletedDateContainer{ class: !appointment.completed? ? 'd-none' : '' }
+  = form_for appointment, url: appointment_path(appointment), remote: true, method: :put do |f|
+    = f.label :completed_date
+    .input-group.datetimepicker.date#appointmentCompletedDatePicker{ data: { target_input: 'nearest' } }
+      = f.text_field :completed_date, class: 'datetimepicker-input form-control', value: format_date(appointment.completed_date), onchange: "Rails.fire(this.form, 'submit')", data: { target: '#appointmentCompletedDatePicker' }
+      .input-group-append{ data: { toggle: 'datetimepicker', target: '#appointmentCompletedDatePicker' } }
+        %span.input-group-text
+          = icon('fas', 'calendar-alt')

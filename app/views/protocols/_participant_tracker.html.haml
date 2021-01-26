@@ -37,12 +37,12 @@
         %th.external-id.editable{ data: { field: 'external_id', align: 'left', sortable: 'true' } }
           = ProtocolsParticipant.human_attribute_name(:external_id)
         %th.arm{ data: { field: 'arm', align: 'left', sortable: 'true' } }
-          = t(:participant)[:arm]
+          = ProtocolsParticipant.human_attribute_name(:arm)
         %th.status{ data: { field: 'status', align: 'left', sortable: 'true' } }
           = ProtocolsParticipant.human_attribute_name(:status)
         %th.recruitment-source{ data: { field: 'recruitment_source', align: 'left', sortable: 'true' } }
           = ProtocolsParticipant.human_attribute_name(:recruitment_source)
-        %th.notes.editable{ data: { field: 'notes', align: 'center' } }
+        %th.notes{ data: { field: 'notes', align: 'center' } }
           = Note.model_name.plural.capitalize
         %th.actions{ data: { field: 'actions', align: 'center' } }
           = t('actions.actions')

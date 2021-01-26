@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class MultipleProceduresController < ApplicationController
-
+  before_action :find_appointment
   before_action :find_procedures, only: [:complete_all, :incomplete_all, :update_procedures]
   before_action :create_note_before_update, only: [:update_procedures]
 
@@ -48,7 +48,6 @@ class MultipleProceduresController < ApplicationController
   end
 
   def reset_procedures
-    @appointment = Appointment.find(params[:appointment_id])
     #Status is used by the 'show' re-render
     @statuses = @appointment.appointment_statuses.pluck(:status)
 
@@ -74,8 +73,12 @@ class MultipleProceduresController < ApplicationController
 
   private
 
+  def find_appointment
+    @appointment = Appointment.find(params[:appointment_id])
+  end
+
   def find_procedures
-    @procedures = Procedure.where(id: params[:procedure_ids])
+    @procedures = @appointments.procedures.where(id: params[:procedure_ids])
   end
 
   def create_note_before_update

@@ -33,7 +33,17 @@ class ProtocolsParticipantsController < ApplicationController
   end
 
   def show
-    respond_to :html, :js
+    respond_to do |format|
+      format.html {
+        session[:breadcrumbs].set_base(:requests, root_url).add_crumbs([
+          { label: helpers.protocol_label(@protocol) },
+          { label: helpers.request_label(@protocol), url: protocol_path(@protocol) },
+          { label: helpers.protocols_participant_label(@protocols_participant) }
+        ])
+      }
+      format.js
+      format.json
+    end
   end
 
   def new
@@ -42,12 +52,14 @@ class ProtocolsParticipantsController < ApplicationController
 
   def create
     respond_to :js
-    @protocol.protocols_participants.create(participant_id: params[:participant_id])
+    @prot_part = @protocol.protocols_participants.create(participant_id: params[:participant_id])
+    @prot_part.update_attribute(:arm, @protocol.arms.first) if @protocol.arms.length == 1
     flash[:success] = t('protocols_participants.flash.updated')
   end
 
   def update
     respond_to :js
+    @protocols_participant.current_identity = current_identity
     @protocols_participant.update_attributes(protocols_participant_params)
     flash[:success] = t('protocols_participants.flash.updated')
   end

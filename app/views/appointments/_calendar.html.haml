@@ -18,35 +18,38 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.col-xs-12
-  .row.appointment{ data: { id: appointment.id } }
-    .col-xs-12
-      .row
-        .col-xs-12
-          .page-header
-            %h3.appointment_header
-              = "Visit: #{appointment.formatted_name}"
-              = appointment_notes_formatter(appointment)
-            .row
-              .col-md-5
-                = render partial: '/appointments/visit_type_dropdown'
-              .col-md-5.col-md-offset-2.text-right
-                = render partial: '/appointments/visit_indications_dropdown'
-      .row#custom_tooltip_container
-        = render partial: '/appointments/start_complete_buttons', locals: { appointment: appointment }
-      .row.calendar
-        .col-xs-12
-          - appointment.procedures_grouped_by_core.each do |core_id, procedures|
-            - ordered_procedures = (@appointment_style == "custom" ? procedures.sort_by(&:position) : procedures)
-            = render partial: '/appointments/core', locals: {core_id: core_id, procedures: ordered_procedures, appointment: appointment}
-      .row.services
-        .col-xs-4
-          = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker', include_blank: 'Nothing Selected'
-          %span.help-block.service-error.hidden
-            %p.text-danger
-              = t(:appointment)[:service_error]
-        .col-xs-2
-          = text_field_tag "service_quantity", 1, class: "form-control"
-        .col-xs-2
-          %button.btn.btn-success.add_service
-            = t(:appointment)[:add_service]
+.card.w-100
+  .card-header.d-flex.justify-content-between
+    %h3.mb-0
+      = "#{Appointment.model_name.human}: #{appointment.formatted_name}"
+    .appointment-actions.d-flex
+      - if appointment.started?
+        = complete_appointment_buttons(appointment)
+        = reset_appointment_button(appointment)
+      - else
+        = start_appointment_button(appointment)
+      = notes_button(appointment, model: Appointment.model_name.human)
+      - if @appointment_style == "grouped"
+        %button.btn.btn-secondary{type: "button", data: {appointment_style: "custom", toggle: "tooltip", animation: 'false', container: '#custom_tooltip_container'}, title: "Switch to Custom Ordered View"}
+          %span.glyphicon.glyphicon-list
+      - else
+        %button.btn.btn-secondary{type: "button", data: {appointment_style: "grouped", toggle: "tooltip", animation: 'false', container: '#custom_tooltip_container'}, title: "Switch to Grouped View"}
+          %span.glyphicon.glyphicon-th-list
+  .card-body
+    .row
+      = render '/appointments/start_complete_buttons', appointment: appointment
+      = render '/appointments/visit_type_dropdown', appointment: appointment
+      = render '/appointments/visit_indications_dropdown', appointment: appointment
+  - appointment.cores.each do |core|
+    = render '/appointments/core', core: core, appointment: appointment
+.w-100.services
+  .col-xs-4
+    = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker', include_blank: 'Nothing Selected'
+    %span.help-block.service-error.hidden
+      %p.text-danger
+        = t(:appointments)[:service_error]
+  .col-xs-2
+    = text_field_tag "service_quantity", 1, class: "form-control"
+  .col-xs-2
+    %button.btn.btn-success.add_service
+      = t(:appointments)[:add_service]
