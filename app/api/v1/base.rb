@@ -65,7 +65,7 @@ module CWFSPARC
               requires :sparc_id, type: Integer
               optional :quantity_requested, type: Integer
               optional :service_id, type: Integer
-              optional :protocol_id, type: Integer
+              optional :sub_service_request_id, type: Integer
             end
           end
         end
@@ -78,7 +78,8 @@ module CWFSPARC
           line_item = LineItem.find_by_sparc_id(line_item_hash['sparc_id']) if (action == "update" or "destroy")
 
           if action == 'create'
-            if LineItem.create(line_item_hash)
+            protocol_id = Protocol.find_by_sub_service_request_id(line_item_hash['sub_service_request_id']).id
+            if LineItem.create(sparc_id: line_item_hash['sparc_id'], quantity_requested: line_item_hash['quantity_requested'], service_id: line_item_hash['service_id'], protocol_id: protocol_id)
               success_message = {result: "success", detail: "created"}
             end
           elsif action == 'update'
