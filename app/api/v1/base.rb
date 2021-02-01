@@ -55,6 +55,49 @@ module CWFSPARC
           Notification.create params['notification']
         end
       end
+
+      #For syncing of one time fee line items from SPARC
+      resource :otf_sync_from_sparc do
+        params do
+          requires :sync, type: Hash do
+            requires :action, type: String, values: ['create', 'update', 'destroy']
+            requires :line_item, type: Hash do
+              requires :sparc_id, type: Integer
+              optional :quantity_requested, type: Integer
+              optional :service_id, type: Integer
+              optional :protocol_id, type: Integer
+            end
+          end
+        end
+        post do
+          sync = params['sync']
+          action = sync['action']
+          line_item_hash = sync['line_item']
+
+          ##If there are multiple (bad data) line items with the same sparc_id, this will just grab the first one as a fall back.
+          line_item = LineItem.find_by_sparc_id(line_item_hash['sparc_id']) if (action == "update" or "destroy")
+
+          if action == 'create'
+            if LineItem.create(line_item_hash)
+              success_message = {result: "success", detail: "created"}
+            end
+          elsif action == 'update'
+            if line_item.update_attributes(line_items_hash)
+              success_message = {result: "success", detail: "updated"}
+            end
+          elsif action == 'destroy'
+            if line_item.destroy
+              success_message = {result: "success", detail: "destroyed"}
+            end
+          end
+
+          if success_message
+            return success_message
+          else
+            return {result: "error"}
+          end
+        end
+      end
     end
   end
 end
