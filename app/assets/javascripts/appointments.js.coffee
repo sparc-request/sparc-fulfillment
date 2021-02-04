@@ -23,9 +23,26 @@ $ ->
     $.ajax
       method: 'GET'
       dataType: 'script'
-      url: $('.appointment-link').first().prop('href')
+      url: $('.appointment-link.active').prop('href')
+
+  # Allow the page to reload a previous appointment when navigating
+  # with the browseer's "Back" arrow
+  $(window).on 'popstate', ->
+    url = new URL(window.location)
+    appointmentId = url.searchParams.get('appointment_id')
+    $('.appointment-link.active').removeClass('active')
+    $(".appointment-link[data-appointment-id=#{appointmentId}]").addClass('active')
+    $('#appointmentContainer').addClass('d-none')
+    $('#appointmentLoadingContainer').removeClass('d-none')
+    $.ajax
+      method: 'GET'
+      dataType: 'script'
+      url: "/appointments/#{appointmentId}"
 
   $(document).on 'ajax:beforeSend', '.appointment-link', ->
+    url = new URL(window.location)
+    url.searchParams.set('appointment_id', $(this).data('appointment-id'))
+    window.history.pushState({}, null, url.toString())
     $('.appointment-link.active').removeClass('active')
     $(this).addClass('active')
     $('#appointmentContainer').addClass('d-none')

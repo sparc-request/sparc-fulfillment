@@ -20,10 +20,10 @@
 
 = render 'participant_info', protocol: @protocol, participant: @participant, protocols_participant: @protocols_participant
 
-= render 'appointments', protocols_participant: @protocols_participant
+= render 'appointments', protocols_participant: @protocols_participant, appointment: @appointment
 .w-80
   #appointmentContainer
   .card#appointmentLoadingContainer
     .card-body
       %h3.mb-0.text-center
-        = "Loading..."
+        = t('constants.search.loading')

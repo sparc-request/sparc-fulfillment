@@ -20,11 +20,11 @@
 
 - disabled = procedure.invoiced? || !procedure.complete?
 - if procedure.invoiced?
-  - tooltip = t('procedures.tooltips.invoiced_warning')
+  - tooltip = t('procedures.tooltips.invoiced.disabled')
 - elsif !procedure.appointment.started?
   - tooltip = t('procedures.tooltips.unstarted_appointment')
 
 .tooltip-wrapper{ title: tooltip, data: { toggle: disabled ? 'tooltip' : '' } }
   = form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
-    .input-group.datetimepicker.date{ id: "procedure-#{procedure.id}-followDatePicker", data: { target_input: 'nearest' } }
-      = f.text_field :completed_date, class: 'datetimepicker-input form-control', value: format_date(procedure.completed_date), onchange: "Rails.fire(this.form, 'submit')", disabled: disabled, data: { target: "#procedure-#{procedure.id}-followDatePicker" }
+    .input-group.datetimepicker.date.procedure-completed-datepicker{ id: "procedure-#{procedure.id}-completedDatePicker", data: { target_input: 'nearest' } }
+      = f.text_field :completed_date, class: 'datetimepicker-input form-control', value: format_date(procedure.completed_date), disabled: disabled, data: { target: "#procedure-#{procedure.id}-completedDatePicker" }

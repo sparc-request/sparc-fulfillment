@@ -18,12 +18,20 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-- appt_unstarted = !procedure.appointment.started?
+- if !procedure.appointment.started?
+  - disabled = true
+  - tooltip = t('procedures.tooltips.unstarted_appointment')
+- elsif procedure.invoiced?
+  - disabled = true
+  - tooltip = t('procedures.tooltips.invoiced.disabled')
+- else
+  - disabled = false
+  - tooltip = ''
 
-.btn-group.appointment-status-buttons{ title: appt_unstarted ? t('procedures.tooltips.unstarted_appointment') : '', role: 'group', data: { selected: procedure.follow_up? ? 'unstarted' : procedure.status, toggle: appt_unstarted ? 'tooltip' : '' } }
-  %button.btn.btn-outline-success.btn-sq.complete-btn{ class: [procedure.complete? ? 'active' : '', appt_unstarted ? 'disabled' : ''], title: t('procedures.tooltips.complete'), data: { toggle: appt_unstarted ? '' : 'tooltip', url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id, procedure: { status: 'complete', performer_id: current_identity.id }), status: 'complete' } }
+.btn-group.appointment-status-buttons{ title: tooltip, role: 'group', data: { selected: procedure.follow_up? ? 'unstarted' : procedure.status, toggle: disabled ? 'tooltip' : '' } }
+  %button.btn.btn-outline-success.btn-sq.complete-btn{ class: [procedure.complete? ? 'active' : '', disabled ? 'disabled' : ''], title: t('procedures.tooltips.complete'), data: { toggle: disabled ? '' : 'tooltip', url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id, procedure: { status: 'complete', performer_id: current_identity.id }), status: 'complete' } }
     = icon('fas', 'check')
-  %button.btn.btn-outline-secondary.btn-sq.unstarted-btn{ class: [procedure.unstarted? || procedure.follow_up? ? 'active' : '', appt_unstarted ? 'disabled' : ''], title: t('procedures.tooltips.unstarted'), data: { toggle: appt_unstarted ? '' : 'tooltip', url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id, procedure: { status: 'unstarted', performer_id: current_identity.id }), status: 'unstarted' } }
+  %button.btn.btn-outline-secondary.btn-sq.unstarted-btn{ class: [procedure.unstarted? || procedure.follow_up? ? 'active' : '', disabled ? 'disabled' : ''], title: t('procedures.tooltips.unstarted'), data: { toggle: disabled ? '' : 'tooltip', url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id, procedure: { status: 'unstarted', performer_id: current_identity.id }), status: 'unstarted' } }
     = icon('fas', 'times')
-  %button.btn.btn-outline-warning.btn-sq.incomplete-button{ class: [procedure.incomplete? ? 'active' : '', appt_unstarted ? 'disabled' : ''], title: t('procedures.tooltips.incomplete'), data: { toggle: appt_unstarted ? '' : 'tooltip', url: edit_appointment_procedure_path(procedure, appointment_id: procedure.appointment_id, procedure: { status: 'incomplete', performer_id: nil }), status: 'incomplete' } }
+  %button.btn.btn-outline-warning.btn-sq.incomplete-button{ class: [procedure.incomplete? ? 'active' : '', disabled ? 'disabled' : ''], title: t('procedures.tooltips.incomplete'), data: { toggle: disabled ? '' : 'tooltip', url: edit_appointment_procedure_path(procedure, appointment_id: procedure.appointment_id, procedure: { status: 'incomplete', performer_id: nil }), status: 'incomplete' } }
     = icon('fas', 'exclamation')

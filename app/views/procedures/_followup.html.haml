@@ -20,7 +20,7 @@
 
 - disabled = procedure.invoiced? || !procedure.appointment.started?
 - if procedure.invoiced?
-  - tooltip = t('procedures.tooltips.invoiced_warning')
+  - tooltip = t('procedures.tooltips.invoiced.disabled')
 - elsif !procedure.appointment.started?
   - tooltip = t('procedures.tooltips.unstarted_appointment')
 - elsif procedure.task.nil?

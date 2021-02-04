@@ -61,8 +61,6 @@ $("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .se
 
 <% end %>
 
-# $('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
-
 pg = new ProcedureGrouper()
 
 <% if @appointment_style == "grouped" %>
@@ -87,20 +85,9 @@ statuses = []
 statuses[statuses.length] =  "<%= status %>"
 <% end %>
 
-$(".followup_procedure_datepicker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-
-$(".completed_date_field").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-
 $("#group-<%= @procedure.group_id %> button").trigger('click')
 
 <% if @cost_error_message %>
 swal("<%= @cost_error_message %>")
 <% end %>
 <% end %>
-
-$('input#invoiced_procedure').bootstrapToggle()
-$('input#credited_procedure').bootstrapToggle()

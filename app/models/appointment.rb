@@ -105,6 +105,6 @@ class Appointment < ApplicationRecord
   end
 
   def formatted_name
-    self.type == 'CustomAppointment' ? "#{self.name} (Custom Visit)" : self.name
+    self.type == 'CustomAppointment' ? "#{self.name} (Custom Visit)" : self.visit_group.identifier
   end
 end

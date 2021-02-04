@@ -75,11 +75,6 @@ class Procedure < ApplicationRecord
      ["O", "other_billing_qty"]]
   end
 
-  def performable_by
-    #Returns identities that are allowed to be the performer for this procedure, formatted for an options_for_select helper
-    @performable_by ||= Identity.joins(:clinical_providers).where(clinical_providers: { organization: self.protocol.organization }).order(:first_name, :last_name)
-  end
-
   def formatted_billing_type
     case self.billing_type
     when "research_billing_qty"

@@ -18,8 +18,8 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-- appointments = protocols_participant.appointments.where(arm: protocols_participant.arm).eager_load(:visit_group)
-- selected ||= appointments.first
+- appointments  = protocols_participant.appointments.where(arm: protocols_participant.arm).eager_load(:visit_group)
+- appointment ||= appointments.first
 
 .w-20.pr-3#appointmentsList
   .card
@@ -33,8 +33,8 @@
         = f.select :arm_id, protocols_participant_calendar_arm_options(protocols_participant), {}, class: 'selectpicker'
     .list-group.list-group-flush
       - appointments.each do |appt|
-        = link_to appointment_path(appt), remote: true, class: ['list-group-item list-group-item-action d-flex justify-content-between appointment-link', appt == selected ? 'active' : ''] do
+        = link_to appointment_path(appt), remote: true, class: ['list-group-item list-group-item-action d-flex justify-content-between appointment-link', appt == appointment ? 'active' : ''], data: { appointment_id: appt.id } do
           %span.w-90
-            = appt.visit_group.identifier
+            = appt.formatted_name
           %span.w-10.text-center
             = appointment_context_icon(appt)

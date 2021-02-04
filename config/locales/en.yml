@@ -489,9 +489,16 @@ en:
       incomplete: "Incomplete"
       followup:
         schedule: "Schedule a follow-up"
-      disabled_credited: "This item cannot be removed because it is credited."
+      invoiced:
+        incomplete_procedure: "Can only be toggled after the Procedure has been completed."
+        warning: "Warning: Once this procedure has been invoiced it cannot be undone"
+        disabled: "This procedure has been invoiced and cannot be altered."
+      credited:
+        incomplete_procedure: "Can only be toggled after the Procedure has been completed."
+        warning: "Once this procedure has been credited it cannot be undone"
+        disabled: "This procedure has already been credited"
+      delete: "Delete Procedure"
       disabled_invoiced: "This item cannot be removed because it is invoiced."
-      invoiced_warning: "This procedure has been invoiced and cannot be altered."
       group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
 
   protocols:

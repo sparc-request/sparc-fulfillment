@@ -19,7 +19,10 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
-  $(document).on('mouseenter', '.appointment-status-buttons button', ->
+  $(document).on 'hide.datetimepicker', '.procedure-completed-datepicker', ->
+    Rails.fire($(this).parents('form')[0], 'submit')
+
+  $(document).on('mouseenter', '.appointment-status-buttons button:not(.disabled)', ->
     $(this).siblings('.active').removeClass('active')
     $(this).addClass('active')
   ).on('mouseleave', '.appointment-status-buttons', ->
@@ -61,28 +64,6 @@ $ ->
 
 
 
-
-$(document).on 'change', 'input.toggle_invoice_procedure', ->
-  invoiced = $(this).prop('checked')
-  procedure_id = $(this).data('id')
-  $.ajax
-    type: 'PUT'
-    url: "/procedures/#{procedure_id}.js"
-    data:
-      procedure:
-        invoiced: invoiced
-        credited: !invoiced
-
-$(document).on 'change', 'input.toggle_credit_procedure', ->
-  credited = $(this).prop('checked')
-  procedure_id = $(this).data('id')
-  $.ajax
-    type: 'PUT'
-    url: "/procedures/#{procedure_id}.js"
-    data:
-      procedure:
-        credited: credited
-        invoiced: !credited
 
 $(document).on 'click', '.procedure_move_button',  ->
   id = $(this).data('procedure-id')

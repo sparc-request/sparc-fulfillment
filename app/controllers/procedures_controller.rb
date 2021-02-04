@@ -28,7 +28,8 @@ class ProceduresController < ApplicationController
   def index
     respond_to :json
 
-    @procedures = @appointment.procedures.eager_load(:notes, :task).preload(:protocol, :service).where(sparc_core_id: params[:core_id])
+    @procedures     = @appointment.procedures.eager_load(:notes, :task).preload(:service, :protocol).where(sparc_core_id: params[:core_id])
+    @performable_by = @appointment.protocol.organization.clinical_provider_identities.order(:first_name, :last_name)
   end
 
   def create
@@ -53,6 +54,8 @@ class ProceduresController < ApplicationController
   end
 
   def edit
+    respond_to :js
+
     @task = Task.new
     if params[:partial].present?
       @note = @procedure.notes.new(kind: 'reason')
@@ -63,6 +66,8 @@ class ProceduresController < ApplicationController
   end
 
   def update
+    respond_to :js
+
     unless @procedure.update_attributes(procedure_params)
       @errors = @procedure.errors
     end
@@ -72,11 +77,9 @@ class ProceduresController < ApplicationController
   end
 
   def destroy
-    @statuses = @appointment.appointment_statuses.pluck(:status)
+    respond_to :js
 
     @procedure.destroy
-
-    render 'appointments/show'
   end
 
   def change_procedure_position

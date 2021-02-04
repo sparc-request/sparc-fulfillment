@@ -2,7 +2,7 @@ json.(protocols_participant)
 
 json.actions                  protocols_participant_actions(protocols_participant)
 json.arm                      protocols_participant_arm_dropdown(protocols_participant)
-json.arm_read                 protocols_participant.arm.name
+json.arm_read                 protocols_participant.arm.try(:name)
 json.calendar                 protocols_participant_calendar_button(protocols_participant)
 json.external_id              protocols_participant_external_id(protocols_participant)
 json.external_id_read         protocols_participant_external_id(protocols_participant, readonly: true)

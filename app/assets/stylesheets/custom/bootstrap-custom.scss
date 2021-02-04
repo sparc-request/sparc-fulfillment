@@ -130,8 +130,15 @@
 }
 
 @each $color, $value in $theme-colors {
-  .btn.btn-outline-#{$color}:active {
-    background-color: darken($value, 10%) !important;
+  .btn.btn-outline-#{$color} {
+    &:active {
+      background-color: darken($value, 10%) !important;
+    }
+
+    &.active.disabled {
+      color: white;
+      background-color: $value;
+    }
   }
 }
 

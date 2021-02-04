@@ -44,11 +44,11 @@ class Identity < SparcDbBase
   end
 
   def billing_manager_protocols
-    IdentityOrganizations.new(id).authorized_billing_manager_protocols
+    @billing_manager_protocols ||= IdentityOrganizations.new(id).authorized_billing_manager_protocols
   end
 
   def billing_manager_protocols_allow_credit
-    IdentityOrganizations.new(id).authorized_billing_manager_protocols_allow_credit
+    @billing_manager_protocols_allow_credit ||= IdentityOrganizations.new(id).authorized_billing_manager_protocols_allow_credit
   end
 
   def protocols_full
