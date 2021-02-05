@@ -83,7 +83,7 @@ module CWFSPARC
               success_message = {result: "success", detail: "created"}
             end
           elsif action == 'update'
-            if line_item.update_attributes(line_items_hash)
+            if line_item.update_attributes(line_item_hash)
               success_message = {result: "success", detail: "updated"}
             end
           elsif action == 'destroy'
