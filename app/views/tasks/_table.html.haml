@@ -44,9 +44,9 @@
             = t('task.assignee_name')
           %th{ data: { field: 'assignable_type', align: 'left', sortable: 'true' } }
             = t('task.assignable_type')
-          %th.w-30{ data: { field: 'body', align: 'left', sortable: 'true' } }
+          %th.w-25{ data: { field: 'body', align: 'left', sortable: 'true' } }
             = Task.human_attribute_name(:body)
-          %th.w-10{ data: { field: 'due_at', align: 'left', sortable: 'true', sorter: 'dueDateSorter' } }
+          %th.w-15{ data: { field: 'due_at', align: 'left', sortable: 'true', sorter: 'dueDateSorter' } }
             = Task.human_attribute_name(:due_at)
           %th.w-5.complete{ data: { field: 'complete', align: 'center' } }
             = t('task.completed')

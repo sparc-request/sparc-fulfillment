@@ -602,6 +602,7 @@ en:
       false: "Incomplete"
     completed: "Completed"
     create_task: "Create Task"
+    due_soon: "Due soon"
     emails:
       assigned_new_task: "You have been assigned a new task"
       content: "Task Content: "
@@ -616,6 +617,7 @@ en:
       updated: "Task Updated"
     identity_name: "Created by"
     new_task: "Create New Task"
+    past_due : "Past due"
     reschedule: "Reschedule"
     show_complete: "Complete "
     show_incomplete: "Incomplete "
