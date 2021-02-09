@@ -22,7 +22,7 @@
 - if @task_id
   = hidden_field_tag 'task_id', @task_id
 
-.w-100
+.w-100#tasksList
   .card
     .card-header.bg-primary.text-white
       %h3.mb-0
@@ -33,7 +33,7 @@
           = icon('fas', 'plus mr-2')
       = check_box_tag :complete, '', false, { id: 'completeToggle', data: { toggle: 'toggle', on: t('task.show_complete'), off: t('task.show_incomplete'), onstyle: 'success', style: 'ml-2' } }
       = check_box_tag :all_tasks, '', false, { id: 'allTasksToggle', data: { toggle: 'toggle', on: t('task.all_tasks'), off: t('task.my_tasks'), onstyle: 'success', style: 'ml-2' } }
-    %table.tasks#tasksTable{ data: { toggle: 'table', search: 'true', show_columns: 'true', show_refresh: 'true', url: tasks_path(scope: 'mine', format: :json), sort_name: 'due_at', sort_order: 'asc', striped: 'true', toolbar: '#tasksToolbar', show_export: 'true' } }
+    %table.tasks#tasks{ data: { toggle: 'table', search: 'true', show_columns: 'true', show_refresh: 'true', url: tasks_path(scope: 'mine', format: :json), sort_name: 'due_at', sort_order: 'asc', striped: 'true', toolbar: '#tasksToolbar', show_export: 'true' } }
       %thead
         %tr
           %th{ data: { field: 'protocol_id', align: 'center', visible: 'false', sortable: 'true' } }

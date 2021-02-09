@@ -33,7 +33,7 @@ notification_bubble = $(".notification-badge.task-notifications")
 notification_count = parseInt(notification_bubble.text())
 if notification_count == 0
   notification_bubble.remove();
-$("#tasksTable").bootstrapTable('refresh')
+$("#tasks").bootstrapTable('refresh')
 $("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal('hide')
 <% end %>

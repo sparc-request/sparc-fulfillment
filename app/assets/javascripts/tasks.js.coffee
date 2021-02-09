@@ -22,6 +22,13 @@ $ ->
 
   $('[data-toggle="tooltip"]').tooltip()
 
+  $('#tasksList .export button').addClass('no-caret').siblings('.dropdown-menu').addClass('d-none')
+
+  $(document).on 'click', '#tasksList .export button', ->
+    url = new URL($('#tasks').data('url'), window.location.origin)
+    url.pathname = url.pathname.replace('json', 'csv')
+    window.location = url
+
   $(document).on 'click', 'table.tasks tbody td:not(td.complete, td.reschedule)', ->
     row_id  = $(this).parents("tr").attr("data-index")
     task_id = $(this).parents("table").bootstrapTable("getData")[row_id].id
@@ -45,5 +52,5 @@ $ ->
     scope = if $("#allTasksToggle").prop("checked") then "all" else "mine"
     status = if $("#completeToggle").prop("checked") then "complete" else "incomplete"
 
-    $('#tasksTable').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
+    $('#tasks').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
 

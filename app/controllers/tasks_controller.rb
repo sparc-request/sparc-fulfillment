@@ -31,6 +31,9 @@ class TasksController < ApplicationController
       format.json {
         @tasks = scoped_tasks
       }
+      format.csv {
+        send_data Task.to_csv(scoped_tasks), filename: "cwf_tasks.csv"
+      }
     end
   end
 

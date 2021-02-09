@@ -20,6 +20,8 @@
 
 class Task < ApplicationRecord
 
+  require 'csv'
+
   has_paper_trail
   acts_as_paranoid
 
@@ -41,6 +43,29 @@ class Task < ApplicationRecord
   scope :complete, -> { where(complete: true) }
   scope :mine, -> (identity) { where(["identity_id = ? OR assignee_id = ?", identity.id, identity.id]) }
   scope :json_info, -> { includes(:identity, procedure: [protocol: [:sub_service_request], core: [:parent]]) }
+
+  def self.to_csv(tasks)
+    CSV.generate do |csv|
+      csv << [Protocol.human_attribute_name(:id),
+              I18n.t('task.identity_name'),
+              I18n.t('task.assignee_name'),
+              I18n.t('task.assignable_type'),
+              Task.human_attribute_name(:body),
+              Task.human_attribute_name(:due_at),
+              I18n.t('task.completed'),
+              I18n.t('procedure.prog_core')]
+      tasks.each do |t|
+        csv << [ t.assignable_type == 'Procedure' ? t.procedure.protocol.srid : '',
+                t.identity.full_name,
+                t.assignee.full_name,
+                t.assignable_type,
+                t.body,
+                t.due_at.strftime('%m/%d/%Y'),
+                t.complete,
+                t.assignable_type == 'Procedure' ? "#{t.procedure.core.name} / #{t.procedure.core.parent.name}" : '']
+      end
+    end
+  end
 
   private
 
