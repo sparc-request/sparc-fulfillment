@@ -40,13 +40,19 @@
               .col-sm-9
                 = text_field_tag "title", title, class: 'form-control'
             .form-group
-              = label_tag "start_date", t(:reports)[:subsidy_date_from], class: "col-sm-3 control-label"
-              .col-sm-9
-                = text_field_tag "start_date", nil, class: "form-control", readonly: true
+              = label_tag "start_date", t(:reports)[:subsidy_date_from], class: "col-sm-4 col-form-label"
+              .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
+                = text_field_tag "start_date", nil, class: "form-control datetimepicker", readonly: true, data: { target:"#start_date" }
+                .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
+                  .input-group-text
+                    %span.far.fa-calendar
             .form-group
-              = label_tag "end_date", t(:reports)[:subsidy_date_to], class: "col-sm-3 control-label"
-              .col-sm-9
-                = text_field_tag "end_date", nil, class: "form-control", readonly: true
+              = label_tag "end_date", t(:reports)[:subsidy_date_to], class: "col-sm-4 col-form-label"
+              .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
+                = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date" }
+                .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
+                  .input-group-text
+                    %span.far.fa-calendar
             .form-group
               = label_tag "sort_by", t(:reports)[:sort_by], class: "col-sm-3 control-label"
               .col-sm-3

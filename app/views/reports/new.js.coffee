@@ -24,10 +24,15 @@ $("#modalContainer").modal('show')
 $('#start_date').datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
+  allowInputToggle: false
+  useCurrent: false
 
 $('#end_date').datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
+  allowInputToggle: false
+  useCurrent: false
+
 
 if $("#protocol_section.background_load").length
   $.ajax
