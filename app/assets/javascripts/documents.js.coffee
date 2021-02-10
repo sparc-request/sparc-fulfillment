@@ -35,6 +35,17 @@ $ ->
         type: 'DELETE'
         url: "/documents/#{document_id}.js"
 
+  $(document).on 'change', "#organization_select", ->
+    console.log("Clicked")
+    console.log($(this).val())
+    console.log($(this).val() != null)
+    org_ids = $(this).val()
+    if org_ids != null
+      $.ajax
+        type: 'GET'
+        url: "reports/update_protocols_dropdown"
+        data: { org_ids: org_ids }
+
   if $("body.documents-index").length > 0
     $(document).on 'click', 'a.attached_file', ->
       update_view_on_download_new_report $(this), 'table.documents', 'Identity'

@@ -32,12 +32,12 @@ module DocumentsHelper
     case document.state
     when 'Completed'
       content_tag(:a, class: 'attached_file', id: "file_#{document.id}", href: document_path(document), target: :blank, title: 'Download File', 'data-id' => document.id) do
-        content_tag(:span, '', class: 'glyphicon glyphicon-file')
+        content_tag(:span, '', class: 'fa fa-file')
       end
     when 'Processing'
-      content_tag(:span, '', class: 'glyphicon glyphicon-refresh spin', style: 'cursor:auto')
+      content_tag(:span, '', class: 'fas fa-cog fa-spin', style: 'cursor:auto')
     else
-      content_tag(:span, '', class: 'glyphicon glyphicon-alert danger', style: 'cursor:auto')
+      content_tag(:span, '', class: 'fas fa-exclamation-triangle', style: 'cursor:auto;color:red;')
     end
   end
 
@@ -53,7 +53,7 @@ module DocumentsHelper
     if document.completed? || document.failed?
     [
       "<a class='remove remove-document' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}' data-documentable_type='#{document.documentable_type}'>",
-      "<i class='glyphicon glyphicon-remove'></i>",
+      "<i class='far fa-trash-alt'></i>",
       "</a>"
     ].join ""
     else
