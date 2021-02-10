@@ -36,21 +36,21 @@
     %table.tasks#tasks{ data: { toggle: 'table', search: 'true', show_columns: 'true', show_refresh: 'true', url: tasks_path(scope: 'mine', format: :json), sort_name: 'due_at', sort_order: 'asc', striped: 'true', toolbar: '#tasksToolbar', show_export: 'true' } }
       %thead
         %tr
-          %th{ data: { field: 'protocol_id', align: 'center', visible: 'false', sortable: 'true' } }
+          %th.w-10{ data: { field: 'protocol_id', align: 'center', visible: 'false', sortable: 'true' } }
             = Protocol.human_attribute_name(:id)
-          %th{ data: { field: 'identity_name', align: 'left', sortable: 'true' } }
+          %th.w-12{ data: { field: 'identity_name', align: 'left', sortable: 'true' } }
             = t('task.identity_name')
-          %th{ data: { field: 'assignee_name', align: 'left', sortable: 'true' } }
+          %th.w-12{ data: { field: 'assignee_name', align: 'left', sortable: 'true' } }
             = t('task.assignee_name')
-          %th{ data: { field: 'assignable_type', align: 'left', sortable: 'true' } }
+          %th.w-10{ data: { field: 'assignable_type', align: 'left', sortable: 'true' } }
             = t('task.assignable_type')
-          %th.w-25{ data: { field: 'body', align: 'left', sortable: 'true' } }
+          %th.w-31{ data: { field: 'body', align: 'left', sortable: 'true' } }
             = Task.human_attribute_name(:body)
           %th.w-15{ data: { field: 'due_at', align: 'left', sortable: 'true', sorter: 'dueDateSorter' } }
             = Task.human_attribute_name(:due_at)
-          %th.w-5.complete{ data: { field: 'complete', align: 'center' } }
+          %th.w-10.complete{ data: { field: 'complete', align: 'center' } }
             = t('task.completed')
-          %th.w-5.reschedule{ data: { field: 'reschedule', align: 'center' } }
+          %th.w-10.reschedule{ data: { field: 'reschedule', align: 'center' } }
             = t('task.reschedule')
-          %th{ data: { field: 'organization', align: 'left', visible: 'false', sortable: 'true' } }
+          %th.w-10{ data: { field: 'organization', align: 'left', visible: 'false', sortable: 'true' } }
             = t('procedure.prog_core')

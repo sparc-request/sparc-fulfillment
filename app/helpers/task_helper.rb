@@ -24,6 +24,10 @@ module TaskHelper
     link_to icon('fas', 'calendar-alt'), task_reschedule_task_path(task_id), remote: true, class: 'btn btn-primary reschedule-task'
   end
 
+  def format_body(body)
+    content_tag(:span, body, class: 'text-break')
+  end
+
   def format_checkbox task
     content_tag :div, nil, class: 'form-check' do
       raw([

@@ -18,7 +18,11 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.complete-checkbox {
-  transform: scale(1.5);
-  cursor: pointer;
+#tasks {
+  table-layout: fixed;
+
+  .complete-checkbox {
+    transform: scale(1.5);
+    cursor: pointer;
+  }
 }
