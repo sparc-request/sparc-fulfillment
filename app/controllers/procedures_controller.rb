@@ -57,6 +57,7 @@ class ProceduresController < ApplicationController
     respond_to :js
 
     @task = Task.new
+    @clinical_providers = ClinicalProvider.includes(:identity).where(organization_id: current_identity.protocols_organizations_ids).order('identities.last_name')
     if params[:partial].present?
       @note = @procedure.notes.new(kind: 'reason')
       render params[:partial]
