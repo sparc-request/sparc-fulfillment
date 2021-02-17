@@ -36,9 +36,6 @@ $ ->
         url: "/documents/#{document_id}.js"
 
   $(document).on 'change', "#organization_select", ->
-    console.log("Clicked")
-    console.log($(this).val())
-    console.log($(this).val() != null)
     org_ids = $(this).val()
     if org_ids != null
       $.ajax

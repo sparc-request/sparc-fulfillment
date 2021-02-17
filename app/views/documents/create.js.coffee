@@ -27,10 +27,5 @@ $("#modalContainer").html("<%= escape_javascript(render(partial: 'index', locals
 $('#study-level-activities-table').bootstrapTable('refresh', {silent: "true"})
 <% end %>
 
-<% if @document.documentable_type == "Identity" %>
-$("#documents_table").bootstrapTable('refresh', {silent: "true"})
-$("#reports_table").bootstrapTable('refresh', {silent: "true"})
-<% end %>>
-
 $("#modalContainer").modal 'show'
 <% end %>
