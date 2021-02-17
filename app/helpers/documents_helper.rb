@@ -44,7 +44,7 @@ module DocumentsHelper
   def edit_formatter(document)
     [
       "<a class='edit edit-document ml10' href='javascript:void(0)' title='Edit' data-document_id='#{document.id}'>",
-      "<i class='glyphicon glyphicon-edit'></i>",
+      "<i class='fas fa-edit'></i>",
       "</a>"
     ].join ""
   end
@@ -58,6 +58,14 @@ module DocumentsHelper
     ].join ""
     else
       "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
+    end
+  end
+
+  def read_formatter(date)
+    if date.present?
+      'Read'
+    else
+      'Unread'
     end
   end
 end

@@ -244,7 +244,7 @@ en:
     state: "Report Status"
     title: "Title"
     upload_button: "Upload Document"
-    viewed_at: "Date Viewed"
+    read_state: "Read/Unread"
 
   fulfillment:
     object: "Fulfillment"
