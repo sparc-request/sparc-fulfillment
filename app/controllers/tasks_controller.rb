@@ -49,7 +49,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.js {
         @task = Task.new
-        @clinical_providers = Identity.joins(:clinical_providers).where('clinical_providers.organization_id': current_identity.protocols.map{|p| p.sub_service_request.organization_id }).distinct.order(:last_name)
+        @clinical_providers = Identity.joins(:clinical_providers).where('clinical_providers.organization_id': current_identity.protocols_organizations_ids).order('identities.last_name')
       }
     end
   end
