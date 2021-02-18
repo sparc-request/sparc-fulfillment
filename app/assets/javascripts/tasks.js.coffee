@@ -48,7 +48,6 @@ $ ->
       data: data
 
   $(document).on "change", "#completeToggle, #allTasksToggle", ->
-    console.log("clicked")
     scope = if $("#allTasksToggle").prop("checked") then "all" else "mine"
     status = if $("#completeToggle").prop("checked") then "complete" else "incomplete"
 

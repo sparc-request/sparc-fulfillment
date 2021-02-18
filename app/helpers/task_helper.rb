@@ -20,15 +20,11 @@
 
 module TaskHelper
 
-  def format_reschedule(task_id)
-    link_to icon('fas', 'calendar-alt'), task_reschedule_task_path(task_id), remote: true, class: 'btn btn-primary reschedule-task'
+  def format_task_reschedule(task_id)
+    link_to icon('fas', 'calendar-alt'), edit_task_path(task_id), remote: true, class: 'btn btn-primary reschedule-task'
   end
 
-  def format_body(body)
-    content_tag(:span, body, class: 'text-break')
-  end
-
-  def format_checkbox task
+  def format_task_checkbox task
     content_tag :div, nil, class: 'form-check' do
       raw([
         content_tag(:input, nil, type: 'checkbox', class: 'form-check-input complete-checkbox complete', id: "completeTask#{task.id}", task_id: task.id, checked: task.complete? ? "checked" : nil),
@@ -53,7 +49,7 @@ module TaskHelper
     end
   end
 
-  def format_due_date task
+  def format_task_due_date task
     due_date = task.due_at
     if task.complete or (due_date - 7.days) > Time.now # task is complete or due_date is greater than 7 days away
       format_date(due_date)
@@ -64,7 +60,7 @@ module TaskHelper
     end
   end
 
-  def format_org task
+  def format_task_org task
     case task.assignable_type
     when 'Procedure'
       core = task.procedure.core

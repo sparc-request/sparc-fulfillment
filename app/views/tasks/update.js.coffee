@@ -27,12 +27,7 @@ $("[name='task[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-vali
 <% end %>
 <% end %>
 <% else %>
-# TODO: check that notifications update
-$(".notification-badge.task-notifications").empty().append("<%= current_identity.reload.tasks_count %>")
-notification_bubble = $(".notification-badge.task-notifications")
-notification_count = parseInt(notification_bubble.text())
-if notification_count == 0
-  notification_bubble.remove();
+$("nav#siteNav").replaceWith("<%= j render 'layouts/navbar' %>")
 $("#tasks").bootstrapTable('refresh')
 $("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal('hide')

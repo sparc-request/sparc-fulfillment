@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class TasksController < ApplicationController
-  before_action :find_task, only: [:show, :update, :task_reschedule]
+  before_action :find_task, only: [:show, :update, :edit]
 
   respond_to :json, :html
 
@@ -86,9 +86,7 @@ class TasksController < ApplicationController
     end
   end
 
-  def task_reschedule
-    # this pops up the modal to change the date for a task
-    # change this to edit?
+  def edit
     respond_to :js
   end
 
