@@ -19,5 +19,5 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modalContainer").
-  html("<%= j render 'edit', procedure: @procedure, task: @task %>").
+  html("<%= j render 'edit', procedure: @procedure, task: @task, clinical_providers: @clinical_providers %>").
   modal('show')
