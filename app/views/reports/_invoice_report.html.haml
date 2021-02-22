@@ -22,12 +22,12 @@
   .modal-content
     = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
       .modal-header
+        %h4.modal-title.text-center
+          = t(:reports)[:invoice_report]
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only
             = t(:actions)[:close]
-        %h4.modal-title.text-center
-          = t(:reports)[:invoice_report]
       .modal-body
         #modal_errors
         = render partial: 'required_fields'
