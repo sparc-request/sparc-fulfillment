@@ -30,11 +30,11 @@
         = start_appointment_button(appointment)
       = notes_button(appointment, model: Appointment.model_name.human)
       - if @appointment_style == "grouped"
-        %button.btn.btn-secondary{type: "button", data: {appointment_style: "custom", toggle: "tooltip", animation: 'false', container: '#custom_tooltip_container'}, title: "Switch to Custom Ordered View"}
-          %span.glyphicon.glyphicon-list
+        %button.btn.btn-secondary.ml-1{ type: "button", title: "Switch to Custom Ordered View", data: { appointment_style: "custom", toggle: "tooltip", placement: 'top', animation: 'false' } }
+          = icon('fas', 'list')
       - else
-        %button.btn.btn-secondary{type: "button", data: {appointment_style: "grouped", toggle: "tooltip", animation: 'false', container: '#custom_tooltip_container'}, title: "Switch to Grouped View"}
-          %span.glyphicon.glyphicon-th-list
+        %button.btn.btn-secondary.ml-1{ type: "button", title: "Switch to Grouped View", data: { appointment_style: "grouped", toggle: "tooltip", placement: 'top', animation: 'false' } }
+          = icon('far', 'list-alt')
   .card-body
     .row
       = render '/appointments/start_complete_buttons', appointment: appointment
