@@ -43,7 +43,7 @@ class IdentityOrganizations
   def authorized_protocols
     ##This is a different version of the above "fulfillment_access_protocols" method, but without eager loading of un-needed relations.
     fetch_rights
-    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs}).distinct
+    Protocol.joins(:sub_service_request).includes(sub_service_request: [:organization]).where(sub_service_requests: {organization_id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs}).distinct
   end
 
   def authorized_billing_manager_protocols
@@ -56,9 +56,14 @@ class IdentityOrganizations
     Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: billing_manager_orgs + authorized_child_organizations(billing_manager_orgs)}).distinct
   end
 
-  def fulfillment_organizations_with_protocols
+  def fulfillment_organizations_with_protocols(include_distinct=true)
+    # Optional distinct to save an additional sql query when not needed
     fetch_rights
-    Organization.joins(:protocols).where(id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs).distinct
+    organizations = Organization.joins(:protocols).where(id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs)
+    if include_distinct
+      organizations = organizations.distinct
+    end
+    return organizations
   end
 
   private

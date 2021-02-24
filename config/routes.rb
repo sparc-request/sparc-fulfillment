@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   resources :visits, only: [:update]
   resources :custom_appointments, controller: :appointments
   resources :imports
+  resources :tasks, only: [:index, :show, :new, :create, :update, :edit]
 
   resources :reports, only: [:new, :create] do
     collection do
@@ -88,12 +89,6 @@ Rails.application.routes.draw do
   resources :visit_groups, only: [:new, :create, :update, :destroy] do
     collection do
       get 'navigate', to: 'visit_groups#navigate_to_visit_group'
-    end
-  end
-
-  resources :tasks do
-    member do
-      get 'task_reschedule'
     end
   end
 

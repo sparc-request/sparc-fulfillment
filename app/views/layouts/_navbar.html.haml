@@ -32,7 +32,7 @@
               = icon('fas', 'tasks fa-2x mr-1')
               = t('layout.navigation.tasks')
               - if current_identity.tasks_count > 0
-                %span.badge.badge-pill.badge-c.badge-danger.notification-badge<
+                %span.badge.badge-pill.badge-c.badge-danger.notification-badge.task-notifications<
                   = format_count(current_identity.tasks_count)
           .nav-item
             = link_to documents_path, class: ['nav-link', @highlighted_link == 'documents' ? 'active' : ''] do

@@ -18,16 +18,11 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-body.tasks
+#tasks {
+  table-layout: fixed;
 
-  &.tasks-index
-
-    .fixed-table-toolbar .columns button
-      line-height: 22px
-      clear: right
-
-      &:last-child
-        margin-left: 8px
-
-    .overdue-task
-      color: red
+  .complete-checkbox {
+    transform: scale(1.5);
+    cursor: pointer;
+  }
+}

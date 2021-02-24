@@ -88,6 +88,7 @@ en:
       protocol:
         coordinators: "Coordinators"
         end_date: "End Date"
+        id: "Protocol ID"
         organizations: "Provider/Program/Core"
         owner: "Owner"
         principal_investigator: "Principal Investigator"
@@ -105,7 +106,8 @@ en:
         recruitment_source: "Recruitment Source"
         status: "Status"
       task:
-        due_at: "Date"
+        body: "Task"
+        due_at: "Due Date"
       visit_group:
         name: "Visit Name"
         day: "Visit Day"
@@ -588,14 +590,19 @@ en:
       withdrawn: 'Withdrawn'
 
   task:
+    table:
+      header: "Tasks"
     object: "Task"
     all_tasks: "All Tasks "
     my_tasks: "My Tasks "
     assignable_type: "Type"
     assignee_name: "Assigned to"
+    complete:
+      true: "Complete"
+      false: "Incomplete"
     completed: "Completed"
     create_task: "Create Task"
-    due_at: "Due Date"
+    due_soon: "Due soon"
     emails:
       assigned_new_task: "You have been assigned a new task"
       content: "Task Content: "
@@ -610,6 +617,7 @@ en:
       updated: "Task Updated"
     identity_name: "Created by"
     new_task: "Create New Task"
+    past_due : "Past due"
     reschedule: "Reschedule"
     show_complete: "Complete "
     show_incomplete: "Incomplete "
