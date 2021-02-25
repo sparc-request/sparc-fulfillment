@@ -25,25 +25,51 @@
     = select_tag 'core_multiselect', nil, class: "selectpicker #{disabled_class(!appointment.started?)}", multiple: true
     %button.btn.btn-default.btn-primary.multiselect.complete_all.disabled{ type: 'button', id: "core_#{core.id}_multiselect_complete_all", class: disabled_class(!appointment.started?) } Complete
     %button.btn.btn-default.btn-warning.multiselect.incomplete_all.disabled{ type: 'button', id: "core_#{core.id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete
-%table.table-hover{ id: "core-#{core.id}-procedures", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
-  %thead.bg-light
-    %th.w-20.name{ data: { field: 'name' } }
-      = Procedure.model_name.human
-    %th.billing-type{ data: { field: 'billing_type' } }
-      = Procedure.human_attribute_name(:billing_type)
-    %th.status{ data: { field: 'status', align: 'center', halign: 'left' } }
-      = Procedure.human_attribute_name(:status)
-    %th.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
-      = Procedure.human_attribute_name(:followup)
-    %th.completed-date{ data: { field: 'completed_date' } }
-      = Procedure.human_attribute_name(:completed_date)
-    %th.performer{ data: { field: 'performer' } }
-      = Procedure.human_attribute_name(:performer)
-    %th.invoiced{ data: { field: 'invoiced' } }
-      = Procedure.human_attribute_name(:invoiced)
-    %th.credited{ data: { field: 'credited' } }
-      = Procedure.human_attribute_name(:credited)
-    %th.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
-      = Note.model_name.plural.capitalize
-    %th.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
-      = t('actions.actions')
+- if appointment_style == 'grouped'
+  -# TODO: Make this work for grouped view. Not sure how much different table views will need to be
+  %table.table-hover{ id: "core#{core.id}ProceduresGroupedView", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
+    %thead.bg-light
+      %th.w-20.name{ data: { field: 'name' } }
+        = Procedure.model_name.human
+      %th.billing-type{ data: { field: 'billing_type' } }
+        = Procedure.human_attribute_name(:billing_type)
+      %th.status{ data: { field: 'status', align: 'center', halign: 'left' } }
+        = Procedure.human_attribute_name(:status)
+      %th.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
+        = Procedure.human_attribute_name(:followup)
+      %th.completed-date{ data: { field: 'completed_date' } }
+        = Procedure.human_attribute_name(:completed_date)
+      %th.performer{ data: { field: 'performer' } }
+        = Procedure.human_attribute_name(:performer)
+      %th.invoiced{ data: { field: 'invoiced' } }
+        = Procedure.human_attribute_name(:invoiced)
+      %th.credited{ data: { field: 'credited' } }
+        = Procedure.human_attribute_name(:credited)
+      %th.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
+        = Note.model_name.plural.capitalize
+      %th.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
+        = t('actions.actions')
+- else
+  -# TODO: break these into partials?
+  %table.table-hover{ id: "core#{core.id}ProceduresCustomView", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
+    %thead.bg-light
+      %th.w-20.name{ data: { field: 'name' } }
+        = Procedure.model_name.human
+      %th.billing-type{ data: { field: 'billing_type' } }
+        = Procedure.human_attribute_name(:billing_type)
+      %th.status{ data: { field: 'status', align: 'center', halign: 'left' } }
+        = Procedure.human_attribute_name(:status)
+      %th.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
+        = Procedure.human_attribute_name(:followup)
+      %th.completed-date{ data: { field: 'completed_date' } }
+        = Procedure.human_attribute_name(:completed_date)
+      %th.performer{ data: { field: 'performer' } }
+        = Procedure.human_attribute_name(:performer)
+      %th.invoiced{ data: { field: 'invoiced' } }
+        = Procedure.human_attribute_name(:invoiced)
+      %th.credited{ data: { field: 'credited' } }
+        = Procedure.human_attribute_name(:credited)
+      %th.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
+        = Note.model_name.plural.capitalize
+      %th.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
+        = t('actions.actions')

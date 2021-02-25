@@ -75,13 +75,13 @@ class AppointmentsController < ApplicationController
   end
 
   def change_appointment_style
+    respond_to :js
+
     @appointment_style = params[:appointment_style]
     session[:appointment_style] = @appointment_style
 
     @appointment = Appointment.find params[:appointment_id]
     @statuses = @appointment.appointment_statuses.pluck(:status)
-
-    render :show
   end
 
   def reset_procedures

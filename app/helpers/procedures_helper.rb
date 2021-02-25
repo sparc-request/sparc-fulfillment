@@ -116,12 +116,20 @@ module ProceduresHelper
     notes_button(procedure, disabled: disabled, tooltip: tooltip)
   end
 
-  def procedure_actions(procedure)
-    content_tag :div, class: 'd-flex justify-content-center' do
-      raw([
-        delete_procedure_button(procedure)
-      ].join(''))
+  def procedure_actions(procedure, appointment_style)
+    action_buttons = []
+    if appointment_style == 'custom'
+      action_buttons << move_procedure_dropdown(procedure)
     end
+    action_buttons << delete_procedure_button(procedure)
+
+    content_tag :div, class: 'd-flex justify-content-center' do
+      raw(action_buttons.join(''))
+    end
+  end
+
+  def move_procedure_dropdown(procedure)
+    render('procedures/move_procedure_dropdown.html.haml', procedure: procedure)
   end
 
   def delete_procedure_button(procedure)
@@ -136,7 +144,7 @@ module ProceduresHelper
       end
 
     content_tag :div, class: 'tooltip-wrapper', title: tooltip, data: { toggle: 'tooltip' } do
-      link_to icon('fas', 'trash'), appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :delete, class: ['btn btn-danger btn-sq', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' }
+      link_to icon('fas', 'trash'), appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :delete, class: ['btn btn-danger', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' }
     end
   end
 end

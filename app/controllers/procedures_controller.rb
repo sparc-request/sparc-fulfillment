@@ -19,16 +19,17 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ProceduresController < ApplicationController
-  before_action :find_appointment, only: [:index, :create, :edit, :update, :destroy]
+  before_action :find_appointment, only: [:index, :create, :edit, :update, :destroy, :change_procedure_position]
   before_action :find_procedure, only: [:edit, :update, :destroy, :change_procedure_position]
   before_action :save_original_procedure_status, only: [:update]
   before_action :create_note_before_update, only: [:update]
-  before_action :set_appointment_style, only: [:create, :update, :destroy, :change_procedure_position]
+  before_action :set_appointment_style, only: [:create, :index, :update, :destroy, :change_procedure_position]
 
   def index
     respond_to :json
 
-    @procedures     = @appointment.procedures.eager_load(:notes, :task).preload(:service, :protocol).where(sparc_core_id: params[:core_id])
+    #TODO: When working on grouped view, might need to pull off .order
+    @procedures     = @appointment.procedures.eager_load(:notes, :task).preload(:service, :protocol).where(sparc_core_id: params[:core_id]).order(:position)
     @performable_by = @appointment.protocol.organization.clinical_provider_identities.order(:first_name, :last_name)
   end
 

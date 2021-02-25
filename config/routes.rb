@@ -100,11 +100,11 @@ Rails.application.routes.draw do
       get 'completed_appointments'
     end
 
-    put 'change_appointment_style'
+    get 'change_appointment_style'
 
     resources :procedures, only: [:index, :create, :edit, :update, :destroy] do
-      collection do
-        put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position'
+      member do
+        put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position', as: 'change_position'
       end
     end
 

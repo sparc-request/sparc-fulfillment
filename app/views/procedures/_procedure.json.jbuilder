@@ -1,6 +1,6 @@
 json.(procedure)
 
-json.actions        procedure_actions(procedure)
+json.actions        procedure_actions(procedure, appointment_style)
 json.billing_type   procedure_billing_display(procedure)
 json.completed_date render 'completed_date.html', procedure: procedure
 json.credited       procedure_credited_display(procedure)
