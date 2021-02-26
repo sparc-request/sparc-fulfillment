@@ -27,7 +27,7 @@ class FulfillmentsController < ApplicationController
     respond_to do |format|
       format.js { render }
       format.json {
-        @fulfillments = @line_item.fulfillments
+        @fulfillments = @line_item.fulfillments.eager_load(:performer, :documents, :notes, :components)
 
         render
       }

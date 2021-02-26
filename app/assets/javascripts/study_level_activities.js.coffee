@@ -43,14 +43,6 @@ $ ->
         fulfillment:
           credited: credited
 
-  $(document).on 'click', ".otf_service_new", ->
-    protocol_id = $('#protocol_id').val()
-    data = protocol_id: protocol_id
-    $.ajax
-      type: 'GET'
-      url: "/line_items/new"
-      data: data
-
   $(document).on 'change', '.components .sla_components > .selectpicker', ->
     row_index   = $(this).parents("tr").data("index")
     line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id

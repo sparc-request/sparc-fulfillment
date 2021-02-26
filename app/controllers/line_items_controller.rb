@@ -24,7 +24,7 @@ class LineItemsController < ApplicationController
   def index
     respond_to :json
     @protocol = Protocol.find(params[:protocol_id])
-    @line_items = @protocol.one_time_fee_line_items
+    @line_items = @protocol.one_time_fee_line_items.eager_load(:fulfillments, :notes, :documents)
   end
 
   def edit

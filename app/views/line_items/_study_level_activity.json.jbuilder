@@ -5,7 +5,7 @@ json.fulfillments       sla_fulfillments_button(line_item)
 json.service            service_name_display(line_item.service)
 json.quantity_requested line_item.quantity_requested
 json.quantity_type      line_item.quantity_type
-json.fulfilled          amount_fulfilled(line_item)
+json.quantity_fulfilled sla_quantity_fulfilled(line_item)
 json.quantity_remaining line_item.quantity_remaining
 json.account_number     sla_account_number(line_item)
 json.contact            sla_contact(line_item)

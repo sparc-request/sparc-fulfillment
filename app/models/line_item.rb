@@ -114,7 +114,4 @@ class LineItem < ApplicationRecord
       fulfillments.order('fulfilled_at DESC').first.fulfilled_at
     end
   end
-
-  private
-
 end
