@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class TasksController < ApplicationController
-  before_action :find_task, only: [:show, :update, :task_reschedule]
+  before_action :find_task, only: [:show, :update, :edit]
 
   respond_to :json, :html
 
@@ -30,7 +30,9 @@ class TasksController < ApplicationController
       format.html
       format.json {
         @tasks = scoped_tasks
-        render
+      }
+      format.csv {
+        send_data Task.to_csv(scoped_tasks), filename: "cwf_tasks.csv"
       }
     end
   end
@@ -47,12 +49,14 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.js {
         @task = Task.new
-        @clinical_providers = ClinicalProvider.where(organization_id: current_identity.protocols.map{|p| p.sub_service_request.organization_id })
+        @clinical_providers = Identity.joins(:clinical_providers).where('clinical_providers.organization_id': current_identity.protocols_organizations_ids).order('identities.last_name')
       }
     end
   end
 
   def create
+    respond_to :js
+
     task_parameters = task_params.except("notes")
     if task_params[:notes]
       task_parameters[:body] = task_params[:notes][:comment]
@@ -74,13 +78,16 @@ class TasksController < ApplicationController
   end
 
   def update
+    respond_to :js
     if @task.update_attributes(task_params)
       flash[:success] = t(:task)[:flash_messages][:updated]
+    else
+      @errors = @task.errors
     end
   end
 
-  def task_reschedule
-    # this pops up the modal to change the date for a task
+  def edit
+    respond_to :js
   end
 
   private
@@ -114,9 +121,12 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.
-      require(:task).
-      permit(:complete, :body, :due_at, :assignee_id, :assignable_type, :assignable_id, notes: [:kind, :comment, :notable_type, :notable_id])
+    # sanitize date params
+    params[:task][:due_at] = sanitize_date(params[:task][:due_at]) if params[:task][:due_at]
+
+    params.require(:task).permit(
+      :complete, :body, :due_at, :assignee_id, :assignable_type, :assignable_id,
+      notes: [:kind, :comment, :notable_type, :notable_id])
   end
 
   def scoped_tasks

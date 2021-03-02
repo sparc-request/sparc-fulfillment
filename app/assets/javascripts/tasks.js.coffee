@@ -22,6 +22,13 @@ $ ->
 
   $('[data-toggle="tooltip"]').tooltip()
 
+  $('#tasksList .export button').addClass('no-caret').siblings('.dropdown-menu').addClass('d-none')
+
+  $(document).on 'click', '#tasksList .export button', ->
+    url = new URL($('#tasks').data('url'), window.location.origin)
+    url.pathname = url.pathname.replace('json', 'csv')
+    window.location = url
+
   $(document).on 'click', 'table.tasks tbody td:not(td.complete, td.reschedule)', ->
     row_id  = $(this).parents("tr").attr("data-index")
     task_id = $(this).parents("table").bootstrapTable("getData")[row_id].id
@@ -40,19 +47,9 @@ $ ->
       url: "/tasks/#{task_id}.js"
       data: data
 
-  $(document).on 'click', '.task-reschedule', ->
-    task_id = $(this).attr('task_id')
+  $(document).on "change", "#completeToggle, #allTasksToggle", ->
+    scope = if $("#allTasksToggle").prop("checked") then "all" else "mine"
+    status = if $("#completeToggle").prop("checked") then "complete" else "incomplete"
 
-    $.ajax
-      type: 'GET'
-      url: "/tasks/#{task_id}/task_reschedule"
+    $('#tasks').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
 
-  - if $("body.tasks-index").length > 0
-
-    $("table.tasks").bootstrapTable('hideColumn', 'protocol_id')
-
-    $(document).on "change", "#complete, #all_tasks", ->
-      scope = if $("#all_tasks").prop("checked") then "all" else "mine"
-      status = if $("#complete").prop("checked") then "complete" else "incomplete"
-
-      $('#task-list').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})

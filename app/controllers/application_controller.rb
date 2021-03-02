@@ -53,6 +53,10 @@ class ApplicationController < ActionController::Base
     @appointment_style = session[:appointment_style] || "grouped"
   end
 
+  def sanitize_date(date)
+    return Date.strptime(date, '%m/%d/%Y').to_s rescue Date.strptime(date, '%Y-%m-%d').to_s rescue ""
+  end
+
   private
 
   def establish_bradcrumber
