@@ -32,9 +32,8 @@ $ ->
   refreshDocumentTable = ->
     $('#documents_table').bootstrapTable('refresh', {silent: "true"})
     complete = true
-    $('span').each ->
-      if $(this).hasClass('processing')
-        complete = false
+    if $('span.processing').length
+      complete = false
     clearDocumentTableInterval(complete)
 
   $(document).on 'click', '.edit-document', ->
