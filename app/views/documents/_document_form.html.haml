@@ -30,7 +30,7 @@
         #document_modal_errors
         = render 'required_fields'
         .form-group
-          = form.label "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
+          = form.label "title", t(:documents)[:title], class: "control-label required"
           .col-sm-8
             = form.text_field :title, {class: 'form-control'}
       .modal-footer

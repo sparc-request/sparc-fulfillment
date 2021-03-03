@@ -29,30 +29,29 @@
       .modal-body
         #modal_errors
         = render partial: 'required_fields'
-        .row
-          .col-md-12
-            = hidden_field_tag "report_type", report_type
-            .form-group
-              =label_tag "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
-              .col-sm-9= text_field_tag "title", title, class: "form-control"
-            .form-group
-              = label_tag "start_date", t(:reports)[:start_date]+t(:actions)[:required], class: "col-sm-4 col-form-label"
-              .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
-                = text_field_tag "start_date", nil, class: "form-control datetimepicker", readonly: true, data: { target:"#start_date" }
-                .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
-                  .input-group-text
-                    %span.far.fa-calendar
-            .form-group
-              = label_tag "end_date", t(:reports)[:end_date]+t(:actions)[:required], class: "col-sm-4 col-form-label"
-              .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
-                = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date" }
-                .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
-                  .input-group-text
-                    %span.far.fa-calendar
-            .form-group.protocols-group
-              = label_tag "protocol", t(:reports)[:protocols], class: "col-sm-3 control-label"
-              .col-sm-9#protocol_section.background_load
-                %i.fas.fa-cog.fa-spin
+        .col-md-12
+          = hidden_field_tag "report_type", report_type
+          .form-group
+            =label_tag "title", t(:documents)[:title], class: "control-label required"
+            .col-sm-9= text_field_tag "title", title, class: "form-control"
+          .form-group
+            = label_tag "start_date", t(:reports)[:start_date], class: "required"
+            .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
+              = text_field_tag "start_date", nil, class: "form-control datetimepicker", readonly: true, data: { target:"#start_date" }
+              .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
+                .input-group-text
+                  %span.far.fa-calendar
+          .form-group
+            = label_tag "end_date", t(:reports)[:end_date], class: "required"
+            .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
+              = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date" }
+              .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
+                .input-group-text
+                  %span.far.fa-calendar
+          .form-group.protocols-group
+            = label_tag "protocol", t(:reports)[:protocols], class: "control-label required"
+            .col-sm-9#protocol_section.background_load
+              %i.fas.fa-cog.fa-spin
       .modal-footer
         .center-block
           %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}

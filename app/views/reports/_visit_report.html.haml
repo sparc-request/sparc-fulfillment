@@ -28,26 +28,26 @@
           %span{"aria-hidden" => "true"} &times;
       .modal-body
         #modal_errors
-        .row
-          .col-md-12
-            = hidden_field_tag "report_type", report_type
-            .form-group
-              =label_tag "title", t(:documents)[:title], class: "col-sm-4 control-label"
-              .col-sm-8= text_field_tag "title", title, class: "form-control"
-            .form-group
-              = label_tag "start_date", t(:reports)[:visit_start_date_from], class: "col-sm-4 col-form-label"
-              .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
-                = text_field_tag "start_date", nil, class: "form-control datetimepicker", readonly: true, data: { target:"#start_date" }
-                .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
-                  .input-group-text
-                    %span.far.fa-calendar
-            .form-group
-              = label_tag "end_date", t(:reports)[:visit_start_date_to], class: "col-sm-4 col-form-label"
-              .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
-                = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date" }
-                .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
-                  .input-group-text
-                    %span.far.fa-calendar
+        = render partial: 'required_fields'
+        .col-md-12
+          = hidden_field_tag "report_type", report_type
+          .form-group
+            =label_tag "title", t(:documents)[:title], class: "control-label required"
+            .col-sm-8= text_field_tag "title", title, class: "form-control"
+          .form-group
+            = label_tag "start_date", t(:reports)[:visit_start_date_from]
+            .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
+              = text_field_tag "start_date", nil, class: "form-control datetimepicker", readonly: true, data: { target:"#start_date" }
+              .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
+                .input-group-text
+                  %span.far.fa-calendar
+          .form-group
+            = label_tag "end_date", t(:reports)[:visit_start_date_to]
+            .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
+              = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date" }
+              .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
+                .input-group-text
+                  %span.far.fa-calendar
       .modal-footer
         .center-block
           %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
