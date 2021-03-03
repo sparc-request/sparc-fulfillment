@@ -115,14 +115,6 @@ $ ->
 
       $('#service_list').val('').trigger('change')
 
-  $(document).on 'click', '.appointment_style_button button', ->
-    data = appointment_style: $(this).data('appointment-style')
-    appointment_id = $(this).parents('.row.appointment').data('id')
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/appointments/#{appointment_id}/change_appointment_style.js"
-
   $(document).on 'click', '.uncomplete_visit', ->
     appointment_id = $(this).parents('.row.appointment').data('id')
     data = field: "reset_completed_date", appointment: completed_date: null

@@ -42,14 +42,18 @@
       = render '/appointments/visit_indications_dropdown', appointment: appointment
   - appointment.cores.each do |core|
     = render '/appointments/core', core: core, appointment: appointment, appointment_style: appointment_style
-.w-100.services
-  .col-xs-4
-    = select_tag "service_list", options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), "id", "name"), class: 'form-control selectpicker', include_blank: 'Nothing Selected'
-    %span.help-block.service-error.hidden
-      %p.text-danger
-        = t(:appointments)[:service_error]
-  .col-xs-2
-    = text_field_tag "service_quantity", 1, class: "form-control"
-  .col-xs-2
-    %button.btn.btn-success.add_service
-      = t(:appointments)[:add_service]
+
+.card.w-100.services
+  = form_with url: "/appointments/#{appointment.id}/procedures", local: false do |f|
+    .card-header
+      %h3.mb-0
+        Add Services
+    .card-body
+      .row
+        .col-8
+          = f.select :service_id, options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), 'id', 'name'), { include_blank: true }, class: 'form-control selectpicker'
+        .col-2
+          = f.text_field :qty, value: 1, class: 'form-control'
+        .col-2
+          %button.btn.btn-success.w-100#addService
+            = t('appointments.add_service')
