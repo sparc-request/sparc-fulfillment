@@ -24,10 +24,8 @@
       .modal-header
         %h4.modal-title.text-center
           = t(:documents)[:edit_header]
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only
-            = t(:actions)[:close]
+        %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} &times;
       .modal-body
         #document_modal_errors
         = render 'required_fields'
