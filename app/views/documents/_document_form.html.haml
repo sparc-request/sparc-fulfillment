@@ -22,12 +22,12 @@
   .modal-content
     = form_for document, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
       .modal-header
+        %h4.modal-title.text-center
+          = t(:documents)[:edit_header]
         %button.close{type: 'button', data: {dismiss: 'modal'}}
           %span{aria: {hidden:'true'}} &times;
           %span.sr-only
             = t(:actions)[:close]
-        %h4.modal-title.text-center
-          = t(:documents)[:edit_header]
       .modal-body
         #document_modal_errors
         = render 'required_fields'

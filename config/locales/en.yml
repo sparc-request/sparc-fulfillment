@@ -245,6 +245,8 @@ en:
     title: "Title"
     upload_button: "Upload Document"
     read_state: "Read/Unread"
+    read: "Read"
+    unread: "Unread"
 
   fulfillment:
     object: "Fulfillment"

@@ -77,7 +77,7 @@ $ ->
 
     $(table_to_update).bootstrapTable 'updateCell', 
       index: row_index
-      field: 'viewed_at'
+      field: 'read_state'
       value: utcdate
 
 (exports ? this).refreshDocumentsTables = ->
