@@ -41,23 +41,17 @@ module DocumentsHelper
     end
   end
 
-  def edit_formatter(document)
-    [
-      "<a class='edit edit-document ml10' href='javascript:void(0)' title='Edit' data-document_id='#{document.id}'>",
-      "<i class='glyphicon glyphicon-edit'></i>",
-      "</a>"
-    ].join ""
-  end
-
-  def delete_formatter(document)
+  def actions_formatter(document)
     if document.completed? || document.failed?
-    [
-      "<a class='remove remove-document' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}' data-documentable_type='#{document.documentable_type}'>",
-      "<i class='glyphicon glyphicon-remove'></i>",
-      "</a>"
-    ].join ""
-    else
-      "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
+      [
+        "<a class='edit edit-document ml10' href='javascript:void(0)' title='Edit' data-document_id='#{document.id}'>",
+        "<i class='fas fa-edit'></i>",
+        "</a>",
+        "&nbsp&nbsp",   
+        "<a class='remove remove-document' style='color:red' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}' data-documentable_type='#{document.documentable_type}'>",
+        "<i class='far fa-trash-alt'></i>",
+        "</a>"
+      ].join ""
     end
   end
 end
