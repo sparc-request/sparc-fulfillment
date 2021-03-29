@@ -29,8 +29,9 @@
 .tooltip-wrapper{ title: tooltip, data: { toggle: 'tooltip' } }
   - if procedure.task.present?
     = form_for procedure.task, url: task_path(procedure.task), remote: true, method: :put do |f|
-      .input-group.datetimepicker.date#followupDatePicker{ data: { target_input: 'nearest' } }
-        = f.text_field :due_at, class: 'datetimepicker-input form-control', value: format_date(procedure.task.due_at), onchange: "Rails.fire(this.form, 'submit')", disabled: disabled, data: { target: '#followupDatePicker' }
+      -# TODO: Does this violate unique ID rules?
+      .input-group.datetimepicker.date{ id: "followupDatePicker#{procedure.id}", data: { target_input: 'nearest' } }
+        = f.text_field :due_at, class: 'datetimepicker-input form-control', value: format_date(procedure.task.due_at), onchange: "Rails.fire(this.form, 'submit')", disabled: disabled, data: { target: "#followupDatePicker#{procedure.id}" }
   - else
     = link_to edit_appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, class: ['btn btn-warning', disabled ? 'disabled' : ''] do
       = icon('fas', 'calendar-alt')

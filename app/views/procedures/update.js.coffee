@@ -39,23 +39,23 @@ $("#modalContainer").modal('hide')
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 
-date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").find(".completed_date_field").datetimepicker(format: 'MM/DD/YYYY').data("DateTimePicker")
+date_time_picker = $("#procedure<%= @procedure.id %>-completedDatePicker").datetimepicker('format', 'MM/DD/YYYY')
 
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('billing-type', "<%= @procedure.billing_type %>").attr('data-billing-type', "<%= @procedure.billing_type %>")
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('group-id', "<%= @procedure.group_id %>").attr('data-group-id', "<%= @procedure.group_id %>")
 
 <% if @procedure.unstarted? || @procedure.follow_up? %>
-date_time_picker.date(null).disable()
+date_time_picker.datetimepicker('date', null).datetimepicker('disable')
 $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "")
 
 <% elsif @procedure.incomplete? %>
-date_time_picker.date(null).disable()
+date_time_picker.datetimepicker('date', null).datetimepicker('disable')
 
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% elsif @procedure.complete? %>
-date_time_picker.date("<%= format_date(@procedure.completed_date) %>").enable()
+date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>").datetimepicker('enable')
 
 $("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
 
@@ -63,18 +63,10 @@ $("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .se
 
 pg = new ProcedureGrouper()
 
-<% if @appointment_style == "grouped" %>
-pg.initialize()
-<% else %>
-# $("select.core_multiselect").multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
-pg.initialize_multiselects_only()
+<% if @billing_type_updated && @appointment_style == "grouped" %>
+$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('destroy')
+$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable()
 <% end %>
-
-if !$('.start_date_input').hasClass('hidden')
-  start_date_init("<%= format_datetime(@appointment.start_date) %>")
-
-if !$('.completed_date_input').hasClass('hidden')
-  completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
 
 $('#appointment_content_indications').selectpicker()
 $('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")

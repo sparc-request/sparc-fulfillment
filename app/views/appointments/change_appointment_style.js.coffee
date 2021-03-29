@@ -18,8 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$('#appointmentContainer').
-  html("<%= j render '/appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>").
-  removeClass('d-none')
+# This view is to avoid re-rendering everything on the participant tracker tab
+$('#appointmentContainer').html("<%= j render '/appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
 
 $(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

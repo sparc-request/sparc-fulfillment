@@ -27,7 +27,7 @@
     %button.btn.btn-default.btn-warning.multiselect.incomplete_all.disabled{ type: 'button', id: "core_#{core.id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete
 - if appointment_style == 'grouped'
   -# TODO: Make this work for grouped view. Not sure how much different table views will need to be
-  %table.table-hover{ id: "core#{core.id}ProceduresGroupedView", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
+  %table.table-hover.core{ id: "core#{core.id}ProceduresGroupedView", data: { toggle: 'table', group_by: 'true', group_by_field: 'group_label', group_by_toggle: 'true', group_by_formatter: 'proceduresGroupFormatter', group_by_collapsed_groups: 'proceduresCollapsedGroups', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
     %thead.bg-light
       %th.w-20.name{ data: { field: 'name' } }
         = Procedure.model_name.human
@@ -49,6 +49,9 @@
         = Note.model_name.plural.capitalize
       %th.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
         = t('actions.actions')
+      %th.group-label{ data: { field: 'group_label', visible: 'false' } }
+        -# group label column for table grouping, intentionally left invisible
+
 - else
   -# TODO: break these into partials?
   %table.table-hover{ id: "core#{core.id}ProceduresCustomView", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }

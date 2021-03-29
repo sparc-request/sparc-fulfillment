@@ -28,7 +28,6 @@ class ProceduresController < ApplicationController
   def index
     respond_to :json
 
-    #TODO: When working on grouped view, might need to pull off .order
     @procedures     = @appointment.procedures.eager_load(:notes, :task).preload(:service, :protocol).where(sparc_core_id: params[:core_id]).order(:position)
     @performable_by = @appointment.protocol.organization.clinical_provider_identities.order(:first_name, :last_name)
   end
@@ -39,6 +38,7 @@ class ProceduresController < ApplicationController
     performer_id    = params[:performer_id]
     protocol        = @appointment.protocol
 
+    # TODO: assign errors here when adding services?
     qty.times do
       Procedure.create(appointment: @appointment,
                        service_id: service.id,
@@ -74,6 +74,7 @@ class ProceduresController < ApplicationController
       @errors = @procedure.errors
     end
 
+    @billing_type_updated = procedure_params.has_key?(:billing_type) #If billing type has changed, need to refresh groups if in grouped view
     @statuses = @appointment.appointment_statuses.pluck(:status)
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
   end

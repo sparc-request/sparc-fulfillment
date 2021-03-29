@@ -20,9 +20,7 @@
 
 $('#appointmentsList').replaceWith("<%= j render 'protocols_participants/appointments', protocols_participant: @appointment.protocols_participant, appointment: @appointment %>")
 $('#appointmentLoadingContainer').addClass('d-none')
-$('#appointmentContainer').
-  html("<%= j render '/appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>").
-  removeClass('d-none')
+$('#appointmentContainer').html("<%= j render '/appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
 
 # TODO: remove this if render option works out
 # pg = new ProcedureGrouper()

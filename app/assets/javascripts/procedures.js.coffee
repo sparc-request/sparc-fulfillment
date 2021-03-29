@@ -19,6 +19,14 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+
+  $(document).on 'load-success.bs.table', 'table.core', ->
+    $('.group-of-one').closest('tr.groupBy').remove()
+    $('#appointmentContainer').removeClass('d-none')
+
+  $(document).on 'click', 'tr.groupBy', ->
+    $(this).find('.group-icon').toggleClass('fa-chevron-right fa-chevron-down')
+
   $(document).on 'hide.datetimepicker', '.procedure-completed-datepicker', ->
     Rails.fire($(this).parents('form')[0], 'submit')
 
@@ -58,6 +66,17 @@ $ ->
               $btn.removeClass('active')
               $btn.siblings("button[data-status=#{old_status}]").addClass('active')
 
+(exports ? this).proceduresGroupFormatter = (value, idx, data) ->
+  single_procedure = if data.length == 1 then 'group-of-one' else ''
+  badge = '<strong class="badge badge-primary px-2 my-1 mr-2">' + data.length + '</strong>'
+  icon = '<i class="fas fa-chevron-right group-icon ml-2"></i>'
+  formatted_value = '<p class="lead mb-0 w-75 ' + single_procedure + '">' + badge + value + icon + '</p>'
+
+(exports ? this).proceduresCollapsedGroups = (groupKey, items) ->
+  if items.length > 1
+    [groupKey]
+  else
+    []
 
 
 

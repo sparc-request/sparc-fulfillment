@@ -147,4 +147,8 @@ module ProceduresHelper
       link_to icon('fas', 'trash'), appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :delete, class: ['btn btn-danger', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' }
     end
   end
+
+  def procedure_group_label(procedure)
+    service_name_display(procedure.service, true) + content_tag(:strong, procedure.formatted_billing_type, class: 'ml-2')
+  end
 end
