@@ -61,11 +61,8 @@ $("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .se
 
 <% end %>
 
-pg = new ProcedureGrouper()
-
 <% if @billing_type_updated && @appointment_style == "grouped" %>
-$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('destroy')
-$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable()
+$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
 <% end %>
 
 $('#appointment_content_indications').selectpicker()

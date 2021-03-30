@@ -18,4 +18,10 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
+<% if @appointment_style == "grouped" %>
+table = $('#core<%= @procedure.core.id %>ProceduresGroupedView')
+<% else %>
+table = $('#core<%= @procedure.core.id %>ProceduresCustomView')
+<% end %>
+
+table.bootstrapTable('refresh', silent: true)
