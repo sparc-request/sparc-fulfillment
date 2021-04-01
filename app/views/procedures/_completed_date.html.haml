@@ -26,5 +26,5 @@
 
 .tooltip-wrapper{ title: tooltip, data: { toggle: disabled ? 'tooltip' : '' } }
   = form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
-    .input-group.datetimepicker.date.procedure-completed-datepicker{ id: "procedure-#{procedure.id}-completedDatePicker", data: { target_input: 'nearest' } }
-      = f.text_field :completed_date, class: 'datetimepicker-input form-control', value: format_date(procedure.completed_date), disabled: disabled, data: { target: "#procedure-#{procedure.id}-completedDatePicker" }
+    .input-group.datetimepicker.date.procedure-completed-datepicker{ id: "procedure#{procedure.id}CompletedDatePicker", data: { target_input: 'nearest' } }
+      = f.text_field :completed_date, class: 'datetimepicker-input form-control', value: format_date(procedure.completed_date), disabled: disabled, data: { target: "#procedure#{procedure.id}CompletedDatePicker" }

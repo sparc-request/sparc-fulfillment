@@ -18,9 +18,9 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.modal-dialog{ role: 'document' }
-  = form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), method: :put, remote: true do |f|
-    .modal-content
+.modal-dialog
+  .modal-content
+    = form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), method: :put, remote: true do |f|
       .modal-header
         %h3.modal-title
           = t('notes.new', notable_type: Procedure.model_name.human)
@@ -46,5 +46,4 @@
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t('actions.close')
-        %button.btn.btn-primary.save{type: 'submit'}
-          = t(:actions)[:save]
+        = f.submit t('actions.submit'), class: 'btn btn-primary'

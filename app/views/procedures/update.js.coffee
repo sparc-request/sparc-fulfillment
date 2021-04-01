@@ -39,25 +39,28 @@ $("#modalContainer").modal('hide')
 
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 
-date_time_picker = $("#procedure<%= @procedure.id %>-completedDatePicker").datetimepicker('format', 'MM/DD/YYYY')
-
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('billing-type', "<%= @procedure.billing_type %>").attr('data-billing-type', "<%= @procedure.billing_type %>")
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('group-id', "<%= @procedure.group_id %>").attr('data-group-id', "<%= @procedure.group_id %>")
+date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
+performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .selectpicker")
+date_time_picker.datetimepicker('format', 'MM/DD/YYYY')
 
 <% if @procedure.unstarted? || @procedure.follow_up? %>
-date_time_picker.datetimepicker('date', null).datetimepicker('disable')
+date_time_picker.datetimepicker('date', null)
+date_time_picker.datetimepicker('disable')
 $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "")
+performer_selectpicker.selectpicker('val', "")
 
 <% elsif @procedure.incomplete? %>
-date_time_picker.datetimepicker('date', null).datetimepicker('disable')
-
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
+date_time_picker.datetimepicker('date', null)
+date_time_picker.datetimepicker('disable')
+$("#procedure<%= @procedure.id %>StatusButtons").data("selected", "incomplete")
+$("#procedure<%= @procedure.id %>StatusButtons button").removeClass("active")
+$("#procedure<%= @procedure.id %>StatusButtons .incomplete-btn").addClass("active")
+performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% elsif @procedure.complete? %>
-date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>").datetimepicker('enable')
-
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
+date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+date_time_picker.datetimepicker('enable')
+performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% end %>
 
