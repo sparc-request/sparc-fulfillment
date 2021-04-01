@@ -31,23 +31,23 @@
     %thead.bg-light
       %th.w-20.name{ data: { field: 'name' } }
         = Procedure.model_name.human
-      %th.billing-type{ data: { field: 'billing_type' } }
+      %th.w-5.billing-type{ data: { field: 'billing_type' } }
         = Procedure.human_attribute_name(:billing_type)
-      %th.status{ data: { field: 'status', align: 'center', halign: 'left' } }
+      %th.w-10.status{ data: { field: 'status', align: 'center', halign: 'left' } }
         = Procedure.human_attribute_name(:status)
-      %th.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
+      %th.w-10.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
         = Procedure.human_attribute_name(:followup)
-      %th.completed-date{ data: { field: 'completed_date' } }
+      %th.w-15.completed-date{ data: { field: 'completed_date' } }
         = Procedure.human_attribute_name(:completed_date)
-      %th.performer{ data: { field: 'performer' } }
+      %th.w-15.performer{ data: { field: 'performer' } }
         = Procedure.human_attribute_name(:performer)
-      %th.invoiced{ data: { field: 'invoiced' } }
+      %th.w-5.invoiced{ data: { field: 'invoiced' } }
         = Procedure.human_attribute_name(:invoiced)
-      %th.credited{ data: { field: 'credited' } }
+      %th.w-5.credited{ data: { field: 'credited' } }
         = Procedure.human_attribute_name(:credited)
-      %th.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
+      %th.w-5.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
         = Note.model_name.plural.capitalize
-      %th.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
+      %th.w-10.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
         = t('actions.actions')
       %th.group-label{ data: { field: 'group_label', visible: 'false' } }
         -# group label column for table grouping, intentionally left invisible
@@ -58,21 +58,21 @@
     %thead.bg-light
       %th.w-20.name{ data: { field: 'name' } }
         = Procedure.model_name.human
-      %th.billing-type{ data: { field: 'billing_type' } }
+      %th.w-5.billing-type{ data: { field: 'billing_type' } }
         = Procedure.human_attribute_name(:billing_type)
-      %th.status{ data: { field: 'status', align: 'center', halign: 'left' } }
+      %th.w-10.status{ data: { field: 'status', align: 'center', halign: 'left' } }
         = Procedure.human_attribute_name(:status)
-      %th.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
+      %th.w-10.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
         = Procedure.human_attribute_name(:followup)
-      %th.completed-date{ data: { field: 'completed_date' } }
+      %th.w-15.completed-date{ data: { field: 'completed_date' } }
         = Procedure.human_attribute_name(:completed_date)
-      %th.performer{ data: { field: 'performer' } }
+      %th.w-15.performer{ data: { field: 'performer' } }
         = Procedure.human_attribute_name(:performer)
-      %th.invoiced{ data: { field: 'invoiced' } }
+      %th.w-5.invoiced{ data: { field: 'invoiced' } }
         = Procedure.human_attribute_name(:invoiced)
-      %th.credited{ data: { field: 'credited' } }
+      %th.w-5.credited{ data: { field: 'credited' } }
         = Procedure.human_attribute_name(:credited)
-      %th.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
+      %th.w-5.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
         = Note.model_name.plural.capitalize
-      %th.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
+      %th.w-10.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
         = t('actions.actions')

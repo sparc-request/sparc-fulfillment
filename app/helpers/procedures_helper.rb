@@ -47,7 +47,7 @@ module ProceduresHelper
 
     form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
       content_tag :div, class: 'tooltip-wrapper', title: tooltip, data: { toggle: disabled ? 'tooltip' : '' } do
-        f.select :performer_id, options_from_collection_for_select(performable_by, :id, :full_name, procedure.performer_id), { include_blank: true }, onchange: "Rails.fire(this.form, 'submit')", class: 'selectpicker', disabled: disabled, data: { width: '125' }
+        f.select :performer_id, options_from_collection_for_select(performable_by, :id, :full_name, procedure.performer_id), { include_blank: true }, onchange: "Rails.fire(this.form, 'submit')", class: 'selectpicker w-100', disabled: disabled
       end
     end
   end
