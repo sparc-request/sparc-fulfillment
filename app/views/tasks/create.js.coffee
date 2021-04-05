@@ -36,21 +36,13 @@ $("#modalContainer").modal('hide')
 # JS related to appointments and procedures, this will be refactored later
 
 <% if @procedure.present? %>
-$("#follow_up_<%= @procedure.id %>").html("<%= escape_javascript(render(:partial =>'appointments/followup_calendar', locals: {procedure: @procedure})) %>")
+$("#followup<%= @procedure.id %>").replaceWith("<%= j render 'procedures/followup', procedure: @procedure %>")
+updateNotesBadge("procedure<%= @procedure.id %>", "<%= format_count(@procedure.notes.length) %>")
 update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 <% end %>
 
 <% if @appointment.present? %>
-$('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
-
-pg = new ProcedureGrouper()
-
-<% if @appointment_style == "grouped" %>
-pg.initialize()
-<% else %>
-# $("select.core_multiselect").multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
-pg.initialize_multiselects_only()
-<% end %>
+$('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
 
 if !$('.start_date_input').hasClass('hidden')
   start_date_init("<%= format_datetime(@appointment.start_date) %>")
