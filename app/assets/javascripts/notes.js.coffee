@@ -18,17 +18,12 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @errors %>
-$("[name^='note']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
-$('.form-error').remove()
+(exports ? this).updateNotesBadge = (selector, count) ->
+  badge = $("[id=#{selector}Notes]:visible").find('span.badge')
+  badge.html("#{count}")
 
-<% @errors.messages.each do |attr, messages| %>
-<% messages.each do |message| %>
-$("[name='note[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
-<% end %>
-<% end %>
-<% else %>
-updateNotesBadge("<%= @note.unique_selector %>", "<%= @count %>")
-$("#modalContainer").html("<%= j render 'index', notes: @notes, note: @note, notable_id: @notable_id, notable_type: @notable_type, notable: @notable, disabled: false %>")
-$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
-<% end %>
+  if parseInt(count, 10) == 0
+    badge.removeClass('badge-warning').addClass('badge-secondary')
+  else
+    badge.removeClass('badge-secondaru').addClass('badge-warning')
+

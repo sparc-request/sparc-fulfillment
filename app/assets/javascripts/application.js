@@ -94,3 +94,4 @@
 //= require imports
 //= require fulfillments
 //= require procedures
+//= require notes

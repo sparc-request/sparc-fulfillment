@@ -79,6 +79,8 @@ statuses[statuses.length] =  "<%= status %>"
 
 $("#group-<%= @procedure.group_id %> button").trigger('click')
 
+updateNotesBadge("procedure<%= @procedure.id %>", "<%= format_count(@procedure.notes.length) %>")
+
 <% if @cost_error_message %>
 swal("<%= @cost_error_message %>")
 <% end %>
