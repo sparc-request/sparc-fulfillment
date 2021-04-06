@@ -95,13 +95,13 @@ $ ->
       url: "/fulfillments"
       data: "line_item_id" : line_item_id
 
-  $(document).on 'click', '.otf_fulfillment_edit', ->
+  $(document).on 'click', '.otf-fulfillment-edit', ->
     allowSubmit = true
-    row_index   = $(this).parents("tr").data("index")
-    fulfillment_id = $(this).parents("#fulfillments-table").bootstrapTable("getData")[row_index].id
+    fulfillment_id = $(this).data('fulfillment_id')
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
+    
 
   $(document).on 'click', '.add_fulfillment', (e)->
     e.preventDefault()

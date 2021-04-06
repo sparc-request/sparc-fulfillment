@@ -18,7 +18,9 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$(document).on 'click', '.otf_fulfillment_delete', ->
-  $.ajax
-    type: 'delete'
-    url: "/fulfillments/#{$(this).data('id')}.js"
+$(document).on 'click', '.otf-fulfillment-delete', ->
+  proceed = confirm "Are you sure you want to delete this fulfillment?"
+  if proceed
+    $.ajax
+      type: 'delete'
+      url: "/fulfillments/#{$(this).data('fulfillment_id')}.js"

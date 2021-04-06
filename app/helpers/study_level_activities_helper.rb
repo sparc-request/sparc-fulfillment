@@ -88,6 +88,20 @@ module StudyLevelActivitiesHelper
     raw content_tag(:div, button + ul, class: 'btn-group')
   end
 
+  def fulfillment_actions(fulfillment)
+    unless fulfillment.invoiced?
+      [
+        "<a class='edit otf-fulfillment-edit ml10' href='javascript:void(0)' title='Edit' data-fulfillment_id='#{fulfillment.id}'>",
+        "<i class='fas fa-edit'></i>",
+        "</a>",
+        "&nbsp&nbsp",   
+        "<a class='remove otf-fulfillment-delete' style='color:red' href='javascript:void(0)' title='Remove' data-fulfillment_id='#{fulfillment.id}'>",
+        "<i class='far fa-trash-alt'></i>",
+        "</a>"
+      ].join ""
+    end
+  end
+
   def toggle_invoiced(fulfillment)
     if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
       invoice_toggle_button(fulfillment)
@@ -110,10 +124,6 @@ module StudyLevelActivitiesHelper
 
   def credit_read_only(fulfillment)
     (fulfillment.credited? ? "Yes" : "No")
-  end
-
-  def fulfillment_grouper_formatter(fulfillment)
-    fulfillment.fulfilled_at.strftime('%b %Y')
   end
 
   def fulfillment_components_formatter(components)
