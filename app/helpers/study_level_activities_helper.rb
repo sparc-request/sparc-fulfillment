@@ -60,45 +60,30 @@ module StudyLevelActivitiesHelper
     protocol.protocol_type == 'Study'
   end
 
-  def fulfillment_options_buttons(fulfillment)
-    unless fulfillment.invoiced?
-      options = raw(
-        note_list_item({object: fulfillment, has_notes: fulfillment.notes.any?})+
-        document_list_item({object: fulfillment, has_documents: fulfillment.documents.any?})+
-        content_tag(:li, raw(
-          content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-edit", aria: {hidden: "true"}))+' Edit Fulfillment', type: 'button', class: 'btn btn-default form-control actions-button otf_fulfillment_edit'))
-        )+
-        content_tag(:li, raw(
-                      content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-remove", aria: {hidden: "true"}))+' Delete Fulfillment', type: 'button', class: 'btn btn-default form-control actions-button otf_fulfillment_delete', data: { id: fulfillment.id }))
-        )
-      )
-    else
-      options = raw(
-        note_list_item({object: fulfillment, has_notes: fulfillment.notes.any?})+
-        content_tag(:li, raw(
-          content_tag(:button, raw(content_tag(:span, '', class: "glyphicon glyphicon-open-file", aria: {hidden: "true"}))+' Documents', type: 'button', class: 'btn btn-default form-control actions-button documents list', data: {documentable_id: fulfillment.id, documentable_type: "Fulfillment"}))
-        )
-      )
-    end
-
-    span = raw content_tag(:span, '', class: 'glyphicon glyphicon-triangle-bottom')
-    button = raw content_tag(:button, raw(span), type: 'button', class: 'btn btn-default btn-sm dropdown-toggle form-control available-actions-button', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
-    ul = raw content_tag(:ul, options, class: 'dropdown-menu', role: 'menu')
-
-    raw content_tag(:div, button + ul, class: 'btn-group')
-  end
-
   def fulfillment_actions(fulfillment)
+    notes_documents_array = [
+      "<a class='fulfillment_documents' href='javascript:void(0)' title='Documents' data-documentable-id='#{fulfillment.id}' data-documentable-type='Fulfillment'>",
+      "<i class='fas fa-folder-open'></i>",
+      "</a>",
+      "&nbsp&nbsp",
+      "<a class='fulfillment_notes' href='javascript:void(0)' title='Notes' data-notable-id='#{fulfillment.id}' data-notable-type='Fulfillment'>",
+      "<i class='fa fa-list'></i>",
+      "</a>",
+      "&nbsp&nbsp"]
+
+    edit_delete_array = [
+      "<a class='edit otf-fulfillment-edit ml10' href='javascript:void(0)' title='Edit' data-fulfillment_id='#{fulfillment.id}'>",
+      "<i class='fas fa-edit'></i>",
+      "</a>",
+      "&nbsp&nbsp",   
+      "<a class='remove otf-fulfillment-delete' style='color:red' href='javascript:void(0)' title='Remove' data-fulfillment_id='#{fulfillment.id}'>",
+      "<i class='far fa-trash-alt'></i>",
+      "</a>"]
+
     unless fulfillment.invoiced?
-      [
-        "<a class='edit otf-fulfillment-edit ml10' href='javascript:void(0)' title='Edit' data-fulfillment_id='#{fulfillment.id}'>",
-        "<i class='fas fa-edit'></i>",
-        "</a>",
-        "&nbsp&nbsp",   
-        "<a class='remove otf-fulfillment-delete' style='color:red' href='javascript:void(0)' title='Remove' data-fulfillment_id='#{fulfillment.id}'>",
-        "<i class='far fa-trash-alt'></i>",
-        "</a>"
-      ].join ""
+      return (notes_documents_array + edit_delete_array).join ""
+    else
+      return notes_documents_array.join ""
     end
   end
 
@@ -151,24 +136,6 @@ module StudyLevelActivitiesHelper
 
   def credit_toggle_button(fulfillment)
     content_tag(:input, '', type: "checkbox", name: "credited", checked: fulfillment.credited?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.credited? || fulfillment.invoiced?, class: 'credit_toggle')
-  end
-
-  def note_list_item(params)
-    content_tag(:li, raw(
-      content_tag(:button,
-        raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:has_notes] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
-        ' Notes' + show_notification_badge(params, 'notes'),
-        type: 'button', class: "btn btn-default form-control actions-button notes list", style: 'position: relative', data: {notable_id: params[:object].id, notable_type: params[:object].class.name}))
-    )
-  end
-
-  def document_list_item(params)
-    content_tag(:li, raw(
-      content_tag(:button,
-        raw(content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_documents", class: "glyphicon glyphicon-open-file #{params[:has_documents] ? 'blue-glyphicon' : ''}", aria: {hidden: "true"}))+
-        ' Documents' + show_notification_badge(params, 'documents'),
-        type: 'button', class: "btn btn-default form-control actions-button documents list", style: 'position: relative', data: {documentable_id: params[:object].id, documentable_type: params[:object].class.name}))
-    )
   end
 
   def show_notification_badge(params, type)
