@@ -70,7 +70,7 @@ $ ->
   single_procedure = if data.length == 1 then 'group-of-one' else ''
   badge = '<strong class="badge badge-primary px-2 my-1 mr-2">' + data.length + '</strong>'
   icon = '<i class="fas fa-chevron-right group-icon ml-2"></i>'
-  formatted_value = '<p class="lead mb-0 w-75 ' + single_procedure + '">' + badge + value + icon + '</p>'
+  formatted_value = '<p class="lead mb-0 w-75 ' + single_procedure + '">' + badge + '<strong>' + value + '</strong>' + icon + '</p>'
 
 (exports ? this).proceduresCollapsedGroups = (groupKey, items) ->
   if items.length > 1

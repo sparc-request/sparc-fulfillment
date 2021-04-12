@@ -29,7 +29,7 @@ class ProceduresController < ApplicationController
     respond_to :json
 
     @procedures     = @appointment.procedures.eager_load(:notes, :task).preload(:service, :protocol).where(sparc_core_id: params[:core_id]).order(:position)
-    @performable_by = @appointment.protocol.organization.clinical_provider_identities.order(:first_name, :last_name)
+    @performable_by = @appointment.performable_by
   end
 
   def create

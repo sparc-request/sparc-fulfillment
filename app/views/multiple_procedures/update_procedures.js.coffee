@@ -18,41 +18,31 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @note && @note.errors.present? %>
-
-$('#modal_errors').html("<%= escape_javascript(render(partial: 'modal_errors', locals: { errors: @note.errors })) %>")
-$('#incomplete_all_modal button.save').removeClass('disabled')
+<% if @multiple_procedure_errors %>
+$("#completeIncompleteAll input:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+<% @multiple_procedure_errors.each do |attr, message| %>
+$("#completeIncompleteAll [name='<%= attr.to_s %>']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
 
 <% else %>
 
-$('#complete_all_modal button.save').removeClass('disabled')
-
-<% if @procedures.present? %>
-
-update_complete_visit_button(<%= @procedures.first.appointment.can_finish? %>)
-
 <% @procedures.each do |procedure| %>
-
+$("#procedure<%= procedure.id %>StatusButtons button").removeClass('active')
+$("#procedure<%= procedure.id %>StatusButtons .<%= procedure.status %>-btn").addClass('active')
+$(".performer #edit_procedure_<%= procedure.id %> .selectpicker").selectpicker('val', '<%= procedure.performer_id %>')
+date_time_picker = $("#procedure<%= procedure.id %>CompletedDatePicker")
 <% if procedure.incomplete? %>
-
-$("tr.procedure[data-id='<%= procedure.id %>'] td.status .incomplete").addClass('active')
-$("tr.procedure[data-id='<%= procedure.id %>'] td.status .complete").removeClass('active')
-$("tr.procedure[data-id='<%= procedure.id %>'] .completed_date_field").val("").prop('disabled', true)
-$("tr.procedure[data-id='<%= procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= @performed_by %>")
-<% if procedure.notes.any? %>
-$('#modalContainer').modal 'hide'
-<% end %>
-
+date_time_picker.datetimepicker('date', null)
+date_time_picker.datetimepicker('disable')
 <% elsif procedure.complete? %>
-$("tr.procedure[data-id='<%= procedure.id %>'] td.status .complete").addClass('active')
-$("tr.procedure[data-id='<%= procedure.id %>'] td.status .incomplete").removeClass('active')
-$("tr.procedure[data-id='<%= procedure.id %>'] .completed-date .completed_date_field.datetimepicker").val("<%= @completed_date %>").removeAttr("disabled")
-$("tr.procedure[data-id='<%= procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "<%= @performed_by %>")
-<% if procedure.notes.any? %>
-$("#modalContainer").modal('hide')
-<% end %>
-<% end %>
-<% end %>
+date_time_picker.datetimepicker('date', "<%= format_date(procedure.completed_date) %>")
+date_time_picker.datetimepicker('enable')
 <% end %>
 <% end %>
 
+$('#modalContainer').modal('hide')
+
+<% end %>
+
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

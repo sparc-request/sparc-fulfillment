@@ -21,12 +21,13 @@
 .card-header.flex-wrap.border-top.border-bottom-0
   %h3.w-100
     = core.name
-  .d-flex.service-multiselect-container
-    = select_tag 'core_multiselect', nil, class: "selectpicker #{disabled_class(!appointment.started?)}", multiple: true
-    %button.btn.btn-default.btn-primary.multiselect.complete_all.disabled{ type: 'button', id: "core_#{core.id}_multiselect_complete_all", class: disabled_class(!appointment.started?) } Complete
-    %button.btn.btn-default.btn-warning.multiselect.incomplete_all.disabled{ type: 'button', id: "core_#{core.id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete
+  .d-flex.service-multiselect-container.w-50
+    = select_tag "core_#{core.id}_multiselect", options_for_select(procedures_groups_for_select(procedures)), class: "core_multiselect selectpicker show-tick #{disabled_class(!appointment.started?)}", multiple: true, data: { actions_box: true, appointment_id: appointment.id, core_id: core.id }
+    %button.btn.btn-default.btn-primary.multiselect.complete_all{ type: 'button', id: "core_#{core.id}_multiselect_complete_all", class: disabled_class(!appointment.started?), data: { status: 'complete' } }
+      Complete
+    %button.btn.btn-default.btn-warning.multiselect.incomplete_all{ type: 'button', id: "core_#{core.id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?), data: { status: 'incomplete' } }
+      Incomplete
 - if appointment_style == 'grouped'
-  -# TODO: Make this work for grouped view. Not sure how much different table views will need to be
   %table.table-hover.core{ id: "core#{core.id}ProceduresGroupedView", data: { toggle: 'table', group_by: 'true', group_by_field: 'group_label', group_by_toggle: 'true', group_by_formatter: 'proceduresGroupFormatter', group_by_collapsed_groups: 'proceduresCollapsedGroups', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
     %thead.bg-light
       %th.w-20.name{ data: { field: 'name' } }
@@ -35,7 +36,7 @@
         = Procedure.human_attribute_name(:billing_type)
       %th.w-10.status{ data: { field: 'status', align: 'center', halign: 'left' } }
         = Procedure.human_attribute_name(:status)
-      %th.w-10.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
+      %th.w-15.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
         = Procedure.human_attribute_name(:followup)
       %th.w-15.completed-date{ data: { field: 'completed_date' } }
         = Procedure.human_attribute_name(:completed_date)
@@ -47,13 +48,12 @@
         = Procedure.human_attribute_name(:credited)
       %th.w-5.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
         = Note.model_name.plural.capitalize
-      %th.w-10.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
+      %th.w-5.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
         = t('actions.actions')
-      %th.group-label{ data: { field: 'group_label', visible: 'false' } }
-        -# group label column for table grouping, intentionally left invisible
+      %th.group-label{ class: 'd-none', data: { field: 'group_label' } }
+        -# group label column for table grouping, intentionally left d-none
 
 - else
-  -# TODO: break these into partials?
   %table.table-hover{ id: "core#{core.id}ProceduresCustomView", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
     %thead.bg-light
       %th.w-20.name{ data: { field: 'name' } }

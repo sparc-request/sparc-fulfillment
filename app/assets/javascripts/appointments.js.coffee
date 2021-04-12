@@ -209,9 +209,11 @@ $ ->
           data: data
           url: "/procedures/#{procedure_id}/edit.js"
 
-  $(document).on 'click', 'button.incomplete_all', ->
-    status = 'incomplete'
-    procedure_ids = fetch_multiselect_group_ids(this)
+  $(document).on 'click', 'button.complete_all, button.incomplete_all', ->
+    status = $(this).data('status')
+    select = $(this).parents('.service-multiselect-container').find('select.core_multiselect')
+    appointment_id = select.attr('data-appointment-id')
+    procedure_ids = fetch_multiselect_group_ids(select)
     self = this
 
     if procedure_ids.length > 0
@@ -219,23 +221,8 @@ $ ->
         type: 'GET'
         data:
           status: status
-          procedure_ids: _.flatten(procedure_ids)
-        url: "/multiple_procedures/incomplete_all.js"
-        success: ->
-          reset_multiselect_after_update(self)
-
-  $(document).on 'click', 'button.complete_all', ->
-    status = 'complete'
-    procedure_ids = fetch_multiselect_group_ids(this)
-    self = this
-
-    if procedure_ids.length > 0
-      $.ajax
-        type: 'GET'
-        data:
-          status: status
-          procedure_ids: _.flatten(procedure_ids)
-        url: "/multiple_procedures/complete_all.js"
+          procedure_ids: procedure_ids
+        url: "/appointments/5968/multiple_procedures/#{status}_all.js"
         success: ->
           reset_multiselect_after_update(self)
 
@@ -354,19 +341,17 @@ $ ->
       $("button.complete_visit").addClass('disabled')
       $("div.completed_date_btn").addClass('contains_disabled')
 
-  window.fetch_multiselect_group_ids = (element) ->
-    multiselect = $(element).parents('.core').find('select.core_multiselect')
-    group_ids = multiselect.val()
+  window.fetch_multiselect_group_ids = (select) ->
+    group_ids = select.val()
     procedure_ids = []
 
     if group_ids
       find_ids = (group_id) ->
-        rows = $("tr.procedure[data-group-id='#{group_id}']")
+        rows = $("td.name div[data-group-id='#{group_id}']")
+        console.log("length: #{rows.length}")
 
-        procedure_ids.push $.map rows, (row) ->
-          disabled = $(row).data('disabled')
-          if disabled == false
-            $(row).data('id')
+        $.map rows, (row) ->
+          procedure_ids.push $(row).data('procedure-id')
 
       find_ids group_id for group_id in group_ids
       return procedure_ids

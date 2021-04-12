@@ -18,22 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @procedure_ids.present? %>
-$("#modalContainer").html("<%= escape_javascript(render(partial: 'complete_all_modal', locals: { procedure_ids: @procedure_ids})) %>")
-$("#modalContainer").modal 'show'
-<% else %>
-alert(I18n["appointment"]["procedure_group_invoiced_warning"])
-<% end %>
+$("#modalContainer").html("<%= j render 'multiple_procedures/complete_all_modal', performable_by: @performable_by, appointment: @appointment, procedure_ids: @procedure_ids %>")
+$("#modalContainer").modal('show')
 
-$(document).on 'click', "#complete_all_modal button.save", (e) ->
-  if !$('.date_field').val() || !$('#complete_all_modal .filter-option').text()
-    e.preventDefault()
-    $('#multiple_procedures_modal_errors').addClass('alert').addClass('alert-danger').html('Please complete the required fields:')
-  else
-    $(this).addClass("disabled")
-
-$(".selectpicker").selectpicker()
-
-$(".date_field").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

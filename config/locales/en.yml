@@ -382,11 +382,16 @@ en:
     documents: "Documents"
 
   multiple_procedures_modal:
+    errors:
+      completed_date: "Can't be blank"
+      performer_id: "Can't be blank"
+      reason: "Can't be blank"
+      comment: "Can't be blank"
     incomplete_header: "Incomplete Multiple Services"
     complete_header: "Complete Multiple Services"
-    completed_date: "Completed Date *"
-    performed_by: "Performed By *"
-    reason: "Reason *"
+    completed_date: "Completed Date"
+    performed_by: "Performed By"
+    reason: "Reason"
 
   #############
   ### Notes ###
@@ -397,6 +402,7 @@ en:
     header: "%{notable_type} Notes"
     add: "Leave Note"
     update: "Update Note"
+    comment: "Comment"
     none: "This %{notable_type} doesn't have any notes."
     placeholder: "Type a note..."
     edited: "(Edited)"

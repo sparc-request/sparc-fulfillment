@@ -19,6 +19,12 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ProceduresHelper
+  def procedure_name_display(procedure)
+    content_tag :div, data: { group_id: procedure.group_id, procedure_id: procedure.id } do
+      service_name_display(procedure.service)
+    end
+  end
+
   def procedure_billing_display(procedure)
     disabled = !procedure.appointment.started? || procedure.invoiced?
     tooltip =
@@ -148,7 +154,11 @@ module ProceduresHelper
     end
   end
 
+  def procedures_groups_for_select(procedures)
+    procedures.map{ |p| [{ data: { content: procedure_group_label(p) } }, p.group_id]}.uniq
+  end
+
   def procedure_group_label(procedure)
-    service_name_display(procedure.service, true) + content_tag(:strong, procedure.formatted_billing_type, class: 'ml-2')
+    service_name_display(procedure.service) + content_tag(:span, procedure.formatted_billing_type, class: 'ml-2')
   end
 end

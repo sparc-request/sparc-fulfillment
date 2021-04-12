@@ -18,26 +18,28 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-#incomplete_all_modal.modal-dialog
+#completeIncompleteAll.modal-dialog
   .modal-content
-    = render 'multiple_procedures/modal_header', modal_header: t(:multiple_procedures_modal)[:incomplete_header] 
-    = form_tag update_procedures_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
-      .modal-body.form-horizontal
-        #multiple_procedures_modal_errors
-        - @procedures.each do |procedure|
-          = hidden_field_tag 'procedure_ids[]', procedure.id
-        = hidden_field_tag :status, "incomplete"
+    = form_with url: update_procedures_appointment_multiple_procedures_path(@appointment), method: :put, local: false do |f|
+      = f.hidden_field :status, value: 'incomplete'
+      - @procedure_ids.each do |pid|
+        = f.hidden_field 'procedure_ids[]', value: pid
+      .modal-header
+        %h4.modal-title
+          = t('multiple_procedures_modal.incomplete_header')
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+          %span{ aria: { hidden: 'true' } } &times;
+      .modal-body
         .form-group
-          = render 'multiple_procedures/performed_by', procedures: @procedures 
+          = f.label 'performer_id', t('multiple_procedures_modal.performed_by'), class: 'required'
+          = f.select :performer_id, options_from_collection_for_select(performable_by, :id, :full_name), { include_blank: true }, class: 'selectpicker form-control'
         .form-group
-          = label_tag "reason", t(:multiple_procedures_modal)[:reason], class: "col-sm-4 control-label"
-          .col-sm-7
-            = select_tag "reason", options_for_select(Procedure::NOTABLE_REASONS), prompt: "Select a reason", class: "selectpicker form-control reason-select"
+          = f.label 'reason', t('multiple_procedures_modal.reason'), class: 'required'
+          = f.select :reason, options_for_select(Procedure::NOTABLE_REASONS), { include_blank: true }, class: 'selectpicker form-control'
         .form-group
-          = label_tag "comment", t(:notes)[:comment], class: "col-sm-4 control-label"
-          .col-sm-7
-            = text_area_tag :comment, nil, class: 'form-control', rows: "6"
-      = render 'multiple_procedures/modal_footer'
-
-
-
+          = f.label "comment", t('notes.comment'), class: 'required'
+          = f.text_area :comment, class: 'form-control', rows: 6
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t(:actions)[:close]
+        = f.submit t('actions.submit'), class: 'btn btn-primary'

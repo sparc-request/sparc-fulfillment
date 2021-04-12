@@ -7,7 +7,7 @@ json.credited       procedure_credited_display(procedure)
 json.followup       render 'followup.html', procedure: procedure
 json.group_label    procedure_group_label(procedure)
 json.invoiced       procedure_invoiced_display(procedure)
-json.name           service_name_display(procedure.service)
+json.name           procedure_name_display(procedure)
 json.notes          procedure_notes_display(procedure)
 json.performer      procedure_performer_display(procedure, performable_by)
 json.status         render 'status_toggle.html', procedure: procedure

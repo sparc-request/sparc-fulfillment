@@ -84,6 +84,11 @@ class Appointment < ApplicationRecord
     procedures.any?(&:credited?)
   end
 
+  def performable_by
+    # List of clinical providers that can perform actions on an the appointment's procedures
+    self.protocol.organization.clinical_provider_identities.order(:first_name, :last_name)
+  end
+
   def procedures_grouped_by_core
     procedures.group_by(&:sparc_core_id)
   end

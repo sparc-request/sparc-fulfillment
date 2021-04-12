@@ -122,8 +122,7 @@ module ApplicationHelper
     end
   end
 
-  def service_name_display(service, strong=false)
-    element = strong ? :strong : :span
-    content_tag(element, service.name) + (service.is_available ? "" : content_tag(element, " (Inactive)", class: 'inactive-service'))
+  def service_name_display(service)
+    content_tag(:span, service.name) + (service.is_available ? "" : content_tag(:span, " (Inactive)", class: 'inactive-service'))
   end
 end
