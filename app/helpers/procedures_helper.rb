@@ -158,7 +158,8 @@ module ProceduresHelper
     procedures.map{ |p| [{ data: { content: procedure_group_label(p) } }, p.group_id]}.uniq
   end
 
-  def procedure_group_label(procedure)
-    service_name_display(procedure.service) + content_tag(:span, procedure.formatted_billing_type, class: 'ml-2')
+  def procedure_group_label(procedure, strong=false)
+    element = strong ? :strong : :span
+    service_name_display(procedure.service, strong) + content_tag(element, procedure.formatted_billing_type, class: 'ml-2')
   end
 end
