@@ -18,14 +18,16 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-- visit_groups.each_with_index do |visit_group, index|
-  .col-xs-1.text-center
-    - state = "#{set_check(visit_group)}"
-    - if tab == 'template'
-      .glyphicon.check_column.btn.btn-primary{type: "button", visit_group_id: visit_group.id, check: state, title: state == "true" ? t(:visit)[:check_column] : t(:visit)[:uncheck_column], class: "#{glyph_class(visit_group)}", data: {toggle: "tooltip", animation: 'false'}}
-    - if tab == 'quantity'
-      .r-t-labels
-        %span.even_shorter_text.r-label= "R"
-        %span.even_shorter_text.t-label= "T"
-- (visit_groups.size...Visit.per_page).each do |index|
-  .col-xs-1{class: "column_#{index}"} &nbsp
+.row
+  - visit_groups.each_with_index do |visit_group, index|
+    .col-xs-1.text-center
+      - state = "#{set_check(visit_group)}"
+      - if tab == 'template'
+        .fa.fa-check-square.btn.btn-primary{type: "button", visit_group_id: visit_group.id, check: state, title: state == "true" ? t(:visit)[:check_column] : t(:visit)[:uncheck_column], class: "#{glyph_class(visit_group)}", data: {toggle: "tooltip", animation: 'false'}}
+      - if tab == 'quantity'
+        .r-t-labels
+          %span.even_shorter_text.r-label= "R"
+          %span.even_shorter_text.t-label= "T"
+.row
+  - (visit_groups.size...Visit.per_page).each do |index|
+    .col-xs-1{class: "column_#{index}"} &nbsp
