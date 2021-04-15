@@ -18,11 +18,7 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.col-xs-2
+.d-flex
   .page_change_arrow.btn.btn-info.fa.fa-arrow-left{title: t(:visit_groups)[:view_page_previous], type: "button", id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: page == 1, role: 'button', aria: {label: "View Previous"}, data: {toggle: "tooltip", animation: 'false'}}
--# The visit jump to drop down
-.col-xs-8
   = build_visits_select(arm, page)
--# The next page arrow
-.col-xs-2
   .page_change_arrow.btn.btn-info.btn.btn-info.fa.fa-arrow-right{title: t(:visit_groups)[:view_page_next], type: "button", id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: page * Visit.per_page >= arm.visit_count, role: 'button', aria: {label: "View Previous"}, data: {toggle: "tooltip", animation: 'false'}}
