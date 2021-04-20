@@ -27,7 +27,7 @@ $("#visit_group_<%= @visit_group.id %>").val("<%= @visit_group.reload.name %>")
 
 <% unless @errors %>
 $("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'
 
 # reload calendar
 $(".schedule-tab.active a").click()

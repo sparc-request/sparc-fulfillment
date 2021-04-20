@@ -19,10 +19,13 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+  $('html').addClass('ready')
   $('[data-toggle="tooltip"]').tooltip()
   $("input[placeholder='Search']").wrap("<div class='input-group search-bar'/>")
   $("<span class='input-group-addon clear_search glyphicon glyphicon-remove' data-toggle='true' style='display:none;'></span>").insertAfter($("input[placeholder='Search']"))
   $(".selectpicker").selectpicker()
+
+  stickybits('.position-sticky, .sticky-top')
 
   $('#history-back').contextmenu
     target: '#history-menu',

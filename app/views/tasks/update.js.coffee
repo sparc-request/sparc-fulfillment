@@ -25,4 +25,4 @@ notification_bubble = $('.notification.task-notifications')
 notification_count = parseInt(notification_bubble.text())
 if notification_count == 0
   notification_bubble.remove();
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'

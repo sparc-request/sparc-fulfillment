@@ -23,5 +23,5 @@ $("#appointment_modal_errors").html("<%= escape_javascript(render(partial: 'moda
 <% else %>
 $(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {protocols_participant: @appointment.protocols_participant})) %>")
 $("#appointment_select").selectpicker()
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'
 <% end %>

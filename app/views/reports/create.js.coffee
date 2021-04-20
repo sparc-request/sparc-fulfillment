@@ -30,5 +30,5 @@ if $("#modal_errors > .alert.alert-danger > p").length == 0
   <% end %>
   <% end %>
   window.document_id = <%= @document.id %>
-  $("#modal_place").modal('hide')
+  $("#modalContainer").modal('hide')
   $('table.documents').bootstrapTable('refresh')

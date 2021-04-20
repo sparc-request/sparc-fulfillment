@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#modal_area").html("<%= escape_javascript(render(:partial =>'participants/associate_participants_to_protocol_modal', locals: {protocol: @protocol})) %>");
-$("#modal_place").modal 'show'
+$("#modalContainer").modal 'show'
 $("#patient-registry-modal").bootstrapTable()
 
 ### De-identified Patient ###

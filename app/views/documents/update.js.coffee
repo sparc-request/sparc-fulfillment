@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 <% if @errors.nil? %>
-$("#modal_place").modal('hide')
+$("#modalContainer").modal('hide')
 $("#documents_table").bootstrapTable('refresh', {silent: "true"})
 $("#reports_table").bootstrapTable('refresh', {silent: "true"})
 <% else %>

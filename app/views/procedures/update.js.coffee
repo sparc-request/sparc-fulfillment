@@ -86,7 +86,7 @@ $(".completed_date_field").datetimepicker
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
 
 $("#group-<%= @procedure.group_id %> button").trigger('click')
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'
 
 <% if @cost_error_message %>
 swal("<%= @cost_error_message %>")

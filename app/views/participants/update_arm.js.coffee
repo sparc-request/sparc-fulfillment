@@ -19,5 +19,5 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
-$("#modal_place").modal 'hide'
+$("#modalContainer").modal 'hide'
 refreshParticipantTables()
