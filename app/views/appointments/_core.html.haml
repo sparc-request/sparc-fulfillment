@@ -56,7 +56,7 @@
         -# group label column for table grouping, intentionally left d-none
 
 - else
-  %table.table-hover{ id: "core#{core.id}ProceduresCustomView", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
+  %table.table-hover.core{ id: "core#{core.id}ProceduresCustomView", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
     %thead.bg-light
       %th.w-20.name{ data: { field: 'name' } }
         = Procedure.model_name.human
