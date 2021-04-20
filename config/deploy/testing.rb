@@ -51,9 +51,9 @@ server 'bmic-sparc-d.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
 # Feel free to add new variables to customise your setup.
 
 set :deploy_to, "/var/www/rails/sparc-fulfillment"
-set :branch, 'testing'
+set :branch, 'v3.3.0'
 set :rails_env, 'testing'
-set :rvm_ruby_version, '2.5.5@fulfillment-testing --create'
+set :rvm_ruby_version, '2.5.5@cwf --create'
 set :passenger_restart_with_touch, true
 #set :passenger_environment_variables, { :path => '/usr/local/rvm/gems/ruby-1.9.3-p286/bin:$PATH' }
 #set :passenger_rvm_ruby_version, 'ruby-1.9.3-p286'
