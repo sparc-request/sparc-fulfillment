@@ -29,6 +29,7 @@ $("#completeIncompleteAll [name='<%= attr.to_s %>']").parents('.form-group').rem
 
 <% @procedures.each do |procedure| %>
 $("#procedure<%= procedure.id %>StatusButtons button").removeClass('active')
+$("#procedure<%= procedure.id %>StatusButtons").data('selected', '<%= procedure.status %>')
 $("#procedure<%= procedure.id %>StatusButtons .<%= procedure.status %>-btn").addClass('active')
 $(".performer #edit_procedure_<%= procedure.id %> .selectpicker").selectpicker('val', '<%= procedure.performer_id %>')
 date_time_picker = $("#procedure<%= procedure.id %>CompletedDatePicker")

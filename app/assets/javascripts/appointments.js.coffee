@@ -48,15 +48,6 @@ $ ->
     $('#appointmentContainer').addClass('d-none')
     $('#appointmentLoadingContainer').removeClass('d-none')
 
-  $(document).on 'click', '.start-appointment', ->
-    $.ajax
-      method: 'PUT'
-      dataType: 'script'
-      url: $(this).data('url')
-      data:
-        appointment:
-          start_date: new Date($.now()).toUTCString()
-
   $(document).on 'click', '.complete-appointment:not(.disabled)', ->
     start_date = new Date(parseInt(moment($('#start_date').data("date"), "MM/DD/YYYY h:mm a").format('x')))
     end_date = new Date($.now())
@@ -79,11 +70,7 @@ $ ->
 
 
 
-  window.reset_multiselect_after_update = (element) ->
-    multiselect = $(element).siblings('#core_multiselect')
-    $(multiselect).multiselect('deselectAll', false)
-    $(multiselect).multiselect('updateButtonText')
-    $(element).closest('.align-select-menu').find('.complete_all, .incomplete_all').toggleClass('disabled')
+
 
   $(document).on 'click', 'tr.procedure-group button', ->
     core = $(this).closest('tr.core')
@@ -209,12 +196,11 @@ $ ->
           data: data
           url: "/procedures/#{procedure_id}/edit.js"
 
-  $(document).on 'click', 'button.complete_all, button.incomplete_all', ->
+  $(document).on 'click', 'button.complete-all, button.incomplete-all', ->
     status = $(this).data('status')
     select = $(this).parents('.service-multiselect-container').find('select.core_multiselect')
     appointment_id = select.attr('data-appointment-id')
     procedure_ids = fetch_multiselect_group_ids(select)
-    self = this
 
     if procedure_ids.length > 0
       $.ajax
@@ -222,9 +208,9 @@ $ ->
         data:
           status: status
           procedure_ids: procedure_ids
-        url: "/appointments/5968/multiple_procedures/#{status}_all.js"
+        url: "/appointments/#{appointment_id}/multiple_procedures/#{status}_all.js"
         success: ->
-          reset_multiselect_after_update(self)
+          select.selectpicker('deselectAll')
 
   $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
     id = $(this).parents('.modal-content').data('id')
@@ -235,7 +221,7 @@ $ ->
   #Enables/Disables Complete and Incomplete buttons upon selecting services/deselecting services
   $(document).on 'change', "label.checkbox input[type='checkbox']", ->
     all_unchecked = !$(this).closest('.multiselect-container').find('li.active').length
-    $(this).closest('.align-select-menu').find('.complete_all, .incomplete_all').toggleClass('disabled', all_unchecked)
+    $(this).closest('.align-select-menu').find('.complete-all, .incomplete-all').toggleClass('disabled', all_unchecked)
 
   $(document).on 'click', 'button.appointment.new', ->
     protocols_participant_id = $(this).data('protocols-participant-id')
@@ -348,7 +334,6 @@ $ ->
     if group_ids
       find_ids = (group_id) ->
         rows = $("td.name div[data-group-id='#{group_id}']")
-        console.log("length: #{rows.length}")
 
         $.map rows, (row) ->
           procedure_ids.push $(row).data('procedure-id')

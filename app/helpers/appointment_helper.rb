@@ -30,7 +30,7 @@ module AppointmentHelper
   end
 
   def start_appointment_button(appointment)
-    content_tag :button, t('appointments.start_visit'), class: 'btn btn-primary start-appointment mr-1', data: { url: appointment_path(appointment) }
+    link_to t('appointments.start_visit'), appointment_path(appointment, appointment: { start_date: Date.today }), remote: true, method: :put, class: 'btn btn-primary start-appointment mr-1'
   end
 
   def reset_appointment_button(appointment)

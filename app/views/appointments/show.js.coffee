@@ -22,31 +22,9 @@ $('#appointmentsList').replaceWith("<%= j render 'protocols_participants/appoint
 $('#appointmentLoadingContainer').addClass('d-none')
 $('#appointmentContainer').html("<%= j render '/appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
 
-# TODO: remove this if render option works out
-# pg = new ProcedureGrouper()
-
-<% if @appointment_style == "grouped" %>
-# pg.initialize()
-<% else %>
-# $("select.core_multiselect").multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
-# pg.initialize_multiselects_only()
-<% end %>
-
-$(".followup_procedure_datepicker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-
-$(".completed_date_field").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-
-$('.row.appointment [data-toggle="tooltip"]').tooltip()
 
 <% if @refresh_dashboard %>
 $('table#completed-appointments-table').bootstrapTable('refresh', {url: "/appointments/completed_appointments.json?protocols_participant_id=<%= @appointment.protocols_participant_id %>", silent: "true"})
 <% end %>
-
-$('input#invoiced_procedure').bootstrapToggle()
-$('input#credited_procedure').bootstrapToggle()
 
 $(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

@@ -68,6 +68,10 @@ performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
 <% end %>
 
+<% if @billing_type_updated %>
+$('#core_<%= @procedure.core.id %>_multiselect').selectpicker('refresh')
+<% end %>
+
 $('#appointment_content_indications').selectpicker()
 $('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
 $(".selectpicker").selectpicker()
@@ -85,3 +89,5 @@ updateNotesBadge("procedure<%= @procedure.id %>", "<%= format_count(@procedure.n
 swal("<%= @cost_error_message %>")
 <% end %>
 <% end %>
+
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
