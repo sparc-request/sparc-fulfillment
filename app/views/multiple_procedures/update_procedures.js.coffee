@@ -42,6 +42,10 @@ date_time_picker.datetimepicker('enable')
 <% end %>
 <% end %>
 
+<% if @appointment.can_finish? %>
+$(".appointment-action-buttons").html("<%= j render '/appointments/appointment_action_buttons', appointment: @appointment %>")
+<% end %>
+
 $('#modalContainer').modal('hide')
 
 <% end %>
