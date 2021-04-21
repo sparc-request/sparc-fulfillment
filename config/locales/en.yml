@@ -168,6 +168,9 @@ en:
         unstarted: "Unstarted"
         started: "Started on %{date}"
         completed: "Completed on %{date}"
+      change_view_style:
+        custom: "Switch to Custom Ordered View"
+        grouped: "Switch to Grouped View"
       complete_visit:
         disabled: "Assign a status or follow-up date for each procedure in order to complete this visit."
       reset_visit:

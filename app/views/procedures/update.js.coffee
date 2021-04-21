@@ -81,6 +81,8 @@ statuses = []
 statuses[statuses.length] =  "<%= status %>"
 <% end %>
 
+$(".appointment-action-buttons").html("<%= j render '/appointments/appointment_action_buttons', appointment: @appointment %>")
+
 $("#group-<%= @procedure.group_id %> button").trigger('click')
 
 updateNotesBadge("procedure<%= @procedure.id %>", "<%= format_count(@procedure.notes.length) %>")

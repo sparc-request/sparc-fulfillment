@@ -22,22 +22,19 @@
   .card-header.d-flex.justify-content-between
     %h3.mb-0
       = "#{Appointment.model_name.human}: #{appointment.formatted_name}"
-    .appointment-actions.d-flex
-      - if appointment.started?
-        = complete_appointment_buttons(appointment)
-        = reset_appointment_button(appointment)
-      - else
-        = start_appointment_button(appointment)
+    .d-flex
+      .appointment-action-buttons.d-flex
+        = render '/appointments/appointment_action_buttons', appointment: appointment
       = notes_button(appointment, model: Appointment.model_name.human)
       - if @appointment_style == "grouped"
-        = link_to appointment_change_appointment_style_path(appointment_id: appointment.id, appointment_style: 'custom'), remote: true, class: 'btn btn-secondary ml-1', title: 'Switch to Custom Ordered View', data: { toggle: 'tooltip', placement: 'top', animation: 'false' } do
+        = link_to appointment_change_appointment_style_path(appointment_id: appointment.id, appointment_style: 'custom'), remote: true, class: 'btn btn-secondary ml-1', title: t('appointments.tooltips.change_view_style.custom'), data: { toggle: 'tooltip', placement: 'top', animation: 'false' } do
           = icon('fas', 'list')
       - else
-        = link_to appointment_change_appointment_style_path(appointment_id: appointment.id, appointment_style: 'grouped'), remote: true, class: 'btn btn-secondary ml-1', title: 'Switch to Grouped View', data: { toggle: 'tooltip', placement: 'top', animation: 'false' } do
+        = link_to appointment_change_appointment_style_path(appointment_id: appointment.id, appointment_style: 'grouped'), remote: true, class: 'btn btn-secondary ml-1', title: t('appointments.tooltips.change_view_style.grouped'), data: { toggle: 'tooltip', placement: 'top', animation: 'false' } do
           = icon('far', 'list-alt')
   .card-body
     .row
-      = render '/appointments/start_complete_buttons', appointment: appointment
+      = render '/appointments/start_complete_datepickers', appointment: appointment
       = render '/appointments/visit_type_dropdown', appointment: appointment
       = render '/appointments/visit_indications_dropdown', appointment: appointment
   - appointment_procedures = appointment.procedures_grouped_by_core
