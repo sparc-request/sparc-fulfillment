@@ -69,7 +69,8 @@ $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh
 <% end %>
 
 <% if @billing_type_updated %>
-$('#core_<%= @procedure.core.id %>_multiselect').selectpicker('refresh')
+<% core_id = @procedure.sparc_core_id %>
+$("#core<%= core_id %>ServiceMultiselectContainer").replaceWith("<%= j render '/multiple_procedures/complete_all_select', appointment: @appointment, core_id: core_id, procedures: @appointment.procedures_grouped_by_core[core_id] %>")
 <% end %>
 
 $('#appointment_content_indications').selectpicker()

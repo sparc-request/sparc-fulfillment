@@ -21,14 +21,7 @@
 .card-header.flex-wrap.border-top.border-bottom-0
   %h3.w-100
     = core.name
-  .btn-group.service-multiselect-container.w-50
-    - disabled = !appointment.started? || appointment.completed? ? 'disabled' : nil
-    .w-60
-      = select_tag "core_#{core.id}_multiselect", options_for_select(procedures_groups_for_select(procedures)), disabled: disabled, class: 'core_multiselect selectpicker show-tick w-100', multiple: true, data: { actions_box: true, appointment_id: appointment.id, core_id: core.id }
-    %button.btn.btn-default.btn-primary.multiselect.complete-all{ type: 'button', id: "core_#{core.id}_multiselect_complete_all", disabled: disabled, class: "w-20 #{disabled}", data: { status: 'complete' } }
-      Complete
-    %button.btn.btn-default.btn-warning.multiselect.incomplete-all{ type: 'button', id: "core_#{core.id}_multiselect_incomplete_all", disabled: disabled, class: "w-20 #{disabled}", data: { status: 'incomplete' } }
-      Incomplete
+  = render '/multiple_procedures/complete_all_select', appointment: appointment, core_id: core.id, procedures: procedures
 - if appointment_style == 'grouped'
   %table.table-hover.core{ id: "core#{core.id}ProceduresGroupedView", data: { toggle: 'table', group_by: 'true', group_by_field: 'group_label', group_by_toggle: 'true', group_by_formatter: 'proceduresGroupFormatter', group_by_collapsed_groups: 'proceduresCollapsedGroups', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
     %thead.bg-light
