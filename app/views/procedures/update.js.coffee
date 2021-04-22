@@ -70,9 +70,11 @@ $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh
 
 <% if @billing_type_updated %>
 <% core_id = @procedure.sparc_core_id %>
-$("#core<%= core_id %>ServiceMultiselectContainer").replaceWith("<%= j render '/multiple_procedures/complete_all_select', appointment: @appointment, core_id: core_id, procedures: @appointment.procedures_grouped_by_core[core_id] %>")
+select_container = $("select.core_multiselect[data-core-id='<%= core_id %>']").parents('.service-multiselect-container')
+select_container.replaceWith("<%= j render '/multiple_procedures/complete_all_select', appointment: @appointment, core_id: core_id, procedures: @appointment.procedures_grouped_by_core[core_id] %>")
 <% end %>
 
+console.log("This is for the dropdown for type of visit")
 $('#appointment_content_indications').selectpicker()
 $('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
 $(".selectpicker").selectpicker()

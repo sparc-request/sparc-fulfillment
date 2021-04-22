@@ -86,13 +86,12 @@ class ProceduresController < ApplicationController
   end
 
   def change_procedure_position
-    @appointment = @procedure.appointment
-    @statuses = @appointment.appointment_statuses.pluck(:status)
+    respond_to :js
+
     @movement_type = params[:movement_type]
+    @core_id = @procedure.sparc_core_id
 
     @procedure.send("move_#{@movement_type}")
-
-    render 'appointments/show'
   end
 
   private
