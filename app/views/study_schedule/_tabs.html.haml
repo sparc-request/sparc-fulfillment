@@ -1,0 +1,10 @@
+.tabs.w-100#studySchedule
+  %nav.nav.nav-tabs.border-bottom-0{ role: 'tablist' }
+    = link_to "Template", "#template", data: {toggle: 'tab', tab: 'template', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/template', class: ['nav-link nav-item h4 mb-0', (tab == "template") ? "active" : ""], role: 'tab'
+    = link_to "Quantity/Billing Tab", "#quantity", data: {toggle: 'tab', tab: 'quantity', protocol: protocol.id}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing', class: ['nav-link nav-item h4 mb-0', (tab == "quantity") ? "active" : ""], role: 'tab'
+    = link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request', class: ['nav-link nav-item h4 mb-0', (tab == "consolidated") ? "active" : ""], role: 'tab'
+    .study_schedule_container.w-100
+      - protocol.arms.each do |arm|
+        = render 'study_schedule/arm', arm: arm, page: page, tab: tab
+    .study_level_activities_display{hidden: tab == 'consolidated' ? false : true}
+      = render 'study_schedule/study_level_activities', protocol: protocol

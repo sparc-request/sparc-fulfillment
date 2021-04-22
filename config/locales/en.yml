@@ -164,7 +164,7 @@ en:
     edit_arm: Edit Arm
     flash_messages:
       updated: "Arm Updated"
-    header: 'Clinical Services'
+    header: "Clinical Services (%{arm_name})"
     name: "Arm Name"
     name_with_arm_name_interpolated: 'Arm Name: %{arm_name}'
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"

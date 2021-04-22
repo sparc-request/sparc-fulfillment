@@ -18,16 +18,18 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.arms_container{id: "arms_container_#{arm.id}"}
-  - visit_groups = arm.visit_groups.paginate(page: page)
-  .study_schedule.service{class: "arm_#{arm.id}"}
+- visit_groups = arm.visit_groups.paginate(page: page)
+.card
+  .card-header.text-white.justify-content-between.sticky-top.bg-primary
+    %h3.mb-0<
+      = t('arm.header', arm_name: arm.name)
     .row.header
-      .col-xs-4.text-center.study_schedule_table_name
-        %span{id: "arm-name-display-#{arm.id}"}
+      .col-sm-6.text-center.study_schedule_table_name{id: "arm-name-display-#{arm.id}"}
+        .row
           = t(:arm)[:header]
-          %br
+        .row
           = t('arm.name_with_arm_name_interpolated', arm_name: arm.name)
-      .col-xs-8.text-center.visit_group_select{id: "select_for_arm_#{arm.id}"}
+      .col-sm-6.text-center.visit_group_select{id: "select_for_arm_#{arm.id}"}
         = render partial: '/study_schedule/visit_group_page_select', locals: {arm: arm, page: page}
     .row.visit_groups
       .col-xs-4
