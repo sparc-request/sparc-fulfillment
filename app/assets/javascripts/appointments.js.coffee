@@ -282,6 +282,30 @@ $ ->
       data: data
       url: "/procedures/#{procedure_id}.js"
 
+  $(document).on 'change change.datetimepicker', '#appointmentStartDatePicker, #appointmentCompletedDatePicker', (e) ->
+    datepicker_input = $(this).find('input')
+    default_date = $(this).data('default-date')
+    current_date = datepicker_input.val()
+
+    if default_date != current_date
+      appointment_id = $(this).data('appointment-id')
+      datepicker = $(this)
+
+      if datepicker_input.attr('name') == 'start_date'
+        date_data = start_date: new Date(current_date).toUTCString()
+      else
+        date_data = completed_date: new Date(current_date).toUTCString()
+
+      $.ajax
+        type: 'PUT'
+        data:
+          appointment:
+            date_data
+        url: "/appointments/#{appointment_id}"
+
+
+
+  # TODO: check if this is needed
   # window.start_date_init = (date) ->
   #   $('#start_date').datetimepicker
   #     format: 'MM/DD/YYYY h:mm a'

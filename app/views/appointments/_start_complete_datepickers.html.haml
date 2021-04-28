@@ -19,19 +19,21 @@
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 -# TODO: Refactor this to use if/else?
-.col-3#appointmentStartDateContainer{ class: !appointment.started? ? 'd-none' : '' }
-  = form_for appointment, url: appointment_path(appointment), remote: true, method: :put do |f|
-    = f.label :start_date
-    .input-group.datetimepicker.date#appointmentStartDatePicker{ data: { target_input: 'nearest' } }
-      = f.text_field :start_date, class: 'datetimepicker-input form-control', value: format_date(appointment.start_date), onchange: "Rails.fire(this.form, 'submit')", data: { target: '#appointmentStartDatePicker' }
-      .input-group-append{ data: { toggle: 'datetimepicker', target: '#appointmentStartDatePicker' } }
-        %span.input-group-text
-          = icon('fas', 'calendar-alt')
-.col-3#appointmentCompletedDateContainer{ class: !appointment.completed? ? 'd-none' : '' }
-  = form_for appointment, url: appointment_path(appointment), remote: true, method: :put do |f|
-    = f.label :completed_date
-    .input-group.datetimepicker.date#appointmentCompletedDatePicker{ data: { target_input: 'nearest' } }
-      = f.text_field :completed_date, class: 'datetimepicker-input form-control', value: format_date(appointment.completed_date), onchange: "Rails.fire(this.form, 'submit')", data: { target: '#appointmentCompletedDatePicker' }
-      .input-group-append{ data: { toggle: 'datetimepicker', target: '#appointmentCompletedDatePicker' } }
-        %span.input-group-text
-          = icon('fas', 'calendar-alt')
+- if appointment.started? && !appointment.completed?
+  .col-3
+    .form-group
+      = label_tag :start_date, 'Start Date'
+      .input-group.datetimepicker.date#appointmentStartDatePicker{ data: { target_input: 'nearest', appointment_id: appointment.id, default_date: format_date(appointment.start_date) } }
+        = text_field_tag :start_date, format_date(appointment.start_date), class: 'datetimepicker-input test-date-input form-control', data: { target: '#appointmentStartDatePicker' }
+        .input-group-append{ data: { toggle: 'datetimepicker', target: '#appointmentStartDatePicker' } }
+          %span.input-group-text
+            = icon('fas', 'calendar-alt')
+- elsif appointment.completed?
+  .col-3
+    .form-group
+      = label_tag :completed_date, 'Completed Date'
+      .input-group.datetimepicker.date#appointmentCompletedDatePicker{ data: { target_input: 'nearest', appointment_id: appointment.id, default_date: format_date(appointment.completed_date) } }
+        = text_field_tag :completed_date, format_date(appointment.completed_date), class: 'datetimepicker-input test-date-input form-control', data: { target: '#appointmentCompletedDatePicker' }
+        .input-group-append{ data: { toggle: 'datetimepicker', target: '#appointmentCompletedDatePicker' } }
+          %span.input-group-text
+            = icon('fas', 'calendar-alt')
