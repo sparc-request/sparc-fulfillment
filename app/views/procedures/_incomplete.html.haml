@@ -37,7 +37,7 @@
             %p.mb-0
               = t('procedures.incomplete.note')
           .form-row
-            .form-group.col-6
+            .form-group.w-100
               = nf.label :reason, class: 'required'
               = nf.select :reason, Procedure::NOTABLE_REASONS, { include_blank: true }, class: "selectpicker"
           .form-group.mb-0
