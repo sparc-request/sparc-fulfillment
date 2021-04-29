@@ -43,7 +43,6 @@ en:
     attributes:
       arm:
         name: "Arm Name"
-        subject_count: "Subject Count"
         visit_count: "Visit Count"
       appointment:
         name: "Visit Name"
@@ -357,6 +356,7 @@ en:
     quantity: "Quantity"
     service: "Service"
     started: "Started"
+    subject_count: "Subject Count"
     notes: "Notes"
     documents: "Documents"
 
@@ -568,6 +568,11 @@ en:
     name: "Selected Service"
     remove_services: "Remove Services"
     report: "Report"
+
+  study_schedule:
+    tooltips:
+      quantity_type: "Quantity Type"
+      subject_count: "Subject Count"
 
   sub_service_request:
     statuses:

@@ -1,0 +1,12 @@
+%tr
+  %th.service-name.text-center{ colspan: 9, rowspan: 2 }
+    = t(:line_item)[:service]
+  %th.unit-type.text-center{ colspan: 4, rowspan: 2 }
+    %span{ title: t(:study_schedule)[:tooltips][:quantity_type], data: { toggle: 'tooltip' } }
+      = raw LineItem.human_attribute_name(:quantity_type).sub(' ', '<br>')
+  %th.subject-count.text-center{ colspan: 2, rowspan: 2 }
+    %span{ title: t(:study_schedule)[:tooltips][:subject_count], data: { toggle: 'tooltip' } }
+      = t(:line_item)[:subject_count]
+  %th{ colspan: 2, rowspan: 2 }
+  %th.visit-group-select.text-center{ colspan: 15 }
+    = render 'study_schedule/visit_group_page_select', arm: arm, page: page
