@@ -21,7 +21,6 @@
 <% if !(@appointment.errors.empty?) %>
 $("#appointment_modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @appointment.errors})) %>")
 <% else %>
-$(".row.appointment-select").html("<%= escape_javascript(render(partial: 'participants/dropdown', locals: {protocols_participant: @appointment.protocols_participant})) %>")
-$("#appointment_select").selectpicker()
+$('#appointmentsList').replaceWith("<%= j render '/protocols_participants/appointments', protocols_participant: @protocols_participant %>")
 $("#modalContainer").modal 'hide'
 <% end %>

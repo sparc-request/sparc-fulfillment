@@ -18,7 +18,8 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-- appointments  = protocols_participant.appointments.where(arm: protocols_participant.arm).eager_load(:visit_group)
+- arm = protocols_participant.arm
+- appointments  = protocols_participant.appointments.where(arm: arm).eager_load(:visit_group)
 - appointment ||= appointments.first
 
 .w-20.pr-3#appointmentsList
@@ -26,7 +27,7 @@
     .card-header.justify-content-between
       %h3.mb-0
         = Appointment.model_name.plural.humanize
-      = link_to new_appointment_path(protocols_participant_id: protocols_participant.id), remote: true, class: 'btn btn-success ml-1' do
+      = link_to new_appointment_path(protocols_participant_id: protocols_participant.id, arm_id: arm.id), remote: true, class: 'btn btn-success ml-1' do
         = icon('fas', 'plus')
     .card-header
       = form_with url: appointments_path(protocols_participant_id: protocols_participant.id), remote: true, html: { class: 'flex-fill' } do |f|

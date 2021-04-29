@@ -37,13 +37,13 @@ class AppointmentsController < ApplicationController
   #### BEGIN CUSTOM APPOINTMENTS ####
 
   def new
-    @appointment = CustomAppointment.new(custom_appointment_params)
+    @appointment = CustomAppointment.new(protocols_participant_id: params[:protocols_participant_id], arm_id: params[:arm_id])
     @note = @appointment.notes.new(kind: 'reason')
   end
 
   def create
     @appointment = CustomAppointment.new(custom_appointment_params)
-
+    @protocols_participant = ProtocolsParticipant.find(custom_appointment_params[:protocols_participant_id])
     if @appointment.valid?
       @appointment.save
     end

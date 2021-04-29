@@ -21,6 +21,7 @@
 $('#appointmentsList').replaceWith("<%= j render 'protocols_participants/appointments', protocols_participant: @appointment.protocols_participant, appointment: @appointment %>")
 $('#appointmentLoadingContainer').addClass('d-none')
 $('#appointmentContainer').html("<%= j render '/appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
+$('#appointmentContainer').removeClass('d-none')
 
 <% if @refresh_dashboard %>
 $('table#completed-appointments-table').bootstrapTable('refresh', {url: "/appointments/completed_appointments.json?protocols_participant_id=<%= @appointment.protocols_participant_id %>", silent: "true"})
