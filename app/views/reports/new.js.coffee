@@ -24,10 +24,15 @@ $("#modalContainer").modal('show')
 $('#start_date').datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
+  allowInputToggle: false
+  useCurrent: false
 
 $('#end_date').datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
+  allowInputToggle: false
+  useCurrent: false
+
 
 if $("#protocol_section.background_load").length
   $.ajax
@@ -68,7 +73,7 @@ multi_select.multiselect({
     selected_values = multi_select.val()
     if !_.isEqual(@original_selected_values,selected_values) && selected_values != null
       $('#protocol_section').empty()
-      $('#protocol_section').append("<i class='dropdown-glyphicon glyphicon glyphicon-refresh spin' />")
+      $('#protocol_section').append("<i class='fas fa-cog fa-spin' />")
       $('#protocol_section').closest('.form-group').removeClass("hidden")
       $.ajax
         type: 'GET'

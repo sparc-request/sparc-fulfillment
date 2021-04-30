@@ -28,4 +28,4 @@ $(".modal-content #protocol_select").selectpicker({
 })
 
 
-$('.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin').remove()
+$('.fas.fa-cog.fa-spin').remove()

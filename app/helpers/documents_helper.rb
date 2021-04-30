@@ -32,32 +32,36 @@ module DocumentsHelper
     case document.state
     when 'Completed'
       content_tag(:a, class: 'attached_file', id: "file_#{document.id}", href: document_path(document), target: :blank, title: 'Download File', 'data-id' => document.id) do
-        content_tag(:span, '', class: 'glyphicon glyphicon-file')
+        content_tag(:span, '', class: 'fa fa-file')
       end
     when 'Processing'
-      content_tag(:span, '', class: 'glyphicon glyphicon-refresh spin', style: 'cursor:auto')
+      content_tag(:span, '', class: 'fas fa-cog fa-spin processing', style: 'cursor:auto')
     else
-      content_tag(:span, '', class: 'glyphicon glyphicon-alert danger', style: 'cursor:auto')
+      content_tag(:span, '', class: 'fas fa-exclamation-triangle', style: 'cursor:auto;color:red;')
     end
   end
 
-  def edit_formatter(document)
-    [
-      "<a class='edit edit-document ml10' href='javascript:void(0)' title='Edit' data-document_id='#{document.id}'>",
-      "<i class='glyphicon glyphicon-edit'></i>",
-      "</a>"
-    ].join ""
-  end
-
-  def delete_formatter(document)
+  def actions_formatter(document)
     if document.completed? || document.failed?
-    [
-      "<a class='remove remove-document' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}' data-documentable_type='#{document.documentable_type}'>",
-      "<i class='glyphicon glyphicon-remove'></i>",
-      "</a>"
-    ].join ""
+      [
+        "<a class='edit edit-document ml10' href='javascript:void(0)' title='Edit' data-document_id='#{document.id}'>",
+        "<i class='fas fa-edit'></i>",
+        "</a>",
+        "&nbsp&nbsp",   
+        "<a class='remove remove-document' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}' data-documentable_type='#{document.documentable_type}'>",
+        "<i class='far fa-trash-alt'></i>",
+        "</a>"
+      ].join ""
     else
       "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
+    end
+  end
+
+  def read_formatter(document)
+    if document.downloaded?
+      t(:documents)[:read]
+    else
+      t(:documents)[:unread]
     end
   end
 end
