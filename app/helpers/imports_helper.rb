@@ -22,7 +22,7 @@ module ImportsHelper
 
   def attached_file(url)
     content_tag(:a, class: 'attached_file', href: url) do
-      content_tag(:span, '', class: 'glyphicon glyphicon-file')
+      content_tag(:span, '', class: 'fas fa-file')
     end
   end
 end
