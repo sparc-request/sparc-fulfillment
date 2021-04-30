@@ -22,12 +22,9 @@
   .modal-content
     = form_for fulfillment, {remote: true, html: {class: "form-horizontal fulfillment-form", role: "form"}} do |form|
       .modal-header
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only
-            = t(:actions)[:close]
-        %h4.modal-title.text-center
-          = header_text
+        %h4.modal-title.text-center= header_text
+        %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} &times;
       .modal-body
         #modal_errors
         = render partial: 'required_fields'
@@ -35,9 +32,12 @@
           .col-md-12
             = form.hidden_field :line_item_id
             .form-group
-              = form.label "fulfilled_at", t(:fulfillment)[:fulfillment_date]+t(:actions)[:required], class: "col-sm-4 control-label"
-              .col-sm-7
-                = form.text_field "fulfilled_at", {class: 'form-control', id: 'date_fulfilled_field', value: format_date(fulfillment.fulfilled_at), readonly: true}
+              = form.label "fulfilled_at", t(:fulfillment)[:fulfillment_date]+t(:actions)[:required]
+              .input-group.datetimepicker.date.col-sm-7{ id: 'fulfillment_date', data: {target_input: 'nearest' }}
+                = text_field_tag "fulfillment_date", nil, class: "form-control datetimepicker", readonly: true, data: { target:"#fulfillment_date" }, value: format_date(fulfillment.fulfilled_at)
+                .input-group-append{ data: { toggle: 'datetimepicker', target: '#fulfillment_date' }}
+                  .input-group-text
+                    %span.far.fa-calendar
             .form-group
               = form.label "quantity", t(:fulfillment)[:quantity]+t(:actions)[:required], class: "col-sm-4 control-label"
               .col-sm-7
@@ -52,6 +52,6 @@
                 = form.select "components", options_for_select(fulfillment.line_item.service.components_list, fulfillment.components.map(&:component)), {include_blank: false}, {class: 'form-control selectpicker', multiple: "", title: "Please Select", 'data-width' => '150px', 'data-selected-text-format' => 'count>2'}
       .modal-footer
         .center-block
-          %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: fulfillment.line_item_id}}
+          %button#fulfillments_back.btn.btn-secondary{type: 'button', data: {line_item_id: fulfillment.line_item_id}}
             = t(:actions)[:close]
           %input.btn.btn-primary.add_fulfillment{type: 'submit', value: t(:actions)[:save]}

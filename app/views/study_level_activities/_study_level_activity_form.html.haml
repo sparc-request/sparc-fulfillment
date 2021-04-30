@@ -22,12 +22,9 @@
   .modal-content
     = form_for line_item, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
       .modal-header
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only
-            = t(:actions)[:close]
-        %h4.modal-title.text-center
-          = header_text
+        %h4.modal-title.text-center= header_text
+        %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} &times;
       .modal-body
         .row
           .col-md-12
@@ -42,6 +39,6 @@
                 = form.text_field "contact_name", {class: 'form-control', maxlength: 30}
       .modal-footer
         .center-block
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+          %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
           %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}
