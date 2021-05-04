@@ -24,8 +24,6 @@ class MultipleProceduresController < ApplicationController
   before_action :assign_multiple_procedure_errors, only: [:update_procedures]
 
   def complete_all
-    # TODO: check if invoiced procedures/procedure groups can still be edited
-    # This was the en.yml message that got removed: procedure_group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
     @procedure_ids = params[:procedure_ids]
     @performable_by = @appointment.performable_by
   end

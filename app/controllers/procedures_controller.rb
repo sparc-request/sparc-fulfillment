@@ -38,7 +38,6 @@ class ProceduresController < ApplicationController
     performer_id    = params[:performer_id]
     protocol        = @appointment.protocol
 
-    # TODO: assign errors here when adding services?
     qty.times do
       Procedure.create(appointment: @appointment,
                        service_id: service.id,
