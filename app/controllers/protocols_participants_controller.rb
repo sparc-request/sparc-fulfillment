@@ -21,6 +21,7 @@
 class ProtocolsParticipantsController < ApplicationController
   before_action :find_protocol,               only: [:index, :show, :new, :create, :update, :destroy]
   before_action :find_protocols_participant,  only: [:show, :update, :destroy]
+  before_action :set_appointment_style, only: [:update]
 
   def index
     respond_to do |format|
@@ -61,8 +62,10 @@ class ProtocolsParticipantsController < ApplicationController
   def update
     respond_to :js
     @protocols_participant.current_identity = current_identity
-    @protocols_participant.update_attributes(protocols_participant_params)
-    flash[:success] = t('protocols_participants.flash.updated')
+    if @protocols_participant.update_attributes(protocols_participant_params)
+      @appointment = @protocols_participant.appointments.where(arm_id: @protocols_participant.arm_id).first
+      flash[:success] = t('protocols_participants.flash.updated')
+    end
   end
 
   def destroy

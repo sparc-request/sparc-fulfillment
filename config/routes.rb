@@ -41,6 +41,7 @@ Rails.application.routes.draw do
 
       member do
         get 'calendar', to: 'protocols_participants#show', as: 'calendar'
+        put 'update', to: 'protocols_participants#update'
       end
 
       put 'change_recruitment_source(/:id)', to: 'participants#update_recruitment_source'

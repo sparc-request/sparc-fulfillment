@@ -57,13 +57,11 @@ $ ->
     else
       data = field: "completed_date", appointment: completed_date: end_date.toUTCString()
 
-    appointment_id = $(this).parents('.row.appointment').data('id')
+    url = $(this).data('url')
     $.ajax
       type: 'PUT'
       data: data
-      url:  "/appointments/#{appointment_id}.js"
-
-
+      url:  url
 
 
 
@@ -302,43 +300,6 @@ $ ->
           appointment:
             date_data
         url: "/appointments/#{appointment_id}"
-
-
-
-  # TODO: check if this is needed
-  # window.start_date_init = (date) ->
-  #   $('#start_date').datetimepicker
-  #     format: 'MM/DD/YYYY h:mm a'
-  #     defaultDate: date
-  #     ignoreReadonly: true
-  #   $('#start_date').on 'dp.hide', (e) ->
-  #     appointment_id = $(this).parents('.row.appointment').data('id')
-  #     data = appointment: start_date: e.date.toDate().toUTCString()
-  #     $.ajax
-  #       type: 'PUT'
-  #       data: data
-  #       url:  "/appointments/#{appointment_id}.js"
-  #       success: ->
-  #         if !$('.completed_date_input').hasClass('hidden')
-  #           $('#completed_date').data("DateTimePicker").minDate(e.date)
-
-  # window.completed_date_init = (date) ->
-  #   $('#completed_date').datetimepicker
-  #     format: 'MM/DD/YYYY h:mm a'
-  #     defaultDate: date
-  #     ignoreReadonly: true
-  #   $('#start_date').data("DateTimePicker").maxDate($('#completed_date').data("DateTimePicker").date())
-  #   $('#completed_date').data("DateTimePicker").minDate($('#start_date').data("DateTimePicker").date())
-  #   $('#completed_date').on 'dp.hide', (e) ->
-  #     appointment_id = $(this).parents('.row.appointment').data('id')
-  #     data = appointment: completed_date: e.date.toDate().toUTCString()
-  #     $.ajax
-  #       type: 'PUT'
-  #       data: data
-  #       url:  "/appointments/#{appointment_id}.js"
-  #       success: ->
-  #         $('#completed-appointments-table').bootstrapTable('refresh', {silent: "true"})
-  #         $('#start_date').data("DateTimePicker").maxDate(e.date)
 
   # If enable_it true, enable Complete Visit button; otherwise, disable it.
   # Also, add the contains_disabled class to the containing div whenever
