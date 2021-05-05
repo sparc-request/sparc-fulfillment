@@ -37,7 +37,7 @@ module DocumentsHelper
     when 'Processing'
       content_tag(:span, '', class: 'fas fa-cog fa-spin processing', style: 'cursor:auto')
     else
-      content_tag(:span, '', class: 'fas fa-exclamation-triangle', style: 'cursor:auto')
+      content_tag(:span, '', class: 'fas fa-exclamation-triangle', style: 'cursor:auto;color:red;')
     end
   end
 
