@@ -20,6 +20,8 @@
 
 class Protocol < ApplicationRecord
 
+  require 'csv'
+
   include LocalDb
 
   attr_accessor :document_counter_updated
@@ -76,7 +78,8 @@ class Protocol < ApplicationRecord
            :funding_source,
            :potential_funding_source,
            :research_master_id,
-           to: :sparc_protocol
+           to: :sparc_protocol,
+           :allow_nil => true
 
   delegate :subsidy_committed,
            :percent_subsidy,
@@ -182,6 +185,15 @@ class Protocol < ApplicationRecord
 
   def research_master_id
     sparc_protocol.research_master_id
+  end
+
+  def self.to_csv(protocols)
+    CSV.generate do |csv|
+      csv << ["Protocol ID", "Sparc ID", "Short Title", "Primary Principal Investigator"]
+      protocols.each do |p|
+        csv << [p.id, p.sparc_id, p.short_title, p.pi ? p.pi.full_name : ""]
+      end
+    end
   end
 
   ##### PRIVATE METHODS #####

@@ -19,6 +19,23 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+
+  setDocumentTableInterval = null
+
+  $(document).on 'click', '.report-request', ->
+    setDocumentTableInterval = setInterval refreshDocumentTable, 5000
+
+  clearDocumentTableInterval = (complete) ->
+    if complete == true
+      clearInterval setDocumentTableInterval
+
+  refreshDocumentTable = ->
+    $('#documents_table').bootstrapTable('refresh', {silent: "true"})
+    complete = true
+    if $('span.processing').length
+      complete = false
+    clearDocumentTableInterval(complete)
+
   $(document).on 'click', '.edit-document', ->
     document_id = $(this).data('document_id')
     $.ajax
@@ -34,6 +51,14 @@ $ ->
       $.ajax
         type: 'DELETE'
         url: "/documents/#{document_id}.js"
+
+  $(document).on 'change', "#organization_select", ->
+    org_ids = $(this).val()
+    if org_ids != null
+      $.ajax
+        type: 'GET'
+        url: "reports/update_protocols_dropdown"
+        data: { org_ids: org_ids }
 
   if $("body.documents-index").length > 0
     $(document).on 'click', 'a.attached_file', ->
@@ -51,9 +76,10 @@ $ ->
 
     $(table_to_update).bootstrapTable 'updateCell', 
       index: row_index
-      field: 'viewed_at'
+      field: 'read_state'
       value: utcdate
 
 (exports ? this).refreshDocumentsTables = ->
   $('#documents_table').bootstrapTable('refresh', {silent: "true"})
   $('#reports_table').bootstrapTable('refresh', {silent: "true"})
+  

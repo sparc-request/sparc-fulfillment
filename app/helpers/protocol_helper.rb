@@ -91,13 +91,13 @@ module ProtocolHelper
     end
   end
 
-  def formatted_coordinators(coordinators=Array.new)
+  def formatted_coordinators(coordinators)
     if coordinators.any?
       content_tag :div, class: 'dropdown' do
         content_tag(:button, 'Coordinators', type: 'button', class: 'btn btn-light dropdown-toggle', data: { toggle: 'dropdown', boundary: 'window' }, aria: { expanded: 'false' }) +
-        content_tag(:div, class: 'dropdown-menu') do
+        content_tag(:div, class: 'dropdown-menu', id: 'coordinator-menu') do
           coordinators.map do |co|
-            link_to co, 'javascript:void(0)', class: 'dropdown-item'
+            content_tag(:p, co, class: 'dropdown-item')
           end.join('').html_safe
         end
       end
