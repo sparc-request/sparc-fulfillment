@@ -294,7 +294,7 @@ en:
       brand_logo_alt: "SPARCFulfillment Logo"
       institution_logo_alt: "MUSC Logo"
     navigation:
-      requests: "Requests"
+      requests: "Home"
       documents: "Reports"
       tasks: "Tasks"
       imports: "Imports"
@@ -304,11 +304,13 @@ en:
       sign_out: "Sign Out"
     footer:
       version: "SPARCFulfillment %{version}"
-      copyright: "&copy; 2011-2020 MUSC Foundation for Research Development"
+      copyright: "&copy; 2011-2021 MUSC Foundation for Research Development"
       github: "GitHub"
       about:
         header: "About"
-        about_sparc: "About SPARCRequest"
+        about_sparc:
+          text: "About SPARCRequest"
+          url: "https://research.musc.edu/resources/sctr/research-resources/tools/sparcrequest"
         about_sctr:
           text: "About SCTR"
           url: "http://sctr.musc.edu"
