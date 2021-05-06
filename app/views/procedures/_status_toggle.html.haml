@@ -24,6 +24,9 @@
 - elsif procedure.invoiced?
   - disabled = true
   - tooltip = t('procedures.tooltips.invoiced.disabled')
+- elsif procedure.credited?
+  - disabled = true
+  - tooltip = t('procedures.tooltips.credited.disabled')
 - else
   - disabled = false
   - tooltip = ''

@@ -18,9 +18,11 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-- disabled = procedure.invoiced? || !procedure.complete?
+- disabled = procedure.invoiced? || procedure.credited? || !procedure.complete?
 - if procedure.invoiced?
   - tooltip = t('procedures.tooltips.invoiced.disabled')
+- elsif procedure.credited?
+  - tooltip = t('procedures.tooltips.credited.disabled')
 - elsif !procedure.appointment.started?
   - tooltip = t('procedures.tooltips.unstarted_appointment')
 

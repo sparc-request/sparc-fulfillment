@@ -26,12 +26,14 @@ module ProceduresHelper
   end
 
   def procedure_billing_display(procedure)
-    disabled = !procedure.appointment.started? || procedure.invoiced?
+    disabled = !procedure.appointment.started? || procedure.invoiced? || procedure.credited?
     tooltip =
       if !procedure.appointment.started?
         t('procedures.tooltips.unstarted_appointment')
       elsif procedure.invoiced?
         t('procedures.tooltips.invoiced.disabled')
+      elsif procedure.credited?
+        t('procedures.tooltips.credited.disabled')
       end
 
     form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
@@ -43,12 +45,14 @@ module ProceduresHelper
   end
 
   def procedure_performer_display(procedure, performable_by)
-    disabled = !procedure.appointment.started? || procedure.invoiced?
+    disabled = !procedure.appointment.started? || procedure.invoiced? || procedure.credited?
     tooltip =
       if !procedure.appointment.started?
         t('procedures.tooltips.unstarted_appointment')
       elsif procedure.invoiced?
         t('procedures.tooltips.invoiced.disabled')
+      elsif procedure.credited?
+        t('procedures.tooltips.credited.disabled')
       end
 
     form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
@@ -111,12 +115,10 @@ module ProceduresHelper
   end
 
   def procedure_notes_display(procedure)
-    disabled = !procedure.appointment.started? || procedure.invoiced?
+    disabled = !procedure.appointment.started?
     tooltip =
       if !procedure.appointment.started?
         t('procedures.tooltips.unstarted_appointment')
-      elsif procedure.invoiced?
-        t('procedures.tooltips.invoiced.disabled')
       end
 
     notes_button(procedure, disabled: disabled, tooltip: tooltip)
@@ -139,12 +141,14 @@ module ProceduresHelper
   end
 
   def delete_procedure_button(procedure)
-    disabled = !procedure.appointment.started? || procedure.invoiced?
+    disabled = !procedure.appointment.started? || procedure.invoiced? || procedure.credited?
     tooltip =
       if !procedure.appointment.started?
         t('procedures.tooltips.unstarted_appointment')
       elsif procedure.invoiced?
         t('procedures.tooltips.invoiced.disabled')
+      elsif procedure.credited?
+        t('procedures.tooltips.credited.disabled')
       else
         t('procedures.tooltips.delete')
       end

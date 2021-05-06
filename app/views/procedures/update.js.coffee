@@ -37,8 +37,6 @@ $("[name='procedure[notes_attributes][0][<%= attr.to_s %>]']").parents('.form-gr
 $("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
 $("#modalContainer").modal('hide')
 
-update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
-
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
 performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .selectpicker")
 date_time_picker.datetimepicker('format', 'MM/DD/YYYY')
@@ -64,7 +62,7 @@ performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% end %>
 
-<% if @billing_type_updated && @appointment_style == "grouped" %>
+<% if (@billing_type_updated && @appointment_style == "grouped") || @invoiced_or_credited_changed %>
 $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
 <% end %>
 
@@ -73,11 +71,6 @@ $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh
 select_container = $("select.core_multiselect[data-core-id='<%= core_id %>']").parents('.service-multiselect-container')
 select_container.replaceWith("<%= j render '/multiple_procedures/complete_all_select', appointment: @appointment, core_id: core_id, procedures: @appointment.procedures_grouped_by_core[core_id] %>")
 <% end %>
-
-console.log("This is for the dropdown for type of visit")
-$('#appointment_content_indications').selectpicker()
-$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
-$(".selectpicker").selectpicker()
 
 statuses = []
 <% @statuses.each do |status| %>

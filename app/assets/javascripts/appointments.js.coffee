@@ -63,57 +63,6 @@ $ ->
       data: data
       url:  url
 
-
-
-
-
-
-
-
-  $(document).on 'click', 'tr.procedure-group button', ->
-    core = $(this).closest('tr.core')
-    pg = new ProcedureGrouper(core)
-    group = $(this).parents('.procedure-group')
-    group_id = $(group).data('group-id')
-    groups = $('.procedure-group')
-
-    if $(group).find('span.glyphicon').hasClass('glyphicon-chevron-right')
-      pg.show_group(group_id)
-      close_open_procedure_groups(groups, group_id)
-    else
-      pg.hide_group(group_id)
-
-  $(document).on 'click', '.add_service', ->
-    if $('#service_list').val() == ''
-      $('.service-error').removeClass('hidden')
-    else
-      $('.service-error').addClass('hidden')
-      data =
-        'appointment_id': $(this).parents('.row.appointment').data('id'),
-        'service_id': $('#service_list').val(),
-        'qty': $('#service_quantity').val()
-
-      $.ajax
-        type: 'POST'
-        url:  "/procedures.js"
-        data: data
-
-      $('#service_list').val('').trigger('change')
-
-  $(document).on 'click', '.uncomplete_visit', ->
-    appointment_id = $(this).parents('.row.appointment').data('id')
-    data = field: "reset_completed_date", appointment: completed_date: null
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/appointments/#{appointment_id}.js"
-      success: ->
-        # reload table of procedures, so that UI elements disabled
-        # before start of appointment can be re-enabled
-        $.ajax
-          type: 'GET'
-          url: "/appointments/#{appointment_id}.js"
-
   # Procedure buttons
   $(document).on 'dp.hide', ".completed_date_field", ->
     procedure_id = $(this).parents(".procedure").data("id")
@@ -210,35 +159,10 @@ $ ->
         success: ->
           select.selectpicker('deselectAll')
 
-  $(document).on 'click', '#edit_modal .close_modal, #incomplete_modal .close_modal', ->
-    id = $(this).parents('.modal-content').data('id')
-    $("#incomplete_button_#{id}").parent().removeClass('active')
-    if $("#complete_button_#{id}").parent().hasClass('selected_before')
-      $("#complete_button_#{id}").parent().addClass('active')
-
   #Enables/Disables Complete and Incomplete buttons upon selecting services/deselecting services
   $(document).on 'change', "label.checkbox input[type='checkbox']", ->
     all_unchecked = !$(this).closest('.multiselect-container').find('li.active').length
     $(this).closest('.align-select-menu').find('.complete-all, .incomplete-all').toggleClass('disabled', all_unchecked)
-
-  $(document).on 'click', 'button.appointment.new', ->
-    protocols_participant_id = $(this).data('protocols-participant-id')
-    arm_id = $(this).data('arm-id')
-
-    data = custom_appointment: arm_id: arm_id, protocols_participant_id: protocols_participant_id
-
-    $.ajax
-      type: 'GET'
-      data: data
-      url: "/custom_appointments/new.js"
-
-  $(document).on 'click', 'button.followup.new', ->
-    if !$(this).hasClass('disabled')
-      procedure_id  = $(this).parents('.procedure').data('id')
-
-      $.ajax
-        type: 'GET'
-        url: "/procedures/#{procedure_id}/edit.js"
 
   $(document).on 'click', '.procedure button.delete', ->
     element      = $(this).parents(".procedure")
@@ -250,35 +174,6 @@ $ ->
         url:  "/procedures/#{procedure_id}.js"
         error: ->
           alert('This procedure has already been marked as complete, incomplete, or requiring a follow up and cannot be removed')
-
-  $(document).on 'change', '#appointment_content_indications', ->
-    appointment_id = $(this).parents('.row.appointment').data('id')
-    contents = $(this).val()
-    data = appointment: contents : contents
-    $.ajax
-      type: 'PUT'
-      data: data
-      url:  "/appointments/#{appointment_id}.js"
-
-  $(document).on 'change', '#appointment_indications', ->
-    appointment_id = $(this).parents('.row.appointment').data('id')
-    statuses = $(this).val()
-    data = 'statuses' : statuses
-
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/appointments/#{appointment_id}/update_statuses.js"
-
-  $(document).on 'change', 'td.performed-by .selectpicker', ->
-    procedure_id = $(this).parents(".procedure").data("id")
-    selected = $(this).find("option:selected").val()
-    data = procedure:
-              performer_id: selected
-    $.ajax
-      type: 'PUT'
-      data: data
-      url: "/procedures/#{procedure_id}.js"
 
   $(document).on 'change change.datetimepicker', '#appointmentStartDatePicker, #appointmentCompletedDatePicker', (e) ->
     datepicker_input = $(this).find('input')
@@ -301,17 +196,6 @@ $ ->
             date_data
         url: "/appointments/#{appointment_id}"
 
-  # If enable_it true, enable Complete Visit button; otherwise, disable it.
-  # Also, add the contains_disabled class to the containing div whenever
-  # the button is disabled.
-  window.update_complete_visit_button = (enable_it) ->
-    if enable_it
-      $("button.complete_visit").removeClass('disabled')
-      $("div.completed_date_btn").removeClass('contains_disabled')
-    else
-      $("button.complete_visit").addClass('disabled')
-      $("div.completed_date_btn").addClass('contains_disabled')
-
   window.fetch_multiselect_group_ids = (select) ->
     group_ids = select.val()
     procedure_ids = []
@@ -325,25 +209,3 @@ $ ->
 
       find_ids group_id for group_id in group_ids
       return procedure_ids
-
-  close_open_procedure_groups = (groups, group_id) ->
-    groups.each ->
-      if $(this).find('span.glyphicon').hasClass('glyphicon-chevron-down') && ($(this).data('group-id') != group_id)
-        pg = new ProcedureGrouper($(this).closest('tr.core'))
-        pg.hide_group($(this).data('group-id'))
-
-  # Display a helpful message when user clicks on a disabled UI element
-  $(document).on 'click', '.pre_start_disabled, .complete-all-container.contains_disabled, .incomplete-all-container.contains_disabled', ->
-    alert(I18n["appointment"]["warning"])
-
-  $(document).on 'click', '.invoiced_disabled, .complete-all-container.invoiced_disabled, .incomplete-all-container.invoiced_disabled', ->
-    alert(I18n["appointment"]["procedure_invoiced_warning"])
-
-  $(document).on 'focus', '.dropdown-toggle', (e) ->
-    if $(this).parent().hasClass('disable-select-box')
-      alert(I18n["appointment"]["procedure_invoiced_warning"])
-      $(this).blur()
-
-  $(document).on 'click', '.disabled-status.btn-group .btn.disabled ', (e) ->
-    e.stopPropagation()
-    alert(I18n["appointment"]["procedure_invoiced_warning"])

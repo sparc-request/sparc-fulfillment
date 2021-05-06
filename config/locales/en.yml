@@ -508,8 +508,8 @@ en:
         disabled: "This procedure has been invoiced and cannot be altered."
       credited:
         incomplete_procedure: "Can only be toggled after the Procedure has been completed."
-        warning: "Once this procedure has been credited it cannot be undone"
-        disabled: "This procedure has already been credited"
+        warning: "Warning: Once this procedure has been credited it cannot be undone"
+        disabled: "This procedure has been credited and cannot be altered."
       delete: "Delete Procedure"
       disabled_invoiced: "This item cannot be removed because it is invoiced."
       group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."

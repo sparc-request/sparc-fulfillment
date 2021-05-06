@@ -36,11 +36,11 @@ module AppointmentHelper
   def reset_appointment_button(appointment)
     tooltip =
       if appointment.has_invoiced_procedures? && appointment.has_credited_procedures?
-        t('appointment.tooltips.reset_visit.disabled_credited_and_invoiced')
+        t('appointments.tooltips.reset_visit.disabled_credited_and_invoiced')
       elsif appointment.has_invoiced_procedures?
-        t('appointment.tooltips.reset_visit.disabled_invoiced')
+        t('appointments.tooltips.reset_visit.disabled_invoiced')
       elsif appointment.has_credited_procedures?
-        t('appointment.tooltips.reset_visit.disabled_credited')
+        t('appointments.tooltips.reset_visit.disabled_credited')
       end
 
     content_tag :div, class: 'tooltip-wrapper mx-1', title: tooltip, data: { toggle: 'tooltip' } do

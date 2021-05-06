@@ -38,7 +38,6 @@ $("#modalContainer").modal('hide')
 <% if @procedure.present? %>
 $("#followup<%= @procedure.id %>").replaceWith("<%= j render 'procedures/followup', procedure: @procedure %>")
 updateNotesBadge("procedure<%= @procedure.id %>", "<%= format_count(@procedure.notes.length) %>")
-update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
 <% end %>
 
 <% if @appointment.present? %>
@@ -58,9 +57,6 @@ statuses = []
 <% @statuses.each do |status| %>
 statuses[statuses.length] =  "<%= status %>"
 <% end %>
-
-$('#appointment_indications').selectpicker()
-$('#appointment_indications').selectpicker('val', statuses)
 
 $(".followup_procedure_datepicker").datetimepicker
   format: 'MM/DD/YYYY'

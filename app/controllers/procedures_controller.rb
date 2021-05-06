@@ -74,6 +74,7 @@ class ProceduresController < ApplicationController
     end
 
     @billing_type_updated = procedure_params.has_key?(:billing_type) #If billing type has changed, need to refresh groups if in grouped view
+    @invoiced_or_credited_changed = change_in_invoiced_or_credited_detected?
     @statuses = @appointment.appointment_statuses.pluck(:status)
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
   end
@@ -155,6 +156,12 @@ class ProceduresController < ApplicationController
 
   def change_in_performer_detected?
     procedure_params[:performer_id].present? && procedure_params[:performer_id] != @procedure.performer_id
+  end
+
+  def change_in_invoiced_or_credited_detected?
+    invoiced_changed = procedure_params[:invoiced].present? && procedure_params[:invoiced] != @procedure.invoiced
+    credited_changed = procedure_params[:credited].present? && procedure_params[:credited] != @procedure.credited
+    return invoiced_changed || credited_changed
   end
 
   def procedure_params

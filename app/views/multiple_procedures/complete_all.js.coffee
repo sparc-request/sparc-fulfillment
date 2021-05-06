@@ -18,7 +18,17 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+<% if @has_invoiced_procedures %>
+Swal.fire(
+  type: 'error'
+  icon: 'error'
+  html: "<h5>#{I18n.t('procedures.tooltips.group_invoiced_warning')}</h5>"
+  showConfirmButton: false
+  cancelButtonText: I18n.t('actions.close')
+)
+<% else %>
 $("#modalContainer").html("<%= j render 'multiple_procedures/complete_all_modal', performable_by: @performable_by, appointment: @appointment, procedure_ids: @procedure_ids %>")
 $("#modalContainer").modal('show')
+<% end %>
 
 $(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

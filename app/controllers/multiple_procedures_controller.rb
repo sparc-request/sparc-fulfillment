@@ -25,11 +25,13 @@ class MultipleProceduresController < ApplicationController
 
   def complete_all
     @procedure_ids = params[:procedure_ids]
+    @has_invoiced_procedures = !Procedure.where(id: @procedure_ids, invoiced: true).empty?
     @performable_by = @appointment.performable_by
   end
 
   def incomplete_all
     @procedure_ids = params[:procedure_ids]
+    @has_invoiced_procedures = !Procedure.where(id: @procedure_ids, invoiced: true).empty?
     @performable_by = @appointment.performable_by
     @note = Note.new(kind: 'reason')
   end
