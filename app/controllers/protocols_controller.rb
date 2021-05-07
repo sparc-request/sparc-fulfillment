@@ -38,6 +38,11 @@ class ProtocolsController < ApplicationController
         @protocols  = @protocols.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0).eager_load(:pi)
       }
       format.js
+      format.csv {
+        @protocols = Protocol.all.eager_load(:pi, :sparc_protocol)
+
+        send_data Protocol.to_csv(@protocols), filename: "cwf_protocols.csv"
+      }
     end
   end
 

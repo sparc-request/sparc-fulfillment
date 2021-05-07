@@ -21,11 +21,11 @@
 module AppointmentHelper
   def appointment_context_icon(appointment)
     if appointment.completed?
-      icon('fas', 'check fa-lg text-success', title: t('appointments.tooltips.state.completed'), data: { toggle: 'tooltip' })
+      icon('fas', 'check fa-lg text-success', title: t('appointments.tooltips.state.completed', date: format_date(appointment.completed_date)), data: { toggle: 'tooltip' })
     elsif appointment.started?
       icon('far', 'clock fa-lg text-warning', title: t('appointments.tooltips.state.started', date: format_date(appointment.start_date)), data: { toggle: 'tooltip' })
     else
-      icon('fas', 'times fa-lg text-secondary', title: t('appointments.tooltips.state.unstarted', date: format_date(appointment.completed_date)), data: { toggle: 'tooltip' })
+      icon('fas', 'times fa-lg text-secondary', title: t('appointments.tooltips.state.unstarted'), data: { toggle: 'tooltip' })
     end
   end
 

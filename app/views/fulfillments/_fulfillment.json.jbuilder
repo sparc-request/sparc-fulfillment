@@ -7,7 +7,7 @@ json.quantity            fulfillment.quantity
 json.quantity_type       fulfillment.line_item.quantity_type
 json.performed_by        fulfillment.performer.full_name if fulfillment.performer
 json.components          fulfillment_components_formatter(fulfillment.components)
-json.actions             fulfillment_options_buttons(fulfillment)
+json.actions             fulfillment_actions(fulfillment)
 json.invoiced            toggle_invoiced(fulfillment)
 json.credited				     toggle_credited(fulfillment)
 json.notes               notes(fulfillment.notes)
