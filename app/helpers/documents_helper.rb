@@ -48,12 +48,10 @@ module DocumentsHelper
         "<i class='fas fa-edit'></i>",
         "</a>",
         "&nbsp&nbsp",   
-        "<a class='remove remove-document' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}' data-documentable_type='#{document.documentable_type}'>",
+        "<a class='remove remove-document' style='color:red' href='javascript:void(0)' title='Remove' data-document_id='#{document.id}' data-documentable_type='#{document.documentable_type}'>",
         "<i class='far fa-trash-alt'></i>",
         "</a>"
       ].join ""
-    else
-      "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
     end
   end
 
