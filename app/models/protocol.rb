@@ -189,9 +189,11 @@ class Protocol < ApplicationRecord
 
   def self.to_csv(protocols)
     CSV.generate do |csv|
-      csv << ["Protocol ID", "Sparc ID", "Short Title", "Primary Principal Investigator"]
+      csv << ["Protocol ID", "Sparc ID", "Short Title", "Primary Principal Investigator", "Status", "IRB Approval", "IRB Expiration", "Provider/Program/Core"]
       protocols.each do |p|
-        csv << [p.id, p.sparc_id, p.short_title, p.pi ? p.pi.full_name : ""]
+        csv << [p.srid, p.sparc_id, p.short_title, p.pi ? p.pi.full_name : "", p.status.present? ? p.status.capitalize : '-',
+                p.irb_approval_date.present? ? p.irb_approval_date : '-', p.irb_expiration_date.present? ? p.irb_expiration_date : '-',
+                p.sub_service_request.org_tree_display]
       end
     end
   end
