@@ -35,9 +35,9 @@ $ ->
 
     $(".fixed-table-toolbar").prepend('
       <div class="btn-group float-left financial--view mr-1" data-toggle="buttons">
-        <button class="btn btn-light mb-0 active management" title="Management View" data-toggle="tooltip">
+        <button class="btn btn-light mb-0 active management" title="Requests View" data-toggle="tooltip">
           <input type="radio" autocomplete="off" class="d-none" value="management">
-          <i class="fas fa-book"></i> Management
+          <i class="fas fa-book"></i> Requests
         </button>
         <button class="btn btn-light mb-0 financial" title="Financial View" data-toggle="tooltip">
           <input type="radio" autocomplete="off" class="d-none" value="financial">
