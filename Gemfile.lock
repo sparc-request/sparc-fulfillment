@@ -78,8 +78,8 @@ GEM
     archive-zip (0.12.0)
       io-like (~> 0.3.0)
     arel (9.0.0)
-    autoprefixer-rails (7.2.2)
-      execjs
+    autoprefixer-rails (10.2.5.0)
+      execjs (< 2.8.0)
     axlsx_rails (0.6.1)
       actionpack (>= 3.1)
       caxlsx (>= 3.0)
@@ -499,7 +499,7 @@ DEPENDENCIES
   activerecord-session_store
   acts_as_list
   addressable
-  autoprefixer-rails (= 7.2.2)
+  autoprefixer-rails (= 10.2.5.0)
   axlsx!
   axlsx_rails
   babel-transpiler
