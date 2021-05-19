@@ -49,7 +49,6 @@ class ProtocolsController < ApplicationController
   def show
     respond_to do |format|
       format.html {
-        gon.push({ protocol_id: @protocol.id })
         session[:breadcrumbs].set_base(:requests, root_url).add_crumbs([
           { label: helpers.protocol_label(@protocol) },
           { label: helpers.request_label(@protocol) }

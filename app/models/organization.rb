@@ -27,6 +27,7 @@ class Organization < SparcDbBase
   has_many :children, class_name: "Organization", foreign_key: :parent_id
 
   has_many :protocols, through: :sub_service_requests
+  has_many :clinical_provider_identities, through: :clinical_providers, source: :identity
 
   has_many :services,
             -> {where(is_available: true)}

@@ -46,8 +46,9 @@ en:
         subject_count: "Subject Count"
         visit_count: "Visit Count"
       appointment:
+        contents: "Type of Visit"
         name: "Visit Name"
-        position: ""
+        statuses: "Visit Indications"
       fulfillment:
         credited: "Credited"
         fulfilled_at: "Fulfillment Date"
@@ -83,6 +84,14 @@ en:
         race: "Race"
         state: "State"
         zipcode: "Zip Code"
+      procedure:
+        billing_type: "R/T"
+        completed_date: "Completed Date"
+        credited: "Credited"
+        followup: "Follow-Up"
+        invoiced: "Invoiced"
+        performer: "Performed By"
+        status: "Status"
       protocol:
         coordinators: "Coordinators"
         end_date: "End Date"
@@ -100,6 +109,7 @@ en:
         subsidy_committed: "Subsidy Amount"
         total_at_approval: "Cost at Approval"
       protocols_participant:
+        arm: "Current Arm"
         external_id: "External ID"
         recruitment_source: "Recruitment Source"
         status: "Status"
@@ -108,7 +118,7 @@ en:
         due_at: "Due Date"
       visit_group:
         name: "Visit Name"
-        day: "Visit Day"
+        day: "Day"
         position: ""
     errors:
       models:
@@ -120,9 +130,14 @@ en:
           attributes:
             position:
               blank: "You must select a Position"
+    models:
+      appointment:
+        zero: "Visits"
+        one: "Visit"
+        few: "Visits"
+        other: "Visits"
 
-  appointment:
-    object: "Appointment"
+  appointments:
     add_service: "Add Service"
     appointment_dropdown: "Please select a visit:"
     completed: "Completed Visits"
@@ -137,21 +152,29 @@ en:
     protocol_id: "Protocol ID"
     reason: "Reason"
     reset_visit: "Reset Visit"
-    reset_visit_disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
-    reset_visit_disabled_credited: "A procedure within this visit has been credited and cannot be altered."
-    reset_visit_disabled_credited_and_invoiced: "A procedure within this visit has been credited or invoiced and cannot be altered."
     service_error: 'Please choose the service that is desired to be added'
     srid: "SRID"
     start_date: "Start Date:"
     start_time: "Start Time:"
     start_visit: "Start Visit"
     visit_indications: "Visit Indications:"
-    visit_type: "Type of Visit:"
-    warning: "Please click 'Start Visit' and enter a start date to continue."
-    procedure_disabled_credited: "This item cannot be removed because it is credited."
-    procedure_disabled_invoiced: "This item cannot be removed because it is invoiced."
-    procedure_invoiced_warning: "This procedure has been invoiced and cannot be altered."
-    procedure_group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
+    confirms:
+      reset_visit:
+        text: "Resetting this appointment will delete all data which has been recorded for it.<br><br>Are you sure you want to proceed?"
+    tooltips:
+      state:
+        unstarted: "Unstarted"
+        started: "Started on %{date}"
+        completed: "Completed on %{date}"
+      change_view_style:
+        custom: "Switch to Custom Ordered View"
+        grouped: "Switch to Grouped View"
+      complete_visit:
+        disabled: "Assign a status or follow-up date for each procedure in order to complete this visit."
+      reset_visit:
+        disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
+        disabled_credited: "A procedure within this visit has been credited and cannot be altered."
+        disabled_credited_and_invoiced: "A procedure within this visit has been credited or invoiced and cannot be altered."
 
   arm:
     object: "Arm"
@@ -199,6 +222,7 @@ en:
       select: "---Please Select---"
       select_action: "Select an action"
       select_one: "Select One"
+      select_if_applicable: "Select if applicable"
     add_as_last: "Last Visit"
     other: "Other"
     show: "Show Details"
@@ -365,20 +389,29 @@ en:
     documents: "Documents"
 
   multiple_procedures_modal:
+    errors:
+      completed_date: "Can't be blank"
+      performer_id: "Can't be blank"
+      reason: "Can't be blank"
+      comment: "Can't be blank"
     incomplete_header: "Incomplete Multiple Services"
+    incomplete_all: "Incomplete"
     complete_header: "Complete Multiple Services"
-    completed_date: "Completed Date *"
-    performed_by: "Performed By *"
-    reason: "Reason *"
+    complete_all: "Complete"
+    completed_date: "Completed Date"
+    performed_by: "Performed By"
+    reason: "Reason"
 
   #############
   ### Notes ###
   #############
 
   notes:
+    new: "New %{notable_type} Note"
     header: "%{notable_type} Notes"
     add: "Leave Note"
     update: "Update Note"
+    comment: "Comment"
     none: "This %{notable_type} doesn't have any notes."
     placeholder: "Type a note..."
     edited: "(Edited)"
@@ -388,6 +421,7 @@ en:
   ####################
 
   participants:
+    change_note: "%{attr} changed from %{old} to %{new}"
     tooltips:
       notes: "Participant Notes"
 
@@ -415,7 +449,6 @@ en:
   participant:
     object: "Participant"
     address: "Address"
-    arm: "Current Arm"
     calendar: "Calendar"
     city: "City"
     details: "Participant Details"
@@ -453,24 +486,37 @@ en:
     tracker: "Participant Tracker"
     zip: "Zip Code"
 
-  procedure:
-    object: "Procedure"
-    complete: "Complete All"
+  procedures:
     completed_date: "Completed Date"
     credited: "Credited"
+    incomplete:
+      note: "Please provide a brief note explaining why this procedure was not able to be completed."
     edit_header: "Follow Up"
     followup: "Follow Up"
     follow_up_date: "Follow Up Date"
     fud: "Due Date"
-    incomplete: "Incomplete All"
     notes: "Notes"
     performed_by: "Performed By"
     prog_core: "Program / Core"
-    r_t: "R/T"
     select_reason: "Select a Reason"
-    status: "Status"
-    invoiced: "Invoiced"
-    actions: "Actions"
+    tooltips:
+      unstarted_appointment: "Click 'Start Visit' and enter a start date to continue."
+      complete: "Complete"
+      unstarted: "Unstarted"
+      incomplete: "Incomplete"
+      followup:
+        schedule: "Schedule a follow-up"
+      invoiced:
+        incomplete_procedure: "Can only be toggled after the Procedure has been completed."
+        warning: "Warning: Once this procedure has been invoiced it cannot be undone"
+        disabled: "This procedure has been invoiced and cannot be altered."
+      credited:
+        incomplete_procedure: "Can only be toggled after the Procedure has been completed."
+        warning: "Warning: Once this procedure has been credited it cannot be undone"
+        disabled: "This procedure has been credited and cannot be altered."
+      delete: "Delete Procedure"
+      disabled_invoiced: "This item cannot be removed because it is invoiced."
+      group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
 
   protocols:
     sparc_link: "SPARCDashboard"
