@@ -1,8 +1,8 @@
 {
-  "name": "sparc-request",
+  "name": "sparc-fulfillment",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/sparc-request/sparc-request.git",
+  "repository": "https://github.com/sparc-request/sparc-fulfillment.git",
   "author": "SPARCRequest <sparcrequest@gmail.com>",
   "license": "MIT",
   "dependencies": {
