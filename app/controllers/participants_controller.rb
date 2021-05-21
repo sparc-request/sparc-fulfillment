@@ -31,7 +31,7 @@ class ParticipantsController < ApplicationController
       format.html
       format.json {
         @participants = Participant.search(params[:search])
-        @total        = @participants.length
+        @total        = @participants.count
         @participants = @participants.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0)
       }
     end

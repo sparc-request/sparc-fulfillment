@@ -27,7 +27,7 @@ class ProtocolsParticipantsController < ApplicationController
     respond_to do |format|
       format.json {
         @protocols_participants = @protocol.protocols_participants.search(params[:search])
-        @total                  = @protocols_participants.length
+        @total                  = @protocols_participants.count
         @protocols_participants = @protocols_participants.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0)
       }
     end
@@ -55,7 +55,7 @@ class ProtocolsParticipantsController < ApplicationController
   def create
     respond_to :js
     @prot_part = @protocol.protocols_participants.create(participant_id: params[:participant_id])
-    @prot_part.update_attribute(:arm, @protocol.arms.first) if @protocol.arms.length == 1
+    @prot_part.update_attribute(:arm, @protocol.arms.first) if @protocol.arms.count == 1
     flash[:success] = t('protocols_participants.flash.updated')
   end
 

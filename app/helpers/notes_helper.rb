@@ -24,12 +24,12 @@ module NotesHelper
   #   <model>     - (String/ActiveRecord Object) - An optional model name to add to the button as text
   #   <tooltip>   - (String) - An optional tooltip on the button
   def notes_button(notable, opts={})
-    has_notes     = notable.notes.length > 0
+    has_notes     = notable.notes.count > 0
     notable_type  = notable.class.name
 
     content_tag :div, id: "#{notable_type.downcase}#{notable.id}Notes", class: 'tooltip-wrapper', title: opts[:disabled] ? opts[:tooltip] : '', data: { toggle: opts[:disabled] && opts[:tooltip] ? 'tooltip' : '' }  do
       link_to notes_path(note: { notable_id: notable.id, notable_type: notable_type }, protocol_id: opts[:protocol_id]), remote: true, class: ['btn btn-light position-relative', opts[:class], opts[:disabled] ? 'disabled' : '', opts[:model] ? '' : 'btn-sq'], title: opts[:tooltip], data: { toggle: opts[:tooltip] || opts[:disabled] ? 'tooltip' : '' } do
-        raw(icon('far', 'sticky-note fa-lg') + content_tag(:span, format_count(notable.notes.length, 1), class: ['badge badge-pill badge-c notification-badge', has_notes ? 'badge-warning ' : 'badge-secondary'])) + (opts[:model] ? content_tag(:span, (opts[:model].is_a?(String) ? opts[:model] : opts[:model].model_name.human) + " " + Note.model_name.plural.capitalize, class: 'ml-2') : '')
+        raw(icon('far', 'sticky-note fa-lg') + content_tag(:span, format_count(notable.notes.count, 1), class: ['badge badge-pill badge-c notification-badge', has_notes ? 'badge-warning ' : 'badge-secondary'])) + (opts[:model] ? content_tag(:span, (opts[:model].is_a?(String) ? opts[:model] : opts[:model].model_name.human) + " " + Note.model_name.plural.capitalize, class: 'ml-2') : '')
       end
     end
   end

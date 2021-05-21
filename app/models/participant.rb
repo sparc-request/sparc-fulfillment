@@ -169,7 +169,7 @@ class Participant < ApplicationRecord
   end
 
   def can_be_deidentified?
-    protocols.length <= 1
+    protocols.count <= 1
   end
 
   def can_be_destroyed?
