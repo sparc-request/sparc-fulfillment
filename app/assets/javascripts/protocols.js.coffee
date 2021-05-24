@@ -19,6 +19,14 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+
+  $('#protocolsList .export button').addClass('no-caret').siblings('.dropdown-menu').addClass('d-none')
+
+  $(document).on 'click', '#protocolsList .export button', ->
+    url = new URL($('#protocols').data('url'), window.location.origin)
+    url.pathname = url.pathname.replace('json', 'csv')
+    window.location = url
+
   if $("#protocols").length
     # Delete Protocol tab-remembering cookie
     Cookies.remove("active-protocol-tab")
@@ -27,9 +35,9 @@ $ ->
 
     $(".fixed-table-toolbar").prepend('
       <div class="btn-group float-left financial--view mr-1" data-toggle="buttons">
-        <button class="btn btn-light mb-0 active management" title="Management View" data-toggle="tooltip">
+        <button class="btn btn-light mb-0 active management" title="Requests View" data-toggle="tooltip">
           <input type="radio" autocomplete="off" class="d-none" value="management">
-          <i class="fas fa-book"></i> Management
+          <i class="fas fa-book"></i> Requests
         </button>
         <button class="btn btn-light mb-0 financial" title="Financial View" data-toggle="tooltip">
           <input type="radio" autocomplete="off" class="d-none" value="financial">
@@ -69,6 +77,9 @@ $ ->
         bootstrapTable('hideColumn', 'total_at_approval').
         bootstrapTable('hideColumn', 'percent_subsidy').
         bootstrapTable('hideColumn', 'subsidy_committed')
+
+    $(document).on 'click', '#coordinator-menu', (e) ->
+      e.stopPropagation()
 
   # Load tab on page load
   if $('#protocolTabs').length

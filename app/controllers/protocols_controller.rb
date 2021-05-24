@@ -34,17 +34,21 @@ class ProtocolsController < ApplicationController
       }
       format.json {
         @protocols  = current_identity.protocols_full.search(params[:search]).with_status(params[:status])
-        @total      = @protocols.length
+        @total      = @protocols.count
         @protocols  = @protocols.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0).eager_load(:pi)
       }
       format.js
+      format.csv {
+        @protocols = Protocol.all.eager_load(:pi, :sparc_protocol)
+
+        send_data Protocol.to_csv(@protocols), filename: "cwf_protocols.csv"
+      }
     end
   end
 
   def show
     respond_to do |format|
       format.html {
-        gon.push({ protocol_id: @protocol.id })
         session[:breadcrumbs].set_base(:requests, root_url).add_crumbs([
           { label: helpers.protocol_label(@protocol) },
           { label: helpers.request_label(@protocol) }

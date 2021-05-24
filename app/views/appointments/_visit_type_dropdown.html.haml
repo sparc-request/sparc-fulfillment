@@ -18,9 +18,7 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-%label= t(:appointment)[:visit_type]
-%select#appointment_content_indications.selectpicker{title: "Select if Applicable"}
-  %option{value: ""} Select if Applicable
-  %option{value: "Lab Only"} Lab Only
-  %option{value: "Space Only"} Space Only
-  %option{value: "PFT Only"} PFT Only
+.col-3
+  = form_for appointment, url: appointment_path(appointment), remote: true, method: :put do |f|
+    = f.label :contents
+    = f.select :contents, options_for_select(Appointment::VISIT_TYPES, appointment.contents), { include_blank: t('constants.select_if_applicable') }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"

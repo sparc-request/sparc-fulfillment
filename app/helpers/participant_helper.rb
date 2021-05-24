@@ -19,21 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ParticipantHelper
-  def appointments_for_select(arm, protocols_participant)
-    appointments = []
-    protocols_participant.appointments.incompleted.each do |appt|
-      if appt.arm.name == arm.name
-        appointments << appt
-      end
-    end
-
-    appointments
-  end
-
-  def arms_for_appointments(appts)
-    appts.map{|x| x.arm}.compact.uniq
-  end
-
   def us_states
     ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'N/A']
   end
@@ -45,28 +30,17 @@ module ParticipantHelper
       "</a>"
     ].join ""
   end
-  
-  def registry_edit_formatter(participant)
-    [
-      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-edit'></i>",
-      "</a>"
-    ].join ""
-  end
 
-  def registry_delete_formatter(participant)
-    if participant.can_be_destroyed?
-      [
-        "<a class='remove destroy-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
-        "<i class='glyphicon glyphicon-remove'></i>",
-        "</a>"
-      ].join ""
-    else
-      [
-        "<div data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>",
-        "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
-      ].join ""
-    end
+  def registry_actions_formatter(participant)
+    destroy_array = choose_destroy_action(participant)
+
+    return_array = [
+      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
+      "<i class='fas fa-edit'></i>",
+      "</a>",
+      "&nbsp&nbsp"] + destroy_array  
+    
+    return_array.join ""
   end
 
   def editFormatter(participant, protocols_participant)
@@ -96,5 +70,13 @@ module ParticipantHelper
     protocols_participant = ProtocolsParticipant.where(protocol_id: protocol.id, participant_id: participant.id)
     protocols_participant_cannot_be_destroyed = protocols_participant.empty? ? false : !protocols_participant.first.can_be_destroyed?
     "<input class='associate' type='checkbox' " + (protocols_participant_cannot_be_destroyed && associate ? "checked='checked' disabled" : associate ? "checked='checked'" : "") + " protocol_id='#{protocol.id}' participant_id='#{participant.id}'>"
+  end
+
+  def choose_destroy_action(participant)
+    if participant.can_be_destroyed?
+      return ["<a class='remove destroy-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>", "<i class='far fa-trash-alt'></i>", "</a>"]
+    else
+      return ["<a data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>", "<i class='far fa-trash-alt' style='cursor:default'></i>"]
+    end
   end
 end

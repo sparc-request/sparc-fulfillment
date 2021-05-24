@@ -20,6 +20,7 @@
 
 class TasksController < ApplicationController
   before_action :find_task, only: [:show, :update, :edit]
+  before_action :set_appointment_style, only: [:create]
 
   respond_to :json, :html
 

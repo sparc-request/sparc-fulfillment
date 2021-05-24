@@ -19,36 +19,34 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class MultipleProceduresController < ApplicationController
-
-  before_action :find_procedures, only: [:complete_all, :incomplete_all, :update_procedures]
-  before_action :create_note_before_update, only: [:update_procedures]
+  before_action :find_appointment
+  before_action :find_procedures, only: [:update_procedures]
+  before_action :assign_multiple_procedure_errors, only: [:update_procedures]
 
   def complete_all
     @procedure_ids = params[:procedure_ids]
+    @has_invoiced_procedures = !Procedure.where(id: @procedure_ids, invoiced: true).empty?
+    @performable_by = @appointment.performable_by
   end
 
   def incomplete_all
+    @procedure_ids = params[:procedure_ids]
+    @has_invoiced_procedures = !Procedure.where(id: @procedure_ids, invoiced: true).empty?
+    @performable_by = @appointment.performable_by
     @note = Note.new(kind: 'reason')
   end
 
   def update_procedures
-    @core_id = @procedures.first.sparc_core_id
-    status = params[:status]
-    if status == 'incomplete'
-      @performed_by = params[:performed_by]
+    unless @multiple_procedure_errors
+      status = params[:status]
+      create_note_before_update
       @procedures.each do |procedure|
-        procedure.update_attributes(status: "incomplete", performer_id: @performed_by)
+        procedure.update_attributes(status: status, performer_id: params[:performer_id], completed_date: params[:completed_date])
       end
-    elsif status == 'complete'
-      #Mark all @procedures as complete.
-      @performed_by = params[:performed_by]
-      @procedures.each{|procedure| procedure.update_attributes(status: 'complete', performer_id: @performed_by, completed_date: params[:completed_date])}
-      @completed_date = params[:completed_date]
     end
   end
 
   def reset_procedures
-    @appointment = Appointment.find(params[:appointment_id])
     #Status is used by the 'show' re-render
     @statuses = @appointment.appointment_statuses.pluck(:status)
 
@@ -74,8 +72,26 @@ class MultipleProceduresController < ApplicationController
 
   private
 
+  def find_appointment
+    @appointment = Appointment.find(params[:appointment_id])
+  end
+
   def find_procedures
-    @procedures = Procedure.where(id: params[:procedure_ids])
+    @procedures = @appointment.procedures.find(params[:procedure_ids])
+  end
+
+  def assign_multiple_procedure_errors
+    # Assign errors here, can't use ActiveModel::Errors since there's no multiple_procedures model
+    # and there is no nested form for notes
+    @multiple_procedure_errors = {}
+    @multiple_procedure_errors.store(:performer_id, t('multiple_procedures_modal.errors.performer_id')) if params[:performer_id].blank?
+    @multiple_procedure_errors.store(:completed_date, t('multiple_procedures_modal.errors.completed_date')) if complete_status_detected? && params[:completed_date].blank?
+    @multiple_procedure_errors.store(:reason, t('multiple_procedures_modal.errors.reason')) if incomplete_status_detected? && params[:reason].blank?
+    @multiple_procedure_errors.store(:comment, t('multiple_procedures_modal.errors.comment')) if incomplete_status_detected? && params[:comment].blank?
+
+    if @multiple_procedure_errors.empty?
+      @multiple_procedure_errors = nil
+    end
   end
 
   def create_note_before_update

@@ -21,19 +21,31 @@
 class ProtocolsParticipantsController < ApplicationController
   before_action :find_protocol,               only: [:index, :show, :new, :create, :update, :destroy]
   before_action :find_protocols_participant,  only: [:show, :update, :destroy]
+  before_action :set_appointment_style, only: [:update]
 
   def index
     respond_to do |format|
       format.json {
         @protocols_participants = @protocol.protocols_participants.search(params[:search])
-        @total                  = @protocols_participants.length
+        @total                  = @protocols_participants.count
         @protocols_participants = @protocols_participants.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0)
       }
     end
   end
 
   def show
-    respond_to :html, :js
+    respond_to do |format|
+      format.html {
+        @appointment = Appointment.find(params[:appointment_id]) if params[:appointment_id]
+        session[:breadcrumbs].set_base(:requests, root_url).add_crumbs([
+          { label: helpers.protocol_label(@protocol) },
+          { label: helpers.request_label(@protocol), url: protocol_path(@protocol) },
+          { label: helpers.protocols_participant_label(@protocols_participant) }
+        ])
+      }
+      format.js
+      format.json
+    end
   end
 
   def new
@@ -42,14 +54,18 @@ class ProtocolsParticipantsController < ApplicationController
 
   def create
     respond_to :js
-    @protocol.protocols_participants.create(participant_id: params[:participant_id])
+    @prot_part = @protocol.protocols_participants.create(participant_id: params[:participant_id])
+    @prot_part.update_attribute(:arm, @protocol.arms.first) if @protocol.arms.count == 1
     flash[:success] = t('protocols_participants.flash.updated')
   end
 
   def update
     respond_to :js
-    @protocols_participant.update_attributes(protocols_participant_params)
-    flash[:success] = t('protocols_participants.flash.updated')
+    @protocols_participant.current_identity = current_identity
+    if @protocols_participant.update_attributes(protocols_participant_params)
+      @appointment = @protocols_participant.appointments.where(arm_id: @protocols_participant.arm_id).first
+      flash[:success] = t('protocols_participants.flash.updated')
+    end
   end
 
   def destroy
