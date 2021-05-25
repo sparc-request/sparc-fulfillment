@@ -18,37 +18,35 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+require 'faker'
+
 namespace :data do
 
   desc 'DeIdentify Participant Data'
   task deidentify_participant_data: :environment do
 
-    bar = ProgressBar.new(13)
-    Participant.update_all(first_name: "De-Identified")
-    bar.increment!
-    Participant.update_all(last_name: "De-Identified")
-    bar.increment!
-    Participant.update_all(mrn: 1)
-    bar.increment!
-    Participant.update_all(date_of_birth: Date.today.strftime("%Y-%m-%d"))
-    bar.increment!
-    Participant.update_all(gender: "Unknown")
-    bar.increment!
-    Participant.update_all(ethnicity: "Unknown/Other/Unreported")
-    bar.increment!
-    Participant.update_all(race: "Unknown/Other/Unreported")
-    bar.increment!
-    Participant.update_all(address: "1234 DeIdentified Ave")
-    bar.increment!
-    Participant.update_all(phone: "123-867-5309")
-    bar.increment!
-    Participant.update_all(city: "De-Identified")
-    bar.increment!
-    Participant.update_all(state: "North De-Identified")
-    bar.increment!
-    Participant.update_all(zipcode: "12345")
-    bar.increment!
-    Participant.update_all(middle_initial: "D")
-    bar.increment!
+    Participant.with_deleted.update_all(mrn: nil)
+
+    bar = ProgressBar.new(Participant.with_deleted.count)
+
+    Participant.with_deleted.find_each do |participant|
+      participant.update_attributes(
+        first_name: Faker::Name.first_name,
+        last_name: Faker::Name.last_name,
+        mrn: participant.id,
+        date_of_birth: Faker::Date.birthday(min_age: 18, max_age: 85).strftime("%m/%d/%Y"),
+        gender: "Unknown",
+        ethnicity: "Unknown/Other/Unreported",
+        race: "Unknown/Other/Unreported",
+        address: Faker::Address.street_address,
+        phone: Faker::Number.number(digits: 10),
+        city: Faker::Address.city,
+        state: Faker::Address.state_abbr,
+        zipcode: "12345",
+        middle_initial: "D"
+        )
+
+      bar.increment!
+    end
   end
 end
