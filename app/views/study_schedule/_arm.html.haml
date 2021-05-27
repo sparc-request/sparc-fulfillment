@@ -27,23 +27,31 @@
     %thead{id: "select_for_arm_#{arm.id}"}
       = render '/study_schedule/template_header', arm: arm, page: page, visit_groups: visit_groups
 
--#    .row.visit_groups
--#      .col-xs-4
--#      .visit_groups{class: "visit_groups_for_#{arm.id}"}
--#        = render partial: '/study_schedule/visit_groups', locals: {arm: arm, visit_groups: visit_groups, tab: tab}
--#    .row.check_visit_columns
--#      .col-xs-4
--#      - unless tab == 'consolidated'
--#        %div{class: "check_columns_for_arm_#{arm.id}"}
--#          = render partial: '/study_schedule/check_visit_columns', locals: {visit_groups: visit_groups, tab: tab}
--#      .col-xs-1
--#    .row
--#      .scrolling-div.col-xs-12
--#        - arm_per_participant_line_items_by_core(arm, tab == "consolidated").each do |core, line_items|
--#          .row.core{id: "arm_#{arm.id}_core_#{core.id}"}
--#            .col-xs-12= "#{core.name}"
--#          - line_items.each do |li|
--#            = render partial: 'study_schedule/line_item', locals: {line_item: li, page: page, tab: tab}
--#          %div{id: "arm_#{arm.id}_end_of_core_#{core.id}"}
--#        %div{id: "end_of_arm_#{arm.id}"}
+      %tr
+        .visit-groups
+          = render partial: '/study_schedule/visit_groups', locals: {arm: arm, visit_groups: visit_groups, tab: tab}
+
+      %tr
+        %th{ colspan: 10 }
+        = render partial: '/study_schedule/check_visit_columns', locals: {visit_groups: visit_groups, tab: tab}
+
+-#      .row.visit_groups
+-#        .col-xs-4
+-#        .visit_groups{class: "visit_groups_for_#{arm.id}"}
+-#          = render partial: '/study_schedule/visit_groups', locals: {arm: arm, visit_groups: visit_groups, tab: tab}
+-#      .row.check_visit_columns
+-#        .col-xs-4
+-#        - unless tab == 'consolidated'
+-#          %div{class: "check_columns_for_arm_#{arm.id}"}
+-#            = render partial: '/study_schedule/check_visit_columns', locals: {visit_groups: visit_groups, tab: tab}
+-#        .col-xs-1
+-#      .row
+-#        .scrolling-div.col-xs-12
+-#          - arm_per_participant_line_items_by_core(arm, tab == "consolidated").each do |core, line_items|
+-#            .row.core{id: "arm_#{arm.id}_core_#{core.id}"}
+-#              .col-xs-12= "#{core.name}"
+-#            - line_items.each do |li|
+-#              = render partial: 'study_schedule/line_item', locals: {line_item: li, page: page, tab: tab}
+-#            %div{id: "arm_#{arm.id}_end_of_core_#{core.id}"}
+-#          %div{id: "end_of_arm_#{arm.id}"}
 -#%br
