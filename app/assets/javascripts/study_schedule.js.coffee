@@ -110,12 +110,6 @@ $ ->
       url:  "/visit_groups/#{visit_group_id}"
       data: data
 
-  $(document).on 'click', '.change_line_item_service', ->
-    line_item_id = $(this).attr('line_item_id')
-    $.ajax
-      type: 'GET'
-      url: "/line_items/#{line_item_id}/edit"
-
   $(document).on 'click', '.check_row', ->
     if confirm("This will reset custom values for this row, do you wish to continue?")
       check = $(this).attr('check')
