@@ -101,8 +101,8 @@ $ ->
       url:  "/visits/#{visit_id}"
       data: data
 
-  $(document).on 'change', '.visit_name', ->
-    visit_group_id = $(this).data('visit_group_id')
+  $(document).on 'change', '.visit-name', ->
+    visit_group_id = $(this).data('visit-group-id')
     name = $(this).val()
     data = 'visit_group' : 'name' : name
     $.ajax
