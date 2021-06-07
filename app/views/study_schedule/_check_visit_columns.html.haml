@@ -20,11 +20,11 @@
 
 - visit_groups.each_with_index do |visit_group, index|
   %th.text-center{ colspan: 3 }
-    - state = "#{set_check(visit_group)}"
+    - checked = set_check(visit_group)
     - if tab == 'template'
-      -# TODO: See what the glyph_class does when fixing functionality
-      %button.btn.btn-success{ type: "button", visit_group_id: visit_group.id, check: state, title: state == "true" ? t(:visit)[:check_column] : t(:visit)[:uncheck_column], class: "#{glyph_class(visit_group)}", data: { toggle: "tooltip", animation: 'false' } }
-        = icon('fas', 'check')
+      %button.btn.check-column{ type: 'button', visit_group_id: visit_group.id, check: checked.to_s, class: checked ? 'btn-success' : 'btn-danger', title: checked ? t('visit.check_column') : t('visit.uncheck_column'), data: { toggle: 'tooltip', animation: 'false' } }
+        = icon('fas', 'check' + (checked ? '' : ' d-none'))
+        = icon('fas', 'times' + (checked ? ' d-none' : ''))
     - if tab == 'quantity'
       .r-t-labels
         %span.even_shorter_text.r-label= "R"

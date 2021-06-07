@@ -20,11 +20,6 @@
 
 module StudyScheduleHelper
 
-  def glyph_class obj
-    count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
-    count == 0 ? 'glyphicon-remove' : 'glyphicon-ok'
-  end
-
   def set_check obj
     count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
     count != 0

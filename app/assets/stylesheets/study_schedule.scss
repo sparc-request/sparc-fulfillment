@@ -104,24 +104,14 @@
     table-layout: fixed;
   }
 
-  th.visit-group, th.check-column, td.check-row, td.notes, td.displayed-cost, td.subject-count, td.visit:not(.calendar-visit), td.units-per-quantity, td.quantity {
-    &.editable {
-      transition: $btn-transition;
+  th.visit, th.check-column, td.check-row, td.notes, td.displayed-cost, td.subject-count, td.visit:not(.calendar-visit), td.units-per-quantity, td.quantity {
+    transition: $btn-transition;
 
-      &:hover, &:focus, &.active {
-        cursor: pointer;
-        background: theme-color-level('light', 0.5);
-        outline: 0;
-      }
+    &:hover, &:focus, &.active {
+      cursor: pointer;
+      background: theme-color-level('light', 0.5);
+      outline: 0;
     }
-
-    &:not(.editable):hover {
-      cursor: not-allowed;
-
-      input {
-        cursor: not-allowed;
-      }
-    } 
 
     .visit-quantity {
       transform: scale(1.5);
