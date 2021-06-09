@@ -20,7 +20,7 @@
 
 - visits = line_item.visits.paginate(page: page, per_page: Visit.per_page)
 - visits.each_with_index do |visit, index|
-  %td.text-center.visit{ colspan: 3, class: "line_item_#{line_item.id}_visit_#{index} visits_for_line_item_#{line_item.id} visit_for_visit_group_#{visit.visit_group_id}", visit_group_id: visit.visit_group_id }
+  %td.text-center.visit{ colspan: 3, class: "line_item_#{line_item.id}_visit_#{index} visit_for_line_item_#{line_item.id} visit_for_visit_group_#{visit.visit_group_id}", visit_group_id: visit.visit_group_id }
     - if tab == 'template'
       = check_box_tag "visit_check_#{visit.id}", visit.id, visit.has_billing?, class: 'visit-quantity'
     - elsif tab == 'quantity'
@@ -29,4 +29,4 @@
     -else
       = visit.total_quantity
 - (visits.size...Visit.per_page).each do |index|
-  %td{ colspan: 3, class: "line_item_#{line_item.id}_visit_#{index}" } &nbsp
+  %td.visit.empty-visit{ colspan: 3, class: "line_item_#{line_item.id}_visit_#{index}" } &nbsp

@@ -29,12 +29,16 @@ $(".selectpicker").selectpicker()
 
 <% if on_current_page?(@current_page, @visit_group.position) %>
 # Overwrite the visit_groups
-$(".visit_groups_for_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_groups', locals: { arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab }) %>")
+$(".visit_groups_for_#{arm_id}").html("<%= j render '/study_schedule/visit_groups', arm: @arm, visit_groups: @visit_groups, tab: @tab %>")
 # Overwrite the check columns
-$(".check_columns_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/check_visit_columns', locals: { visit_groups: @visit_groups, tab: @schedule_tab }) %>")
+$(".check_columns_for_arm_#{arm_id}").html("<%= j render '/study_schedule/check_visit_columns', visit_groups: @visit_groups, tab: @tab %>")
 # Overwrite the visits
 <% @arm.line_items.each do |line_item| %>
-$(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visits', locals: {line_item: line_item, page: @current_page, tab: @schedule_tab}) %>")
+$(".visit_for_line_item_<%= line_item.id %>").last().after('<div id="placeholderElement"></div>')
+placeholder_element = $('#placeholderElement')
+placeholder_element.siblings('.visit').remove()
+placeholder_element.after("<%= j render '/study_schedule/visits', line_item: line_item, page: @page, tab: @tab %>")
+placeholder_element.remove()
 <% end %>
 <% end %>
 <% end %>

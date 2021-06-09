@@ -27,12 +27,10 @@
     %thead{id: "select_for_arm_#{arm.id}"}
       = render '/study_schedule/template_header', arm: arm, page: page, visit_groups: visit_groups
 
-      %tr
-        .visit-groups
-          = render partial: '/study_schedule/visit_groups', locals: {arm: arm, visit_groups: visit_groups, tab: tab}
+      %tr{ class: "visit_groups_for_#{arm.id}" }
+        = render partial: '/study_schedule/visit_groups', locals: {arm: arm, visit_groups: visit_groups, tab: tab}
 
-      %tr
-        %th{ colspan: 10 }
+      %tr{ class: "check_columns_for_arm_#{arm.id}" }
         = render partial: '/study_schedule/check_visit_columns', locals: {visit_groups: visit_groups, tab: tab}
 
     %tbody

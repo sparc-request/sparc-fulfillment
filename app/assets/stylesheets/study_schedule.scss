@@ -104,7 +104,7 @@
     table-layout: fixed;
   }
 
-  th.visit, th.check-column, td.check-row, td.notes, td.displayed-cost, td.subject-count, td.visit:not(.calendar-visit), td.units-per-quantity, td.quantity {
+  th.visit, th.check-column, td.check-row, td.notes, td.displayed-cost, td.subject-count, td.visit:not(.empty-visit), td.units-per-quantity, td.quantity {
     transition: $btn-transition;
 
     &:hover, &:focus, &.active {

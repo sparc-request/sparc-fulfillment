@@ -27,9 +27,9 @@ $ ->
     date.setTime(date.getTime() + (60 * 60 * 1000))
     $.cookie("active-schedule-tab", tab, expires: date, path: '/') # save tab to cookie
 
-  $(document).on 'click', '.page_change_arrow', ->
+  $(document).on 'click', '.page_change_arrow:not(.disabled)', ->
     data =
-      'arm_id': $(this).data('arm_id'),
+      'arm_id': $(this).data('arm-id'),
       'page'  : $(this).attr('page'),
       'tab'   : $('#current_tab').val()
     $.ajax
@@ -124,7 +124,7 @@ $ ->
         success: =>
           # Check off visits
           # Update text fields
-          identifier = ".visits_for_line_item_#{line_item_id}"
+          identifier = ".visit_for_line_item_#{line_item_id}"
           if check == 'true'
             check_row_column($(this), identifier, 'btn-success', 'btn-danger', 'false', I18n.t('visit.uncheck_row'), true, 1, 0)
           else
