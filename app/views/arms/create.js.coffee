@@ -18,12 +18,18 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
-<% unless @errors %>
-$("#flashContainer").html("<%= escape_javascript(render('flash')) %>")
+<% if @errors %>
+$("[name^='arm']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='arm[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+<% else %>
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal 'hide'
-$(".study_schedule_container").append("<%= escape_javascript(render(partial: 'study_schedule/arm', locals: {arm: @arm, page: 1, tab: @schedule_tab})) %>")
-$('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
+$(".study-schedule-container").append("<%= j render 'study_schedule/arm',arm: @arm, page: 1, tab: @schedule_tab %>")
 
 #Adjust sticky headers
 adjustCalendarHeaders()

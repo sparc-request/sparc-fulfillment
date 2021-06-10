@@ -23,6 +23,7 @@ $('#protocolTabs').replaceWith("<%= j render 'protocols/tabs', protocol: @protoc
 $('#requestLoading').removeClass('active show')
 $("#<%= @tab.camelize(:lower) %>Tab").html('<%= j render "protocols/#{@tab}", protocol: @protocol %>').addClass('active show')
 
+#Adjust sticky headers
 adjustCalendarHeaders()
 
 $(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
