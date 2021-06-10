@@ -161,3 +161,26 @@ $ ->
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
 
+(exports ? this).adjustCalendarHeaders = () ->
+  zIndex = $('.study-schedule-container').length * 5
+
+  $('.study-schedule-container').each ->
+    $head   = $(this).children('.card-header')
+    $row1   = $(this).find('.study-schedule-table > thead > tr:first-child')
+    $row2   = $(this).find('.study-schedule-table > thead > tr:nth-child(2)')
+    $row3   = $(this).find('.study-schedule-table > thead > tr:nth-child(3)')
+
+    headHeight  = $head.outerHeight()
+    row1Height  = $row1.outerHeight()
+    row2Height  = $row2.outerHeight()
+    row3Height  = $row3.outerHeight()
+
+    $head.css('z-index': zIndex)
+    zIndex -= 2
+    $row1.children('th').css({ 'top': headHeight, 'z-index': zIndex })
+    $row1.children('th.visit-group-select').css({ 'z-index': zIndex + 1 })
+    zIndex--
+    $row2.children('th').css({ 'top': headHeight + row1Height, 'z-index': zIndex })
+    zIndex--
+    $row3.children('th').css({ 'top': headHeight +  row1Height + row2Height, 'z-index': zIndex })
+    zIndex--

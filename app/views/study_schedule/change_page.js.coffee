@@ -50,6 +50,9 @@ placeholder_element.after("<%= j render '/study_schedule/visits', line_item: lin
 placeholder_element.remove()
 <% end %>
 
+#Adjust sticky headers
+adjustCalendarHeaders()
+
 # Set the dropdown to the selected page
 $("#visits_select_for_#{arm_id}").selectpicker('val', page)
 # Set the current page for early out in javascript

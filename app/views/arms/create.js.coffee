@@ -24,4 +24,7 @@ $("#flashContainer").html("<%= escape_javascript(render('flash')) %>")
 $("#modalContainer").modal 'hide'
 $(".study_schedule_container").append("<%= escape_javascript(render(partial: 'study_schedule/arm', locals: {arm: @arm, page: 1, tab: @schedule_tab})) %>")
 $('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
+
+#Adjust sticky headers
+adjustCalendarHeaders()
 <% end %>
