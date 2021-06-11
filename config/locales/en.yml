@@ -344,6 +344,9 @@ en:
         listserv:
           text: "Listserv"
           subject: "SPARCRequest Listserv"
+        faqs:
+          text: "FAQs"
+        feedback: "Feedback"
       browsers:
         header: "Supported Browsers"
         chrome: "Chrome"
