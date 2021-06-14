@@ -40,21 +40,26 @@ $ ->
       url: "/arms/navigate"
       data: data
 
-  $(document).on 'click', '#remove_arm_form_button', ->
+  $(document).on 'click', '#removeArmFormButton', ->
     # Ensure there are at least two arms in dropdown
     # so that protocol always has at least one arm.
     # Arms are deleted through a delayed job, so
     # we need the count from the dropdown and not
     # the server.
     arm_select = $("#arm_form_select")
-    if $("#arm_form_select > option").size() > 1
+    if $("#arm_form_select > option").length > 1
       arm_id = arm_select.val()
       arm_name = $(".bootstrap-select > button[data-id='arm_form_select']").attr('title')
-      if confirm "Are you sure you want to remove arm: #{arm_name} from this protocol?"
-        $.ajax
-          type: 'DELETE'
-          url: "/arms/#{arm_id}"
-          data: "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
+      Swal.fire(
+        title: "Are you sure?"
+        text: "Are you sure you want to remove #{arm_name} from this protocol?"
+        icon: "warning"
+      ).then (result) ->
+        if result.isConfirmed
+          $.ajax
+            type: 'DELETE'
+            url: "/arms/#{arm_id}"
+            data: "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
     else
       alert("Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm.")
 
