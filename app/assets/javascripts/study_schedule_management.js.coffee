@@ -21,61 +21,27 @@
 $ ->
 
 ##              **BEGIN MANAGE ARMS**                     ##
-
-  $(document).on 'click', '#add_arm_button', ->
-    data =
-      "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
-      "schedule_tab" : $('#current_tab').attr('value')
-    $.ajax
-      type: 'GET'
-      url: "/arms/new"
-      data: data
-
-  $(document).on 'click', '#remove_arm_button', ->
-    data =
-      "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
-      "intended_action" : "destroy"
-    $.ajax
-      type: 'GET'
-      url: "/arms/navigate"
-      data: data
-
-  $(document).on 'click', '#removeArmFormButton', ->
+  $(document).on 'ajax:before', '#navigateArmForm', (e) ->
     # Ensure there are at least two arms in dropdown
     # so that protocol always has at least one arm.
     # Arms are deleted through a delayed job, so
     # we need the count from the dropdown and not
     # the server.
-    arm_select = $("#arm_form_select")
-    if $("#arm_form_select > option").length > 1
-      arm_id = arm_select.val()
-      arm_name = $(".bootstrap-select > button[data-id='arm_form_select']").attr('title')
+    if $("#arm_form_select > option").length < 1
+      e.preventDefault()
       Swal.fire(
-        title: "Are you sure?"
-        text: "Are you sure you want to remove #{arm_name} from this protocol?"
-        icon: "warning"
+        title: "Error"
+        text: "Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm."
+        icon: "error"
+        showConfirmButton: false
       ).then (result) ->
-        if result.isConfirmed
-          $.ajax
-            type: 'DELETE'
-            url: "/arms/#{arm_id}"
-            data: "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
-    else
-      alert("Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm.")
-
-  $(document).on 'click', '#edit_arm_button', ->
-    data =
-      "protocol_id" : $('#study_schedule_buttons').data('protocol-id')
-      "intended_action" : "edit"
-    $.ajax
-      type: 'GET'
-      url: "/arms/navigate"
-      data: data
+        if result.isDismissed
+          $("#modalContainer").modal('hide')
 
   $(document).on 'change', "#arm_form_select", ->
     data =
       "protocol_id"     : $('#study_schedule_buttons').data('protocol-id')
-      "intended_action" : $("#navigate_arm_form").data("intended-action")
+      "intended_action" : $("#navigateArmFormBody").data("intended-action")
       "arm_id"          : $(this).val()
     $.ajax
       type: 'GET'

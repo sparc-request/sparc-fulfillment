@@ -27,7 +27,7 @@ $("[name='arm_form_select']").parents('.form-group').removeClass('is-valid').add
 <% end %>
 <% end %>
 <% else %>
-$(".study-schedule-container.arm-<%= @arm.id %>-container").remove()
+$(".study-schedule-container .arm-<%= @arm.id %>-container").remove()
 $("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal('hide')
 <% end %>

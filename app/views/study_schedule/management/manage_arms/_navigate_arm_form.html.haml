@@ -22,24 +22,28 @@
 
 .modal-dialog
   .modal-content
-    .modal-header
-      %h4.modal-title
-        = edit_action ? t('arm.edit_arm') : t('arm.remove_arm')
-      %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
-        %span{ aria: { hidden: 'true' } } &times;
-    .modal-body
-      #navigate_arm_form{ data: { intended_action: intended_action } }
-        .form-group
-          = label_tag 'arm_form_label', t('arm.object'), class: "control-label"
-          = select_tag "arm_form_select", options_from_collection_for_select(protocol_arms, 'id', 'name', arm.id), class: "selectpicker form-control"
-      - if edit_action
-        %hr
-          .edit_arm_area= render partial: '/study_schedule/management/manage_arms/edit_arm_form', locals: {arm: arm}
-    .modal-footer
-      %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
-        = t(:actions)[:close]
-      - if edit_action
-        %input.btn.btn-primary{ type: 'submit', value: t('actions.remove'), data: { confirm_swal: true } }
-      - else
-        %button.btn.btn-primary#removeArmFormButton{ type: 'submit' }
-          = t('actions.remove')
+    = form_for arm, remote: true, method: edit_action ? :put : :delete, html: { id: 'navigateArmForm' } do |f|
+      .modal-header
+        %h4.modal-title
+          = edit_action ? t('arm.edit_arm') : t('arm.remove_arm')
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+          %span{ aria: { hidden: 'true' } } &times;
+      .modal-body
+        #navigateArmFormBody{ data: { intended_action: intended_action } }
+          .form-group
+            = label_tag 'arm_form_label', t('arm.object'), class: "required"
+            = select_tag "arm_form_select", options_from_collection_for_select(protocol_arms, 'id', 'name', arm.id), class: "selectpicker form-control"
+          - if edit_action
+            .form-group
+              = f.label "name", t('arm.name'), class: "required"
+              = f.text_field "name", {class: 'form-control'}
+            .form-group
+              = f.label "subject_count", t('arm.subject_count'), class: "required"
+              = f.text_field "subject_count", {class: 'form-control'}
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t(:actions)[:close]
+        - if edit_action
+          = f.submit t('actions.submit'), class: 'btn btn-primary'
+        - else
+          = f.submit t('actions.remove'), class: 'btn btn-primary', data: { confirm_swal: true, html: "Are you sure you want to remove arm: #{arm.name} from this protocol?" }
