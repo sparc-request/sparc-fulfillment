@@ -18,7 +18,7 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-- edit_action = intended_action == "edit"
+- edit_action = intended_action == 'edit'
 
 .modal-dialog
   .modal-content
@@ -31,15 +31,15 @@
       .modal-body
         #navigateArmFormBody{ data: { intended_action: intended_action } }
           .form-group
-            = label_tag 'arm_form_label', t('arm.object'), class: "required"
-            = select_tag "arm_form_select", options_from_collection_for_select(protocol_arms, 'id', 'name', arm.id), class: "selectpicker form-control"
+            = label_tag 'arm_form_label', t('arm.object'), class: 'required'
+            = select_tag 'arm_form_select', options_from_collection_for_select(protocol_arms, 'id', 'name', arm.id), class: 'selectpicker form-control'
           - if edit_action
             .form-group
-              = f.label "name", t('arm.name'), class: "required"
-              = f.text_field "name", {class: 'form-control'}
+              = f.label 'name', t('arm.name'), class: 'required'
+              = f.text_field :name, {class: 'form-control'}
             .form-group
-              = f.label "subject_count", t('arm.subject_count'), class: "required"
-              = f.text_field "subject_count", {class: 'form-control'}
+              = f.label 'subject_count', t('arm.subject_count'), class: 'required'
+              = f.text_field :subject_count, {class: 'form-control'}
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

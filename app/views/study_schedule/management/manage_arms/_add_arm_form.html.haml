@@ -30,17 +30,17 @@
           %span{ aria: { hidden: 'true' } } &times;
       .modal-body
         .form-group
-          = f.label "name", t('arm.name'), class: "control-label required"
-          = f.text_field "name", { class: 'form-control' }
+          = f.label 'name', t('arm.name'), class: 'required'
+          = f.text_field :name, { class: 'form-control' }
         .form-group
-          = f.label "subject_count", t('arm.subject_count'), class: "control-label required"
-          = f.text_field "subject_count", { class: 'form-control' }
+          = f.label 'subject_count', t('arm.subject_count'), class: 'required'
+          = f.text_field :subject_count, { class: 'form-control' }
         .form-group
-          = f.label "visit_count", t('arm.visit_count'), class: "control-label required"
-          = f.text_field "visit_count", { class: 'form-control' }
+          = f.label 'visit_count', t('arm.visit_count'), class: 'required'
+          = f.text_field :visit_count, { class: 'form-control' }
         .form-group
-          = label_tag "service_ids", t(:services)[:objects], class: "control-label"
-          = select_tag "services[]", options_from_collection_for_select(services, 'id' , 'name'), { class: "form-control selectpicker", multiple: "", title: "Please Select Services", 'data-selected-text-format' => 'count>2'}
+          = label_tag 'service_ids', t('services.objects')
+          = select_tag 'services[]', options_from_collection_for_select(services, 'id' , 'name'), { class: 'form-control selectpicker', multiple: '', title: 'Please Select Services', 'data-selected-text-format' => 'count>2'}
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]
