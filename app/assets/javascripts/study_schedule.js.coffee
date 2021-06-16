@@ -162,9 +162,9 @@ $ ->
     $("#{identifier} input[type=text].insurance").val(insurance_val)
 
 (exports ? this).adjustCalendarHeaders = () ->
-  zIndex = $('.study-schedule-container').length * 5
+  zIndex = $('.study-schedule-arm-container').length * 5
 
-  $('.study-schedule-container').each ->
+  $('.study-schedule-arm-container').each ->
     $head   = $(this).children('.card-header')
     $row1   = $(this).find('.study-schedule-table > thead > tr:first-child')
     $row2   = $(this).find('.study-schedule-table > thead > tr:nth-child(2)')
