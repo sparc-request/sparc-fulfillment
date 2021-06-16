@@ -26,7 +26,7 @@
       = t('arm.header', arm_name: arm.name)
   .collapse.show{ class: "arm-#{arm.id}-collapse" }
     %table.table.table-bordered.study-schedule-table
-      %thead{id: "select_for_arm_#{arm.id}"}
+      %thead
         = render '/study_schedule/template_header', arm: arm, page: page, visit_groups: visit_groups
 
         %tr{ class: "visit_groups_for_#{arm.id}" }
