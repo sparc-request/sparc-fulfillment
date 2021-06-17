@@ -46,4 +46,5 @@
         - if edit_action
           = f.submit t('actions.submit'), class: 'btn btn-primary'
         - else
-          = f.submit t('actions.remove'), class: 'btn btn-primary', data: { confirm_swal: true, html: "Are you sure you want to remove arm: #{arm.name} from this protocol?" }
+          %a.btn.btn-primary#removeArmButton
+            = t('actions.remove')

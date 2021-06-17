@@ -21,22 +21,30 @@
 $ ->
 
 ##              **BEGIN MANAGE ARMS**                     ##
-  $(document).on 'ajax:before', '#navigateArmForm', (e) ->
+  $(document).on 'click', '#removeArmButton', (e) ->
     # Ensure there are at least two arms in dropdown
     # so that protocol always has at least one arm.
     # Arms are deleted through a delayed job, so
     # we need the count from the dropdown and not
     # the server.
-    if $("#arm_form_select > option").length < 1
-      e.preventDefault()
-      Swal.fire(
-        title: "Error"
-        text: "Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm."
-        icon: "error"
-        showConfirmButton: false
-      ).then (result) ->
-        if result.isDismissed
-          $("#modalContainer").modal('hide')
+    arm_name = $(".bootstrap-select > button[data-id='arm_form_select']").attr('title')
+    Swal.fire(
+      title: "Are you sure?"
+      text: "Are you sure you want to remove arm: #{arm_name} from this protocol?"
+      icon: "warning"
+    ).then (confirm_delete_arm) ->
+      if confirm_delete_arm.isConfirmed
+        if $("#arm_form_select > option").length < 1
+          Swal.fire(
+            title: "Error"
+            text: "Cannot remove the last Arm for this Protocol. All Protocols must have at least one Arm."
+            icon: "error"
+            showConfirmButton: false
+          ).then (result) ->
+            if result.isDismissed
+              $("#modalContainer").modal('hide')
+        else
+          Rails.fire($('#navigateArmForm')[0], 'submit')
 
   $(document).on 'change', "#arm_form_select", ->
     data =
