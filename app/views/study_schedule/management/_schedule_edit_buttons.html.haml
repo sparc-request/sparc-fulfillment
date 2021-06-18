@@ -22,24 +22,25 @@
   .row
     .col-sm-4.col-md-4.text-center.h5
       =t(:protocol)[:study_schedule][:manage_arms]
-      #manage_arms
+      #manage_arms.mt-1
         = link_to new_arm_path(protocol_id: protocol.id, schedule_tab: tab), remote: true, class: 'btn btn-success btn-sm mr-2', title: t('protocol.study_schedule.add_arm'), type: 'button', aria: { label: 'Add Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
           = icon('fas', 'plus')
-
         = link_to navigate_arms_path(protocol_id: protocol.id, intended_action: 'destroy'), remote: true, class: 'btn btn-danger btn-sm mr-2', title: t('protocol.study_schedule.remove_arm'), type: 'button', aria: { label: 'Remove Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
           = icon('fas', 'minus')
-
         = link_to navigate_arms_path(protocol_id: protocol.id, intended_action: 'edit'), remote: true, class: 'btn btn-warning btn-sm', title: t('protocol.study_schedule.edit_arm'), type: 'button', aria: { label: 'Edit Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
           = icon('fas', 'edit')
 
     .col-sm-4.col-md-4.text-center.h5
       =t(:protocol)[:study_schedule][:manage_visits]
-      #manage_visit_groups
-        .btn.btn-success.btn-sm.fas.fa-plus#add_visit_group_button{title: t(:protocol)[:study_schedule][:add_visit_group], type: "button", aria: {label: "Add Visit Group"}, data: {toggle: "tooltip", animation: 'false'}}
-        .btn.btn-danger.btn-sm.fas.fa-minus#remove_visit_group_button{title: t(:protocol)[:study_schedule][:remove_visit_group], type: "button", aria: {label: "Remove Visit Group"}, data: {toggle: "tooltip", animation: 'false'}}
-        .btn.btn-warning.btn-sm.fas.fa-edit#edit_visit_group_button{title: t(:protocol)[:study_schedule][:edit_visit_group], type: "button", aria: {label: "Edit Visit Group"}, data: {toggle: "tooltip", animation: 'false'}}
+      #manage_visit_groups.mt-1
+        = link_to 'javascript:;', id: 'add_visit_group_button', class: 'btn btn-success btn-sm mr-2', title: t('protocol.study_schedule.add_visit_group'), type: 'button', aria: {label: 'Add Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
+          = icon('fas', 'plus')
+        = link_to 'javascript:;', id: 'remove_visit_group_button', class: 'btn btn-danger btn-sm mr-2', title: t('protocol.study_schedule.remove_visit_group'), type: 'button', aria: {label: 'Remove Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
+          = icon('fas', 'minus')
+        = link_to 'javascript:;', id: 'edit_visit_group_button', class: 'btn btn-warning btn-sm', title: t('protocol.study_schedule.edit_visit_group'), type: 'button', aria: { label: 'Edit Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
+          = icon('fas', 'edit')
     .col-sm-4.col-md-4.text-center.h5
       =t(:protocol)[:study_schedule][:manage_services]
-      #manage_services
+      #manage_services.mt-1
         .btn.btn-success.btn-sm.fas.fa-plus#add_service_button{title: t(:protocol)[:study_schedule][:add_service], type: "button", aria: {label: "Add Service"}, data: {toggle: "tooltip", animation: 'false'}}
         .btn.btn-danger.btn-sm.fas.fa-minus#remove_service_button{title: t(:protocol)[:study_schedule][:remove_service], type: "button", aria: {label: "Remove Service"}, data: {toggle: "tooltip", animation: 'false'}}

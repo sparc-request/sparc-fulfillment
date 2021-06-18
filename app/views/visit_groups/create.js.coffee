@@ -46,7 +46,7 @@ $(".check_columns_for_arm_#{arm_id}").html("<%= j render '/study_schedule/check_
 $(".visit_for_line_item_<%= line_item.id %>").last().after('<div id="placeholderElement"></div>')
 placeholder_element = $('#placeholderElement')
 placeholder_element.siblings('.visit').remove()
-placeholder_element.after("<%= j render '/study_schedule/visits', line_item: line_item, page: @page, tab: @schedule_tab %>")
+placeholder_element.after("<%= j render '/study_schedule/visits', line_item: line_item, page: @current_page.to_i, tab: @schedule_tab %>")
 placeholder_element.remove()
 <% end %>
 #Adjust sticky headers
