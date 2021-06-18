@@ -40,13 +40,8 @@ class InvoiceReportGroupedOptions
 
   def extract_name_and_id(orgs)
     org_options = []
-    inactive = content_tag(:strong, I18n.t(:reports)[:inactive], class: 'text-danger')
     orgs.each do |org|
-      name = content_tag(
-              :span,
-              org.name + (org.is_available ? "" : inactive),
-              class: 'text')
-      org_options << [raw(name), org.id]
+      org_options << ["#{org.name}#{org.is_available ? '' : ' (Inactive)'}", org.id]
     end
     org_options
   end

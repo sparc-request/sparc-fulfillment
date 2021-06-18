@@ -271,6 +271,7 @@ en:
     read_state: "Read/Unread"
     read: "Read"
     unread: "Unread"
+    page_title: "Generated Reports"
 
   fulfillment:
     object: "Fulfillment"
