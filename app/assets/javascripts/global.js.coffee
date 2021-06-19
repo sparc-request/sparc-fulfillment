@@ -225,18 +225,19 @@ $ ->
 (exports ? this).add_to_report_notification_count = (documentable_type, amount) ->
   switch documentable_type
     when 'Protocol'
-      if !$('.notification.protocol_report_notifications').length
-        $('<span class="notification protocol_report_notifications">0</span>').appendTo($('#protocol-reports-tab'))
-      notification_bubble = $('.notification.protocol_report_notifications')
+      if !$('span.notification-badge.reports-tab-badge small').length
+        $('<span class="badge badge-pill badge-c badge-danger notification-badge reports-tab-badge"><small>0</small></span>').appendTo($('#reportsTabLink span.position-relative'))
+      notification_bubble = $('span.notification-badge.reports-tab-badge small')
     when 'Identity'
-      if !$('.notification.identity_report_notifications').length
-        $('<span class="notification identity_report_notifications">0</span>').appendTo($('a.documents'))
-      notification_bubble = $('.notification.identity_report_notifications')
+      if !$('.identity_report_notifications').length
+        $('<span class="badge badge-pill badge-c badge-danger notification-badge identity_report_notifications">0</span>').appendTo($('#navbarLinks .documents_nav'))
+      notification_bubble = $('span.notification-badge.identity_report_notifications')
   notification_count = parseInt(notification_bubble.text())
   notification_bubble.text(notification_count + amount) if (notification_count + amount) >= 0
   notification_count = parseInt(notification_bubble.text())
   if notification_count == 0
     notification_bubble.remove();
+
 
 ### Add "exclude_in_export" class to columns you want excluded from export and then pass in table ID ###
 window.exclude_from_export = (table_id) ->

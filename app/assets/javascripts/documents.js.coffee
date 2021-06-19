@@ -46,7 +46,7 @@ $ ->
     document_id = $(this).data('document_id')
     del = confirm "Are you sure you want to delete this document?"
     if del
-      if $(this).parent().siblings("td.viewed_at").text() == ""
+      if $(this).parent().siblings("td.read_state").text() == "Unread"
         add_to_report_notification_count($(this).data('documentable_type'), -1)
       $.ajax
         type: 'DELETE'
