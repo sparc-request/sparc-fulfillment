@@ -71,13 +71,11 @@ $ ->
 
   if date_downloaded_element.text().length == 0
     add_to_report_notification_count(documentable_type, -1)
-    
-    utcdate = moment().format(I18n["documents"]["date_time_formatter_js"])
 
     $(table_to_update).bootstrapTable 'updateCell', 
       index: row_index
       field: 'read_state'
-      value: utcdate
+      value: "Read"
 
 (exports ? this).refreshDocumentsTables = ->
   $('#documents_table').bootstrapTable('refresh', {silent: "true"})

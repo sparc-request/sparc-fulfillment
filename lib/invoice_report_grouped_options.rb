@@ -41,7 +41,8 @@ class InvoiceReportGroupedOptions
   def extract_name_and_id(orgs)
     org_options = []
     orgs.each do |org|
-      org_options << ["#{org.name}#{org.is_available ? '' : ' (Inactive)'}", org.id]
+      inactive_indicator = org.is_available ? '' : '<small class="text-danger ml-1"><em>Inactive</em></small>'
+      org_options << [{'data-content': org.name + inactive_indicator}, org.id]
     end
     org_options
   end
