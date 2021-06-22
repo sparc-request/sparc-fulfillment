@@ -145,7 +145,7 @@ $ ->
   $(document).on 'click', '#add_service_button', ->
     page_hash = {}
     $(".visit_dropdown.form-control").each (index) ->
-      key = $(this).data('arm_id')
+      key = $(this).data('arm-id')
       value = $(this).attr('page')
       page_hash[key] = value
     data =

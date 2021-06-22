@@ -241,6 +241,7 @@ en:
     search:
       loading: "Loading..."
       no_results: "No Results"
+    cant_be_blank: "Can't be blank"
 
   documents:
     object: "Document"
