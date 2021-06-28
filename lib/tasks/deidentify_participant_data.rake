@@ -25,6 +25,8 @@ namespace :data do
   desc 'DeIdentify Participant Data'
   task deidentify_participant_data: :environment do
 
+    PaperTrail.enabled = false
+
     Participant.with_deleted.update_all(mrn: nil)
 
     bar = ProgressBar.new(Participant.with_deleted.count)
@@ -48,5 +50,7 @@ namespace :data do
 
       bar.increment!
     end
+
+    PaperTrail.enabled = true
   end
 end
