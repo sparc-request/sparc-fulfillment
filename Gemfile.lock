@@ -369,7 +369,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rake (13.0.1)
-    rdoc (6.2.1)
+    rdoc (6.3.2)
     ref (2.0.0)
     regexp_parser (1.7.1)
     remotipart (1.4.4)
