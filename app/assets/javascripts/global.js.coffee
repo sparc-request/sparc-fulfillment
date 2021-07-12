@@ -227,14 +227,16 @@ $ ->
     when 'Protocol'
       if !$('span.notification-badge.reports-tab-badge small').length
         $('<span class="badge badge-pill badge-c badge-danger notification-badge reports-tab-badge"><small>0</small></span>').appendTo($('#reportsTabLink span.position-relative'))
-      notification_bubble = $('span.notification-badge.reports-tab-badge small')
+      notification_text = $('span.notification-badge.reports-tab-badge small')
+      notification_bubble = $('span.notification-badge.reports-tab-badge')
     when 'Identity'
       if !$('.identity_report_notifications').length
         $('<span class="badge badge-pill badge-c badge-danger notification-badge identity_report_notifications">0</span>').appendTo($('#navbarLinks .documents_nav'))
       notification_bubble = $('span.notification-badge.identity_report_notifications')
-  notification_count = parseInt(notification_bubble.text())
-  notification_bubble.text(notification_count + amount) if (notification_count + amount) >= 0
-  notification_count = parseInt(notification_bubble.text())
+      notification_text = notification_bubble
+  notification_count = parseInt(notification_text.text())
+  notification_text.text(notification_count + amount) if (notification_count + amount) >= 0
+  notification_count = parseInt(notification_text.text())
   if notification_count == 0
     notification_bubble.remove();
 
