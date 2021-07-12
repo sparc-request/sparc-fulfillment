@@ -20,48 +20,34 @@
 
 .modal-dialog
   .modal-content
-    = form_for visit_group, {remote: true, html: {class: "form-horizontal new_visit", role: "form"}} do |a|
+    = form_for visit_group, remote: true do |f|
+      = hidden_field_tag :schedule_tab, schedule_tab
+      = hidden_field_tag :current_page, current_page
       .modal-header
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only
-            = t(:actions)[:close]
-        %h4#CreateNewParticipant.modal-title.text-center
-          = t(:visit)[:add_visit]
+        %h4.modal-title
+          = t('protocol.visit.add_visit')
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+          %span{ aria: { hidden: 'true' } } &times;
       .modal-body
-        #modal_errors
-        = render partial: 'required_fields'
-        .row
-          = hidden_field_tag :schedule_tab, schedule_tab
-          = hidden_field_tag :current_page, current_page
-          .col-md-12
-            .form-group
-              = a.label "arm_id", t(:visit_groups)[:arm], class: "col-sm-4 control-label"
-              .col-sm-7
-                = a.select "arm_id", options_from_collection_for_select(protocol.arms,'id','name', arm.id), {include_blank: false}, class: "form-control selectpicker"
-            .form-group
-              = a.label "name", t(:visit_groups)[:name]+t(:actions)[:required], class: "col-sm-4 control-label"
-              .col-sm-7
-                = a.text_field "name", {class: 'form-control'}
-            .form-group
-              = a.label "day", t(:visit_groups)[:day]+(ENV.fetch('USE_EPIC'){nil} == 'false' ? '' : t(:actions)[:required]), class: "col-sm-4 control-label"
-              .col-sm-7
-                = a.text_field "day", {class: 'form-control', maxlength: 4}
-            .form-group
-              = a.label "position", t(:visit_groups)[:position], class: "col-sm-4 control-label"
-              .col-sm-7
-                = a.select "position", options_for_select(insert_to_position_options(arm.visit_groups)), { include_blank: '' }, class: "form-control selectpicker visit-group-position"
-            .form-group
-              = a.label "window_before", t(:visit_groups)[:window_before], class: "col-sm-4 control-label"
-              .col-sm-7
-                = a.text_field "window_before", {class: 'form-control'}
-            .form-group
-              = a.label "window_after", t(:visit_groups)[:window_after], class: "col-sm-4 control-label"
-              .col-sm-7
-                = a.text_field "window_after", {class: 'form-control'}
+        .form-group
+          = f.label "arm_id", t('visit_groups.arm')
+          = f.select :arm_id, options_from_collection_for_select(protocol.arms,'id','name', arm.id), { include_blank: false }, class: "form-control selectpicker"
+        .form-group
+          = f.label "name", t('visit_groups.name'), class: 'required'
+          = f.text_field :name, { class: 'form-control' }
+        .form-group
+          = f.label "day", t('visit_groups.day'), class: ENV.fetch('USE_EPIC'){nil} == 'false' ? '' : 'required'
+          = f.text_field :day, { class: 'form-control', maxlength: 4 }
+        .form-group
+          = f.label "position", t('visit_groups.position')
+          = f.select :position, options_for_select(insert_to_position_options(arm.visit_groups)), { include_blank: '' }, class: "form-control selectpicker visit-group-position"
+        .form-group
+          = f.label "window_before", t('visit_groups.window_before')
+          = f.text_field :window_before, { class: 'form-control' }
+        .form-group
+          = f.label "window_after", t('visit_groups.window_after')
+          = f.text_field :window_after, { class: 'form-control' }
       .modal-footer
-        .center-block
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
-            = t(:actions)[:close]
-          %span.add-visit-wrapper{ title: 'You must select a position', data: { toggle: 'tooltip', animate: 'false' } }
-            %input.btn.btn-primary.add-visit{type: 'submit', value: t(:actions)[:add]}
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t(:actions)[:close]
+        = f.submit t('actions.submit'), class: 'btn btn-primary'

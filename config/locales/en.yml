@@ -43,7 +43,6 @@ en:
     attributes:
       arm:
         name: "Arm Name"
-        subject_count: "Subject Count"
         visit_count: "Visit Count"
       appointment:
         contents: "Type of Visit"
@@ -185,7 +184,7 @@ en:
     edit_arm: Edit Arm
     flash_messages:
       updated: "Arm Updated"
-    header: 'Clinical Services'
+    header: "Clinical Services (%{arm_name})"
     name: "Arm Name"
     name_with_arm_name_interpolated: 'Arm Name: %{arm_name}'
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
@@ -242,6 +241,7 @@ en:
     search:
       loading: "Loading..."
       no_results: "No Results"
+    cant_be_blank: "Can't be blank"
 
   documents:
     object: "Document"
@@ -389,6 +389,7 @@ en:
     quantity: "Quantity"
     service: "Service"
     started: "Started"
+    subject_count: "Subject Count"
     notes: "Notes"
     documents: "Documents"
 
@@ -622,6 +623,11 @@ en:
     name: "Selected Service"
     remove_services: "Remove Services"
     report: "Report"
+
+  study_schedule:
+    tooltips:
+      quantity_type: "Quantity Type"
+      subject_count: "Subject Count"
 
   sub_service_request:
     statuses:
