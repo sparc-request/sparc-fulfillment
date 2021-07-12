@@ -27,9 +27,9 @@ $ ->
     date.setTime(date.getTime() + (60 * 60 * 1000))
     $.cookie("active-schedule-tab", tab, expires: date, path: '/') # save tab to cookie
 
-  $(document).on 'click', '.page_change_arrow', ->
+  $(document).on 'click', '.page_change_arrow:not(.disabled)', ->
     data =
-      'arm_id': $(this).data('arm_id'),
+      'arm_id': $(this).data('arm-id'),
       'page'  : $(this).attr('page'),
       'tab'   : $('#current_tab').val()
     $.ajax
@@ -77,7 +77,7 @@ $ ->
       url:  '/study_schedule/change_tab'
       data: data
 
-  $(document).on 'change', '.visit', ->
+  $(document).on 'change', '.visit-quantity', ->
     visit_id = $(this).val()
     research = + $(this).prop('checked') # unary operator '+' evaluates true/false to num
     data = 'visit':
@@ -101,8 +101,8 @@ $ ->
       url:  "/visits/#{visit_id}"
       data: data
 
-  $(document).on 'change', '.visit_name', ->
-    visit_group_id = $(this).data('visit_group_id')
+  $(document).on 'change', '.visit-name', ->
+    visit_group_id = $(this).data('visit-group-id')
     name = $(this).val()
     data = 'visit_group' : 'name' : name
     $.ajax
@@ -110,16 +110,10 @@ $ ->
       url:  "/visit_groups/#{visit_group_id}"
       data: data
 
-  $(document).on 'click', '.change_line_item_service', ->
-    line_item_id = $(this).attr('line_item_id')
-    $.ajax
-      type: 'GET'
-      url: "/line_items/#{line_item_id}/edit"
-
-  $(document).on 'click', '.check_row', ->
+  $(document).on 'click', '.check-row', ->
     if confirm("This will reset custom values for this row, do you wish to continue?")
       check = $(this).attr('check')
-      line_item_id = $(this).data('line_item_id')
+      line_item_id = $(this).data('line-item-id')
       data =
         'line_item_id': line_item_id,
         'check':        check
@@ -130,13 +124,13 @@ $ ->
         success: =>
           # Check off visits
           # Update text fields
-          identifier = ".visits_for_line_item_#{line_item_id}"
+          identifier = ".visit_for_line_item_#{line_item_id}"
           if check == 'true'
-            check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_row"], true, 1, 0)
+            check_row_column($(this), identifier, 'btn-success', 'btn-danger', 'false', I18n.t('visit.uncheck_row'), true, 1, 0)
           else
-            check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_row"], false, 0, 0)
+            check_row_column($(this), identifier, 'btn-danger', 'btn-success', 'true', I18n.t('visit.check_row'), false, 0, 0)
 
-  $(document).on 'click', '.check_column', ->
+  $(document).on 'click', '.check-column', ->
     if confirm("This will reset custom values for this column, do you wish to continue?")
       check = $(this).attr('check')
       visit_group_id = $(this).attr('visit_group_id')
@@ -152,17 +146,41 @@ $ ->
           # Update text fields
           identifier = ".visit_for_visit_group_#{visit_group_id}"
           if check == 'true'
-            check_row_column($(this), identifier, 'glyphicon-ok', 'glyphicon-remove', 'false', I18n["visit"]["uncheck_column"], true, 1, 0)
+            check_row_column($(this), identifier, 'btn-success', 'btn-danger', 'false', I18n.t('visit.uncheck_column'), true, 1, 0)
           else
-            check_row_column($(this), identifier, 'glyphicon-remove', 'glyphicon-ok', 'true', I18n["visit"]["check_column"], false, 0, 0)
+            check_row_column($(this), identifier, 'btn-danger', 'btn-success', 'true', I18n.t('visit.check_column'), false, 0, 0)
 
   check_row_column = (obj, identifier, remove_class, add_class, attr_check, attr_title, prop_check, research_val, insurance_val) ->
     obj.removeClass(remove_class).addClass(add_class)
     obj.attr('check', attr_check)
     obj.attr('title', attr_title)
-    obj.tooltip('destroy')
+    obj.find('i').toggleClass('d-none')
+    obj.tooltip('dispose')
     obj.tooltip()
     $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
 
+(exports ? this).adjustCalendarHeaders = () ->
+  zIndex = $('.study-schedule-arm-container').length * 5
+
+  $('.study-schedule-arm-container').each ->
+    $head   = $(this).children('.card-header')
+    $row1   = $(this).find('.study-schedule-table > thead > tr:first-child')
+    $row2   = $(this).find('.study-schedule-table > thead > tr:nth-child(2)')
+    $row3   = $(this).find('.study-schedule-table > thead > tr:nth-child(3)')
+
+    headHeight  = $head.outerHeight()
+    row1Height  = $row1.outerHeight()
+    row2Height  = $row2.outerHeight()
+    row3Height  = $row3.outerHeight()
+
+    $head.css('z-index': zIndex)
+    zIndex -= 2
+    $row1.children('th').css({ 'top': headHeight, 'z-index': zIndex })
+    $row1.children('th.visit-group-select').css({ 'z-index': zIndex + 1 })
+    zIndex--
+    $row2.children('th').css({ 'top': headHeight + row1Height, 'z-index': zIndex })
+    zIndex--
+    $row3.children('th').css({ 'top': headHeight +  row1Height + row2Height, 'z-index': zIndex })
+    zIndex--
