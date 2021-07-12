@@ -49,7 +49,10 @@ $ ->
     #Index table events
     $(document).on 'change', '#protocol_status_filter', ->
       status = $(this).val()
-      $('#protocols').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
+      if status == "all"
+        $('#protocols').bootstrapTable('refresh', {url: "/protocols.json", silent: "true"})
+      else
+        $('#protocols').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
     $(document).on 'click', '.financial:not(.active)', ->
       $(this).addClass('active')

@@ -22,7 +22,7 @@
   .card
     .card-header.bg-primary.text-white
       %h3.mb-0
-        = "Generated Documents"
+        = t(:documents)[:page_title]
     %table.documents.table-striped.bg-white#documents_table{data: {pagination: 'true', 'page-size' => 20, toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", toolbar: '#documentsToolbar', url: documents_path(format: :json), show: {columns: "true", refresh: "true", toggle: "true"}, "sort-name" => "created_at", "sort-order" => 'desc'}}
       %thead.bg-primary.text-white
         %tr

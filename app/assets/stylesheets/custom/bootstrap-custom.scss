@@ -67,7 +67,9 @@
   line-height: 18px;
 
   &.btn-info, &.btn-warning,
-  &.btn-outline-info:hover, &.btn-outline-warning:hover {
+  &.btn-outline-info:hover:not(.disabled), &.btn-outline-warning:hover:not(.disabled),
+  &.btn-outline-info:active, &.btn-outline-warning:active,
+  &.btn-outline-info.active, &.btn-outline-warning.active {
     color: white !important;
   }
 
@@ -123,6 +125,19 @@
 
     &:enabled:hover, &:enabled:not(.disabled):hover {
       background: theme-color('light');
+    }
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn.btn-outline-#{$color} {
+    &:active {
+      background-color: darken($value, 10%) !important;
+    }
+
+    &.active.disabled {
+      color: white;
+      background-color: $value;
     }
   }
 }
@@ -756,6 +771,10 @@ nav.navbar {
 .card > .table, .card > .collapse > .table, .card > .collapsing > .table {
   border: 0;
 
+  thead th {
+    border-top: 0;
+  }
+
   thead th, tbody td, tbody th {
     &:first-child {
       border-left: 0;
@@ -775,31 +794,33 @@ nav.navbar {
 /// Utilities ///
 /////////////////
 
-.is-valid {
-  .bootstrap-select .dropdown-toggle, .toggle, .input-group .input-group-text {
-    border: 1px solid theme-color('success') !important;
+.form-group, .form-row {
+  &.is-valid {
+    .bootstrap-select .dropdown-toggle, .toggle, .input-group .input-group-text {
+      border: 1px solid theme-color('success') !important;
+    }
+
+    label {
+      color: theme-color('success');
+    }
+
+    .form-control, .custom-select {
+      @extend .is-valid;
+    }
   }
 
-  label {
-    color: theme-color('success');
-  }
+  &.is-invalid {
+    .bootstrap-select .dropdown-toggle, .toggle, .input-group .input-group-text {
+      border: 1px solid theme-color('danger') !important;
+    }
 
-  .form-control, .custom-select {
-    @extend .is-valid;
-  }
-}
+    label {
+      color: theme-color('danger');
+    }
 
-.is-invalid {
-  .bootstrap-select .dropdown-toggle, .toggle, .input-group .input-group-text {
-    border: 1px solid theme-color('danger') !important;
-  }
-
-  label {
-    color: theme-color('danger');
-  }
-
-  .form-control, .custom-select {
-    @extend .is-invalid;
+    .form-control, .custom-select {
+      @extend .is-invalid;
+    }
   }
 }
 

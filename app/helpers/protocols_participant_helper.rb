@@ -19,13 +19,21 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ProtocolsParticipantHelper
+  def protocols_participant_label(protocols_participant)
+    protocols_participant.full_name.truncate(50)
+  end
+
   def protocols_participant_actions(protocols_participant)
     content_tag :div, class: 'd-flex justify-content-center' do
-      raw([
-        protocols_participant_details_button(protocols_participant),
-        protocols_participant_report_button(protocols_participant),
-        protocols_participant_delete_button(protocols_participant)
-      ].join(''))
+      if action_name == 'show'
+        protocols_participant_details_button(protocols_participant)
+      else
+        raw([
+          protocols_participant_details_button(protocols_participant),
+          protocols_participant_report_button(protocols_participant),
+          protocols_participant_delete_button(protocols_participant)
+        ].join(''))
+      end
     end
   end
 
@@ -74,9 +82,14 @@ module ProtocolsParticipantHelper
     end
   end
 
-  def protocols_participant_external_id(protocols_participant)
-    popover = render('external_id_form.html', protocols_participant: protocols_participant)
-    link_to protocols_participant.external_id || t('constants.na'), 'javascript:void(0)', data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
+  def protocols_participant_external_id(protocols_participant, opts={})
+    external_id = protocols_participant.external_id.present? ? protocols_participant.external_id : t('constants.na')
+    if opts[:readonly]
+      external_id
+    else
+      popover = render('external_id_form.html', protocols_participant: protocols_participant)
+      link_to external_id, 'javascript:void(0)', data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
+    end
   end
 
   def protocols_participant_report_button(protocols_participant)
@@ -87,15 +100,34 @@ module ProtocolsParticipantHelper
     end
   end
 
-  def protocols_participant_status_dropdown(protocols_participant)
-    form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
-      f.select :status, options_for_select(Participant::STATUS_OPTIONS, protocols_participant.status), { include_blank: true }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+  def protocols_participant_status_dropdown(protocols_participant, opts={})
+    if opts[:readonly]
+      protocols_participant.status.present? ? protocols_participant.status : t('constants.na')
+    else
+      form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
+        f.select :status, options_for_select(Participant::STATUS_OPTIONS, protocols_participant.status), { include_blank: true }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+      end
     end
   end
 
-  def protocols_participant_recruitment_source_dropdown(protocols_participant)
-    form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
-      f.select :recruitment_source, options_for_select(Participant::RECRUITMENT_OPTIONS, protocols_participant.recruitment_source), { include_blank: true }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+  def protocols_participant_recruitment_source_dropdown(protocols_participant, opts={})
+    if opts[:readonly]
+      protocols_participant.recruitment_source.present? ? protocols_participant.recruitment_source : t('constants.na')
+    else
+      form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
+        f.select :recruitment_source, options_for_select(Participant::RECRUITMENT_OPTIONS, protocols_participant.recruitment_source), { include_blank: true }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+      end
     end
+  end
+
+  def protocols_participant_calendar_arm_options(protocols_participant)
+    arms = protocols_participant.arms.map do |arm|
+      if arm == protocols_participant.arm
+        ["#{ProtocolsParticipant.human_attribute_name(:arm)}: #{arm.name}", arm.id]
+      else
+        ["#{Arm.model_name.human}: #{arm.name}", arm.id]
+      end
+    end
+    options_for_select(arms, protocols_participant.arm.id)
   end
 end

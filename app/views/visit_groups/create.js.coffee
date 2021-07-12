@@ -18,23 +18,38 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
-<% unless @errors %>
-$("#flashContainer").html("<%= escape_javascript(render('application/flash')) %>")
+<% if @errors %>
+$("[name^='visit_group']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='visit_group[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+<% else %>
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal 'hide'
 
 # update dropdown to page visit groups
-$("#select_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_group_page_select', locals: {arm: @arm, page: @current_page.to_i}) %>")
+arm_id = <%= @arm.id %>
+tab = $('#current_tab').val()
+$("#select_for_arm_#{arm_id}").replaceWith("<%= j render '/study_schedule/visit_group_page_select', arm: @arm, page: @current_page.to_i %>")
 $(".selectpicker").selectpicker()
 
 <% if on_current_page?(@current_page, @visit_group.position) %>
 # Overwrite the visit_groups
-$(".visit_groups_for_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visit_groups', locals: { arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab }) %>")
+$(".visit_groups_for_#{arm_id}").html("<%= j render '/study_schedule/visit_groups', arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab %>")
 # Overwrite the check columns
-$(".check_columns_for_arm_<%= @arm.id %>").html("<%= escape_javascript(render partial: '/study_schedule/check_visit_columns', locals: { visit_groups: @visit_groups, tab: @schedule_tab }) %>")
+$(".check_columns_for_arm_#{arm_id}").html("<%= j render '/study_schedule/check_visit_columns', visit_groups: @visit_groups, tab: @schedule_tab %>")
 # Overwrite the visits
 <% @arm.line_items.each do |line_item| %>
-$(".visits_for_line_item_<%= line_item.id %>").html("<%= escape_javascript(render partial: '/study_schedule/visits', locals: {line_item: line_item, page: @current_page, tab: @schedule_tab}) %>")
+$(".visit_for_line_item_<%= line_item.id %>").last().after('<div id="placeholderElement"></div>')
+placeholder_element = $('#placeholderElement')
+placeholder_element.siblings('.visit').remove()
+placeholder_element.after("<%= j render '/study_schedule/visits', line_item: line_item, page: @current_page.to_i, tab: @schedule_tab %>")
+placeholder_element.remove()
 <% end %>
+#Adjust sticky headers
+adjustCalendarHeaders()
 <% end %>
 <% end %>

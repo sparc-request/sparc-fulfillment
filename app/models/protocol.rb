@@ -115,7 +115,7 @@ class Protocol < ApplicationRecord
     when 'srid'
       order(Protocol.arel_table[:sparc_id].send(order), SubServiceRequest.arel_table[:ssr_id].send(order))
     when 'rmid'
-      order(Protocol.arel_table[:research_master_id].send(order))
+      order(Sparc::Protocol.arel_table[:research_master_id].send(order))
     when 'pi'
       order(Identity.arel_full_name.send(order))
     when 'irb_approval_date'
@@ -124,6 +124,8 @@ class Protocol < ApplicationRecord
       order(IrbRecord.arel_table[:irb_expiration_date].send(order))
     when 'organizations'
       order(SubServiceRequest.arel_table[:org_tree_display].send(order))
+    when 'status'
+      order(SubServiceRequest.arel_table[:status].send(order))
     else
       order(sort => order)
     end

@@ -1,0 +1,30 @@
+-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+-# All rights reserved.~
+
+-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+-# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+-# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+-# derived from this software without specific prior written permission.~
+
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+-# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+-# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
+.tabs.w-100#studySchedule
+  %nav.nav.nav-tabs.border-bottom-0{ role: 'tablist' }
+    = link_to "Template", "#template", data: {toggle: 'tab', tab: 'template', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/template', class: ['nav-link nav-item h4 mb-0', (tab == "template") ? "active" : ""], role: 'tab'
+    = link_to "Quantity/Billing Tab", "#quantity", data: {toggle: 'tab', tab: 'quantity', protocol: protocol.id}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing', class: ['nav-link nav-item h4 mb-0', (tab == "quantity") ? "active" : ""], role: 'tab'
+    = link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request', class: ['nav-link nav-item h4 mb-0', (tab == "consolidated") ? "active" : ""], role: 'tab'
+    .study-schedule-container.w-100
+      - protocol.arms.each do |arm|
+        = render 'study_schedule/arm', arm: arm, page: page, tab: tab
+    .study_level_activities_display{hidden: tab == 'consolidated' ? false : true}
+      = render 'study_schedule/study_level_activities', protocol: protocol

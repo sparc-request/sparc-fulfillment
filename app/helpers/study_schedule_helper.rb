@@ -20,11 +20,6 @@
 
 module StudyScheduleHelper
 
-  def glyph_class obj
-    count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
-    count == 0 ? 'glyphicon-remove' : 'glyphicon-ok'
-  end
-
   def set_check obj
     count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
     count != 0
@@ -53,7 +48,7 @@ module StudyScheduleHelper
   end
 
   def build_visits_select arm, page
-    select_tag "visits_select_for_#{arm.id}", visits_select_options(arm, page), class: 'visit_dropdown form-control selectpicker', :'data-arm_id' => "#{arm.id}", page: page
+    select_tag "visits_select_for_#{arm.id}", visits_select_options(arm, page), class: 'visit_dropdown form-control selectpicker', page: page, data: { arm_id: arm.id }
   end
 
   def on_current_page? current_page, position
