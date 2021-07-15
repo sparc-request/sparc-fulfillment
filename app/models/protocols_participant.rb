@@ -104,7 +104,7 @@ class ProtocolsParticipant < ApplicationRecord
   private
 
   def has_new_visit_groups?
-    self.new_visit_groups.any?
+    new_visit_groups.any?
   end
 
   def new_visit_groups
