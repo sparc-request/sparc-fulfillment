@@ -36,13 +36,13 @@ module StudyLevelActivitiesHelper
     button
 
     link_to documents_path(document: { documentable_id: line_item.id, documentable_type: LineItem.name }), remote: true, class: 'btn btn-sq btn-light position-relative' do
-      raw(icon('far', 'file-alt fa-lg') + content_tag(:span, format_count(line_item.documents.count, 1), class: ['badge badge-pill badge-c notification-badge', line_item.documents.count > 1 ? 'badge-warning ' : 'badge-secondary']))
+      raw(icon('far', 'file-alt fa-lg') + content_tag(:span, line_item.documents.count, class: ['badge badge-pill badge-c notification-badge', line_item.documents.count > 1 ? 'badge-warning ' : 'badge-secondary']))
     end
   end
 
   def sla_fulfillments_button(line_item)
     link_to fulfillments_path(line_item_id: line_item.id), remote: true, class: 'btn btn-sq btn-primary position-relative' do
-      raw(icon('fas', 'list') + content_tag(:span, format_count(line_item.fulfillments.count, 1), class: ['badge badge-pill badge-c notification-badge', line_item.fulfillments.count > 1 ? 'badge-warning ' : 'badge-secondary']))
+      raw(icon('fas', 'list') + content_tag(:span, line_item.fulfillments.count, class: ['badge badge-pill badge-c notification-badge', line_item.fulfillments.count > 1 ? 'badge-warning ' : 'badge-secondary']))
     end
   end
 

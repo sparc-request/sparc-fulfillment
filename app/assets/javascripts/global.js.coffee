@@ -234,11 +234,12 @@ $ ->
         $('<span class="badge badge-pill badge-c badge-danger notification-badge identity_report_notifications">0</span>').appendTo($('#navbarLinks .documents_nav'))
       notification_bubble = $('span.notification-badge.identity_report_notifications')
       notification_text = notification_bubble
-  notification_count = parseInt(notification_text.text())
-  notification_text.text(notification_count + amount) if (notification_count + amount) >= 0
-  notification_count = parseInt(notification_text.text())
-  if notification_count == 0
-    notification_bubble.remove();
+
+  new_notification_count = (parseInt(notification_text.text()) + amount)
+  notification_text.text(new_notification_count)
+
+  if new_notification_count <= 0
+    notification_bubble.remove()
 
 
 ### Add "exclude_in_export" class to columns you want excluded from export and then pass in table ID ###

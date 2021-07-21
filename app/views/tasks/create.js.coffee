@@ -37,7 +37,7 @@ $("#modalContainer").modal('hide')
 
 <% if @procedure.present? %>
 $("#followup<%= @procedure.id %>").replaceWith("<%= j render 'procedures/followup', procedure: @procedure %>")
-updateNotesBadge("procedure<%= @procedure.id %>", "<%= format_count(@procedure.notes.length) %>")
+updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.length %>")
 <% end %>
 
 <% if @appointment.present? %>
