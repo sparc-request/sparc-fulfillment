@@ -20,21 +20,27 @@
 
 $ ->
 
-  setDocumentTableInterval = null
-
   $(document).on 'click', '.report-request', ->
-    setDocumentTableInterval = setInterval refreshDocumentTable, 5000
+    $('#documents_table').one 'post-body.bs.table', () ->
+      new_document_id = $('span.processing').first().data('id')
+      documentInterval = setInterval((->
+          getDocumentState(new_document_id, documentInterval)
+          ), 5000)    
 
-  clearDocumentTableInterval = (complete) ->
-    if complete == true
-      clearInterval setDocumentTableInterval
-
-  refreshDocumentTable = ->
-    $('#documents_table').bootstrapTable('refresh', {silent: "true"})
-    complete = true
-    if $('span.processing').length
-      complete = false
-    clearDocumentTableInterval(complete)
+  getDocumentState = (id, interval) ->
+    $.ajax
+      method: 'GET'
+      dataType: 'json'
+      url: "/documents/#{id}.json"
+      success: (data) ->
+        switch data.document.state
+          when 'Completed'
+            clearInterval(interval)
+            $('#documents_table').bootstrapTable('refresh', {silent: "true"})
+            add_to_report_notification_count("Identity", 1)
+          when 'Error'
+            clearInterval(interval)
+            $('#documents_table').bootstrapTable('refresh', {silent: "true"})
 
   $(document).on 'click', '.edit-document', ->
     document_id = $(this).data('document_id')
@@ -80,4 +86,3 @@ $ ->
 (exports ? this).refreshDocumentsTables = ->
   $('#documents_table').bootstrapTable('refresh', {silent: "true"})
   $('#reports_table').bootstrapTable('refresh', {silent: "true"})
-  

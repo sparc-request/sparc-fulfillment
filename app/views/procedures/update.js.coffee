@@ -81,7 +81,7 @@ $(".appointment-action-buttons").html("<%= j render '/appointments/appointment_a
 
 $("#group-<%= @procedure.group_id %> button").trigger('click')
 
-updateNotesBadge("procedure<%= @procedure.id %>", "<%= format_count(@procedure.notes.count) %>")
+updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.count %>")
 
 <% if @cost_error_message %>
 swal("<%= @cost_error_message %>")
