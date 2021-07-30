@@ -60,3 +60,10 @@ $ ->
       if $(item).find("td.deidentified:contains('Yes')").length
         $this.addClass 'deidentified_patient'
       return
+
+  ### *DETAILS ###
+  $(document).on 'click', '.participant-details', ->
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/details"

@@ -26,7 +26,7 @@ module ParticipantHelper
   def registry_details_formatter(participant)
     [
       "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-sunglasses'></i>",
+      "<i class='fa fa-info'></i>",
       "</a>"
     ].join ""
   end
