@@ -105,6 +105,11 @@ class ParticipantsController < ApplicationController
     end
   end
 
+  def details
+    #This is here because I spent 3 hours trying to figure out how rails was rendering an action that didn't exist -.-
+    #I don't care if it's "not needed" technically, it's a troubleshooting nightmare.
+  end
+
   private
 
   def authorize_patient_registrar

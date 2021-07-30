@@ -26,7 +26,6 @@
           %span{"aria-hidden" => "true"} &times;
       .modal-body
         #modal_errors
-        = render partial: 'required_fields'
         .col-md-12
           .form-group
             = p.label "deidentified", t(:patient)[:deidentified_patient], class: "col-sm-4 control-label"
@@ -40,43 +39,43 @@
             = p.label "last_name", t(:participant)[:last_name], class: "col-sm-4 control-label required"
             .col-sm-7= p.text_field "last_name", {class: 'form-control'}
           .form-group
-            = p.label "first_name", t(:participant)[:first_name]+t(:actions)[:required], class: "col-sm-4 control-label required"
+            = p.label "first_name", t(:participant)[:first_name], class: "col-sm-4 control-label required"
             .col-sm-7= p.text_field "first_name", {class: 'form-control'}
           .form-group
             = p.label "middle_initial", t(:participant)[:middle_initial], class: "col-sm-4 control-label"
             .col-sm-7= p.text_field "middle_initial", {class: 'form-control'}
           %hr
           .form-group
-            = p.label "mrn", t(:participant)[:mrn]+t(:actions)[:required], class: "col-sm-4 control-label"
+            = p.label "mrn", t(:participant)[:mrn], class: "col-sm-4 control-label required"
             .col-sm-7= p.text_field "mrn", {class: 'form-control'}
           .form-group
-            = p.label "date_of_birth", t(:participant)[:dob]+t(:actions)[:required], class: "required"
+            = p.label "date_of_birth", t(:participant)[:dob], class: "required"
             .input-group.datetimepicker.date.col-sm-7{ id: 'dob_time_picker', data: {target_input: 'nearest' }}
               = p.text_field "date_of_birth", class: "form-control datetimepicker", readonly: true, data: { target:"#dob_time_picker" }, value: format_date(participant.date_of_birth)
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#dob_time_picker' }}
                 .input-group-text
                   %span.far.fa-calendar
           .form-group
-            = p.label "gender", t(:participant)[:gender]+t(:actions)[:required], class: "col-sm-4 control-label"
+            = p.label "gender", t(:participant)[:gender], class: "col-sm-4 control-label required"
             .col-sm-7= p.select "gender", Participant::GENDER_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
           .form-group
-            = p.label "ethnicity", t(:participant)[:ethnicity]+t(:actions)[:required], class: "col-sm-4 control-label"
+            = p.label "ethnicity", t(:participant)[:ethnicity], class: "col-sm-4 control-label required"
             .col-sm-7= p.select "ethnicity", Participant::ETHNICITY_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
           .form-group
-            = p.label "race", t(:participant)[:race]+t(:actions)[:required], class: "col-sm-4 control-label"
+            = p.label "race", t(:participant)[:race], class: "col-sm-4 control-label required"
             .col-sm-7= p.select "race", Participant::RACE_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
           %hr
           .form-group
-            = p.label "address", t(:participant)[:address]+t(:actions)[:required], class: "col-sm-4 control-label"
+            = p.label "address", t(:participant)[:address], class: "col-sm-4 control-label required"
             .col-sm-7= p.text_field "address", {class: 'form-control'}
           .form-group
-            = p.label "city", t(:participant)[:city]+t(:actions)[:required], class: "col-sm-4 control-label"
+            = p.label "city", t(:participant)[:city], class: "col-sm-4 control-label required"
             .col-sm-7= p.text_field "city", {class: 'form-control'}
           .form-group
-            = p.label "state", t(:participant)[:state]+t(:actions)[:required], class: "col-sm-4 control-label"
+            = p.label "state", t(:participant)[:state], class: "col-sm-4 control-label required"
             .col-sm-7= p.select "state", options_for_select(us_states, participant.state), {include_blank: true}, :class => "form-control selectpicker"
           .form-group
-            = p.label "zipcode", t(:participant)[:zip]+t(:actions)[:required], class: "col-sm-4 control-label"
+            = p.label "zipcode", t(:participant)[:zip], class: "col-sm-4 control-label required"
             .col-sm-7= p.text_field "zipcode", {class: 'form-control'}
           %hr
           .form-group
