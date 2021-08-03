@@ -18,14 +18,30 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-- visits = line_item.visits.paginate(page: page, per_page: Visit.per_page)
-- visits.each_with_index do |visit, index|
-  %td.text-center.visit{ colspan: 3, class: "line_item_#{line_item.id}_visit_#{index} visit_for_line_item_#{line_item.id} visit_for_visit_group_#{visit.visit_group_id}", id: "visit#{visit.id}", visit_group_id: visit.visit_group_id }
-    - if tab == 'template'
-      = check_box_tag "visit_check_#{visit.id}", visit.id, visit.has_billing?, class: 'visit-quantity'
-    - elsif tab == 'quantity'
-      = quantity_visit_link(visit, page)
-    -else
-      = visit.total_quantity
-- (visits.size...Visit.per_page).each do |index|
-  %td.visit.empty-visit{ colspan: 3, class: "line_item_#{line_item.id}_visit_#{index}" } &nbsp
+.modal-dialog{ role: 'document' }
+  .modal-content
+    = form_for visit, remote: true do |f|
+      = hidden_field_tag :tab, 'quantity'
+      = hidden_field_tag :page, params[:page]
+      .modal-header
+        %h3.modal-title<
+          = t('study_schedule.edit_billing_modal')
+          %small.text-muted
+            = visit.line_item.service.name
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+          %span{ aria: { hidden: 'true' } } &times;
+      .modal-body
+        .form-row
+          .form-group.col-4.mb-0
+            = f.label :research_billing_qty, class: 'required'
+            = f.text_field :research_billing_qty, class: 'form-control'
+          .form-group.col-4.mb-0
+            = f.label :insurance_billing_qty, class: 'required'
+            = f.text_field :insurance_billing_qty, class: 'form-control'
+          .form-group.col-4.mb-0
+            = f.label :effort_billing_qty, class: 'required'
+            = f.text_field :effort_billing_qty, class: 'form-control'
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t('actions.close')
+        = f.submit t('actions.submit'), class: 'btn btn-primary'

@@ -56,7 +56,7 @@ $ ->
       url:  '/study_schedule/change_page'
       data: data
 
-  $(document).on 'click', '#study_schedule_tabs a', ->
+  $(document).on 'click', '#studyScheduleTabs a', ->
     protocol_id = $(this).data('protocol')
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
@@ -65,7 +65,7 @@ $ ->
     $('.visit_dropdown.selectpicker').each ->
       page = $(this).val()
 
-      arm_id = $(this).data('arm_id')
+      arm_id = $(this).data('arm-id')
       arms_and_pages[arm_id] = page
 
     data =
