@@ -20,7 +20,7 @@
 
 .card.w-100
   #participantTrackerToolbar
-    = link_to new_protocol_participant_path(protocol_id: protocol.id), remote: true, class: 'btn btn-success float-left' do
+    = link_to new_protocol_participant_path(protocol_id: protocol.id), remote: true, class: 'btn btn-success' do
       = succeed t(:participant)[:search_participant] do
         = icon('fas', 'search mr-2')
     %span.tooltip-wraper.ml-3{title: t('reports.participant_report'), data: {toggle: 'tooltip'}}
