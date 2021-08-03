@@ -18,8 +18,10 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+$('#study_schedule_buttons').replaceWith("<%= j render 'study_schedule/management/schedule_edit_buttons', protocol: @protocol, tab: @tab %>")
+
 <% @arms_and_pages.each do |arm_id, value| %>
-$(".arm-<%= arm_id %>-container").html("<%= j render "/study_schedule/clinical_services/#{@tab}/arm", arm: value[:arm], page: value[:page].to_i, tab: @tab %>")
+$(".arm-<%= arm_id %>-container").html("<%= j render '/study_schedule/arm', arm: value[:arm], page: value[:page].to_i, tab: @tab %>")
 $("#visits_select_for_<%= arm_id %>").selectpicker()
 <% end %>
 

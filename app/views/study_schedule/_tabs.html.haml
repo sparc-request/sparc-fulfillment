@@ -25,7 +25,6 @@
     = link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request', class: ['nav-link nav-item h4 mb-0', (tab == "consolidated") ? "active" : ""], role: 'tab'
     .study-schedule-container.w-100
       - protocol.arms.each do |arm|
-        -# TODO: rename all places that called 'study_schedule/arm'
-        = render "study_schedule/clinical_services/#{tab}/arm", arm: arm, page: page, tab: tab
+        = render 'study_schedule/arm', arm: arm, page: page, tab: tab
     .study_level_activities_display{hidden: tab == 'consolidated' ? false : true}
       = render 'study_schedule/study_level_activities', protocol: protocol
