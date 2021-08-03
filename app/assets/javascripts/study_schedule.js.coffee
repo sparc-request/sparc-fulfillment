@@ -101,6 +101,13 @@ $ ->
       url:  "/visits/#{visit_id}"
       data: data
 
+  $(document).on 'click', 'td.visit.quantity-visit', ->
+    if $link = $(this).find('a:not(.disabled)')
+      $.ajax
+        method: $link.data('method') || 'GET'
+        dataType: 'script'
+        url: $link.attr('href')
+
   $(document).on 'change', '.visit-name', ->
     visit_group_id = $(this).data('visit-group-id')
     name = $(this).val()
