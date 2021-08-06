@@ -30,7 +30,6 @@ module ProtocolsParticipantHelper
       else
         raw([
           protocols_participant_details_button(protocols_participant),
-          protocols_participant_report_button(protocols_participant),
           protocols_participant_delete_button(protocols_participant)
         ].join(''))
       end
@@ -89,14 +88,6 @@ module ProtocolsParticipantHelper
     else
       popover = render('external_id_form.html', protocols_participant: protocols_participant)
       link_to external_id, 'javascript:void(0)', data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
-    end
-  end
-
-  def protocols_participant_report_button(protocols_participant)
-    content_tag(:div, class: 'tooltip-wrapper', title: t('reports.participant_report'), data: { toggle: 'tooltip' }) do
-      content_tag(:button, class: 'btn btn-sq btn-secondary mr-1 participant-report report-button', data: { url: reports_path(report_type: 'participant_report', title: t('reports.participant_report'), documentable_id: protocols_participant.protocol_id, documentable_type: Protocol.name) }) do
-        icon('fas', 'file-alt mr-1')
-      end
     end
   end
 

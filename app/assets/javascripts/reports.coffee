@@ -88,7 +88,7 @@ setReportError = ($element) ->
 
 addReportDropdown = ($element, documentId) ->
   $button       = $element.clone()
-  $dropdown     = $("<div class='dropdown'></div>")
+  $dropdown     = $("<span class='dropdown'></span>")
   $dropdownMenu = $("
     <ul class='dropdown-menu dropdown-menu-right'>
       <a class='dropdown-item download-report' href='/documents/#{documentId}' target='_blank'><i class='fas fa-download mr-2'></i>#{I18n.t('reports.download')}</a>
