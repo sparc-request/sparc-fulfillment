@@ -27,9 +27,10 @@
         = icon('fas', 'check' + (checked ? '' : ' d-none'))
         = icon('fas', 'times' + (checked ? ' d-none' : ''))
     - if tab == 'quantity'
-      .r-t-labels
-        %span.even_shorter_text.r-label= "R"
-        %span.even_shorter_text.t-label= "T"
+      .quantity-container
+        %span.r-label= "R"
+        %span.t-label= "T"
+        %span.t-label= "%"
 
 - (visit_groups.size...Visit.per_page).each do |index|
   %th{ colspan: 3, class: "column_#{index}" } &nbsp

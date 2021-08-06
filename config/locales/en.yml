@@ -628,6 +628,7 @@ en:
     tooltips:
       quantity_type: "Quantity Type"
       subject_count: "Subject Count"
+    edit_billing_modal: "Edit Billing Quantities"
 
   sub_service_request:
     statuses:

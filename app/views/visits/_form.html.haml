@@ -18,13 +18,30 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.tabs.w-100#studySchedule
-  %nav.nav.nav-tabs.border-bottom-0#studyScheduleTabs{ role: 'tablist' }
-    = link_to "Template", "#template", data: {toggle: 'tab', tab: 'template', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/template', class: ['nav-link nav-item h4 mb-0', (tab == "template") ? "active" : ""], role: 'tab'
-    = link_to "Quantity/Billing Tab", "#quantity", data: {toggle: 'tab', tab: 'quantity', protocol: protocol.id}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing', class: ['nav-link nav-item h4 mb-0', (tab == "quantity") ? "active" : ""], role: 'tab'
-    = link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request', class: ['nav-link nav-item h4 mb-0', (tab == "consolidated") ? "active" : ""], role: 'tab'
-    .study-schedule-container.w-100
-      - protocol.arms.each do |arm|
-        = render 'study_schedule/arm', arm: arm, page: page, tab: tab
-    .study_level_activities_display{hidden: tab == 'consolidated' ? false : true}
-      = render 'study_schedule/study_level_activities', protocol: protocol
+.modal-dialog{ role: 'document' }
+  .modal-content
+    = form_for visit, remote: true do |f|
+      = hidden_field_tag :tab, 'quantity'
+      = hidden_field_tag :page, params[:page]
+      .modal-header
+        %h3.modal-title<
+          = t('study_schedule.edit_billing_modal')
+          %small.text-muted
+            = visit.line_item.service.name
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+          %span{ aria: { hidden: 'true' } } &times;
+      .modal-body
+        .form-row
+          .form-group.col-4.mb-0
+            = f.label :research_billing_qty, class: 'required'
+            = f.text_field :research_billing_qty, class: 'form-control'
+          .form-group.col-4.mb-0
+            = f.label :insurance_billing_qty, class: 'required'
+            = f.text_field :insurance_billing_qty, class: 'form-control'
+          .form-group.col-4.mb-0
+            = f.label :effort_billing_qty, class: 'required'
+            = f.text_field :effort_billing_qty, class: 'form-control'
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t('actions.close')
+        = f.submit t('actions.submit'), class: 'btn btn-primary'
