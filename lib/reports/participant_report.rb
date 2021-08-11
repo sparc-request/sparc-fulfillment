@@ -35,6 +35,7 @@ class ParticipantReport < Report
     @gender = @params[:gender] unless @params[:gender] == 'Both' || @params[:gender] == ''
     @mrns = @params[:mrns]
     @protocols = @params[:protocols]
+    @protocol_level = @params[:protocol_level]
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
@@ -75,7 +76,14 @@ class ParticipantReport < Report
       header << "City"
       header << "State"
       header << "Zip"
-      header << "Protocol(s)"
+      if @protocol_level
+        header << "External ID"
+        header << "Current Arm"
+        header << "Status"
+        header << "Recruitment Source"
+      else
+        header << "Protocol(s)"
+      end
 
       csv << header
       participants.each do |participant|
@@ -96,7 +104,20 @@ class ParticipantReport < Report
         data << participant.city
         data << participant.state
         data << participant.zipcode
-        data << participant.protocols.map(&:sparc_id).map(&:inspect).join(', ')
+
+        if @protocol_level
+          ##There is only one protocol in the protocols array, because this is being ran inside of one protocol
+          protocol_id = @protocols.first
+          ##Same with protocols_participant, only one should exist between this particular participant, and protocol
+          protocols_participant = participant.protocols_participants.where(protocol_id: protocol_id).first
+
+          data << protocols_participant.external_id
+          data << protocols_participant.arm.name
+          data << protocols_participant.status
+          data << protocols_participant.recruitment_source
+        else
+          data << participant.protocols.map(&:sparc_id).map(&:inspect).join(', ')
+        end
 
         csv << data
       end

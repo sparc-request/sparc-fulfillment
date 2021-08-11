@@ -59,6 +59,7 @@ getDocumentState = ($element, documentId, interval) ->
             $dropdown.replaceWith($button)
             generateReport($button)
         when 'Error'
+          clearInterval(interval)
           $element.removeClass('disabled')
           setReportError($element)
 
