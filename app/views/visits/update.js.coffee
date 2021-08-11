@@ -26,8 +26,10 @@ $('.form-error').remove()
 $("[name='visit[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
 <% end %>
 <% end %>
+
 <% else %>
-$("#visit<%= @visit.id %>").html("<%= j quantity_visit_link(@visit, @page) %>")
-$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
-$("#modalContainer").modal('hide')
+if $('#studyScheduleTabs .nav-link[data-tab="quantity"]').hasClass('active')
+  $("#visit<%= @visit.id %>").html("<%= j quantity_visit_link(@visit, @page) %>")
+  $("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
+  $("#modalContainer").modal('hide')
 <% end %>
