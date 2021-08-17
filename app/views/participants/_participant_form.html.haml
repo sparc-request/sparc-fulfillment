@@ -51,7 +51,7 @@
           .form-group
             = p.label "date_of_birth", t(:participant)[:dob], class: "required"
             .input-group.datetimepicker.date.col-sm-7{ id: 'dob_time_picker', data: {target_input: 'nearest' }}
-              = p.text_field "date_of_birth", class: "form-control datetimepicker", readonly: true, data: { target:"#dob_time_picker" }, value: format_date(participant.date_of_birth)
+              = p.text_field "date_of_birth", class: "form-control datetimepicker-input", readonly: true, data: { target:"#dob_time_picker", toggle: "datetimepicker" }, value: format_date(participant.date_of_birth)
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#dob_time_picker' }}
                 .input-group-text
                   %span.far.fa-calendar

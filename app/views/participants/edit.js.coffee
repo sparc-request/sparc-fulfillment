@@ -24,5 +24,6 @@ $("#dob_time_picker").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
   viewMode: 'years'
+  allowInputToggle: false
 $(".selectpicker").selectpicker()
 

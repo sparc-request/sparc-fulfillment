@@ -20,7 +20,6 @@
 
 $ ->
 
-  # allowSubmit = true
   # Line Item Bindings
 
   $(document).on 'change', 'input.invoice_toggle', ->
@@ -96,23 +95,11 @@ $ ->
       data: "line_item_id" : line_item_id
 
   $(document).on 'click', '.otf-fulfillment-edit', ->
-    # allowSubmit = true
     fulfillment_id = $(this).data('fulfillment_id')
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
     
-
-  # $(document).on 'click', '.add_fulfillment', (e)->
-  #   e.preventDefault()
-  #   if allowSubmit
-  #     $('.fulfillment-form').submit()
-  #     allowSubmit = false
-  #   else
-  #     return false
-
-  # $(document).on 'click', '#date_fulfilled_field, #fulfillment_quantity', ->
-  #   allowSubmit = true
 
   # Do not display in dropdown that allows you to add/remove columns
   # These columns will always be outputted to the export file
