@@ -26,7 +26,7 @@ module ParticipantHelper
   def registry_details_formatter(participant)
     [
       "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' participant_id='#{participant.id}'>",
-      "<i class='fa fa-info'></i>",
+      "#{icon('fas', 'info')}",
       "</a>"
     ].join ""
   end
@@ -36,21 +36,11 @@ module ParticipantHelper
 
     return_array = [
       "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
-      "<i class='fas fa-edit'></i>",
+      "#{icon('fas', 'edit')}",
       "</a>",
       "&nbsp&nbsp"] + destroy_array  
     
     return_array.join ""
-  end
-
-  def editFormatter(participant, protocols_participant)
-    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
-    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    [
-      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' #{protocol_id_attr} participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-edit'></i>",
-      "</a>"
-    ].join ""
   end
 
   def phoneNumberFormatter(participant)
