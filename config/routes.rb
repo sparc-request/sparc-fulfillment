@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   end
 
   resources :participants do
+    get 'details', to: 'participants#details'
   end
 
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
