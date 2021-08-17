@@ -91,6 +91,7 @@ class ReportsController < ApplicationController
               :protocols_participant_id,
               :documentable_id,
               :documentable_type,
+              :protocol_level,
               :mrns => [],
               :organizations => [],
               :protocols => []).merge(identity_id: current_identity.id)
