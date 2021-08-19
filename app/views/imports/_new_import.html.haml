@@ -22,17 +22,16 @@
   = form_for @import, multipart: true, remote: true, html: { class: 'form-horizontal' } do |f|
     .modal-content
       .modal-header
-        %button.close{ type: 'button', data: { dismiss: 'modal' } }
-          %span{ aria: { hidden: 'true' } } &times;
-          %span.sr-only
-            = t(:actions)[:close]
         %h3.modal-title.text-center
           = link_to 'http://www.getklok.com',
             data: { toggle: "tooltip", animation: 'false' },
             title: t(:imports)[:klok_import_info], target: '_blank' do
-            / %i.glyphicon.glyphicon-time
             = icon('fa', 'clock')
             = t(:imports)[:klok_import]
+        %button.close{ type: 'button', data: { dismiss: 'modal' } }
+          %span{ aria: { hidden: 'true' } } &times;
+          %span.sr-only
+            = t(:actions)[:close]
       .modal-body
         .form-group
           = f.label :title, t(:imports)[:file_select],
@@ -49,7 +48,7 @@
         .form-group
           = label_tag "proof_report",
             t(:imports)[:proof_report],
-            class: "col-sm-3 control-label",
+            class: "col-sm-3 control-label tooltip-wrapper",
             data:{toggle: "tooltip", animation: 'false'},
             title: t(:imports)[:proof_report_info]
           .col-sm-9
@@ -59,7 +58,7 @@
         .form-group
           = label_tag "import_klok_data",
             t(:imports)[:import_klok_data],
-            class: "col-sm-3 control-label",
+            class: "col-sm-3 control-label tooltip-wrapper",
             data:{toggle: "tooltip", animation: 'false'},
             title: t(:imports)[:import_klok_data_info]
           .col-sm-9
