@@ -30,7 +30,8 @@
           = link_to 'http://www.getklok.com',
             data: { toggle: "tooltip", animation: 'false' },
             title: t(:imports)[:klok_import_info], target: '_blank' do
-            %i.glyphicon.glyphicon-time
+            / %i.glyphicon.glyphicon-time
+            = icon('fa', 'clock')
             = t(:imports)[:klok_import]
       .modal-body
         .form-group
