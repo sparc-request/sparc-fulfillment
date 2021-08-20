@@ -48,7 +48,7 @@ $ ->
       return
 
     data =
-      'arm_id': $(this).data('arm_id')
+      'arm_id': $(this).data('arm-id')
       'page'  : page_selected
       'tab'   : tab
     $.ajax
@@ -56,7 +56,7 @@ $ ->
       url:  '/study_schedule/change_page'
       data: data
 
-  $(document).on 'click', '#studyScheduleTabs a', ->
+  $(document).on 'click', '#studyScheduleTabs a.nav-link', ->
     protocol_id = $(this).data('protocol')
     tab = $(this).data('tab')
     $('#current_tab').val(tab)

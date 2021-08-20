@@ -20,3 +20,5 @@
 
 $('#modalContainer').html("<%= j render 'form', visit: @visit %>")
 $('#modalContainer').modal('show')
+
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
