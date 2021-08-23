@@ -113,7 +113,7 @@ class ParticipantReport < Report
           arm = protocols_participant.arm
 
           data << protocols_participant.external_id
-          data << arm.nil? ? "No Arm Selected" : arm.name
+          data << (arm.nil? ? "No Arm Selected" : arm.name)
           data << protocols_participant.status
           data << protocols_participant.recruitment_source
         else
