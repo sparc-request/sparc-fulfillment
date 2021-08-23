@@ -60,7 +60,15 @@ $ ->
 
   $(document).on 'change', "#organization_select", ->
     org_ids = $(this).val()
-    if org_ids != null
+    if org_ids.length == 0
+      # Hide protocols dropdown if an Organization has not been selected
+      $('#protocol_section').closest('.form-group').addClass("d-none")
+      $('#org_based_protocols').addClass('d-none')
+      $('#protocol_section').empty()
+    else
+      $('#org_based_protocols').removeClass('d-none')
+      $('#protocol_section').empty()
+      $('#protocol_section').closest('.form-group').removeClass("d-none")
       $.ajax
         type: 'GET'
         url: "reports/update_protocols_dropdown"
