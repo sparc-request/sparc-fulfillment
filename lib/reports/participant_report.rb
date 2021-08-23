@@ -112,7 +112,7 @@ class ParticipantReport < Report
           protocols_participant = participant.protocols_participants.where(protocol_id: protocol_id).first
 
           data << protocols_participant.external_id
-          data << protocols_participant.arm.name
+          data << protocols_participant.arm ? protocols_participant.arm.name : "No Arm Selected"
           data << protocols_participant.status
           data << protocols_participant.recruitment_source
         else
