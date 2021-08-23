@@ -110,9 +110,10 @@ class ParticipantReport < Report
           protocol_id = @protocols.first
           ##Same with protocols_participant, only one should exist between this particular participant, and protocol
           protocols_participant = participant.protocols_participants.where(protocol_id: protocol_id).first
+          arm = protocols_participant.arm
 
           data << protocols_participant.external_id
-          data << protocols_participant.arm ? protocols_participant.arm.name : "No Arm Selected"
+          data << arm.nil? ? "No Arm Selected" : arm.name
           data << protocols_participant.status
           data << protocols_participant.recruitment_source
         else
