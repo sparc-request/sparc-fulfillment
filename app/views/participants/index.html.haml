@@ -36,7 +36,7 @@
               = t(:participant)[:dob]  
             %th{data: {class: 'deidentified truncate', align: "left", sortable: "true", field: "deidentified", visible: "true"}}
               = t(:participant)[:deidentified] 
-            %th{data: {class: 'external_id', align: "center", field: "external_id", visible: "false"}}
+            %th{data: {class: 'external_ids', align: "center", sortable: "true", field: "external_ids", visible: "false"}}
               = t(:activerecord)[:attributes][:protocols_participant][:external_id]
             %th{data: {class: 'details', align: "center", field: "details"}}
               = t(:actions)[:details]

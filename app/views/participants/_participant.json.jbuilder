@@ -5,6 +5,7 @@ if @protocol
 else
   json.details      registry_details_formatter(participant)
   json.actions      registry_actions_formatter(participant)
+  json.external_ids participant.external_ids
 end
 
 json.deidentified   deidentified_patient(participant)
