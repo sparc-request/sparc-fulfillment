@@ -26,9 +26,8 @@
           %span{"aria-hidden" => "true"} &times;
       .modal-body
         #modal_errors
-        = render partial: 'required_fields'
         .col-md-12
-          .form-group
+          .form-group.row.align-items-center
             = p.label "deidentified", t(:patient)[:deidentified_patient], class: "col-sm-4 control-label"
             - if participant.can_be_deidentified?
               .checkbox.col-sm-7
@@ -36,51 +35,51 @@
             - else
               .checkbox.col-sm-7{ disabled: true, title: t(:patient)[:cannot_be_deidentified], data: { toggle: 'tooltip', placement: 'top'} }
                 %label= p.check_box "deidentified", disabled: true
-          .form-group
-            = p.label "last_name", t(:participant)[:last_name], class: "col-sm-4 control-label required"
+          .form-group.row.align-items-center
+            = p.label "last_name", t(:participant)[:last_name]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.text_field "last_name", {class: 'form-control'}
-          .form-group
-            = p.label "first_name", t(:participant)[:first_name]+t(:actions)[:required], class: "col-sm-4 control-label required"
+          .form-group.row.align-items-center
+            = p.label "first_name", t(:participant)[:first_name]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.text_field "first_name", {class: 'form-control'}
-          .form-group
-            = p.label "middle_initial", t(:participant)[:middle_initial], class: "col-sm-4 control-label"
-            .col-sm-7= p.text_field "middle_initial", {class: 'form-control'}
+          .form-group.row.align-items-center
+            = p.label "middle_initial", t(:participant)[:middle_initial], class: "col-sm-4 control-label mb-0"
+            .col-sm-7= p.text_field "middle_initial", {class: 'form-control', maxlength: 1}
           %hr
-          .form-group
-            = p.label "mrn", t(:participant)[:mrn]+t(:actions)[:required], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "mrn", t(:participant)[:mrn]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.text_field "mrn", {class: 'form-control'}
-          .form-group
-            = p.label "date_of_birth", t(:participant)[:dob]+t(:actions)[:required], class: "required"
+          .form-group.row.align-items-center
+            = p.label "date_of_birth", t(:participant)[:dob]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .input-group.datetimepicker.date.col-sm-7{ id: 'dob_time_picker', data: {target_input: 'nearest' }}
-              = p.text_field "date_of_birth", class: "form-control datetimepicker", readonly: true, data: { target:"#dob_time_picker" }, value: format_date(participant.date_of_birth)
+              = p.text_field "date_of_birth", class: "form-control datetimepicker-input", readonly: true, data: { target:"#dob_time_picker", toggle: "datetimepicker" }, value: format_date(participant.date_of_birth)
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#dob_time_picker' }}
                 .input-group-text
                   %span.far.fa-calendar
-          .form-group
-            = p.label "gender", t(:participant)[:gender]+t(:actions)[:required], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "gender", t(:participant)[:gender]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.select "gender", Participant::GENDER_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
-          .form-group
-            = p.label "ethnicity", t(:participant)[:ethnicity]+t(:actions)[:required], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "ethnicity", t(:participant)[:ethnicity]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.select "ethnicity", Participant::ETHNICITY_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
-          .form-group
-            = p.label "race", t(:participant)[:race]+t(:actions)[:required], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "race", t(:participant)[:race]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.select "race", Participant::RACE_OPTIONS, {include_blank: true}, :class => "form-control selectpicker"
           %hr
-          .form-group
-            = p.label "address", t(:participant)[:address]+t(:actions)[:required], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "address", t(:participant)[:address]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.text_field "address", {class: 'form-control'}
-          .form-group
-            = p.label "city", t(:participant)[:city]+t(:actions)[:required], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "city", t(:participant)[:city]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.text_field "city", {class: 'form-control'}
-          .form-group
-            = p.label "state", t(:participant)[:state]+t(:actions)[:required], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "state", t(:participant)[:state]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.select "state", options_for_select(us_states, participant.state), {include_blank: true}, :class => "form-control selectpicker"
-          .form-group
-            = p.label "zipcode", t(:participant)[:zip]+t(:actions)[:required], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "zipcode", t(:participant)[:zip]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.text_field "zipcode", {class: 'form-control'}
           %hr
-          .form-group
-            = p.label "phone", t(:participant)[:phone], class: "col-sm-4 control-label"
+          .form-group.row.align-items-center
+            = p.label "phone", t(:participant)[:phone], class: "col-sm-4 control-label mb-0"
             .col-sm-7= p.text_field "phone", {class: 'form-control'}
       .modal-footer
         .center-block

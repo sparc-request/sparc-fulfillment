@@ -1,7 +1,6 @@
 json.(fulfillment)
 
 json.id fulfillment.id
-json.fulfillment_date_my fulfillment_grouper_formatter(fulfillment)
 json.fulfillment_date    fulfillment_date_formatter(fulfillment)
 json.quantity            fulfillment.quantity
 json.quantity_type       fulfillment.line_item.quantity_type

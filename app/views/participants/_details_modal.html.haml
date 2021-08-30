@@ -25,60 +25,41 @@
         = participant.full_name
       %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
         %span{ aria: { hidden: 'true' } } &times;
-    .modal-body.py-0
+    .modal-body
       .row
-        %table.table.mb-0
-          %tbody
-            %tr.d-flex
-              %td.col-3.d-inline-block.border-top-0
-                = Participant.human_attribute_name(:mrn)
-              %td.col-9.d-inline-block.border-top-0
-                = participant.mrn
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:date_of_birth)
-              %td.col-9.d-inline-block
-                = format_date(participant.date_of_birth)
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:gender)
-              %td.col-9.d-inline-block
-                = participant.gender
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:ethnicity)
-              %td.col-9.d-inline-block
-                = participant.ethnicity
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:race)
-              %td.col-9.d-inline-block
-                = participant.race
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:address)
-              %td.col-9.d-inline-block
-                = participant.address
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:city)
-              %td.col-9.d-inline-block
-                = participant.city
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:state)
-              %td.col-9.d-inline-block
-                = participant.state
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:zipcode)
-              %td.col-9.d-inline-block
-                = participant.zipcode
-            %tr.d-flex
-              %td.col-3.d-inline-block
-                = Participant.human_attribute_name(:phone)
-              %td.col-9.d-inline-block
-                = participant.phone
+        .col
+          %table.table.table-striped
+            %tbody
+              %tr
+                %td= Participant.human_attribute_name(:mrn)
+                %td= participant.mrn
+              %tr
+                %td= Participant.human_attribute_name(:date_of_birth)
+                %td= format_date(participant.date_of_birth)
+              %tr
+                %td= Participant.human_attribute_name(:gender)
+                %td= participant.gender
+              %tr
+                %td= Participant.human_attribute_name(:ethnicity)
+                %td= participant.ethnicity
+              %tr
+                %td= Participant.human_attribute_name(:race)
+                %td= participant.race
+              %tr
+                %td= Participant.human_attribute_name(:address)
+                %td= participant.address
+              %tr
+                %td= Participant.human_attribute_name(:city)
+                %td= participant.city
+              %tr
+                %td= Participant.human_attribute_name(:state)
+                %td= participant.state
+              %tr
+                %td= Participant.human_attribute_name(:zipcode)
+                %td= participant.zipcode
+              %tr
+                %td= Participant.human_attribute_name(:phone)
+                %td= participant.phone
     .modal-footer
       %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
         = t('actions.close')

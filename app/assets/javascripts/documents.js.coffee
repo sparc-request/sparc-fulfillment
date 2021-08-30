@@ -60,11 +60,26 @@ $ ->
 
   $(document).on 'change', "#organization_select", ->
     org_ids = $(this).val()
-    if org_ids != null
+    if org_ids.length == 0
+      # Hide protocols dropdown if an Organization has not been selected
+      $('#protocol_section').closest('.form-group').addClass("d-none")
+      $('#org_based_protocols').addClass('d-none')
+      $('#protocol_section').empty()
+      $('input[type=submit].report-request').prop('disabled', true)
+    else
+      $('#org_based_protocols').removeClass('d-none')
+      $('#protocol_section').empty()
+      $('#protocol_section').closest('.form-group').removeClass("d-none")
       $.ajax
         type: 'GET'
         url: "reports/update_protocols_dropdown"
         data: { org_ids: org_ids }
+
+  $(document).on 'change', "#protocol_select", ->
+    if $(this).val().length > 0
+      $('input[type=submit].report-request').prop('disabled', false)
+    else
+      $('input[type=submit].report-request').prop('disabled', true)
 
   if $("body.documents-index").length > 0
     $(document).on 'click', 'a.attached_file', ->

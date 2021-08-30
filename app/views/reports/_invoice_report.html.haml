@@ -50,43 +50,54 @@
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
                 .input-group-text
                   %span.far.fa-calendar
+
           .form-group
             = label_tag "organizations", t(:reports)[:organization], class: "control-label required"
             .col-sm-9
               = select_tag 'organizations',grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "selectpicker form-control", id: "organization_select"
-          .form-group.hidden
+
+          .form-group.d-none
             = label_tag "protocol", t(:reports)[:protocols], class: "control-label required"
             .col-sm-9#protocol_section
-          .form-group
-            = label_tag "sort_by", t(:reports)[:sort_by], class: "control-label"
-            .col-sm-3
-              %label.radio-inline
-                = radio_button_tag "sort_by", t(:reports)[:protocol_id], true
-                = t(:reports)[:protocol_id]
-            .col-sm-3
-              %label.radio-inline
-                = radio_button_tag "sort_by", t(:reports)[:primary_pi]
-                = t(:reports)[:primary_pi]
-          .form-group
-            = label_tag "sort_order", t(:reports)[:sort_order], class: "control-label"
-            .col-sm-3
-              %label.radio-inline
-                = radio_button_tag "sort_order", t(:reports)[:asc], true
-                = t(:reports)[:ascending]
-            .col-sm-3
-              %label.radio-inline
-                = radio_button_tag "sort_order", t(:reports)[:desc]
-                = t(:reports)[:descending]
-          .form-group
-            = label_tag "include_notes", t(:reports)[:include_notes], class: "control-label"
-            .checkbox.col-sm-9
-              %label= check_box_tag "include_notes", true, false
-          .form-group
-            = label_tag "include_invoiced", t(:reports)[:include_invoiced], class: "control-label"
-            .checkbox.col-sm-9
-              %label= check_box_tag "include_invoiced", true, false
+          .form-group#org_based_protocols.d-none
+            = icon('fas', 'cog spin ml-3')
+
+          .row
+            .form-group.col-sm-6
+              %label.control-label=t(:reports)[:sort_by]
+              .form-check.ml-3
+                = radio_button_tag "sort_by", t(:reports)[:protocol_id], true, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:protocol_id]
+
+              .form-check.ml-3
+                = radio_button_tag "sort_by", t(:reports)[:primary_pi], false, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:primary_pi]
+
+            .form-group.col-sm-6
+              %label.control-label=t(:reports)[:sort_order]
+              .form-check.ml-3
+                = radio_button_tag "sort_order", t(:reports)[:asc], true, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:ascending]
+
+              .form-check.ml-3
+                = radio_button_tag "sort_order", t(:reports)[:desc], false, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:descending]
+
+          .row
+            %label.col-12.control-label=t(:actions)[:options]
+          .row
+            .form-group.col-sm-6
+              .form-check.ml-3
+                = check_box_tag "include_notes", true, false, class: "form-check-input"
+                %label.form-check-label=t(:reports)[:include_notes]
+              
+            .form-group.col-sm-6
+              .form-check.ml-3
+                = check_box_tag "include_invoiced", true, false, class: "form-check-input"
+                %label.form-check-label=t(:reports)[:include_invoiced]
+                
       .modal-footer
         .center-block
           %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: t(:reports)[:request_report], class: 'report-request'}
+          %input.btn.btn-primary{type: 'submit', value: t(:reports)[:request_report], class: 'report-request', disabled: true}

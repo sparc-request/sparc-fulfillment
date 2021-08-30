@@ -69,6 +69,8 @@
 //= require custom/bootstrap-select-custom
 //= require custom/tempusdominus-custom
 //= require custom/nprogress-custom
+//= require custom/bootstrap-table-custom
+
 
 ///////////////////////////
 /// Require Our Scripts ///

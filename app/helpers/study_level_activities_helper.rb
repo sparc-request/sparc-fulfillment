@@ -122,7 +122,7 @@ module StudyLevelActivitiesHelper
   def fulfillment_date_formatter(fulfillment)
     if fulfillment.klok_entry_id.present? # this was imported from klok
       content_tag(:span, format_date(fulfillment.fulfilled_at), class: 'fulfillment-date-for-klok-entry') +
-      content_tag(:i, '', class: 'glyphicon glyphicon-time')
+      content_tag(:i, '', class: 'far fa-clock')
     else
       format_date(fulfillment.fulfilled_at)
     end
