@@ -79,6 +79,8 @@ statuses[statuses.length] =  "<%= status %>"
 
 $(".appointment-action-buttons").html("<%= j render '/appointments/appointment_action_buttons', appointment: @appointment %>")
 
+$('.delete-button[data-procedure="<%= @procedure.id %>"]').replaceWith("<%= j delete_procedure_button(@procedure) %>")
+
 $("#group-<%= @procedure.group_id %> button").trigger('click')
 
 updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.count %>")

@@ -514,8 +514,12 @@ en:
     tooltips:
       unstarted_appointment: "Click 'Start Visit' and enter a start date to continue."
       complete: "Complete"
+      completed:
+        disabled: "This procedure has been completed and cannot be deleted"
       unstarted: "Unstarted"
       incomplete: "Incomplete"
+      incompleted:
+        disabled: "This procedure is incomplete and cannot be deleted"
       followup:
         schedule: "Schedule a follow-up"
       invoiced:
