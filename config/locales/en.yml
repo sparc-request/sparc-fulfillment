@@ -176,6 +176,7 @@ en:
         grouped: "Switch to Grouped View"
       complete_visit:
         disabled: "Assign a status or follow-up date for each procedure in order to complete this visit."
+        completed: "This visit has already been completed"
       reset_visit:
         disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
         disabled_credited: "A procedure within this visit has been credited and cannot be altered."
