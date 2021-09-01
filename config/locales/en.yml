@@ -125,6 +125,12 @@ en:
           attributes:
             position:
               blank: "You must select a Position"
+        procedure:
+          attributes:
+            base:
+              qty: "Must be greater than zero"
+            service:
+              required: "You ust select a Service"
         visit_group:
           attributes:
             position:
