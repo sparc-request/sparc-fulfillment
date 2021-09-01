@@ -22,7 +22,7 @@
   .modal-content
     = form_for document, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
       .modal-header
-        %h4.modal-title.text-center
+        %h4.modal-title
           = t(:documents)[:edit_header]
         %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} &times;

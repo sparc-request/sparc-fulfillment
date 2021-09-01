@@ -67,11 +67,11 @@ module StudyLevelActivitiesHelper
   def fulfillment_actions(fulfillment)
     notes_documents_array = [
       "<a class='fulfillment_documents' href='javascript:void(0)' title='Documents' data-documentable-id='#{fulfillment.id}' data-documentable-type='Fulfillment'>",
-      "<i class='fas fa-folder-open'></i>",
+      "<i class='far fa-file-alt'></i>",
       "</a>",
       "&nbsp&nbsp",
       "<a class='fulfillment_notes' href='javascript:void(0)' title='Notes' data-notable-id='#{fulfillment.id}' data-notable-type='Fulfillment'>",
-      "<i class='fa fa-list'></i>",
+      "<i class='far fa-sticky-note'></i>",
       "</a>",
       "&nbsp&nbsp"]
 

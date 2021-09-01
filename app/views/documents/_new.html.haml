@@ -24,12 +24,10 @@
       = form.hidden_field :documentable_type
       = form.hidden_field :documentable_id
       .modal-header
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only
-            = t(:actions)[:close]
-        %h4.modal-title.text-center
+        %h4.modal-title
           = t(:documents)[:new_header]
+        %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} &times;
       #doc_modal_errors
       .modal-body
         .form-group.row.align-items-center
@@ -38,6 +36,6 @@
             = form.file_field :document
       .modal-footer
         .center-block
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+          %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
           %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}
