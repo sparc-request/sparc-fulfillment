@@ -29,10 +29,11 @@
       .modal-body
         #document_modal_errors
         = render 'required_fields'
-        .form-group
-          = form.label "title", t(:documents)[:title], class: "control-label required"
-          .col-sm-8
-            = form.text_field :title, {class: 'form-control'}
+        .col-12.mt-3
+          .form-group.row.align-items-center
+            = form.label "title", t(:documents)[:title], class: "control-label required col-sm-4"
+            .col-sm-8
+              = form.text_field :title, {class: 'form-control'}
       .modal-footer
         .center-block
           %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}

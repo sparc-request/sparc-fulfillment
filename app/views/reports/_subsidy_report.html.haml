@@ -29,27 +29,30 @@
       .modal-body
         #modal_errors
         = render partial: 'required_fields'
-        .col-md-12
+        .col-md-12.mt-3
           = hidden_field_tag "report_type", report_type
           = hidden_field_tag "include_notes", false
-          .form-group
-            = label_tag "title", t(:documents)[:title], class: "control-label required"
-            .col-sm-9
+          .form-group.row.align-items-center
+            = label_tag "title", t(:documents)[:title], class: "control-label required col-sm-5 mb-0"
+            .col-sm-7
               = text_field_tag "title", title, class: 'form-control'
-          .form-group
-            = label_tag "start_date", t(:reports)[:subsidy_date_from], class: "col-form-label"
-            .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
+          .form-group.row.align-items-center
+            = label_tag "start_date", t(:reports)[:subsidy_date_from], class: "control-label col-sm-5 mb-0"
+            .input-group.datetimepicker.date.col-sm-7{ id: 'start_date', data: {target_input: 'nearest' }}
               = text_field_tag "start_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#start_date", toggle:"datetimepicker" }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
                 .input-group-text
                   %span.far.fa-calendar
-          .form-group
-            = label_tag "end_date", t(:reports)[:subsidy_date_to], class: "col-form-label"
-            .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
+          .form-group.row.align-items-center
+            = label_tag "end_date", t(:reports)[:subsidy_date_to], class: "control-label col-sm-5 mb-0"
+            .input-group.datetimepicker.date.col-sm-7{ id: 'end_date', data: {target_input: 'nearest'}}
               = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date", toggle:"datetimepicker" }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
                 .input-group-text
                   %span.far.fa-calendar
+
+          %hr
+
           .row
             .form-group.col-sm-6
               %label.control-label=t(:reports)[:sort_by]
