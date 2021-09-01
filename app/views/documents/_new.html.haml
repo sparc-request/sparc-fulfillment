@@ -32,8 +32,8 @@
           = t(:documents)[:new_header]
       #doc_modal_errors
       .modal-body
-        .form-group
-          = form.label "document", t(:documents)[:object], class: "col-sm-3 control-label"
+        .form-group.row.align-items-center
+          = form.label "document", t(:documents)[:object], class: "col-sm-4 control-label mb-0"
           .col-sm-8
             = form.file_field :document
       .modal-footer
