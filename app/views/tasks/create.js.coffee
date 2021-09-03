@@ -43,12 +43,6 @@ updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.length %
 <% if @appointment.present? %>
 $('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
 
-if !$('.start_date_input').hasClass('hidden')
-  start_date_init("<%= format_datetime(@appointment.start_date) %>")
-
-if !$('.completed_date_input').hasClass('hidden')
-  completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
-
 $('#appointment_content_indications').selectpicker()
 $('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
 $(".selectpicker").selectpicker()

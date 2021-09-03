@@ -208,5 +208,4 @@ $ ->
     input.addClass('datetimepicker-input')
   else if !moment(input.val()).isSame(moment(old_date))
     form = this_elem.parent()[0]
-    console.log("Form about to be submitted")
     Rails.fire(form, 'submit')
