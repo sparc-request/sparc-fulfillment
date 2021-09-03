@@ -43,10 +43,6 @@ updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.length %
 <% if @appointment.present? %>
 $('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
 
-$('#appointment_content_indications').selectpicker()
-$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
-$(".selectpicker").selectpicker()
-
 statuses = []
 <% @statuses.each do |status| %>
 statuses[statuses.length] =  "<%= status %>"
