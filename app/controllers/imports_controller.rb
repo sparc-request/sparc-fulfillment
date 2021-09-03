@@ -52,12 +52,13 @@ class ImportsController < ApplicationController
           end
         rescue Exception => e
           import.destroy # remove the import since it has an error
-          format.js { render js: "swal('Klok Import Error', \"#{e.message}\", 'error');" }
+          format.js { render js: "Swal.fire(title: 'Error', text: \"#{e.message}\", icon: 'error', showCancelButton: false)"}
           format.html { render :new }
         end
       end
     end
   end
+
 
   private
 

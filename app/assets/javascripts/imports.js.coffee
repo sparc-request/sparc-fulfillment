@@ -18,21 +18,39 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @valid %>
-$('#modalContainer').modal('hide')
-$('.imports').bootstrapTable('refresh')
-Swal.fire(
-  title: "Success"
-  text: "Klok File Uploaded"
-  icon: "success"
-  showCancelButton: false
-)
-<% else %>
-$('.imports').bootstrapTable('refresh')
-Swal.fire(
-  title: "Error"
-  text: "Invalid Klok File"
-  icon: "error"
-  showCancelButton: false
-)
-<% end %>
+$ ->
+  # We can attach the `fileselect` event to all file inputs on the page
+  $(document).on 'change', ':file', ->
+    $('#file-display').val $(this).val().replace(/^.*[\\\/]/, '')
+
+  $(document).on 'click', '.klok-submit-button', ->
+    button = $(this)
+    button.val(button.data('loading-text'))
+    $('.fa-sync').removeClass('d-none')
+
+  $(document).ajaxStop ->
+    $('.fa-sync').addClass('d-none')
+    $('.klok-submit-button').each ->
+      button = $(this)
+      button.val(button.data('complete-text'))
+
+  $(document).on 'change', '.file-input.validated', ->
+    allowedExtensions = ['xml', 'XML']
+    extensionUsed = $(this).val().split('.').pop()
+
+    if allowedExtensions.includes(extensionUsed)
+      $('.klok-submit-button').each ->
+        $(this).prop('disabled', false)
+    else
+      Swal.fire(
+        title: "Oops"
+        text: "Only .xml files are allowed"
+        icon: "error"
+        showCancelButton: false
+      ).then (result) ->
+        if result.isConfirmed
+          $('.file-input.validated').val('')
+          $('#file-display').val('')
+
+          $('.klok-submit-button').each ->
+            $(this).prop('disabled', true)
