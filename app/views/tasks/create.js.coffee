@@ -58,19 +58,6 @@ statuses = []
 statuses[statuses.length] =  "<%= status %>"
 <% end %>
 
-$(".followup_procedure_datepicker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-  allowInputToggle: false
-
-$(".completed_date_field").datetimepicker
-  format: 'MM/DD/YYYY'
-  allowInputToggle: false
-
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
 <% end %>
-
-$(".followup_procedure_datepicker").datetimepicker
-  format: 'MM/DD/YYYY'
-  allowInputToggle: false
   

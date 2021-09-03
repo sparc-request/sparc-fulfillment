@@ -74,16 +74,6 @@ $ ->
       url: "/procedures/#{procedure_id}.js"
       data: data
 
-  $(document).on 'dp.hide', ".followup_procedure_datepicker", ->
-    task_id = $(this).data("taskId")
-    due_at = $(this).val()
-    data = task:
-            due_at: due_at
-    $.ajax
-      type: 'PUT'
-      url: "/tasks/#{task_id}.js"
-      data: data
-
   $(document).on 'change', '.billing_type.bootstrap-select', ->
     procedure    = $(this).parents('tr.procedure')
     procedure_id = $(procedure).data('id')
@@ -209,3 +199,14 @@ $ ->
 
       find_ids group_id for group_id in group_ids
       return procedure_ids
+
+(exports ? this).updateFollowupDate = (this_elem, old_date) ->
+  input = this_elem.find('.datetimepicker-input')
+  if input.val() == ""
+    input.removeClass('datetimepicker-input')
+    this_elem.datetimepicker('date', old_date)
+    input.addClass('datetimepicker-input')
+  else if !moment(input.val()).isSame(moment(old_date))
+    form = this_elem.parent()[0]
+    console.log("Form about to be submitted")
+    Rails.fire(form, 'submit')
