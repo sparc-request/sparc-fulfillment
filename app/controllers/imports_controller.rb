@@ -55,6 +55,8 @@ class ImportsController < ApplicationController
           format.js { render js: "Swal.fire(title: 'Error', text: \"#{e.message}\", icon: 'error', showCancelButton: false)"}
           format.html { render :new }
         end
+      else
+        ##Needs to handle error state of import.save
       end
     end
   end
