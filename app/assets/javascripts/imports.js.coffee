@@ -29,7 +29,7 @@ $ ->
     $('.fa-sync').removeClass('d-none')
 
   $(document).ajaxStop ->
-    $('.fa-sync').addClass('d-none')
+    $('#imports_modal .fa-sync').addClass('d-none')
     $('.klok-submit-button').each ->
       button = $(this)
       button.val(button.data('complete-text'))
