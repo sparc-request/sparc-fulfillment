@@ -30,7 +30,7 @@
   %table#participantTrackerTable{ data: { toggle: 'table', url: protocol_participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'participant-tracker-table', toolbar: '#participantTrackerToolbar', show_export: 'true', export_types: ['excel'] } }
     %thead.bg-light
       %tr
-        %th.calendar.editable{ data: { field: 'calendar', align: 'center' } }
+        %th.calendar.editable{ data: { field: 'calendar', align: 'left' } }
           = t('protocols_participants.table.fields.calendar')
         %th.last-name{ data: { field: 'last_name', align: 'left', sortable: 'true' } }
           = Participant.human_attribute_name(:last_name)
@@ -46,8 +46,8 @@
           = ProtocolsParticipant.human_attribute_name(:status)
         %th.recruitment-source{ data: { field: 'recruitment_source', align: 'left', sortable: 'true' } }
           = ProtocolsParticipant.human_attribute_name(:recruitment_source)
-        %th.notes{ data: { field: 'notes', align: 'center' } }
+        %th.notes{ data: { field: 'notes', align: 'left' } }
           = Note.model_name.plural.capitalize
-        %th.actions{ data: { field: 'actions', align: 'center' } }
+        %th.actions{ data: { field: 'actions', align: 'left' } }
           = t('actions.actions')
 

@@ -85,10 +85,11 @@ $ ->
 
   $(document).on 'click', '.editable', (event) ->
     # Perform requests when clicking editable table cells with anchors
-    if ($anchor = $(this).find('a')).length
+    editable_object = $(this)
+    if ($anchor = editable_object.find('a')).length
       # Anchor has an href to perform a request
       if !$anchor.hasClass('disabled') && $anchor.attr('href') != 'javascript:void(0)'
-        $(this).addClass('disabled')
+        editable_object.addClass('disabled')
         $anchor.addClass('disabled')
         # If the requst should be remote, send an AJAX request
         if $anchor.data('remote')
@@ -98,8 +99,9 @@ $ ->
             dataType: 'script'
             url:      $anchor.attr('href')
             success: ->
-              $(this).removeClass('disabled')
+              editable_object.removeClass('disabled')
               $anchor.removeClass('disabled')
+              $anchor.prop('disabled', false)
         # Else change the page location
         else
           window.location.href = $anchor.attr('href')
