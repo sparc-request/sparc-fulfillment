@@ -19,35 +19,17 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 <% if @errors %>
-$("[name^='task']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.services form .form-group').removeClass('is-invalid').addClass('is-valid')
 $('.form-error').remove()
+
 <% @errors.messages.each do |attr, messages| %>
 <% messages.each do |message| %>
-$("[name='task[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% if attr.to_s == "service"%>
+$("[name='service_id']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% elsif attr.to_s == "base" %>
+$("[name='qty']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end%>
 <% end %>
-<% end %>
-<% else %>
-$("nav#siteNav").replaceWith("<%= j render 'layouts/navbar' %>")
-$("#tasks").bootstrapTable('refresh')
-$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
-$("#modalContainer").modal('hide')
 <% end %>
 
-# JS related to appointments and procedures, this will be refactored later
-
-<% if @procedure.present? %>
-$("#followup<%= @procedure.id %>").replaceWith("<%= j render 'procedures/followup', procedure: @procedure %>")
-updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.length %>")
 <% end %>
-
-<% if @appointment.present? %>
-$('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
-
-statuses = []
-<% @statuses.each do |status| %>
-statuses[statuses.length] =  "<%= status %>"
-<% end %>
-
-$('.row.appointment [data-toggle="tooltip"]').tooltip()
-<% end %>
-  
