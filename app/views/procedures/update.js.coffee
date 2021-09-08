@@ -84,7 +84,7 @@ $("#group-<%= @procedure.group_id %> button").trigger('click')
 updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.count %>")
 
 <% if @cost_error_message %>
-swal("<%= @cost_error_message %>")
+Swal.fire("<%= @cost_error_message %>")
 <% end %>
 <% end %>
 

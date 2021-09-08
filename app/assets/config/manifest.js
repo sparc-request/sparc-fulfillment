@@ -24,3 +24,4 @@
 
 //= link imports.js
 //= link show_task.js
+//= link favicon.ico
