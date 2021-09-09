@@ -48,8 +48,8 @@ module ProtocolsParticipantHelper
     disabled              = !protocols_participant.can_be_destroyed?
     url                   = associated ? destroy_protocol_participant_path(protocols_participant, protocol_id: protocol.id) : protocol_participants_path(protocol_id: protocol.id, participant_id: participant.id)
     ajax_method           = associated ? :delete : :post
-    klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger remove-participant' : 'btn-success add-participant']
-    icon_klass            = associated ? 'times' : 'check'
+    klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger remove-participant' : 'btn-primary add-participant']
+    icon_klass            = associated ? 'times' : 'plus'
     tooltip               = disabled ? 'cant_delete' : (associated ? 'remove' : 'add')
 
     link_to url, method: ajax_method, remote: true, class: klass, title: t("protocols_participants.tooltips.#{tooltip}"), data: { toggle: 'tooltip' } do
