@@ -84,7 +84,7 @@ module StudyLevelActivitiesHelper
       "<i class='far fa-trash-alt'></i>",
       "</a>"]
 
-    unless fulfillment.invoiced?
+    unless (fulfillment.invoiced? || fulfillment.credited?)
       return (notes_documents_array + edit_delete_array).join ""
     else
       return notes_documents_array.join ""
