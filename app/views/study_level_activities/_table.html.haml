@@ -22,7 +22,7 @@
   %p.text-warning.mb-0<
     = icon('fas', 'exclamation-circle mr-1')
     = t(:line_item)[:edit_in_sparc]
-%table#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', 'cookie-id-table' => 'studyLevelActivities', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['excel'], export_options: "{\"ignoreColumn\": [1,2,3], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}" } }
+%table#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', 'cookie-id-table' => 'studyLevelActivities', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], export_options: "{\"ignoreColumn\": [1,2,3], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}", undefined_text: "" } }
   %thead.bg-light
     %tr
       %th.fulfillments.editable{ data: { field: 'fulfillments', align: 'left', switchable: 'false' } }

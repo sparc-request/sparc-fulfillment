@@ -27,7 +27,7 @@
       %button.btn.btn-secondary.participant-report.report-button{ data: { url: reports_path(report_type: 'participant_report', title: t('reports.participant_report'), documentable_id: protocol.id, documentable_type: Protocol.name, protocols: [protocol.id], protocol_level: true) }}
         = icon('fas', 'file-alt')
       
-  %table#participantTrackerTable{ data: { toggle: 'table', url: protocol_participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'participant-tracker-table', toolbar: '#participantTrackerToolbar', show_export: 'true', export_types: ['excel'] } }
+  %table#participantTrackerTable{ data: { toggle: 'table', url: protocol_participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'participant-tracker-table', toolbar: '#participantTrackerToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: "" } }
     %thead.bg-light
       %tr
         %th.calendar.editable{ data: { field: 'calendar', align: 'left' } }
