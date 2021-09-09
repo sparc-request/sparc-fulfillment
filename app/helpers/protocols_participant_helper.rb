@@ -46,7 +46,7 @@ module ProtocolsParticipantHelper
     protocols_participant = protocol.protocols_participants.find_by(participant_id: participant.id) || protocol.protocols_participants.new(participant_id: participant.id)
     associated            = !protocols_participant.new_record?
     disabled              = !protocols_participant.can_be_destroyed?
-    url                   = associated ? protocol_participant_path(protocols_participant, protocol_id: protocol.id) : protocol_participants_path(protocol_id: protocol.id, participant_id: participant.id)
+    url                   = associated ? destroy_protocol_participant_path(protocols_participant, protocol_id: protocol.id) : protocol_participants_path(protocol_id: protocol.id, participant_id: participant.id)
     ajax_method           = associated ? :delete : :post
     klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger remove-participant' : 'btn-success add-participant']
     icon_klass            = associated ? 'times' : 'check'
@@ -69,7 +69,7 @@ module ProtocolsParticipantHelper
   def protocols_participant_delete_button(protocols_participant)
     disabled = !protocols_participant.can_be_destroyed?
     content_tag(:div, class: 'tooltip-wrapper', title: disabled ? t('protocols_participants.tooltips.cant_delete') : t('actions.delete'), data: { toggle: 'tooltip', boundary: 'window' }) do
-      link_to protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :delete, remote: true, class: ['btn btn-sq btn-danger remove-participant', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' } do
+      link_to destroy_protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :delete, remote: true, class: ['btn btn-sq btn-danger remove-participant', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' } do
         icon('fas', 'trash')
       end
     end
