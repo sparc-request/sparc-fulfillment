@@ -30,16 +30,19 @@
           %span{ aria: { hidden: 'true' } } &times;
       .modal-body
         #navigateArmFormBody{ data: { intended_action: intended_action } }
-          .form-group
-            = label_tag 'arm_form_label', t('arm.object'), class: 'required'
-            = select_tag 'arm_form_select', options_from_collection_for_select(protocol_arms, 'id', 'name', arm.id), class: 'selectpicker form-control'
+          .form-group.row.align-items-center
+            = label_tag 'arm_form_label', t('arm.object'), class: 'required control-label mb-0 col-sm-4'
+            .col-sm-8
+              = select_tag 'arm_form_select', options_from_collection_for_select(protocol_arms, 'id', 'name', arm.id), class: 'selectpicker form-control'
           - if edit_action
-            .form-group
-              = f.label 'name', t('arm.name'), class: 'required'
-              = f.text_field :name, {class: 'form-control'}
-            .form-group
-              = f.label 'subject_count', t('arm.subject_count'), class: 'required'
-              = f.text_field :subject_count, {class: 'form-control'}
+            .form-group.row.align-items-center
+              = f.label 'name', t('arm.name'), class: 'required control-label mb-0 col-sm-4'
+              .col-sm-8
+                = f.text_field :name, {class: 'form-control'}
+            .form-group.row.align-items-center
+              = f.label 'subject_count', t('arm.subject_count'), class: 'required control-label mb-0 col-sm-4'
+              .col-sm-8
+                = f.text_field :subject_count, {class: 'form-control'}
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

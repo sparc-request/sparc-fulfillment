@@ -22,7 +22,7 @@
   .card-header.bg-primary.text-white
     %h3.mb-0<
       = protocols_participant.full_name
-  %table#participantDetailsTable{ data: { toggle: 'table', url: calendar_protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id, format: :json) } }
+  %table#participantDetailsTable{ data: { toggle: 'table', url: calendar_protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id, format: :json), undefined_text: "" } }
     %thead.bg-light
       %tr
         %th.mrn{ data: { field: 'mrn', align: 'center' } }

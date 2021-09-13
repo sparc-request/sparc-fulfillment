@@ -45,7 +45,7 @@ class ProceduresController < ApplicationController
                                      sparc_core_id: service.try(:sparc_core_id),
                                      sparc_core_name: service.try(:sparc_core_name))
 
-    if new_procedure.valid?
+    if new_procedure.valid? && qty > 0
       qty.times do
         new_procedure.dup.save
       end
@@ -54,6 +54,9 @@ class ProceduresController < ApplicationController
       render 'appointments/show'
     else
       @errors = new_procedure.errors
+      unless qty > 0
+        @errors.add(:base, :qty)
+      end
     end
   end
 

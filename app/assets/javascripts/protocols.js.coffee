@@ -20,13 +20,6 @@
 
 $ ->
 
-  $('#protocolsList .export button').addClass('no-caret').siblings('.dropdown-menu').addClass('d-none')
-
-  $(document).on 'click', '#protocolsList .export button', ->
-    url = new URL($('#protocols').data('url'), window.location.origin)
-    url.pathname = url.pathname.replace('json', 'csv')
-    window.location = url
-
   if $("#protocols").length
     # Delete Protocol tab-remembering cookie
     Cookies.remove("active-protocol-tab")

@@ -25,7 +25,7 @@
     .protocol-links.d-flex
       = dashboard_link(protocol)
       = formatted_study_schedule_report(protocol)
-  %table{ id: dom_id(protocol), data: { toggle: 'table', url: protocol_path(protocol, format: :json) } }
+  %table{ id: dom_id(protocol), data: { toggle: 'table', url: protocol_path(protocol, format: :json), undefined_text: "" } }
     %thead.bg-light
       %tr
         %th.rmid{ data: { field: 'rmid', align: 'center', sortable: 'true', visible: Sparc::Setting.get_value('research_master_enabled').to_s } }
