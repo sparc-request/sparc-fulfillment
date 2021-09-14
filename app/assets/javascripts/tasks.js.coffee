@@ -22,6 +22,17 @@ $ ->
 
   $('[data-toggle="tooltip"]').tooltip()
 
+  $(document).on 'load-success.bs.table', 'table#tasks', ->
+    $(this).find('.text-truncate').each (i, cell) ->
+      task_body = $(cell).text()
+      $(cell).attr({
+        data_toggle: 'tooltip',
+        data_placement: 'top',
+        title: task_body
+      })
+      $(cell).tooltip()
+
+
   $(document).on 'click', 'table.tasks tbody td:not(td.complete, td.reschedule)', ->
     row_id  = $(this).parents("tr").attr("data-index")
     task_id = $(this).parents("table").bootstrapTable("getData")[row_id].id
@@ -46,3 +57,8 @@ $ ->
 
     $('#tasks').bootstrapTable('refresh', {url: "/tasks.json?scope=" + scope + "&status=" + status, silent: "true"})
 
+(exports ? this).tasksBodyCellStyle = (value, row, index) ->
+  if value.length > 50
+    return { classes: 'text-truncate' }
+  else
+    return { classes: '' }

@@ -40,7 +40,7 @@
             = t('task.assignee_name')
           %th.w-10{ data: { field: 'assignable_type', align: 'left', sortable: 'true' } }
             = t('task.assignable_type')
-          %th.w-31{ data: { field: 'body', align: 'left', sortable: 'true' } }
+          %th.w-31{ data: { field: 'body', align: 'left', sortable: 'true', cell_style: 'tasksBodyCellStyle' } }
             = Task.human_attribute_name(:body)
           %th.w-15{ data: { field: 'due_at', align: 'left', sortable: 'true', sorter: 'dueDateSorter' } }
             = Task.human_attribute_name(:due_at)
