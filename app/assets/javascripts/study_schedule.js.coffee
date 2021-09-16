@@ -78,8 +78,11 @@ $ ->
       data: data
 
   $(document).on 'change', '.visit-quantity', ->
-    visit_id = $(this).val()
-    research = + $(this).prop('checked') # unary operator '+' evaluates true/false to num
+    checkbox = $(this)
+    line_item_id = checkbox.parent().data('line-item-id')
+    visit_group_id = checkbox.parent().data('visit-group-id')
+    visit_id = checkbox.val()
+    research = + checkbox.prop('checked') # unary operator '+' evaluates true/false to num
     data = 'visit':
       'research_billing_qty':  research,
       'insurance_billing_qty': 0,
@@ -88,6 +91,10 @@ $ ->
       type: 'PUT'
       url:  "/visits/#{visit_id}"
       data: data
+      success: =>
+        verify_row_button_state(line_item_id)
+        verify_column_button_state(visit_group_id)
+
 
   $(document).on 'change', '.quantity', ->
     visit_id = $(this).attr('visit_id')
@@ -121,6 +128,7 @@ $ ->
     if confirm("This will reset custom values for this row, do you wish to continue?")
       check = $(this).attr('check')
       line_item_id = $(this).data('line-item-id')
+      arm_container = $(this).parents('.study-schedule-arm-container')
       data =
         'line_item_id': line_item_id,
         'check':        check
@@ -137,10 +145,16 @@ $ ->
           else
             check_row_column($(this), identifier, 'btn-danger', 'btn-success', 'true', I18n.t('visit.check_row'), false, 0, 0)
 
+          #Check all column buttons
+          $(arm_container).find('button.check-column').each () ->
+            visit_group_id = $(this).data('visit-group-id')
+            verify_column_button_state(visit_group_id)
+
   $(document).on 'click', '.check-column', ->
     if confirm("This will reset custom values for this column, do you wish to continue?")
       check = $(this).attr('check')
-      visit_group_id = $(this).attr('visit_group_id')
+      visit_group_id = $(this).data('visit-group-id')
+      arm_container = $(this).parents('.study-schedule-arm-container')
       data =
         'visit_group_id': visit_group_id,
         'check':        check
@@ -157,16 +171,55 @@ $ ->
           else
             check_row_column($(this), identifier, 'btn-danger', 'btn-success', 'true', I18n.t('visit.check_column'), false, 0, 0)
 
+          #Check all row buttons
+          $(arm_container).find("tr.line-item").each () ->
+            line_item_id = $(this).data('line-item-id')
+            verify_row_button_state(line_item_id)
+
   check_row_column = (obj, identifier, remove_class, add_class, attr_check, attr_title, prop_check, research_val, insurance_val) ->
-    obj.removeClass(remove_class).addClass(add_class)
-    obj.attr('check', attr_check)
-    obj.attr('title', attr_title)
-    obj.find('i').toggleClass('d-none')
-    obj.tooltip('dispose')
-    obj.tooltip()
+    modify_check_button(obj, remove_class, add_class, attr_check, attr_title)
     $("#{identifier} input[type=checkbox]").prop('checked', prop_check)
     $("#{identifier} input[type=text].research").val(research_val)
     $("#{identifier} input[type=text].insurance").val(insurance_val)
+
+  modify_check_button = (obj, remove_class, add_class, attr_check, attr_title) ->
+    obj.removeClass(remove_class).addClass(add_class)
+    obj.attr('check', attr_check)
+    obj.attr('title', attr_title)
+
+    if attr_check == 'true'
+      obj.find('i.fa-times').addClass('d-none')
+      obj.find('i.fa-check').removeClass('d-none')
+    else
+      obj.find('i.fa-check').addClass('d-none')
+      obj.find('i.fa-times').removeClass('d-none')
+
+    obj.tooltip('dispose')
+    obj.tooltip()
+
+  verify_column_button_state = (visit_group_id) ->
+    checkboxes =    $(".visit_for_visit_group_#{visit_group_id} input[type=checkbox]")
+    checked_boxes = checkboxes.filter( ->
+                      $(this).prop('checked')
+                    )
+    column_button = $("button.check-column[data-visit-group-id=#{visit_group_id}]")
+
+    if checked_boxes.length == checkboxes.length
+      modify_check_button(column_button, 'btn-success', 'btn-danger', 'false', I18n.t('visit.uncheck_row'))
+    else
+      modify_check_button(column_button, 'btn-danger', 'btn-success', 'true', I18n.t('visit.check_row'))
+
+  verify_row_button_state = (line_item_id) ->
+    checkboxes =    $("tr#line_item_#{line_item_id} input[type=checkbox]")
+    checked_boxes = checkboxes.filter( ->
+                      $(this).prop('checked')
+                    )
+    row_button =    $("tr#line_item_#{line_item_id} button.check-row")
+
+    if checked_boxes.length == checkboxes.length
+      modify_check_button(row_button, 'btn-success', 'btn-danger', 'false', I18n.t('visit.uncheck_column'))
+    else
+      modify_check_button(row_button, 'btn-danger', 'btn-success', 'true', I18n.t('visit.check_column'))
 
 (exports ? this).adjustCalendarHeaders = () ->
   zIndex = $('.study-schedule-arm-container').length * 5
