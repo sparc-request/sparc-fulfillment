@@ -38,7 +38,7 @@ module ProtocolsParticipantHelper
 
   def protocols_participant_arm_dropdown(protocols_participant)
     form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
-      f.select :arm_id, options_from_collection_for_select(protocols_participant.protocol.arms, :id, :name, protocols_participant.id), { include_blank: protocols_participant.arm.nil? }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+      f.select :arm_id, options_from_collection_for_select(protocols_participant.protocol.arms, :id, :name, protocols_participant.arm.id), { include_blank: protocols_participant.arm.nil? }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
     end
   end
 
@@ -46,10 +46,10 @@ module ProtocolsParticipantHelper
     protocols_participant = protocol.protocols_participants.find_by(participant_id: participant.id) || protocol.protocols_participants.new(participant_id: participant.id)
     associated            = !protocols_participant.new_record?
     disabled              = !protocols_participant.can_be_destroyed?
-    url                   = associated ? protocol_participant_path(protocols_participant, protocol_id: protocol.id) : protocol_participants_path(protocol_id: protocol.id, participant_id: participant.id)
+    url                   = associated ? destroy_protocol_participant_path(protocols_participant, protocol_id: protocol.id) : protocol_participants_path(protocol_id: protocol.id, participant_id: participant.id)
     ajax_method           = associated ? :delete : :post
-    klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger remove-participant' : 'btn-success add-participant']
-    icon_klass            = associated ? 'times' : 'check'
+    klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger remove-participant' : 'btn-primary add-participant']
+    icon_klass            = associated ? 'times' : 'plus'
     tooltip               = disabled ? 'cant_delete' : (associated ? 'remove' : 'add')
 
     link_to url, method: ajax_method, remote: true, class: klass, title: t("protocols_participants.tooltips.#{tooltip}"), data: { toggle: 'tooltip' } do
@@ -69,7 +69,7 @@ module ProtocolsParticipantHelper
   def protocols_participant_delete_button(protocols_participant)
     disabled = !protocols_participant.can_be_destroyed?
     content_tag(:div, class: 'tooltip-wrapper', title: disabled ? t('protocols_participants.tooltips.cant_delete') : t('actions.delete'), data: { toggle: 'tooltip', boundary: 'window' }) do
-      link_to protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :delete, remote: true, class: ['btn btn-sq btn-danger remove-participant', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' } do
+      link_to destroy_protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :delete, remote: true, class: ['btn btn-sq btn-danger remove-participant', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' } do
         icon('fas', 'trash')
       end
     end
