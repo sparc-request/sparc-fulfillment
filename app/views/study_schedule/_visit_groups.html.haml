@@ -21,7 +21,7 @@
 - visit_groups.each_with_index do |visit_group, index|
   %th.visit_group_box.px-2{ colspan: 3 }
     .visit_group_names.text-center
-      .visit_name_display.text-center{:data_visit_group_id => visit_group.id}
+      .visit_name_display.text-center
         %span{ id: "visit-name-display-#{visit_group.id}" }
           = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "form-control visit-group-#{index} visit-name text-center", disabled: (tab == 'consolidated' ? true : false), data: { visit_group_id: visit_group.id }
 
