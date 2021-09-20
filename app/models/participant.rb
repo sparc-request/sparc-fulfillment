@@ -88,6 +88,8 @@ class Participant < ApplicationRecord
     case sort
     when 'first_middle'
       order(Participant.arel_table[:first_name].send(order), Participant.arel_table[:middle_initial].send(order))
+    when 'external_ids'
+      includes(:protocols_participants).order("protocols_participants.external_id #{order}")
     else
       order(sort => order)
     end
@@ -166,6 +168,10 @@ class Participant < ApplicationRecord
 
   def protocol_ids
     protocols.ids
+  end
+
+  def external_ids
+    protocols_participants.where.not(external_id: "").map(&:external_id).join(", ")
   end
 
   def can_be_deidentified?

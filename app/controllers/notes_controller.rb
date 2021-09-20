@@ -38,7 +38,7 @@ class NotesController < ApplicationController
     if @note.save
       @notes  = @notable.notes
       @note   = current_identity.notes.new(notable_id: @notable_id, notable_type: @notable_type)
-      @count  = helpers.format_count(@notes.count, 1)
+      @count  = @notes.count
     else
       @errors = @note.errors
     end
@@ -62,7 +62,7 @@ class NotesController < ApplicationController
     @note.destroy
     @notes    = @notable.notes
     @note     = current_identity.notes.new(notable_id: @notable_id, notable_type: @notable_type)
-    @count    = helpers.format_count(@notes.count, 1)
+    @count    = @notes.count
   end
 
   private

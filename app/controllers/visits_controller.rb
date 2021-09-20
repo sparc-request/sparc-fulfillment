@@ -20,6 +20,13 @@
 
 class VisitsController < ApplicationController
   before_action :find_visit, only: [:update]
+  before_action :find_page, only: [:update]
+
+  def edit
+    @visit = Visit.find(params[:id])
+
+    respond_to :js
+  end
 
   def update
     if @visit.update_attributes(visit_params)
@@ -27,9 +34,7 @@ class VisitsController < ApplicationController
       @visit.update_procedures @visit.insurance_billing_qty, 'insurance_billing_qty'
       flash[:success] = t(:visit)[:flash_messages][:updated]
     else
-      @visit.errors.full_messages.each do |error|
-        flash[:alert] = error
-      end
+      @errors = @visit.errors
     end
   end
 
@@ -41,5 +46,9 @@ class VisitsController < ApplicationController
 
   def find_visit
     @visit = Visit.find(params[:id])
+  end
+
+  def find_page
+    @page = params[:page]
   end
 end

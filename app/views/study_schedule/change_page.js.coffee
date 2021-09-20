@@ -30,11 +30,17 @@ $("#arrow-right-#{arm_id}").attr('page', page + 1)
 
 # Disable arrows if needed
 if page == 1
+  # Disable left arrow if on the first page
   $("#arrow-left-#{arm_id}").addClass('disabled')
   $("#arrow-right-#{arm_id}").removeClass('disabled')
 else if visit_count - page * <%= Visit.per_page %> <= 0
+  # Disable right arrow if on the last page
   $("#arrow-left-#{arm_id}").removeClass('disabled')
   $("#arrow-right-#{arm_id}").addClass('disabled')
+else
+  # Enable both arrows if neither first or last page
+  $("#arrow-left-#{arm_id}").removeClass('disabled')
+  $("#arrow-right-#{arm_id}").removeClass('disabled')
 
 # Overwrite the visit_groups
 $(".visit_groups_for_#{arm_id}").html("<%= j render '/study_schedule/visit_groups', arm: @arm, visit_groups: @visit_groups, tab: @tab %>")

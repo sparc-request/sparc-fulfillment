@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       member do
         get 'calendar', to: 'protocols_participants#show', as: 'calendar'
         put 'update', to: 'protocols_participants#update'
+        delete :destroy, as: 'destroy'
       end
 
       put 'change_recruitment_source(/:id)', to: 'participants#update_recruitment_source'
@@ -50,6 +51,7 @@ Rails.application.routes.draw do
   end
 
   resources :participants do
+    get 'details', to: 'participants#details'
   end
 
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
@@ -57,7 +59,7 @@ Rails.application.routes.draw do
   resources :notes, only: [:index, :create, :edit, :update, :destroy]
   resources :documents
   resources :line_items, only: [:index, :edit, :update]
-  resources :visits, only: [:update]
+  resources :visits, only: [:edit, :update]
   resources :custom_appointments, controller: :appointments
   resources :imports
   resources :tasks, only: [:index, :show, :new, :create, :update, :edit]

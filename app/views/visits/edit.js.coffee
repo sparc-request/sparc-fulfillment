@@ -18,11 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modalContainer").html("<%= escape_javascript(render(:partial =>'participants/participant_form', locals: {protocol: @protocol, participant: @participant, header_text: 'Create New Participant'})) %>")
-$("#modalContainer").modal 'show'
-$("#dob_time_picker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-  viewMode: 'years'
-  allowInputToggle: false
-$(".selectpicker").selectpicker()
+$('#modalContainer').html("<%= j render 'form', visit: @visit %>")
+$('#modalContainer').modal('show')
+
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
