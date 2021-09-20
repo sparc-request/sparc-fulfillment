@@ -125,6 +125,12 @@ en:
           attributes:
             position:
               blank: "You must select a Position"
+        procedure:
+          attributes:
+            base:
+              qty: "Must be greater than zero"
+            service:
+              required: "You ust select a Service"
         visit_group:
           attributes:
             position:
@@ -170,6 +176,7 @@ en:
         grouped: "Switch to Grouped View"
       complete_visit:
         disabled: "Assign a status or follow-up date for each procedure in order to complete this visit."
+        completed: "This visit has already been completed"
       reset_visit:
         disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
         disabled_credited: "A procedure within this visit has been credited and cannot be altered."
@@ -284,7 +291,7 @@ en:
       created: "Fulfillment Created"
       updated: "Fulfillment Updated"
     fulfillments: "Fulfillments"
-    fulfillment_grouper: "Month Year"
+    fulfillment_month_year: "Month Year"
     fulfillment_date: "Fulfillment Date"
     log_notes:
       account_number: "Account Number changed to "
@@ -507,8 +514,12 @@ en:
     tooltips:
       unstarted_appointment: "Click 'Start Visit' and enter a start date to continue."
       complete: "Complete"
+      completed:
+        disabled: "This procedure has been completed and cannot be deleted"
       unstarted: "Unstarted"
       incomplete: "Incomplete"
+      incompleted:
+        disabled: "This procedure is incomplete and cannot be deleted"
       followup:
         schedule: "Schedule a follow-up"
       invoiced:
@@ -628,6 +639,7 @@ en:
     tooltips:
       quantity_type: "Quantity Type"
       subject_count: "Subject Count"
+    edit_billing_modal: "Edit Billing Quantities"
 
   sub_service_request:
     statuses:

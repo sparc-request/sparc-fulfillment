@@ -48,7 +48,7 @@ $ ->
       return
 
     data =
-      'arm_id': $(this).data('arm_id')
+      'arm_id': $(this).data('arm-id')
       'page'  : page_selected
       'tab'   : tab
     $.ajax
@@ -56,7 +56,7 @@ $ ->
       url:  '/study_schedule/change_page'
       data: data
 
-  $(document).on 'click', '#study_schedule_tabs a', ->
+  $(document).on 'click', '#studyScheduleTabs a.nav-link', ->
     protocol_id = $(this).data('protocol')
     tab = $(this).data('tab')
     $('#current_tab').val(tab)
@@ -65,7 +65,7 @@ $ ->
     $('.visit_dropdown.selectpicker').each ->
       page = $(this).val()
 
-      arm_id = $(this).data('arm_id')
+      arm_id = $(this).data('arm-id')
       arms_and_pages[arm_id] = page
 
     data =
@@ -100,6 +100,13 @@ $ ->
       type: 'PUT'
       url:  "/visits/#{visit_id}"
       data: data
+
+  $(document).on 'click', 'td.visit.quantity-visit', ->
+    if $link = $(this).find('a:not(.disabled)')
+      $.ajax
+        method: $link.data('method') || 'GET'
+        dataType: 'script'
+        url: $link.attr('href')
 
   $(document).on 'change', '.visit-name', ->
     visit_group_id = $(this).data('visit-group-id')

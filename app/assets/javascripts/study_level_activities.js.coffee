@@ -20,7 +20,6 @@
 
 $ ->
 
-  allowSubmit = true
   # Line Item Bindings
 
   $(document).on 'change', 'input.invoice_toggle', ->
@@ -96,27 +95,15 @@ $ ->
       data: "line_item_id" : line_item_id
 
   $(document).on 'click', '.otf-fulfillment-edit', ->
-    allowSubmit = true
     fulfillment_id = $(this).data('fulfillment_id')
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
     
 
-  $(document).on 'click', '.add_fulfillment', (e)->
-    e.preventDefault()
-    if allowSubmit
-      $('.fulfillment-form').submit()
-      allowSubmit = false
-    else
-      return false
-
-  $(document).on 'click', '#date_fulfilled_field, #fulfillment_quantity', ->
-    allowSubmit = true
-
   # Do not display in dropdown that allows you to add/remove columns
   # These columns will always be outputted to the export file
-  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')
+  # Cannot use $('#studyLevelActivities').bootstrapTable('hideColumn', 'docs')
   # because it will not show up in the export file
 
   $('#study_level_activities li').find("[data-field='docs']").closest('li').hide()
@@ -124,4 +111,4 @@ $ ->
   $('#study_level_activities li').find("[data-field='components_export']").closest('li').hide()
 
   ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
-  exclude_from_export('study-level-activities-table')
+  exclude_from_export('studyLevelActivities')

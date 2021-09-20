@@ -23,4 +23,5 @@ $("#modalContainer").modal 'show'
 $("#fulfillment_date").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
+  allowInputToggle: false
 $(".selectpicker").selectpicker()

@@ -19,7 +19,7 @@
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 %tr.line-item{ id: "line_item_#{line_item.id}", data: { core_id: core_id } }
-  %td.line_item_service_name{ colspan: 6 }
+  %td.line_item_service_name{ colspan: tab == 'template' ? 6 : 10 }
     = service_name_display(line_item.service)
   - if tab == 'template'
     %td.text-center{ colspan: 2 }
@@ -31,6 +31,5 @@
       %button.btn.check-row{ check: checked.to_s, class: checked ? 'btn-success' : 'btn-danger', title: checked ? t(:visit)[:check_row] : t(:visit)[:uncheck_row], data: { toggle: "tooltip", animation: 'false', line_item_id: line_item.id } }
         = icon('fas', 'check' + (checked ? '' : ' d-none'))
         = icon('fas', 'times' + (checked ? ' d-none' : ''))
-  - else
-    %td
+
   = render partial: '/study_schedule/visits', locals: { line_item: line_item, page: page, tab: tab }

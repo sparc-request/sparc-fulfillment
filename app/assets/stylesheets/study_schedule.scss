@@ -120,6 +120,11 @@
   }
 }
 
+.quantity-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .visit-group-popover {
   max-width: unset;
 

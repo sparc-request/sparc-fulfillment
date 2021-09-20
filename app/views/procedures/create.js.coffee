@@ -18,11 +18,18 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modalContainer").html("<%= escape_javascript(render(:partial =>'participants/participant_form', locals: {protocol: @protocol, participant: @participant, header_text: 'Create New Participant'})) %>")
-$("#modalContainer").modal 'show'
-$("#dob_time_picker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-  viewMode: 'years'
-  allowInputToggle: false
-$(".selectpicker").selectpicker()
+<% if @errors %>
+$('.services form .form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+<% if attr.to_s == "service"%>
+$("[name='service_id']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% elsif attr.to_s == "base" %>
+$("[name='qty']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end%>
+<% end %>
+<% end %>
+
+<% end %>

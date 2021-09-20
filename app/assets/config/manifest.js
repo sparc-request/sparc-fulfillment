@@ -22,6 +22,6 @@
 //= link application.css
 //= link_tree ../images/
 
-//= link faye.js
 //= link imports.js
 //= link show_task.js
+//= link favicon.ico

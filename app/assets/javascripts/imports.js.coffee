@@ -18,11 +18,39 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modalContainer").html("<%= escape_javascript(render(:partial =>'participants/participant_form', locals: {protocol: @protocol, participant: @participant, header_text: 'Create New Participant'})) %>")
-$("#modalContainer").modal 'show'
-$("#dob_time_picker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-  viewMode: 'years'
-  allowInputToggle: false
-$(".selectpicker").selectpicker()
+$ ->
+  # We can attach the `fileselect` event to all file inputs on the page
+  $(document).on 'change', ':file', ->
+    $('#file-display').val $(this).val().replace(/^.*[\\\/]/, '')
+
+  $(document).on 'click', '.klok-submit-button', ->
+    button = $(this)
+    button.val(button.data('loading-text'))
+    $('.fa-sync').removeClass('d-none')
+
+  $(document).ajaxStop ->
+    $('#imports_modal .fa-sync').addClass('d-none')
+    $('.klok-submit-button').each ->
+      button = $(this)
+      button.val(button.data('complete-text'))
+
+  $(document).on 'change', '.file-input.validated', ->
+    allowedExtensions = ['xml', 'XML']
+    extensionUsed = $(this).val().split('.').pop()
+
+    if allowedExtensions.includes(extensionUsed)
+      $('.klok-submit-button').each ->
+        $(this).prop('disabled', false)
+    else
+      Swal.fire(
+        title: "Oops"
+        text: "Only .xml files are allowed"
+        icon: "error"
+        showCancelButton: false
+      ).then (result) ->
+        if result.isConfirmed
+          $('.file-input.validated').val('')
+          $('#file-display').val('')
+
+          $('.klok-submit-button').each ->
+            $(this).prop('disabled', true)

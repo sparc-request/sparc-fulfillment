@@ -43,7 +43,7 @@ namespace :data do
         address: Faker::Address.street_address,
         phone: Faker::Number.number(digits: 10),
         city: Faker::Address.city,
-        state: Faker::Address.state_abbr,
+        state: Faker::Address.state,
         zipcode: "12345",
         middle_initial: "D"
         )
