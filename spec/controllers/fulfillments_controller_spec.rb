@@ -35,7 +35,7 @@ RSpec.describe FulfillmentsController do
       it 'renders the :index action' do
         get :index, params: { line_item_id: @line_item.id }, format: :js, xhr: true
 
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'assigns @line_item' do

@@ -65,7 +65,7 @@ RSpec.describe ParticipantsController do
     it "should get participants" do
       @participant2 = create(:participant)
       get :index, format: :json
-      expect(assigns(:participants)).to eq([@participant, @participant2])
+      expect(assigns(:participants)).to eq([@participant2, @participant])
     end
   end
 
@@ -138,40 +138,6 @@ RSpec.describe ParticipantsController do
           id: @participant.id
         }, format: :js
       }.to change(Participant, :count).by(-1)
-    end
-  end
-
-  describe "GET #edit_arm" do
-    it "should find the participant" do
-      get :edit_arm, params: {
-        protocol_id: @protocol.id,
-        participant_id: @participant.id
-      }, format: :js, xhr: true
-      expect(assigns(:participant)).to eq(@participant)
-    end
-  end
-
-  describe "PUT #update_arm" do
-    it "should change a participant's arm" do
-      @protocols_participant.update_attributes(protocol_id: @protocol.id, participant_id: @participant.id)
-      @arm = create(:arm, protocol_id: @protocol.id)
-      put :update_arm, params: {
-        protocol_id: @protocol.id,
-        participant_id: @participant.id,
-        protocols_participant: {arm_id: @arm.id}
-      }, format: :js
-      @protocols_participant.reload
-      expect(@protocols_participant.arm_id).to eq @arm.id
-    end
-  end
-
-  describe "GET #details" do
-    it "should select an instantiated participant" do
-      get :details, params: {
-        protocol_id: @protocol.id,
-        participant_id: @participant.id
-      }, format: :js, xhr: true
-      expect(assigns(:participant)).to eq(@participant)
     end
   end
 end

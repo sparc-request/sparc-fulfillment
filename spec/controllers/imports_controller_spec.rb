@@ -30,7 +30,7 @@ RSpec.describe ImportsController, type: :controller do
 
       get :index
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it 'should return all imports' do
