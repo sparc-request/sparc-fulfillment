@@ -62,12 +62,20 @@ module StudyScheduleHelper
   end
 
   def on_current_page? current_page, position
+    destination_page(position) == current_page.to_i
+  end
+
+  def before_current_page? current_page, position
+    destination_page(position) < current_page.to_i
+  end
+
+  def destination_page position
     destination_page = position / Visit.per_page
     if position % Visit.per_page != 0
       destination_page += 1
     end
 
-    destination_page == current_page.to_i
+    return destination_page
   end
 
   def create_line_items_options page_hash
