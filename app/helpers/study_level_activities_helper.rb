@@ -21,7 +21,7 @@
 module StudyLevelActivitiesHelper
   def notes(notes)
     bullet_point = notes.count > 1 ? "\u2022 " : ""
-    notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + Identity.find(note.identity_id).full_name }.join("<br>")
+    notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + (note.identity_id ? Identity.find(note.identity_id).full_name : "System") }.join("<br>")
   end
 
   def documents(documents)
