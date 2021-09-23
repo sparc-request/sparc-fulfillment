@@ -25,6 +25,8 @@
 %table#studyLevelActivities{ data: { toggle: 'table', url: line_items_path(format: :json, protocol_id: protocol.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', cookie: 'true', cookie_id_table: 'studyLevelActivities', toolbar: '#studyLevelActivitiesToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], export_options: "{\"ignoreColumn\": [\"fulfillments\",\"notes\",\"documents\"], \"fileName\": \"Protocol_#{protocol.sparc_id}\"}", undefined_text: "" } }
   %thead.bg-light
     %tr
+      %th.fulfillments_export.d-none{ data: { field: 'fulfillments_export', switchable: 'false' } }
+        = Fulfillment.model_name.plural.capitalize
       %th.fulfillments.editable{ data: { field: 'fulfillments', align: 'left', switchable: 'false' } }
         = Fulfillment.model_name.plural.capitalize
       %th.service{ data: { field: 'service', align: 'left' } }

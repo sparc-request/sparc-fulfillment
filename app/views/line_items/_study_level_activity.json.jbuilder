@@ -13,3 +13,4 @@ json.date_started         format_date(line_item.started_at)
 json.last_fulfillment     format_date(line_item.last_fulfillment)
 json.notes                notes_button(line_item)
 json.documents            sla_docs_button(line_item)
+json.fulfillments_export  line_item.fulfillments.count
