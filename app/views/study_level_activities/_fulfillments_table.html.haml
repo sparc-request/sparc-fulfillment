@@ -30,7 +30,7 @@
         = link_to new_fulfillment_path(line_item_id: line_item.id), remote: true, class: 'btn btn-success' do
           = succeed t(:fulfillment)[:add_fulfillment] do
             = icon('fas', 'plus mr-2')
-      %table.table-striped#fulfillments-table{ data: { toggle: 'table', url: fulfillments_path(format: :json, line_item_id: line_item.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', striped: 'true', toolbar: '#fulfillmentsToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: ""} }
+      %table.table-striped#fulfillments-table{ data: { toggle: 'table', url: fulfillments_path(format: :json, line_item_id: line_item.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', striped: 'true', toolbar: '#fulfillmentsToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: "", export_options: "{\"ignoreColumn\": [\"actions\",\"documents\",\"invoiced\",\"credited\"]}"} }
         %thead.bg-primary.text-white
           %tr
             %th.month-year{ data: { field: 'month_year', align: 'left', sortable: 'true', sorter: 'dateSorter'}}
@@ -47,7 +47,11 @@
               = Component.model_name.plural.capitalize
             %th.invoiced{ data: { field: 'invoiced', align: 'left' } }
               = Fulfillment.human_attribute_name(:invoiced)
+            %th.invoiced_export.d-none{ data: { field: 'invoiced_export', switchable: 'false' } }
+              = Fulfillment.human_attribute_name(:invoiced)
             %th.credited{ data: { field: 'credited', align: 'left' } }
+              = Fulfillment.human_attribute_name(:credited)
+            %th.credited_export.d-none{ data: { field: 'credited_export', switchable: 'false' } }
               = Fulfillment.human_attribute_name(:credited)
             %th.notes{ data: { field: 'notes', align: 'left' } }
               = Note.model_name.plural.capitalize

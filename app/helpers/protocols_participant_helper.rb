@@ -38,7 +38,7 @@ module ProtocolsParticipantHelper
 
   def protocols_participant_arm_dropdown(protocols_participant)
     form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
-      f.select :arm_id, options_from_collection_for_select(protocols_participant.protocol.arms, :id, :name, protocols_participant.arm.id), { include_blank: protocols_participant.arm.nil? }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+      f.select :arm_id, options_from_collection_for_select(protocols_participant.protocol.arms, :id, :name, protocols_participant.try(:arm).try(:id)), { include_blank: protocols_participant.arm.nil? }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
     end
   end
 
