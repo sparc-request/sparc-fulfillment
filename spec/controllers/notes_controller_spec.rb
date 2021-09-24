@@ -72,6 +72,7 @@ RSpec.describe NotesController, type: :controller do
 
       expect{ post :create, params: params, format: :js }.to change(Note, :count).by(1)
       expect(assigns(:note)).to have_attributes(comment: 'okay')
+      expect(assigns(:next_note)).to have_attributes(comment: nil)
     end
   end
 end
