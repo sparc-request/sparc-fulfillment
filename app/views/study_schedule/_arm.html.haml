@@ -23,7 +23,7 @@
   .card-header.text-white.justify-content-between.sticky-top.bg-primary{ data: { toggle: 'collapse', target: ".arm-#{arm.id}-collapse" } }
     %h3.mb-0{id: "arm-name-display-#{arm.id}"}
       = icon('fas', 'caret-down pr-1 mr-2')
-      = t('arm.header', arm_name: arm.name)
+      %span.arm_name_text= t('arm.header', arm_name: arm.name)
   .collapse.show{ class: "arm-#{arm.id}-collapse" }
     %table.table.table-bordered.study-schedule-table
       %thead

@@ -36,20 +36,22 @@ tab = $('#current_tab').val()
 $("#select_for_arm_#{arm_id}").replaceWith("<%= j render '/study_schedule/visit_group_page_select', arm: @arm, page: @current_page.to_i %>")
 $(".selectpicker").selectpicker()
 
-<% if on_current_page?(@current_page, @visit_group.position) %>
-# Overwrite the visit_groups
-$(".visit_groups_for_#{arm_id}").html("<%= j render '/study_schedule/visit_groups', arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab %>")
-# Overwrite the check columns
-$(".check_columns_for_arm_#{arm_id}").html("<%= j render '/study_schedule/check_visit_columns', visit_groups: @visit_groups, tab: @schedule_tab %>")
-# Overwrite the visits
-<% @arm.line_items.each do |line_item| %>
-$(".visit_for_line_item_<%= line_item.id %>").last().after('<div id="placeholderElement"></div>')
-placeholder_element = $('#placeholderElement')
-placeholder_element.siblings('.visit').remove()
-placeholder_element.after("<%= j render '/study_schedule/visits', line_item: line_item, page: @current_page.to_i, tab: @schedule_tab %>")
-placeholder_element.remove()
-<% end %>
-#Adjust sticky headers
-adjustCalendarHeaders()
-<% end %>
+
+# on_current_page? checks if the visit_group should be on the current page after update, also need to check if it's there before it was updated
+if <%= on_current_page?(@current_page, @visit_group.position) %> || $('#visit-name-display-<%= @visit_group.id %>').length
+  # Overwrite the visit_groups
+  $(".visit_groups_for_#{arm_id}").html("<%= j render '/study_schedule/visit_groups', arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab %>")
+  # Overwrite the check columns
+  $(".check_columns_for_arm_#{arm_id}").html("<%= j render '/study_schedule/check_visit_columns', visit_groups: @visit_groups, tab: @schedule_tab %>")
+  # Overwrite the visits
+  <% @arm.line_items.each do |line_item| %>
+  $(".visit_for_line_item_<%= line_item.id %>").last().after('<div id="placeholderElement"></div>')
+  placeholder_element = $('#placeholderElement')
+  placeholder_element.siblings('.visit').remove()
+  placeholder_element.after("<%= j render '/study_schedule/visits', line_item: line_item, page: @current_page.to_i, tab: @schedule_tab %>")
+  placeholder_element.remove()
+  <% end %>
+  #Adjust sticky headers
+  adjustCalendarHeaders()
+
 <% end %>

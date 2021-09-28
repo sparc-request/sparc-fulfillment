@@ -21,6 +21,6 @@
 $("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
 <% unless @errors %>
 $("#flashContainer").html("<%= escape_javascript(render('flash')) %>")
-$("#modalContainer").modal 'hide'
-$("#arm-name-display-<%= @arm.id %>").html("<%= @arm.name %>")
+$("#modalContainer").modal('hide')
+$("#arm-name-display-<%= @arm.id %> span.arm_name_text").html("<%= t('arm.header', arm_name: @arm.name) %>")
 <% end %>
