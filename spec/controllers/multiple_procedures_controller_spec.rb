@@ -47,7 +47,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @procedure1 = create(:procedure, appointment: @appointment, service: @service)
             @procedure2 = create(:procedure, appointment: @appointment, service: @service)
             @current_date = DateTime.current
-            params = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @current_date.strftime("%m/%d/%Y"), performed_by: @identity.id, format: :js }
+            params = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @current_date.strftime("%m/%d/%Y"), performer_id: @identity.id, format: :js }
 
             put :update_procedures, params: params
           end
@@ -74,7 +74,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @procedure1 = create(:procedure, appointment: @appointment, service: @service)
             @procedure2 = create(:procedure, appointment: @appointment, service: @service)
             @current_date = DateTime.current
-            params    = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', performed_by: @identity.id, reason: "Assessment missed", comment: "Hello Beautiful", format: :js }
+            params    = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', performer_id: @identity.id, reason: "Assessment missed", comment: "Hello Beautiful", format: :js }
 
             put :update_procedures, params: params
           end
@@ -123,7 +123,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @procedure1 = create(:procedure_complete, appointment: @appointment, service: @service, performer_id: @identity.id)
             @procedure2 = create(:procedure_complete, appointment: @appointment, service: @service, performer_id: @identity.id)
             @edited_date = DateTime.current.tomorrow
-            params = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m/%d/%Y"), performed_by: Identity.last.id, format: :js }
+            params = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m/%d/%Y"), performer_id: Identity.last.id, format: :js }
 
             put :update_procedures, params: params
           end
@@ -150,7 +150,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @procedure1 = create(:procedure_complete, appointment: @appointment, service: @service, performer_id: @identity.id)
             @procedure2 = create(:procedure_complete, appointment: @appointment, service: @service, performer_id: @identity.id)
             @current_date = DateTime.current
-            params    = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', performed_by: @identity.id, reason: "Assessment missed", comment: "Hello Beautiful", format: :js }
+            params    = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', performer_id: @identity.id, reason: "Assessment missed", comment: "Hello Beautiful", format: :js }
 
             put :update_procedures, params: params
           end
@@ -200,7 +200,7 @@ RSpec.describe MultipleProceduresController, type: :controller do
             @procedure1 = create(:procedure, status: "incomplete", appointment: @appointment, service: @service, performer_id: @identity.id)
             @procedure2 = create(:procedure, status: "incomplete", appointment: @appointment, service: @service, performer_id: @identity.id)
             @edited_date = DateTime.current.tomorrow
-            params    = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m/%d/%Y"), performed_by: Identity.first.id, format: :js }
+            params    = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'complete', completed_date: @edited_date.strftime("%m/%d/%Y"), performer_id: Identity.first.id, format: :js }
 
             put :update_procedures, params: params
           end
@@ -225,13 +225,14 @@ RSpec.describe MultipleProceduresController, type: :controller do
             expect(@procedure2.reload.notes).to be
           end
         end
+
         context 'User edits fields for all incomplete Procedures' do
 
           before do
-            @procedure1 = create(:procedure_incomplete, appointment: @appointment, service: @service, performer_id: @identity.id)
-            @procedure2 = create(:procedure_incomplete, appointment: @appointment, service: @service, performer_id: @identity.id)
-            @current_date = DateTime.current
-            params    = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], status: 'incomplete', performed_by: Identity.first.id, reason: "Assessment missed", format: :js }
+            @procedure1 = create(:procedure_incomplete, appointment: @appointment, service: @service, performer_id: @identity.id, incompleted_date: DateTime.current.to_date)
+            @procedure2 = create(:procedure_incomplete, appointment: @appointment, service: @service, performer_id: @identity.id, incompleted_date: DateTime.current.to_date)
+            @current_date = DateTime.current.to_date
+            params    = { appointment_id: @appointment.id, procedure_ids: [@procedure1.id, @procedure2.id], performer_id: Identity.first.id, status: "incomplete", reason: "Assessment missed", format: :js }
 
             put :update_procedures, params: params
           end
@@ -242,8 +243,8 @@ RSpec.describe MultipleProceduresController, type: :controller do
           end
 
           it 'should update the Procedure incompleted_date to: current date' do
-            expect((@procedure1.reload.incompleted_date).to_date).to eq(@current_date.to_date)
-            expect((@procedure2.reload.incompleted_date).to_date).to eq(@current_date.to_date)
+            expect((@procedure1.reload.incompleted_date).to_date).to eq(@current_date)
+            expect((@procedure2.reload.incompleted_date).to_date).to eq(@current_date)
           end
 
           it 'should update the Procedures completed_dates to: nil' do
