@@ -88,27 +88,6 @@ RSpec.describe ParticipantsController do
       }.to change(Participant, :count).by(1)
     end
 
-    it "should assign the arm if there is only one arm on a protocol" do
-      post :update_protocol_association, params: {
-        protocol_id: @protocol.id,
-        participant_id: create(:participant),
-        checked: true
-      }, format: :js, xhr: true
-      expect(assigns(:protocols_participant).arm).to eq(@arm)
-    end
-
-    it "should not assign the arm if there are multiple arms on a protocol" do
-      create(:arm, protocol_id: @protocol.id)
-      
-      post :update_protocol_association, params: {
-        protocol_id: @protocol.id,
-        participant_id: create(:participant).id,
-        checked: true
-      }, format: :js, xhr: true
-      expect(assigns(:protocols_participant).arm.nil?).to eq(true)
-    end
-  end
-
   describe "GET #edit" do
     it "should select an instantiated participant" do
       get :edit, params: {

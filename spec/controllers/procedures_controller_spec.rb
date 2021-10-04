@@ -208,8 +208,6 @@ RSpec.describe ProceduresController, type: :controller do
         }.to change(Procedure, :count).by(qty)
     end
   end
-<<<<<<< HEAD
-=======
 
   describe "DELETE #delete" do
     it "should remove the procedure if unmarked" do
@@ -242,5 +240,4 @@ RSpec.describe ProceduresController, type: :controller do
         }.to raise_error(ActiveRecord::ActiveRecordError)
     end
   end
->>>>>>> db668c1ba29e5befe44bf76d86ff8a13cfafd16e
 end
