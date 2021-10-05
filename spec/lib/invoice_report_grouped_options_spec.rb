@@ -41,7 +41,7 @@ RSpec.describe InvoiceReportGroupedOptions do
           program_with_protocols,
           core_with_protocols,
         ]
-        binding.pry
+        
         expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Providers", [[{:"data-content"=>"Gryffindor"}, provider_id]]], ["Programs", [[{:"data-content"=>"Slytherin"}, program_id]]], ["Cores", [[{:"data-content"=>"Hufflepuff"}, core_id]]]])
 
       end
