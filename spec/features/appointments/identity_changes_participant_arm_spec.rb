@@ -40,7 +40,7 @@ feature "Change Participant Arm", js: :true do
     @procedure = create(:procedure, visit_group: @original_arm.visit_groups.first, completed_date: "08/08/2013")
     @service   = @protocol.organization.inclusive_child_services(:per_participant).first
     
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
 
   end
@@ -49,7 +49,7 @@ feature "Change Participant Arm", js: :true do
     @new_arm = create(:arm, protocol_id: @protocol.id)
     @protocols_participant.update_attribute(:arm_id, @new_arm.id)
     
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
   end
 

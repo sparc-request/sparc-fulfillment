@@ -37,7 +37,7 @@ feature 'Identity adds Procedure', js: true do
   def given_i_am_viewing_a_participants_calendar
     @protocol     = create_and_assign_protocol_to_me
     @protocols_participant  = @protocol.protocols_participants.first
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
   end
 

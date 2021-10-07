@@ -36,7 +36,7 @@ feature 'Removing a Status', js: true do
     @appointment  = protocols_participant.appointments.first
     visit_group   = @appointment.visit_group
 
-    visit calendar_participants_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: protocol)
+    visit calendar_protocol_participant_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
     bootstrap_select '#appointment_select', visit_group.name

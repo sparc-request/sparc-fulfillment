@@ -48,7 +48,7 @@ feature 'User tries to reset appointment', js: true do
     wait_for_ajax
 
     #Select the visit
-    visit calendar_participants_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: @protocol.id)
+    visit calendar_protocol_participant_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: @protocol.id)
     wait_for_ajax
     bootstrap_select('#appointment_select', VisitGroup.first.name)
     wait_for_ajax

@@ -76,7 +76,7 @@ feature 'Custom appointment', js: true do
       @protocols_participant.update_attribute(:arm, nil)
     end
 
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
   end
 
