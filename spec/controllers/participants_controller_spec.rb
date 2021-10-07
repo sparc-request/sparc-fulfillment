@@ -87,6 +87,7 @@ RSpec.describe ParticipantsController do
         post :create, params: { participant: attributes }, format: :js
       }.to change(Participant, :count).by(1)
     end
+  end
 
   describe "GET #edit" do
     it "should select an instantiated participant" do
