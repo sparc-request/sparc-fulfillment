@@ -50,12 +50,12 @@ RSpec.describe ProtocolsParticipant, type: :model do
     describe 'update appointments on arm change' do
 
       it "should set appointments with completed procedures to completed" do
-        appts_with_completes = protocols_participant.appointments.map{|a| a.has_completed_procedures}
+        appts_with_completes = protocols_participant.appointments.map{|a| a.has_completed_procedures?}
         protocols_participant.update_appointments_on_arm_change
         expect(protocols_participant.appointments.include?(appts_with_completes))
       end
       it "should delete incomplete appointments" do
-        appts_with_completes = protocols_participant.appointments.map{|a| a.has_completed_procedures}
+        appts_with_completes = protocols_participant.appointments.map{|a| a.has_completed_procedures?}
         protocols_participant.update_appointments_on_arm_change
         expect(protocols_participant.appointments.exclude?(appts_with_completes))
       end
