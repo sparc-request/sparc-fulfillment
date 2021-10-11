@@ -28,7 +28,7 @@
           %span{ aria: { hidden: 'true' } } &times;
       .modal-body
         .form-group.row.align-items-center
-          = f.label 'due_at', t('task.due_at'), class: 'required control-label mb-0 col-sm-4'
+          = f.label 'follow_up_date', Task.human_attribute_name(:due_at), class: 'required control-label mb-0 col-sm-4'
           .col-sm-8
             .input-group.datetimepicker.date{ id: 'dueAtDatePicker', data: { target_input: 'nearest' } }
               = f.text_field :due_at, class: 'datetimepicker-input form-control', data: { target: '#dueAtDatePicker' }
