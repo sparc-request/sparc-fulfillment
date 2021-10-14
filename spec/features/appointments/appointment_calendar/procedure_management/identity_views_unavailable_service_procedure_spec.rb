@@ -33,7 +33,7 @@ feature 'User views procedure which has an unavailable service', js: true do
 		protocol 		= create_and_assign_protocol_to_me
 		@protocols_participant = protocol.protocols_participants.first
 
-		visit calendar_protocol_participant_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: protocol.id)
+		visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
 		wait_for_ajax
 	end
 

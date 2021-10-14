@@ -68,7 +68,7 @@ feature 'Invoice Procedure', js: true do
   end
 
   def and_i_am_adding_a_procedure
-    visit calendar_protocol_participant_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
 
     bootstrap_select('#appointment_select', @visit_group.name)
     
@@ -85,7 +85,7 @@ feature 'Invoice Procedure', js: true do
             service: @service,
             completed_date: DateTime.current.strftime('%m/%d/%Y'),
             credited: true)
-    visit calendar_protocol_participant_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
     bootstrap_select('#appointment_select', @visit_group.name)
   end
 
@@ -95,7 +95,7 @@ feature 'Invoice Procedure', js: true do
     visit_group   = protocols_participant.appointments.first.visit_group
     service       = protocol.organization.inclusive_child_services(:per_participant).first
 
-    visit calendar_protocol_participant_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: protocol)
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
 
     bootstrap_select('#appointment_select', visit_group.name)
     

@@ -64,7 +64,7 @@ feature 'User messes with a procedures date completed', js: true do
     service      = @protocol.organization.inclusive_child_services(:per_participant).first
     @pricing_map   = create(:pricing_map, service: service, effective_date: @the_middle_of_next_month)
 
-    visit calendar_protocol_participant_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
   end
 

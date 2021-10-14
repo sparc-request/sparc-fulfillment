@@ -37,7 +37,7 @@ feature 'User tries to reset appointment', js: true do
     arm           = @protocol.arms.first
     @participant  = Participant.first
     @visit_group  = arm.visit_groups.first
-    @appointment  = @visit_group.appointments.where(protocols_participant_id: protocols_participant.id).first
+    @appointment  = @visit_group.appointments.where(id: protocols_participant.id).first
     line_item_1   = arm.line_items[0]
 
     #Add services for the visit group
@@ -48,7 +48,7 @@ feature 'User tries to reset appointment', js: true do
     wait_for_ajax
 
     #Select the visit
-    visit calendar_protocol_participant_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: @protocol.id)
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
     bootstrap_select('#appointment_select', VisitGroup.first.name)
     wait_for_ajax
