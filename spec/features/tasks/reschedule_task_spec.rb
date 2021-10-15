@@ -38,15 +38,15 @@ feature "rescheduling a Task", js: true do
   end
 
   def when_i_reschedule_the_task
-    page.all('.task-reschedule').last.click
+    page.all('a.reschedule-task').last.click
     wait_for_ajax
-    bootstrap_datepicker '#reschedule_datepicker', day: '15'
-    click_button "Save"
+    bootstrap_datepicker '.datetimepicker-input', day: '15'
+    click_button "Submit"
     wait_for_ajax
   end
 
   def then_i_should_see_the_task_has_been_rescheduled
-    expect(page).to have_css("table.tasks tbody td.due_at", text: "09/15/2025")
-    expect(page).to have_css("tr[data-index='0'] td.due_at", text: "09/09/2025")
+    expect(page).to have_css("tr:nth-child(1) td:nth-child(5)", text: "/09/")
+    expect(page).to have_css("tr:nth-child(2) td:nth-child(5)", text: "/15/")
   end
 end
