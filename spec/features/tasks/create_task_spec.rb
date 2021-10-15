@@ -75,12 +75,12 @@ feature "create Task", js: true do
 
   def then_i_should_see_the_task_is_assigned_to_me
     expect(page).to have_css("table.tasks tbody tr", count: 1)
-    expect(page).to have_css(".notification.task-notifications", text: 1)
+    expect(page).to have_css("span.badge", text: 1)
   end
 
   def then_i_should_see_two_tasks_are_assigned_to_me
     expect(page).to have_css("table.tasks tbody tr", count: 2)
-    expect(page).to have_css(".notification.task-notifications", text: 2)
+    expect(page).to have_css("span.badge", text: 2)
   end
 
   def then_i_should_see_the_task_is_assigned_to_the_identity
