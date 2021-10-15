@@ -46,7 +46,7 @@ feature "rescheduling a Task", js: true do
   end
 
   def then_i_should_see_the_task_has_been_rescheduled
-    expect(page).to have_css(".bootstrap-table table tbody tr", text: "/15/")
-    # expect(page).to have_css("tr[data-index='0'] td.due_at", text: "/09/")
+    expect(page).to have_css("tr:nth-child(1) td:nth-child(5)", text: "/09/")
+    expect(page).to have_css("tr:nth-child(2) td:nth-child(5)", text: "/15/")
   end
 end
