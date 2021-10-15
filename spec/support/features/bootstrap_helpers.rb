@@ -42,8 +42,8 @@ module Features
       bootstrap_select = page.first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
       
       bootstrap_select.click
-      expect(page).to have_selector('.dropdown-menu.open')
-      first('.dropdown-menu.open span.text', text: choice).click
+      expect(page).to have_selector('.dropdown-menu.show')
+      first('.dropdown-menu.show span.text', text: choice).click
       wait_for_ajax
     end
 
