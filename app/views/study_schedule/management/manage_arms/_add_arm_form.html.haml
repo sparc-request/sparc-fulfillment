@@ -29,22 +29,26 @@
         %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
           %span{ aria: { hidden: 'true' } } &times;
       .modal-body
-        .form-group.row.align-items-center
-          = f.label 'name', t('arm.name'), class: 'control-label required col-sm-4 mb-0'
-          .col-sm-8
-            = f.text_field :name, { class: 'form-control' }
-        .form-group.row.align-items-center
-          = f.label 'subject_count', t('arm.subject_count'), class: 'control-label required col-sm-4 mb-0'
-          .col-sm-8
-            = f.text_field :subject_count, { class: 'form-control' }
-        .form-group.row.align-items-center
-          = f.label 'visit_count', t('arm.visit_count'), class: 'control-label required col-sm-4 mb-0'
-          .col-sm-8
-            = f.text_field :visit_count, { class: 'form-control' }
-        .form-group.row.align-items-center
-          = label_tag 'service_ids', t('services.objects'), class: 'control-label col-sm-4 mb-0'
-          .col-sm-8
-            = select_tag 'services[]', options_from_collection_for_select(services, 'id' , 'name'), { class: 'form-control selectpicker', multiple: '', title: 'Please Select Services', 'data-selected-text-format' => 'count>2'}
+        .form-group
+          .row.align-items-center
+            = f.label 'name', t('arm.name'), class: 'control-label required col-sm-4 mb-0'
+            .col-sm-8
+              = f.text_field :name, { class: 'form-control' }
+        .form-group
+          .row.align-items-center
+            = f.label 'subject_count', t('arm.subject_count'), class: 'control-label required col-sm-4 mb-0'
+            .col-sm-8
+              = f.text_field :subject_count, { class: 'form-control' }
+        .form-group
+          .row.align-items-center
+            = f.label 'visit_count', t('arm.visit_count'), class: 'control-label required col-sm-4 mb-0'
+            .col-sm-8
+              = f.text_field :visit_count, { class: 'form-control' }
+        .form-group
+          .row.align-items-center
+            = label_tag 'service_ids', t('services.objects'), class: 'control-label col-sm-4 mb-0'
+            .col-sm-8
+              = select_tag 'services[]', options_from_collection_for_select(services, 'id' , 'name'), { class: 'form-control selectpicker', multiple: '', title: 'Please Select Services', 'data-selected-text-format' => 'count>2'}
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

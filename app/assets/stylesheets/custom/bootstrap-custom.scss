@@ -794,33 +794,31 @@ nav.navbar {
 /// Utilities ///
 /////////////////
 
-.form-group, .form-row {
-  &.is-valid {
-    .bootstrap-select .dropdown-toggle, .toggle, .input-group .input-group-text {
-      border: 1px solid theme-color('success') !important;
-    }
-
-    label {
-      color: theme-color('success');
-    }
-
-    .form-control, .custom-select {
-      @extend .is-valid;
-    }
+.is-valid {
+  .bootstrap-select .dropdown-toggle, .toggle, .input-group .input-group-text {
+    border: 1px solid theme-color('success') !important;
   }
 
-  &.is-invalid {
-    .bootstrap-select .dropdown-toggle, .toggle, .input-group .input-group-text {
-      border: 1px solid theme-color('danger') !important;
-    }
+  label {
+    color: theme-color('success');
+  }
 
-    label {
-      color: theme-color('danger');
-    }
+  .form-control, .custom-select {
+    @extend .is-valid;
+  }
+}
 
-    .form-control, .custom-select {
-      @extend .is-invalid;
-    }
+.is-invalid {
+  .bootstrap-select .dropdown-toggle, .toggle, .input-group .input-group-text {
+    border: 1px solid theme-color('danger') !important;
+  }
+
+  label {
+    color: theme-color('danger');
+  }
+
+  .form-control, .custom-select {
+    @extend .is-invalid;
   }
 }
 
