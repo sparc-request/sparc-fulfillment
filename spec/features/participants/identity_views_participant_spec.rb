@@ -61,7 +61,7 @@ feature 'User views Participant', js: true do
   end
 
   def when_i_view_a_participants_calendar
-    visit calendar_protocol_participant_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
     wait_for_ajax
   end
