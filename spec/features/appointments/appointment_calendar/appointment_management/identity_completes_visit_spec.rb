@@ -93,14 +93,13 @@ feature 'Complete Visit', js: true do
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
     
-    bootstrap_select '#appointment_select', @visit_group.name
+    page.find('a.list-group-item[data-appointment-id="1"]').click
     wait_for_ajax
   end
 
   def when_i_add_a_procedure
-    bootstrap_select '#service_list', @service.name
-    fill_in 'service_quantity', with: 1
-    click_button 'Add Service'
+    bootstrap_select('.form-control.selectpicker', @service.name)
+    page.find('button#addService').click
     wait_for_ajax
 
     @visit_group.appointments.first.procedures.reload
@@ -115,45 +114,44 @@ feature 'Complete Visit', js: true do
   end
 
   def when_i_begin_the_appointment
-    find('button.start_visit').click
+    find('a.btn.start-appointment').click
     wait_for_ajax
   end
 
   def when_i_complete_the_procedure
-    find("tr.procedure[data-id='#{@procedure.id}'] label.status.complete").click
+    find("button.btn-sq.complete-btn").click
     wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
-    find("tr.procedure[data-id='#{@procedure.id}'] label.status.incomplete").click
+    find("button.btn-sq.incomplete-btn").click
     bootstrap_select '#procedure_notes_attributes_0_reason', 'Assessment missed'
-    click_button 'Save'
+    # find('input[value="Submit"]').click
+    # click_button 'Submit'
     wait_for_ajax
   end
 
   def when_i_add_a_follow_up_date
-    find("tr.procedure[data-id='#{@procedure.id}'] button.followup.new").click
+    find("td.followup").click
     wait_for_ajax
 
     bootstrap_select '#task_assignee_id', @identity.full_name
-    bootstrap_datepicker '#follow_up_procedure_datepicker', day: '10'
-    fill_in 'Comment', with: 'Test comment'
-    click_button 'Save'
+    bootstrap_datepicker '#task_due_at', day: '10'
+    fill_in 'task_notes_comment', with: 'Test comment'
+    click_button 'Submit'
     wait_for_ajax
   end
 
   def then_i_should_be_able_to_complete_visit
     expect(page).not_to have_css("button.complete_visit.disabled")
-    find("button.complete_visit").click
+    find("button.complete-appointment").click
     wait_for_ajax
     # completed date input should be visible after clicking Complete Visit
     expect(page).not_to have_css('div.completed_date_input.hidden')
   end
 
   def then_i_should_not_be_able_to_complete_visit
-    accept_alert do
-      find("button.complete_visit.disabled").click
-    end
+    expect(page).to have_css("button.disabled")
     wait_for_ajax
   end
 
