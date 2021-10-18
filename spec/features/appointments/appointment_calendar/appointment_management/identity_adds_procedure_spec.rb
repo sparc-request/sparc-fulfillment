@@ -45,20 +45,21 @@ feature 'Identity adds Procedure', js: true do
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    bootstrap_select('#appointment_select', visit_group.name)
-    bootstrap_select('#service_list', service.name)
-    fill_in 'service_quantity', with: '1'
-    page.find('button.add_service').click
+    # bootstrap_select('.list-group-item', visit_group.name)
+    page.find('a.list-group-item[data-appointment-id="1"]').click
+    bootstrap_select('.form-control.selectpicker', service.name)
+    # fill_in 'input[value="1"]', with: '1'
+    page.find('button#addService').click
     wait_for_ajax
   end
 
   def then_i_should_see_the_procedure_in_the_appointment_calendar
-    expect(page).to have_css('.procedures .procedure', count: 1)
+    expect(page).to have_css('#appointmentContainer tbody tr[data-index="0"]', count: 1)
   end
 
   def then_i_should_see_that_the_performed_by_selector_does_not_have_a_selection
     expected_value = page.evaluate_script %Q{ $('table.procedures .performed-by-dropdown').val(); }
 
-    expect(expected_value).to eq('')
+    expect(expected_value).to eq(nil)
   end
 end
