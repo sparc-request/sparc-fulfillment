@@ -41,21 +41,21 @@ feature 'User tries to reset appointment', js: true do
     line_item_1   = arm.line_items[0]
 
     #Add services for the visit group
-    visit protocol_path(@protocol.id)
-    wait_for_ajax
-    find("#line_item_#{line_item_1.id} .check_row").click()
-    accept_confirm
-    wait_for_ajax
+    # visit protocol_path(@protocol.id)
+    # wait_for_ajax
+    # find("#line_item_#{line_item_1.id} .check_row").click()
+    # accept_confirm
+    # wait_for_ajax
 
     #Select the visit
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
-    bootstrap_select('#appointment_select', VisitGroup.first.name)
+    page.find('a.list-group-item[data-appointment-id="1"]').click
     wait_for_ajax
   end
 
   def when_i_start_the_appointment
-    find('button.start_visit').click
+    find('a.btn.start-appointment').click
     wait_for_ajax
   end
 
@@ -67,19 +67,19 @@ feature 'User tries to reset appointment', js: true do
   end
 
   def when_i_complete_the_visit
-    find("button.complete_visit").click
+    find("button.complete-appointment").click
     wait_for_ajax
   end
 
   def when_i_click_the_reset_button
-    find("button.reset_visit").click
-    accept_confirm
+    find("a.btn.reset-appointment").click
+    wait_for_ajax
+
+    find('button.swal2-confirm').click
     wait_for_ajax
   end
 
   def then_i_should_see_a_reset_appointment
-    expect(page).to have_css('button.start_visit', visible: true)
-    expect(page).to have_css('button.complete_visit.disabled', visible: true)
-    expect(page).to have_css('td.status .pre_start_disabled', visible: true)
+    expect(page).to have_css('a.start-appointment', visible: true)
   end
 end
