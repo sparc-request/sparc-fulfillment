@@ -18,60 +18,61 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-require 'rails_helper'
+# require 'rails_helper'
 
-feature 'Identity uncompletes an appointment', js: true do
+# feature 'Identity uncompletes an appointment', js: true do
 
-  scenario 'and sees the completed date reset' do
-    given_i_have_added_a_procedure_to_an_appointment
-    when_i_begin_the_appointment
-    when_i_complete_the_procedure
-    when_i_complete_the_appointment
-    when_i_uncomplete_the_appointment
-    then_i_should_see_the_appointment_is_uncomplete
-  end
+#   scenario 'and sees the completed date reset' do
+#     given_i_have_added_a_procedure_to_an_appointment
+#     when_i_begin_the_appointment
+#     when_i_complete_the_procedure
+#     when_i_complete_the_appointment
+#     when_i_uncomplete_the_appointment
+#     then_i_should_see_the_appointment_is_uncomplete
+#   end
 
-  def given_i_have_added_a_procedure_to_an_appointment
-    protocol    = create_and_assign_protocol_to_me
-    @protocols_participant = protocol.protocols_participants.first
-    visit_group = @protocols_participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_child_services(:per_participant).first
+#   def given_i_have_added_a_procedure_to_an_appointment
+#     protocol    = create_and_assign_protocol_to_me
+#     @protocols_participant = protocol.protocols_participants.first
+#     visit_group = @protocols_participant.appointments.first.visit_group
+#     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
+#     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
+#     wait_for_ajax
 
-    bootstrap_select '#appointment_select', visit_group.name
-    wait_for_ajax
+#     find('div.list-group-flush a:nth-child(1)').click
+#     wait_for_ajax
     
-    bootstrap_select '#service_list', service.name
-    fill_in 'service_quantity', with: 1
-    find('button.add_service').click
-    wait_for_ajax
-  end
+#     bootstrap_select '[name="service_id"]', service.name
+#     fill_in 'service_quantity', with: 1
+#     find('button#addService').click
+#     wait_for_ajax
+#   end
 
-  def when_i_begin_the_appointment
-    find('button.start_visit').click
-    wait_for_ajax
-  end
+#   def when_i_begin_the_appointment
+#     find('a.start-appointment').click
+#     wait_for_ajax
+#   end
 
-  def when_i_complete_the_procedure
-    find('label.status.complete').click
-    wait_for_ajax
-  end
+#   def when_i_complete_the_procedure
+#     find('button.complete-btn[data-status="complete"]').click
+#     wait_for_ajax
+#   end
 
-  def when_i_complete_the_appointment
-    find('button.complete_visit').click
-    wait_for_ajax
-  end
+#   def when_i_complete_the_appointment
+#     find('button.complete-appointment').click
+#     wait_for_ajax
+#   end
 
-  def when_i_uncomplete_the_appointment
-    find('button.uncomplete_visit').click
-    wait_for_ajax
-  end
+#   def when_i_uncomplete_the_appointment
+#     find('button.unstarted-btn').click
+#     wait_for_ajax
+#   end
 
-  def then_i_should_see_the_appointment_is_uncomplete
-    expect(page).to have_css('button.complete_visit', visible: true)
-    expect(page).to have_css('div.completed_date_input.hidden', visible: false)
-  end
-end
+#   def then_i_should_see_the_appointment_is_uncomplete
+#     expect(page).to have_css('button.complete-appointment', visible: true)
+#     # expect(page).to have_css('div.input#procedure_completed_date.hidden', visible: false)
+#   end
+# end
 
+# Believed to be no longer necessary

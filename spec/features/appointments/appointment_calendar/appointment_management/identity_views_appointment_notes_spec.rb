@@ -45,30 +45,31 @@ feature 'User creates an appointment note', js: true do
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', @visit_group.name
+    find('div.list-group-flush a:nth-child(1)').click
     wait_for_ajax
   end
 
   def when_i_view_the_notes_list
-    find('h3.appointment_header button.notes.list').click
+    binding.pry
+    @identity.notes = []
+    find("div#participant#{@protocols_participant.id}Notes a.btn").click
     wait_for_ajax
   end
 
   def when_i_create_a_note
+    @identity.notes = []
     when_i_view_the_notes_list
     wait_for_ajax
-    click_button 'Add Note'
-    wait_for_ajax
     fill_in 'note_comment', with: "I'm a note. Fear me."
-    click_button 'Save'
+    find('input.btn.btn-primary').click
     wait_for_ajax
   end
 
   def then_i_should_see_a_notice_that_there_are_no_notes
-    expect(page).to have_css('.modal-body', text: 'This Appointment currently has no notes')
+    expect(page).to have_css('div.alert-warning', text: 'This Participant doesn\'t have any notes.')
   end
 
   def then_i_should_see_the_note
-    expect(page).to have_css('.modal-body', text: "I'm a note. Fear me.")
+    expect(page).to have_css('.note-body', text: "I'm a note. Fear me.")
   end
 end
