@@ -27,10 +27,11 @@
         %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
           %span{ aria: { hidden: 'true' } } &times;
       .modal-body
-        .form-group.row.align-items-center
-          = label_tag :line_item_ids, t(:services)[:objects], class: 'control-label mb-0 col-sm-4'
-          .col-sm-8
-            = select_tag :line_item_ids, grouped_options_for_select(line_items.group_by{ |li| li.arm.name }.map{ |arm, lis| [arm, lis.map{ |li| [li.name, li.id] }] }), class: 'form-control selectpicker', multiple: true
+        .form-group
+          .row.align-items-center
+            = label_tag :line_item_ids, t(:services)[:objects], class: 'control-label mb-0 col-sm-4'
+            .col-sm-8
+              = select_tag :line_item_ids, grouped_options_for_select(line_items.group_by{ |li| li.arm.name }.map{ |arm, lis| [arm, lis.map{ |li| [li.name, li.id] }] }), class: 'form-control selectpicker', multiple: true
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

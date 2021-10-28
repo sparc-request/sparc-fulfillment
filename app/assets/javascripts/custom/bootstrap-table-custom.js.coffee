@@ -43,7 +43,8 @@ getOrder = ->
   return 0
 
 pastDueDateCleaner = (a) ->
-  return a.replace(" - PAST DUE", "").replace("<span class=\"overdue-task\">", "").replace("</span>", "")
+  # All dates are format %m/%d/%Y (format_date), but it may be wrapped in a strong or span followed by "Due soon", "Past due", or a translation.
+  return $($.parseHTML(a))[0].textContent.substr(0, 10)
 
 (exports ? this).fulfillmentDateSorter = (a, b) ->
   sort_a = new Date(fulfillmentDateCleaner(a))
