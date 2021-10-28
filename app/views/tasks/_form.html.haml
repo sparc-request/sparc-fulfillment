@@ -29,22 +29,25 @@
         %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
           %span{ aria: { hidden: 'true' } } &times;
       .modal-body
-        .form-group.row.align-items-center
-          = f.label 'assignee_id', t('task.assignee_name'), class: 'required control-label col-sm-4 mb-0'
-          .col-sm-8
-            = f.select :assignee_id, options_from_collection_for_select(clinical_providers, 'id', 'full_name'), { include_blank: true }, class: 'form-control selectpicker'
-        .form-group.row.align-items-center
-          = f.label 'follow_up_date', t('task.due_at'), class: 'required control-label col-sm-4 mb-0'
-          .col-sm-8
-            .input-group.datetimepicker.date{ id: 'dueAtDatePicker', data: { target_input: 'nearest' } }
-              = f.text_field :due_at, class: 'datetimepicker-input form-control', data: { target: '#dueAtDatePicker' }
-              .input-group-append{ data: { toggle: 'datetimepicker', target: '#dueAtDatePicker' } }
-                %span.input-group-text
-                  = icon('fas', 'calendar-alt')
-        .form-group.row.align-items-center
-          = f.label 'task_body', Task.human_attribute_name(:body), class: 'control-label col-sm-4 mb-0'
-          .col-sm-8
-            = f.text_area :body, { class: 'form-control', rows: 4 }
+        .form-group
+          .row.align-items-center
+            = f.label 'assignee_id', t('task.assignee_name'), class: 'required control-label col-sm-4 mb-0'
+            .col-sm-8
+              = f.select :assignee_id, options_from_collection_for_select(clinical_providers, 'id', 'full_name'), { include_blank: true }, class: 'form-control selectpicker'
+        .form-group
+          .row.align-items-center
+            = f.label 'follow_up_date', Task.human_attribute_name(:due_at), class: 'required control-label col-sm-4 mb-0'
+            .col-sm-8
+              .input-group.datetimepicker.date{ id: 'dueAtDatePicker', data: { target_input: 'nearest' } }
+                = f.text_field :due_at, class: 'datetimepicker-input form-control', data: { target: '#dueAtDatePicker' }
+                .input-group-append{ data: { toggle: 'datetimepicker', target: '#dueAtDatePicker' } }
+                  %span.input-group-text
+                    = icon('fas', 'calendar-alt')
+        .form-group
+          .row.align-items-center
+            = f.label 'task_body', Task.human_attribute_name(:body), class: 'control-label col-sm-4 mb-0'
+            .col-sm-8
+              = f.text_area :body, { class: 'form-control', rows: 4 }
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

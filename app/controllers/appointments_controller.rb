@@ -46,6 +46,8 @@ class AppointmentsController < ApplicationController
     @protocols_participant = ProtocolsParticipant.find(custom_appointment_params[:protocols_participant_id])
     if @appointment.valid?
       @appointment.save
+    else
+      @errors = @appointment.errors
     end
   end
 
