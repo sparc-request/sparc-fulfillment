@@ -41,12 +41,6 @@ feature 'Identity adds a Procedure', js: true do
     then_i_should_see_the_multiselect_instantiated_with_2_options
   end
 
-  scenario 'and sees that the Complete and Incomplete buttons on the multiselect are disabled when no Services have been selected' do
-    given_i_am_viewing_a_started_visit
-    when_i_add_a_procedure
-    then_i_should_see_a_disabled_complete_and_incomplete_button
-  end
-
   scenario 'and sees that the Complete and Incomplete buttons on the multiselect are enabled when a Service has been selected' do
     given_i_am_viewing_a_started_visit
     when_i_add_a_procedure
@@ -108,20 +102,20 @@ feature 'Identity adds a Procedure', js: true do
   def then_i_should_see_the_group_counter_is_correct
     group_id = Procedure.first.group_id
 
-    expect(page).to have_css("tr.procedure-group[data-group-id='#{group_id}'] span.count", text: '3')
-  end
-
-  def then_i_should_see_a_disabled_complete_and_incomplete_button
-    expect(page).to have_css("button.complete_all.disabled")
-    expect(page).to have_css("button.incomplete_all.disabled")
+    expect(page).to have_css("tr.hidden", count: 3, visible: false)
   end
 
   def and_select_a_procedure_from_multiselect
-    bootstrap_multiselect '#core_multiselect', [@services.first.name]
+    find("button[data-id='core_#{Procedure.first.sparc_core_id}_multiselect']").click
+    wait_for_ajax
+    
+    find("a.dropdown-item").click
+    wait_for_ajax
   end
 
   def and_select_all_procedures_from_multiselect
-    bootstrap_multiselect '#core_multiselect'
+    find("button[data-id='core_#{Procedure.first.sparc_core_id}_multiselect']").click
+    find("button.bs-select-all").click
   end
 
   def then_i_should_see_a_enabled_complete_and_incomplete_button
@@ -132,25 +126,25 @@ feature 'Identity adds a Procedure', js: true do
   def then_i_should_not_see_the_procedure_in_the_group
     group_id = Procedure.last.group_id
 
-    expect(page).to have_css("tr.procedure[data-group-id='#{group_id}']", count: 1)
+    expect(page).to have_css("tr[data-index='2']", count: 1)
   end
 
   def then_i_should_see_two_procedures_in_the_group
-    find('tr.procedure-group button').click
+    find("button[data-id='core_#{Procedure.first.sparc_core_id}_multiselect']").click
     wait_for_ajax
     
     group_id = Procedure.first.group_id
 
-    expect(page).to have_css("tr.procedure[data-group-id='#{group_id}']", count: 2)
+    expect(page).to have_css("tr.hidden", count: 2, visible: false)
   end
 
   def then_i_should_see_three_procedures_in_the_group
-    find('tr.procedure-group button').click
+    find("button[data-id='core_#{Procedure.first.sparc_core_id}_multiselect']").click
     wait_for_ajax
 
     group_id = Procedure.first.group_id
 
-    expect(page).to have_css("tr.procedure[data-group-id='#{group_id}']", count: 3)
+    expect(page).to have_css("tr.hidden", count: 3, visible: false)
   end
 
   def then_i_should_see_a_core
@@ -158,14 +152,14 @@ feature 'Identity adds a Procedure', js: true do
   end
 
   def then_i_should_see_the_multiselect_instantiated_with_2_options
-    find("select#core_multiselect + .btn-group").click
-    expect(page).to have_content("Select all")
-    expect(page).to have_content("1 #{Procedure.first.service_name} R")
+    find("button[data-id='core_#{Procedure.first.sparc_core_id}_multiselect']").click
+    expect(page).to have_css("button.bs-select-all")
+    expect(page).to have_content("#{Procedure.first.service_name}")
   end
 
   def then_i_should_see_the_quantity_increment_for_the_group_in_the_multiselect_dropdown
-    find("select#core_multiselect + .btn-group").click
-    expect(page).to have_content("3 #{Procedure.first.service_name} R")
+    find("button[data-id='core_#{Procedure.first.sparc_core_id}_multiselect']").click
+    expect(page).to have_content("#{Procedure.first.service_name}")
   end
 
   alias :and_the_visit_has_one_procedure :when_i_add_a_procedure
