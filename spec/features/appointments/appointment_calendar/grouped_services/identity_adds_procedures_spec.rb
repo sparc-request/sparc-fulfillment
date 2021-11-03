@@ -25,6 +25,7 @@ feature 'Identity adds Procedure', js: true do
   context 'User adds two procedures' do
     scenario 'and sees them in the appointment calendar' do
       given_i_am_viewing_a_participants_calendar
+      given_i_am_viewing_a_visit
       when_i_add_two_procedures
       then_i_should_see_two_procedures_in_the_appointment_calendar
     end
@@ -42,18 +43,18 @@ feature 'Identity adds Procedure', js: true do
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    bootstrap_select('#appointment_select', visit_group.name)
+    page.find('a.list-group-item[data-appointment-id="1"]').click
     wait_for_ajax
-    bootstrap_select('#service_list', service.name)
+    bootstrap_select('.form-control.selectpicker', service.name)
     fill_in 'service_quantity', with: '2'
-    page.find('button.add_service').click
+    page.find('button#addService').click
     wait_for_ajax
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar
-    find('tr.procedure-group button').click
+    find("tr.info.groupBy.expanded").click
     wait_for_ajax
-    
-    expect(page).to have_css('.procedures .procedure', count: 2)
+
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 2)
   end
 end
