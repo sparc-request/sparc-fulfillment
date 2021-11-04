@@ -21,12 +21,13 @@
 class ProtocolsParticipant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
-  
+
   belongs_to :protocol
   belongs_to :participant
   belongs_to :arm
 
   has_many :appointments, dependent: :destroy
+  has_many :notes, as: :notable
 
   has_many :procedures, through: :appointments
   has_many :arms, -> { distinct }, through: :appointments
@@ -99,6 +100,10 @@ class ProtocolsParticipant < ApplicationRecord
     end
 
     label
+  end
+
+  def friendly_notable_type
+    "Participant"
   end
 
   private
