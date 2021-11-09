@@ -65,7 +65,8 @@ feature 'Identity views nav bar', js: true do
   def given_i_am_on_the_participant_page
     click_link 'Participant Tracker'
     wait_for_ajax
-    page.find('table.participants tbody tr:first-child td.calendar a').click
+    # page.find('table.participants tbody tr:first-child td.calendar a').click
+    find('tbody tr[data-index="0"] a.btn-primary').click
     wait_for_ajax
   end
 
@@ -74,7 +75,8 @@ feature 'Identity views nav bar', js: true do
   end
 
   def when_i_click_the_home_button
-    click_link 'Home'
+    # click_link 'Home'
+    find('#siteNav .nav-link', text: 'Home').click
     wait_for_ajax
   end
 
@@ -105,27 +107,33 @@ feature 'Identity views nav bar', js: true do
   end
 
   def when_i_sign_out
-    accept_confirm do
-      click_link 'sign-out-link'
-    end
+    # accept_confirm do
+      # click_link 'sign-out-link'
+    # end
+    find('#siteNav #navbarUtilities').click
+    find('a.text-danger').click
     wait_for_ajax
   end
 
   def when_i_click_the_all_reports_link
-    click_link 'All Reports'
+    # click_link 'All Reports'
+    click_link 'Reports'
     wait_for_ajax
   end
 
   def then_i_should_be_on_the_home_page
-    expect(page.body).to have_css('table.protocols')
+    # expect(page.body).to have_css('table.protocols')
+    expect(page).to have_css('#protocols')
   end
 
   def then_i_should_see_the_participant_tracker_tab_is_active
-    expect(page.body).to have_css('.tab-pane.active#participant_tracker')
+    # expect(page.body).to have_css('.tab-pane.active#participant_tracker')
+    expect(page.body).to have_css('.nav-tabs a.active#participantTrackerTabLink')
   end
 
   def then_the_study_schedule_tab_should_be_active
-    expect(page.body).to have_css('.tab-pane.active#study_schedule')
+    # expect(page.body).to have_css('.tab-pane.active#study_schedule')
+    expect(page.body).to have_css('.nav-tabs a.active#studyLevelActivitiesTabLink')
   end
 
   def then_i_should_be_signed_out
