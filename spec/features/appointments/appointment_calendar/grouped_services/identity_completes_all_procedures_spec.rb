@@ -40,6 +40,7 @@ feature 'Identity completes all Services', js: true do
       and_i_click_complete_all
       then_i_should_see_a_complete_all_modal
       with_a_default_completed_date_of_current_date
+      when_i_fill_in_performed_by
       when_i_save_the_modal
       then_i_should_see_all_selected_procedures_completed
     end
@@ -48,6 +49,7 @@ feature 'Identity completes all Services', js: true do
       and_i_select_all_in_the_core_dropdown
       and_i_click_complete_all
       then_i_should_see_a_complete_all_modal
+      when_i_fill_in_performed_by
       when_i_save_the_modal
       then_i_should_see_all_procedures_completed
     end 
@@ -59,12 +61,15 @@ feature 'Identity completes all Services', js: true do
   end
 
   def and_i_select_the_procedure_in_the_core_dropdown
-    bootstrap_multiselect '#core_multiselect', [@services.last.name]
+    find('.core_multiselect').click
+    wait_for_ajax
+    
+    find("a#bs-select-24-1").click
     wait_for_ajax
   end
 
   def and_i_click_complete_all
-    find('button.complete_all').click
+    find('button.complete-all').click
     wait_for_ajax
   end
 
@@ -82,16 +87,22 @@ feature 'Identity completes all Services', js: true do
   end
 
   def with_a_default_completed_date_of_current_date
-    expected_date = page.evaluate_script %Q{ $('.date_field').first().val(); }
+    expected_date = page.evaluate_script %Q{ $('.datetimepicker-input').val(); }
     expect(expected_date).to eq(DateTime.current.strftime('%m/%d/%Y'))
   end
 
+  def when_i_fill_in_performed_by
+    bootstrap_select('[name="performer_id"]', "Sally-#{1 || 6} Smith")
+  end
+
   def when_i_save_the_modal
-    find('button.save').click
+    find('input[value="Submit"]').click
   end
 
   def and_i_select_all_in_the_core_dropdown
-    bootstrap_multiselect '#core_multiselect'
+    find('.core_multiselect').click
+    find('button.bs-select-all').click
+    wait_for_ajax
   end
 
   def then_i_should_see_all_procedures_completed
