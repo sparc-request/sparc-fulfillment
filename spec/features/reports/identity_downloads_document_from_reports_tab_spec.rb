@@ -56,7 +56,8 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
     visit protocol_path @protocol
     wait_for_ajax
 
-    click_link 'Reports'
+    # click_link 'Reports'
+    find('#reportsTabLink').click
     wait_for_ajax
   end
 
@@ -66,11 +67,11 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
   end
 
   def then_i_should_not_see_the_reports_counter
-    expect(page).to_not have_css(".protocol_report_notifications")
+    expect(page).to_not have_css(".notification-badge")
   end
 
   def then_i_should_see_the_reports_counter_decrement_to(value)
-    expect(page).to have_css(".protocol_report_notifications", text: value)
+    expect(page).to have_css(".notification-badge", text: value)
   end
 
   def then_i_should_see_the_viewed_at_date_has_been_updated
