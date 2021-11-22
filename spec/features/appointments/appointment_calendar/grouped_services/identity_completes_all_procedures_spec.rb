@@ -92,7 +92,7 @@ feature 'Identity completes all Services', js: true do
   end
 
   def when_i_fill_in_performed_by
-    bootstrap_select('[name="performer_id"]', "Sally-#{1 || 6} Smith")
+    bootstrap_select('[name="performer_id"]', "Sally-#{1 || 6} Smith") # issue with this function
   end
 
   def when_i_save_the_modal
