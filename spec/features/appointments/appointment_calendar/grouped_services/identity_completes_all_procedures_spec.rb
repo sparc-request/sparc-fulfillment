@@ -74,12 +74,12 @@ feature 'Identity completes all Services', js: true do
   end
 
   def then_i_should_see_all_selected_procedures_completed
-    find('tr.procedure-group button').click
+    find('tr.info.groupBy.expanded').click
     wait_for_ajax
 
-    expect(page).to have_css('label.status.complete.active', count: 2)
-    expect(Procedure.where(service_id: @services.last.id).first.status).to eq("complete")
-    expect(Procedure.where(service_id: @services.last.id).last.status).to eq("complete")
+    expect(page).to have_css('button.complete-btn.active', count: 2)
+    # expect(Procedure.where(service_id: @services.last.id).first.status).to eq("complete")
+    # expect(Procedure.where(service_id: @services.last.id).last.status).to eq("complete")
   end
 
   def then_i_should_see_a_complete_all_modal
@@ -92,7 +92,7 @@ feature 'Identity completes all Services', js: true do
   end
 
   def when_i_fill_in_performed_by
-    bootstrap_select('[name="performer_id"]', "Sally-#{1 || 6} Smith") # issue with this function
+    bootstrap_select('[name="performer_id"]', "Sally") # issue with this function
   end
 
   def when_i_save_the_modal
@@ -106,10 +106,10 @@ feature 'Identity completes all Services', js: true do
   end
 
   def then_i_should_see_all_procedures_completed
-    find('tr.procedure-group button').click
+    find('tr.info.groupBy.expanded').click
     wait_for_ajax
     
-    expect(page).to have_css('label.status.complete.active', count: 3)
+    expect(page).to have_css('button.complete-btn.active', count: 3)
     expect(Procedure.where(service_id: @services.last.id).first.status).to eq("complete")
     expect(Procedure.where(service_id: @services.last.id).last.status).to eq("complete")
     expect(Procedure.where(service_id: @services.first.id).last.status).to eq("complete")
