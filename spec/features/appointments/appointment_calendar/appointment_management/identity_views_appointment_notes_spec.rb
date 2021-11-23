@@ -50,7 +50,6 @@ feature 'User creates an appointment note', js: true do
   end
 
   def when_i_view_the_notes_list
-    binding.pry
     @identity.notes = []
     find("div#participant#{@protocols_participant.id}Notes a.btn").click
     wait_for_ajax

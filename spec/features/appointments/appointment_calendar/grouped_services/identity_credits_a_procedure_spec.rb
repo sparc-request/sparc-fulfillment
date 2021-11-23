@@ -28,6 +28,7 @@ feature 'Invoice Procedure', js: true do
     end
 
     scenario 'and should only see toggle button credited column' do
+      when_i_start_the_appointment
       and_i_am_adding_a_procedure
       then_i_shoud_see_the_credited_column_as_a_toggle_button
       then_i_should_see_the_remove_button_as_non_disabled
@@ -104,6 +105,11 @@ feature 'Invoice Procedure', js: true do
     find('button.add_service').click
   end
 
+  def when_i_start_the_appointment
+    find('a.btn.start-appointment').click
+    wait_for_ajax
+  end
+  
   def then_i_should_see_the_credited_column_as_view_only
     expect(page).to have_css('td.credited_view_only', count: 1)
   end

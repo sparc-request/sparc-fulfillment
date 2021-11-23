@@ -126,15 +126,13 @@ feature 'Complete Visit', js: true do
   def when_i_incomplete_the_procedure
     find("button.btn-sq.incomplete-btn").click
     bootstrap_select '#procedure_notes_attributes_0_reason', 'Assessment missed'
-    # find('input[value="Submit"]').click
-    # click_button 'Submit'
+    click_button 'Submit'
     wait_for_ajax
   end
 
   def when_i_add_a_follow_up_date
     find("td.followup").click
     wait_for_ajax
-
     bootstrap_select '#task_assignee_id', @identity.full_name
     bootstrap_datepicker '#task_due_at', day: '10'
     fill_in 'task_notes_comment', with: 'Test comment'

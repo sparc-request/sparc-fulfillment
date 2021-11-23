@@ -55,6 +55,7 @@ class ProtocolsParticipantsController < ApplicationController
   def create
     respond_to :js
     @prot_part = @protocol.protocols_participants.create(participant_id: params[:participant_id])
+    @prot_part.current_identity = current_identity
     @prot_part.update_attribute(:arm, @protocol.arms.first) if @protocol.arms.count == 1
     flash[:success] = t('protocols_participants.flash.updated')
   end

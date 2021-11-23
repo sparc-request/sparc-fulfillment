@@ -43,7 +43,6 @@ date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_da
 
 <% else %>
 $("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
-$("#modalContainer").modal('hide')
 
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
 performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .selectpicker")
@@ -56,6 +55,7 @@ $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").rem
 performer_selectpicker.selectpicker('val', "")
 
 <% elsif @procedure.incomplete? %>
+$("#modalContainer").modal('hide')
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
 $("#procedure<%= @procedure.id %>StatusButtons").data("selected", "incomplete")
