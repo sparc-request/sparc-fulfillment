@@ -76,7 +76,7 @@ module ProtocolsParticipantHelper
   end
 
   def protocols_participant_details_button(protocols_participant)
-    link_to participant_details_path(protocols_participant), remote: true, class: 'btn btn-sq btn-info mr-1 participant-details is-this-update', title: t('actions.details'), data: { toggle: 'tooltip' } do
+    link_to participant_details_path(protocols_participant.participant_id), remote: true, class: 'btn btn-sq btn-info mr-1 participant-details is-this-update', title: t('actions.details'), data: { toggle: 'tooltip' } do
       icon('fas', 'eye')
     end
   end
