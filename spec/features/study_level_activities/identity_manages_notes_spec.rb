@@ -57,27 +57,29 @@ feature 'Notes', js: true do
   end
 
   def when_i_open_up_a_new_line_item_note
-    first('.notes.list').click
-    wait_for_ajax
-    find('.note.new').click
+    first('.notes a').click
     wait_for_ajax
   end
 
   def when_i_open_up_a_new_fulfillment_note
-    first('.otf-fulfillment-list').click
+    first('.fulfillments a').click
     wait_for_ajax
-    first("#fulfillments-table .available-actions-button").click
-    wait_for_ajax
-    first('.notes.list[data-notable-type="Fulfillment"]').click
-    wait_for_ajax
-    find('.note.new').click
+    sleep 2
+
+    first("#fulfillments-table .fulfillment_notes").click
     wait_for_ajax
   end
 
   def then_i_fill_out_and_save_the_note
     fill_in 'note_comment', with: "Test Comment"
     wait_for_ajax
-    click_button 'Save'
+    sleep 2
+
+    find('#modalContainer input.btn.btn-primary').click
+    wait_for_ajax
+
+    find('#modalContainer .btn-secondary').click
     wait_for_ajax
   end
+
 end

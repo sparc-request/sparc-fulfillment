@@ -40,7 +40,7 @@ module Features
     def bootstrap_select(class_or_id, choice)
       expect(page).to have_selector("select#{class_or_id}", visible: false)
       bootstrap_select = page.first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
-      
+
       bootstrap_select.click
       expect(page).to have_selector('.dropdown-menu.show')
       first('.dropdown-menu.show span.text', text: choice).click
@@ -55,8 +55,9 @@ module Features
       e = page.find(element)
 
       if e['readonly']
-        page.execute_script "$('#{element}').focus()"
-        page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
+        # page.execute_script "$('#{element}').focus()"
+        # page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
+        first("#{element}").click
 
         if args[:year]
           expect(page).to have_selector('.year', text: args[:year])

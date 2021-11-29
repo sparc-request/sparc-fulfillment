@@ -34,7 +34,7 @@ feature 'Fulfillments', js: true do
     it 'should be able to add a fulfillment' do
       given_i_have_fulfillments
       and_i_have_opened_up_fulfillments
-      click_button "Add Fulfillment"
+      click_link "Add Fulfillment"
       wait_for_ajax
       when_i_fill_out_the_fulfillment_form
       expect(page).to have_content('45.0')
@@ -56,14 +56,14 @@ feature 'Fulfillments', js: true do
     wait_for_ajax
     click_link "Non-clinical Services"
     wait_for_ajax
-    first('.otf-fulfillment-list').click
+    first('.fulfillments a').click
     wait_for_ajax
   end
 
   def when_i_fill_out_the_fulfillment_form
-    bootstrap_datepicker '#date_fulfilled_field', day: '15'
+    bootstrap_datepicker '#fulfillment_fulfilled_at', day: '15'
     find('.modal-title').click
-    fill_in 'Quantity', with: "45"
+    fill_in "fulfillment_quantity", with: "45"
     click_button "Save"
     wait_for_ajax
   end
