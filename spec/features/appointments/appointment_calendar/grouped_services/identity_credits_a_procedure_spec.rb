@@ -28,15 +28,19 @@ feature 'Invoice Procedure', js: true do
     end
 
     scenario 'and should only see toggle button credited column' do
-      when_i_start_the_appointment
+      and_i_am_viewing_uncompleted_procedures
       and_i_am_adding_a_procedure
-      then_i_shoud_see_the_credited_column_as_a_toggle_button
+      when_i_start_the_appointment
       then_i_should_see_the_remove_button_as_non_disabled
+      when_i_complete_the_procedure
+      when_i_update_the_billing_type
+      then_i_should_see_the_credited_column_as_a_toggle_button
     end
 
     context 'a procedure has been credited' do
       scenario 'and remove button and reset button is disabled' do
-        and_i_am_viewing_procedures
+        and_i_am_viewing_completed_procedures
+        and_i_am_adding_a_procedure
         then_i_should_see_the_remove_button_disabled
         then_i_should_see_the_reset_visit_button_disabled
       end
@@ -46,6 +50,7 @@ feature 'Invoice Procedure', js: true do
   context 'Current user is a Non-Billing Manager' do
     scenario 'and should only see view-only credited column' do
       given_i_am_viewing_procedures_as_a_non_billing_manager
+      when_i_start_the_appointment  
       then_i_should_see_the_credited_column_as_view_only
     end
   end
@@ -68,17 +73,37 @@ feature 'Invoice Procedure', js: true do
     @service       = @protocol.organization.inclusive_child_services(:per_participant).first
   end
 
-  def and_i_am_adding_a_procedure
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+  def given_i_am_viewing_procedures_as_a_non_billing_manager
+    protocol      = create_and_assign_protocol_to_me
+    protocols_participant   = protocol.protocols_participants.first
+    visit_group   = protocols_participant.appointments.first.visit_group
+    @service       = protocol.organization.inclusive_child_services(:per_participant).first
 
-    bootstrap_select('#appointment_select', @visit_group.name)
-    
-    bootstrap_select '#service_list', @service.name
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
+
+    page.find('a.list-group-item[data-appointment-id="1"]').click
+    bootstrap_select '[name="service_id"]', @service.name
     fill_in 'service_quantity', with: 1
-    find('button.add_service').click
+    find('button#addService').click
   end
 
-  def and_i_am_viewing_procedures
+  def and_i_am_adding_a_procedure
+    page.find('a.list-group-item[data-appointment-id="1"]').click
+    bootstrap_select '[name="service_id"]', @service.name
+    fill_in 'service_quantity', with: 1
+    find('button#addService').click
+  end
+
+  def and_i_am_viewing_uncompleted_procedures
+    appointment  = @protocols_participant.appointments.first
+    create(:procedure_insurance_billing_qty_with_notes,
+            appointment: appointment,
+            service: @service,
+            credited: true)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+  end
+
+  def and_i_am_viewing_completed_procedures
     appointment  = @protocols_participant.appointments.first
     appointment.update_attribute(:start_date, Time.now)
     create(:procedure_insurance_billing_qty_with_notes,
@@ -87,52 +112,38 @@ feature 'Invoice Procedure', js: true do
             completed_date: DateTime.current.strftime('%m/%d/%Y'),
             credited: true)
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    bootstrap_select('#appointment_select', @visit_group.name)
-  end
-
-  def given_i_am_viewing_procedures_as_a_non_billing_manager
-    protocol      = create_and_assign_protocol_to_me
-    protocols_participant   = protocol.protocols_participants.first
-    visit_group   = protocols_participant.appointments.first.visit_group
-    service       = protocol.organization.inclusive_child_services(:per_participant).first
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-
-    bootstrap_select('#appointment_select', visit_group.name)
-    
-    bootstrap_select '#service_list', service.name
-    fill_in 'service_quantity', with: 1
-    find('button.add_service').click
   end
 
   def when_i_start_the_appointment
     find('a.btn.start-appointment').click
     wait_for_ajax
   end
-  
-  def then_i_should_see_the_credited_column_as_view_only
-    expect(page).to have_css('td.credited_view_only', count: 1)
+
+  def when_i_update_the_billing_type
+    bootstrap_select '#procedure_billing_type', 'T'
   end
 
-  def then_i_shoud_see_the_credited_column_as_a_toggle_button
-    expect(page).to have_selector('td.credited_toggle', count: 1)
+  def when_i_complete_the_procedure
+    find('button.complete-btn').click
+  end
+  
+  def then_i_should_see_the_credited_column_as_view_only
+    expect(page).to have_css('td.credited', count: 1)
+  end
+
+  def then_i_should_see_the_credited_column_as_a_toggle_button
+    expect(page).to_not have_selector('td.w-5.credited div.toggle.btn-light.disabled', count: 1)
   end
 
   def then_i_should_see_the_remove_button_disabled
-    expect(page).to have_selector('button.reset_visit:disabled', count: 1)
+    expect(page).to have_selector('a.reset-appointment.disabled', count: 1)
   end
 
   def then_i_should_see_the_reset_visit_button_disabled
-    expect(page).to have_selector('button.delete:disabled', count: 1)
+    expect(page).to have_selector('a.reset-appointment.disabled', count: 1)
   end
 
   def then_i_should_see_the_remove_button_as_non_disabled
-    expect(page).to have_selector('button.delete:not(:disabled)', count: 1)
+    expect(page).to have_selector('a.delete-button:not(:disabled)', count: 1)
   end
-    # expect(page).to have_selector("td.credited_toggle .toggle #credited_procedure[disabled]") 
-    # expect(find('.toggle')).to be_disabled
-
-    # expect(find_by_id('credited_procedure')).to be_disabled
-    # expect(page).to have_selector('td.credited_toggle .toggle #credited_procedure:disabled', count: 1)
-    # expect(page).to have_selector('div.toggle:disabled', count: 1)
 end
