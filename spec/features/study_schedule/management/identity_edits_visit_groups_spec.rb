@@ -62,7 +62,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
       when_i_click_the_edit_visit_group_button
       when_i_set_the_name_to 'VG 2'
+      wait_for_ajax
       when_i_set_the_day_to 2
+      wait_for_ajax
       when_i_click_the_save_submit_button
       then_i_should_see_the_updated_visit_group
     end
@@ -108,6 +110,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
 
     visit protocol_path @protocol
     wait_for_ajax
+
+    find('#studyScheduleTabLink').click
+    wait_for_ajax
   end
 
   def given_i_am_viewing_an_arm_with_one_visit_group
@@ -118,6 +123,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     @arm      = create(:arm_with_one_visit_group, visit_count: 1, protocol: @protocol, subject_count: 3)
 
     visit protocol_path @protocol
+    wait_for_ajax
+
+    find('#studyScheduleTabLink').click
     wait_for_ajax
   end
 
@@ -142,29 +150,33 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     fill_in "visit_group_day", with: opts[:day] || "13"
     bootstrap_select "#visit_group_position", opts[:position] || "Add as last"
     wait_for_ajax
+
   end
 
   def when_i_set_the_name_to name
     fill_in "visit_group_name", with: name
+    wait_for_ajax
   end
 
   def when_i_set_the_day_to day
     fill_in "visit_group_day", with: day
+    wait_for_ajax
   end
 
   def when_i_click_the_add_submit_button
-    click_button 'Add'
+    find('input[type="submit"]').click
     wait_for_ajax
   end
 
   def when_i_click_the_remove_submit_button
-    click_button 'Remove'
-    accept_confirm
+    @visit_group_id_to_be_deleted = @visit_groups.first.id
+    find('#removeVisitGroupButton').click
+    find('button.swal2-confirm').click
     wait_for_ajax
   end
 
   def when_i_click_the_save_submit_button
-    click_button "Save"
+    find('input[type="submit"]').click
     wait_for_ajax
   end
 
@@ -176,7 +188,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     fill_in "visit_group_#{@arm.visit_groups.first.id}", with: name
     wait_for_ajax
 
-    first(".study_schedule_table_name").click
+    first(".study-schedule-table").click
     wait_for_ajax
   end
 
@@ -190,7 +202,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_not_see_the_visit_group
-    expect(page).to have_no_selector(".visit_name", text: @visit_groups.first.name)
+    expect(page).to have_no_selector(".visit-name", id: "visit_group_#{@visit_group_id_to_be_deleted}")
   end
 
   def then_i_should_see_the_position_is position
@@ -198,9 +210,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     @new_visit_group = @arm.visit_groups.find_by_name("VG")
 
     within(".visit_groups_for_#{@arm.id}") do
-      expect(page.all(".visit_name")[0].value).to eq(@original_visit_group_1.name)
-      expect(page.all(".visit_name")[1].value).to eq(@new_visit_group.name)
-      expect(page.all(".visit_name")[2].value).to eq(@original_visit_group_2.name)
+      expect(page.all(".visit_group_box")[0].find("input").value).to eq(@original_visit_group_1.name)
+      expect(page.all(".visit_group_box")[1].find("input").value).to eq(@new_visit_group.name)
+      expect(page.all(".visit_group_box")[2].find("input").value).to eq(@original_visit_group_2.name)
     end
   end
 
@@ -209,6 +221,9 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def then_i_should_see_the_original_name
+    visit protocol_path @protocol #reload the page
+    wait_for_ajax
+
     expect(find("#visit_group_#{@arm.visit_groups.first.id}").value).to eq(@original_name)
   end
 end
