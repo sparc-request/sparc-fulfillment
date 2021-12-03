@@ -91,7 +91,7 @@ class ParticipantsController < ApplicationController
   end
 
   def find_participants(action_name)
-    @participants = Participant.search(params[:search])
+    @participants = Participant.includes(:procedures).search(params[:search])
     @total = @participants.count
     @participants = @participants.order(Arel.sql("#{@sort}")) if @sort
     @participants = @participants.limit(@limit).offset(@offset)
