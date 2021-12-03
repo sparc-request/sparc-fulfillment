@@ -102,6 +102,7 @@ task import_klok: :environment do
         fulfillment.notes.build(comment: entry.comments, identity: local_identity) if entry.comments.present? && fulfillment.notes.select{|x| (x.comment == entry.comments) && (x.identity == local_identity)}.empty?
 
         if fulfillment.valid?
+          fulfillment.klok_upload = true
           fulfillment.save
           csv << ["SRID: #{fulfillment.protocol.srid}", "Success (Fulfillment ID: #{fulfillment.id})"] + entry.attributes.values
         else

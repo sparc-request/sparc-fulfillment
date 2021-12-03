@@ -23,6 +23,7 @@
 //= link application.js
 
 //= link_tree ../images/
+//= link_tree ../stylesheets/
 
 //= link imports.js
 //= link show_task.js

@@ -20,20 +20,42 @@
 
 .modal-dialog
   .modal-content
-    = form_for line_item, remote: true do |f|
-      = f.hidden_field :id
-      .modal-header
-        %h4.modal-title
-          = t('line_item.change_service')
-        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
-          %span{ aria: { hidden: 'true' } } &times;
-      .modal-body
-        .form-group
-          .row.align-items-center
-            = f.label 'service', t('line_item.service'), class: 'control-label mb-0 col-sm-4'
-            .col-sm-8
-              = f.select 'service_id', options_from_collection_for_select(line_item.service.organization.inclusive_child_services(:per_participant), 'id', 'name', line_item.service_id), {}, class: 'form-control selectpicker'
-      .modal-footer
-        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
-          = t('actions.close')
-        = f.submit t('actions.submit'), class: 'btn btn-primary'
+    .modal-header
+      %h4.modal-title
+        = t('task.object')
+      %button.close{ type: 'button', value: '', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+        %span{ aria: { hidden: 'true' } } &times;
+    .modal-body
+      .row.mb-1
+        %strong.col-4
+          = t('task.identity_name')
+        .col-8
+          = task.identity.full_name
+      .row.mb-1
+        %strong.col-4
+          = t('task.assignee_name')
+        .col-8
+          = task.assignee.full_name
+      .row.mb-1
+        %strong.col-4
+          = t('task.assignable_type')
+        .col-8
+          = task.assignable_type
+      .row.mb-1
+        %strong.col-4
+          = t('task.due_at')
+        .col-8
+          = format_date(task.due_at)
+      .row.mb-1
+        %strong.col-4
+          = t('task.completed')
+        .col-8
+          = t("task.complete.#{task.complete.to_s}")
+      .row
+        %strong.col-4
+          = t('task.object')
+        .col-8.text-break
+          = task.body
+    .modal-footer
+      %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+        = t('actions.close')
