@@ -29,7 +29,8 @@ feature 'Invoice Procedure', js: true do
 
     scenario 'and should only see toggle button invoiced column' do
       and_i_am_adding_a_procedure
-      then_i_shoud_see_the_invoiced_column_as_a_toggle_button
+      when_i_start_the_appointment
+      then_i_should_see_the_invoiced_column_as_a_toggle_button
       then_i_should_see_the_remove_button_as_non_disabled
     end
 
@@ -70,11 +71,12 @@ feature 'Invoice Procedure', js: true do
   def and_i_am_adding_a_procedure
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
 
-    bootstrap_select('#appointment_select', @visit_group.name)
+    find('a.list-group-item[data-appointment-id="1"]').click
+    wait_for_ajax
     
-    bootstrap_select '#service_list', @service.name
+    bootstrap_select '[name="service_id"]', @service.name
     fill_in 'service_quantity', with: 1
-    find('button.add_service').click
+    find('button#addService').click
   end
 
   def and_i_am_viewing_procedures
@@ -86,7 +88,8 @@ feature 'Invoice Procedure', js: true do
             completed_date: DateTime.current.strftime('%m/%d/%Y'),
             invoiced: true)
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    bootstrap_select('#appointment_select', @visit_group.name)
+    find('a.list-group-item[data-appointment-id="1"]').click
+    wait_for_ajax
   end
 
   def given_i_am_viewing_procedures_as_a_non_billing_manager
@@ -97,31 +100,37 @@ feature 'Invoice Procedure', js: true do
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
 
-    bootstrap_select('#appointment_select', visit_group.name)
+    find('a.list-group-item[data-appointment-id="1"]').click
+    wait_for_ajax
     
-    bootstrap_select '#service_list', service.name
+    bootstrap_select '[name="service_id"]', service.name
     fill_in 'service_quantity', with: 1
-    find('button.add_service').click
+    find('button#addService').click
+  end
+
+  def when_i_start_the_appointment
+    find('a.btn.start-appointment').click
+    wait_for_ajax
   end
 
   def then_i_should_see_the_invoiced_column_as_view_only
-    expect(page).to have_css('td.invoiced_view_only', count: 1)
+    expect(page).to have_css('td.invoiced', count: 1)
   end
 
-  def then_i_shoud_see_the_invoiced_column_as_a_toggle_button
-    expect(page).to have_selector('td.invoiced_toggle', count: 1)
+  def then_i_should_see_the_invoiced_column_as_a_toggle_button
+    expect(page).to have_selector('td div.toggle.disabled', count: 1)
   end
 
   def then_i_should_see_the_remove_button_disabled
-    expect(page).to have_selector('button.reset_visit:disabled', count: 1)
+    expect(page).to have_selector('a.reset-appointment.disabled', count: 1)
   end
 
   def then_i_should_see_the_reset_visit_button_disabled
-    expect(page).to have_selector('button.delete:disabled', count: 1)
+    expect(page).to have_selector('a.reset-appointment.disabled', count: 1)
   end
 
   def then_i_should_see_the_remove_button_as_non_disabled
-    expect(page).to have_selector('button.delete:not(:disabled)', count: 1)
+    expect(page).to have_selector('a.delete-button:not(:disabled)', count: 1)
   end
     # expect(page).to have_selector("td.invoiced_toggle .toggle #invoiced_procedure[disabled]") 
     # expect(find('.toggle')).to be_disabled
