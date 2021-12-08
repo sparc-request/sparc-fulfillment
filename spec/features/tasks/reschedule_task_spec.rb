@@ -40,6 +40,9 @@ feature "rescheduling a Task", js: true do
   def when_i_reschedule_the_task
     page.all('a.reschedule-task').last.click
     wait_for_ajax
+
+    sleep 2
+
     bootstrap_datepicker '.datetimepicker-input', day: '15'
     click_button "Submit"
     wait_for_ajax
