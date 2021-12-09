@@ -94,10 +94,10 @@ feature 'User tries to view the participant calendar', js: true do
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', @visit_group.name
-
+    find('.list-group').click
     wait_for_ajax
-    click_button 'Start Visit'
+    # click_button 'Start Visit'
+    click_link 'Start Visit'
     wait_for_ajax
     click_button 'Complete Visit'
     wait_for_ajax
@@ -118,11 +118,11 @@ feature 'User tries to view the participant calendar', js: true do
   end
 
   def then_the_participant_calendar_icon_should_be_active
-    expect(page).to have_css("tr[data-index='0'] td.calendar a.participant-calendar i.glyphicon")
+    expect(page).to have_css("tr[data-index='0'] td.calendar i.fa-calendar-alt")
   end
 
   def then_the_participant_calendar_icon_should_be_inactive
-    expect(page).to have_css("tr[data-index='0'] td.calendar i.glyphicon")
+    expect(page).to have_css("tr[data-index='0'] td.calendar i.fa-calendar-alt")
   end
 
   def then_i_will_see_the_participant_calendar
