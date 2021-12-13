@@ -29,7 +29,7 @@
           = icon('fas', 'plus mr-2')
       = check_box_tag :complete, '', false, { id: 'completeToggle', data: { toggle: 'toggle', on: t('task.show_complete'), off: t('task.show_incomplete'), onstyle: 'success', style: 'ml-2' } }
       = check_box_tag :all_tasks, '', false, { id: 'allTasksToggle', data: { toggle: 'toggle', on: t('task.all_tasks'), off: t('task.my_tasks'), onstyle: 'success', style: 'ml-2' } }
-    %table.tasks#tasks{ data: { toggle: 'table', search: 'true', show_columns: 'true', show_refresh: 'true', url: tasks_path(scope: 'mine', format: :json), sort_name: 'due_at', sort_order: 'asc', striped: 'true', toolbar: '#tasksToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], export_options: "{\"ignoreColumn\": [\"reschedule\"]}", undefined_text: ""} }
+    %table.tasks#tasks{ data: { toggle: 'table', search: 'true', show_columns: 'true', show_refresh: 'true', url: tasks_path(scope: 'mine', format: :json), page_size: @limit, pagination: "true", side_pagination: "server", sort_name: 'due_at', sort_order: 'asc', striped: 'true', toolbar: '#tasksToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], export_options: "{\"ignoreColumn\": [\"reschedule\"]}", undefined_text: ""} }
       %thead
         %tr
           %th.w-10{ data: { field: 'protocol_id', align: 'center', visible: 'false', sortable: 'true' } }
@@ -42,7 +42,7 @@
             = t('task.assignable_type')
           %th.w-31{ data: { field: 'body', align: 'left', sortable: 'true', cell_style: 'tasksBodyCellStyle' } }
             = Task.human_attribute_name(:body)
-          %th.w-15{ data: { field: 'due_at', align: 'left', sortable: 'true', sorter: 'dueDateSorter' } }
+          %th.w-15{ data: { field: 'due_at', align: 'left', sortable: 'true'} }
             = Task.human_attribute_name(:due_at)
           %th.w-10.complete{ data: { field: 'complete', align: 'center' } }
             = t('task.completed')
