@@ -121,10 +121,10 @@ bootstrap-select@^1.13.12:
   resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.13.18.tgz#4557119d58dc1159189977161c803962220e4dda"
   integrity sha512-V1IzK4rxBq5FrJtkzSH6RmFLFBsjx50byFbfAf8jYyXROWs7ZpprGjdHeoyq2HSsHyjJhMMwjsQhRoYAfxCGow==
 
-bootstrap-table@^1.18.2:
-  version "1.18.2"
-  resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.18.2.tgz#5b65fabe9d1462db193e9c844965da00aef5806c"
-  integrity sha512-BShrYY9bcadwxikP5Sd/+tZlbLcYqOBjYm5bdJLu3lRTgXEQ1p937ZNlcCMhIrRhvelUKlSl7EFORnEkSHR7gA==
+bootstrap-table@^1.19.1:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.19.1.tgz#c88384a2993d8df9618b80fee147f1bf1cb2d7c1"
+  integrity sha512-WvV+l1AI/C+zThaKmfHmi/IuayVNB0qdFyEhFx1jyZhO0oLtNJNANkCR3rvJf6Dkh72dsLElxpE/bzK9seEQLA==
 
 bootstrap4-toggle@^3.4.0:
   version "3.6.1"
