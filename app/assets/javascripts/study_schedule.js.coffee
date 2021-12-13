@@ -25,7 +25,7 @@ $ ->
     tab = String(e.target).split("#")[1]
     date = new Date()
     date.setTime(date.getTime() + (60 * 60 * 1000))
-    $.cookie("active-schedule-tab", tab, expires: date, path: '/') # save tab to cookie
+    $.cookie("active-schedule-tab", tab, {expires: date}, path: '/') # save tab to cookie
 
   $(document).on 'click', '.page_change_arrow:not(.disabled)', ->
     data =

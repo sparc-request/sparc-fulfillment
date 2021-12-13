@@ -36,6 +36,7 @@ class StudyScheduleController < ApplicationController
       @arms_and_pages[arm_id] = {arm: arm, page: page}
     end
     @tab = params[:tab]
+    cookies['active-schedule-tab'.to_sym] = @tab
   end
 
   def check_row
