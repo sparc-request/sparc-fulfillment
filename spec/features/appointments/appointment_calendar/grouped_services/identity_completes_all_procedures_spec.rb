@@ -78,8 +78,6 @@ feature 'Identity completes all Services', js: true do
     wait_for_ajax
 
     expect(page).to have_css('button.complete-btn.active', count: 2)
-    # expect(Procedure.where(service_id: @services.last.id).first.status).to eq("complete")
-    # expect(Procedure.where(service_id: @services.last.id).last.status).to eq("complete")
   end
 
   def then_i_should_see_a_complete_all_modal
@@ -92,7 +90,7 @@ feature 'Identity completes all Services', js: true do
   end
 
   def when_i_fill_in_performed_by
-    bootstrap_select('[name="performer_id"]', "Sally") # issue with this function
+    bootstrap_select('[name="performer_id"]', "Sally")
   end
 
   def when_i_save_the_modal
