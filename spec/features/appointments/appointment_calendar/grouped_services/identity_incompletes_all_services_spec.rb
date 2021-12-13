@@ -90,31 +90,31 @@ feature 'Identity incompletes all Services', js: true do
 
   def when_i_select_an_ungrouped_procedure_in_the_core_dropdown
     @selected = [@services.first]
-    bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
+    bootstrap_multiselect '.core_multiselect', @selected.map(&:name)
   end
 
   def when_i_select_multiple_but_not_all_ungrouped_procedures_in_the_core_dropdown
     @selected = @services[0..1]
-    bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
+    bootstrap_multiselect '.core_multiselect', @selected.map(&:name)
   end
 
   def when_i_select_all_ungrouped_procedures_in_the_core_dropdown
     @selected = @services[0..2]
-    bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
+    bootstrap_multiselect '.core_multiselect', @selected.map(&:name)
   end
 
   def when_i_select_all_grouped_procedures_in_the_core_dropdown
     @selected = [@services.fourth]
-    bootstrap_multiselect '#core_multiselect', @selected.map(&:name)
+    bootstrap_multiselect '.core_multiselect', @selected.map(&:name)
   end
 
   def when_i_select_all_procedures_in_the_core_dropdown
     @selected = @services
-    bootstrap_multiselect '#core_multiselect'
+    bootstrap_multiselect '.core_multiselect'
   end
 
   def and_i_click_incomplete_all_and_give_a_reason
-    find('button.incomplete_all').click
+    find('button.incomplete-all').click
     wait_for_ajax
     reason = Procedure::NOTABLE_REASONS.first
     bootstrap_select '.reason-select', reason
@@ -124,7 +124,7 @@ feature 'Identity incompletes all Services', js: true do
   end
 
   def and_i_click_incomplete_all_and_close_the_alert
-    find('button.incomplete_all').click
+    find('button.incomplete-all').click
     wait_for_ajax
     click_button 'Close'
     wait_for_ajax

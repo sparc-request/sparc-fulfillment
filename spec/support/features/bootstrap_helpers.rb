@@ -22,15 +22,15 @@ module Features
   module BootstrapHelpers
     def bootstrap_multiselect(class_or_id, selections = ['all'])
       expect(page).to have_selector("select#{class_or_id}", visible: false)
-      bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".btn-group").find('.dropdown-toggle')
+      bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
       bootstrap_multiselect.click
 
-      expect(page).to have_selector('.open .dropdown-menu')
+      expect(page).to have_selector('.dropdown-menu.show')
       if selections.first == 'all'
-        first('.open .dropdown-menu a', text: 'Select all').click
+        first('.dropdown-menu.show button.bs-select-all').click
       else
         selections.each do |selection|
-          first('.open .dropdown-menu a', text: selection).click
+          first('.dropdown-menu.show span.text', text: selection).click
         end
       end
       find('body').click # Click away
