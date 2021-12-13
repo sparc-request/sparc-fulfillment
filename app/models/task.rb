@@ -27,7 +27,7 @@ class Task < ApplicationRecord
 
   belongs_to :identity
   belongs_to :assignee,
-             class_name: "Identity"
+             class_name: "Identity", foreign_key: "assignee_id"
   belongs_to :assignable, polymorphic: true
 
   belongs_to :procedure, ->{ joins(:tasks).where( tasks: { id: Task.where(assignable_type: 'Procedure' ) } ) }, foreign_key: :assignable_id
@@ -52,6 +52,8 @@ class Task < ApplicationRecord
     case sort
     when 'identity_name'
       order("identities.first_name #{order}", "identities.last_name #{order}")
+    when 'organization'
+      order("organizations.name #{order}")
     else
       order(sort => order)
     end

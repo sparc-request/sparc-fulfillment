@@ -106,7 +106,7 @@ class Appointment < ApplicationRecord
   end
 
   def can_be_destroyed?
-    procedures.where.not(status: 'unstarted').empty?
+    procedures.touched.empty?
   end
 
   def formatted_name
