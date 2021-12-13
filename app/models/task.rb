@@ -52,6 +52,8 @@ class Task < ApplicationRecord
     case sort
     when 'identity_name'
       order("identities.first_name #{order}", "identities.last_name #{order}")
+    when 'organization'
+      order("organizations.name #{order}")
     else
       order(sort => order)
     end
