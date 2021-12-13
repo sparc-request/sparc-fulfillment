@@ -712,6 +712,7 @@ en:
   visit_groups:
     object: "Visit Group"
     created: "Visit Created"
+    arm: "Arm"
     day: "Visit Day"
     deleted: "Visit Destroyed"
     flash_messages:

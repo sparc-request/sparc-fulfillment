@@ -22,6 +22,7 @@ class DelayedDestroyJob < ActiveJob::Base
   queue_as :delayed_destroy
 
   def perform(object)
+    object.update_attributes(marked_for_deletion: false)
     object.destroy
   end
 end
