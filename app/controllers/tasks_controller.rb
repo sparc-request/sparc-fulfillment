@@ -147,10 +147,15 @@ class TasksController < ApplicationController
     end
 
     @total = tasks.count
-    if params[:sort] == "assignee_name"
+    case params[:sort]
+    when "identity_name"
+      custom_sorted = tasks.includes(:identity).sort_by{|task| task.identity.full_name}
+    when "assignee_name"
       custom_sorted = tasks.includes(:assignee).sort_by{|task| task.assignee.full_name}
-    elsif params[:sort] == "protocol_id"
+    when "protocol_id"
       custom_sorted = tasks.includes(procedure: [protocol: [:sub_service_request]]).sort_by{|task| (task.procedure ? task.procedure.protocol.srid : '')}
+    when "organization"
+      custom_sorted = tasks.includes(procedure: [protocol: [:sub_service_request]]).sort_by{|task| (task.procedure ? "#{task.procedure.core} #{task.procedure.core.parent}" : '')}
     end
 
     if !custom_sorted.nil?
