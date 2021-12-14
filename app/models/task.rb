@@ -49,14 +49,7 @@ class Task < ApplicationRecord
     sort  = 'id' if sort.blank?
     order = 'desc' if order.blank?
 
-    case sort
-    when 'identity_name'
-      order("identities.first_name #{order}", "identities.last_name #{order}")
-    when 'organization'
-      order("organizations.name #{order}")
-    else
-      order(sort => order)
-    end
+    order(sort => order)
   }
 
   def self.to_csv(tasks)
