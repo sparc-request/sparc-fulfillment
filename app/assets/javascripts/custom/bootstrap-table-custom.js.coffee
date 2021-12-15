@@ -34,18 +34,6 @@ getOrder = ->
   return -1 if sort_a < sort_b
   return 0
 
-(exports ? this).dueDateSorter = (a, b) ->
-  sort_a = new Date(pastDueDateCleaner(a))
-  sort_b = new Date(pastDueDateCleaner(b))
-
-  return 1 if sort_a > sort_b
-  return -1 if sort_a < sort_b
-  return 0
-
-pastDueDateCleaner = (a) ->
-  # All dates are format %m/%d/%Y (format_date), but it may be wrapped in a strong or span followed by "Due soon", "Past due", or a translation.
-  return $($.parseHTML(a))[0].textContent.substr(0, 10)
-
 (exports ? this).fulfillmentDateSorter = (a, b) ->
   sort_a = new Date(fulfillmentDateCleaner(a))
   sort_b = new Date(fulfillmentDateCleaner(b))

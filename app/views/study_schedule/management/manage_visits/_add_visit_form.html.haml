@@ -36,14 +36,14 @@
               = f.select :arm_id, options_from_collection_for_select(protocol.arms,'id','name', arm.id), { include_blank: false }, class: "form-control selectpicker"
         .form-group
           .row.align-items-center
-            = f.label "name", t('visit_groups.name'), class: 'required control-label col-sm-4 mb-0'
+            = f.label 'name', t('visit_groups.name'), class: 'control-label required col-sm-4 mb-0'
             .col-sm-8
               = f.text_field :name, { class: 'form-control' }
         .form-group
           .row.align-items-center
             = f.label "day", t('visit_groups.day'), class: "control-label col-sm-4 mb-0 #{ENV.fetch('USE_EPIC'){nil} == 'false' ? '' : 'required'}"
             .col-sm-8
-            = f.text_field :day, { class: 'form-control', maxlength: 4 }
+              = f.text_field :day, { class: 'form-control', maxlength: 4 }
         .form-group
           .row.align-items-center
             = f.label "position", t('visit_groups.position'), class: 'control-label col-sm-4 mb-0'
