@@ -19,8 +19,9 @@
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 //= link favicon.ico
-//= link application.js
 //= link application.css
+//= link application.js
+
 //= link_tree ../images/
 //= link_tree ../stylesheets/
 
