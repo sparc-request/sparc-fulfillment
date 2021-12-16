@@ -83,41 +83,53 @@ feature 'User creates Participant', js: true do
   def when_i_create_a_new_participant_with_non_numerical_mrn
     find('.new-participant').click
 
-    fill_in 'First Name', with: "Harry"
     fill_in 'Last Name', with: "Potter"
+    fill_in 'First Name', with: "Harry"
     fill_in 'MRN', with: "1234abc"
-    fill_in 'City', with: "London"
-    bootstrap_select '#participant_state', "South Carolina"
-    fill_in 'Zip Code', with: "11111"
-    bootstrap_datepicker '#dob_time_picker', year: Date.current.year, month: 'Mar', day: '15'
+    wait_for_ajax
+
+    bootstrap_datepicker '#participant_date_of_birth', year: Date.current.year, month: 'Mar', day: '15'
     bootstrap_select '#participant_gender', "Male"
     bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
     bootstrap_select '#participant_race', "Asian"
+
     fill_in 'Address', with: "123 Hogwarts"
-    find("input[value='Save Participant']").click
+    fill_in 'City', with: "London"
+    bootstrap_select '#participant_state', "South Carolina"
+    fill_in 'Zip Code', with: "11111"
     wait_for_ajax
+
+    click_button 'Save Participant'
+    wait_for_ajax
+
   end
 
   def when_i_create_a_new_participant_with_numerical_mrn
     find('.new-participant').click
 
-    fill_in 'First Name', with: "Harry"
     fill_in 'Last Name', with: "Potter"
+    fill_in 'First Name', with: "Harry"
     fill_in 'MRN', with: "1234"
-    fill_in 'City', with: "London"
-    bootstrap_select '#participant_state', "South Carolina"
-    fill_in 'Zip Code', with: "11111"
-    bootstrap_datepicker '#dob_time_picker', year: Date.current.year, month: 'Mar', day: '15'
+    wait_for_ajax
+
+    bootstrap_datepicker '#participant_date_of_birth', year: Date.current.year, month: 'Mar', day: '15'
     bootstrap_select '#participant_gender', "Male"
     bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
     bootstrap_select '#participant_race', "Asian"
+
     fill_in 'Address', with: "123 Hogwarts"
-    find("input[value='Save Participant']").click
+    fill_in 'City', with: "London"
+    bootstrap_select '#participant_state', "South Carolina"
+    fill_in 'Zip Code', with: "11111"
     wait_for_ajax
+
+    click_button 'Save Participant'
+    wait_for_ajax
+
   end
 
   def then_i_should_see_the_new_participant_in_the_list
-    expect(page).to have_css('#flashes_container', text: 'Participant Created')
+    expect(page).to have_css('#flashContainer', text: 'Participant Created')
     expect(page).to have_css('table.participants tbody tr', count: 1)
   end
 
@@ -125,11 +137,4 @@ feature 'User creates Participant', js: true do
     expect(page).to have_css('#modal_errors', text: 'MRN must only contain numbers')
   end
 
-  def then_they_should_have_an_assigned_arm
-    expect(Participant.last.arm_id).to eq(@protocol.arms.first.id)
-  end
-
-  def then_they_should_not_have_an_assigned_arm
-    expect(Participant.last.arm_id).to eq(nil)
-  end
 end
