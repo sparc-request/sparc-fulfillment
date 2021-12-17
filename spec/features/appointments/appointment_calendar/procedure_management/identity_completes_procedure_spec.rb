@@ -122,7 +122,6 @@ feature 'User completes Procedure', js: true do
   end
 
   def then_i_should_see_reset_notes
-    binding.pry
     expect(page).to have_css('div.note-body', text: 'Status reset', count: 1)
   end
 
