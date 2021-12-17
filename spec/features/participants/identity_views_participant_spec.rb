@@ -52,7 +52,7 @@ feature 'User views Participant', js: true do
 
   def given_i_have_access_to_a_protocol_with_appointments
     @protocol     = create_and_assign_protocol_to_me
-    @protocols_participant  = create(:protocols_participant_with_completed_appointments, 
+    @protocols_participant  = create(:protocols_participant_with_completed_appointments,
                             protocol_id: @protocol.id,
                             arm_id: @protocol.arms.first.id,
                             participant: create(:participant))
@@ -71,7 +71,7 @@ feature 'User views Participant', js: true do
   end
 
   def then_i_should_see_the_participant_calendar
-    expect(page).to have_css('#participant-info')
+    expect(page).to have_css('#participantDetailsTable')
     expect(page).to have_content(@protocols_participant.participant.full_name)
     expect(page).to have_content(@protocols_participant.participant.mrn) unless @protocols_participant.participant.mrn.blank?
     expect(page).to have_content(@protocols_participant.external_id) unless @protocols_participant.external_id.blank?
@@ -81,8 +81,8 @@ feature 'User views Participant', js: true do
   end
 
   def then_i_should_see_an_ordered_list_of_visits
-    @appointments.sort_by { |appointment| appointment.completed_date }.reverse.each_with_index do |appointment, index|
-      expect(page).to have_css("table.visits tbody tr:nth-of-type(#{index + 1})", text: appointment.name)
+    @appointments.sort_by { |appointment| appointment.completed_date }.reverse.each_with_index do |appointment|
+      expect(page).to have_css("div#appointmentsList a[data-appointment-id='#{appointment.id}']", text: appointment.name)
     end
   end
 end
