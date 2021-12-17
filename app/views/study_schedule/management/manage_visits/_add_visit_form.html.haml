@@ -18,6 +18,8 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+- use_epic = ENV.fetch('USE_EPIC') == "true"
+
 .modal-dialog
   .modal-content
     = form_for visit_group, remote: true do |f|
@@ -36,12 +38,12 @@
               = f.select :arm_id, options_from_collection_for_select(protocol.arms,'id','name', arm.id), { include_blank: false }, class: "form-control selectpicker"
         .form-group
           .row.align-items-center
-            = f.label 'name', t('visit_groups.name'), class: 'control-label required col-sm-4 mb-0'
+            = f.label 'name', t('visit_groups.name'), class: 'control-label col-sm-4 mb-0'
             .col-sm-8
               = f.text_field :name, { class: 'form-control' }
         .form-group
           .row.align-items-center
-            = f.label "day", t('visit_groups.day'), class: "control-label col-sm-4 mb-0 #{ENV.fetch('USE_EPIC'){nil} == 'false' ? '' : 'required'}"
+            = f.label "day", "#{t('visit_groups.day')}#{use_epic ? ' *' : ''}", class: "control-label col-sm-4 mb-0"
             .col-sm-8
               = f.text_field :day, { class: 'form-control', maxlength: 4 }
         .form-group
