@@ -35,7 +35,7 @@
               = select_tag "add_service_id", options_from_collection_for_select(services, 'id' , 'name'), class: "form-control selectpicker"
         .form-group
           .row.align-items-center
-            = label_tag "add_service_arm_ids_and_pages", t(:arm)[:objects], class: "required control-label mb-0 col-sm-4"
+            = label_tag "add_service_arm_ids_and_pages", t(:services)[:arm], class: "control-label mb-0 col-sm-4"
             .col-sm-8
               = select_tag "add_service_arm_ids_and_pages[]", create_line_items_options(page_hash), { class: "form-control selectpicker", multiple: "", title: "Please Select Arms", 'data-selected-text-format' => 'count>2'}
       .modal-footer
