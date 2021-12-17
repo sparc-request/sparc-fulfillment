@@ -32,7 +32,7 @@ class CreateParticipants < ActiveRecord::Migration[4.2]
       t.string :ethnicity
       t.string :race
       t.string :address
-      t.string :phonent
+      t.string :phone
       t.datetime :deleted_at
 
       t.timestamps
