@@ -43,7 +43,7 @@ feature 'User edits Participant', js: true do
     wait_for_ajax
 
     @date_of_birth_year = Participant.find(participant_id).date_of_birth.strftime("%Y")
-
+    sleep 1
     bootstrap_datepicker '#participant_date_of_birth', year: @date_of_birth_year, month: 'Mar', day: '15'
 
     wait_for_ajax
