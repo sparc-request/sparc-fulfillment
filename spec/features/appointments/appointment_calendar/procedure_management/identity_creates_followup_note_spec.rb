@@ -72,7 +72,6 @@ feature 'Followup note', js: true do
     context 'and tries to add a followup note' do
       scenario 'and sees a helpful error message' do
         given_i_have_created_a_procedure
-        # when_i_try_to_add_a_follow_up_note
         then_i_should_see_a_helpful_message
       end
     end
