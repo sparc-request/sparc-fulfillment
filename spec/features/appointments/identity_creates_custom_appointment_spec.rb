@@ -30,14 +30,6 @@ feature 'Custom appointment', js: true do
         then_i_should_see_the_create_custom_visit_modal
       end
     end
-
-    context 'and the participant does not have an arm' do
-      scenario 'and does not see the create custom visit modal' do
-        given_i_am_viewing_the_participant_calendar(:without_arm)
-        when_i_click_create_custom_appointment
-        then_i_should_not_see_the_create_custom_visit_modal
-      end
-    end
   end
 
   context 'User creates custom appointment' do
@@ -81,56 +73,50 @@ feature 'Custom appointment', js: true do
   end
 
   def when_i_click_create_custom_appointment
-    find('button.appointment.new').click
+    find('#new_appointment_button').click
   end
 
   def when_i_fill_in_the_form
-    fill_in 'custom_appointment_name', with: 'Test Visit'
-    bootstrap_select "#custom_appointment_position", "Add as last"
-    bootstrap_select "#custom_appointment_notes_attributes_0_reason", "Assessment not performed"
+    fill_in 'custom_visit_name', with: 'Test Visit'
+    bootstrap_select "#custom_visit_position", "Add as last"
+    bootstrap_select "#custom_visit_reason", "Assessment not performed"
   end
 
   def when_i_click_add_appointment
-    click_button 'Add'
+    click_button 'Submit'
     wait_for_ajax
   end
 
   def when_i_select_the_appointment
     @service = @protocol.organization.inclusive_child_services(:per_participant).first
     @service.update_attributes(name: 'Test Service')
-    bootstrap_select '#appointment_select', "Test Visit"
+    find("a.appointment-link span", text: "Test Visit").click
     wait_for_ajax
   end
 
   def when_i_add_a_procedure
-    bootstrap_select '#service_list', 'Test Service'
+    bootstrap_select '#add_procedure_dropdown', 'Test Service'
     fill_in 'service_quantity', with: 1
-    find('button.add_service').click
+    find('button#addService').click
     wait_for_ajax
   end
 
   def when_i_complete_the_procedure
-    find('button.start_visit').click
-    find('label.status.complete').click
+    find('a.start-appointment').click
+    wait_for_ajax
+    find('button.complete-btn').click
     wait_for_ajax
 
-    click_button 'Complete Visit'
+    find('button.complete-appointment').click
     wait_for_ajax
   end
 
   def then_i_should_see_the_create_custom_visit_modal
-    expect(page).to have_css("body.participants.modal-open")
-  end
-
-  def then_i_should_see_the_create_custom_visit_button_is_disabled
-  end
-
-  def then_i_should_not_see_the_create_custom_visit_modal
-    expect(page).to_not have_css("body.participants.modal-open")
+    expect(page).to have_css(".modal-title", text: "Custom Visit")
   end
 
   def then_i_should_see_the_newly_created_appointment
-    expect(page).to have_css("#appointment_select option", visible: false, text: "Test Visit")
+    expect(page).to have_css("a.appointment-link span", text: "Test Visit")
   end
 
   def then_it_should_appear_on_the_dashboard

@@ -37,9 +37,9 @@ module Features
       wait_for_ajax
     end
 
-    def bootstrap_select(class_or_id, choice)
-      expect(page).to have_selector("select#{class_or_id}", visible: false)
-      bootstrap_select = page.first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
+    def bootstrap_select(class_or_id, choice, context_selector = '')
+      expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: false)
+      bootstrap_select = page.first("#{context_selector} select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
 
       bootstrap_select.click
       expect(page).to have_selector('.dropdown-menu.show')
