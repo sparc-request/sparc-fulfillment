@@ -105,7 +105,6 @@ feature 'User completes Procedure', js: true do
   end
 
   def when_i_try_to_complete_the_procedure
-    binding.pry
     find('button.complete-btn').click
     # alert = page.driver.browser.switch_to.alert
     # @alert_message = alert.text

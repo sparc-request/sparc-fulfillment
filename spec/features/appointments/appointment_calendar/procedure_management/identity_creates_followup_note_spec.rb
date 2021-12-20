@@ -133,7 +133,6 @@ feature 'Followup note', js: true do
 
   def when_i_try_to_add_a_follow_up_note
     find('td.followup div#followup1').click
-    binding.pry
     alert = page.driver.browser.switch_to.alert
     @alert_message = alert.text
     alert.accept
