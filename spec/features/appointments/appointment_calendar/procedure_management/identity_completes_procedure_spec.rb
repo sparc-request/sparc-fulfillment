@@ -54,7 +54,6 @@ feature 'User completes Procedure', js: true do
   context 'before starting Appointment' do
     scenario 'and sees a helpful error message' do
       given_i_have_added_a_procedure_to_an_appointment
-      # when_i_start_the_appointment
       then_i_should_see_a_helpful_message
     end
   end
@@ -105,11 +104,7 @@ feature 'User completes Procedure', js: true do
   end
 
   def when_i_try_to_complete_the_procedure
-    binding.pry
     find('button.complete-btn').click
-    # alert = page.driver.browser.switch_to.alert
-    # @alert_message = alert.text
-    # alert.accept
     wait_for_ajax
   end
 

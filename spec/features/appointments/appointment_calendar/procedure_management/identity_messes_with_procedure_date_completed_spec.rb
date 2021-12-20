@@ -80,33 +80,33 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def given_an_appointment_has_started
-    find('button.start_visit').click
+    find('a.start-appointment').click
     wait_for_ajax
   end
 
   def when_i_complete_the_procedure
-    find('label.status.complete').click
+    find('div#procedure1StatusButtons button.complete-btn').click
     wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
     reason = Procedure::NOTABLE_REASONS.first
 
-    find('label.status.incomplete').click
-    bootstrap_select '.reason-select', reason
-    fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
-    click_button 'Save'
+    find('div#procedure1StatusButtons button.incomplete-btn').click
+    bootstrap_select '#procedure_notes_attributes_0_reason', reason
+    fill_in 'Comment', with: 'Test comment'
   end
 
   def when_i_add_a_procedure
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    bootstrap_select('#appointment_select', visit_group.name)
+    find('a[data-appointment-id="1"]').click
     wait_for_ajax
-    bootstrap_select '#service_list', service.name
-    fill_in 'service_quantity', with: '1'
-    page.find('button.add_service').click
+    bootstrap_select '[name="service_id"', service.name
+    fill_in 'service_quantity', with: 1
+    find('button#addService').click
+    wait_for_ajax
   end
 
   def when_i_edit_the_completed_date
