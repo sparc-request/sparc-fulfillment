@@ -65,6 +65,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       wait_for_ajax
       when_i_set_the_day_to 2
       wait_for_ajax
+      sleep 2
       when_i_click_the_save_submit_button
       then_i_should_see_the_updated_visit_group
     end
