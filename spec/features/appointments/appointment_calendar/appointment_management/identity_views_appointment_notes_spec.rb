@@ -26,14 +26,16 @@ feature 'User creates an appointment note', js: true do
     scenario 'and sees a notification that there are no notes' do
       given_i_am_viewing_an_appointment
       when_i_view_the_notes_list
-      then_i_should_see_a_notice_that_there_are_no_notes
+      # then_i_should_see_a_notice_that_there_are_no_notes
+      then_i_should_see_current_notes
     end
   end
 
   scenario 'and sees a note' do
     given_i_am_viewing_an_appointment
     when_i_create_a_note
-    then_i_should_see_the_note
+    then_i_should_see_the_created_note
+    # then_i_should_see_the_note
   end
 
   def given_i_am_viewing_an_appointment
@@ -50,25 +52,33 @@ feature 'User creates an appointment note', js: true do
   end
 
   def when_i_view_the_notes_list
-    @identity.notes = []
     find("div#participant#{@protocols_participant.id}Notes a.btn").click
     wait_for_ajax
   end
 
   def when_i_create_a_note
-    @identity.notes = []
     when_i_view_the_notes_list
     wait_for_ajax
     fill_in 'note_comment', with: "I'm a note. Fear me."
-    find('input.btn.btn-primary').click
+    sleep 1
+    find('input.btn[type="submit"]').click
     wait_for_ajax
   end
 
-  def then_i_should_see_a_notice_that_there_are_no_notes
-    expect(page).to have_css('div.alert-warning', text: 'This Participant doesn\'t have any notes.')
+  def then_i_should_see_current_notes
+    expect(page).to have_css('div.note-body p', text: 'Status changed from N/A')
+    expect(page).to have_css('div.note-body p', text: 'Current Arm changed from N/A')
   end
 
-  def then_i_should_see_the_note
-    expect(page).to have_css('.note-body', text: "I'm a note. Fear me.")
+  def then_i_should_see_the_created_note
+    expect(page).to have_css('div.note-body p', text: 'I\'m a note. Fear me.')
   end
+
+  # def then_i_should_see_a_notice_that_there_are_no_notes
+  #   expect(page).to have_css('div.alert-warning', text: 'This Participant doesn\'t have any notes.')
+  # end
+
+  # def then_i_should_see_the_note
+  #   expect(page).to have_css('.note-body', text: "I'm a note. Fear me.")
+  # end
 end

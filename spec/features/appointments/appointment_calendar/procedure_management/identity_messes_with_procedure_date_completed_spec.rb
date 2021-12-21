@@ -56,9 +56,9 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def given_i_am_viewing_an_appointment
-    next_month               = Time.current.month + 1
-    @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
-
+    next_day               = Time.now.day + 1
+    edited_completed_date = Time.now.strftime("%m/#{next_day}/%Y")
+    
     @protocol     = create_and_assign_protocol_to_me
     @protocols_participant  = @protocol.protocols_participants.first
     service      = @protocol.organization.inclusive_child_services(:per_participant).first
@@ -95,6 +95,7 @@ feature 'User messes with a procedures date completed', js: true do
     find('div#procedure1StatusButtons button.incomplete-btn').click
     bootstrap_select '#procedure_notes_attributes_0_reason', reason
     fill_in 'Comment', with: 'Test comment'
+    find('input.btn[type="submit"]').click
   end
 
   def when_i_add_a_procedure
@@ -110,25 +111,28 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def when_i_edit_the_completed_date
-    find('.procedures .completed_date_field')
-    page.execute_script %Q{ $('.procedures .completed_date_field').trigger('click'); }
-    next_month               = Time.current.month + 1
-    edited_completed_date = Date.current.strftime("0#{next_month}/15/%Y")
-    page.execute_script %Q{ $(".completed-date .completed_date_field").val('#{edited_completed_date}') }
+    next_day               = Time.now.day + 1
+    edited_completed_date = Time.now.strftime("%m/#{next_day}/%Y")
+    # page.execute_script %Q{ $('.procedures .completed_date_field').trigger('click'); }
+    # bootstrap_datepicker 'input#procedure1CompletedDatePicker', month: "#{next_mont}"
+    bootstrap_datepicker 'input#procedure_completed_date', day: "#{next_day}"
+    page.execute_script %Q{ $("div#procedure1CompletedDatePicker").val('#{edited_completed_date}') }
     wait_for_ajax
   end
 
   def then_i_should_see_a_disabled_datepicker
-    expect(page).to have_css(".completed-date input[disabled]")
+    expect(page).to have_css("input#procedure_completed_date[disabled]")
   end
 
   def then_i_should_see_an_enabled_datepicker_with_the_current_date
-    expected_date = page.evaluate_script %Q{ $('.completed_date_field').first().val(); }
-    expect(expected_date).to eq(DateTime.current.strftime('%m/%d/%Y'))
+    expected_date = page.evaluate_script %Q{ $('input#procedure_completed_date').val(); }
+    expect(expected_date).to eq(Time.now.strftime('%m/%d/%Y'))
   end
 
-  def then_i_should_see_the_completed_date_has_been_updated
-    expected_date = page.evaluate_script %Q{ $('.completed_date_field').first().val(); }
-    expect(expected_date).to eq(@the_middle_of_next_month)
+  def then_i_should_see_the_completed_date_has_been_updated 
+    next_day               = Time.now.day + 1
+    edited_completed_date = Time.now.strftime("%m/#{next_day}/%Y")
+    expected_date = page.evaluate_script %Q{ $('input#procedure_completed_date').val(); }
+    expect(expected_date).to eq(edited_completed_date)
   end
 end
