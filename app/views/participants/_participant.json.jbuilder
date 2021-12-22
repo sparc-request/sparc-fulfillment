@@ -11,6 +11,6 @@ end
 json.deidentified   deidentified_patient(participant)
 json.first_middle   participant.first_middle
 json.last_name      participant.last_name
-json.date_of_birth  participant.date_of_birth.strftime('%m/%d/%Y')
+json.date_of_birth  participant.date_of_birth.try(:strftime, "%m/%d/%Y")
 json.mrn            participant.mrn
 json.phone          phoneNumberFormatter(participant)

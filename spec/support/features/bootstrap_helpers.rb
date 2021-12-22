@@ -22,28 +22,37 @@ module Features
   module BootstrapHelpers
     def bootstrap_multiselect(class_or_id, selections = ['all'])
       expect(page).to have_selector("select#{class_or_id}", visible: false)
-      bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".btn-group").find('.dropdown-toggle')
+      bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
       bootstrap_multiselect.click
 
-      expect(page).to have_selector('.open .dropdown-menu')
+      expect(page).to have_selector('.dropdown-menu.show')
       if selections.first == 'all'
-        first('.open .dropdown-menu a', text: 'Select all').click
+        first('.dropdown-menu.show button.bs-select-all').click
       else
         selections.each do |selection|
-          first('.open .dropdown-menu a', text: selection).click
+          first('.dropdown-menu.show span.text', text: selection).click
         end
       end
-      find('body').click # Click away
+
+      #This caused problems,
+      #because it ACTUALLY clicks on the center of the page,
+      #and if that happens to be something to actually click on...
+
+      # find('body').click # Click away
+
+      ##
+
+      find('body').native.send_keys(:escape)
       wait_for_ajax
     end
 
-    def bootstrap_select(class_or_id, choice)
-      expect(page).to have_selector("select#{class_or_id}", visible: false)
-      bootstrap_select = page.first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
-      
+    def bootstrap_select(class_or_id, choice, context_selector = '')
+      expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: false)
+      bootstrap_select = page.first("#{context_selector} select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
+
       bootstrap_select.click
-      expect(page).to have_selector('.dropdown-menu.open')
-      first('.dropdown-menu.open span.text', text: choice).click
+      expect(page).to have_selector('.dropdown-menu.show')
+      first('.dropdown-menu.show span.text', text: choice).click
       wait_for_ajax
     end
 
@@ -55,8 +64,7 @@ module Features
       e = page.find(element)
 
       if e['readonly']
-        page.execute_script "$('#{element}').focus()"
-        page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
+        first("#{element}").click
 
         if args[:year]
           expect(page).to have_selector('.year', text: args[:year])

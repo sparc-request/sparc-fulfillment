@@ -49,9 +49,9 @@
     .card-body
       .row
         .form-group.mb-0.col-8
-          = f.select :service_id, options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), 'id', 'name'), { include_blank: true }, class: 'form-control selectpicker'
+          = f.select :service_id, options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), 'id', 'name'), { include_blank: true }, class: 'form-control selectpicker', id: "add_procedure_dropdown"
         .form-group.mb-0.col-2
-          = f.text_field :qty, value: 1, class: 'form-control'
+          = f.text_field :qty, value: 1, class: 'form-control', id: 'service_quantity'
         .col-2
           %button.btn.btn-success.w-100#addService
             = t('appointments.add_service')

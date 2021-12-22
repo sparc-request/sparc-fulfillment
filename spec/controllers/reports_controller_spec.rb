@@ -34,7 +34,7 @@ RSpec.describe ReportsController, type: :controller do
 
       it 'should respond with: :success' do
         do_post
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'should create a document' do

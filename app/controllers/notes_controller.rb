@@ -36,9 +36,9 @@ class NotesController < ApplicationController
   def create
     @note = current_identity.notes.new(note_params)
     if @note.save
-      @notes  = @notable.notes
-      @note   = current_identity.notes.new(notable_id: @notable_id, notable_type: @notable_type)
-      @count  = @notes.count
+      @notes     = @notable.notes
+      @next_note = current_identity.notes.new(notable_id: @notable_id, notable_type: @notable_type)
+      @count     = @notes.count
     else
       @errors = @note.errors
     end
