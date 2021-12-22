@@ -145,6 +145,9 @@ en:
   appointments:
     add_service: "Add Service"
     appointment_dropdown: "Please select a visit:"
+    off_arm_header: "Appointments from other Arms"
+    arm_change_label: "Re-Assign Arm:"
+    arm_change_tooltip: "Dropdown consists of different arms. Selecting a different arm from dropdown will change available visit display"
     completed: "Completed Visits"
     completed_date: "Completed Date:"
     completed_time: "Completed Time:"
