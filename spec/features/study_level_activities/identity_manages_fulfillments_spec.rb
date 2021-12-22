@@ -36,6 +36,7 @@ feature 'Fulfillments', js: true do
       and_i_have_opened_up_fulfillments
       click_link "Add Fulfillment"
       wait_for_ajax
+      sleep 1
       when_i_fill_out_the_fulfillment_form
       expect(page).to have_content('45.0')
     end
@@ -56,13 +57,14 @@ feature 'Fulfillments', js: true do
     wait_for_ajax
     click_link "Non-clinical Services"
     wait_for_ajax
+    sleep 1
     first('.fulfillments a').click
     wait_for_ajax
+    sleep 1
   end
 
   def when_i_fill_out_the_fulfillment_form
     bootstrap_datepicker '#fulfillment_fulfilled_at', day: '15'
-    find('.modal-title').click
     fill_in "fulfillment_quantity", with: "45"
     click_button "Save"
     wait_for_ajax

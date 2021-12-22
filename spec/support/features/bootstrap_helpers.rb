@@ -33,7 +33,16 @@ module Features
           first('.dropdown-menu.show span.text', text: selection).click
         end
       end
-      find('body').click # Click away
+
+      #This caused problems,
+      #because it ACTUALLY clicks on the center of the page,
+      #and if that happens to be something to actually click on...
+
+      # find('body').click # Click away
+
+      ##
+
+      find('body').native.send_keys(:escape)
       wait_for_ajax
     end
 
@@ -55,8 +64,6 @@ module Features
       e = page.find(element)
 
       if e['readonly']
-        # page.execute_script "$('#{element}').focus()"
-        # page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
         first("#{element}").click
 
         if args[:year]
