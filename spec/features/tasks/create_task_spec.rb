@@ -51,39 +51,39 @@ feature "create Task", js: true do
   end
 
   def when_i_create_a_task_assigned_to_myself
-    find(".new-task").click
+    find("a.btn.btn-success").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    bootstrap_datepicker '#follow_up_datepicker', day: '15'
+    bootstrap_datepicker '.datetimepicker-input', day: '15'
     fill_in :task_body, with: "Test body"
     find("#new_task .modal-footer .btn-primary").click
     wait_for_ajax
   end
 
   def when_i_create_a_task_assigned_to_another_identity
-    find(".new-task").click
+    find("a.btn.btn-success").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    bootstrap_datepicker '#follow_up_datepicker', day: '15'
+    bootstrap_datepicker '.datetimepicker-input', day: '15'
     fill_in :task_body, with: "Test body"
     find("#new_task .modal-footer .btn-primary").click
     wait_for_ajax
   end
 
   def when_i_click_on_the_all_tasks_button
-    find("#all_tasks", visible: false).find(:xpath, "..").click
+    find("#allTasksToggle", visible: false).find(:xpath, "..").click
     wait_for_ajax
   end
 
   def then_i_should_see_the_task_is_assigned_to_me
     expect(page).to have_css("table.tasks tbody tr", count: 1)
-    expect(page).to have_css(".notification.task-notifications", text: 1)
+    expect(page).to have_css("span.badge", text: 1)
   end
 
   def then_i_should_see_two_tasks_are_assigned_to_me
     expect(page).to have_css("table.tasks tbody tr", count: 2)
-    expect(page).to have_css(".notification.task-notifications", text: 2)
+    expect(page).to have_css("span.badge", text: 2)
   end
 
   def then_i_should_see_the_task_is_assigned_to_the_identity
-    expect(page).to have_css("table.tasks tbody td.assignee_name", count: 1, text: @assignee.full_name)
+    expect(page).to have_css("table.tasks tbody td:nth-child(2)", count: 1, text: @assignee.full_name)
   end
 end

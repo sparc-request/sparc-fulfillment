@@ -20,16 +20,47 @@
 
 require 'rails_helper'
 
-RSpec.describe AppointmentHelper do
+RSpec.describe ApplicationHelper do
+	describe "#notes_button" do
+    context "no notes" do
+    	notable = Participant.create()
+      params = {
+        }
 
-  describe "#historical_statuses" do
-    it "should return old statuses" do
-      arm = create(:arm)
-      protocol = create_and_assign_protocol_to_me
-      protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: create(:participant))
-      appointment = create(:appointment, name: "Test Appt", protocols_participant: protocols_participant, arm: arm)
-      statuses = appointment.appointment_statuses.map{|x| x.status}
-      expect(helper.historical_statuses(statuses)).to eq(statuses - Appointment::STATUSES)
+      it "should return a white button with blue text" do
+        expect(helper.notes_button(notable,params)).to have_selector(".badge-secondary")
+      end
+    end
+
+    context "has notes" do
+      before :each do
+        @notable = create(:participant)
+        @notable.notes.create(comment:'test')
+        @params = {
+        }
+      end
+
+      it "should return a blue button with white text" do
+        expect(helper.notes_button(@notable,@params)).to have_selector(".badge-warning")
+      end
+    end
+
+    context "model is present" do
+      notable = Participant.create()
+      params = {model:"string"
+        }
+      it "should not return the sq button" do
+        expect(helper.notes_button(notable,params)).not_to have_selector(".btn-sq")
+      end
+    end
+
+    context "model is not present" do
+      notable = Participant.create()
+      params = {
+        }
+      it "should return a square button" do
+        expect(helper.notes_button(notable,params)).to have_selector(".btn-sq")
+      end
     end
   end
 end

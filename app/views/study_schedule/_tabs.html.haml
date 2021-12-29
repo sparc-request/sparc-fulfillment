@@ -18,30 +18,13 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-= form_for visit_group, {remote: true, html: {class: "form-horizontal new_visit", role: "form"}} do |a|
-  .form-group
-    = a.label "name", t(:visit_groups)[:name]+t(:actions)[:required], class: "col-sm-4 control-label"
-    .col-sm-7
-      = a.text_field "name", {class: 'form-control'}
-  .form-group
-    = a.label "day", t(:visit_groups)[:day]+(ENV.fetch('USE_EPIC'){nil} == 'false' ? '' : t(:actions)[:required]), class: "col-sm-4 control-label"
-    .col-sm-7
-      = a.text_field "day", {class: 'form-control', maxlength: 4}
-  .form-group
-    = a.label "position", t(:visit_groups)[:position], class: "col-sm-4 control-label"
-    .col-sm-7
-      = a.select "position", options_for_select(move_to_position_options_for(visit_group), visit_group.position), {}, class: "form-control selectpicker"
-  .form-group
-    = a.label "window_before", t(:visit_groups)[:window_before], class: "col-sm-4 control-label"
-    .col-sm-7
-      = a.text_field "window_before", {class: 'form-control'}
-  .form-group
-    = a.label "window_after", t(:visit_groups)[:window_after], class: "col-sm-4 control-label"
-    .col-sm-7
-      = a.text_field "window_after", {class: 'form-control'}
-  .modal-footer
-    .center-block
-      %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
-        = t(:actions)[:close]
-      -# Why not: = a.submit, :save, class: btn btn-primary etc...
-      %input.btn.btn-primary{type: 'submit', value: t(:actions)[:save]}
+.tabs.w-100#studySchedule
+  %nav.nav.nav-tabs.border-bottom-0#studyScheduleTabs{ role: 'tablist' }
+    = link_to "Template", "#template", data: {toggle: 'tab', tab: 'template', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/template', class: ['nav-link nav-item h4 mb-0', (tab == "template") ? "active" : ""], role: 'tab'
+    = link_to "Quantity/Billing Tab", "#quantity", data: {toggle: 'tab', tab: 'quantity', protocol: protocol.id}, role: 'tab', "aria-controls" => 'study_schedule/quantity/billing', class: ['nav-link nav-item h4 mb-0', (tab == "quantity") ? "active" : ""], role: 'tab'
+    = link_to "Consolidated Request Tab", "#consolidated", data: {toggle: 'tab', tab: 'consolidated', protocol: protocol.id}, role: 'tab', "aria-controls" =>'study_schedule/consolidated_request', class: ['nav-link nav-item h4 mb-0', (tab == "consolidated") ? "active" : ""], role: 'tab'
+    .study-schedule-container.w-100
+      - protocol.arms.each do |arm|
+        = render 'study_schedule/arm', arm: arm, page: page, tab: tab
+    .study_level_activities_display{hidden: tab == 'consolidated' ? false : true}
+      = render 'study_schedule/study_level_activities', protocol: protocol

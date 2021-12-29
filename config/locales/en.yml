@@ -43,7 +43,6 @@ en:
     attributes:
       arm:
         name: "Arm Name"
-        subject_count: "Subject Count"
         visit_count: "Visit Count"
       appointment:
         contents: "Type of Visit"
@@ -126,6 +125,12 @@ en:
           attributes:
             position:
               blank: "You must select a Position"
+        procedure:
+          attributes:
+            base:
+              qty: "Must be greater than zero"
+            service:
+              required: "You ust select a Service"
         visit_group:
           attributes:
             position:
@@ -140,6 +145,9 @@ en:
   appointments:
     add_service: "Add Service"
     appointment_dropdown: "Please select a visit:"
+    off_arm_header: "Appointments from other Arms"
+    arm_change_label: "Re-Assign Arm:"
+    arm_change_tooltip: "Dropdown consists of different arms. Selecting a different arm from dropdown will change available visit display"
     completed: "Completed Visits"
     completed_date: "Completed Date:"
     completed_time: "Completed Time:"
@@ -171,6 +179,7 @@ en:
         grouped: "Switch to Grouped View"
       complete_visit:
         disabled: "Assign a status or follow-up date for each procedure in order to complete this visit."
+        completed: "This visit has already been completed"
       reset_visit:
         disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
         disabled_credited: "A procedure within this visit has been credited and cannot be altered."
@@ -185,7 +194,7 @@ en:
     edit_arm: Edit Arm
     flash_messages:
       updated: "Arm Updated"
-    header: 'Clinical Services'
+    header: "Clinical Services (%{arm_name})"
     name: "Arm Name"
     name_with_arm_name_interpolated: 'Arm Name: %{arm_name}'
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
@@ -193,6 +202,10 @@ en:
     selected_line_items: "Selected Services"
     subject_count: "Subject Count"
     visit_count: "Visit Count"
+    form:
+      arm_name: "Arm Name *"
+      subject_count: "Subject Count *"
+      visit_count: "Visit Count *"
 
   ##############################
   # Confirms (via Sweet Alert) #
@@ -242,6 +255,7 @@ en:
     search:
       loading: "Loading..."
       no_results: "No Results"
+    cant_be_blank: "Can't be blank"
 
   documents:
     object: "Document"
@@ -284,7 +298,7 @@ en:
       created: "Fulfillment Created"
       updated: "Fulfillment Updated"
     fulfillments: "Fulfillments"
-    fulfillment_grouper: "Month Year"
+    fulfillment_month_year: "Month Year"
     fulfillment_date: "Fulfillment Date"
     log_notes:
       account_number: "Account Number changed to "
@@ -389,6 +403,7 @@ en:
     quantity: "Quantity"
     service: "Service"
     started: "Started"
+    subject_count: "Subject Count"
     notes: "Notes"
     documents: "Documents"
 
@@ -506,8 +521,12 @@ en:
     tooltips:
       unstarted_appointment: "Click 'Start Visit' and enter a start date to continue."
       complete: "Complete"
+      completed:
+        disabled: "This procedure has been completed and cannot be deleted"
       unstarted: "Unstarted"
       incomplete: "Incomplete"
+      incompleted:
+        disabled: "This procedure is incomplete and cannot be deleted"
       followup:
         schedule: "Schedule a follow-up"
       invoiced:
@@ -616,12 +635,18 @@ en:
     object: "Service"
     objects: "Services"
     add_services: "Add Services"
-    arm: "Select Arm(s)"
+    arm: "Select Arm(s) *"
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     name: "Selected Service"
     remove_services: "Remove Services"
     report: "Report"
+
+  study_schedule:
+    tooltips:
+      quantity_type: "Quantity Type"
+      subject_count: "Subject Count"
+    edit_billing_modal: "Edit Billing Quantities"
 
   sub_service_request:
     statuses:
@@ -694,13 +719,14 @@ en:
   visit_groups:
     object: "Visit Group"
     created: "Visit Created"
+    arm: "Arm"
     day: "Visit Day"
     deleted: "Visit Destroyed"
     flash_messages:
       updated: "Visit Updated"
-    name: "Visit Name"
+    name: "Visit Name *"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
-    position: "Insert into Position *"
+    position: "Insert into Position"
     window_after: "Window After *"
     window_before: "Window Before *"
     view_page_next: "View More"

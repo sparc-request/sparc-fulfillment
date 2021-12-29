@@ -25,14 +25,16 @@
         = header_text
       %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
         %span{ aria: { hidden: 'true' } } &times;
-    .modal-body
+    .modal-body.table-responsive
       #fulfillmentsToolbar
         = link_to new_fulfillment_path(line_item_id: line_item.id), remote: true, class: 'btn btn-success' do
           = succeed t(:fulfillment)[:add_fulfillment] do
             = icon('fas', 'plus mr-2')
-      %table.table-striped#fulfillments-table{ data: { toggle: 'table', url: fulfillments_path(format: :json, line_item_id: line_item.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', striped: 'true', toolbar: '#fulfillmentsToolbar', show_export: 'true' } }
+      %table.table-striped#fulfillments-table{ data: { toggle: 'table', url: fulfillments_path(format: :json, line_item_id: line_item.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', striped: 'true', toolbar: '#fulfillmentsToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: "", export_options: "{\"ignoreColumn\": [\"actions\",\"documents\",\"invoiced\",\"credited\"]}"} }
         %thead.bg-primary.text-white
           %tr
+            %th.month-year{ data: { field: 'month_year', align: 'left', sortable: 'true', sorter: 'dateSorter'}}
+              = t(:fulfillment)[:fulfillment_month_year]
             %th.fulfillment-date{ data: { field: 'fulfillment_date', align: 'left', sortable: 'true', sorter: 'fulfillmentDateSorter' } }
               = Fulfillment.human_attribute_name(:fulfilled_at)
             %th.qty{ data: { field: 'quantity', align: 'left', sortable: 'true' } }
@@ -40,18 +42,22 @@
             %th.qty-type{ data: { field: 'quantity_type', align: 'left', sortable: 'true' } }
               = Fulfillment.human_attribute_name(:quantity_type)
             %th.performed-by{ data: { field: 'performed_by', align: 'left', sortable: 'true' } }
-              = Fulfillment.human_attribute_name(:performer)
+              = Fulfillment.human_attribute_name(:performed_by)
             %th.components{ data: { field: 'components', align: 'left' } }
               = Component.model_name.plural.capitalize
             %th.invoiced{ data: { field: 'invoiced', align: 'left' } }
               = Fulfillment.human_attribute_name(:invoiced)
+            %th.invoiced_export.d-none{ data: { field: 'invoiced_export', switchable: 'false' } }
+              = Fulfillment.human_attribute_name(:invoiced)
             %th.credited{ data: { field: 'credited', align: 'left' } }
               = Fulfillment.human_attribute_name(:credited)
-            %th.notes{ data: { field: 'notes', align: 'center' } }
+            %th.credited_export.d-none{ data: { field: 'credited_export', switchable: 'false' } }
+              = Fulfillment.human_attribute_name(:credited)
+            %th.notes{ data: { field: 'notes', align: 'left' } }
               = Note.model_name.plural.capitalize
-            %th.documents{ data: { field: 'documents', align: 'center' } }
+            %th.documents{ data: { field: 'documents', align: 'left' } }
               = Document.model_name.plural.capitalize
-            %th.actions{ data: { field: 'actions', align: 'center' } }
+            %th.actions{ data: { field: 'actions', align: 'left' } }
               = t(:actions)[:actions]
       %p.text-center.text-muted.mt-3.mb-0<
         = icon('fas', 'clock mr-1')

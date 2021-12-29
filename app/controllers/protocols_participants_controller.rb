@@ -22,6 +22,7 @@ class ProtocolsParticipantsController < ApplicationController
   before_action :find_protocol,               only: [:index, :show, :new, :create, :update, :destroy]
   before_action :find_protocols_participant,  only: [:show, :update, :destroy]
   before_action :set_appointment_style, only: [:update]
+  before_action :authorize_protocol,  only: [:show]
 
   def index
     respond_to do |format|
@@ -55,6 +56,7 @@ class ProtocolsParticipantsController < ApplicationController
   def create
     respond_to :js
     @prot_part = @protocol.protocols_participants.create(participant_id: params[:participant_id])
+    @prot_part.current_identity = current_identity
     @prot_part.update_attribute(:arm, @protocol.arms.first) if @protocol.arms.count == 1
     flash[:success] = t('protocols_participants.flash.updated')
   end

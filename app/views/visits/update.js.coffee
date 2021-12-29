@@ -18,10 +18,18 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @visit.errors[:research_billing_qty].any? %>
-error_tooltip_on("#visits_<%= @visit.id %>_research_billing_qty", "Quantity <%= raw(@visit.errors[:research_billing_qty][0]) %>")
-$("#visits_<%= @visit.id %>_research_billing_qty").val("<%= @visit.reload.research_billing_qty %>")
-<% elsif @visit.errors[:insurance_billing_qty].any? %>
-error_tooltip_on("#visits_<%= @visit.id %>_insurance_billing_qty", "Quantity <%= raw(@visit.errors[:insurance_billing_qty][0]) %>")
-$("#visits_<%= @visit.id %>_insurance_billing_qty").val("<%= @visit.reload.insurance_billing_qty %>")
+<% if @errors %>
+$("[name^='visit']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='visit[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+
+<% else %>
+if $('#studyScheduleTabs .nav-link[data-tab="quantity"]').hasClass('active')
+  $("#visit<%= @visit.id %>").html("<%= j quantity_visit_link(@visit, @page) %>")
+  $("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
+  $("#modalContainer").modal('hide')
 <% end %>

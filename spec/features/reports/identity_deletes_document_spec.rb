@@ -29,13 +29,19 @@ feature 'Identity deletes a document', js: true, enqueue: false do
         then_i_should_see_the_delete_icon_is_greyed_out
       end
     end
+  end
 
-    scenario "and does not see the report" do
-      given_i_am_viewing_the_all_reports_page_with_documents(1)
-      when_i_click_the_delete_icon
-      then_i_should_not_see_the_document
+  context "from the All Reports page" do
+    context "when clicking the delete report" do
+      scenario "does not see the report" do
+        given_i_am_viewing_the_all_reports_page_with_documents(1)
+        when_i_click_the_delete_icon
+        then_i_should_not_see_the_document
+      end
     end
+  end
 
+  context "from the All Reports page" do
     context "which has not been accessed" do
       scenario "and sees the documents counter decrement" do
         given_i_am_viewing_the_all_reports_page_with_documents(2)
@@ -52,21 +58,28 @@ feature 'Identity deletes a document', js: true, enqueue: false do
         then_i_should_see_the_delete_icon_is_greyed_out
       end
     end
+  end
 
-    scenario "and does not see the report" do
-      given_i_am_viewing_the_reports_tab_with_documents(1)
-      when_i_click_the_delete_icon
-      then_i_should_not_see_the_document
-    end
-
-    context "which has not been accessed" do
-      scenario "and sees the documents counter decrement" do
-        given_i_am_viewing_the_reports_tab_with_documents(2)
+  context "from the Reports Tab" do
+    context "when clicking the delete report" do
+      scenario "does not see the report" do
+        given_i_am_viewing_the_reports_tab_with_documents(1)
         when_i_click_the_delete_icon
-        then_i_should_see_the_protocol_docs_counter_was_decremented
+        then_i_should_not_see_the_document
       end
     end
   end
+
+  context "from the Reports Tab" do
+    context "which has not been accessed" do
+        scenario "and sees the documents counter decrement" do
+          given_i_am_viewing_the_reports_tab_with_documents(2)
+          when_i_click_the_delete_icon
+          then_i_should_see_the_protocol_docs_counter_was_decremented
+        end
+    end
+  end
+
 
   def given_i_am_viewing_the_all_reports_page_with_documents(count, state="Completed")
     @protocol = create_and_assign_protocol_to_me
@@ -77,6 +90,7 @@ feature 'Identity deletes a document', js: true, enqueue: false do
 
     visit documents_path
     wait_for_ajax
+
   end
 
   def given_i_am_viewing_the_reports_tab_with_documents(count, state="Completed")
@@ -89,7 +103,9 @@ feature 'Identity deletes a document', js: true, enqueue: false do
     visit protocol_path @protocol
     wait_for_ajax
 
-    click_link 'Reports'
+    # click_link 'Reports'
+    find('#reportsTabLink').click
+    wait_for_ajax
   end
 
   def when_i_click_the_delete_icon
@@ -99,7 +115,7 @@ feature 'Identity deletes a document', js: true, enqueue: false do
   end
 
   def then_i_should_see_the_delete_icon_is_greyed_out
-    expect(page).to have_css("i.glyphicon-remove[style='cursor:default']")
+    expect(page).to_not have_css(".actions .remove-document")
   end
 
   def then_i_should_not_see_the_document
@@ -111,6 +127,6 @@ feature 'Identity deletes a document', js: true, enqueue: false do
   end
 
   def then_i_should_see_the_protocol_docs_counter_was_decremented
-    expect(page).to have_css(".protocol_report_notifications", text: 1)
+    expect(page).to have_css(".notification-badge", text: 1)
   end
 end
