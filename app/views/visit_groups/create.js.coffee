@@ -36,7 +36,7 @@ tab = $('#current_tab').val()
 $("#select_for_arm_#{arm_id}").replaceWith("<%= j render '/study_schedule/visit_group_page_select', arm: @arm, page: @current_page.to_i %>")
 $(".selectpicker").selectpicker()
 
-<% if on_current_page?(@current_page, @visit_group.position) %>
+<% if on_current_page?(@current_page, @visit_group.position) || before_current_page?(@current_page, @visit_group.position) %>
 # Overwrite the visit_groups
 $(".visit_groups_for_#{arm_id}").html("<%= j render '/study_schedule/visit_groups', arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab %>")
 # Overwrite the check columns

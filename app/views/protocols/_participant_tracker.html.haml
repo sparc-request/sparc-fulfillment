@@ -23,10 +23,14 @@
     = link_to new_protocol_participant_path(protocol_id: protocol.id), remote: true, class: 'btn btn-success' do
       = succeed t(:participant)[:search_participant] do
         = icon('fas', 'search mr-2')
-  %table#participantTrackerTable{ data: { toggle: 'table', url: protocol_participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'participant-tracker-table', toolbar: '#participantTrackerToolbar', show_export: 'true', export_types: ['excel'] } }
+    %span.tooltip-wrapper.ml-3{title: t('reports.participant_report'), data: {toggle: 'tooltip'}}
+      %button.btn.btn-secondary.participant-report.report-button{ data: { url: reports_path(report_type: 'participant_report', title: t('reports.participant_report'), documentable_id: protocol.id, documentable_type: Protocol.name, protocols: [protocol.id], protocol_level: true) }}
+        = icon('fas', 'file-alt')
+      
+  %table#participantTrackerTable{ data: { toggle: 'table', url: protocol_participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'participant-tracker-table', toolbar: '#participantTrackerToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: "", export_options: "{\"ignoreColumn\": [\"calendar\",\"notes\",\"actions\",\"arm\",\"status\",\"recruitment_source\"]}"} }
     %thead.bg-light
       %tr
-        %th.calendar.editable{ data: { field: 'calendar', align: 'center' } }
+        %th.calendar.editable{ data: { field: 'calendar', align: 'left' } }
           = t('protocols_participants.table.fields.calendar')
         %th.last-name{ data: { field: 'last_name', align: 'left', sortable: 'true' } }
           = Participant.human_attribute_name(:last_name)
@@ -38,11 +42,19 @@
           = ProtocolsParticipant.human_attribute_name(:external_id)
         %th.arm{ data: { field: 'arm', align: 'left', sortable: 'true' } }
           = ProtocolsParticipant.human_attribute_name(:arm)
+        %th.arm_export.d-none{ data: { field: 'arm_export', switchable: 'false' } }
+          = ProtocolsParticipant.human_attribute_name(:arm)
         %th.status{ data: { field: 'status', align: 'left', sortable: 'true' } }
+          = ProtocolsParticipant.human_attribute_name(:status)
+        %th.status_export.d-none{ data: { field: 'status_export', switchable: 'false' } }
           = ProtocolsParticipant.human_attribute_name(:status)
         %th.recruitment-source{ data: { field: 'recruitment_source', align: 'left', sortable: 'true' } }
           = ProtocolsParticipant.human_attribute_name(:recruitment_source)
-        %th.notes{ data: { field: 'notes', align: 'center' } }
+        %th.recruitment_export.d-none{ data: { field: 'recruitment_export', switchable: 'false' } }
+          = ProtocolsParticipant.human_attribute_name(:recruitment_source)
+        %th.notes{ data: { field: 'notes', align: 'left' } }
           = Note.model_name.plural.capitalize
-        %th.actions{ data: { field: 'actions', align: 'center' } }
+        %th.notes_export.d-none{ data: { field: 'notes_export', switchable: 'false' } }
+          = Note.model_name.plural.capitalize
+        %th.actions{ data: { field: 'actions', align: 'left' } }
           = t('actions.actions')

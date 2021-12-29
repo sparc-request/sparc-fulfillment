@@ -30,12 +30,13 @@ class StudyScheduleController < ApplicationController
   def change_tab
     @protocol = Protocol.find(params[:protocol_id])
     @arms_and_pages = {}
-    hash = params[:arms_and_pages]
-    hash.each do |arm_id, page|
+    arms_and_pages_params = params[:arms_and_pages]
+    arms_and_pages_params.each do |arm_id, page|
       arm = Arm.find(arm_id)
       @arms_and_pages[arm_id] = {arm: arm, page: page}
     end
     @tab = params[:tab]
+    cookies['active-schedule-tab'.to_sym] = @tab
   end
 
   def check_row

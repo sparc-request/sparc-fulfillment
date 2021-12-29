@@ -141,20 +141,20 @@ module ProceduresHelper
   end
 
   def delete_procedure_button(procedure)
-    disabled = !procedure.appointment.started? || procedure.invoiced? || procedure.credited?
+    disabled = !procedure.appointment.started? || procedure.complete? || procedure.incomplete?
     tooltip =
       if !procedure.appointment.started?
         t('procedures.tooltips.unstarted_appointment')
-      elsif procedure.invoiced?
-        t('procedures.tooltips.invoiced.disabled')
-      elsif procedure.credited?
-        t('procedures.tooltips.credited.disabled')
+      elsif procedure.complete?
+        t('procedures.tooltips.completed.disabled')
+      elsif procedure.incomplete?
+        t('procedures.tooltips.incompleted.disabled')
       else
         t('procedures.tooltips.delete')
       end
 
     content_tag :div, class: 'tooltip-wrapper', title: tooltip, data: { toggle: 'tooltip' } do
-      link_to icon('fas', 'trash'), appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :delete, class: ['btn btn-danger', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' }
+      link_to icon('fas', 'trash'), appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :delete, class: ['btn btn-danger delete-button', disabled ? 'disabled' : ''], data: { confirm_swal: 'true', procedure: procedure.id }
     end
   end
 

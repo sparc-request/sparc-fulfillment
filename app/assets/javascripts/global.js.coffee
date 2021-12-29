@@ -30,7 +30,7 @@ $ ->
 
   stickybits('.position-sticky, .sticky-top')
 
-  $(document).on 'load-success.bs.table search.bs.table sort.bs.table column-switch.bs.table ajax:complete', (e) ->
+  $(document).on 'post-body.bs.table ajax:complete', (e) ->
     initializeSelectpickers()
     initializeDateTimePickers()
     initializeTooltips()
@@ -85,10 +85,11 @@ $ ->
 
   $(document).on 'click', '.editable', (event) ->
     # Perform requests when clicking editable table cells with anchors
-    if ($anchor = $(this).find('a')).length
+    editable_object = $(this)
+    if ($anchor = editable_object.find('a')).length
       # Anchor has an href to perform a request
       if !$anchor.hasClass('disabled') && $anchor.attr('href') != 'javascript:void(0)'
-        $(this).addClass('disabled')
+        editable_object.addClass('disabled')
         $anchor.addClass('disabled')
         # If the requst should be remote, send an AJAX request
         if $anchor.data('remote')
@@ -98,8 +99,9 @@ $ ->
             dataType: 'script'
             url:      $anchor.attr('href')
             success: ->
-              $(this).removeClass('disabled')
+              editable_object.removeClass('disabled')
               $anchor.removeClass('disabled')
+              $anchor.prop('disabled', false)
         # Else change the page location
         else
           window.location.href = $anchor.attr('href')
@@ -227,22 +229,16 @@ $ ->
     when 'Protocol'
       if !$('span.notification-badge.reports-tab-badge small').length
         $('<span class="badge badge-pill badge-c badge-danger notification-badge reports-tab-badge"><small>0</small></span>').appendTo($('#reportsTabLink span.position-relative'))
-      notification_bubble = $('span.notification-badge.reports-tab-badge small')
+      notification_text = $('span.notification-badge.reports-tab-badge small')
+      notification_bubble = $('span.notification-badge.reports-tab-badge')
     when 'Identity'
       if !$('.identity_report_notifications').length
         $('<span class="badge badge-pill badge-c badge-danger notification-badge identity_report_notifications">0</span>').appendTo($('#navbarLinks .documents_nav'))
       notification_bubble = $('span.notification-badge.identity_report_notifications')
-  notification_count = parseInt(notification_bubble.text())
-  notification_bubble.text(notification_count + amount) if (notification_count + amount) >= 0
-  notification_count = parseInt(notification_bubble.text())
-  if notification_count == 0
-    notification_bubble.remove();
+      notification_text = notification_bubble
 
+  new_notification_count = (parseInt(notification_text.text()) + amount)
+  notification_text.text(new_notification_count)
 
-### Add "exclude_in_export" class to columns you want excluded from export and then pass in table ID ###
-window.exclude_from_export = (table_id) ->
-  excluded_cols = []
-  $('#'+table_id + ' .exclude_in_export').each ->
-    excluded_cols.push $(this).closest('th').index()
-  if excluded_cols.length
-    $('#'+table_id).data('export-options').ignoreColumn = excluded_cols
+  if new_notification_count <= 0
+    notification_bubble.remove()

@@ -36,7 +36,7 @@ class ProtocolsParticipant < ApplicationRecord
   delegate :first_name, :last_name, :first_middle, :full_name, :mrn, to: :participant
 
   before_save :note_changes,                      if: Proc.new{ |p| p.arm_id_changed? || p.status_changed? }
-  after_save :update_appointments_on_arm_change,  if: Proc.new{ |p| p.arm_id_changed? }
+  after_save :update_appointments_on_arm_change,  if: Proc.new{ |p| p.saved_change_to_arm_id? }
 
   after_save :update_faye
   after_destroy :update_faye
@@ -104,7 +104,7 @@ class ProtocolsParticipant < ApplicationRecord
   private
 
   def has_new_visit_groups?
-    self.new_visit_groups.any?
+    new_visit_groups.any?
   end
 
   def new_visit_groups

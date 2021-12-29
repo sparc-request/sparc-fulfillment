@@ -23,13 +23,14 @@
   %th.text-center{ colspan: 3 }
     - checked = set_check(visit_group)
     - if tab == 'template'
-      %button.btn.check-column{ type: 'button', visit_group_id: visit_group.id, check: checked.to_s, class: checked ? 'btn-success' : 'btn-danger', title: checked ? t('visit.check_column') : t('visit.uncheck_column'), data: { toggle: 'tooltip', animation: 'false' } }
+      %button.btn.check-column{ type: 'button', check: checked.to_s, class: checked ? 'btn-success' : 'btn-danger', title: checked ? t('visit.check_column') : t('visit.uncheck_column'), data: { visit_group_id: visit_group.id, toggle: 'tooltip', animation: 'false' } }
         = icon('fas', 'check' + (checked ? '' : ' d-none'))
         = icon('fas', 'times' + (checked ? ' d-none' : ''))
     - if tab == 'quantity'
-      .r-t-labels
-        %span.even_shorter_text.r-label= "R"
-        %span.even_shorter_text.t-label= "T"
+      .quantity-container
+        %span.r-label= "R"
+        %span.t-label= "T"
+        %span.t-label= "%"
 
 - (visit_groups.size...Visit.per_page).each do |index|
   %th{ colspan: 3, class: "column_#{index}" } &nbsp
