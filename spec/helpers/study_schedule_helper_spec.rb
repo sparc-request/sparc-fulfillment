@@ -22,26 +22,6 @@ require 'rails_helper'
 
 RSpec.describe StudyScheduleHelper do
 
-  describe "#glyph_class" do
-    it "should return a glyphicon class" do
-      visit_group = create(:visit_group_with_arm)
-      visits = []
-      3.times do
-        visits << create(:visit, visit_group: visit_group)
-      end
-      #glyphicon-ok class
-      expect(helper.glyph_class(visit_group)).to eq("glyphicon-ok")
-      
-      #glyphicon-remove class
-      visits.each do |visit|
-        visit.update_attributes(research_billing_qty: 1)
-        visit.update_attributes(insurance_billing_qty: 1)
-      end
-
-      expect(helper.glyph_class(visit_group)).to eq("glyphicon-remove")
-    end
-  end
-
   describe "#set_check" do
     it "should return whether or not to set check" do
       visit_group = create(:visit_group_with_arm)

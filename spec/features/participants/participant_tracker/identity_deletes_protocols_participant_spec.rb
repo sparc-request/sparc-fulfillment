@@ -54,18 +54,17 @@ feature 'User deletes Participant', js: true do
   end
 
   def when_i_delete_a_participant
-    accept_confirm do
-      page.find('table.participants tbody tr:first-child td.delete a').click
-    end
+    find('#participantTrackerTable tbody tr:first-child td .remove-participant').click
+    find('button.swal2-confirm').click
+    wait_for_ajax
 
-    refresh_bootstrap_table 'table.participants'
   end
 
   def then_i_should_not_see_the_participant
-    expect(page).to have_css('table.participants tbody tr', count: 2)
+    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2)
   end
 
   def then_i_should_see_disabled_delete_button
-    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted."]')
+    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted"]')
   end
 end

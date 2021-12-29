@@ -20,6 +20,7 @@
 
 class ProtocolsController < ApplicationController
   before_action :find_protocol,       only: [:show, :refresh_tab]
+  before_action :pppv_services_check, only: [:show, :refresh_tab]
   before_action :authorize_protocol,  only: [:show], unless: proc { |controller| controller.request.format.json? }
 
   def index
@@ -49,7 +50,6 @@ class ProtocolsController < ApplicationController
   def show
     respond_to do |format|
       format.html {
-        gon.push({ protocol_id: @protocol.id })
         session[:breadcrumbs].set_base(:requests, root_url).add_crumbs([
           { label: helpers.protocol_label(@protocol) },
           { label: helpers.request_label(@protocol) }
@@ -76,7 +76,11 @@ class ProtocolsController < ApplicationController
   end
 
   def get_current_protocol_tab
-    @tab = cookies['active-protocol-tab'.to_sym] ? cookies['active-protocol-tab'.to_sym] : (@services_present ? "study_schedule" : "study_level_activities")
+    @tab = cookies['active-protocol-tab'.to_sym] ? cookies['active-protocol-tab'.to_sym] : (@has_pppv_services ? "study_schedule" : "study_level_activities")
+  end
+
+  def pppv_services_check
+    @has_pppv_services = @protocol.organization.has_per_patient_per_visit_services? || @protocol.line_items.joins(:service).where(services: { one_time_fee: false }).any?
   end
 
   def set_highlighted_link

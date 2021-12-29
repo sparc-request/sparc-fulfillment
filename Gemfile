@@ -77,7 +77,7 @@ group :test do
   gem 'capybara'
   gem 'climate_control'
   gem 'database_cleaner'
-  gem 'geckodriver-helper', git: 'https://github.com/DevicoSolutions/geckodriver-helper.git', ref: "refs/pull/17/head"
+  # gem 'geckodriver-helper', git: 'https://github.com/DevicoSolutions/geckodriver-helper.git', ref: "refs/pull/17/head"
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec-activejob', '~> 0.6.1'
@@ -87,6 +87,6 @@ group :test do
   gem 'shoulda-matchers', "~> 4.4.1", require: false
   gem 'timecop'
   gem 'vcr', '~> 6.0.0'
-  gem 'webdrivers', '~> 4.4'
+  gem 'webdrivers', '~> 4.6'
   gem 'webmock', '~> 3.9.1'
 end

@@ -21,7 +21,7 @@
 module StudyLevelActivitiesHelper
   def notes(notes)
     bullet_point = notes.count > 1 ? "\u2022 " : ""
-    notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + Identity.find(note.identity_id).full_name }.join("<br>")
+    notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + (note.identity_id ? Identity.find(note.identity_id).full_name : "System") }.join("<br>")
   end
 
   def documents(documents)
@@ -36,24 +36,28 @@ module StudyLevelActivitiesHelper
     button
 
     link_to documents_path(document: { documentable_id: line_item.id, documentable_type: LineItem.name }), remote: true, class: 'btn btn-sq btn-light position-relative' do
-      raw(icon('far', 'file-alt fa-lg') + content_tag(:span, format_count(line_item.documents.length, 1), class: ['badge badge-pill badge-c notification-badge', line_item.documents.length > 1 ? 'badge-warning ' : 'badge-secondary']))
+      raw(icon('far', 'file-alt fa-lg') + content_tag(:span, line_item.documents.count, class: ['badge badge-pill badge-c notification-badge', line_item.documents.count > 1 ? 'badge-warning ' : 'badge-secondary']))
     end
   end
 
   def sla_fulfillments_button(line_item)
     link_to fulfillments_path(line_item_id: line_item.id), remote: true, class: 'btn btn-sq btn-primary position-relative' do
-      raw(icon('fas', 'list') + content_tag(:span, format_count(line_item.fulfillments.length, 1), class: ['badge badge-pill badge-c notification-badge', line_item.fulfillments.length > 1 ? 'badge-warning ' : 'badge-secondary']))
+      raw(icon('fas', 'list') + content_tag(:span, line_item.fulfillments.count, class: ['badge badge-pill badge-c notification-badge', line_item.fulfillments.count > 1 ? 'badge-warning ' : 'badge-secondary']))
     end
   end
 
   def sla_account_number(line_item)
     popover = render('study_level_activities/edit_form.html', line_item: line_item, field: :account_number)
-    link_to line_item.account_number || t('constants.na'), 'javascript:void(0)', class: "edit-account_number-#{line_item.id}", data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
+    link_to 'javascript:void(0)', class: "edit-account_number-#{line_item.id}", data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' } do
+      line_item.account_number.present? ? line_item.account_number : t('constants.na')
+    end
   end
 
   def sla_contact(line_item)
     popover = render('study_level_activities/edit_form.html', line_item: line_item, field: :contact_name)
-    link_to line_item.contact_name || t('constants.na'), 'javascript:void(0)', class: "edit-contact_name-#{line_item.id}", data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
+    link_to 'javascript:void(0)', class: "edit-contact_name-#{line_item.id}", data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' } do
+      line_item.contact_name.present? ? line_item.contact_name : t('constants.na')
+    end
   end
 
   def is_protocol_type_study?(protocol)
@@ -62,12 +66,12 @@ module StudyLevelActivitiesHelper
 
   def fulfillment_actions(fulfillment)
     notes_documents_array = [
-      "<a class='fulfillment_documents' href='javascript:void(0)' title='Documents' data-documentable-id='#{fulfillment.id}' data-documentable-type='Fulfillment'>",
-      "<i class='fas fa-folder-open'></i>",
+      "<a class='fulfillment_notes' href='javascript:void(0)' title='Notes' data-notable-id='#{fulfillment.id}' data-notable-type='Fulfillment'>",
+      "<i class='far fa-sticky-note'></i>",
       "</a>",
       "&nbsp&nbsp",
-      "<a class='fulfillment_notes' href='javascript:void(0)' title='Notes' data-notable-id='#{fulfillment.id}' data-notable-type='Fulfillment'>",
-      "<i class='fa fa-list'></i>",
+      "<a class='fulfillment_documents' href='javascript:void(0)' title='Documents' data-documentable-id='#{fulfillment.id}' data-documentable-type='Fulfillment'>",
+      "<i class='far fa-file-alt'></i>",
       "</a>",
       "&nbsp&nbsp"]
 
@@ -75,12 +79,12 @@ module StudyLevelActivitiesHelper
       "<a class='edit otf-fulfillment-edit ml10' href='javascript:void(0)' title='Edit' data-fulfillment_id='#{fulfillment.id}'>",
       "<i class='fas fa-edit'></i>",
       "</a>",
-      "&nbsp&nbsp",   
+      "&nbsp&nbsp",
       "<a class='remove otf-fulfillment-delete' style='color:red' href='javascript:void(0)' title='Remove' data-fulfillment_id='#{fulfillment.id}'>",
       "<i class='far fa-trash-alt'></i>",
       "</a>"]
 
-    unless fulfillment.invoiced?
+    unless (fulfillment.invoiced? || fulfillment.credited?)
       return (notes_documents_array + edit_delete_array).join ""
     else
       return notes_documents_array.join ""
@@ -104,11 +108,11 @@ module StudyLevelActivitiesHelper
   end
 
   def invoice_read_only(fulfillment)
-    (fulfillment.invoiced? ? "Yes" : "No")
+    (fulfillment.invoiced? ? t('constants.yes_select') : t('constants.no_select'))
   end
 
   def credit_read_only(fulfillment)
-    (fulfillment.credited? ? "Yes" : "No")
+    (fulfillment.credited? ? t('constants.yes_select') : t('constants.no_select'))
   end
 
   def fulfillment_components_formatter(components)
@@ -118,7 +122,7 @@ module StudyLevelActivitiesHelper
   def fulfillment_date_formatter(fulfillment)
     if fulfillment.klok_entry_id.present? # this was imported from klok
       content_tag(:span, format_date(fulfillment.fulfilled_at), class: 'fulfillment-date-for-klok-entry') +
-      content_tag(:i, '', class: 'glyphicon glyphicon-time')
+      content_tag(:i, '', class: 'far fa-clock')
     else
       format_date(fulfillment.fulfilled_at)
     end
@@ -128,14 +132,18 @@ module StudyLevelActivitiesHelper
     line_item.fulfillments.sum(:quantity)
   end
 
+  def month_year_formatter(fulfillment)
+    fulfillment.fulfilled_at.strftime('%b %Y')
+  end
+
   private
 
   def invoice_toggle_button(fulfillment)
-    content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.invoiced? || fulfillment.credited?, class: 'invoice_toggle')
+    content_tag(:input, '', type: "checkbox", name: "invoiced", checked: fulfillment.invoiced?, data: {toggle: 'toggle', on: t('constants.yes_select'), off: t('constants.no_select'), id: fulfillment.id}, disabled: fulfillment.invoiced? || fulfillment.credited?, class: 'invoice_toggle')
   end
 
   def credit_toggle_button(fulfillment)
-    content_tag(:input, '', type: "checkbox", name: "credited", checked: fulfillment.credited?, data: {toggle: 'toggle', on: "Yes", off: "No", id: fulfillment.id}, disabled: fulfillment.credited? || fulfillment.invoiced?, class: 'credit_toggle')
+    content_tag(:input, '', type: "checkbox", name: "credited", checked: fulfillment.credited?, data: {toggle: 'toggle', on: t('constants.yes_select'), off: t('constants.no_select'), id: fulfillment.id}, disabled: fulfillment.credited? || fulfillment.invoiced?, class: 'credit_toggle')
   end
 
   def show_notification_badge(params, type)

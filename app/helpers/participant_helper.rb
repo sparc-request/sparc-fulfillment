@@ -19,21 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ParticipantHelper
-  def appointments_for_select(arm, protocols_participant)
-    appointments = []
-    protocols_participant.appointments.incompleted.each do |appt|
-      if appt.arm.name == arm.name
-        appointments << appt
-      end
-    end
-
-    appointments
-  end
-
-  def arms_for_appointments(appts)
-    appts.map{|x| x.arm}.compact.uniq
-  end
-
   def us_states
     ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'N/A']
   end
@@ -41,7 +26,7 @@ module ParticipantHelper
   def registry_details_formatter(participant)
     [
       "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-sunglasses'></i>",
+      "#{icon('fas', 'info')}",
       "</a>"
     ].join ""
   end
@@ -51,21 +36,11 @@ module ParticipantHelper
 
     return_array = [
       "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
-      "<i class='fas fa-edit'></i>",
+      "#{icon('fas', 'edit')}",
       "</a>",
       "&nbsp&nbsp"] + destroy_array  
     
     return_array.join ""
-  end
-
-  def editFormatter(participant, protocols_participant)
-    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
-    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    [
-      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' #{protocol_id_attr} participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-edit'></i>",
-      "</a>"
-    ].join ""
   end
 
   def phoneNumberFormatter(participant)

@@ -36,9 +36,10 @@ class Procedure < ApplicationRecord
 
   belongs_to :appointment
   belongs_to :visit
-  belongs_to :service
+  belongs_to :service, required: true
   belongs_to :performer, class_name: "Identity"
   belongs_to :core, class_name: "Organization", foreign_key: :sparc_core_id
+
   has_one :task,        as: :assignable, dependent: :destroy
   has_many :notes, as: :notable
   has_many :tasks, as: :assignable
@@ -72,11 +73,6 @@ class Procedure < ApplicationRecord
     [["R", "research_billing_qty"],
      ["T", "insurance_billing_qty"],
      ["O", "other_billing_qty"]]
-  end
-
-  def performable_by
-    #Returns identities that are allowed to be the performer for this procedure, formatted for an options_for_select helper
-    Identity.joins(:clinical_providers).where(clinical_providers: {organization: self.protocol.organization}).map {|identity| [identity.full_name, identity.id]}
   end
 
   def formatted_billing_type

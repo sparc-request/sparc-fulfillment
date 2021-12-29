@@ -39,10 +39,12 @@ feature 'User views Participant details', js: true do
   end
 
   def when_i_click_the_participant_details_icon
-    page.find('table.participants tbody tr:first-child td.details a').click
+    @first_name = find('#participantTrackerTable tbody tr:first-child td.first-name').text
+    @last_name = find('#participantTrackerTable tbody tr:first-child td.last-name').text
+    page.find('#participantTrackerTable tbody tr:first-child td.actions a.participant-details').click
   end
 
   def then_i_should_see_the_participant_details
-    expect(page).to have_css('.modal-title', text: 'Participant Details')
+    expect(page).to have_css('.modal-title', text: @first_name + ' ' + @last_name)
   end
 end

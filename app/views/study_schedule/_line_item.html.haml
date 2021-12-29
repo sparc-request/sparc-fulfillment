@@ -18,16 +18,18 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.row.line_item{id: "line_item_#{line_item.id}"}
-  .col-xs-2.line_item_service_name
+%tr.line-item{ id: "line_item_#{line_item.id}", data: { core_id: core_id, line_item_id: line_item.id } }
+  %td.line_item_service_name{ colspan: tab == 'template' ? 6 : 10 }
     = service_name_display(line_item.service)
   - if tab == 'template'
-    .col-xs-1
-      .btn.glyphicon.glyphicon-edit.change_line_item_service{title: t(:protocol)[:study_schedule][:change_service], type: 'button', line_item_id: line_item.id, data: {toggle: "tooltip", animation: 'false'}}
-    .col-xs-1.text-center
-      - state = "#{set_check(line_item)}"
-      .glyphicon.check_row.btn.btn-primary{type: 'button', :'data-line_item_id' => line_item.id, check: state, title: state == "true" ? t(:visit)[:check_row] : t(:visit)[:uncheck_row], class: "#{glyph_class(line_item)}", data: {toggle: "tooltip", animation: 'false'}}
-  - else
-    .col-xs-2
-  %div{class: "visits_for_line_item_#{line_item.id}"}
-    = render partial: '/study_schedule/visits', locals: {line_item: line_item, page: page, tab: tab}
+    %td.text-center{ colspan: 2 }
+      = link_to edit_line_item_path(line_item.id), remote: true, class: 'btn btn-warning change-line-item-service', title: t('protocol.study_schedule.change_service'), data: { toggle: 'tooltip', placement: 'top', animation: 'false' } do
+        = icon('fas', 'edit')
+
+    %td.text-center{ colspan: 2 }
+      - checked = set_check(line_item)
+      %button.btn.check-row{ check: checked.to_s, class: checked ? 'btn-success' : 'btn-danger', title: checked ? t(:visit)[:check_row] : t(:visit)[:uncheck_row], data: { toggle: "tooltip", animation: 'false', line_item_id: line_item.id } }
+        = icon('fas', 'check' + (checked ? '' : ' d-none'))
+        = icon('fas', 'times' + (checked ? ' d-none' : ''))
+
+  = render partial: '/study_schedule/visits', locals: { line_item: line_item, page: page, tab: tab }

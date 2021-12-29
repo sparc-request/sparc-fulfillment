@@ -51,8 +51,10 @@
 //= require bootstrap/dist/js/bootstrap.min
 //= require bootstrap-select/dist/js/bootstrap-select.min
 //= require bootstrap-table/dist/bootstrap-table.min
+//= require tableexport.jquery.plugin/tableExport.min.js
 //= require bootstrap-table/dist/extensions/cookie/bootstrap-table-cookie.min
 //= require bootstrap-table/dist/extensions/export/bootstrap-table-export.min
+//= require bootstrap-table/dist/extensions/group-by-v2/bootstrap-table-group-by.min
 //= require bootstrap4-toggle/js/bootstrap4-toggle.min
 //= require corejs-typeahead/dist/typeahead.bundle.min
 //= require moment/min/moment-with-locales.min
@@ -68,6 +70,8 @@
 //= require custom/bootstrap-select-custom
 //= require custom/tempusdominus-custom
 //= require custom/nprogress-custom
+//= require custom/bootstrap-table-custom
+
 
 ///////////////////////////
 /// Require Our Scripts ///
@@ -89,8 +93,8 @@
 //= require documents
 //= require study_level_activities
 //= require reports
-//= require procedure_grouper
 //= require visit_group_form
 //= require imports
 //= require fulfillments
 //= require procedures
+//= require notes

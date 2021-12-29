@@ -26,10 +26,10 @@
       %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
         %span{ aria: { hidden: 'true' } } &times;
     .modal-body
-      %table#participantRegistryModalTable{ data: { toggle: 'table', url: participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'patient-registry-modal', show_export: 'true', export_types: ['excel'] } }
+      %table#participantRegistryModalTable{ data: { toggle: 'table', url: participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'patient-registry-modal', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: "" } }
         %thead.bg-light
           %tr
-            %th.associate.editable{ data: { field: 'associate', align: 'center' } }
+            %th.associate.editable{ data: { field: 'associate', align: 'left' } }
               = t('protocols_participants.registry.associate')
             %th.last-name{ data: { field: 'last_name', align: 'left', sortable: 'true' } }
               = Participant.human_attribute_name(:last_name)

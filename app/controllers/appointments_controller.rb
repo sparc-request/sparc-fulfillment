@@ -19,36 +19,39 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class AppointmentsController < ApplicationController
-
-  respond_to :json, :html
+  respond_to :json, :html, :js
+  before_action :find_appointment, only: [:show, :update, :update_statuses]
   before_action :set_appointment_style, only: [:create, :show, :update]
 
-  #### BEGIN CUSTOM APPOINTMENTS ####
-
-  def new
-    @appointment = CustomAppointment.new(custom_appointment_params)
-    @note = @appointment.notes.new(kind: 'reason')
+  def index
   end
-
-  def create
-    @appointment = CustomAppointment.new(custom_appointment_params)
-
-    if @appointment.valid?
-      @appointment.save
-    end
-  end
-
-  #### END CUSTOM APPOINTMENTS ####
 
   def show
-    @appointment = Appointment.find params[:id]
-    @statuses = @appointment.appointment_statuses.pluck(:status)
     procedure_creator = ProcedureCreator.new(@appointment)
 
     if @appointment.procedures.with_deleted.empty?
       procedure_creator.initialize_procedures
     end
   end
+
+  #### BEGIN CUSTOM APPOINTMENTS ####
+
+  def new
+    @appointment = CustomAppointment.new(protocols_participant_id: params[:protocols_participant_id], arm_id: params[:arm_id])
+    @note = @appointment.notes.new(kind: 'reason')
+  end
+
+  def create
+    @appointment = CustomAppointment.new(custom_appointment_params)
+    @protocols_participant = ProtocolsParticipant.find(custom_appointment_params[:protocols_participant_id])
+    if @appointment.valid?
+      @appointment.save
+    else
+      @errors = @appointment.errors
+    end
+  end
+
+  #### END CUSTOM APPOINTMENTS ####
 
   def completed_appointments
     protocols_participant = ProtocolsParticipant.find(params[:protocols_participant_id])
@@ -57,37 +60,44 @@ class AppointmentsController < ApplicationController
   end
 
   def update
-    @appointment = Appointment.find params[:id]
     @field = params[:field]
 
     @appointment.update_attributes(appointment_params)
   end
 
   def update_statuses
-    @appointment = Appointment.find params[:appointment_id]
-    new_statuses = params[:statuses]
-    @appointment.appointment_statuses.destroy_all
+    respond_to :js
 
-    if params[:statuses].present?
-      new_statuses.each do |status|
+    if(params[:statuses])
+      @appointment.appointment_statuses.where.not(status: params[:statuses]).destroy_all
+      (params[:statuses] - @appointment.appointment_statuses.pluck(:status)).each do |status|
         @appointment.appointment_statuses.create(status: status)
       end
+    else
+      @appointment.appointment_statuses.destroy_all
     end
 
     render body: nil
   end
 
   def change_appointment_style
+    respond_to :js
+
     @appointment_style = params[:appointment_style]
     session[:appointment_style] = @appointment_style
 
     @appointment = Appointment.find params[:appointment_id]
     @statuses = @appointment.appointment_statuses.pluck(:status)
+  end
 
-    render :show
+  def reset_procedures
   end
 
   private
+
+  def find_appointment
+    @appointment = Appointment.find(params[:id])
+  end
 
   def show_time in_time
     in_time.blank? ? Time.now : in_time
