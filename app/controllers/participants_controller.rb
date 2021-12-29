@@ -91,7 +91,7 @@ class ParticipantsController < ApplicationController
   end
 
   def find_participants(action_name)
-    @participants = Participant.search(params[:search])
+    @participants = Participant.includes(:procedures).search(params[:search])
     @total = @participants.count
     @participants = @participants.order(Arel.sql("#{@sort}")) if @sort
     @participants = @participants.limit(@limit).offset(@offset)
@@ -103,6 +103,11 @@ class ParticipantsController < ApplicationController
       format.html
       format.json
     end
+  end
+
+  def details
+    #This is here because I spent 3 hours trying to figure out how rails was rendering an action that didn't exist -.-
+    #I don't care if it's "not needed" technically, it's a troubleshooting nightmare.
   end
 
   private

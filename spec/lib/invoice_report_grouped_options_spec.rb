@@ -41,8 +41,8 @@ RSpec.describe InvoiceReportGroupedOptions do
           program_with_protocols,
           core_with_protocols,
         ]
-
-        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Providers", [["<span class=\"text\">Gryffindor</span>", provider_id]]], ["Programs", [["<span class=\"text\">Slytherin</span>", program_id]]], ["Cores", [["<span class=\"text\">Hufflepuff</span>", core_id]]]])
+        
+        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Providers", [[{:"data-content"=>"Gryffindor"}, provider_id]]], ["Programs", [[{:"data-content"=>"Slytherin"}, program_id]]], ["Cores", [[{:"data-content"=>"Hufflepuff"}, core_id]]]])
 
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe InvoiceReportGroupedOptions do
           core_with_protocols
         ]
 
-        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Programs", [["<span class=\"text\">Slytherin</span>", program_id]]], ["Cores", [["<span class=\"text\">Hufflepuff</span>", core_id]]]])
+        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Programs", [[{:"data-content"=>"Slytherin"}, program_id]]], ["Cores", [[{:"data-content"=>"Hufflepuff"}, core_id]]]])
 
       end
     end

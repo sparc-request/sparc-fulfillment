@@ -208,7 +208,7 @@ class InvoiceReport < Report
                     data << service_name
                     data << format_date(procedure.completed_date)
                     data << participant.full_name
-                    data << protocols_participant.label
+                    data << participant.label || protocols_participant.label
                     data << procedure.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
                     data << appointment.name
                     data << format_date(appointment.start_date)

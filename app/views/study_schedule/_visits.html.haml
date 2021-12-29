@@ -20,12 +20,11 @@
 
 - visits = line_item.visits.paginate(page: page, per_page: Visit.per_page)
 - visits.each_with_index do |visit, index|
-  %td.text-center.visit{ colspan: 3, class: "line_item_#{line_item.id}_visit_#{index} visit_for_line_item_#{line_item.id} visit_for_visit_group_#{visit.visit_group_id}", visit_group_id: visit.visit_group_id }
+  %td.text-center.visit{ colspan: 3, class: "line_item_#{line_item.id}_visit_#{index} visit_for_line_item_#{line_item.id} visit_for_visit_group_#{visit.visit_group_id} #{tab}-visit", id: "visit#{visit.id}", data: {visit_group_id: visit.visit_group_id, line_item_id: line_item.id} }
     - if tab == 'template'
       = check_box_tag "visit_check_#{visit.id}", visit.id, visit.has_billing?, class: 'visit-quantity'
     - elsif tab == 'quantity'
-      = text_field_tag "visits_#{visit.id}_research_billing_qty", visit.research_billing_qty, class: 'even_shorter_text quantity research text-center', visit_id: visit.id, qty_type: 'research_billing_qty'
-      = text_field_tag "visits_#{visit.id}_insurance_billing_qty", visit.insurance_billing_qty, class: 'even_shorter_text quantity insurance text-center', visit_id: visit.id, qty_type: 'insurance_billing_qty'
+      = quantity_visit_link(visit, page)
     -else
       = visit.total_quantity
 - (visits.size...Visit.per_page).each do |index|

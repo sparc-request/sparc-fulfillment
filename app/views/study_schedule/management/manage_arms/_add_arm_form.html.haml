@@ -30,17 +30,25 @@
           %span{ aria: { hidden: 'true' } } &times;
       .modal-body
         .form-group
-          = f.label 'name', t('arm.name'), class: 'required'
-          = f.text_field :name, { class: 'form-control' }
+          .row.align-items-center
+            = f.label 'name', t('arm.form.arm_name'), class: 'control-label col-sm-4 mb-0'
+            .col-sm-8
+              = f.text_field :name, { class: 'form-control' }
         .form-group
-          = f.label 'subject_count', t('arm.subject_count'), class: 'required'
-          = f.text_field :subject_count, { class: 'form-control' }
+          .row.align-items-center
+            = f.label 'subject_count', t('arm.form.subject_count'), class: 'control-label col-sm-4 mb-0'
+            .col-sm-8
+              = f.text_field :subject_count, { class: 'form-control' }
         .form-group
-          = f.label 'visit_count', t('arm.visit_count'), class: 'required'
-          = f.text_field :visit_count, { class: 'form-control' }
+          .row.align-items-center
+            = f.label 'visit_count', t('arm.form.visit_count'), class: 'control-label col-sm-4 mb-0'
+            .col-sm-8
+              = f.text_field :visit_count, { class: 'form-control' }
         .form-group
-          = label_tag 'service_ids', t('services.objects')
-          = select_tag 'services[]', options_from_collection_for_select(services, 'id' , 'name'), { class: 'form-control selectpicker', multiple: '', title: 'Please Select Services', 'data-selected-text-format' => 'count>2'}
+          .row.align-items-center
+            = label_tag 'service_ids', t('services.objects'), class: 'control-label col-sm-4 mb-0'
+            .col-sm-8
+              = select_tag 'services[]', options_from_collection_for_select(services, 'id' , 'name'), { class: 'form-control selectpicker', multiple: '', title: 'Please Select Services', 'data-selected-text-format' => 'count>2'}
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

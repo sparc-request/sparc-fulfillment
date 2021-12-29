@@ -23,5 +23,6 @@ $("#modalContainer").modal 'show'
 $("#date_started_field").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
+  allowInputToggle: false
 
 $(".selectpicker").selectpicker()

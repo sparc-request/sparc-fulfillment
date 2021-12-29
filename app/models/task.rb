@@ -27,7 +27,7 @@ class Task < ApplicationRecord
 
   belongs_to :identity
   belongs_to :assignee,
-             class_name: "Identity"
+             class_name: "Identity", foreign_key: "assignee_id"
   belongs_to :assignable, polymorphic: true
 
   belongs_to :procedure, ->{ joins(:tasks).where( tasks: { id: Task.where(assignable_type: 'Procedure' ) } ) }, foreign_key: :assignable_id
@@ -41,8 +41,16 @@ class Task < ApplicationRecord
 
   scope :incomplete, -> { where(complete: false) }
   scope :complete, -> { where(complete: true) }
-  scope :mine, -> (identity) { where(["identity_id = ? OR assignee_id = ?", identity.id, identity.id]) }
+  scope :mine, -> (identity) { where(["tasks.identity_id = ? OR tasks.assignee_id = ?", identity.id, identity.id]) }
   scope :json_info, -> { includes(:identity, procedure: [protocol: [:sub_service_request], core: [:parent]]) }
+
+
+  scope :sorted, -> (sort, order) {
+    sort  = 'id' if sort.blank?
+    order = 'desc' if order.blank?
+
+    order(sort => order)
+  }
 
   def self.to_csv(tasks)
     CSV.generate do |csv|

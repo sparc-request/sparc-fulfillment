@@ -36,7 +36,7 @@ class Procedure < ApplicationRecord
 
   belongs_to :appointment
   belongs_to :visit
-  belongs_to :service
+  belongs_to :service, required: true
   belongs_to :performer, class_name: "Identity"
   belongs_to :core, class_name: "Organization", foreign_key: :sparc_core_id
 

@@ -38,7 +38,7 @@
           = f.select :reason, options_for_select(Procedure::NOTABLE_REASONS), { include_blank: true }, class: 'selectpicker form-control'
         .form-group
           = f.label "comment", t('notes.comment'), class: 'required'
-          = f.text_area :comment, class: 'form-control', rows: 6
+          = f.text_area :comment, class: 'form-control', id: 'comment', rows: 6
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

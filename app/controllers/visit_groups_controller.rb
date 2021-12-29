@@ -51,10 +51,14 @@ class VisitGroupsController < ApplicationController
     @current_page                = params[:current_page]
     @schedule_tab                = params[:schedule_tab]
     @visit_groups                = @arm.visit_groups.paginate(page: @current_page)
+    @on_page_edit                = params[:on_page_edit]
     if @visit_group.update_attributes(visit_group_params)
       flash[:success] = t(:visit_groups)[:flash_messages][:updated]
     else
       @errors = @visit_group.errors
+      if @on_page_edit
+        flash[:error] = @errors.full_messages.first
+      end
     end
   end
 

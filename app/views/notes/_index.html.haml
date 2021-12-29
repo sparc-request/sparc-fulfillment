@@ -34,9 +34,9 @@
                 = icon('far', 'sticky-note text-warning')
             .flex-fill
               %h5.card-title.d-flex.text-dark.mb-2
-                = note.identity.full_name
+                = note.identity
                 .ml-auto<
-                  - if note.identity == current_identity
+                  - if (note.identity = current_identity) && (note.kind != "log")
                     = edit_note_button(note)
                     = delete_note_button(note)
               .note-body.text-break

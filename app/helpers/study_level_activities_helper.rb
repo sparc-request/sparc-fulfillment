@@ -21,7 +21,7 @@
 module StudyLevelActivitiesHelper
   def notes(notes)
     bullet_point = notes.count > 1 ? "\u2022 " : ""
-    notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + Identity.find(note.identity_id).full_name }.join("<br>")
+    notes.map{ |note| bullet_point + note.created_at.strftime('%m/%d/%Y') + ", " + note.comment + ", " + (note.identity_id ? Identity.find(note.identity_id).full_name : "System") }.join("<br>")
   end
 
   def documents(documents)
@@ -66,12 +66,12 @@ module StudyLevelActivitiesHelper
 
   def fulfillment_actions(fulfillment)
     notes_documents_array = [
-      "<a class='fulfillment_documents' href='javascript:void(0)' title='Documents' data-documentable-id='#{fulfillment.id}' data-documentable-type='Fulfillment'>",
-      "<i class='fas fa-folder-open'></i>",
+      "<a class='fulfillment_notes' href='javascript:void(0)' title='Notes' data-notable-id='#{fulfillment.id}' data-notable-type='Fulfillment'>",
+      "<i class='far fa-sticky-note'></i>",
       "</a>",
       "&nbsp&nbsp",
-      "<a class='fulfillment_notes' href='javascript:void(0)' title='Notes' data-notable-id='#{fulfillment.id}' data-notable-type='Fulfillment'>",
-      "<i class='fa fa-list'></i>",
+      "<a class='fulfillment_documents' href='javascript:void(0)' title='Documents' data-documentable-id='#{fulfillment.id}' data-documentable-type='Fulfillment'>",
+      "<i class='far fa-file-alt'></i>",
       "</a>",
       "&nbsp&nbsp"]
 
@@ -84,7 +84,7 @@ module StudyLevelActivitiesHelper
       "<i class='far fa-trash-alt'></i>",
       "</a>"]
 
-    unless fulfillment.invoiced?
+    unless (fulfillment.invoiced? || fulfillment.credited?)
       return (notes_documents_array + edit_delete_array).join ""
     else
       return notes_documents_array.join ""
@@ -122,7 +122,7 @@ module StudyLevelActivitiesHelper
   def fulfillment_date_formatter(fulfillment)
     if fulfillment.klok_entry_id.present? # this was imported from klok
       content_tag(:span, format_date(fulfillment.fulfilled_at), class: 'fulfillment-date-for-klok-entry') +
-      content_tag(:i, '', class: 'glyphicon glyphicon-time')
+      content_tag(:i, '', class: 'far fa-clock')
     else
       format_date(fulfillment.fulfilled_at)
     end
@@ -130,6 +130,10 @@ module StudyLevelActivitiesHelper
 
   def amount_fulfilled(line_item)
     line_item.fulfillments.sum(:quantity)
+  end
+
+  def month_year_formatter(fulfillment)
+    fulfillment.fulfilled_at.strftime('%b %Y')
   end
 
   private

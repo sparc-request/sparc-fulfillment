@@ -51,8 +51,18 @@ module AppointmentHelper
   end
 
   def complete_appointment_buttons(appointment)
-    content_tag :div, class: 'tooltip-wrapper', title: appointment.can_finish? ? '' : t('appointments.tooltips.complete_visit.disabled'), data: { toggle: 'tooltip' } do
-      content_tag :button, class: ['btn btn-success complete-appointment', appointment.can_finish? ? '' : 'disabled'], data: { url: appointment_path(appointment), confirm_swal: true } do
+    title = ''
+    disabled_class = ''
+    if appointment.completed?
+      title = t('appointments.tooltips.complete_visit.completed')
+      disabled_class = 'disabled'
+    elsif !appointment.can_finish?
+      title = t('appointments.tooltips.complete_visit.disabled')
+      disabled_class = 'disabled'
+    end
+
+    content_tag :div, class: 'tooltip-wrapper', title: title, data: { toggle: 'tooltip' } do
+      content_tag :button, class: "btn btn-success complete-appointment #{disabled_class}", data: { url: appointment_path(appointment), confirm_swal: true } do
         icon('fas', 'check mr-1') + t('appointments.complete_visit')
       end
     end

@@ -33,9 +33,16 @@ $("[name='procedure[<%= attr.to_s %>]']").parents('.form-group').removeClass('is
 $("[name='procedure[notes_attributes][0][<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
 <% end %>
 <% end %>
+
+<% if @cost_error_message %>
+<% @procedure.reload %>
+Swal.fire("<%= @cost_error_message %>")
+date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
+date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+<% end %>
+
 <% else %>
 $("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
-$("#modalContainer").modal('hide')
 
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
 performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .selectpicker")
@@ -48,6 +55,7 @@ $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").rem
 performer_selectpicker.selectpicker('val', "")
 
 <% elsif @procedure.incomplete? %>
+$("#modalContainer").modal('hide')
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
 $("#procedure<%= @procedure.id %>StatusButtons").data("selected", "incomplete")
@@ -79,13 +87,12 @@ statuses[statuses.length] =  "<%= status %>"
 
 $(".appointment-action-buttons").html("<%= j render '/appointments/appointment_action_buttons', appointment: @appointment %>")
 
+$('.delete-button[data-procedure="<%= @procedure.id %>"]').parent('.tooltip-wrapper').replaceWith("<%= j delete_procedure_button(@procedure) %>")
+
 $("#group-<%= @procedure.group_id %> button").trigger('click')
 
 updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.count %>")
 
-<% if @cost_error_message %>
-swal("<%= @cost_error_message %>")
-<% end %>
 <% end %>
 
 $(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

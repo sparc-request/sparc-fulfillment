@@ -22,14 +22,14 @@
   .card-header.bg-primary.text-white
     %h3.mb-0<
       = protocols_participant.full_name
-  %table#participantDetailsTable{ data: { toggle: 'table', url: calendar_protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id, format: :json) } }
+  %table#participantDetailsTable{ data: { toggle: 'table', url: calendar_protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id, format: :json), undefined_text: "" } }
     %thead.bg-light
       %tr
         %th.mrn{ data: { field: 'mrn', align: 'center' } }
           = Participant.human_attribute_name(:mrn)
         %th.external-id.editable{ data: { field: 'external_id_read', align: 'center' } }
           = ProtocolsParticipant.human_attribute_name(:external_id)
-        %th.arm{ data: { field: 'arm_reaed', align: 'center' } }
+        %th.arm{ data: { field: 'arm_read', align: 'center' } }
           = ProtocolsParticipant.human_attribute_name(:arm)
         %th.status{ data: { field: 'status_read', align: 'center' } }
           = ProtocolsParticipant.human_attribute_name(:status)
