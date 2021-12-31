@@ -35,7 +35,7 @@ feature 'User completes Procedure', js: true do
       given_i_have_completed_an_appointment
       when_i_complete_the_procedure
       when_i_view_the_notes_list
-      then_i_should_see_reset_notes
+      then_i_should_see_complete_notes
     end
   end
 
@@ -54,7 +54,6 @@ feature 'User completes Procedure', js: true do
   context 'before starting Appointment' do
     scenario 'and sees a helpful error message' do
       given_i_have_added_a_procedure_to_an_appointment
-      when_i_try_to_complete_the_procedure
       then_i_should_see_a_helpful_message
     end
   end
@@ -68,12 +67,12 @@ feature 'User completes Procedure', js: true do
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', visit_group.name
+    find('a[data-appointment-id="1"]').click
     wait_for_ajax
     
-    bootstrap_select '#service_list', service.name
-    fill_in 'service_quantity', with: qty
-    find('button.add_service').click
+    bootstrap_select '[name="service_id"', service.name
+    fill_in 'service_quantity', with: 1
+    find('button#addService').click
     wait_for_ajax
 
     visit_group.appointments.first.procedures.reload
@@ -87,44 +86,41 @@ feature 'User completes Procedure', js: true do
   end
 
   def when_i_start_the_appointment
-    find('button.start_visit').click
+    find('a.start-appointment').click
     wait_for_ajax
   end
 
   def when_i_complete_the_procedure
-    find('label.status.complete').click
+    find('button.complete-btn').click
     wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
-    find('label.status.incomplete').click
+    find('button.incomplete-btn').click
     wait_for_ajax
-    bootstrap_select '.reason-select', "Assessment missed"
-    click_button 'Save'
+    bootstrap_select '#procedure_notes_attributes_0_reason', "Assessment missed"
+    find('input[type="submit"]').click
     wait_for_ajax
   end
 
   def when_i_try_to_complete_the_procedure
-    find('label.status.complete').click
-    alert = page.driver.browser.switch_to.alert
-    @alert_message = alert.text
-    alert.accept
+    find('button.complete-btn').click
     wait_for_ajax
   end
 
   def when_i_view_the_notes_list
-    find('.procedure td.notes button.notes.list').click
+    find('div#procedure1Notes').click
   end
 
   def then_i_should_see_complete_notes count=1
-    expect(page).to have_css('.modal-body .detail .comment', text: 'Status set to complete', count: count)
+    expect(page).to have_css('div.note-body', text: 'Status set to complete', count: count)
   end
 
   def then_i_should_see_reset_notes
-    expect(page).to have_css('.modal-body .detail .comment', text: 'Status reset', count: 1)
+    expect(page).to have_css('div.note-body', text: 'Status reset', count: 1)
   end
 
   def then_i_should_see_a_helpful_message
-    expect(@alert_message).to eq("Please click 'Start Visit' and enter a start date to continue.")
+    expect(page).to have_css("div#procedure1StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: false)
   end
 end

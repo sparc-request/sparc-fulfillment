@@ -47,8 +47,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     scenario 'and does not see the arm' do
       given_i_am_viewing_a_protocol_with_multiple_arms
       when_i_click_the_remove_arm_button
-      # Ensure that the selected arm is the correct one being deleted
-      bootstrap_select "#arm_form_select", @protocol.arms.first.name
+      and_i_select_the_first_arm
       when_i_click_the_remove_submit_button
       then_i_should_not_see_the_arm
     end
@@ -61,24 +60,24 @@ feature 'Identity edits arms on protocol study schedule', js: true do
       when_i_click_the_remove_arm_button
       when_i_select_the_arm_with_completed_procedures
       when_i_click_the_remove_submit_button
-      when_i_click_the_close_submit_button
-      then_i_should_still_see_the_arm
+      then_i_should_see_an_error_about_completed_procedures
     end
   end
 
-  # context 'User tries to delete the last arm' do
-  #   scenario 'and sees the arm' do
-  #     given_i_am_viewing_a_protocol_with_one_arm
-  #     when_i_click_the_remove_arm_button
-  #     when_i_click_the_remove_submit_button
-  #     when_i_click_the_close_submit_button
-  #     then_i_should_still_see_the_arm
-  #   end
-  # end
+  context 'User tries to delete the last arm' do
+    scenario 'and sees the arm' do
+      given_i_am_viewing_a_protocol_with_one_arm
+      when_i_click_the_remove_arm_button
+      when_i_click_the_remove_submit_button
+      then_i_should_see_an_error_about_last_arm
+    end
+  end
 
 
   def given_i_am_viewing_a_protocol_with_one_arm
     @protocol = create_and_assign_protocol_to_me
+    first_arm = @protocol.arms.first
+    @protocol.arms.where.not(id: first_arm.id).destroy_all
 
     visit protocol_path @protocol
     wait_for_ajax
@@ -100,8 +99,9 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
 
   def given_there_is_an_arm_with_completed_procedures
-    protocols_participant  = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @protocol.arms.first, participant: create(:participant))
-    procedure    = create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first, status: "complete", completed_date: Date.today.strftime('%m/%d/%Y'), service: create(:service))
+    @arm_with_procedures = @protocol.arms.first
+    protocols_participant  = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @arm_with_procedures, participant: create(:participant))
+    procedure    = create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @arm_with_procedures, status: "complete", completed_date: Date.today.strftime('%m/%d/%Y'), service: create(:service))
 
     visit protocol_path @protocol
     wait_for_ajax
@@ -115,6 +115,11 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   def when_i_click_the_remove_arm_button
     find('div#manage_arms .btn-danger').click
     wait_for_ajax
+  end
+
+  def and_i_select_the_first_arm
+    @deleted_arm_name = @protocol.arms.first.name
+    bootstrap_select "#arm_form_select", @deleted_arm_name
   end
 
   def when_i_click_the_edit_arm_button
@@ -154,17 +159,13 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def when_i_click_the_save_submit_button
+    sleep 2
     find('input[type="submit"]').click
     wait_for_ajax
   end
 
-  def when_i_click_the_close_submit_button
-    click_button "Close"
-    wait_for_ajax
-  end
-
   def when_i_select_the_arm_with_completed_procedures
-    bootstrap_select "#arm_form_select", @protocol.arms.first.name
+    bootstrap_select "#arm_form_select", @arm_with_procedures.name
   end
 
   def then_i_should_see_the_new_arm
@@ -172,15 +173,21 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     expect(find("#studyScheduleTab")).to have_content "arm name"
   end
 
+  def then_i_should_see_an_error_about_last_arm
+    sleep 2
+    expect(find(".modal-body")).to have_content "Cannot remove the last arm of this protocol"
+  end
+
+  def then_i_should_see_an_error_about_completed_procedures
+    sleep 2
+    expect(find(".modal-body")).to have_content "has completed procedures and cannot be deleted"
+  end
+
   def then_i_should_see_the_updated_arm
     expect(find("#studyScheduleTab")).to have_content "other arm name"
   end
 
   def then_i_should_not_see_the_arm
-    expect(find("#studyScheduleTab")).not_to have_content @protocol.arms.first.name #The first arm is gone
-  end
-
-  def then_i_should_still_see_the_arm
-    expect(find("#studyScheduleTab")).to have_content @protocol.arms.last.name #The last arm (with procedures) is gone
+    expect(find("#studyScheduleTab")).not_to have_content @deleted_arm_name #The (former) first arm is gone
   end
 end

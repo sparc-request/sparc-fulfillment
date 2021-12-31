@@ -36,19 +36,28 @@ feature 'User edits Participant', js: true do
   end
 
   def when_i_update_a_participants_details
-    page.find('table.participants tbody tr:first-child td.edit a').click
+    participant_id = page.find('table.participants tbody tr:first-child td.actions a.edit')["participant_id"]
+    page.find('table.participants tbody tr:first-child td.actions a.edit').click
     fill_in 'First Name', with: 'STARLORD'
-    page.execute_script %Q{ $('#dob_time_picker').trigger("focus") }
-    page.execute_script %Q{ $("td.day:contains('15')").trigger("click") }
+    wait_for_ajax
+    wait_for_ajax
 
+    @date_of_birth_year = Participant.find(participant_id).date_of_birth.strftime("%Y")
+    sleep 1
+    bootstrap_datepicker '#participant_date_of_birth', year: @date_of_birth_year, month: 'Mar', day: '15'
+
+    wait_for_ajax
     find("input[value='Save Participant']").click
-    
-    refresh_bootstrap_table 'table.participants'
+    wait_for_ajax
+
   end
 
   def then_i_should_see_the_updated_details
     expect(page).to have_css('#flashes_container', text: 'Participant Updated')
     wait_for_ajax
+
     expect(page).to have_css('table.participants tbody tr td.first_name', text: 'STARLORD')
+    date = Date.new(@date_of_birth_year.to_i, 3, 15).strftime("%m/%d/%Y");
+    expect(page).to have_css('table.participants tbody tr td.date_of_birth', text: date)
   end
 end

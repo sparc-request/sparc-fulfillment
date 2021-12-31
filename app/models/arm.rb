@@ -41,7 +41,7 @@ class Arm < ApplicationRecord
 
   def destroy_later
     if protocol.arms.count < 2
-      errors.add(:arm, "Cannot remove the last Arm of this Protocol.  All protocols must have at least one Arm")
+      errors.add(:arm, "Cannot remove the last Arm of this Protocol. All protocols must have at least one Arm")
       return false
     elsif Procedure.where(appointment: appointments).touched.any?
       errors.add(:arm, "'#{name}' has completed procedures and cannot be deleted")

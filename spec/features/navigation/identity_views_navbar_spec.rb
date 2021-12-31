@@ -123,17 +123,15 @@ feature 'Identity views nav bar', js: true do
 
   def then_i_should_be_on_the_home_page
     # expect(page.body).to have_css('table.protocols')
-    expect(page).to have_css('#protocols')
+    expect(page).to have_css('table#protocols')
   end
 
   def then_i_should_see_the_participant_tracker_tab_is_active
-    # expect(page.body).to have_css('.tab-pane.active#participant_tracker')
     expect(page.body).to have_css('.nav-tabs a.active#participantTrackerTabLink')
   end
 
   def then_the_study_schedule_tab_should_be_active
-    # expect(page.body).to have_css('.tab-pane.active#study_schedule')
-    expect(page.body).to have_css('.nav-tabs a.active#studyLevelActivitiesTabLink')
+    expect(page.body).to have_css('.nav-tabs a.active#studyScheduleTabLink')
   end
 
   def then_i_should_be_signed_out

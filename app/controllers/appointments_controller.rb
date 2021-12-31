@@ -68,9 +68,13 @@ class AppointmentsController < ApplicationController
   def update_statuses
     respond_to :js
 
-    @appointment.appointment_statuses.where.not(status: params[:statuses]).destroy_all
-    (params[:statuses] - @appointment.appointment_statuses.pluck(:status)).each do |status|
-      @appointment.appointment_statuses.create(status: status)
+    if(params[:statuses])
+      @appointment.appointment_statuses.where.not(status: params[:statuses]).destroy_all
+      (params[:statuses] - @appointment.appointment_statuses.pluck(:status)).each do |status|
+        @appointment.appointment_statuses.create(status: status)
+      end
+    else
+      @appointment.appointment_statuses.destroy_all
     end
 
     render body: nil

@@ -145,6 +145,9 @@ en:
   appointments:
     add_service: "Add Service"
     appointment_dropdown: "Please select a visit:"
+    off_arm_header: "Appointments from other Arms"
+    arm_change_label: "Re-Assign Arm:"
+    arm_change_tooltip: "Dropdown consists of different arms. Selecting a different arm from dropdown will change available visit display"
     completed: "Completed Visits"
     completed_date: "Completed Date:"
     completed_time: "Completed Time:"
@@ -199,6 +202,10 @@ en:
     selected_line_items: "Selected Services"
     subject_count: "Subject Count"
     visit_count: "Visit Count"
+    form:
+      arm_name: "Arm Name *"
+      subject_count: "Subject Count *"
+      visit_count: "Visit Count *"
 
   ##############################
   # Confirms (via Sweet Alert) #
@@ -628,7 +635,7 @@ en:
     object: "Service"
     objects: "Services"
     add_services: "Add Services"
-    arm: "Select Arm(s)"
+    arm: "Select Arm(s) *"
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     name: "Selected Service"
@@ -717,9 +724,9 @@ en:
     deleted: "Visit Destroyed"
     flash_messages:
       updated: "Visit Updated"
-    name: "Visit Name"
+    name: "Visit Name *"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
-    position: "Insert into Position *"
+    position: "Insert into Position"
     window_after: "Window After *"
     window_before: "Window Before *"
     view_page_next: "View More"

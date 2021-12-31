@@ -45,11 +45,12 @@ feature "rescheduling a Task", js: true do
 
     bootstrap_datepicker '.datetimepicker-input', day: '15'
     click_button "Submit"
+
     wait_for_ajax
   end
 
   def then_i_should_see_the_task_has_been_rescheduled
-    expect(page).to have_css("tr:nth-child(1) td:nth-child(5)", text: "/09/")
-    expect(page).to have_css("tr:nth-child(2) td:nth-child(5)", text: "/15/")
+    expect(page).to have_css("tr td", text: "/09/")
+    expect(page).to have_css("tr td", text: "/15/")
   end
 end

@@ -33,12 +33,12 @@
           .row.align-items-center
             = f.label "name", Appointment.human_attribute_name(:name), class: "control-label required col-sm-4 mb-0"
             .col-sm-8
-              = f.text_field :name, {class: 'form-control'}
+              = f.text_field :name, {class: 'form-control', id: "custom_visit_name"}
         .form-group
           .row.align-items-center
             = f.label "position", Appointment.human_attribute_name(:position), class: "control-label col-sm-4 mb-0"
             .col-sm-8
-              = f.select "position", options_from_collection_for_select(appointment.arm.appointments.where(protocols_participant_id: appointment.protocols_participant_id), 'position', 'insertion_name') << app_add_as_last_option(appointment), {include_blank: ''}, class: "form-control selectpicker visit-group-position"
+              = f.select "position", options_from_collection_for_select(appointment.arm.appointments.where(protocols_participant_id: appointment.protocols_participant_id), 'position', 'insertion_name') << app_add_as_last_option(appointment), {include_blank: ''}, class: "form-control selectpicker visit-group-position", id: "custom_visit_position"
         = f.fields_for :notes, note do |nf|
           = nf.hidden_field :kind
           = nf.hidden_field :identity_id, value: current_identity.id
@@ -46,12 +46,12 @@
             .row.align-items-center
               = nf.label "reason", t(:notes)[:reason], class: "control-label col-sm-4 mb-0"
               .col-sm-8
-                = nf.select :reason, Appointment::NOTABLE_REASONS, {include_blank: ''}, class: "form-control selectpicker"
+                = nf.select :reason, Appointment::NOTABLE_REASONS, {include_blank: ''}, class: "form-control selectpicker", id: "custom_visit_reason"
           .form-group
             .row.align-items-center
               = nf.label "comment", t(:notes)[:comment], class: "control-label col-sm-4 mb-0"
               .col-sm-8
-                = nf.text_area :comment, {class: 'form-control', rows: "6"}
+                = nf.text_area :comment, {class: 'form-control', rows: "6", id: "custom_visit_comment"}
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]
