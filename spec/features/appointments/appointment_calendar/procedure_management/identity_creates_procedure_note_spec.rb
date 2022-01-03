@@ -75,6 +75,6 @@ feature 'User creates a procedure note', js: true do
   end
 
   def then_i_should_see_the_note
-    expect(page).to have_css('.note-body p', text: "Followup: #{Time.new(2021, 12, 10).strftime("%Y-%m-%d")}: Test comment")
+    expect(page).to have_css('.note-body p', text: "Followup: #{Task.last.due_at.strftime("%Y-%m-10")}: Test comment")
   end
 end
