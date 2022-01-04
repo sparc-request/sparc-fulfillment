@@ -20,6 +20,10 @@
 
 module Features
   module BootstrapHelpers
+    def pick_new_date(old_date)
+      (1..20).to_a.reject{|day| day == old_date}.sample
+    end
+
     def bootstrap_multiselect(class_or_id, selections = ['all'])
       expect(page).to have_selector("select#{class_or_id}", visible: false)
       bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
@@ -67,18 +71,18 @@ module Features
         first("#{element}").click
 
         if args[:year]
-          expect(page).to have_selector('.year', text: args[:year])
-          first('.year', text: args[:year]).click
+          expect(page).to have_selector('.year', exact_text: args[:year])
+          first('.year', exact_text: args[:year]).click
         end
 
         if args[:month]
-          expect(page).to have_selector('.month', text: args[:month])
-          first('.month', text: args[:month]).click
+          expect(page).to have_selector('.month', exact_text: args[:month])
+          first('.month', exact_text: args[:month]).click
         end
 
         if args[:day]
-          expect(page).to have_selector('.day', text: args[:day])
-          first('.day', text: args[:day]).click
+          expect(page).to have_selector('.day', exact_text: args[:day])
+          first('.day', exact_text: args[:day]).click
         end
       else
         page.execute_script "$('#{element}').focus()"
