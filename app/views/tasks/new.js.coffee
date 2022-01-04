@@ -18,10 +18,5 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_area").html("<%= escape_javascript(render(partial: 'form', locals: {task: @task, clinical_providers: @clinical_providers})) %>")
-$("#modal_place").modal(backdrop: 'static', keyboard: false)
-$("#modal_place").modal 'show'
-$("#follow_up_datepicker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-$(".selectpicker").selectpicker()
+$("#modalContainer").html("<%= j render 'tasks/form', task: @task, clinical_providers: @clinical_providers %>")
+$("#modalContainer").modal 'show'

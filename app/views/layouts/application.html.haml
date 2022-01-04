@@ -19,24 +19,29 @@
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 !!!
-%html{ lang: 'en' }
+%html
   %head
-    %meta{ charset: 'utf-8' }
-    %meta{ "http-equiv"=>"X-UA-Compatible", "content"=>"IE=edge"}
-    %title= t('default_title') 
-    :javascript
-      window.I18n = #{current_translations.to_json.html_safe}
-    = javascript_include_tag 'libraries'
-    = stylesheet_link_tag    'application', media: 'all'
+    %title
+      = t('default_title')
     = csrf_meta_tags
+    %meta{ charset: 'utf-8' }
+    %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1, shrink-to-fit=no' }
+    = favicon_link_tag asset_path('favicon.ico')
+    = stylesheet_link_tag 'application', media: 'all'
+    = render 'layouts/javascript'
     = include_gon
-  %body{class: body_class}
-    .container-fluid
-      .row.header= render "header"
-      .row.nav= render "nav"
-    .container
-      .row.flash= render "flash"
-      = yield
-    #footer &nbsp
-    = render 'modal'
-    = render 'javascript'
+    = render 'layouts/i18n-js'
+  %body{class: "#{body_class} bg-light"}
+    - unless Rails.env.production?
+      %h4.alert.alert-danger.rounded-0.text-center.m-0{ role: 'alert' }
+        = Rails.env.capitalize
+    = render 'layouts/header'
+    = render 'layouts/navbar'
+    = render 'layouts/subheader'
+    .container-fluid#contentContainer
+      - unless content_for?(:flash)
+        = render 'layouts/flash'
+      = content_for?(:content) ? yield(:content) : yield
+    = render 'layouts/footer'
+    = render 'layouts/back_to_top'
+    = render 'layouts/modal'

@@ -19,10 +19,17 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ProtocolHelper
+  def protocol_label(protocol)
+    protocol.label.truncate(50)
+  end
 
-  def admin_portal_link(protocol)
-    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-default btn-xs admin_portal_link', title: t(:protocol)[:admin_portal_link_tooltip], aria: { expanded: 'false' }) do
-      content_tag(:span, '', class: 'glyphicon glyphicon-link')
+  def request_label(protocol)
+    protocol.sub_service_request.label.truncate(50)
+  end
+
+  def dashboard_link(protocol)
+    content_tag(:a, href: protocol.sparc_uri, target: :blank, class: 'btn btn-light mr-2', title: t(:protocol)[:admin_portal_link_tooltip], aria: { expanded: 'false' }) do
+      icon('fas', 'link mr-2') + t('protocols.sparc_link')
     end
   end
 
@@ -71,7 +78,6 @@ module ProtocolHelper
   end
 
   def formatted_requester protocol
-
     if protocol.sub_service_request.present? && protocol.sub_service_request.service_request.present? && protocol.service_requester.present?
       protocol.service_requester.full_name
     else
@@ -80,29 +86,28 @@ module ProtocolHelper
   end
 
   def formatted_study_schedule_report protocol
-    icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
-    button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button study_schedule_report dropdown-toggle', id: "study_schedule_report_#{protocol.id.to_s}", 'aria-expanded' => 'false', title: 'Study Schedule Report', 'data-title' => 'Study Schedule Report', 'data-report_type' => 'study_schedule_report',  'data-documentable_id' => protocol.id, 'data-documentable_type' => 'Protocol', 'data-protocol_id' => protocol.id)
-    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_study_schedule_report_#{protocol.id.to_s}", role: 'menu')
-    html      = raw content_tag(:div, button + ul, class: 'btn-group')
+    if protocol.arms.any?
+      content_tag :button, class: "btn btn-secondary study-schedule-report report-button", data: { url: reports_path(report_type: 'study_schedule_report', title: t('reports.study_schedule_report'), documentable_id: protocol.id, documentable_type: Protocol.name) } do
+        icon('fas', 'file-download mr-2') + t('actions.export')
+      end
+    else
+      content_tag :button, class: "btn btn-secondary study-schedule-report report-button disabled", data: {toggle: "tooltip", title: "Export Report is only for clinical services"} do
+        icon('fas', 'file-download mr-2') + t('actions.export')
+      end
+    end
   end
 
-  def formatted_coordinators coordinators=Array.new
-    html = '-'
-
+  def formatted_coordinators(coordinators)
     if coordinators.any?
-      li = Array.new
-
-      span = raw content_tag(:span, '', class: 'caret')
-      button = raw content_tag(:button, raw('Coordinators ' + span), type: 'button', class: 'btn btn-default btn-xs dropdown-toggle', 'data-toggle' => 'dropdown', 'aria-expanded' => 'false')
-      coordinators.each do |coordinator|
-        li.push raw(content_tag(:li, raw(content_tag(:a, coordinator, href: 'javascript:;'))))
+      content_tag :div, class: 'dropdown' do
+        content_tag(:button, 'Coordinators', type: 'button', class: 'btn btn-light dropdown-toggle', data: { toggle: 'dropdown', boundary: 'window' }, aria: { expanded: 'false' }) +
+        content_tag(:div, class: 'dropdown-menu', id: 'coordinator-menu') do
+          coordinators.map do |co|
+            content_tag(:p, co, class: 'dropdown-item')
+          end.join('').html_safe
+        end
       end
-      ul = raw content_tag(:ul, raw(li.join), class: 'dropdown-menu', role: 'menu')
-
-      html = raw content_tag(:div, button + ul, class: 'btn-group')
     end
-
-    html
   end
 
   def arm_per_participant_line_items_by_core arm, consolidated=false

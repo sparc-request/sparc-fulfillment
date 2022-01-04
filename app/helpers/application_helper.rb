@@ -19,42 +19,35 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ApplicationHelper
-  def generate_history_text url
-    begin
-      h = Rails.application.routes.recognize_path(url)
-      case h[:action]
-      when 'index'
-        ['All', h[:controller].humanize].join(' ')
-      when 'show'
-        klass = h[:controller].classify.constantize
-        klass.title h[:id]
+  def format_date(date, opts={})
+    if date.present?
+      if opts[:html]
+        content_tag :span do
+          raw date.strftime('%m/%d/%Y')
+        end
       else
-        url
+        date.strftime('%m/%d/%Y')
       end
-    rescue Exception => e
-      #TODO do we want the message in test, this is just breadcrumbs
-      unless Rails.env.test?
-        puts "#"*20
-        puts e.message
-        puts "#"*20
-      end
-      return url
     end
   end
 
-  def format_date date
-    if date.present?
-      date.strftime('%m/%d/%Y')
-    else
-      ''
+  def format_datetime(datetime, opts={})
+    if datetime.present?
+      if opts[:html]
+        content_tag :span do
+          raw datetime.strftime('%m/%d/%Y %l:%M') + content_tag(:span, datetime.strftime(':%S'), class: 'd-none') + datetime.strftime(' %p')
+        end
+      else
+        datetime.strftime('%m/%d/%Y %l:%M:%S %p')
+      end
     end
   end
 
-  def format_datetime date
-    if date.present?
-      date.strftime('%F %H:%M')
+  def format_count(value, digits=1)
+    if value >= 10.pow(digits)
+      "#{value - (value - (10.pow(digits) - 1))}+"
     else
-      ''
+      value
     end
   end
 
@@ -124,15 +117,6 @@ module ApplicationHelper
     ].join ""
   end
 
-  def current_translations
-    @translations ||= I18n.backend.send(:translations)
-    @translations[I18n.locale].with_indifferent_access
-  end
-
-  def back_link url
-    url.to_s + "?back=true" # handles root url as well (nil)
-  end
-
   def truncate_string_length(s, max=70, elided = ' ...')
     #truncates string to max # of characters then adds elipsis
     if s.present?
@@ -144,17 +128,8 @@ module ApplicationHelper
     end
   end
 
-  def logged_in identity
-    content_tag(:span, "#{t(:navbar)[:logged_in_msg]} #{current_identity.full_name} (#{current_identity.email})", class: "logged-in-as", "aria-hidden" => "true")
-  end
-
-  def notes_button params
-    content_tag(:button, class: "btn btn-default #{params[:button_class].nil? ? '' : params[:button_class]} list notes", title: params[:title], label: "Notes List", data: {notable_id: params[:object].id, notable_type: params[:object].class.name}, toggle: "tooltip", animation: 'false') do
-      content_tag(:span, '', id: "#{params[:object].class.name.downcase}_#{params[:object].id}_notes", class: "glyphicon glyphicon-list-alt #{params[:has_notes] ? "blue-glyphicon" : ""}")
-    end
-  end
-
-  def service_name_display(service)
-    content_tag(:span, service.name) + (service.is_available ? "" : content_tag(:span, " (Inactive)", class: 'inactive-service'))
+  def service_name_display(service, strong=false)
+    element = strong ? :strong : :span
+    content_tag(element, service.name) + (service.is_available ? "" : content_tag(element, " (Inactive)", class: 'inactive-service'))
   end
 end

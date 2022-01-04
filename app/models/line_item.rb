@@ -52,6 +52,10 @@ class LineItem < ApplicationRecord
   after_create :increment_sparc_service_counter
   after_destroy :decrement_sparc_service_counter
 
+  def friendly_notable_type
+    Service.model_name.human
+  end
+
   def set_name
     update_attributes(name: service.name)
   end

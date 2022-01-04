@@ -19,7 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ProtocolsParticipant < ApplicationRecord
-
   has_paper_trail
   acts_as_paranoid
   
@@ -28,29 +27,64 @@ class ProtocolsParticipant < ApplicationRecord
   belongs_to :arm
 
   has_many :appointments, dependent: :destroy
+
   has_many :procedures, through: :appointments
+  has_many :arms, -> { distinct }, through: :appointments
+
+  attr_accessor :current_identity
+
+  delegate :first_name, :last_name, :first_middle, :full_name, :mrn, to: :participant
+
+  before_save :note_changes,                      if: Proc.new{ |p| p.arm_id_changed? || p.status_changed? }
+  after_save :update_appointments_on_arm_change,  if: Proc.new{ |p| p.saved_change_to_arm_id? }
 
   after_save :update_faye
   after_destroy :update_faye
 
-  validates :protocol_id, presence: true
-  validates :participant_id, presence: true
+  scope :search, -> (term) {
+    eager_load(:arm).where(participant: Participant.search(term)
+    ).or(
+      eager_load(:arm).where(ProtocolsParticipant.arel_table[:external_id].matches("%#{term}%"))
+    ).or(
+      eager_load(:arm).where(ProtocolsParticipant.arel_table[:status].matches("%#{term}%"))
+    ).or(
+      eager_load(:arm).where(ProtocolsParticipant.arel_table[:recruitment_source].matches("%#{term}%"))
+    ).or(
+      eager_load(:arm).where(Arm.arel_table[:name].matches("%#{term}%"))
+    )
+  }
+
+  scope :sorted, -> (sort, order) {
+    sort  = 'id' if sort.blank?
+    order = 'desc' if order.blank?
+
+    case sort
+    when 'first_middle'
+      joins(:participant).order(Participant.arel_table[:first_name].send(order), Participant.arel_table[:middle_initial].send(order))
+    when 'last_name', 'mrn'
+      joins(:participant).order(Participant.arel_table[sort].send(order))
+    when 'arm'
+      joins(:arm).order(Arm.arel_table[:name].send(order))
+    else
+      order(ProtocolsParticipant.arel_table[sort].send(order))
+    end
+  }
 
   def build_appointments
     ActiveRecord::Base.transaction do
       if arm
         if appointments.empty?
-          appointments_for_visit_groups(arm.visit_groups)
+          create_appointments_for_visit_groups(arm.visit_groups)
         elsif has_new_visit_groups?
-          appointments_for_visit_groups(new_visit_groups)
+          create_appointments_for_visit_groups(new_visit_groups)
         end
       end
     end
   end
 
   def update_appointments_on_arm_change
-    appointments.each{ |appt| appt.destroy if appt.can_be_destroyed? }
-    build_appointments
+    self.appointments.select(&:can_be_destroyed?).each(&:destroy)
+    self.build_appointments
   end
 
   def can_be_destroyed?
@@ -70,18 +104,29 @@ class ProtocolsParticipant < ApplicationRecord
   private
 
   def has_new_visit_groups?
-    arm.visit_groups.order(:id).pluck(:id) != appointments.where(arm_id: arm_id).where.not(visit_group_id: nil).order(:visit_group_id).pluck(:visit_group_id)
+    new_visit_groups.any?
   end
 
   def new_visit_groups
-    participant_vgs = appointments.map{|app| app.visit_group}
-    arm_vgs = arm.visit_groups
-    arm_vgs - participant_vgs
+    @new_visit_groups ||= self.arm.visit_groups.where.not(id: self.appointments.pluck(:visit_group_id))
   end
 
-  def appointments_for_visit_groups visit_groups
+  def create_appointments_for_visit_groups visit_groups
     visit_groups.each do |vg|
       appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
+    end
+  end
+
+  def note_changes
+    if status_changed?
+      old_val = status_change[0].present? ? status_change[0] : I18n.t('actions.n_a')
+      new_val = status_change[1].present? ? status_change[1] : I18n.t('actions.n_a')
+      self.participant.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:status), old: old_val, new: new_val))
+    end
+    if arm_id_changed?
+      old_val = arm_id_change[0].present? ? Arm.find(arm_id_change[0]).name : I18n.t('actions.n_a')
+      new_val = arm_id_change[1].present? ? Arm.find(arm_id_change[1]).name : I18n.t('actions.n_a')
+      self.participant.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:arm), old: old_val, new: new_val))
     end
   end
 

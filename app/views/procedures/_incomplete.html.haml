@@ -18,36 +18,32 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-#incomplete_modal.modal-dialog
-  .modal-content{data:{id: "#{procedure.id}"}}
-    .modal-header
-      %button.close.close_modal{type: 'button', data: {dismiss: 'modal'}}
-        %span{aria: {hidden:'true'}} &times;
-        %span.sr-only
-          = t(:actions)[:close]
-      %h4.modal-title.text-center
-        = t(:notes)[:new_header]
-    = form_for procedure, {remote: true, html: {class: "form-horizontal", role: "form"}} do |form|
+.modal-dialog
+  .modal-content
+    = form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), method: :put, remote: true do |f|
+      .modal-header
+        %h3.modal-title
+          = t('notes.new', notable_type: Procedure.model_name.human)
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+          %span{ aria: { hidden: 'true' } } &times;
       .modal-body
-        #modal_errors
-        = render partial: 'required_fields'
-        = form.hidden_field :status, value: "incomplete"
-        = form.hidden_field :completed_date, value: ""
-        = form.hidden_field :performer_id, value: current_identity.id
-        = form.fields_for :notes, note do |note_form|
-          = note_form.hidden_field :identity_id, value: current_identity.id
-          = note_form.hidden_field :kind
+        = f.hidden_field :status, value: "incomplete"
+        = f.hidden_field :completed_date, value: ""
+        = f.hidden_field :performer_id, value: current_identity.id
+        = f.fields_for :notes, note do |nf|
+          = nf.hidden_field :identity_id, value: current_identity.id
+          = nf.hidden_field :kind
           .form-group
-            = note_form.label "reason", t(:notes)[:reason]+t(:actions)[:required], class: "col-sm-3 control-label"
-            .col-sm-8
-              = note_form.select :reason, Procedure::NOTABLE_REASONS, { prompt: "Select a reason" }, class: "selectpicker form-control reason-select"
-          .form-group
-            = note_form.label "comment", t(:notes)[:comment], class: "col-sm-3 control-label"
-            .col-sm-8
-              = note_form.text_area :comment, {class: 'form-control', rows: "6"}
+            %p.mb-0
+              = t('procedures.incomplete.note')
+          .form-row
+            .form-group.w-100
+              = nf.label :reason, class: 'required'
+              = nf.select :reason, Procedure::NOTABLE_REASONS, { include_blank: true }, class: "selectpicker"
+          .form-group.mb-0
+            = nf.label :comment
+            = nf.text_area :comment, class: 'form-control', rows: "6"
       .modal-footer
-        .center-block
-          %button.btn.btn-default.cancel.close_modal{type: 'button', data: {dismiss: 'modal'}}
-            = t(:actions)[:close]
-          %button.btn.btn-primary.save{type: 'submit'}
-            = t(:actions)[:save]
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t('actions.close')
+        = f.submit t('actions.submit'), class: 'btn btn-primary'

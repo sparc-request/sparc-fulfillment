@@ -35,7 +35,7 @@ RSpec.describe TasksController, type: :controller do
       it 'renders the :index action' do
         get :index, format: :html
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template :index
       end
 
@@ -51,7 +51,7 @@ RSpec.describe TasksController, type: :controller do
       it 'renders the :index action' do
         get :index, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'assigns @tasks' do
@@ -75,15 +75,6 @@ RSpec.describe TasksController, type: :controller do
       }, format: :js
       @task.reload
       expect(@task.body).to eq expected_body
-    end
-  end
-
-  describe "GET #task_reschedule" do
-
-    it "renders the reschedule modal" do
-      get :task_reschedule, params: { id: @task.id }, format: :js, xhr: true
-
-      expect(response).to be_success
     end
   end
 

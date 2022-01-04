@@ -23,6 +23,8 @@ class Fulfillment < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
+  attr_accessor :klok_upload
+
   belongs_to :line_item
   belongs_to :service
   belongs_to :creator, class_name: "Identity"
@@ -60,7 +62,7 @@ class Fulfillment < ApplicationRecord
   private
 
   def recalculate_cost
-    if fulfilled_at_changed?
+    if fulfilled_at_changed? && !klok_upload
       write_attribute(:service_cost, line_item.cost(protocol.sparc_funding_source, fulfilled_at).to_i)
     end
   end
@@ -88,10 +90,10 @@ class Fulfillment < ApplicationRecord
   end
 
   def set_subsidy_and_funding_source
-    if fulfilled_at_changed?
+    if fulfilled_at_changed? && !klok_upload
       protocol = line_item.protocol
       subsidy  = protocol.sub_service_request.subsidy
-      write_attribute(:funding_source, protocol.funding_source)
+      write_attribute(:funding_source, protocol.sparc_funding_source)
       write_attribute(:percent_subsidy, subsidy.percent_subsidy) if subsidy
     end
   end

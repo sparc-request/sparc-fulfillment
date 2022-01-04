@@ -37,41 +37,42 @@ feature 'Identity uncompletes an appointment', js: true do
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: protocol.id)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', visit_group.name
+    find('div.list-group-flush a:nth-child(1)').click
     wait_for_ajax
     
-    bootstrap_select '#service_list', service.name
+    bootstrap_select '[name="service_id"]', service.name
     fill_in 'service_quantity', with: 1
-    find('button.add_service').click
+    find('button#addService').click
     wait_for_ajax
   end
 
   def when_i_begin_the_appointment
-    find('button.start_visit').click
+    find('a.start-appointment').click
     wait_for_ajax
   end
 
   def when_i_complete_the_procedure
-    find('label.status.complete').click
+    find('button.complete-btn[data-status="complete"]').click
     wait_for_ajax
   end
 
   def when_i_complete_the_appointment
-    find('button.complete_visit').click
+    find('button.complete-appointment').click
     wait_for_ajax
   end
 
   def when_i_uncomplete_the_appointment
-    find('button.uncomplete_visit').click
+    find('button.unstarted-btn').click
     wait_for_ajax
   end
 
   def then_i_should_see_the_appointment_is_uncomplete
-    expect(page).to have_css('button.complete_visit', visible: true)
-    expect(page).to have_css('div.completed_date_input.hidden', visible: false)
+    expect(page).to have_css('button.complete-appointment', visible: true)
+    # expect(page).to have_css('div.input#procedure_completed_date.hidden', visible: false)
   end
 end
+
 

@@ -30,38 +30,94 @@ en:
     delete: "Delete"
     details: "Details"
     edit: "Edit"
+    export: "Export"
     n_a: "N/A"
     options: "Options"
     remove: "Remove"
-    add: "Add"
-    actions: "Actions"
     required: " * "
     required_message: "Fields marked with an asterisk ( * ) are required to continue."
     save: "Save"
+    submit: "Submit"
 
   activerecord:
     attributes:
       arm:
         name: "Arm Name"
-        subject_count: "Subject Count"
         visit_count: "Visit Count"
       appointment:
+        contents: "Type of Visit"
         name: "Visit Name"
-        position: ""
+        statuses: "Visit Indications"
       fulfillment:
+        credited: "Credited"
         fulfilled_at: "Fulfillment Date"
+        invoiced: "Invoiced"
+        quantity_type: "Qty Type"
+      identity:
+        ldap_uid: "Login"
+      irb_record:
+        irb_approval_date: "IRB Approval"
+        irb_expiration_date: "IRB Expiration"
+        pro_number: "IRB #"
       line_item:
-        quantity_requested: "Quantity"
+        account_number: "Account #"
+        contact_name: "Contact"
+        last_fulfillment: "Last Fulfilled"
+        quantity_fulfilled: "Qty Fulfilled"
+        quantity_remaining: "Qty Remaining"
+        quantity_requested: "Qty"
+        quantity_type: "Qty Type"
+        started_at: "Started"
       notes:
         reason: "Reason"
       participant:
+        address: "Address"
+        city: "City"
+        date_of_birth: "Date of Birth"
+        ethnicity: "Ethnicity"
+        first_name: "First Name"
+        gender: "Gender"
+        last_name: "Last Name"
         mrn: "MRN"
+        phone: "Phone"
+        race: "Race"
+        state: "State"
         zipcode: "Zip Code"
+      procedure:
+        billing_type: "R/T"
+        completed_date: "Completed Date"
+        credited: "Credited"
+        followup: "Follow-Up"
+        invoiced: "Invoiced"
+        performer: "Performed By"
+        status: "Status"
+      protocol:
+        coordinators: "Coordinators"
+        end_date: "End Date"
+        id: "Protocol ID"
+        organizations: "Provider/Program/Core"
+        owner: "Owner"
+        principal_investigator: "Principal Investigator"
+        requester: "Service Requester"
+        rmid: "RMID"
+        short_title: "Short Title"
+        srid: "SRID"
+        status: "Status"
+        start_date: "Start Date"
+        subsidy_amount: "Percent Subsidy"
+        subsidy_committed: "Subsidy Amount"
+        total_at_approval: "Cost at Approval"
+      protocols_participant:
+        arm: "Current Arm"
+        external_id: "External ID"
+        recruitment_source: "Recruitment Source"
+        status: "Status"
       task:
-        due_at: "Date"
+        body: "Task"
+        due_at: "Due Date"
       visit_group:
         name: "Visit Name"
-        day: "Visit Day"
+        day: "Day"
         position: ""
     errors:
       models:
@@ -69,15 +125,29 @@ en:
           attributes:
             position:
               blank: "You must select a Position"
+        procedure:
+          attributes:
+            base:
+              qty: "Must be greater than zero"
+            service:
+              required: "You ust select a Service"
         visit_group:
           attributes:
             position:
               blank: "You must select a Position"
+    models:
+      appointment:
+        zero: "Visits"
+        one: "Visit"
+        few: "Visits"
+        other: "Visits"
 
-  appointment:
-    object: "Appointment"
+  appointments:
     add_service: "Add Service"
     appointment_dropdown: "Please select a visit:"
+    off_arm_header: "Appointments from other Arms"
+    arm_change_label: "Re-Assign Arm:"
+    arm_change_tooltip: "Dropdown consists of different arms. Selecting a different arm from dropdown will change available visit display"
     completed: "Completed Visits"
     completed_date: "Completed Date:"
     completed_time: "Completed Time:"
@@ -90,21 +160,30 @@ en:
     protocol_id: "Protocol ID"
     reason: "Reason"
     reset_visit: "Reset Visit"
-    reset_visit_disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
-    reset_visit_disabled_credited: "A procedure within this visit has been credited and cannot be altered."
-    reset_visit_disabled_credited_and_invoiced: "A procedure within this visit has been credited or invoiced and cannot be altered."
     service_error: 'Please choose the service that is desired to be added'
     srid: "SRID"
     start_date: "Start Date:"
     start_time: "Start Time:"
     start_visit: "Start Visit"
     visit_indications: "Visit Indications:"
-    visit_type: "Type of Visit:"
-    warning: "Please click 'Start Visit' and enter a start date to continue."
-    procedure_disabled_credited: "This item cannot be removed because it is credited."
-    procedure_disabled_invoiced: "This item cannot be removed because it is invoiced."
-    procedure_invoiced_warning: "This procedure has been invoiced and cannot be altered."
-    procedure_group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
+    confirms:
+      reset_visit:
+        text: "Resetting this appointment will delete all data which has been recorded for it.<br><br>Are you sure you want to proceed?"
+    tooltips:
+      state:
+        unstarted: "Unstarted"
+        started: "Started on %{date}"
+        completed: "Completed on %{date}"
+      change_view_style:
+        custom: "Switch to Custom Ordered View"
+        grouped: "Switch to Grouped View"
+      complete_visit:
+        disabled: "Assign a status or follow-up date for each procedure in order to complete this visit."
+        completed: "This visit has already been completed"
+      reset_visit:
+        disabled_invoiced: "A procedure within this visit has been invoiced and cannot be altered."
+        disabled_credited: "A procedure within this visit has been credited and cannot be altered."
+        disabled_credited_and_invoiced: "A procedure within this visit has been credited or invoiced and cannot be altered."
 
   arm:
     object: "Arm"
@@ -115,7 +194,7 @@ en:
     edit_arm: Edit Arm
     flash_messages:
       updated: "Arm Updated"
-    header: 'Clinical Services'
+    header: "Clinical Services (%{arm_name})"
     name: "Arm Name"
     name_with_arm_name_interpolated: 'Arm Name: %{arm_name}'
     not_deleted: "Protocols must have at least one arm. This arm cannot be deleted until another one is added"
@@ -123,6 +202,60 @@ en:
     selected_line_items: "Selected Services"
     subject_count: "Subject Count"
     visit_count: "Visit Count"
+    form:
+      arm_name: "Arm Name *"
+      subject_count: "Subject Count *"
+      visit_count: "Visit Count *"
+
+  ##############################
+  # Confirms (via Sweet Alert) #
+  ##############################
+
+  # These are the default values used by SweetAlert Confirms
+  # denoted by elements with the `data-confirm-swal` property.
+  # See `sweetalert-integration.js`
+
+  confirm:
+    title: "Are you sure?"
+    text: "This action cannot be undone."
+    confirm: "Yes"
+    cancel: "No"
+
+  constants:
+    currency: "$"
+    yes_select: "Yes"
+    no_select: "No"
+    na: "N/A"
+    prompts:
+      any: "- Any -"
+      check_all: "Check all that apply"
+      none: "Nothing Selected"
+      please_specify: "Please Specify"
+      search_for_user: "Search for a user"
+      select: "---Please Select---"
+      select_action: "Select an action"
+      select_one: "Select One"
+      select_if_applicable: "Select if applicable"
+    add_as_last: "Last Visit"
+    other: "Other"
+    show: "Show Details"
+    hide: "Hide Details"
+    more: "More..."
+    less: "Less..."
+    max: "Max: %{max}"
+    min: "Min: %{min}"
+    phone:
+      placeholder: "(XXX) XXX-XXXX"
+      note: "For extensions add ext XXXXX"
+      extension: "ext"
+    required_fields:
+      indicator: "*"
+      message: "required fields"
+      required: "Required"
+    search:
+      loading: "Loading..."
+      no_results: "No Results"
+    cant_be_blank: "Can't be blank"
 
   documents:
     object: "Document"
@@ -149,21 +282,23 @@ en:
     state: "Report Status"
     title: "Title"
     upload_button: "Upload Document"
-    viewed_at: "Date Viewed"
+    read_state: "Read/Unread"
+    read: "Read"
+    unread: "Unread"
+    page_title: "Generated Reports"
 
   fulfillment:
     object: "Fulfillment"
     add_fulfillment: "Add Fulfillment"
-    list_fulfillments: "List"
     components: "Fulfillment Components"
-    invoiced: "Invoiced"
-    credited: "Credited"
     edit: "Edit Fulfillment"
+    quantity: "Qty"
+    performed_by: "Performed By"
     flash_messages:
       created: "Fulfillment Created"
       updated: "Fulfillment Updated"
     fulfillments: "Fulfillments"
-    fulfillment_grouper: "Month Year"
+    fulfillment_month_year: "Month Year"
     fulfillment_date: "Fulfillment Date"
     log_notes:
       account_number: "Account Number changed to "
@@ -172,14 +307,11 @@ en:
       performer_id: "Performed By changed to "
       invoiced: "Invoiced changed to "
     no_components: "Fulfillment Has No Components"
-    performed_by: "Performed By"
-    qty_type: "Quantity Type"
-    quantity: "Quantity"
     view: "View Fulfillment Buttons"
     klok_description: "Imported via Klok"
 
   imports:
-    klok_import: "Klok Import"
+    klok_import: "New Klok Import"
     klok_import_info: "Click here to learn more about Klok"
     file_select: "File Select:"
     file_select_info: "requires *.xml file format"
@@ -195,12 +327,49 @@ en:
     proof_report_submit: 'Proof Report'
     klok_report_submit: 'Klok Report'
 
-  multiple_procedures_modal:
-    incomplete_header: "Incomplete Multiple Services"
-    complete_header: "Complete Multiple Services"
-    completed_date: "Completed Date *"
-    performed_by: "Performed By *"
-    reason: "Reason *"
+  layout:
+    header:
+      org_logo_alt: "SCTR Logo"
+      brand_logo_alt: "SPARCFulfillment Logo"
+      institution_logo_alt: "MUSC Logo"
+    navigation:
+      requests: "Home"
+      documents: "Reports"
+      tasks: "Tasks"
+      imports: "Imports"
+      patient_registry: "Patient Registry"
+      toggle: "Toggle Navigation"
+      sign_in: "SIGN IN"
+      sign_out: "Sign Out"
+    footer:
+      version: "SPARCFulfillment %{version}"
+      copyright: "&copy; 2011-2021 MUSC Foundation for Research Development"
+      github: "GitHub"
+      about:
+        header: "About"
+        about_sparc:
+          text: "About SPARCRequest"
+          url: "https://research.musc.edu/resources/sctr/research-resources/tools/sparcrequest"
+        about_sctr:
+          text: "About SCTR"
+          url: "http://sctr.musc.edu"
+      links:
+        header: "Useful Links"
+        contact: "Contact Us"
+        listserv:
+          text: "Listserv"
+          subject: "SPARCRequest Listserv"
+        faqs:
+          text: "FAQs"
+        feedback: "Feedback"
+      browsers:
+        header: "Supported Browsers"
+        chrome: "Chrome"
+        firefox: "Firefox"
+        safari: "Safari"
+        edge: "Edge"
+        ie11: "Internet Explorer 11+"
+    back_to_top: "Go to Top"
 
   line_item:
     object: "Line Item"
@@ -215,7 +384,6 @@ en:
     delete_line_item: "Delete line item"
     documents: "Documents"
     edit: "Edit Non-clinical Service"
-    edit_from_table: "Edit"
     edit_in_sparc: "Only Account and Contact fields can be edited for non-clinical services. All other editing should be done in SPARCDashboard"
     flash_messages:
       created: "Non-clinical Service Created"
@@ -235,46 +403,71 @@ en:
     quantity: "Quantity"
     service: "Service"
     started: "Started"
+    subject_count: "Subject Count"
     notes: "Notes"
     documents: "Documents"
 
-  navbar:
-    logged_in_msg: "Logged in as"
-    reports_link: 'All Reports'
-    tasks_link: 'All Tasks'
-    imports_link: 'Imports'
-    patient_registry_link: 'Patient Registry'
+  multiple_procedures_modal:
+    errors:
+      completed_date: "Can't be blank"
+      performer_id: "Can't be blank"
+      reason: "Can't be blank"
+      comment: "Can't be blank"
+    incomplete_header: "Incomplete Multiple Services"
+    incomplete_all: "Incomplete"
+    complete_header: "Complete Multiple Services"
+    complete_all: "Complete"
+    completed_date: "Completed Date"
+    performed_by: "Performed By"
+    reason: "Reason"
+
+  #############
+  ### Notes ###
+  #############
 
   notes:
-    object: "Note"
-    action: "Action"
-    add_button: "Add Note"
-    header:
-      title: " Notes"
-    index:
-      none_message1: "This "
-      none_message2: " currently has no notes"
+    new: "New %{notable_type} Note"
+    header: "%{notable_type} Notes"
+    add: "Leave Note"
+    update: "Update Note"
     comment: "Comment"
-    date: "Date"
-    followup: "Follow up"
-    identity: "User"
-    incomplete_header: "Reason for Incompletion"
-    lineitem:
-      edit: "Edit Line Item"
-    new_header: "Add Note"
-    reason: "Reason *"
+    none: "This %{notable_type} doesn't have any notes."
+    placeholder: "Type a note..."
+    edited: "(Edited)"
 
-  protocols_participant:
-    status: "Status"
-    recruitment_source: "Recruitment Source"
-    external_id: "External ID"
-    edit_external_id: "Edit External ID"
+  ####################
+  ### Participants ###
+  ####################
+
+  participants:
+    change_note: "%{attr} changed from %{old} to %{new}"
+    tooltips:
+      notes: "Participant Notes"
+
+  #############################
+  ### Protocols Participant ###
+  #############################
+
+  protocols_participants:
+    flash:
+      created: "Participant was added to this request!"
+      destroyed: "Participant was removed from this request!"
+      updated: "Participant was updated successfully!"
+    registry:
+      header: "Add Participants from Patient Registry"
+      associate: "Associate"
+    table:
+      fields:
+        calendar: "Calendar"
+    tooltips:
+      add: "Add participant to this request"
+      assign_arm: "Assign to an arm to view participant calendar"
+      cant_delete: "Participants with procedure data cannot be deleted"
+      remove: "Remove participant from this request"
 
   participant:
-    associate: "Associate"
     object: "Participant"
     address: "Address"
-    arm: "Current Arm"
     calendar: "Calendar"
     city: "City"
     details: "Participant Details"
@@ -312,54 +505,58 @@ en:
     tracker: "Participant Tracker"
     zip: "Zip Code"
 
-  procedure:
-    object: "Procedure"
-    complete: "Complete All"
+  procedures:
     completed_date: "Completed Date"
     credited: "Credited"
+    incomplete:
+      note: "Please provide a brief note explaining why this procedure was not able to be completed."
     edit_header: "Follow Up"
     followup: "Follow Up"
     follow_up_date: "Follow Up Date"
     fud: "Due Date"
-    incomplete: "Incomplete All"
     notes: "Notes"
     performed_by: "Performed By"
     prog_core: "Program / Core"
-    r_t: "R/T"
     select_reason: "Select a Reason"
-    status: "Status"
-    invoiced: "Invoiced"
-    actions: "Actions"
+    tooltips:
+      unstarted_appointment: "Click 'Start Visit' and enter a start date to continue."
+      complete: "Complete"
+      completed:
+        disabled: "This procedure has been completed and cannot be deleted"
+      unstarted: "Unstarted"
+      incomplete: "Incomplete"
+      incompleted:
+        disabled: "This procedure is incomplete and cannot be deleted"
+      followup:
+        schedule: "Schedule a follow-up"
+      invoiced:
+        incomplete_procedure: "Can only be toggled after the Procedure has been completed."
+        warning: "Warning: Once this procedure has been invoiced it cannot be undone"
+        disabled: "This procedure has been invoiced and cannot be altered."
+      credited:
+        incomplete_procedure: "Can only be toggled after the Procedure has been completed."
+        warning: "Warning: Once this procedure has been credited it cannot be undone"
+        disabled: "This procedure has been credited and cannot be altered."
+      delete: "Delete Procedure"
+      disabled_invoiced: "This item cannot be removed because it is invoiced."
+      group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
+
+  protocols:
+    sparc_link: "SPARCDashboard"
+    table:
+      header: "Requests Received from SPARCRequest"
 
   protocol:
     object: "Protocol"
     admin_portal_link: "SPARCDashboard"
     admin_portal_link_tooltip: "Back to SPARCDashboard"
-    coordinators: "Coordinators"
-    end_date: "Study End Date"
     flash_messages:
       not_found: "Protocol Not Found"
       unauthorized: "Authorization Failure"
     id: "Protocol ID"
-    irb_approval_date: "IRB Approval Date"
-    irb_expiration_date: "IRB Expiration"
-    irb_number: "IRB #"
-    organizations: "Provider/Program/Core"
-    owner: "Owner"
-    principal_investigator: "Principal Investigator"
-    requester: "Service Requester"
-    rmid: "RMID"
-    short_title: "Short Title"
     sparc_id: "SPARC ID"
-    srid: "SRID"
-    start_date: "Study Start Date"
-    status: "Status"
     study_cost: "Total Cost"
-    total_at_approval: "Cost at Approval"
     study_schedule_report: "Export"
-    subsidy_amount: "Percent Subsidy"
-    subsidy_committed: "Subsidy Amount"
-    subsidy_expended: "Subsidy Expended"
     study_schedule:
       add_arm: "Add Arm"
       add_service: "Add Service"
@@ -383,10 +580,8 @@ en:
       study_level_activities: "Non-clinical Services"
       project_level_activities: "Non-clinical Services"
       study_schedule: "Clinical Services"
-      project_schedule: "Clinical Services"
     udak_project_number: "UDAK Project #"
     updates: "Updates"
-    back_to_top: 'Back to Top'
 
   patient:
     registry: "Patient Registry"
@@ -396,6 +591,8 @@ en:
     cannot_be_deidentified: "Patient cannot be de-identified because he/she is already associated to more than one protocol"
 
   reports:
+    download: "Download Report"
+    regenerate: "Generate New Report"
     asc: "ASC"
     ascending: "Ascending"
     auditing_report: "Auditing Report"
@@ -408,14 +605,14 @@ en:
     end_date: "End Date"
     gender: "Gender"
     mrn: "MRN"
-    organization: "Organization(s)*"
+    organization: "Organization(s)"
     page_title: "All Reports"
     participant: "Participant"
     participant_report: "Participant Report"
     primary_pi: "Primary PI"
     project_summary_report: "Project Summary Report"
     not_required_protocols: "Protocol(s)"
-    protocols: "Protocol(s)*"
+    protocols: "Protocol(s)"
     protocol_id: "Protocol ID"
     request_report: "Request Report"
     select_service: "Select a Service"
@@ -423,6 +620,7 @@ en:
     service_type: "Service Type"
     sort_by: "Sort By"
     sort_order: "Sort Order"
+    study_schedule_report: "Study Schedule Report"
     subsidy_date_from: "Subsidy Approval Date From"
     subsidy_date_to: "Subsidy Approval Date To"
     subsidy_report: "Subsidy Report"
@@ -437,16 +635,22 @@ en:
     object: "Service"
     objects: "Services"
     add_services: "Add Services"
-    arm: "Select Arm(s)"
+    arm: "Select Arm(s) *"
     created: "Service(s) have been added to the chosen arms"
     deleted: "Service(s) have been removed from the chosen arms"
     name: "Selected Service"
     remove_services: "Remove Services"
     report: "Report"
 
+  study_schedule:
+    tooltips:
+      quantity_type: "Quantity Type"
+      subject_count: "Subject Count"
+    edit_billing_modal: "Edit Billing Quantities"
+
   sub_service_request:
     statuses:
-      all: 'All'
+      all: 'Any Status'
       ctrc_approved: 'Active'
       administrative_review: 'Administrative Review'
       approved: 'Approved'
@@ -465,14 +669,19 @@ en:
       withdrawn: 'Withdrawn'
 
   task:
+    table:
+      header: "Tasks"
     object: "Task"
     all_tasks: "All Tasks "
     my_tasks: "My Tasks "
     assignable_type: "Type"
     assignee_name: "Assigned to"
+    complete:
+      true: "Complete"
+      false: "Incomplete"
     completed: "Completed"
     create_task: "Create Task"
-    due_at: "Due Date"
+    due_soon: "Due soon"
     emails:
       assigned_new_task: "You have been assigned a new task"
       content: "Task Content: "
@@ -487,6 +696,7 @@ en:
       updated: "Task Updated"
     identity_name: "Created by"
     new_task: "Create New Task"
+    past_due : "Past due"
     reschedule: "Reschedule"
     show_complete: "Complete "
     show_incomplete: "Incomplete "
@@ -509,13 +719,14 @@ en:
   visit_groups:
     object: "Visit Group"
     created: "Visit Created"
+    arm: "Arm"
     day: "Visit Day"
     deleted: "Visit Destroyed"
     flash_messages:
       updated: "Visit Updated"
-    name: "Visit Name"
+    name: "Visit Name *"
     not_deleted: "Arms must have at least one visit. Add another visit before deleting this one"
-    position: "Insert into Position *"
+    position: "Insert into Position"
     window_after: "Window After *"
     window_before: "Window Before *"
     view_page_next: "View More"

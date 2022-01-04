@@ -18,9 +18,10 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_area").html("<%= escape_javascript(render(:partial =>'study_level_activities/fulfillment_form', locals: {line_item: @line_item, fulfillment: @fulfillment, clinical_providers: @clinical_providers, header_text: 'Edit Fulfillment'})) %>");
-$("#modal_place").modal 'show'
-$("#date_fulfilled_field").datetimepicker
+$("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_level_activities/fulfillment_form', locals: {line_item: @line_item, fulfillment: @fulfillment, clinical_providers: @clinical_providers, header_text: 'Edit Fulfillment'})) %>");
+$("#modalContainer").modal 'show'
+$("#fulfillment_date").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
+  allowInputToggle: false
 $(".selectpicker").selectpicker()

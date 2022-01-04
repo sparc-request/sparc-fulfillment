@@ -26,6 +26,7 @@ class Identity < SparcDbBase
 
   has_many :documents, as: :documentable
   has_many :project_roles
+  has_many :notes, dependent: :destroy
   has_many :tasks, as: :assignable
   has_many :reports
   has_many :clinical_providers
@@ -34,16 +35,24 @@ class Identity < SparcDbBase
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
+  def self.arel_full_name
+    Identity.arel_table[:first_name].concat(Arel::Nodes.build_quoted(' ')).concat(Identity.arel_table[:last_name])
+  end
+
   def protocols
     IdentityOrganizations.new(id).authorized_protocols
   end
 
+  def protocols_organizations_ids
+    IdentityOrganizations.new(id).fulfillment_organizations_with_protocols(false).pluck(:id).uniq
+  end
+
   def billing_manager_protocols
-    IdentityOrganizations.new(id).authorized_billing_manager_protocols
+    @billing_manager_protocols ||= IdentityOrganizations.new(id).authorized_billing_manager_protocols
   end
 
   def billing_manager_protocols_allow_credit
-    IdentityOrganizations.new(id).authorized_billing_manager_protocols_allow_credit
+    @billing_manager_protocols_allow_credit ||= IdentityOrganizations.new(id).authorized_billing_manager_protocols_allow_credit
   end
 
   def protocols_full

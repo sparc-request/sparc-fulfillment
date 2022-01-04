@@ -26,4 +26,8 @@ class SubServiceRequest < SparcDbBase
   belongs_to :owner, class_name: 'Identity'
   belongs_to :organization
   belongs_to :service_request
+
+  def label
+    "(#{self.ssr_id}) #{self.organization.label}"
+  end
 end

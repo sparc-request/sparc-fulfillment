@@ -1,21 +1,13 @@
 GIT
-  remote: https://github.com/DevicoSolutions/geckodriver-helper.git
-  revision: 929e5da958de9f82705e2dce71a7dbba873a461f
-  ref: refs/pull/17/head
+  remote: https://github.com/randym/axlsx
+  revision: 8e7b4b3b7259103452c191f73ce0bf64f66033fe
+  branch: master
   specs:
-    geckodriver-helper (0.27.0)
-      archive-zip (~> 0.7)
-
-GIT
-  remote: https://github.com/randym/axlsx.git
-  revision: 776037c0fc799bb09da8c9ea47980bd3bf296874
-  ref: 776037c0fc799bb09da8c9ea47980bd3bf296874
-  specs:
-    axlsx (2.1.0.pre)
-      htmlentities (~> 4.3.4)
+    axlsx (3.0.0.pre)
+      htmlentities (~> 4.3, >= 4.3.4)
       mimemagic (~> 0.3)
-      nokogiri (>= 1.6.6)
-      rubyzip (>= 1.2.1)
+      nokogiri (~> 1.8, >= 1.8.2)
+      rubyzip (~> 1.2, >= 1.2.1)
 
 GEM
   remote: https://rubygems.org/
@@ -75,22 +67,17 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
-    archive-zip (0.12.0)
-      io-like (~> 0.3.0)
     arel (9.0.0)
     autoprefixer-rails (7.2.2)
       execjs
     axlsx_rails (0.6.1)
       actionpack (>= 3.1)
       caxlsx (>= 3.0)
+    babel-source (5.8.35)
+    babel-transpiler (0.7.0)
+      babel-source (>= 4.0, < 6)
+      execjs (~> 2.0)
     bcrypt (3.1.16)
-    bootstrap-sass (3.4.1)
-      autoprefixer-rails (>= 5.2.1)
-      sassc (>= 2.0.0)
-    bootstrap-select-rails (1.13.8)
-    bootstrap-toggle-rails (2.2.1.0)
-    bootstrap3-datetimepicker-rails (4.17.47)
-      momentjs-rails (>= 2.8.1)
     builder (3.2.4)
     capistrano (3.14.1)
       airbrussh (>= 1.0.0)
@@ -110,13 +97,13 @@ GEM
     capistrano3-delayed-job (1.7.6)
       capistrano (~> 3.0, >= 3.0.0)
       daemons (~> 1.3)
-    capybara (3.33.0)
+    capybara (3.35.3)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
-      regexp_parser (~> 1.5)
+      regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     caxlsx (3.0.1)
       htmlentities (~> 4.3, >= 4.3.4)
@@ -215,6 +202,8 @@ GEM
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     ffi (1.11.1)
+    font-awesome-sass (5.13.0)
+      sassc (>= 1.11)
     foreman (0.87.2)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -256,13 +245,10 @@ GEM
     http_parser.rb (0.6.0)
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
-    io-like (0.3.1)
+    i18n-js (3.8.0)
+      i18n (>= 0.6.6)
     jbuilder (2.10.1)
       activesupport (>= 5.0.0)
-    jquery-rails (4.4.0)
-      rails-dom-testing (>= 1, < 3)
-      railties (>= 4.2.0)
-      thor (>= 0.14, < 2.0)
     launchy (2.5.0)
       addressable (~> 2.7)
     letter_opener (1.7.0)
@@ -283,10 +269,8 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.0)
     minitest (5.14.2)
-    momentjs-rails (2.20.1)
-      railties (>= 3.1)
     multi_json (1.15.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
@@ -299,8 +283,9 @@ GEM
     net-ssh (6.1.0)
     netrc (0.11.0)
     nio4r (2.5.4)
-    nokogiri (1.10.10)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.3)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     omniauth (1.9.1)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
@@ -331,6 +316,7 @@ GEM
     public_suffix (4.0.6)
     puma (5.0.0)
       nio4r (~> 2.0)
+    racc (1.5.2)
     rack (2.2.3)
     rack-accept (0.4.5)
       rack (>= 0.4)
@@ -372,9 +358,9 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rake (13.0.1)
-    rdoc (6.2.1)
+    rdoc (6.3.3)
     ref (2.0.0)
-    regexp_parser (1.7.1)
+    regexp_parser (2.1.1)
     remotipart (1.4.4)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -412,10 +398,8 @@ GEM
     ruby2_keywords (0.0.2)
     ruby_parser (3.13.1)
       sexp_processor (~> 4.9)
-    rubyzip (2.3.0)
+    rubyzip (1.3.0)
     safe_yaml (1.0.5)
-    sass-rails (6.0.0)
-      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
@@ -443,7 +427,7 @@ GEM
     spring (2.1.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
-    sprockets (3.7.2)
+    sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
@@ -467,9 +451,6 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.9)
     timecop (0.9.1)
-    turbolinks (5.2.1)
-      turbolinks-source (~> 5.2)
-    turbolinks-source (5.2.0)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
@@ -481,6 +462,10 @@ GEM
     vcr (6.0.0)
     warden (1.2.9)
       rack (>= 2.0.9)
+    webdrivers (4.6.1)
+      nokogiri (~> 1.6)
+      rubyzip (>= 1.3.0)
+      selenium-webdriver (>= 3.0, < 4.0)
     webmock (3.9.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -506,10 +491,7 @@ DEPENDENCIES
   autoprefixer-rails (= 7.2.2)
   axlsx!
   axlsx_rails
-  bootstrap-sass
-  bootstrap-select-rails
-  bootstrap-toggle-rails
-  bootstrap3-datetimepicker-rails (~> 4.17.37)
+  babel-transpiler
   capistrano (~> 3.14)
   capistrano-passenger
   capistrano-rails (~> 1.6)
@@ -527,17 +509,16 @@ DEPENDENCIES
   factory_bot_rails
   faker (~> 2.14.0)
   faye
+  font-awesome-sass
   foreman
-  geckodriver-helper!
   gon
   grape (~> 1.4.0)
   haml-rails
   hashie-forbidden_attributes
+  i18n-js
   jbuilder (~> 2.10)
-  jquery-rails
   launchy
   letter_opener
-  momentjs-rails (>= 2.9.0)
   mysql2 (= 0.5.2)
   net-ldap
   omniauth
@@ -559,24 +540,22 @@ DEPENDENCIES
   rspec-collection_matchers
   rspec-rails
   rubyzip (>= 1.2.1)
-  sass-rails
-  sassc-rails (>= 2.1.0)
+  sassc-rails
   sdoc (~> 1.1.0)
-  selenium-webdriver
   shoulda-callback-matchers
   shoulda-matchers (~> 4.4.1)
   simplecov
   slack-notifier (~> 2.3)
   spring
   spring-commands-rspec
-  sprockets-rails
+  sprockets (~> 4.0)
   therubyracer
   thin
   timecop
-  turbolinks
   uglifier (>= 1.3.0)
   underscore-rails (~> 1.8.3)
   vcr (~> 6.0.0)
+  webdrivers (~> 4.6)
   webmock (~> 3.9.1)
   whenever (~> 1.0.0)
   will_paginate

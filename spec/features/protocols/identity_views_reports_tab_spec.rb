@@ -26,10 +26,10 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     visit protocol_path(protocol)
     wait_for_ajax
 
-    click_button "study_schedule_report_#{protocol.id}"
+    click_button "Export"
     wait_for_ajax
 
-    click_link 'Reports'
+    find('#reportsTabLink').click
     wait_for_ajax
 
     expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
@@ -44,10 +44,10 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     click_link 'Participant Tracker'
     wait_for_ajax
 
-    click_button "participant_report_#{protocols_participant.participant_id}"
+    find('.participant-report').click
     wait_for_ajax
 
-    click_link 'Reports'
+    find('#reportsTabLink').click
     wait_for_ajax
 
     expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1

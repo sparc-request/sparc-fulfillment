@@ -44,6 +44,10 @@ class VisitGroup < ApplicationRecord
   validate :day_must_be_in_order, unless: -> { day.blank? || arm_id.blank? }
   validates :day, numericality: { only_integer: true }, unless: -> { day.blank? }
 
+  def identifier
+    "#{self.name} (#{self.class.human_attribute_name(:day)} #{self.day})"
+  end
+
   def r_quantities_grouped_by_service
     visits.joins(:line_item).group(:service_id).sum(:research_billing_qty)
   end

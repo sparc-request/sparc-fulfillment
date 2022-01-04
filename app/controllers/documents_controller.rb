@@ -19,15 +19,13 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class DocumentsController < ApplicationController
-  layout nil
-
   before_action :find_document, only: [:show, :destroy]
   before_action :authorize_document_access, only: [:show]
   before_action :validate_presence_of_upload, only: [:create]
 
   def index
     respond_to do |format|
-      format.html { render }
+      format.html
       format.js {
         find_documentable
 
@@ -168,5 +166,9 @@ class DocumentsController < ApplicationController
 
   def document_params
     params.require(:document).permit(:documentable_type, :documentable_id, :title)
+  end
+
+  def set_highlighted_link
+    @highlighted_link ||= 'documents'
   end
 end

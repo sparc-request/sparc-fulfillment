@@ -19,6 +19,8 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+  $(document).on 'ajax:beforeSend', '.add-participant, .remove-participant', ->
+    $(this).addClass('disabled')
 
   $('#completed-appointments-table').on 'click-row.bs.table', (row, $element) ->
     $.ajax

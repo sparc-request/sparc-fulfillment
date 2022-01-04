@@ -18,59 +18,36 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @errors.present? %>
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
+<% if @errors %>
+$("[name^='task']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='task[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
 <% else %>
-if !$('.notification.task-notifications').length
-  $('<span class="notification task-notifications"></span>').appendTo($('a.tasks'))
-$(".notification.task-notifications").empty().append("<%= current_identity.reload.tasks_count %>")
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
-$('#task-list').bootstrapTable('refresh', {silent: "true"})
-$("#modal_place").modal 'hide'
+$("nav#siteNav").replaceWith("<%= j render 'layouts/navbar' %>")
+$("#tasks").bootstrapTable('refresh')
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
+$("#modalContainer").modal('hide')
+<% end %>
+
+# JS related to appointments and procedures, this will be refactored later
 
 <% if @procedure.present? %>
-$("#follow_up_<%= @procedure.id %>").html("<%= escape_javascript(render(:partial =>'appointments/followup_calendar', locals: {procedure: @procedure})) %>")
-update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
+$("#followup<%= @procedure.id %>").replaceWith("<%= j render 'procedures/followup', procedure: @procedure %>")
+updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.length %>")
 <% end %>
 
 <% if @appointment.present? %>
-$('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
-
-pg = new ProcedureGrouper()
-
-<% if @appointment_style == "grouped" %>
-pg.initialize()
-<% else %>
-# $("select.core_multiselect").multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
-pg.initialize_multiselects_only()
-<% end %>
-
-if !$('.start_date_input').hasClass('hidden')
-  start_date_init("<%= format_datetime(@appointment.start_date) %>")
-
-if !$('.completed_date_input').hasClass('hidden')
-  completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
-
-$('#appointment_content_indications').selectpicker()
-$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
-$(".selectpicker").selectpicker()
+$('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
 
 statuses = []
 <% @statuses.each do |status| %>
 statuses[statuses.length] =  "<%= status %>"
 <% end %>
 
-$('#appointment_indications').selectpicker()
-$('#appointment_indications').selectpicker('val', statuses)
-
-$(".followup_procedure_datepicker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-
-$(".completed_date_field").datetimepicker(format: 'MM/DD/YYYY')
-
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
 <% end %>
-
-$(".followup_procedure_datepicker").datetimepicker(format: 'MM/DD/YYYY')
-<% end %>
+  
