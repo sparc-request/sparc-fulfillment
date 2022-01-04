@@ -72,17 +72,17 @@ module Features
 
         if args[:year]
           expect(page).to have_selector('.year', exact_text: args[:year])
-          first('.year', text: args[:year]).click
+          first('.year', exact_text: args[:year]).click
         end
 
         if args[:month]
           expect(page).to have_selector('.month', exact_text: args[:month])
-          first('.month', text: args[:month]).click
+          first('.month', exact_text: args[:month]).click
         end
 
         if args[:day]
           expect(page).to have_selector('.day', exact_text: args[:day])
-          first('.day', text: args[:day]).click
+          first('.day', exact_text: args[:day]).click
         end
       else
         page.execute_script "$('#{element}').focus()"
