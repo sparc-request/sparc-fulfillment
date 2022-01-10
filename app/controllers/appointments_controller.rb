@@ -104,7 +104,11 @@ class AppointmentsController < ApplicationController
   end
 
   def appointment_params
-    params.require(:appointment).permit(:contents, :start_date, :completed_date)
+    if(@appointment.type == 'CustomAppointment')
+      params.require(:custom_appointment).permit(:contents, :start_date, :completed_date)
+    else
+      params.require(:appointment).permit(:contents, :start_date, :completed_date)
+    end
   end
 
   def custom_appointment_params
