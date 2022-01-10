@@ -23,7 +23,7 @@ class ParticipantsController < ApplicationController
   before_action :find_participant, only: [:show, :update_status, :update_recruitment_source, :details, :edit, :update, :destroy, :edit_arm, :edit_external_id, :update_arm, :update_external_id, :patient_registry_modal_details]
   before_action :find_protocols_participant, only: [:show, :update_status, :update_recruitment_source, :edit_arm, :edit_external_id, :update_arm, :update_external_id]
   before_action :authorize_protocol, only: [:show]
-  before_action :authorize_patient_registrar, only: [:index]
+  before_action :authorize_patient_registrar, only: [:create, :update, :destroy]
   before_action :format_participant_name, only: [:create, :update]
 
   def index
