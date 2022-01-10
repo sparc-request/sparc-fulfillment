@@ -28,7 +28,7 @@ $("[name='task[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-vali
 <% end %>
 <% else %>
 $("nav#siteNav").replaceWith("<%= j render 'layouts/navbar' %>")
-$("#tasks").bootstrapTable('refresh')
+$("#tasks").bootstrapTable('refresh')##TODO: This doesn't need done if we are on the appointment calendar
 $("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal('hide')
 <% end %>
@@ -41,7 +41,9 @@ updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.length %
 <% end %>
 
 <% if @appointment.present? %>
-$('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
+$('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")##TODO: I'm pretty sure this doesn't actually do anything anymore...
+
+$(".appointment-action-buttons").html("<%= j render '/appointments/appointment_action_buttons', appointment: @appointment %>")
 
 statuses = []
 <% @statuses.each do |status| %>
