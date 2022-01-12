@@ -92,6 +92,7 @@ Rails.application.routes.draw do
   resources :appointments do
     member do
       put :update_statuses
+      put :change_visit_type
     end
 
     collection do
