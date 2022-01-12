@@ -69,7 +69,7 @@ class Appointment < ApplicationRecord
   end
 
   def can_finish?
-    !start_date.blank? && (procedures.all? { |proc| !proc.unstarted? })
+    !start_date.blank? && !procedures.untouched.any?
   end
 
   def has_completed_procedures?

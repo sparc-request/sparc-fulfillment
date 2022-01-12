@@ -18,113 +18,80 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# require 'rails_helper'
+require 'rails_helper'
 
-# feature "Change Participant Arm", js: :true do
-#   context "original arm has completed procedures" do
-#     scenario "User changes arm on the participant tracker" do
-#       when_i_start_work_on_an_appointment
-#       and_i_complete_a_procedure
-#       then_i_change_the_arm_of_the_participant
-#     end
-#   end
-
-
-#   def when_i_start_work_on_an_appointment
-#     @protocol     = create_and_assign_protocol_to_me
-#     @protocols_participant  = @protocol.protocols_participants.first
-#     @original_arm = @protocols_participant.arm
-#     @second_arm   = @protocol.arms.where.not(id: @original_arm.id).first
-#     @service      = @protocol.organization.inclusive_child_services(:per_participant).first
-
-#     @service.update_attributes(name: 'Test Service')
-
-#     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-#     wait_for_ajax
-
-#     find('a.start-appointment').click
-#     wait_for_ajax
-
-#     bootstrap_select '#add_procedure_dropdown', 'Test Service'
-#     fill_in 'service_quantity', with: 1
-#     find('button#addService').click
-#     wait_for_ajax
-#   end
-
-#   def and_i_complete_a_procedure
-#     find('button.complete-btn').click
-#     wait_for_ajax
-#     sleep 5
-#   end
-
-#   def then_i_change_the_arm_of_the_participant
-#     visit protocol_path(@protocol.id)
-#     wait_for_ajax
-
-#     click_link 'Participant Tracker'
-#     wait_for_ajax
-
-#     bootstrap_select("#protocols_participant_arm_id", @second_arm.name, "#edit_protocols_participant_#{@protocols_participant.id}" )
-#     wait_for_ajax
-#     binding.pry
-#   end
-
-# end
+feature "Change Participant Arm", js: :true do
+  context "original arm does NOT have completed procedures" do
+    scenario "User changes arm on the participant tracker" do
+      when_i_start_work_on_an_appointment
+      then_i_change_the_arm_of_the_participant
+      and_i_visit_the_calendar_again
+      i_should_only_see_new_appointments
+    end
+  end
+  context "original arm has completed procedures" do
+    scenario "User changes arm on the participant tracker" do
+      when_i_start_work_on_an_appointment
+      and_i_complete_a_procedure
+      then_i_change_the_arm_of_the_participant
+      and_i_visit_the_calendar_again
+      i_should_see_new_and_old_appointments
+    end
+  end
 
 
+  def when_i_start_work_on_an_appointment
+    @protocol     = create_and_assign_protocol_to_me
+    @protocols_participant  = @protocol.protocols_participants.first
+    @original_arm = @protocols_participant.arm
+    @second_arm   = @protocol.arms.where.not(id: @original_arm.id).first
+    @service      = @protocol.organization.inclusive_child_services(:per_participant).first
+    @original_appointment = @original_arm.visit_groups.first
 
+    @service.update_attributes(name: 'Test Service')
+    @original_appointment.update_attributes(name: "First Arm Appointment")
 
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    wait_for_ajax
 
-    # visit protocol_path(@protocol.id)
-    # wait_for_ajax
+    find('a.start-appointment').click
+    wait_for_ajax
 
-    # click_link 'Participant Tracker'
-    # wait_for_ajax
+    bootstrap_select '#add_procedure_dropdown', 'Test Service'
+    fill_in 'service_quantity', with: 1
+    find('button#addService').click
+    wait_for_ajax
+  end
 
+  def and_i_complete_a_procedure
+    find('button.complete-btn').click
+    wait_for_ajax
+  end
 
+  def then_i_change_the_arm_of_the_participant
+    visit protocol_path(@protocol.id)
+    wait_for_ajax
 
-    # @protocols_participant.update_attribute(:arm_id, @original_arm.id)
-    # @procedure = create(:procedure, visit_group: @original_arm.visit_groups.first, completed_date: "08/08/2013")
-    # @service   = @protocol.organization.inclusive_child_services(:per_participant).first
+    click_link 'Participant Tracker'
+    wait_for_ajax
 
-    # visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-  #   wait_for_ajax
+    bootstrap_select("#protocols_participant_arm_id", @second_arm.name, "#edit_protocols_participant_#{@protocols_participant.id}" )
+    wait_for_ajax
+  end
 
+  def and_i_visit_the_calendar_again
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    wait_for_ajax
+  end
 
+  def i_should_see_new_and_old_appointments
+    expect(page).to have_css("a.appointment-link span", text: @original_appointment.name)
+    expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
+  end
 
+  def i_should_only_see_new_appointments
+    expect(page).to_not have_css("a.appointment-link span", text: @original_appointment.name)
+    expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
+  end
 
-
-
-
-#   context "original arm has completed appointments" do
-#     scenario "Users changes arm on the participant tracker" do
-#       when_i_start_work_on_an_appointment
-#       then_i_change_the_arm_of_the_participant
-#       and_the_visit_group_of_completed_procedure_should_still_appear
-#       then_i_switch_back_to_the_original_arm
-#       and_all_the_visits_should_appear
-#     end
-#   end
-
-
-
-#   def then_i_change_the_arm_of_the_participant
-#     bootstrap_select("#change_arm_dropdown", @second_arm.id)
-#     wait_for_ajax
-#   end
-
-#   def and_the_visit_group_of_completed_procedure_should_still_appear
-#     find("a.appointment-link span", text: @procedure.visit_group.name).click
-#     wait_for_ajax
-#   end
-
-#   def then_i_switch_back_to_the_original_arm
-#     @protocols_participant.update_attribute(:arm_id, @original_arm.id)
-#   end
-
-#   def and_all_the_visits_should_appear
-#     #only tests for one to save time since if last one appears the others should also be there
-#     find("a.appointment-link span", text: @original_arm.visit_groups.last.name).click
-#     wait_for_ajax
-#   end
-# end
+end

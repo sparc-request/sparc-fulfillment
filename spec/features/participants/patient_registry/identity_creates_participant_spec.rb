@@ -88,6 +88,7 @@ feature 'User creates Participant', js: true do
     fill_in 'MRN', with: "1234abc"
     wait_for_ajax
 
+    sleep 1
     bootstrap_datepicker '#participant_date_of_birth', year: Date.current.year, month: 'Mar', day: '15'
     bootstrap_select '#participant_gender', "Male"
     bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
@@ -112,6 +113,7 @@ feature 'User creates Participant', js: true do
     fill_in 'MRN', with: "1234"
     wait_for_ajax
 
+    sleep 1
     bootstrap_datepicker '#participant_date_of_birth', year: Date.current.year, month: 'Mar', day: '15'
     bootstrap_select '#participant_gender', "Male"
     bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
