@@ -48,15 +48,22 @@ class VisitGroupsController < ApplicationController
 
   def update
     @arm = @visit_group.arm
+    @current_page                = params[:current_page]
+    @schedule_tab                = params[:schedule_tab]
+    @visit_groups                = @arm.visit_groups.paginate(page: @current_page)
+    @on_page_edit                = params[:on_page_edit]
     if @visit_group.update_attributes(visit_group_params)
       flash[:success] = t(:visit_groups)[:flash_messages][:updated]
     else
       @errors = @visit_group.errors
+      if @on_page_edit
+        flash[:error] = @errors.full_messages.first
+      end
     end
   end
 
   def destroy
-    @current_page = params[:page].to_i == 0 ? 1 : params[:page].to_i # can't be zero
+    @current_page = params[:current_page].to_i == 0 ? 1 : params[:current_page].to_i # can't be zero
     @arm          = @visit_group.arm
     @visit_groups = @arm.visit_groups.paginate(page: @current_page)
     @schedule_tab = params[:schedule_tab]
@@ -77,6 +84,8 @@ class VisitGroupsController < ApplicationController
     # Used in study schedule management for navigating to a visit group, given an index of them by arm.
     @protocol = Protocol.find(params[:protocol_id])
     @intended_action = params[:intended_action]
+    @current_page = params[:current_page]
+    @schedule_tab = params[:schedule_tab]
     if params[:visit_group_id]
       @visit_group = VisitGroup.find(params[:visit_group_id])
       @arm = @visit_group.arm

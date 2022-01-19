@@ -24,7 +24,7 @@ class Participant < ApplicationRecord
   RACE_OPTIONS        = ['American Indian/Alaska Native', 'Asian', 'Middle Eastern', 'Native Hawaiian or other Pacific Islander', 'Black or African American', 'White', 'Unknown/Other/Unreported'].freeze
   STATUS_OPTIONS      = ['Consented','Screening', 'Enrolled - receiving treatment', 'Follow-up', 'Completed'].freeze
   GENDER_OPTIONS      = ['Male', 'Female', 'Unknown'].freeze
-  RECRUITMENT_OPTIONS = ['', 'Participating Site Referral', 'Primary Physician / or Healthcare Provider Referred', 'Other Physician / or Healthcare Provider Referred', 'Local Advertising (Flyer, Brochure, Newspaper, etc.)', 'Friends or Family Referred', 'SC Research.org', 'MUSC Heroes.org', 'Clinical Trials.gov', 'Billboard Ad Campaign', 'TV Ad Campaign', 'Other'].freeze
+  RECRUITMENT_OPTIONS = ['Participating Site Referral', 'Primary Physician / or Healthcare Provider Referred', 'Other Physician / or Healthcare Provider Referred', 'Local Advertising (Flyer, Brochure, Newspaper, etc.)', 'Friends or Family Referred', 'SC Research.org', 'MUSC Heroes.org', 'Clinical Trials.gov', 'Billboard Ad Campaign', 'TV Ad Campaign', 'Other'].freeze
 
   has_paper_trail
   acts_as_paranoid
@@ -69,6 +69,35 @@ class Participant < ApplicationRecord
   scope :deidentified_true_and_associated_to_a_protocol, -> { where(deidentified: true).joins(:protocols_participants).ids }
 
   scope :able_to_be_associated, -> { where(id: (Participant.all.ids - deidentified_true_and_associated_to_a_protocol).uniq) }
+
+  scope :search, -> (term) {
+    where(Participant.arel_table[:first_name].matches("%#{term}%")
+    ).or(
+      where(Participant.arel_table[:last_name].matches("%#{term}%"))
+    ).or(
+      where(Participant.arel_full_name.matches("%#{term}%"))
+    ).or(
+      where(Participant.arel_table[:mrn].matches("%#{term}%"))
+    )
+  }
+
+  scope :sorted, -> (sort, order) {
+    sort  = 'id' if sort.blank?
+    order = 'desc' if order.blank?
+
+    case sort
+    when 'first_middle'
+      order(Participant.arel_table[:first_name].send(order), Participant.arel_table[:middle_initial].send(order))
+    when 'external_ids'
+      includes(:protocols_participants).order("protocols_participants.external_id #{order}")
+    else
+      order(sort => order)
+    end
+  }
+
+  def self.arel_full_name
+    Participant.arel_table[:first_name].concat(Arel::Nodes.build_quoted(' ')).concat(Participant.arel_table[:last_name])
+  end
 
   def self.title id
     participant = Participant.find id
@@ -141,8 +170,12 @@ class Participant < ApplicationRecord
     protocols.ids
   end
 
+  def external_ids
+    protocols_participants.where.not(external_id: "").map(&:external_id).join(", ")
+  end
+
   def can_be_deidentified?
-    protocols.length <= 1
+    protocols.count <= 1
   end
 
   def can_be_destroyed?

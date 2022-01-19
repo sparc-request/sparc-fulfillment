@@ -1,0 +1,48 @@
+-# Copyright © 2011-2020 MUSC Foundation for Research Development
+-# All rights reserved.~
+
+-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+-# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+-# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+-# derived from this software without specific prior written permission.~
+
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+-# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+-# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
+.modal-dialog.modal-lg{ role: 'document' }
+  .modal-content
+    .modal-header
+      %h3.modal-title
+        = t('protocols_participants.registry.header')
+      %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+        %span{ aria: { hidden: 'true' } } &times;
+    .modal-body
+      %table#participantRegistryModalTable{ data: { toggle: 'table', url: participants_path(protocol_id: protocol.id, format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 10, pagination: 'true', side_pagination: 'server', sort_name: 'last_name', sort_order: 'asc', cookie: 'true', cookie_id_table: 'patient-registry-modal', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: "" } }
+        %thead.bg-light
+          %tr
+            %th.associate.editable{ data: { field: 'associate', align: 'left' } }
+              = t('protocols_participants.registry.associate')
+            %th.last-name{ data: { field: 'last_name', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:last_name)
+            %th.first-name{ data: { field: 'first_middle', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:first_name)
+            %th.mrn{ data: { field: 'mrn', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:mrn)
+            %th.dob{ data: { field: 'date_of_birth', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:date_of_birth)
+            %th.deidentified{ data: { field: 'deidentified', align: 'left', sortable: 'true' } }
+              = t(:participant)[:deidentified] 
+            %th.phone{ data: { field: 'phone', align: 'left', sortable: 'true' } }
+              = Participant.human_attribute_name(:phone)
+    .modal-footer
+      %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+        = t('actions.close')

@@ -27,6 +27,7 @@ class Organization < SparcDbBase
   has_many :children, class_name: "Organization", foreign_key: :parent_id
 
   has_many :protocols, through: :sub_service_requests
+  has_many :clinical_provider_identities, through: :clinical_providers, source: :identity
 
   has_many :services,
             -> {where(is_available: true)}
@@ -37,6 +38,10 @@ class Organization < SparcDbBase
             -> { where(process_ssrs: false) },
             class_name: "Organization",
             foreign_key: :parent_id
+
+  def label
+    self.abbreviation || self.name
+  end
 
   # Returns this organization's pricing setup that is effective on a given date.
   def effective_pricing_setup_for_date(date=Date.today)
@@ -52,6 +57,14 @@ class Organization < SparcDbBase
     pricing_setup = sorted_setups.last
 
     return pricing_setup
+  end
+
+  def has_one_time_fee_services?(opts={})
+    Service.where(one_time_fee: true, is_available: (opts[:is_available] ? opts[:is_available] : [true, false]), organization_id: Organization.authorized_child_organization_ids([self.id])).any?
+  end
+
+  def has_per_patient_per_visit_services?(opts={})
+    Service.where(one_time_fee: false, is_available: (opts[:is_available] ? opts[:is_available] : [true, false]), organization_id: Organization.authorized_child_organization_ids([self.id])).any?
   end
 
   def inclusive_child_services(scope, is_available=true)
@@ -91,5 +104,16 @@ class Organization < SparcDbBase
 
   def all_child_services(scope, is_available=true)
     all_child_organizations_with_non_process_ssrs.map { |child| child.send(is_available ? :services : :all_services).send(scope) }
+  end
+
+  private
+
+  def self.authorized_child_organization_ids(org_ids)
+    child_ids = Organization.where(parent_id: org_ids).ids
+    if child_ids.empty?
+      org_ids
+    else
+      org_ids + self.authorized_child_organization_ids(child_ids)
+    end
   end
 end

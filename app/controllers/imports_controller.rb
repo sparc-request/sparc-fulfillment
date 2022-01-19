@@ -19,7 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ImportsController < ApplicationController
-
   def index
     @imports = Import.all
     respond_to do |format|
@@ -53,12 +52,15 @@ class ImportsController < ApplicationController
           end
         rescue Exception => e
           import.destroy # remove the import since it has an error
-          format.js { render js: "swal('Klok Import Error', \"#{e.message}\", 'error');" }
+          format.js { render js: "Swal.fire(title: 'Error', text: \"#{e.message}\", icon: 'error', showCancelButton: false)"}
           format.html { render :new }
         end
+      else
+        ##Needs to handle error state of import.save
       end
     end
   end
+
 
   private
 
@@ -73,5 +75,8 @@ class ImportsController < ApplicationController
   def import_params
     params.require(:import).permit(:xml_file, :title, :file)
   end
-end
 
+  def set_highlighted_link
+    @highlighted_link ||= 'imports'
+  end
+end

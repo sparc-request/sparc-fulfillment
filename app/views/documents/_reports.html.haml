@@ -1,0 +1,46 @@
+-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+-# All rights reserved.~
+
+-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+-# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+-# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+-# derived from this software without specific prior written permission.~
+
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+-# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+-# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
+.w-20
+  .card
+    .card-header.bg-primary.text-white
+      %h3.mb-0
+        = "Reports"
+    .card-body
+      = link_to new_report_path(report_type: 'invoice_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary text-left" do
+        = succeed "Invoice Report" do
+          = icon('fas', 'file-alt mr-2')
+      = link_to new_report_path(report_type: 'auditing_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+        = succeed "Auditing Report" do
+          = icon('fas', 'file-alt mr-2')
+      = link_to new_report_path(report_type: 'project_summary_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+        = succeed "Project Summary Report" do
+          = icon('fas', 'file-alt mr-2')
+      = link_to new_report_path(report_type: 'subsidy_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+        = succeed "Subsidy Report" do
+          = icon('fas', 'file-alt mr-2')
+      - if ENV.fetch('CLINICAL_SERVICES') == 'true'
+        = link_to new_report_path(report_type: 'visit_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+          = succeed "Visit Report" do
+            = icon('fas', 'file-alt mr-2')
+        - if current_identity.is_a_patient_registrar?
+          = link_to new_report_path(report_type: 'participant_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+            = succeed "Participant Report" do
+              = icon('fas', 'file-alt mr-2')

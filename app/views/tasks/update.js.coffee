@@ -18,11 +18,17 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
-$('#task-list').bootstrapTable('refresh', {silent: "true"})
-$(".notification.task-notifications").empty().append("<%= current_identity.reload.tasks_count %>")
-notification_bubble = $('.notification.task-notifications')
-notification_count = parseInt(notification_bubble.text())
-if notification_count == 0
-  notification_bubble.remove();
-$("#modalContainer").modal 'hide'
+<% if @errors %>
+$("[name^='task']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='task[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+<% else %>
+$("nav#siteNav").replaceWith("<%= j render 'layouts/navbar' %>")
+$("#tasks").bootstrapTable('refresh')
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
+$("#modalContainer").modal('hide')
+<% end %>

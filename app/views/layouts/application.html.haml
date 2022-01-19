@@ -31,16 +31,17 @@
     = render 'layouts/javascript'
     = include_gon
     = render 'layouts/i18n-js'
-  %body.bg-light
+  %body{class: "#{body_class} bg-light"}
     - unless Rails.env.production?
       %h4.alert.alert-danger.rounded-0.text-center.m-0{ role: 'alert' }
         = Rails.env.capitalize
     = render 'layouts/header'
     = render 'layouts/navbar'
-    #contentContainer
-      .container-fluid
-        - unless content_for?(:flash)
-          = render 'layouts/flash'
-        = content_for?(:content) ? yield(:content) : yield
+    = render 'layouts/subheader'
+    .container-fluid#contentContainer
+      - unless content_for?(:flash)
+        = render 'layouts/flash'
+      = content_for?(:content) ? yield(:content) : yield
     = render 'layouts/footer'
+    = render 'layouts/back_to_top'
     = render 'layouts/modal'

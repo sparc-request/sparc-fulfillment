@@ -22,43 +22,35 @@
   .container-fluid
     .collapse.navbar-collapse.order-last.order-xl-first#navbarLinks
       .navbar-nav.mr-auto
-        .nav-item
-          = link_to root_path, class: 'nav-link' do
-            = icon('fas', 'home fa-2x')
         - if identity_signed_in?
           .nav-item
-            = link_to tasks_path, class: 'tasks' do
-              %span.glyphicon.glyphicon-list-alt{aria: {hidden: "true"}}
-              = t(:navbar)[:tasks_link]
-              - if current_identity.tasks_count > 0
-                %span.notification.task-notifications
-                  = current_identity.tasks_count
+            = link_to root_path, class: ['nav-link', @highlighted_link == 'requests' ? 'active' : ''] do
+              = icon('fas', 'home fa-2x mr-1')
+              = t('layout.navigation.requests')
           .nav-item
-            = link_to documents_path, class: 'documents' do
-              %span.glyphicon.glyphicon-equalizer{aria: {hidden: "true"}}
-              = t(:navbar)[:reports_link]
+            = link_to tasks_path, class: ['nav-link', @highlighted_link == 'tasks' ? 'active' : ''] do
+              = icon('fas', 'tasks fa-2x mr-1')
+              = t('layout.navigation.tasks')
+              - if current_identity.tasks_count > 0
+                %span.badge.badge-pill.badge-c.badge-danger.notification-badge.task-notifications
+                  = current_identity.tasks_count
+          .nav-item.documents_nav
+            = link_to documents_path, class: ['nav-link', @highlighted_link == 'documents' ? 'active' : ''] do
+              = icon('fas', 'file-alt fa-2x mr-1')
+              = t('layout.navigation.documents')
               - if current_identity.unaccessed_documents_count > 0
-                %span.notification.identity_report_notifications
+                %span.badge.badge-pill.badge-c.badge-danger.notification-badge.identity_report_notifications
                   = current_identity.unaccessed_documents_count
           .nav-item
-            = link_to imports_path, class: 'imports' do
-              %span.glyphicon.glyphicon-import{aria: {hidden: "true"}}
-              = t(:navbar)[:imports_link]
+            = link_to imports_path, class: ['nav-link', @highlighted_link == 'imports' ? 'active' : ''] do
+              = icon('fas', 'file-import fa-2x mr-1')
+              = t('layout.navigation.imports')
           - if current_identity.is_a_patient_registrar? && (ENV.fetch('CLINICAL_SERVICES') == 'true')
             .nav-item
-              = link_to participants_path, class: 'patient_registry' do
-                %span.glyphicon.glyphicon-user{aria: {hidden: "true"}}
-                = t(:navbar)[:patient_registry_link]
+              = link_to participants_path, class: ['nav-link', @highlighted_link == 'participants' ? 'active' : ''] do
+                = icon('fas', 'users fa-2x mr-1')
+                = t('layout.navigation.patient_registry')
       %button.btn.btn-primary.navbar-toggler.p-0.border-0.text-light{ type: 'button', data: { toggle: 'collapse', target: '#navbarLinks' }, aria: { controls: 'navbarLinks', expanded: 'false', label: t('layout.navigation.toggle') } }
         = icon('fas', 'bars fa-2x')
     .navbar-nav#navbarUtilities
-      .nav-item
-        - if session[:breadcrumbs] && session[:breadcrumbs].present?
-          = link_to back_link(session[:breadcrumbs].last), id: 'history-back', title: generate_history_text(session[:breadcrumbs].last), aria: {label: "Go Back"}, data: {toggle: "tooltip", animation: 'false'} do
-            = icon('fas', 'arrow-left')
-            = "Back"
-            #history-menu
-              %ul.dropdown-menu{role: 'menu'}
-                - session[:breadcrumbs].reverse.each do |url|
-                  .nav-item= link_to generate_history_text(url), url
       = render 'layouts/profile'

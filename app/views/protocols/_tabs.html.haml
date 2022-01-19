@@ -1,0 +1,44 @@
+-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+-# All rights reserved.~
+
+-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+-# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+-# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+-# derived from this software without specific prior written permission.~
+
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+-# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+-# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
+.tabs.w-100#protocolTabs
+  %nav.nav.nav-tabs.nav-justified.border-bottom-0{ role: 'tablist' }
+    - if has_pppv_services && ENV.fetch('CLINICAL_SERVICES') == 'true'
+      = link_to t('protocol.tabs.study_schedule'), refresh_tab_protocol_path(protocol, tab: 'study_schedule'), remote: true, id: 'studyScheduleTabLink', class: ['nav-link nav-item h4 mb-0', tab == 'study_schedule' ? 'active' : ''], role: 'tab', data: { toggle: 'tab' }, aria: { controls: 'studyScheduleTab', selected: (tab == 'study_schedule').to_s }
+      = link_to t('protocol.tabs.participant_tracker'), refresh_tab_protocol_path(protocol, tab: 'participant_tracker'), remote: true, id: 'participantTrackerTabLink', class: ['nav-link nav-item h4 mb-0', tab == 'participant_tracker' ? 'active' : ''], role: 'tab', data: { toggle: 'tab' }, aria: { controls: 'participantTrackerTab', selected: (tab == 'participant_tracker').to_s }
+    = link_to t('protocol.tabs.study_level_activities'), refresh_tab_protocol_path(protocol, tab: 'study_level_activities'), remote: true, id: 'studyLevelActivitiesTabLink', class: ['nav-link nav-item h4 mb-0', tab == 'study_level_activities' ? 'active' : ''], role: 'tab', data: { toggle: 'tab' }, aria: { controls: 'studyLevelActivitiesTab', selected: (tab == 'study_level_activities').to_s }
+    = link_to refresh_tab_protocol_path(protocol, tab: 'reports'), remote: true, id: 'reportsTabLink', class: ['nav-link nav-item h4 mb-0', tab == 'reports' ? 'active' : ''], role: 'tab', data: { toggle: 'tab' }, aria: { controls: 'reportsTab', selected: (tab == 'reports').to_s } do
+      %span.position-relative<
+        = t('protocol.tabs.reports')
+        - if protocol.unaccessed_documents_count > 0
+          %span.badge.badge-pill.badge-c.badge-danger.notification-badge.reports-tab-badge<
+            %small
+              = protocol.unaccessed_documents_count
+
+  .tab-content
+    .tab-pane.fade#studyScheduleTab{ role: 'tabpanel', class: tab == 'study_schedule' ? 'show active' : '', aria: { labelledby: 'studyScheduleTabLink' } }
+    .tab-pane.fade#participantTrackerTab{ role: 'tabpanel', class: tab == 'participant_tracker' ? 'show active' : '', aria: { labelledby: 'participantTrackerTabLink' } }
+    .tab-pane.fade#studyLevelActivitiesTab{ role: 'tabpanel', class: tab == 'study_level_activities' ? 'show active' : '', aria: { labelledby: 'studyLevelActivitiesTabLink' } }
+    .tab-pane.fade#reportsTab{ role: 'tabpanel', class: tab == 'reports' ? 'active' : '', aria: { labelledby: 'reportsTabLink' } }
+    .tab-pane.fade.show.active.loading#requestLoading
+      .card
+        .card-body.text-center
+          %h3.d-flex.justify-content-center.align-items-center.mb-0
+            = t('constants.search.loading')

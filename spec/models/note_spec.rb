@@ -25,7 +25,7 @@ RSpec.describe Note, type: :model do
   it { is_expected.to belong_to(:notable) }
   it { is_expected.to belong_to(:identity) }
 
-  it { is_expected.to validate_inclusion_of(:kind).in_array(Note::KIND_TYPES) }
+  it { is_expected.to validate_inclusion_of(:kind).in_array(['reason']) }
 
   describe 'reason validations' do
 
@@ -43,6 +43,12 @@ RSpec.describe Note, type: :model do
         procedure = create(:procedure)
         note      = create(:note, notable: procedure, comment: 'Test comment')
         expect(note).to validate_inclusion_of(:reason).in_array(Procedure::NOTABLE_REASONS)
+      end
+
+      it 'should validate the presence of kind' do
+        procedure = create(:procedure_follow_up)
+        note = create(:note, notable: procedure, comment: 'Test comment')
+        expect(note).to validate_inclusion_of(:kind).in_array(Note::KIND_TYPES)
       end
     end
 

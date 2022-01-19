@@ -67,6 +67,8 @@
 .bootstrap-table {
   .fixed-table-container {
     .fixed-table-body {
+      overflow: visible;
+
       .fixed-table-loading {
         border-top: 0;
 
@@ -75,6 +77,23 @@
             font-size: 1.5rem;
           }
         }
+      }
+    }
+  }
+
+  tbody tr td.editable {
+    &.disabled {
+      cursor: not-allowed;
+    }
+
+    &:not(.disabled) {
+      &.active {
+        background: theme-color-level('light', 1.5);
+        cursor: pointer;
+      }
+
+      &.focus {
+        background: theme-color-level('light', 2.5); 
       }
     }
   }

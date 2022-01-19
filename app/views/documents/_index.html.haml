@@ -18,37 +18,44 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.modal-dialog.modal-lg
+.modal-dialog.modal-lg{ role: 'document' }
   .modal-content
     .modal-header
-      %button.close{type: 'button', data: {dismiss: 'modal'}}
-        %span{aria: {hidden:'true'}} &times;
-        %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= t(:documents)[documentable_sym][:index_header]
+      %h3.modal-title
+        = t(:documents)[documentable_sym][:index_header]
+      %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+        %span{ aria: { hidden: 'true' } } &times;
     .modal-body
       - if documents.any?
-        .details-table
-          .details-header.text-center
-            .col-xs-2= t(:documents)[:date]
-            .col-xs-8= t(:documents)[:object]
-            .col-xs-2= t(:documents)[:delete]
-          - documents.each do |document|
-            .detail
-              .col-xs-2.created-at= format_datetime(document.created_at)
-              .col-xs-8.comment= link_to document.original_filename, document_path(document), target: "_blank"
-              .col-xs-2.delete.text-center
-                = link_to(document_path(document, format: :js), remote: true, method: :delete) do
-                  %span.glyphicon.glyphicon-remove{aria: {hidden: "true"}}
+        %table.table.table-striped
+          %thead.text-center
+            %tr
+              %th
+                = t(:documents)[:date]
+              %th
+                = t(:documents)[:object]
+              %th
+                = t(:documents)[:delete]
+          %tbody
+            - documents.each do |document|
+              %tr
+                %td.created-at.text-center
+                  = format_datetime(document.created_at)
+                %td.comment.text-center
+                  = link_to document.original_filename, document_path(document), target: "_blank"
+                %td.delete.text-center
+                  = link_to(document_path(document, format: :js), remote: true, method: :delete) do
+                    %span= icon('fa', 'times')
       -else
         .text-center= t(:documents)[documentable_sym][:none]
     .modal-footer
-      .center-block
-        - if documentable_type == "Fulfillment"
-          %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: @documentable.line_item_id}}
-            = t(:actions)[:close]
-        - else
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
+      - if documentable_type == "Fulfillment"
+        %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: @documentable.line_item_id}}
+          = t(:actions)[:close]
+      - else
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t('actions.close')
 
-        = link_to new_document_path(document: { documentable_id: documentable_id, documentable_type: documentable_type }, format: :js), remote: true, class: 'btn btn-primary document new' do
-          %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
-          = t(:documents)[:upload_button]
+      = link_to new_document_path(document: { documentable_id: documentable_id, documentable_type: documentable_type }, format: :js), remote: true, class: 'btn btn-primary document new' do
+        = icon('fa', 'plus')
+        = t(:documents)[:upload_button]

@@ -30,7 +30,7 @@
       @extend .text-muted;
     }
 
-    &[class*='btn-']:not(.btn-light) {
+    &[class*='btn-']:not(.btn-light):not(.btn-white) {
       @extend .text-white;
     }
 

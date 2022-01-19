@@ -22,10 +22,10 @@ require 'rails_helper'
 
 feature 'User views Patient Registry', js: true do
 
-  scenario 'and does not have access' do
-    when_i_visit_the_patient_registry
-    then_i_should_be_redirected_to_the_home_page
-  end
+  # scenario 'and does not have access' do
+  #   when_i_visit_the_patient_registry
+  #   then_i_should_be_redirected_to_the_home_page
+  # end
 
   scenario 'and sees the Patient Registry table' do
     given_i_am_a_patient_registrar

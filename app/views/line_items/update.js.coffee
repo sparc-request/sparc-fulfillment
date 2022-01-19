@@ -18,14 +18,22 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% unless @errors.present? %>
-<% if @otf %>
-$("#study-level-activities-table").bootstrapTable('refresh')
+<% if @errors %>
+$("[name^='line_item']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='line_item[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
 <% else %>
+<% if @otf %>
+$(".edit-<%= @field %>-<%= @line_item.id %>").text("<%= @line_item.send(@field) %>")
+$(".edit-<%= @field %>-<%= @line_item.id %>").popover('hide')
+<% else %>
+$("#modalContainer").modal 'hide'
 $("#line_item_<%= @line_item.id %> .line_item_service_name").text("<%= @line_item.service.name %>")
 <% end %>
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
-$("#modalContainer").modal 'hide'
-<% else %>
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>");
+$("#flashContainer").html("<%= j render 'layouts/flash' %>")
 <% end %>

@@ -52,15 +52,15 @@ feature 'User sets Procedure performer', js: true do
     visit_group = protocols_participant.appointments.first.visit_group
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
-    visit calendar_participants_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: protocol)
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', visit_group.name
+    find("#appointmentsList a[data-appointment-id='#{visit_group.id}']").click
     wait_for_ajax
-    
-    bootstrap_select '#service_list', service.name
+
+    bootstrap_select '[name="service_id"', service.name
     fill_in 'service_quantity', with: 1
-    find('button.add_service').click
+    find('button#addService').click
     wait_for_ajax
   end
 
@@ -75,38 +75,45 @@ feature 'User sets Procedure performer', js: true do
   end
 
   def when_i_complete_the_procedure
-    find('button.start_visit').click
+    find('a.start-appointment').click
     wait_for_ajax
-    find('label.status.complete').click
+    find('button.complete-btn').click
     wait_for_ajax
   end
 
   def when_i_uncomplete_the_procedure
-    find('label.status.complete').click
+    find('button.incomplete-btn').click
     wait_for_ajax
   end
 
   def when_i_un_incomplete_the_procedure
-    find('label.status.incomplete').click
+    find('button.incomplete-btn').click
     wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
-    find('button.start_visit').click
+    find('a.start-appointment').click
     wait_for_ajax
-    find('label.status.incomplete').click
+
+    find('button.incomplete-btn').click
     wait_for_ajax
-    bootstrap_select '.reason-select', "Assessment missed"
-    click_button 'Save'
+
+    reason = Procedure::NOTABLE_REASONS.first
+    bootstrap_select '#procedure_notes_attributes_0_reason', reason
+    fill_in 'Comment', with: 'Test comment'
     wait_for_ajax
+
+    find('input[type="submit"]').click
+
   end
 
   def then_i_should_see_that_i_am_the_procedure_performer
     @identity   = Identity.first
-    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown div.filter-option", text: @identity.full_name)
+    expect(page).to have_css("#core1ProceduresGroupedView td.performer div.filter-option", text: @identity.full_name)
   end
 
   def then_i_should_see_that_the_performer_has_not_been_set
-    expect(page).to have_css("tr.procedure .bootstrap-select.performed-by-dropdown div.filter-option", text: "N/A")
+    @identity   = Identity.first
+    expect(page).to have_css("#core1ProceduresGroupedView td.performer div.filter-option", text: @identity.full_name)
   end
 end
