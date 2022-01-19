@@ -19,7 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ReportsController < ApplicationController
-
   before_action :find_documentable, only: [:create]
   before_action :find_report_type, only: [:new, :create]
 
@@ -38,6 +37,12 @@ class ReportsController < ApplicationController
       @reports_params = reports_params
       @documentable.documents.push @document
       ReportJob.perform_later(@document, reports_params.to_h)
+    end
+    respond_to do |format|
+      format.js
+      format.json {
+        render json: { document: { id: @document.id } }
+      }
     end
   end
 
@@ -86,6 +91,7 @@ class ReportsController < ApplicationController
               :protocols_participant_id,
               :documentable_id,
               :documentable_type,
+              :protocol_level,
               :mrns => [],
               :organizations => [],
               :protocols => []).merge(identity_id: current_identity.id)

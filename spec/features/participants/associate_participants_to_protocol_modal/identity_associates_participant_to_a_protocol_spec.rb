@@ -24,7 +24,7 @@ feature 'User associates Participant to Protocol', js: true do
 
   scenario 'and sees the new Participants in the list' do
     given_i_am_viewing_the_associate_participants_to_protocol_modal
-    i_should_see_associated_participants_as_checked
+    i_should_see_associated_participants
     when_i_click_to_associate_a_participant
     then_i_should_see_the_new_participant_in_the_list
   end
@@ -32,33 +32,33 @@ feature 'User associates Participant to Protocol', js: true do
   def given_i_am_viewing_the_associate_participants_to_protocol_modal
     @protocol    = create_and_assign_protocol_to_me
     create(:participant)
+    create(:patient_registrar, identity: Identity.first, organization: create(:organization))
+
     visit protocol_path(@protocol.id)
     wait_for_ajax
 
     click_link 'Participant Tracker'
     wait_for_ajax
 
-    click_button 'Search Patient Registry'
+    click_link 'Search Patient Registry'
     wait_for_ajax
   end
 
-  def i_should_see_associated_participants_as_checked
-    expect(all('input[type=checkbox]:checked').count).to eq(@protocol.protocols_participants.count)
+  def i_should_see_associated_participants
+    expect(all('.associate a.remove-participant').count).to eq(@protocol.protocols_participants.count)
   end
 
   def when_i_click_to_associate_a_participant
-    all_participant_ids = Participant.all.map(&:id)
-    participant_ids_associated_to_protocol = @protocol.protocols_participants.map(&:id)
-    participant_id_left_to_associate = (all_participant_ids + participant_ids_associated_to_protocol) - (all_participant_ids & participant_ids_associated_to_protocol)
-    find("input[type='checkbox'][participant_id='#{participant_id_left_to_associate.first}']").set(true)
+    all('.associate a.add-participant').first.click
     wait_for_ajax
   end
 
   def then_i_should_see_the_new_participant_in_the_list
-    expect(page).to have_css('#flashes_container', text: 'Participant added to protocol.')
+    expect(page).to have_css('#flashContainer', text: 'Participant was updated successfully!')
     wait_for_ajax
     click_button 'Close'
     wait_for_ajax
-    expect(page).to have_css('table.participants tbody tr', count: 4)
+
+    expect(page).to have_css('#participantTrackerTable tbody tr', count: 4)
   end
 end

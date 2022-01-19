@@ -20,6 +20,8 @@
 
 class Protocol < ApplicationRecord
 
+  require 'csv'
+
   include LocalDb
 
   attr_accessor :document_counter_updated
@@ -28,28 +30,32 @@ class Protocol < ApplicationRecord
   acts_as_paranoid
 
   belongs_to :sub_service_request
-  belongs_to :sparc_protocol, class_name: 'Sparc::Protocol', foreign_key: :sparc_id
-  has_one :human_subjects_info, primary_key: :sparc_id
-  has_many :irb_records, through: :human_subjects_info
-  has_many :service_requests, primary_key: :sparc_id
-  has_many :project_roles,    primary_key: :sparc_id
-  has_many :arms,             dependent: :destroy
-  has_many :line_items,       dependent: :destroy
+  belongs_to :sparc_protocol,       class_name: 'Sparc::Protocol', foreign_key: :sparc_id
+
+  has_one :human_subjects_info,     primary_key: :sparc_id
+
+  has_one :pi_role,                 -> { where(role: 'primary-pi') }, class_name: "ProjectRole", primary_key: :sparc_id
+  has_one :pi,                      through: :pi_role, source: :identity
+
+  has_one :organization,            through: :sub_service_request
+  has_one :subsidy,                 through: :sub_service_request
+
+  has_many :arms,                   dependent: :destroy
+  has_many :line_items,             dependent: :destroy
   has_many :protocols_participants, dependent: :destroy
-  has_many :documents,        as: :documentable
+  has_many :service_requests,       primary_key: :sparc_id
+  has_many :project_roles,          primary_key: :sparc_id
+  has_many :documents,              as: :documentable
 
-  has_many :sub_service_requests, through: :service_requests
-  has_many :subsidies, through: :sub_service_requests
-
-  has_one :organization, through: :sub_service_request
-  has_many :clinical_providers, through: :organization
-  has_many :super_users, through: :organization
-
-  has_many :appointments,     through: :protocols_participants
-  has_many :procedures,       through: :appointments
-
-  has_one  :subsidy, through: :sub_service_request
-  has_many :fulfillments,     through: :line_items
+  has_many :irb_records,            through: :human_subjects_info
+  has_many :sub_service_requests,   through: :service_requests
+  has_many :subsidies,              through: :sub_service_requests
+  has_many :clinical_providers,     through: :organization
+  has_many :super_users,            through: :organization
+  has_many :participants,           through: :protocols_participants
+  has_many :appointments,           through: :protocols_participants
+  has_many :procedures,             through: :appointments
+  has_many :fulfillments,           through: :line_items
 
   before_save :set_documents_count
 
@@ -72,13 +78,58 @@ class Protocol < ApplicationRecord
            :funding_source,
            :potential_funding_source,
            :research_master_id,
-           to: :sparc_protocol
+           to: :sparc_protocol,
+           :allow_nil => true
 
   delegate :subsidy_committed,
            :percent_subsidy,
            :total_at_approval,
            to: :subsidy,
            allow_nil: true
+
+  scope :search, -> (term) {
+    rmid_protocols = Sparc::Protocol.where(Sparc::Protocol.arel_table[:research_master_id].matches("#{term}%"))
+
+    joins(:sub_service_request, :pi).where(Protocol.arel_table[:sparc_id].matches("#{term}%")
+    ).or(
+      joins(:sub_service_request, :pi).where(id: rmid_protocols)
+    ).or(
+      joins(:sub_service_request, :pi).where(Sparc::Protocol.arel_table[:short_title].matches("%#{term}%"))
+    ).or(
+      joins(:sub_service_request, :pi).where(Identity.arel_full_name.matches("%#{term}%"))
+    ).or(
+      joins(:sub_service_request, :pi).where(SubServiceRequest.arel_table[:org_tree_display].matches("%#{term}%"))
+    )
+  }
+
+  scope :with_status, -> (status) {
+    return if status.blank?
+    joins(:sub_service_request).where(sub_service_requests: { status: status })
+  }
+
+  scope :sorted, -> (sort, order) {
+    sort  = 'id' if sort.blank?
+    order = 'desc' if order.blank?
+
+    case sort
+    when 'srid'
+      order(Protocol.arel_table[:sparc_id].send(order), SubServiceRequest.arel_table[:ssr_id].send(order))
+    when 'rmid'
+      order(Sparc::Protocol.arel_table[:research_master_id].send(order))
+    when 'pi'
+      order(Identity.arel_full_name.send(order))
+    when 'irb_approval_date'
+      order(IrbRecord.arel_table[:irb_approval_date].send(order))
+    when 'irb_expiration'
+      order(IrbRecord.arel_table[:irb_expiration_date].send(order))
+    when 'organizations'
+      order(SubServiceRequest.arel_table[:org_tree_display].send(order))
+    when 'status'
+      order(SubServiceRequest.arel_table[:status].send(order))
+    else
+      order(sort => order)
+    end
+  }
 
   def self.title id
     ["Protocol", Protocol.find(id).srid].join(' ')
@@ -94,22 +145,12 @@ class Protocol < ApplicationRecord
     ].join
   end
 
+  def label
+    "(#{self.sparc_id}) #{self.short_title}"
+  end
+
   def srid # this is a combination of sparc_id and sub_service_request.ssr_id
     "#{sparc_id} - #{sub_service_request.ssr_id}"
-  end
-
-  #TODO:Placeholder for subsidy expended. To be completed when participant calendars are built out.
-  def subsidy_expended
-    "$0.00"
-  end
-
-  def pi
-
-    if project_roles.loaded?
-      project_roles.to_a.find{ |pr| pr.role == 'primary-pi'}.identity
-    else
-      project_roles.where(role: "primary-pi").first.identity
-    end
   end
 
   def coordinators
@@ -146,6 +187,17 @@ class Protocol < ApplicationRecord
 
   def research_master_id
     sparc_protocol.research_master_id
+  end
+
+  def self.to_csv(protocols)
+    CSV.generate do |csv|
+      csv << ["Protocol ID", "Sparc ID", "Short Title", "Primary Principal Investigator", "Status", "IRB Approval", "IRB Expiration", "Provider/Program/Core"]
+      protocols.each do |p|
+        csv << [p.srid, p.sparc_id, p.short_title, p.pi ? p.pi.full_name : "", p.status.present? ? p.status.capitalize : '-',
+                p.irb_approval_date.present? ? p.irb_approval_date : '-', p.irb_expiration_date.present? ? p.irb_expiration_date : '-',
+                p.sub_service_request.org_tree_display]
+      end
+    end
   end
 
   ##### PRIVATE METHODS #####

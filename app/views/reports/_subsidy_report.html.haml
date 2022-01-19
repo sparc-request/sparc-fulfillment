@@ -22,53 +22,60 @@
   .modal-content
     = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
       .modal-header
-        %button.close{type: 'button', data: {dismiss: 'modal'}}
-          %span{aria: {hidden:'true'}} &times;
-          %span.sr-only
-            = t(:actions)[:close]
         %h4.modal-title.text-center
           = t(:reports)[:subsidy_report]
+        %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} &times;
       .modal-body
         #modal_errors
         = render partial: 'required_fields'
-        .row
-          .col-md-12
-            = hidden_field_tag "report_type", report_type
-            = hidden_field_tag "include_notes", false
-            .form-group
-              = label_tag "title", t(:documents)[:title]+t(:actions)[:required], class: "col-sm-3 control-label"
-              .col-sm-9
-                = text_field_tag "title", title, class: 'form-control'
-            .form-group
-              = label_tag "start_date", t(:reports)[:subsidy_date_from], class: "col-sm-3 control-label"
-              .col-sm-9
-                = text_field_tag "start_date", nil, class: "form-control", readonly: true
-            .form-group
-              = label_tag "end_date", t(:reports)[:subsidy_date_to], class: "col-sm-3 control-label"
-              .col-sm-9
-                = text_field_tag "end_date", nil, class: "form-control", readonly: true
-            .form-group
-              = label_tag "sort_by", t(:reports)[:sort_by], class: "col-sm-3 control-label"
-              .col-sm-3
-                %label.radio-inline
-                  = radio_button_tag "sort_by", t(:reports)[:protocol_id], true
-                  = t(:reports)[:protocol_id]
-              .col-sm-3
-                %label.radio-inline
-                  = radio_button_tag "sort_by", t(:reports)[:primary_pi]
-                  = t(:reports)[:primary_pi]
-            .form-group
-              = label_tag "sort_order", t(:reports)[:sort_order], class: "col-sm-3 control-label"
-              .col-sm-3
-                %label.radio-inline
-                  = radio_button_tag "sort_order", t(:reports)[:asc], true
-                  = t(:reports)[:ascending]
-              .col-sm-3
-                %label.radio-inline
-                  = radio_button_tag "sort_order", t(:reports)[:desc]
-                  = t(:reports)[:descending]
+        .col-md-12.mt-3
+          = hidden_field_tag "report_type", report_type
+          = hidden_field_tag "include_notes", false
+          .form-group.row.align-items-center
+            = label_tag "title", t(:documents)[:title], class: "control-label required col-sm-5 mb-0"
+            .col-sm-7
+              = text_field_tag "title", title, class: 'form-control'
+          .form-group.row.align-items-center
+            = label_tag "start_date", t(:reports)[:subsidy_date_from], class: "control-label col-sm-5 mb-0"
+            .input-group.datetimepicker.date.col-sm-7{ id: 'start_date', data: {target_input: 'nearest' }}
+              = text_field_tag "start_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#start_date", toggle:"datetimepicker" }
+              .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
+                .input-group-text
+                  %span.far.fa-calendar
+          .form-group.row.align-items-center
+            = label_tag "end_date", t(:reports)[:subsidy_date_to], class: "control-label col-sm-5 mb-0"
+            .input-group.datetimepicker.date.col-sm-7{ id: 'end_date', data: {target_input: 'nearest'}}
+              = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date", toggle:"datetimepicker" }
+              .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
+                .input-group-text
+                  %span.far.fa-calendar
+
+          %hr
+
+          .row
+            .form-group.col-sm-6
+              %label.control-label=t(:reports)[:sort_by]
+              .form-check.ml-3
+                = radio_button_tag "sort_by", t(:reports)[:protocol_id], true, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:protocol_id]
+
+              .form-check.ml-3
+                = radio_button_tag "sort_by", t(:reports)[:primary_pi], false, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:primary_pi]
+
+            .form-group.col-sm-6
+              %label.control-label=t(:reports)[:sort_order]
+              .form-check.ml-3
+                = radio_button_tag "sort_order", t(:reports)[:asc], true, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:ascending]
+
+              .form-check.ml-3
+                = radio_button_tag "sort_order", t(:reports)[:desc], false, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:descending]
+
       .modal-footer
         .center-block
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
+          %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}
             = t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: t(:reports)[:request_report]}
+          %input.btn.btn-primary{type: 'submit', value: t(:reports)[:request_report], class: 'report-request'}

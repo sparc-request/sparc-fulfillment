@@ -23,6 +23,8 @@ class Fulfillment < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
+  attr_accessor :klok_upload
+
   belongs_to :line_item
   belongs_to :service
   belongs_to :creator, class_name: "Identity"
@@ -44,7 +46,7 @@ class Fulfillment < ApplicationRecord
 
   after_create :update_line_item_name
   after_destroy :remove_line_item_name
-  before_update :recalculate_cost
+  before_update :recalculate_cost, :set_subsidy_and_funding_source
 
   scope :fulfilled_in_date_range, ->(start_date, end_date) {
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
@@ -60,7 +62,7 @@ class Fulfillment < ApplicationRecord
   private
 
   def recalculate_cost
-    if fulfilled_at_changed?
+    if fulfilled_at_changed? && !klok_upload
       write_attribute(:service_cost, line_item.cost(protocol.sparc_funding_source, fulfilled_at).to_i)
     end
   end
@@ -84,6 +86,15 @@ class Fulfillment < ApplicationRecord
     # service.decrement(:line_items_count)
     if line_item.one_time_fee && line_item.fulfillments.size == 0
       line_item.update_attributes(name: nil)
+    end
+  end
+
+  def set_subsidy_and_funding_source
+    if fulfilled_at_changed? && !klok_upload
+      protocol = line_item.protocol
+      subsidy  = protocol.sub_service_request.subsidy
+      write_attribute(:funding_source, protocol.sparc_funding_source)
+      write_attribute(:percent_subsidy, subsidy.percent_subsidy) if subsidy
     end
   end
 end

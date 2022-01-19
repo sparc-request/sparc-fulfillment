@@ -20,6 +20,7 @@
 
 (function($) {
   $.extend($.fn.modal.Constructor.Default, { backdrop: 'static' });
+  $.extend($.fn.popover.Constructor.Default, { sanitize: false });
 
   $(document).ready( function() {
     // Prevent form multi-submit during a modal closing
@@ -72,7 +73,7 @@
         $link   = $(el).find('a:not(.dropdown-item)').first(),
         href    = $link.attr('href'),
         remote  = $link.data('remote') || false;
-      } else if (el.tagName != 'a' && $(el).parents('tr').find('a:not(.dropdown-item)').length) {
+      } else if (el.tagName != 'a' && !el.classList.contains('editable') && $(el).parents('tr').find('a:not(.dropdown-item)').length) {
         $link = $(el).parents('tr').find('a:not(.dropdown-item)').first(),
         href    = $link.attr('href'),
         remote  = $link.data('remote') || false;

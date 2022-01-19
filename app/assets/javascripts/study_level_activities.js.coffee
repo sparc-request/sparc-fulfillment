@@ -20,7 +20,6 @@
 
 $ ->
 
-  allowSubmit = true
   # Line Item Bindings
 
   $(document).on 'change', 'input.invoice_toggle', ->
@@ -43,39 +42,6 @@ $ ->
         fulfillment:
           credited: credited
 
-  $(document).on 'click', ".otf_service_new", ->
-    protocol_id = $('#protocol_id').val()
-    data = protocol_id: protocol_id
-    $.ajax
-      type: 'GET'
-      url: "/line_items/new"
-      data: data
-
-  $(document).on 'change', '.components .sla_components > .selectpicker', ->
-    row_index   = $(this).parents("tr").data("index")
-    line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
-    data = components: $(this).val(), line_item_id: line_item_id
-    $.ajax
-      type: 'PUT'
-      url: "/components/update"
-      data: data
-
-  $(document).on 'click', '.otf_edit', ->
-    row_index   = $(this).parents("tr").data("index")
-    line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
-    $.ajax
-      type: 'GET'
-      url: "/line_items/#{line_item_id}/edit"
-
-  $(document).on 'click', '.otf_delete', ->
-    row_index   = $(this).parents("tr").data("index")
-    line_item_id = $(this).parents("table.study_level_activities").bootstrapTable("getData")[row_index].id
-    del = confirm "Are you sure you want to delete the selected Study Level Activity from this protocol"
-    if del
-      $.ajax
-        type: "DELETE"
-        url: "/line_items/#{line_item_id}"
-
   # This binding is also used in fulfillment notes
   $(document).on 'click', 'button#fulfillments_back', ->
     line_item_id = $(this).data('line-item-id')
@@ -87,50 +53,8 @@ $ ->
 
   # Fulfillment Bindings
 
-  $(document).on 'click', '.otf_fulfillment_new', ->
-    allowSubmit = true
-    line_item_id = $(this).data('line-item-id')
-    data = line_item_id: line_item_id
-    $.ajax
-      type: 'GET'
-      url: "/fulfillments/new"
-      data: data
-
-  $(document).on 'click', '.otf-fulfillment-list', ->
-    line_item_id = $(this).data('line-item-id')
-    data = line_item_id: line_item_id
-    $.ajax
-      type: 'GET'
-      url: "/fulfillments"
-      data: "line_item_id" : line_item_id
-
-  $(document).on 'click', '.otf_fulfillment_edit', ->
-    allowSubmit = true
-    row_index   = $(this).parents("tr").data("index")
-    fulfillment_id = $(this).parents("#fulfillments-table").bootstrapTable("getData")[row_index].id
+  $(document).on 'click', '.otf-fulfillment-edit', ->
+    fulfillment_id = $(this).data('fulfillment_id')
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
-
-  $(document).on 'click', '.add_fulfillment', (e)->
-    e.preventDefault()
-    if allowSubmit
-      $('.fulfillment-form').submit()
-      allowSubmit = false
-    else
-      return false
-
-  $(document).on 'click', '#date_fulfilled_field, #fulfillment_quantity', ->
-    allowSubmit = true
-
-  # Do not display in dropdown that allows you to add/remove columns
-  # These columns will always be outputted to the export file
-  # Cannot use $('#study-level-activities-table').bootstrapTable('hideColumn', 'docs')
-  # because it will not show up in the export file
-
-  $('#study_level_activities li').find("[data-field='docs']").closest('li').hide()
-  $('#study_level_activities li').find("[data-field='notes']").closest('li').hide()
-  $('#study_level_activities li').find("[data-field='components_export']").closest('li').hide()
-
-  ### In Study Level Activities we want to ignore data-field: fulfillments_button, components, options ###
-  exclude_from_export('study-level-activities-table')

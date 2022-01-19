@@ -25,7 +25,7 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
   scenario 'and sees the viewed_at date has been updated' do
     given_i_am_viewing_the_reports_tab_with_documents
     when_i_download_the_report
-    then_i_should_see_the_viewed_at_date_has_been_updated
+    then_i_should_see_the_read_unread_has_been_updated
   end
 
   context 'with a single document' do
@@ -56,7 +56,8 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
     visit protocol_path @protocol
     wait_for_ajax
 
-    click_link 'Reports'
+    # click_link 'Reports'
+    find('#reportsTabLink').click
     wait_for_ajax
   end
 
@@ -66,14 +67,14 @@ feature 'Identity downloads a document from the reports tab', js: true, enqueue:
   end
 
   def then_i_should_not_see_the_reports_counter
-    expect(page).to_not have_css(".protocol_report_notifications")
+    expect(page).to_not have_css(".notification-badge")
   end
 
   def then_i_should_see_the_reports_counter_decrement_to(value)
-    expect(page).to have_css(".protocol_report_notifications", text: value)
+    expect(page).to have_css(".notification-badge", text: value)
   end
 
-  def then_i_should_see_the_viewed_at_date_has_been_updated
-    expect(page).to have_css("td.viewed_at", text: Time.now.strftime("%m/%d/%Y"))
+  def then_i_should_see_the_read_unread_has_been_updated
+    expect(page).to have_css("td.read_state", text: 'Read')
   end
 end

@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 <% unless @errors.present? %>
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>")
+$("#flashContainer").html("<%= escape_javascript(render('flash')) %>")
 $("#study-level-activities-table").bootstrapTable('refresh')
 $("#modalContainer").modal 'hide'
 <% else %>

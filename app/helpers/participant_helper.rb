@@ -19,22 +19,6 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ParticipantHelper
-
-  def appointments_for_select(arm, protocols_participant)
-    appointments = []
-    protocols_participant.appointments.incompleted.each do |appt|
-      if appt.arm.name == arm.name
-        appointments << appt
-      end
-    end
-
-    appointments
-  end
-
-  def arms_for_appointments(appts)
-    appts.map{|x| x.arm}.compact.uniq
-  end
-
   def us_states
     ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'N/A']
   end
@@ -42,102 +26,13 @@ module ParticipantHelper
   def registry_details_formatter(participant)
     [
       "<a class='details participant-details ml10' href='javascript:void(0)' title='Details' participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-sunglasses'></i>",
-      "</a>"
-    ].join ""
-  end
-  
-  def registry_edit_formatter(participant)
-    [
-      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-edit'></i>",
+      "#{icon('fas', 'info')}",
       "</a>"
     ].join ""
   end
 
-  def registry_delete_formatter(participant)
-    if participant.can_be_destroyed?
-      [
-        "<a class='remove destroy-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
-        "<i class='glyphicon glyphicon-remove'></i>",
-        "</a>"
-      ].join ""
-    else
-      [
-        "<div data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>",
-        "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
-      ].join ""
-    end
-  end
-
-  def detailsFormatter(participant, protocols_participant)
-    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
-    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    [
-      "<a class='participant-details ml10' href='javascript:void(0)' title='Details' #{protocol_id_attr} participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-sunglasses'></i>",
-      "</a>"
-    ].join ""
-  end
-
-  def editFormatter(participant, protocols_participant)
-    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
-    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    [
-      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' #{protocol_id_attr} participant_id='#{participant.id}'>",
-      "<i class='glyphicon glyphicon-edit'></i>",
-      "</a>"
-    ].join ""
-  end
-
-  def external_id_formatter(participant, protocols_participant, protocol_id)
-    [
-      "<a class='edit edit_external_id' href='javascript:void(0)' title='Edit' #{protocols_participant.external_id} participant_id='#{participant.id}' protocol_id='#{protocol_id}'>",
-      "#{protocols_participant.external_id}  ",
-      "<i class='glyphicon glyphicon-edit'></i>",
-      "</a>"
-    ].join ""
-  end
-
-  def deleteFormatter(participant, protocols_participant)
-    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
-    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    if protocols_participant.can_be_destroyed?
-      [
-        "<a class='remove remove-participant' href='javascript:void(0)' title='Remove' #{protocol_id_attr} participant_id='#{participant.id}' participant_name='#{participant.full_name}'>",
-        "<i class='glyphicon glyphicon-remove'></i>",
-        "</a>"
-      ].join ""
-    else
-      [
-        "<div data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>",
-        "<i class='glyphicon glyphicon-remove' style='cursor:default'></i>"
-      ].join ""
-    end
-  end
-
-  def changeArmFormatter(participant, protocols_participant)
-    protocol_id = protocols_participant.nil? ? nil : protocols_participant.protocol_id
-    protocol_id_attr = protocol_id.nil? ? "" : "protocol_id='#{protocol_id}'"
-    arm_id = protocols_participant.nil? ? nil : protocols_participant.arm_id
-    arm_id_attr = arm_id.nil? ? "" : "arm_id='#{arm_id}'"
-    [
-      "<a class='edit change-arm ml10' href='javascript:void(0)' title='Change Arm' #{protocol_id_attr} participant_id='#{participant.id}' #{arm_id_attr}>",
-      "<i class='glyphicon glyphicon-random'></i>",
-      "</a>"
-    ].join ""
-  end
-
-  def calendarFormatter(protocols_participant)
-    if protocols_participant.appointments.empty?
-      "<i class='glyphicon glyphicon-calendar' title='Assign arm to view participant calendar' style='cursor:default'></i>"
-    else
-      [
-        "<a class='participant-calendar' href='javascript:void(0)' title='Calendar' participant_id='#{protocols_participant.participant_id}' protocols_participant_id='#{protocols_participant.id}' protocol_id='#{protocols_participant.protocol_id}'>",
-        "<i class='glyphicon glyphicon-calendar'></i>",
-        "</a>"
-      ].join ""
-    end
+  def registry_actions_formatter(participant)
+    return [choose_edit_action(participant), "&nbsp&nbsp", choose_destroy_action(participant)].join("")
   end
 
   def phoneNumberFormatter(participant)
@@ -148,37 +43,34 @@ module ParticipantHelper
     end
   end
 
-  def statusFormatter(participant, protocols_participant, protocol_id)
-    select_tag "protocols_participant_status_#{protocols_participant.id}", options_for_select(Participant::STATUS_OPTIONS, protocols_participant.status), include_blank: true, class: "protocols_participant_status selectpicker form-control #{dom_id(participant)}", data:{container: "body", id: participant.id, protocol_id: protocol_id}
-  end
-
-  def recruitmentSourceFormatter(participant, protocols_participant, protocol_id)
-    select_tag "recruitment_source", options_for_select(Participant::RECRUITMENT_OPTIONS, protocols_participant.recruitment_source), include_blank: true, class: "protocols_participant_recruitment_source selectpicker form-control", data:{container: "body", id: participant.id, protocol_id: protocol_id}
-  end
-
-  def notes_formatter(participant)
-    notes_button({object: participant,
-                  title: t(:participant)[:notes],
-                  has_notes: participant.notes.any?,
-                  button_class: 'participant_notes'})
-  end
-
   def deidentified_patient(participant)
     participant.deidentified == false ? "No" : participant.deidentified == true ? "Yes" : "N/A"
   end
 
-  def participant_report_formatter(protocols_participant)
-    icon_span = raw content_tag(:span, '', class: "glyphicon glyphicon-equalizer")
-    button    = raw content_tag(:button, raw(icon_span), type: 'button', class: 'btn btn-default btn-xs report-button participant_report dropdown-toggle', id: "participant_report_#{protocols_participant.id.to_s}", 'aria-expanded' => 'false', title: 'Participant Report', 'data-title' => 'Participant Report', 'data-report_type' => 'participant_report',  'data-documentable_id' => protocols_participant.protocol_id, 'data-documentable_type' => 'Protocol', 'data-protocols_participant_id' => protocols_participant.id)
-    ul        = raw content_tag(:ul, '', class: 'document-dropdown-menu hidden', id: "document_menu_participant_report_#{protocols_participant.participant_id.to_s}", role: 'menu')
-    html      = raw content_tag(:div, button + ul, class: 'btn-group')
-  end
-
-  def associate_formatter(participant, protocol)
+  def associate_formatter(participant, proto)
     associate = participant.protocol_ids.include?(protocol.id)
     protocols_participant = ProtocolsParticipant.where(protocol_id: protocol.id, participant_id: participant.id)
     protocols_participant_cannot_be_destroyed = protocols_participant.empty? ? false : !protocols_participant.first.can_be_destroyed?
     "<input class='associate' type='checkbox' " + (protocols_participant_cannot_be_destroyed && associate ? "checked='checked' disabled" : associate ? "checked='checked'" : "") + " protocol_id='#{protocol.id}' participant_id='#{participant.id}'>"
+  end
 
+  def choose_edit_action(participant)
+    if current_identity.is_a_patient_registrar?
+      ["<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>", "#{icon('fas', 'edit')}", "</a>"]
+    else
+      ["<span class='edit ml10 disabled tooltip-wrapper' title='Only Patient Registrars can edit participants' disabled='disabled' data-toggle='tooltip' data-placement='left'>", "#{icon('fas', 'edit')}", "</span>"]
+    end
+  end
+
+  def choose_destroy_action(participant)
+    if current_identity.is_a_patient_registrar?
+      if participant.can_be_destroyed?
+        return ["<a class='remove destroy-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>", "<i class='far fa-trash-alt'></i>", "</a>"]
+      else
+        return ["<a data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>", "<i class='far fa-trash-alt' style='cursor:default'></i>"]
+      end
+    else
+      return ["<a data-toggle='tooltip' data-placement='left' data-animation='false' title='Only Patient Registrars can delete participants'>", "<i class='far fa-trash-alt' style='cursor:default'></i>"]
+    end
   end
 end

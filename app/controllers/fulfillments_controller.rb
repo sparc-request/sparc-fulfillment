@@ -42,13 +42,13 @@ class FulfillmentsController < ApplicationController
 
   def create
     @line_item = LineItem.find(fulfillment_params[:line_item_id])
+    protocol = @line_item.protocol
     service = @line_item.service
-    funding_source = @line_item.protocol.sparc_funding_source
+    funding_source = protocol.sparc_funding_source
     fulfilled_at = fulfillment_params[:fulfilled_at]
-    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, funding_source: funding_source }))
+    @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, funding_source: funding_source, percent_subsidy: protocol.percent_subsidy }))
     if @fulfillment.valid?
       @fulfillment.service_cost = @line_item.cost(funding_source, Time.strptime(fulfilled_at, "%m/%d/%Y"))
-      perform_subsidy_check
       @fulfillment.save
       update_components_and_create_notes('create')
       flash[:success] = t(:fulfillment)[:flash_messages][:created]
@@ -66,7 +66,6 @@ class FulfillmentsController < ApplicationController
     persist_original_attributes_to_track_changes
     @line_item = @fulfillment.line_item
     if @fulfillment.update_attributes(fulfillment_params)
-      perform_subsidy_check(true)
       update_components_and_create_notes('update')
       detect_changes_and_create_notes
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
@@ -92,9 +91,7 @@ class FulfillmentsController < ApplicationController
   def destroy
     @fulfillment = Fulfillment.find(params[:id])
     @fulfillment.destroy
-    respond_to do |format|
-      format.js
-    end
+    respond_to :js
   end
 
   private
@@ -160,14 +157,5 @@ class FulfillmentsController < ApplicationController
 
   def find_fulfillment
     @fulfillment = Fulfillment.find(params[:id])
-  end
-
-  def perform_subsidy_check(update=false)
-    if @line_item.protocol.sub_service_request.subsidy
-      @fulfillment.percent_subsidy = @line_item.protocol.sub_service_request.subsidy.percent_subsidy
-      if update == true
-        @fulfillment.save
-      end
-    end
   end
 end

@@ -23,11 +23,23 @@ require 'rails_helper'
 RSpec.describe DelayedDestroyJob, type: :job do
   describe '#enqueue' do
 
-    it 'should create a Active::Job' do
-      arm = create(:arm)
-      arm.destroy_later
+    it 'should create a Active::Job if it is not the last arm for a protocol' do
+      protocol = create(:protocol)
+      arm1 = create(:arm, protocol_id: protocol.id)
+      arm2 = create(:arm, protocol_id: protocol.id)
+      
+      arm1.destroy_later
 
       expect(DelayedDestroyJob).to have_been_enqueued
+    end
+
+    it 'should NOT create a Active::Job if it IS the last arm for a protocol' do
+      protocol = create(:protocol)
+      arm = create(:arm, protocol_id: protocol.id)
+
+      arm.destroy_later
+
+      expect(DelayedDestroyJob).not_to have_been_enqueued
     end
   end
 end

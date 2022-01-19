@@ -67,7 +67,9 @@
   line-height: 18px;
 
   &.btn-info, &.btn-warning,
-  &.btn-outline-info:hover, &.btn-outline-warning:hover {
+  &.btn-outline-info:hover:not(.disabled), &.btn-outline-warning:hover:not(.disabled),
+  &.btn-outline-info:active, &.btn-outline-warning:active,
+  &.btn-outline-info.active, &.btn-outline-warning.active {
     color: white !important;
   }
 
@@ -123,6 +125,19 @@
 
     &:enabled:hover, &:enabled:not(.disabled):hover {
       background: theme-color('light');
+    }
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn.btn-outline-#{$color} {
+    &:active {
+      background-color: darken($value, 10%) !important;
+    }
+
+    &.active.disabled {
+      color: white;
+      background-color: $value;
     }
   }
 }
@@ -736,12 +751,8 @@ nav.navbar {
     }
   }
 
-  &.table-interactive tbody tr {
-    transition: $btn-transition;
-
-    &:hover {
-      cursor: pointer;
-    }
+  &.table-interactive tbody tr:hover {
+    cursor: pointer;
   }
 
   &.table-fixed {
@@ -751,10 +762,18 @@ nav.navbar {
   thead th {
     border-bottom: 0;
   }
+
+  tbody tr {
+    transition: $btn-transition;
+  }
 }
 
 .card > .table, .card > .collapse > .table, .card > .collapsing > .table {
   border: 0;
+
+  thead th {
+    border-top: 0;
+  }
 
   thead th, tbody td, tbody th {
     &:first-child {
@@ -851,5 +870,19 @@ a.text-white:hover {
 
   .sticky-top {
     top: 1rem !important;
+  }
+}
+
+/////////////////////////////
+/// Editable Table Fields ///
+/////////////////////////////
+
+table:not(.table) th.editable, td.editable {
+  transition: $btn-transition;
+
+  &.active {
+    cursor: pointer;
+    background: theme-color-level('light', 0.5);
+    outline: 0;
   }
 }

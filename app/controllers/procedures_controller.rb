@@ -19,81 +19,97 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ProceduresController < ApplicationController
-
+  before_action :find_appointment, only: [:index, :create, :edit, :update, :destroy, :change_procedure_position]
   before_action :find_procedure, only: [:edit, :update, :destroy, :change_procedure_position]
   before_action :save_original_procedure_status, only: [:update]
   before_action :create_note_before_update, only: [:update]
-  before_action :set_appointment_style, only: [:create, :update, :destroy, :change_procedure_position]
+  before_action :set_appointment_style, only: [:create, :index, :update, :destroy, :change_procedure_position]
+
+  def index
+    respond_to :json
+
+    @procedures     = @appointment.procedures.eager_load(:notes, :task).preload(:service, :protocol).where(sparc_core_id: params[:core_id]).order(:position)
+    @performable_by = @appointment.performable_by
+  end
 
   def create
-    @appointment = Appointment.find params[:appointment_id]
-    qty             = params[:qty].to_i
-    service         = Service.find params[:service_id]
-    performer_id    = params[:performer_id]
-    protocol        = @appointment.protocol
-    funding_source  = protocol.sparc_funding_source
-    percent_subsidy = protocol.sub_service_request.subsidy ? protocol.sub_service_request.subsidy.percent_subsidy : nil
+    qty           = params[:qty].to_i
+    service       = Service.find_by(id: params[:service_id])
+    performer_id  = params[:performer_id]
 
-    qty.times do
-      Procedure.create(appointment: @appointment,
-                       service_id: service.id,
-                       service_name: service.name,
-                       performer_id: performer_id,
-                       billing_type: 'research_billing_qty',
-                       sparc_core_id: service.sparc_core_id,
-                       sparc_core_name: service.sparc_core_name,
-                       funding_source: funding_source,
-                       percent_subsidy: percent_subsidy)
+    new_procedure = Procedure.new(appointment: @appointment,
+                                     service_id: service.try(:id),
+                                     service_name: service.try(:name),
+                                     performer_id: performer_id,
+                                     billing_type: 'research_billing_qty',
+                                     sparc_core_id: service.try(:sparc_core_id),
+                                     sparc_core_name: service.try(:sparc_core_name))
+
+    if new_procedure.valid? && qty > 0
+      qty.times do
+        new_procedure.dup.save
+      end
+
+      @statuses = @appointment.appointment_statuses.pluck(:status)
+      render 'appointments/show'
+    else
+      @errors = new_procedure.errors
+      unless qty > 0
+        @errors.add(:base, :qty)
+      end
     end
-
-    @statuses = @appointment.appointment_statuses.pluck(:status)
-
-    render 'appointments/show'
   end
 
   def edit
+    respond_to :js
+
     @task = Task.new
+    @clinical_providers = ClinicalProvider.includes(:identity).where(organization_id: current_identity.protocols_organizations_ids).order('identities.last_name')
     if params[:partial].present?
       @note = @procedure.notes.new(kind: 'reason')
       render params[:partial]
     else
-      @clinical_providers = ClinicalProvider.where(organization_id: current_identity.protocols.map{|p| p.sub_service_request.organization_id })
       render
     end
   end
 
   def update
-    @procedure.update_attributes(procedure_params)
-    @appointment = @procedure.appointment
+    respond_to :js
+
+    unless @procedure.update_attributes(procedure_params)
+      @errors = @procedure.errors
+    end
+
+    @billing_type_updated = procedure_params.has_key?(:billing_type) #If billing type has changed, need to refresh groups if in grouped view
+    @invoiced_or_credited_changed = change_in_invoiced_or_credited_detected?
     @statuses = @appointment.appointment_statuses.pluck(:status)
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
-    subsidy = @appointment.protocol.sub_service_request.subsidy
-    if subsidy
-      @procedure.percent_subsidy = subsidy.percent_subsidy
-      @procedure.save
-    end
   end
 
   def destroy
-    @appointment = @procedure.appointment
-    @statuses = @appointment.appointment_statuses.pluck(:status)
+    respond_to :js
 
     @procedure.destroy
-
-    render 'appointments/show'
   end
 
   def change_procedure_position
-    @appointment = @procedure.appointment
-    @statuses = @appointment.appointment_statuses.pluck(:status)
+    respond_to :js
+
     @movement_type = params[:movement_type]
+    @core_id = @procedure.sparc_core_id
 
     @procedure.send("move_#{@movement_type}")
-
-    render 'appointments/show'
   end
 
   private
+
+  def find_appointment
+    @appointment = Appointment.find(params[:appointment_id])
+  end
+
+  def find_procedure
+    @procedure = @appointment.procedures.find(params[:id])
+  end
 
   def save_original_procedure_status
     @original_procedure_status = @procedure.status
@@ -149,6 +165,12 @@ class ProceduresController < ApplicationController
     procedure_params[:performer_id].present? && procedure_params[:performer_id] != @procedure.performer_id
   end
 
+  def change_in_invoiced_or_credited_detected?
+    invoiced_changed = procedure_params[:invoiced].present? && procedure_params[:invoiced] != @procedure.invoiced
+    credited_changed = procedure_params[:credited].present? && procedure_params[:credited] != @procedure.credited
+    return invoiced_changed || credited_changed
+  end
+
   def procedure_params
     params.
       require(:procedure).
@@ -161,9 +183,5 @@ class ProceduresController < ApplicationController
              :credited,
              notes_attributes: [:comment, :kind, :identity_id, :reason],
              tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
-  end
-
-  def find_procedure
-    @procedure = Procedure.find params[:id]
   end
 end

@@ -18,35 +18,50 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.modal-dialog.modal-lg
+.modal-dialog.modal-lg{ role: 'document' }
   .modal-content
     .modal-header
-      %button.close{type: 'button', data: {dismiss: 'modal'}}
-        %span{aria: {hidden:'true'}} &times;
-        %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center= notable_type.underscore.humanize.titleize + t(:notes)[:header][:title]
+      %h3.modal-title
+        = note_header(notable)
+      %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+        %span{ aria: { hidden: 'true' } } &times;
     .modal-body
-      - if notes.any?
-        .details-table
-          .details-header.text-center
-            .col-xs-3= t(:notes)[:identity]
-            .col-xs-2= t(:notes)[:date]
-            .col-xs-7= t(:notes)[:comment]
-          - notes.each do |note|
-            .detail
-              .col-xs-3.name= note.identity.full_name
-              .col-xs-2.created-at= format_datetime(note.created_at)
-              .col-xs-7.comment= note.comment
-      -else
-        = t(:notes)[:index][:none_message1] + notable_type.underscore.humanize.titleize + t(:notes)[:index][:none_message2]
+      - notes.order(updated_at: :desc).each do |note|
+        .card-callout.callout-warning.callout-condensed{ id: "note#{note.id}" }
+          .card-body.d-flex
+            .justify-content-start.pr-2
+              %h5.mb-0
+                = icon('far', 'sticky-note text-warning')
+            .flex-fill
+              %h5.card-title.d-flex.text-dark.mb-2
+                = note.identity.full_name
+                .ml-auto<
+                  - if (note.identity = current_identity) && (note.kind != "log")
+                    = edit_note_button(note)
+                    = delete_note_button(note)
+              .note-body.text-break
+                = simple_format(note.comment)
+                = note_date(note)
+      - if notes.empty?
+        .alert.alert-warning.mb-0
+          = t('notes.none', notable_type: notable.try(:friendly_notable_type) || notable.model_name.human)
     .modal-footer
-      .center-block
-        - if notable_type == "Fulfillment"
-          %button#fulfillments_back.btn.btn-default{type: 'button', data: {line_item_id: @notable.line_item_id}}
-            = t(:actions)[:close]
-        - else
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
-            = t(:actions)[:close]
-        %button.btn.btn-primary.note.new{type: "button", aria: {label: "New Note"}, data: {notable_id: @notable_id, notable_type: notable_type}}
-          %span.glyphicon.glyphicon-plus{aria: {hidden: "true"}}
-          = t(:notes)[:add_button]
+      = form_for note, remote: true, html: { class: 'w-100' } do |f|
+        - if @service_request
+          = hidden_field_tag :srid, @service_request.id
+        - if @sub_service_request
+          = hidden_field_tag :ssrid, @sub_service_request.id
+        - if @protocol
+          = hidden_field_tag :protocol_id, @protocol.id
+        = f.hidden_field :notable_id
+        = f.hidden_field :notable_type
+        = f.hidden_field :identity_id
+        .form-group
+          = f.text_area :comment, class: 'form-control', rows: 3, placeholder: t('notes.placeholder')
+        .text-right
+          - if notable.is_a?(Fulfillment)
+            = link_to t('actions.back'), fulfillments_path(line_item_id: notable.line_item_id), remote: true, class: 'btn btn-secondary'
+          - else
+            %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+              = t('actions.close')
+          = f.submit t('notes.add'), class: 'btn btn-primary'

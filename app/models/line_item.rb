@@ -52,6 +52,10 @@ class LineItem < ApplicationRecord
   after_create :increment_sparc_service_counter
   after_destroy :decrement_sparc_service_counter
 
+  def friendly_notable_type
+    Service.model_name.human
+  end
+
   def set_name
     update_attributes(name: service.name)
   end
@@ -88,14 +92,13 @@ class LineItem < ApplicationRecord
     write_attribute(:started_at, Time.strptime(date, "%m/%d/%Y")) if date.present?
   end
 
+  def quantity_fulfilled
+    fulfillments.sum(&:quantity)
+  end
+
   def quantity_remaining
     if one_time_fee and !fulfillments.empty?
-      remaining = quantity_requested
-      fulfillments.each do |f|
-        remaining -= f.quantity
-      end
-
-      remaining
+      quantity_requested - quantity_fulfilled
     else
       quantity_requested
     end

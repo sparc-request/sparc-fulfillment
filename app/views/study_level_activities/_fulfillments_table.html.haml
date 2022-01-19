@@ -18,53 +18,50 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.modal-dialog.fulfillments-list
+.modal-dialog.modal-xl{ role: 'document' }
   .modal-content
     .modal-header
-      %button.close{type: 'button', data: {dismiss: 'modal'}}
-        %span{aria: {hidden:'true'}} &times;
-        %span.sr-only= t(:actions)[:close]
-      %h4.modal-title.text-center
+      %h3.modal-title
         = header_text
-      .modal-body
-        .bootstrap-table-dropdown-overflow
-          .table-responsive
-            #fulfillment-custom-toolbar
-            %table.fulfillments{id: "fulfillments-table", data: {toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggleOn" => "true", url: fulfillments_path(format: :json, line_item_id: line_item.id), striped: "true", toolbar: "#fulfillment-custom-toolbar", "show-export" => "true", "export-types" => ['xlsx'], "export-options" => '{"ignoreColumn": []}'}}
-              %thead.secondary-header
-                %tr
-                  %th{data: {class: 'fulfillment_grouper', align: "left", sortable: 'true', sorter: 'dateSorter', field: "fulfillment_grouper"}}
-                    = t(:fulfillment)[:fulfillment_grouper]
-                  %th{data: {class: 'fulfillment_date', align: "left", sortable: 'true', sorter: "fulfillmentDateSorter", field: "fulfillment_date"}}
-                    = t(:fulfillment)[:fulfillment_date]
-                  %th{data: {class: 'quantity', align: "left", sortable: 'true', field: "quantity"}}
-                    = t(:fulfillment)[:quantity]
-                  %th{data: {class: 'qty_type', align: "left", sortable: 'true', field: "quantity_type"}}
-                    = t(:fulfillment)[:qty_type]
-                  %th{data: {class: 'performed_by', align: "left", sortable: 'true', field: "performed_by"}}
-                    = t(:fulfillment)[:performed_by]
-                  %th{data: {class: 'components', align: "center", field: "components"}}
-                    = t(:fulfillment)[:components]
-                  %th{data: {class: 'options exclude_in_export', align: "center", field: "options"}}
-                    = t(:actions)[:actions]
-                  %th{data: {class: 'invoiced exclude_in_export', align: "center", field: "invoiced"}}
-                    = t(:fulfillment)[:invoiced]
-                  %th{data: {class: 'credited exclude_in_export', align: "center", field: "credited"}}
-                    = t(:fulfillment)[:credited]
-                  %th{data: {class: 'export_credited hidden', align: "center", field: "export_credited"}}
-                    = t(:fulfillment)[:credited]
-                  %th{data: {class: 'export_invoiced hidden', align: "center", field: "export_invoiced"}}
-                    = t(:fulfillment)[:invoiced]
-                  %th{data: {class: 'notes hidden', align: "center", field: "notes"}}
-                    = t(:line_item)[:notes]
-                  %th{data: {class: 'docs hidden', align: "center", field: "docs"}}
-                    = t(:line_item)[:documents]
-        #fulfillment-klok-description
-          %i{class: 'glyphicon glyphicon-time'}
-          %span= t(:fulfillment)[:klok_description]
+      %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+        %span{ aria: { hidden: 'true' } } &times;
+    .modal-body.table-responsive
+      #fulfillmentsToolbar
+        = link_to new_fulfillment_path(line_item_id: line_item.id), remote: true, class: 'btn btn-success' do
+          = succeed t(:fulfillment)[:add_fulfillment] do
+            = icon('fas', 'plus mr-2')
+      %table.table-striped#fulfillments-table{ data: { toggle: 'table', url: fulfillments_path(format: :json, line_item_id: line_item.id), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', striped: 'true', toolbar: '#fulfillmentsToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: "", export_options: "{\"ignoreColumn\": [\"actions\",\"documents\",\"invoiced\",\"credited\"]}"} }
+        %thead.bg-primary.text-white
+          %tr
+            %th.month-year{ data: { field: 'month_year', align: 'left', sortable: 'true', sorter: 'dateSorter'}}
+              = t(:fulfillment)[:fulfillment_month_year]
+            %th.fulfillment-date{ data: { field: 'fulfillment_date', align: 'left', sortable: 'true', sorter: 'fulfillmentDateSorter' } }
+              = Fulfillment.human_attribute_name(:fulfilled_at)
+            %th.qty{ data: { field: 'quantity', align: 'left', sortable: 'true' } }
+              = Fulfillment.human_attribute_name(:quantity)
+            %th.qty-type{ data: { field: 'quantity_type', align: 'left', sortable: 'true' } }
+              = Fulfillment.human_attribute_name(:quantity_type)
+            %th.performed-by{ data: { field: 'performed_by', align: 'left', sortable: 'true' } }
+              = Fulfillment.human_attribute_name(:performed_by)
+            %th.components{ data: { field: 'components', align: 'left' } }
+              = Component.model_name.plural.capitalize
+            %th.invoiced{ data: { field: 'invoiced', align: 'left' } }
+              = Fulfillment.human_attribute_name(:invoiced)
+            %th.invoiced_export.d-none{ data: { field: 'invoiced_export', switchable: 'false' } }
+              = Fulfillment.human_attribute_name(:invoiced)
+            %th.credited{ data: { field: 'credited', align: 'left' } }
+              = Fulfillment.human_attribute_name(:credited)
+            %th.credited_export.d-none{ data: { field: 'credited_export', switchable: 'false' } }
+              = Fulfillment.human_attribute_name(:credited)
+            %th.notes{ data: { field: 'notes', align: 'left' } }
+              = Note.model_name.plural.capitalize
+            %th.documents{ data: { field: 'documents', align: 'left' } }
+              = Document.model_name.plural.capitalize
+            %th.actions{ data: { field: 'actions', align: 'left' } }
+              = t(:actions)[:actions]
+      %p.text-center.text-muted.mt-3.mb-0<
+        = icon('fas', 'clock mr-1')
+        = t(:fulfillment)[:klok_description]
     .modal-footer
-      .center-block
-        %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}
-          = t(:actions)[:close]
-        %button.btn.btn-success.otf_fulfillment_new{type: "button", "aria-label" => "Add Fulfillment", data: {line_item_id: line_item.id}}
-          = t(:fulfillment)[:add_fulfillment]
+      %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+        = t('actions.close')

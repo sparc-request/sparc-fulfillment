@@ -20,30 +20,43 @@
 
 module Features
   module BootstrapHelpers
+    def pick_new_date(old_date)
+      (1..20).to_a.reject{|day| day == old_date}.sample
+    end
+
     def bootstrap_multiselect(class_or_id, selections = ['all'])
       expect(page).to have_selector("select#{class_or_id}", visible: false)
-      bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".btn-group").find('.dropdown-toggle')
+      bootstrap_multiselect = first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
       bootstrap_multiselect.click
 
-      expect(page).to have_selector('.open .dropdown-menu')
+      expect(page).to have_selector('.dropdown-menu.show')
       if selections.first == 'all'
-        first('.open .dropdown-menu a', text: 'Select all').click
+        first('.dropdown-menu.show button.bs-select-all').click
       else
         selections.each do |selection|
-          first('.open .dropdown-menu a', text: selection).click
+          first('.dropdown-menu.show span.text', text: selection).click
         end
       end
-      find('body').click # Click away
+
+      #This caused problems,
+      #because it ACTUALLY clicks on the center of the page,
+      #and if that happens to be something to actually click on...
+
+      # find('body').click # Click away
+
+      ##
+
+      find('body').native.send_keys(:escape)
       wait_for_ajax
     end
 
-    def bootstrap_select(class_or_id, choice)
-      expect(page).to have_selector("select#{class_or_id}", visible: false)
-      bootstrap_select = page.first("select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
-      
+    def bootstrap_select(class_or_id, choice, context_selector = '')
+      expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: false)
+      bootstrap_select = page.first("#{context_selector} select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
+
       bootstrap_select.click
-      expect(page).to have_selector('.dropdown-menu.open')
-      first('.dropdown-menu.open span.text', text: choice).click
+      expect(page).to have_selector('.dropdown-menu.show')
+      first('.dropdown-menu.show span.text', text: choice).click
       wait_for_ajax
     end
 
@@ -55,22 +68,21 @@ module Features
       e = page.find(element)
 
       if e['readonly']
-        page.execute_script "$('#{element}').focus()"
-        page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
+        first("#{element}").click
 
         if args[:year]
-          expect(page).to have_selector('.year', text: args[:year])
-          first('.year', text: args[:year]).click
+          expect(page).to have_selector('.year', exact_text: args[:year])
+          first('.year', exact_text: args[:year]).click
         end
 
         if args[:month]
-          expect(page).to have_selector('.month', text: args[:month])
-          first('.month', text: args[:month]).click
+          expect(page).to have_selector('.month', exact_text: args[:month])
+          first('.month', exact_text: args[:month]).click
         end
 
         if args[:day]
-          expect(page).to have_selector('.day', text: args[:day])
-          first('.day', text: args[:day]).click
+          expect(page).to have_selector('.day', exact_text: args[:day])
+          first('.day', exact_text: args[:day]).click
         end
       else
         page.execute_script "$('#{element}').focus()"

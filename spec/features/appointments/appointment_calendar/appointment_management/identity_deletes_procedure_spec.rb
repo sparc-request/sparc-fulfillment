@@ -25,6 +25,7 @@ feature 'Delete Procedure', js: true do
   context 'User deletes a core' do
     scenario 'and does not see the core' do
       given_i_am_viewing_a_core_with_n_procedures_such_that_n_is '1'
+      when_i_begin_the_appointment
       when_i_delete_the_first_procedure
       then_i_should_not_see_the_core
     end
@@ -33,6 +34,7 @@ feature 'Delete Procedure', js: true do
   context 'User deletes a procedure but not a core' do
     scenario 'and does not see the procedure' do
       given_i_am_viewing_a_core_with_n_procedures_such_that_n_is '2'
+      when_i_begin_the_appointment
       and_i_unroll_the_group
       when_i_delete_the_first_procedure
       then_i_should_not_see_the_first_procedure
@@ -45,27 +47,36 @@ feature 'Delete Procedure', js: true do
     visit_group   = protocols_participant.appointments.first.visit_group
     service       = protocol.organization.inclusive_child_services(:per_participant).first
 
-    visit calendar_participants_path(participant_id: protocols_participant.participant_id, protocols_participant_id: protocols_participant.id, protocol_id: protocol)
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    bootstrap_select('#appointment_select', visit_group.name)
+    find('.appointment-link[data-appointment-id="1"]').click
     wait_for_ajax
 
-    bootstrap_select '#service_list', service.name
+    bootstrap_select '[name="service_id"]', service.name
     fill_in 'service_quantity', with: number_of_procedures
-    find('button.add_service').click
+    find('button#addService').click
+    wait_for_ajax
+  end
+
+  def when_i_begin_the_appointment
+    find('a.btn.start-appointment').click
     wait_for_ajax
   end
 
   def when_i_delete_the_first_procedure
-    accept_confirm do
-      first('.procedure button.delete').click
-    end
+    # accept_confirm do
+    #   first('a.btn.btn-danger.delete-button').click
+    # end
+    find('tbody tr[data-index="0"] a.btn-danger').click
+    wait_for_ajax
+
+    find('button.swal2-confirm').click
     wait_for_ajax
   end
 
   def and_i_unroll_the_group
-    find('tr.procedure-group button').click
+    find('tr.expanded').click
     wait_for_ajax
   end
 
@@ -74,7 +85,7 @@ feature 'Delete Procedure', js: true do
   end
 
   def then_i_should_not_see_the_first_procedure
-    expect(page).to have_css('.procedures .procedure', count: 1)
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
   end
 
 end

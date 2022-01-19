@@ -18,19 +18,28 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
-<% unless @errors %>
+<% if @errors %>
+$("[name^='add_service_arm']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name^='add_service_arm']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+<% else %>
 
 <% @arm_hash.each do |arm_id, value| %>
-end_of_core = $("#arm_<%= arm_id %>_end_of_core_<%= @service.sparc_core_id %>")
-if end_of_core.length == 0
-  $("#end_of_arm_<%= arm_id %>").before("<div id='arm_<%= arm_id %>_core_<%= @service.sparc_core_id %>' class='row core'><div class='col-xs-12'>Core: <%= @service.sparc_core_name %></div></div><div id='arm_<%= arm_id %>_end_of_core_<%= @service.sparc_core_id %>'></div>")
-$("#arm_<%= arm_id %>_end_of_core_<%= @service.sparc_core_id %>").before("<%= escape_javascript(render(:partial =>'study_schedule/line_item', locals: {line_item: value[:line_item], page: value[:page], tab: @schedule_tab})) %>")
+core_header_row = $('.arm-<%= arm_id %>-container .core-header[data-core-id="<%= @core.id %>"]')
+if core_header_row.length
+  $('.arm-<%= arm_id %>-container .line-item[data-core-id="<%= @core.id %>"]').last().after("<%= j render 'study_schedule/line_item', line_item: value[:line_item], page: value[:page], tab: @schedule_tab, core_id: @core.id %>")
+else
+  last_line_item = $('.arm-<%= arm_id %>-container tr').last()
+  last_line_item.after("<%= j render 'study_schedule/line_item', line_item: value[:line_item], page: value[:page], tab: @schedule_tab, core_id: @core.id %>")
+  last_line_item.after("<%= j render 'study_schedule/core_header', core: @core %>")
 <% end %>
 
 $('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
 $(".selectpicker").selectpicker()
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal 'hide'
-$("#flashes_container").html("<%= escape_javascript(render('flash')) %>");
-
 <% end %>
