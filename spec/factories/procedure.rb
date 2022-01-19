@@ -23,6 +23,7 @@ FactoryBot.define do
   factory :procedure do
     appointment { nil }
     visit { nil }
+    service { create(:service) }
 
     trait :insurance_billing_qty do
       billing_type { 'insurance_billing_qty' }
@@ -59,7 +60,7 @@ FactoryBot.define do
 
     trait :with_notes do
       after(:create) do |procedure, evaluator|
-        create_list(:note, 3, notable: procedure)
+        create_list(:note, 3, notable: procedure, comment: Faker::Hacker.say_something_smart)
       end
     end
 

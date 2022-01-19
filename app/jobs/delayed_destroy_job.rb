@@ -22,6 +22,15 @@ class DelayedDestroyJob < ActiveJob::Base
   queue_as :delayed_destroy
 
   def perform(object)
-    object.destroy
+    class_name = object.class.name
+
+    if class_name == "Arm" #This is needed to account for the fact that not every object that needs to be deleted has a "marked for deletion" attribute
+      id = object.id
+
+      object.destroy
+      Arm.unscoped.only_deleted.find(id).update_attributes(marked_for_deletion: false)
+    else
+      object.destroy
+    end
   end
 end

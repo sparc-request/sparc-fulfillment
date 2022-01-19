@@ -25,7 +25,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
   scenario 'and sees the viewed_at date has been updated' do
     given_i_am_viewing_the_all_reports_page_with_documents
     when_i_download_the_report
-    then_i_should_see_the_viewed_at_date_has_been_updated
+    then_i_should_see_the_read_unread_has_been_updated
   end
 
   context 'with a single document' do
@@ -68,7 +68,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     expect(page).to have_css(".identity_report_notifications", text: value)
   end
 
-  def then_i_should_see_the_viewed_at_date_has_been_updated
-    expect(page).to have_css("td.viewed_at", text: Time.now.strftime("%m/%d/%Y"))
+  def then_i_should_see_the_read_unread_has_been_updated
+    expect(page).to have_css("td.read_state", text: 'Read')
   end
 end

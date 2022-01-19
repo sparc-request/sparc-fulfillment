@@ -18,6 +18,13 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$('.popover').popover('hide')
 $("#flashContainer").html("<%= j render 'layouts/flash' %>")
 $('#participantTrackerTable').bootstrapTable('refresh', silent: true)
+
+if $('#appointmentsList').length
+  $('#appointmentsList').replaceWith("<%= j render 'protocols_participants/appointments', protocols_participant: @protocols_participant, appointment: @appointment %>")
+  $('#appointmentLoadingContainer').addClass('d-none')
+  $('#appointmentContainer').html("<%= j render '/appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
+  $('#appointmentContainer').removeClass('d-none')
+
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

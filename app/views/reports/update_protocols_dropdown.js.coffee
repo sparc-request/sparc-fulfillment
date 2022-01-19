@@ -27,5 +27,7 @@ $(".modal-content #protocol_select").selectpicker({
   liveSearch: true
 })
 
-
-$('.dropdown-glyphicon.glyphicon.glyphicon-refresh.spin').remove()
+if $('#org_based_protocols').length
+  $('#org_based_protocols').addClass('d-none')
+else
+  $('.fas.fa-cog.fa-spin').remove()

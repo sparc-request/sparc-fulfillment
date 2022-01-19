@@ -20,11 +20,6 @@
 
 module StudyScheduleHelper
 
-  def glyph_class obj
-    count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
-    count == 0 ? 'glyphicon-remove' : 'glyphicon-ok'
-  end
-
   def set_check obj
     count = obj.visits.where("research_billing_qty = 0 and insurance_billing_qty = 0").count
     count != 0
@@ -53,16 +48,34 @@ module StudyScheduleHelper
   end
 
   def build_visits_select arm, page
-    select_tag "visits_select_for_#{arm.id}", visits_select_options(arm, page), class: 'visit_dropdown form-control selectpicker', :'data-arm_id' => "#{arm.id}", page: page
+    select_tag "visits_select_for_#{arm.id}", visits_select_options(arm, page), class: 'visit_dropdown form-control selectpicker', page: page, data: { arm_id: arm.id }
+  end
+
+  def quantity_visit_link visit, page
+    content_tag :div, class: 'quantity-container' do
+      raw([
+        link_to("#{visit.research_billing_qty}", edit_visit_path(visit, page: page), remote: true),
+        link_to("#{visit.insurance_billing_qty}", edit_visit_path(visit, page: page), remote: true),
+        link_to("#{visit.effort_billing_qty}", edit_visit_path(visit, page: page), remote: true)
+      ].join(''))
+    end
   end
 
   def on_current_page? current_page, position
+    destination_page(position) == current_page.to_i
+  end
+
+  def before_current_page? current_page, position
+    destination_page(position) < current_page.to_i
+  end
+
+  def destination_page position
     destination_page = position / Visit.per_page
     if position % Visit.per_page != 0
       destination_page += 1
     end
 
-    destination_page == current_page.to_i
+    return destination_page
   end
 
   def create_line_items_options page_hash

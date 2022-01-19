@@ -98,6 +98,7 @@ class Import < ApplicationRecord
 
           if fulfillment.valid?
             unless proof_report
+              fulfillment.klok_upload = true
               fulfillment.save
             end
             csv << ["SRID: #{fulfillment.protocol.srid}", "Success (Fulfillment ID: #{fulfillment.id})"] + entry.attributes.values

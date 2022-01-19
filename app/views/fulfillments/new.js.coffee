@@ -20,7 +20,8 @@
 
 $("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_level_activities/fulfillment_form', locals: {line_item: @line_item, fulfillment: @fulfillment, component: @component, clinical_providers: @clinical_providers, header_text: 'Create New Fulfillment'})) %>");
 $("#modalContainer").modal 'show'
-$("#date_fulfilled_field").datetimepicker
+$("#fulfillment_date").datetimepicker
   format: 'MM/DD/YYYY'
   ignoreReadonly: true
+  allowInputToggle: false
 $(".selectpicker").selectpicker()

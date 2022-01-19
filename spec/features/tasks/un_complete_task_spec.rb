@@ -35,21 +35,21 @@ feature "un-completing a Task", js: true do
 
     visit tasks_path
     wait_for_ajax
-    
+
     first('input.complete').click
     wait_for_ajax
     expect(page).to have_css("table.tasks tbody tr", count: 1)
   end
 
   def when_i_set_the_task_to_incomplete
-    find("#complete", visible: false).find(:xpath, "..").click
+    find("label.toggle-off", text: 'Incomplete').click
     wait_for_ajax
     first('input.complete').click
     wait_for_ajax
   end
 
   def then_i_should_see_that_the_task_is_incomplete
-    find("#complete", visible: false).find(:xpath, "..").click
+    find("label.toggle-on", text: 'Complete').click
     wait_for_ajax
     expect(page).to have_css("table.tasks tbody tr", count: 2)
   end

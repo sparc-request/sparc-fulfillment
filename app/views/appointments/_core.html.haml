@@ -18,39 +18,56 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.core{ data: { core: { id: core_id } } }
-  .panel.panel-default
-    .panel-heading
-      %h3.panel-title
-        = procedures.first.sparc_core_name
-      .row
-        .btn-group.align-select-menu
-          = select_tag 'core_multiselect', nil, class: "core_multiselect #{disabled_class(!appointment.started?)}", style: 'display: inline-block', multiple: true
-          %button.btn.btn-default.btn-primary.multiselect.complete_all.disabled{ type: 'button', id: "core_#{core_id}_multiselect_complete_all", class: disabled_class(!appointment.started?) } Complete
-          %button.btn.btn-default.btn-warning.multiselect.incomplete_all.disabled{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all", class: disabled_class(!appointment.started?) } Incomplete
-    .panel-body
-      %table.table.table-bordered.procedures
-        %thead
-          %th.name
-            = t(:procedure)[:object]
-          %th.r-t
-            = t(:procedure)[:r_t]
-          %th.status
-            = t(:procedure)[:status]
-          %th.followup
-            = t(:procedure)[:followup]
-          %th.completed-date
-            = t(:procedure)[:completed_date]
-          %th.performed-by
-            = t(:procedure)[:performed_by]
-          %th.notes
-            = t(:procedure)[:notes]
-          %th.invoiced
-            = t(:procedure)[:invoiced]
-          %th.credited
-            = t(:procedure)[:credited]
-          %th.actions
-            = t(:procedure)[:actions]
+.card-header.flex-wrap.border-top.border-bottom-0
+  %h3.w-100
+    = core.name
+  = render '/multiple_procedures/complete_all_select', appointment: appointment, core_id: core.id, procedures: procedures
+- if appointment_style == 'grouped'
+  %table.table-hover.core{ id: "core#{core.id}ProceduresGroupedView", data: { toggle: 'table', group_by: 'true', group_by_field: 'group_label', group_by_toggle: 'true', group_by_formatter: 'proceduresGroupFormatter', group_by_collapsed_groups: 'proceduresCollapsedGroups', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
+    %thead.bg-light
+      %th.w-20.name{ data: { field: 'name' } }
+        = Procedure.model_name.human
+      %th.w-5.billing-type{ data: { field: 'billing_type' } }
+        = Procedure.human_attribute_name(:billing_type)
+      %th.w-10.status{ data: { field: 'status', align: 'center', halign: 'left' } }
+        = Procedure.human_attribute_name(:status)
+      %th.w-15.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
+        = Procedure.human_attribute_name(:followup)
+      %th.w-15.completed-date{ data: { field: 'completed_date' } }
+        = Procedure.human_attribute_name(:completed_date)
+      %th.w-15.performer{ data: { field: 'performer' } }
+        = Procedure.human_attribute_name(:performer)
+      %th.w-5.invoiced{ data: { field: 'invoiced' } }
+        = Procedure.human_attribute_name(:invoiced)
+      %th.w-5.credited{ data: { field: 'credited' } }
+        = Procedure.human_attribute_name(:credited)
+      %th.w-5.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
+        = Note.model_name.plural.capitalize
+      %th.w-5.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
+        = t('actions.actions')
+      %th.group-label{ class: 'd-none', data: { field: 'group_label' } }
+        -# group label column for table grouping, intentionally left d-none
 
-        %tbody
-          = render partial: 'appointments/procedure', collection: procedures, as: :procedure
+- else
+  %table.table-hover.core{ id: "core#{core.id}ProceduresCustomView", data: { toggle: 'table', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
+    %thead.bg-light
+      %th.w-20.name{ data: { field: 'name' } }
+        = Procedure.model_name.human
+      %th.w-5.billing-type{ data: { field: 'billing_type' } }
+        = Procedure.human_attribute_name(:billing_type)
+      %th.w-10.status{ data: { field: 'status', align: 'center', halign: 'left' } }
+        = Procedure.human_attribute_name(:status)
+      %th.w-10.followup{ data: { field: 'followup', align: 'center', halign: 'left' } }
+        = Procedure.human_attribute_name(:followup)
+      %th.w-15.completed-date{ data: { field: 'completed_date' } }
+        = Procedure.human_attribute_name(:completed_date)
+      %th.w-15.performer{ data: { field: 'performer' } }
+        = Procedure.human_attribute_name(:performer)
+      %th.w-5.invoiced{ data: { field: 'invoiced' } }
+        = Procedure.human_attribute_name(:invoiced)
+      %th.w-5.credited{ data: { field: 'credited' } }
+        = Procedure.human_attribute_name(:credited)
+      %th.w-5.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
+        = Note.model_name.plural.capitalize
+      %th.w-10.actions{ data: { field: 'actions', align: 'center', halign: 'left' } }
+        = t('actions.actions')
