@@ -48,6 +48,7 @@ gem 'whenever', '~> 1.0.0'
 gem 'will_paginate'
 gem 'yajl-ruby', require: 'yajl'
 gem 'dalli'
+gem 'progress_bar'
 
 group :deploy do
   gem 'capistrano', '~> 3.14'
@@ -62,7 +63,6 @@ group :development, :test, :testing do
   gem "factory_bot_rails"
   gem 'faker', '~> 2.14.0'
   gem 'pry'
-  gem 'progress_bar'
 end
 
 group :development do
