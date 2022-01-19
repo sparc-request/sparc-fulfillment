@@ -95,7 +95,8 @@ feature "View Tasks", js: true do
 
   def when_i_view_complete_tasks
     when_i_visit_the_tasks_page
-    find("#complete", visible: false).find(:xpath, "..").click
+    find("label.toggle-off", text: 'Incomplete').click
+    wait_for_ajax
   end
 
   def when_i_visit_the_tasks_page
@@ -104,7 +105,7 @@ feature "View Tasks", js: true do
   end
 
   def when_click_on_the_view_all_tasks_button
-    find("#all_tasks", visible: false).find(:xpath, "..").click
+    find("label.toggle-off", text: 'My Tasks').click
   end
 
   def then_i_should_see_that_i_have_no_tasks

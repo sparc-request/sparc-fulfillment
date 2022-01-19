@@ -18,10 +18,13 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-//= link application.js
+//= link favicon.ico
 //= link application.css
-//= link_tree ../images/
+//= link application.js
 
-//= link faye.js
+//= link_tree ../images/
+//= link_tree ../stylesheets/
+
 //= link imports.js
 //= link show_task.js
+//= link favicon.ico

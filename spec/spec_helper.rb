@@ -35,11 +35,19 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
+require 'webdrivers'
 require 'shoulda-matchers'
 require 'simplecov'
 require 'rspec/active_job'
 require 'rspec/rails'
 require 'paperclip/matchers'
+
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |file| require file }
+
+Capybara.register_driver :webkit do |app|
+  driver = Capybara::Webkit::Driver.new(app, { set_skip_image_loading: true })
+  driver
+end
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|

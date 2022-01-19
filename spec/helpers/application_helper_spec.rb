@@ -30,7 +30,7 @@ RSpec.describe ApplicationHelper do
 
   describe "#format_datetime" do
     it "should return a formatted datetime" do
-      expect(helper.format_datetime(DateTime.new(2015, 8, 4, 3, 20))).to eq("2015-08-04 03:20")
+      expect(helper.format_datetime(DateTime.new(2015, 8, 4, 3, 20))).to eq("08/04/2015  3:20:00 AM")
     end
   end
 
@@ -68,30 +68,6 @@ RSpec.describe ApplicationHelper do
       expect(helper.twitterized_type("notice")).to eq("alert-info")
       expect(helper.twitterized_type("success")).to eq("alert-success")
       expect(helper.twitterized_type("asdf")).to eq("asdf")
-    end
-  end
-
-  describe "#notes_button" do
-    context "no notes" do
-      params = {object: Participant.create(),
-                title: 'Notes',
-                has_notes: false,
-                button_class: ''}
-
-      it "should return a white button with blue text" do
-        expect(helper.notes_button(params)).to have_selector(".btn-default")
-      end
-    end
-
-    context "has notes" do
-      params = {object: Participant.create(),
-                title: 'Notes',
-                has_notes: true,
-                button_class: ''}
-
-      it "should return a blue button with white text" do
-        expect(helper.notes_button(params)).to have_selector(".blue-glyphicon")
-      end
     end
   end
 

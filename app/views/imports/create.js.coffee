@@ -21,8 +21,18 @@
 <% if @valid %>
 $('#modalContainer').modal('hide')
 $('.imports').bootstrapTable('refresh')
-swal('Success', 'Klok File Uploaded', 'success')
+Swal.fire(
+  title: "Success"
+  text: "Klok File Uploaded"
+  icon: "success"
+  showCancelButton: false
+)
 <% else %>
 $('.imports').bootstrapTable('refresh')
-swal('Error', 'Invalid Klok File', 'error')
+Swal.fire(
+  title: "Error"
+  text: "Invalid Klok File"
+  icon: "error"
+  showCancelButton: false
+)
 <% end %>

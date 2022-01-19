@@ -21,50 +21,77 @@
 require 'rails_helper'
 
 feature "Change Participant Arm", js: :true do
-
-  context "original arm has completed appointments" do
-    scenario "Users changes arm on the participant tracker" do
+  context "original arm does NOT have completed procedures" do
+    scenario "User changes arm on the participant tracker" do
       when_i_start_work_on_an_appointment
       then_i_change_the_arm_of_the_participant
-      and_the_visit_group_of_completed_procedure_should_still_appear
-      then_i_switch_back_to_the_original_arm
-      and_all_the_visits_should_appear
+      and_i_visit_the_calendar_again
+      i_should_only_see_new_appointments
+    end
+  end
+  context "original arm has completed procedures" do
+    scenario "User changes arm on the participant tracker" do
+      when_i_start_work_on_an_appointment
+      and_i_complete_a_procedure
+      then_i_change_the_arm_of_the_participant
+      and_i_visit_the_calendar_again
+      i_should_see_new_and_old_appointments
     end
   end
 
+
   def when_i_start_work_on_an_appointment
     @protocol     = create_and_assign_protocol_to_me
-    @original_arm = @protocol.arms.first
     @protocols_participant  = @protocol.protocols_participants.first
-    @protocols_participant.update_attribute(:arm_id, @original_arm.id)
-    @procedure = create(:procedure, visit_group: @original_arm.visit_groups.first, completed_date: "08/08/2013")
-    @service   = @protocol.organization.inclusive_child_services(:per_participant).first
-    
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    @original_arm = @protocols_participant.arm
+    @second_arm   = @protocol.arms.where.not(id: @original_arm.id).first
+    @service      = @protocol.organization.inclusive_child_services(:per_participant).first
+    @original_appointment = @original_arm.visit_groups.first
+
+    @service.update_attributes(name: 'Test Service')
+    @original_appointment.update_attributes(name: "First Arm Appointment")
+
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
 
+    find('a.start-appointment').click
+    wait_for_ajax
+
+    bootstrap_select '#add_procedure_dropdown', 'Test Service'
+    fill_in 'service_quantity', with: 1
+    find('button#addService').click
+    wait_for_ajax
+  end
+
+  def and_i_complete_a_procedure
+    find('button.complete-btn').click
+    wait_for_ajax
   end
 
   def then_i_change_the_arm_of_the_participant
-    @new_arm = create(:arm, protocol_id: @protocol.id)
-    @protocols_participant.update_attribute(:arm_id, @new_arm.id)
-    
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit protocol_path(@protocol.id)
+    wait_for_ajax
+
+    click_link 'Participant Tracker'
+    wait_for_ajax
+
+    bootstrap_select("#protocols_participant_arm_id", @second_arm.name, "#edit_protocols_participant_#{@protocols_participant.id}" )
     wait_for_ajax
   end
 
-  def and_the_visit_group_of_completed_procedure_should_still_appear
-    bootstrap_select("#appointment_select", @procedure.visit_group.name)
+  def and_i_visit_the_calendar_again
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
   end
 
-  def then_i_switch_back_to_the_original_arm
-    @protocols_participant.update_attribute(:arm_id, @original_arm.id)
+  def i_should_see_new_and_old_appointments
+    expect(page).to have_css("a.appointment-link span", text: @original_appointment.name)
+    expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
   end
 
-  def and_all_the_visits_should_appear
-    #only tests for one to save time since if last one appears the others should also be there
-    bootstrap_select("#appointment_select", @original_arm.visit_groups.last.name)
-    wait_for_ajax
+  def i_should_only_see_new_appointments
+    expect(page).to_not have_css("a.appointment-link span", text: @original_appointment.name)
+    expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
   end
+
 end

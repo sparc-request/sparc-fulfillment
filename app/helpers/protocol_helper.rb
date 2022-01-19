@@ -86,18 +86,24 @@ module ProtocolHelper
   end
 
   def formatted_study_schedule_report protocol
-    content_tag :button, class: 'btn btn-secondary study-schedule-report report-button', data: { url: reports_path(report_type: 'study_schedule_report', title: t('reports.study_schedule_report'), documentable_id: protocol.id, documentable_type: Protocol.name) } do
-      icon('fas', 'file-download mr-2') + t('actions.export')
+    if protocol.arms.any?
+      content_tag :button, class: "btn btn-secondary study-schedule-report report-button", data: { url: reports_path(report_type: 'study_schedule_report', title: t('reports.study_schedule_report'), documentable_id: protocol.id, documentable_type: Protocol.name) } do
+        icon('fas', 'file-download mr-2') + t('actions.export')
+      end
+    else
+      content_tag :button, class: "btn btn-secondary study-schedule-report report-button disabled", data: {toggle: "tooltip", title: "Export Report is only for clinical services"} do
+        icon('fas', 'file-download mr-2') + t('actions.export')
+      end
     end
   end
 
-  def formatted_coordinators(coordinators=Array.new)
+  def formatted_coordinators(coordinators)
     if coordinators.any?
       content_tag :div, class: 'dropdown' do
         content_tag(:button, 'Coordinators', type: 'button', class: 'btn btn-light dropdown-toggle', data: { toggle: 'dropdown', boundary: 'window' }, aria: { expanded: 'false' }) +
-        content_tag(:div, class: 'dropdown-menu') do
+        content_tag(:div, class: 'dropdown-menu', id: 'coordinator-menu') do
           coordinators.map do |co|
-            link_to co, 'javascript:void(0)', class: 'dropdown-item'
+            content_tag(:p, co, class: 'dropdown-item')
           end.join('').html_safe
         end
       end

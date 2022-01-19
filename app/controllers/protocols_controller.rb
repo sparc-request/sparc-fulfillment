@@ -20,6 +20,7 @@
 
 class ProtocolsController < ApplicationController
   before_action :find_protocol,       only: [:show, :refresh_tab]
+  before_action :pppv_services_check, only: [:show, :refresh_tab]
   before_action :authorize_protocol,  only: [:show], unless: proc { |controller| controller.request.format.json? }
 
   def index
@@ -34,17 +35,21 @@ class ProtocolsController < ApplicationController
       }
       format.json {
         @protocols  = current_identity.protocols_full.search(params[:search]).with_status(params[:status])
-        @total      = @protocols.length
+        @total      = @protocols.count
         @protocols  = @protocols.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0).eager_load(:pi)
       }
       format.js
+      format.csv {
+        @protocols = Protocol.all.eager_load(:pi, :sparc_protocol)
+
+        send_data Protocol.to_csv(@protocols), filename: "cwf_protocols.csv"
+      }
     end
   end
 
   def show
     respond_to do |format|
       format.html {
-        gon.push({ protocol_id: @protocol.id })
         session[:breadcrumbs].set_base(:requests, root_url).add_crumbs([
           { label: helpers.protocol_label(@protocol) },
           { label: helpers.request_label(@protocol) }
@@ -71,7 +76,11 @@ class ProtocolsController < ApplicationController
   end
 
   def get_current_protocol_tab
-    @tab = cookies['active-protocol-tab'.to_sym] ? cookies['active-protocol-tab'.to_sym] : (@services_present ? "study_schedule" : "study_level_activities")
+    @tab = cookies['active-protocol-tab'.to_sym] ? cookies['active-protocol-tab'.to_sym] : (@has_pppv_services ? "study_schedule" : "study_level_activities")
+  end
+
+  def pppv_services_check
+    @has_pppv_services = @protocol.organization.has_per_patient_per_visit_services? || @protocol.line_items.joins(:service).where(services: { one_time_fee: false }).any?
   end
 
   def set_highlighted_link

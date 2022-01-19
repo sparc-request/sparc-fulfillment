@@ -20,6 +20,8 @@
 
 class Protocol < ApplicationRecord
 
+  require 'csv'
+
   include LocalDb
 
   attr_accessor :document_counter_updated
@@ -76,7 +78,8 @@ class Protocol < ApplicationRecord
            :funding_source,
            :potential_funding_source,
            :research_master_id,
-           to: :sparc_protocol
+           to: :sparc_protocol,
+           :allow_nil => true
 
   delegate :subsidy_committed,
            :percent_subsidy,
@@ -112,7 +115,7 @@ class Protocol < ApplicationRecord
     when 'srid'
       order(Protocol.arel_table[:sparc_id].send(order), SubServiceRequest.arel_table[:ssr_id].send(order))
     when 'rmid'
-      order(Protocol.arel_table[:research_master_id].send(order))
+      order(Sparc::Protocol.arel_table[:research_master_id].send(order))
     when 'pi'
       order(Identity.arel_full_name.send(order))
     when 'irb_approval_date'
@@ -121,6 +124,8 @@ class Protocol < ApplicationRecord
       order(IrbRecord.arel_table[:irb_expiration_date].send(order))
     when 'organizations'
       order(SubServiceRequest.arel_table[:org_tree_display].send(order))
+    when 'status'
+      order(SubServiceRequest.arel_table[:status].send(order))
     else
       order(sort => order)
     end
@@ -182,6 +187,17 @@ class Protocol < ApplicationRecord
 
   def research_master_id
     sparc_protocol.research_master_id
+  end
+
+  def self.to_csv(protocols)
+    CSV.generate do |csv|
+      csv << ["Protocol ID", "Sparc ID", "Short Title", "Primary Principal Investigator", "Status", "IRB Approval", "IRB Expiration", "Provider/Program/Core"]
+      protocols.each do |p|
+        csv << [p.srid, p.sparc_id, p.short_title, p.pi ? p.pi.full_name : "", p.status.present? ? p.status.capitalize : '-',
+                p.irb_approval_date.present? ? p.irb_approval_date : '-', p.irb_expiration_date.present? ? p.irb_expiration_date : '-',
+                p.sub_service_request.org_tree_display]
+      end
+    end
   end
 
   ##### PRIVATE METHODS #####

@@ -18,34 +18,25 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.arms_container{id: "arms_container_#{arm.id}"}
-  - visit_groups = arm.visit_groups.paginate(page: page)
-  .study_schedule.service{class: "arm_#{arm.id}"}
-    .row.header
-      .col-xs-4.text-center.study_schedule_table_name
-        %span{id: "arm-name-display-#{arm.id}"}
-          = t(:arm)[:header]
-          %br
-          = t('arm.name_with_arm_name_interpolated', arm_name: arm.name)
-      .col-xs-8.text-center.visit_group_select{id: "select_for_arm_#{arm.id}"}
-        = render partial: '/study_schedule/visit_group_page_select', locals: {arm: arm, page: page}
-    .row.visit_groups
-      .col-xs-4
-      .visit_groups{class: "visit_groups_for_#{arm.id}"}
-        = render partial: '/study_schedule/visit_groups', locals: {arm: arm, visit_groups: visit_groups, tab: tab}
-    .row.check_visit_columns
-      .col-xs-4
-      - unless tab == 'consolidated'
-        %div{class: "check_columns_for_arm_#{arm.id}"}
-          = render partial: '/study_schedule/check_visit_columns', locals: {visit_groups: visit_groups, tab: tab}
-      .col-xs-1
-    .row
-      .scrolling-div.col-xs-12
+- visit_groups = arm.visit_groups.paginate(page: page)
+.card{ class: "study-schedule-arm-container arm-#{arm.id}-container" }
+  .card-header.text-white.justify-content-between.sticky-top.bg-primary{ data: { toggle: 'collapse', target: ".arm-#{arm.id}-collapse" } }
+    %h3.mb-0{id: "arm-name-display-#{arm.id}"}
+      = icon('fas', 'caret-down pr-1 mr-2')
+      %span.arm_name_text= t('arm.header', arm_name: arm.name)
+  .collapse.show{ class: "arm-#{arm.id}-collapse" }
+    %table.table.table-bordered.study-schedule-table
+      %thead
+        = render '/study_schedule/template_header', arm: arm, page: page, visit_groups: visit_groups
+
+        %tr{ class: "visit_groups_for_#{arm.id}" }
+          = render '/study_schedule/visit_groups', arm: arm, visit_groups: visit_groups, tab: tab
+
+        %tr{ class: "check_columns_for_arm_#{arm.id}" }
+          = render '/study_schedule/check_visit_columns', visit_groups: visit_groups, tab: tab
+
+      %tbody
         - arm_per_participant_line_items_by_core(arm, tab == "consolidated").each do |core, line_items|
-          .row.core{id: "arm_#{arm.id}_core_#{core.id}"}
-            .col-xs-12= "#{core.name}"
+          = render 'study_schedule/core_header', core: core
           - line_items.each do |li|
-            = render partial: 'study_schedule/line_item', locals: {line_item: li, page: page, tab: tab}
-          %div{id: "arm_#{arm.id}_end_of_core_#{core.id}"}
-        %div{id: "end_of_arm_#{arm.id}"}
-%br
+            = render 'study_schedule/line_item', line_item: li, page: page, tab: tab, core_id: core.id

@@ -36,7 +36,20 @@ class Arm < ApplicationRecord
   validates_numericality_of :subject_count, greater_than_or_equal_to: 1
   validates_numericality_of :visit_count, greater_than_or_equal_to: 1
 
+  default_scope { where(marked_for_deletion: false) }
+
+
   def destroy_later
-    DelayedDestroyJob.perform_later self
+    if protocol.arms.count < 2
+      errors.add(:arm, "Cannot remove the last Arm of this Protocol. All protocols must have at least one Arm")
+      return false
+    elsif Procedure.where(appointment: appointments).touched.any?
+      errors.add(:arm, "'#{name}' has completed procedures and cannot be deleted")
+      return false
+    else
+      update_attributes(marked_for_deletion: true)
+      DelayedDestroyJob.perform_later self
+      return true
+    end
   end
 end

@@ -24,7 +24,7 @@
 # You can define all roles on a single server, or split them:
 
 set :repo_url, 'git@sparc_fulfillment:sparc-request/sparc-fulfillment.git'
-server 'cwf-s.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
+server 'bmic-sparc-s.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
 
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
@@ -53,10 +53,10 @@ server 'cwf-s.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
 
+set :deploy_to, "/var/www/rails/sparc-fulfillment"
 set :branch, 'staging'
 set :rails_env, 'production'
-set :rvm_ruby_version, '2.4.2@fulfillment-staging --create'
-
+set :rvm_ruby_version, '2.5.5@cwf --create'
 set :passenger_restart_with_touch, true
 #set :passenger_environment_variables, { :path => '/usr/local/rvm/gems/ruby-1.9.3-p286/bin:$PATH' }
 #set :passenger_rvm_ruby_version, 'ruby-1.9.3-p286'

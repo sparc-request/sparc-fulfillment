@@ -22,21 +22,19 @@
   .card
     .card-header.bg-primary.text-white
       %h3.mb-0
-        = "Generated Documents"
-    %table.documents.custom_striped.bg-white#documents_table{data: {pagination: 'true', 'page-size' => 20, toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", toolbar: '#documentsToolbar', url: documents_path(format: :json), striped: "true", show: {columns: "true", refresh: "true", toggle: "true"}, "sort-name" => "created_at", "sort-order" => 'desc'}}
-      %thead
+        = t(:documents)[:page_title]
+    %table.documents.table-striped.bg-white#documents_table{data: {undefined_text: "", pagination: 'true', 'page-size' => 20, toggle: 'table', search: "true", "show-columns" => "true", "show-refresh" => "true", "show-toggle" => "true", toolbar: '#documentsToolbar', url: documents_path(format: :json), show: {columns: "true", refresh: "true", toggle: "true"}, "sort-name" => "created_at", "sort-order" => 'desc'}}
+      %thead.bg-primary.text-white
         %tr
-          %th{data: {class: 'edit', align: "center", field: "edit"}}
-            = t(:actions)[:edit]
           %th{data: {class: 'title', align: 'center', sortable: "true", field: 'title'}}
             = t(:documents)[:title]
-          %th{data: {class: 'created_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'created_at'}}
-            = t(:documents)[:date_created]
-          %th{data: {class: 'viewed_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'viewed_at'}}
-            = t(:documents)[:viewed_at]
-          %th{data: {class: 'state', align: 'center', field: 'state'}}
-            = t(:documents)[:state]
           %th{data: {class: 'file', align: 'center', field: 'file'}}
             = t(:documents)[:file]
-          %th{data: {class: 'delete', align: 'center', field: 'delete'}}
-            = t(:actions)[:delete]
+          %th{data: {class: 'state', align: 'center', field: 'state'}}
+            = t(:documents)[:state]
+          %th{data: {class: 'created_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'created_at'}}
+            = t(:documents)[:date_created]
+          %th{data: {class: 'read_state', align: 'center', sortable: "true", field: 'read_state'}}
+            = t(:documents)[:read_state]
+          %th{data: {class: 'actions', align: "center", field: "actions"}}
+            = t(:actions)[:actions]

@@ -2,6 +2,7 @@ json.(protocol)
 
 json.id                   protocol.id
 json.srid                 protocol.srid + link_to('', protocol_path(protocol), class: 'd-none')
+json.rmid                 protocol.research_master_id
 json.status               formatted_status(protocol)
 json.short_title          protocol.short_title
 json.irb_approval_date    format_date(protocol.irb_approval_date)

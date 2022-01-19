@@ -18,13 +18,13 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-%main.card.w-100
+%main.card.w-100#protocolsList
   .card-header.bg-primary.text-white
     %h3.mb-0
       = t('protocols.table.header')
   #protocolsToolbar
     = select_tag 'protocol_status_filter', options_for_select((t(:sub_service_request)[:statuses].values.zip t(:sub_service_request)[:statuses].keys), 'Any Status'), class: 'selectpicker'
-  %table.table-interactive#protocols{ data: { toggle: 'table', url: protocols_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 50, pagination: 'true', side_pagination: 'server', sort_name: 'sparc_id', sort_order: 'asc', cookie: 'true', cookie_id_table: 'protocols', toolbar: '#protocolsToolbar', show_export: 'true', export_types: ['excel']} }
+  %table.table-interactive#protocols{ data: { toggle: 'table', url: protocols_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', show_toggle: 'true', page_size: 50, pagination: 'true', side_pagination: 'server', sort_name: 'sparc_id', sort_order: 'asc', cookie: 'true', cookie_id_table: 'protocols', toolbar: '#protocolsToolbar', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], undefined_text: ""} }
     %thead.bg-light
       %tr
         %th.srid{ data: { field: 'srid', align: 'left', sortable: 'true' } }

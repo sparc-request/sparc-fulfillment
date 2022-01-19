@@ -19,6 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+
   if $("#protocols").length
     # Delete Protocol tab-remembering cookie
     Cookies.remove("active-protocol-tab")
@@ -27,9 +28,9 @@ $ ->
 
     $(".fixed-table-toolbar").prepend('
       <div class="btn-group float-left financial--view mr-1" data-toggle="buttons">
-        <button class="btn btn-light mb-0 active management" title="Management View" data-toggle="tooltip">
+        <button class="btn btn-light mb-0 active management" title="Requests View" data-toggle="tooltip">
           <input type="radio" autocomplete="off" class="d-none" value="management">
-          <i class="fas fa-book"></i> Management
+          <i class="fas fa-book"></i> Requests
         </button>
         <button class="btn btn-light mb-0 financial" title="Financial View" data-toggle="tooltip">
           <input type="radio" autocomplete="off" class="d-none" value="financial">
@@ -41,7 +42,10 @@ $ ->
     #Index table events
     $(document).on 'change', '#protocol_status_filter', ->
       status = $(this).val()
-      $('#protocols').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
+      if status == "all"
+        $('#protocols').bootstrapTable('refresh', {url: "/protocols.json", silent: "true"})
+      else
+        $('#protocols').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
     $(document).on 'click', '.financial:not(.active)', ->
       $(this).addClass('active')
@@ -69,6 +73,9 @@ $ ->
         bootstrapTable('hideColumn', 'total_at_approval').
         bootstrapTable('hideColumn', 'percent_subsidy').
         bootstrapTable('hideColumn', 'subsidy_committed')
+
+    $(document).on 'click', '#coordinator-menu', (e) ->
+      e.stopPropagation()
 
   # Load tab on page load
   if $('#protocolTabs').length
