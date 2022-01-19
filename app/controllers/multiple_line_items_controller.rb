@@ -36,6 +36,7 @@ class MultipleLineItemsController < ApplicationController
     @service = Service.find(params[:add_service_id])
 
     if params[:add_service_arm_ids_and_pages] # if they selected arms, otherwise add error
+      @core = @service.organization
       @schedule_tab = params[:schedule_tab]
       @arm_hash = {}
       params[:add_service_arm_ids_and_pages].each do |set|
@@ -52,7 +53,7 @@ class MultipleLineItemsController < ApplicationController
 
       flash.now[:success] = t(:services)[:created]
     else
-      @service.errors.add(:arms, "to add '#{@service.name}' to must be selected")
+      @service.errors.add(:arms, t('constants.cant_be_blank'))
       @errors = @service.errors
     end
   end
@@ -66,6 +67,10 @@ class MultipleLineItemsController < ApplicationController
   def destroy_line_items
     # handles submission of the remove line items form
     @line_items = LineItem.where(id: params[:line_item_ids]).destroy_all
-    flash.now[:success] = t(:services)[:deleted]
+    if !@line_items.empty?
+      flash.now[:success] = t(:services)[:deleted]
+    else
+      @error = t('constants.cant_be_blank')
+    end
   end
 end

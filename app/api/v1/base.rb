@@ -55,6 +55,50 @@ module CWFSPARC
           Notification.create params['notification']
         end
       end
+
+      #For syncing of one time fee line items from SPARC
+      resource :otf_sync_from_sparc do
+        params do
+          requires :sync, type: Hash do
+            requires :action, type: String, values: ['create', 'update', 'destroy']
+            requires :line_item, type: Hash do
+              requires :sparc_id, type: Integer
+              optional :quantity_requested, type: Integer
+              optional :service_id, type: Integer
+              optional :sub_service_request_id, type: Integer
+            end
+          end
+        end
+        post do
+          sync = params['sync']
+          action = sync['action']
+          line_item_hash = sync['line_item']
+
+          ##If there are multiple (bad data) line items with the same sparc_id, this will just grab the first one as a fall back.
+          line_item = LineItem.find_by_sparc_id(line_item_hash['sparc_id']) if (action == "update") or (action == "destroy")
+
+          if action == 'create'
+            protocol_id = Protocol.find_by_sub_service_request_id(line_item_hash['sub_service_request_id']).id
+            if LineItem.create(sparc_id: line_item_hash['sparc_id'], quantity_requested: line_item_hash['quantity_requested'], service_id: line_item_hash['service_id'], protocol_id: protocol_id)
+              success_message = {result: "success", detail: "created"}
+            end
+          elsif action == 'update'
+            if line_item.update_attributes(line_item_hash)
+              success_message = {result: "success", detail: "updated"}
+            end
+          elsif action == 'destroy'
+            if line_item.destroy
+              success_message = {result: "success", detail: "destroyed"}
+            end
+          end
+
+          if success_message
+            return success_message
+          else
+            return {result: "error"}
+          end
+        end
+      end
     end
   end
 end

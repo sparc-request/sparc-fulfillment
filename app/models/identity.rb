@@ -43,12 +43,16 @@ class Identity < SparcDbBase
     IdentityOrganizations.new(id).authorized_protocols
   end
 
+  def protocols_organizations_ids
+    IdentityOrganizations.new(id).fulfillment_organizations_with_protocols(false).pluck(:id).uniq
+  end
+
   def billing_manager_protocols
-    IdentityOrganizations.new(id).authorized_billing_manager_protocols
+    @billing_manager_protocols ||= IdentityOrganizations.new(id).authorized_billing_manager_protocols
   end
 
   def billing_manager_protocols_allow_credit
-    IdentityOrganizations.new(id).authorized_billing_manager_protocols_allow_credit
+    @billing_manager_protocols_allow_credit ||= IdentityOrganizations.new(id).authorized_billing_manager_protocols_allow_credit
   end
 
   def protocols_full

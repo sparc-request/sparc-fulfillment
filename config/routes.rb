@@ -41,6 +41,8 @@ Rails.application.routes.draw do
 
       member do
         get 'calendar', to: 'protocols_participants#show', as: 'calendar'
+        put 'update', to: 'protocols_participants#update'
+        delete :destroy, as: 'destroy'
       end
 
       put 'change_recruitment_source(/:id)', to: 'participants#update_recruitment_source'
@@ -49,6 +51,7 @@ Rails.application.routes.draw do
   end
 
   resources :participants do
+    get 'details', to: 'participants#details'
   end
 
   resources :visit_groups, only: [:new, :create, :edit, :update, :destroy]
@@ -56,19 +59,14 @@ Rails.application.routes.draw do
   resources :notes, only: [:index, :create, :edit, :update, :destroy]
   resources :documents
   resources :line_items, only: [:index, :edit, :update]
-  resources :visits, only: [:update]
+  resources :visits, only: [:edit, :update]
   resources :custom_appointments, controller: :appointments
   resources :imports
+  resources :tasks, only: [:index, :show, :new, :create, :update, :edit]
 
   resources :reports, only: [:new, :create] do
     collection do
       get 'update_protocols_dropdown'
-    end
-  end
-
-  resources :procedures, only: [:create, :edit, :update, :destroy] do
-    collection do
-      put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position'
     end
   end
 
@@ -91,18 +89,32 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :tasks do
-    member do
-      get 'task_reschedule'
-    end
-  end
-
   resources :appointments do
+    member do
+      put :update_statuses
+      put :change_visit_type
+    end
+
     collection do
       get 'completed_appointments'
     end
-    put 'update_statuses'
-    put 'change_appointment_style'
+
+    get 'change_appointment_style'
+
+    resources :procedures, only: [:index, :create, :edit, :update, :destroy] do
+      member do
+        put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position', as: 'change_position'
+      end
+    end
+
+    resources :multiple_procedures, only: [] do
+      collection do
+        get 'incomplete_all'
+        get 'complete_all'
+        put 'update_procedures'
+        put 'reset_procedures'
+      end
+    end
   end
 
 
@@ -112,15 +124,6 @@ Rails.application.routes.draw do
       put 'create_line_items'
       get 'edit_line_items'
       put 'destroy_line_items'
-    end
-  end
-
-  resources :multiple_procedures, only: [] do
-    collection do
-      get 'incomplete_all'
-      get 'complete_all'
-      put 'update_procedures'
-      put 'reset_procedures'
     end
   end
 

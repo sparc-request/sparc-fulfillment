@@ -19,20 +19,18 @@
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 .card.w-100
-  %table.protocol_reports#reports_table{data: {toggle: 'table', search: "true", url: documents_path(document: { documentable_type: 'Protocol', documentable_id: @protocol.id }, format: :json), show: {columns: "true", refresh: "true", toggle: "true"}, striped: "true", "sort-name" => "created_at", "sort-order" => 'desc', pagination: 'true', 'page-size' => 20}}
-    %thead.bg-light
+  %table.table-striped.protocol_reports#reports_table{data: {toggle: 'table', search: "true", url: documents_path(document: { documentable_type: 'Protocol', documentable_id: @protocol.id }, format: :json), show: {columns: "true", refresh: "true", toggle: "true"}, striped: "true", "sort-name" => "created_at", "sort-order" => 'desc', pagination: 'true', 'page-size' => 20, undefined_text: ""}}
+    %thead.bg-primary.text-light
       %tr
-        %th{data: {class: 'edit', align: "center", field: "edit"}}
-          = t(:actions)[:edit]
         %th{data: {class: 'title', align: 'center', sortable: "true", field: 'title'}}
           = t(:documents)[:title]
-        %th{data: {class: 'created_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'created_at'}}
-          = t(:documents)[:date_created]
-        %th{data: {class: 'viewed_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'viewed_at'}}
-          = t(:documents)[:viewed_at]
-        %th{data: {class: 'state', align: 'center', field: 'state'}}
-          = t(:documents)[:state]
         %th{data: {class: 'file', align: 'center', field: 'file'}}
           = t(:documents)[:file]
-        %th{data: {class: 'delete', align: 'center', field: 'delete'}}
-          = t(:actions)[:delete]
+        %th{data: {class: 'state', align: 'center', field: 'state'}}
+          = t(:documents)[:state]
+        %th{data: {class: 'created_at', align: 'center', sortable: "true", sorter: "dateSorter", field: 'created_at'}}
+          = t(:documents)[:date_created]
+        %th{data: {class: 'read_state', align: 'center', field: 'read_state'}}
+          = t(:documents)[:read_state]
+        %th{data: {class: 'actions', align: "center", field: "actions"}}
+          = t(:actions)[:actions]

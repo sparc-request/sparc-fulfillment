@@ -18,22 +18,12 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.disabled_tooltip {
-  padding: 6px 12px;
-  margin: -6px -12px;
-}
-
-table.procedures tr.procedure{
-  td {
-    vertical-align: middle;
-  }
-  td.billing .dropdown-toggle {
-    padding-right: 0px;
-  }
-  .large_actions_container {
-    width: 85px;
-    ul.dropdown-menu {
-      min-width: 75px;
+#appointmentsList {
+  .appointment-link {
+    border-color: transparent;
+    &.active {
+      color: $list-group-action-active-color;
+      background-color: $list-group-action-active-bg;
     }
   }
 }

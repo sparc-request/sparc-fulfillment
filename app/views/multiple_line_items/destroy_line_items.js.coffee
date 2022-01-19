@@ -18,13 +18,20 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+<% if @error %>
+$("[name^='line_item_ids']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= @error.capitalize.html_safe %></small>")
+<% else %>
+
 <% @line_items.each do |li| %>
-$("#line_item_<%= li.id %>").remove()
-core_header = $("#arm_<%= li.arm_id %>_core_<%= li.service.sparc_core_id %>")
-if core_header.next().attr('id') == "arm_<%= li.arm_id %>_end_of_core_<%= li.service.sparc_core_id %>"
-  $("#arm_<%= li.arm_id %>_end_of_core_<%= li.service.sparc_core_id %>").remove()
-  core_header.remove()
+line_item_row = $("#line_item_<%= li.id %>")
+core_id = line_item_row.data('core-id')
+unless line_item_row.siblings(".line-item[data-core-id='#{core_id}']").length
+  line_item_row.siblings(".core-header[data-core-id='#{core_id}']").remove()
+
+line_item_row.remove()
 <% end %>
 
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal 'hide'
-$("#flashContainer").html("<%= j render 'flash' %>")
+
+<% end %>

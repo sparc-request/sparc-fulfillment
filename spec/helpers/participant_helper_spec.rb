@@ -22,23 +22,6 @@ require 'rails_helper'
 
 RSpec.describe ParticipantHelper do
 
-  describe "#appointments_for_select" do
-    it "should return appointments on the arm" do
-      protocol = create_and_assign_protocol_to_me
-      arm = protocol.arms.last
-      protocols_participant = create(:protocols_participant, protocol: protocol, arm: arm, participant: create(:participant))
-
-      2.times do
-        create(:appointment, protocols_participant: protocols_participant, arm: arm, name: "Appt")
-        create(:appointment, protocols_participant: protocols_participant, arm: protocol.arms.first, name: "Bad Appt")
-      end
-
-      array = [protocols_participant.appointments[0], protocols_participant.appointments[2]]
-
-      expect(helper.appointments_for_select(arm, protocols_participant)).to eq(array)
-    end
-  end
-
   describe "#phoneNumberFormatter" do
     it "should return a formatted phone number if in the form ##########" do
       protocol = create_and_assign_protocol_to_me

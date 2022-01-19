@@ -54,6 +54,9 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
 
     visit protocol_path @protocol
     wait_for_ajax
+
+    find('#studyScheduleTabLink').click
+    wait_for_ajax
   end
 
   def given_an_arm_has_services
@@ -79,34 +82,33 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
 
   def when_i_fill_in_the_form
     bootstrap_select "#add_service_id", "#{@services.last.name}"
-    
+
     bootstrap_select "#add_service_arm_ids_and_pages_", @arm.name
-    find("h4#line_item").click # click out of bootstrap multiple select
+    find("h4.modal-title").click # click out of bootstrap multiple select
   end
 
   def when_i_select_a_service_and_arm
-    find('#line_item_ids', visible: false).sibling('.dropdown-toggle').click
-    first('.open .dropdown-menu a', text: @services.first.name).click
-    find("h4#line_item").click # click out of bootstrap multiple select
+    bootstrap_select "#line_item_ids", @services.first.name
+    find("h4.modal-title").click # click out of bootstrap multiple select
   end
 
   def when_i_click_the_add_submit_button
-    click_button "Add"
+    find('input[type="submit"]').click
     wait_for_ajax
   end
 
   def when_i_click_the_remove_submit_button
-    click_button "Remove"
+    find('input[type="submit"]').click
     wait_for_ajax
   end
 
   def then_i_should_see_it_on_that_arm
-    arm = find(".arm_#{@arm.id}")
+    arm = find(".arm-#{@arm.id}-container")
     expect(arm).to have_content "#{@services.last.name}"
   end
 
   def then_i_should_not_see_it_on_that_arm
-    arm = find(".arm_#{@arm.id}")
+    arm = find(".arm-#{@arm.id}-container")
     expect(arm).not_to have_content "#{@services.first.name}"
   end
 end

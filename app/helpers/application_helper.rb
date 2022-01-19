@@ -78,6 +78,12 @@ module ApplicationHelper
     tag.to_s.gsub(/\s/, "_").gsub(/[^-\w]/, "").downcase
   end
 
+  def body_class
+    qualified_controller_name = controller.controller_path.gsub('/','-')
+
+    "#{qualified_controller_name} #{qualified_controller_name}-#{controller.action_name}"
+  end
+
   ##Sets css bootstrap classes for rails flash message types##
   def twitterized_type type
     case type.to_sym
@@ -122,7 +128,8 @@ module ApplicationHelper
     end
   end
 
-  def service_name_display(service)
-    content_tag(:span, service.name) + (service.is_available ? "" : content_tag(:span, " (Inactive)", class: 'inactive-service'))
+  def service_name_display(service, strong=false)
+    element = strong ? :strong : :span
+    content_tag(element, service.name) + (service.is_available ? "" : content_tag(element, " (Inactive)", class: 'inactive-service'))
   end
 end

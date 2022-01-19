@@ -56,15 +56,15 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def given_i_am_viewing_an_appointment
-    next_month               = Time.current.month + 1
-    @the_middle_of_next_month = Date.current.strftime("0#{next_month}/15/%Y")
+    next_day               = Time.now.day + 1
+    edited_completed_date = Time.now.strftime("%m/#{next_day}/%Y")
 
     @protocol     = create_and_assign_protocol_to_me
     @protocols_participant  = @protocol.protocols_participants.first
     service      = @protocol.organization.inclusive_child_services(:per_participant).first
     @pricing_map   = create(:pricing_map, service: service, effective_date: @the_middle_of_next_month)
 
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
   end
 
@@ -80,55 +80,60 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def given_an_appointment_has_started
-    find('button.start_visit').click
+    find('a.start-appointment').click
     wait_for_ajax
   end
 
   def when_i_complete_the_procedure
-    find('label.status.complete').click
+    find('div#procedure1StatusButtons button.complete-btn').click
     wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
     reason = Procedure::NOTABLE_REASONS.first
 
-    find('label.status.incomplete').click
-    bootstrap_select '.reason-select', reason
-    fill_in 'procedure_notes_attributes_0_comment', with: 'Test comment'
-    click_button 'Save'
+    find('div#procedure1StatusButtons button.incomplete-btn').click
+    bootstrap_select '#procedure_notes_attributes_0_reason', reason
+    fill_in 'Comment', with: 'Test comment'
+    find('input.btn[type="submit"]').click
   end
 
   def when_i_add_a_procedure
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    bootstrap_select('#appointment_select', visit_group.name)
+    find('a[data-appointment-id="1"]').click
     wait_for_ajax
-    bootstrap_select '#service_list', service.name
-    fill_in 'service_quantity', with: '1'
-    page.find('button.add_service').click
+    bootstrap_select '[name="service_id"', service.name
+    fill_in 'service_quantity', with: 1
+    find('button#addService').click
+    wait_for_ajax
   end
 
   def when_i_edit_the_completed_date
-    find('.procedures .completed_date_field')
-    page.execute_script %Q{ $('.procedures .completed_date_field').trigger('click'); }
-    next_month               = Time.current.month + 1
-    edited_completed_date = Date.current.strftime("0#{next_month}/15/%Y")
-    page.execute_script %Q{ $(".completed-date .completed_date_field").val('#{edited_completed_date}') }
+    @complete_procedure    = Procedure.complete.first
+    existing_day           = @complete_procedure.completed_date.strftime("%-d").to_i
+    @new_day               = pick_new_date(existing_day)
+    @edited_completed_date = Time.now.change(day: @new_day)
+
+    bootstrap_datepicker 'input#procedure_completed_date', day: "#{@new_day}"
     wait_for_ajax
+    @complete_procedure.reload
   end
 
   def then_i_should_see_a_disabled_datepicker
-    expect(page).to have_css(".completed-date input[disabled]")
+    expect(page).to have_css("input#procedure_completed_date[disabled]")
   end
 
   def then_i_should_see_an_enabled_datepicker_with_the_current_date
-    expected_date = page.evaluate_script %Q{ $('.completed_date_field').first().val(); }
-    expect(expected_date).to eq(DateTime.current.strftime('%m/%d/%Y'))
+    expected_date = page.evaluate_script %Q{ $('input#procedure_completed_date').val(); }
+    expect(expected_date).to eq(Time.now.strftime('%m/%d/%Y'))
   end
 
   def then_i_should_see_the_completed_date_has_been_updated
-    expected_date = page.evaluate_script %Q{ $('.completed_date_field').first().val(); }
-    expect(expected_date).to eq(@the_middle_of_next_month)
+    date_on_page = find('#procedure_completed_date').value()
+
+    expect(@complete_procedure.completed_date.strftime('%D')).to eq(@edited_completed_date.strftime('%D'))
+    expect(date_on_page).to eq(@edited_completed_date.strftime('%m/%d/%Y'))
   end
 end

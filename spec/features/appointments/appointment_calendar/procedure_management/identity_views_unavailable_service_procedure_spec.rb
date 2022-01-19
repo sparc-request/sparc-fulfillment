@@ -24,32 +24,36 @@ feature 'User views procedure which has an unavailable service', js: true do
 
 	scenario 'and sees the inactive tag.' do
 		given_i_am_viewing_the_appointment_calendar
-		when_the_participant_has_a_procedure_with_an_inactive_service
+		when_i_add_a_procedure
+		when_i_change_the_service_to_inactive
 		when_i_open_the_appointment_calendar_with_the_bad_procedure
 		then_i_should_see_the_inactive_tag
 	end
 
 	def given_i_am_viewing_the_appointment_calendar
-		protocol 		= create_and_assign_protocol_to_me
-		@protocols_participant = protocol.protocols_participants.first
+		@protocol 		= create_and_assign_protocol_to_me
+		@protocols_participant = @protocol.protocols_participants.first
+		@services     = @protocol.organization.inclusive_child_services(:per_participant)
 
-		visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: protocol.id)
+		visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
 		wait_for_ajax
 	end
 
-	def when_the_participant_has_a_procedure_with_an_inactive_service
-		service     = Service.first
-		@appointment = @protocols_participant.appointments.first
+	def when_i_add_a_procedure
+		@service = @services.first
+		bootstrap_select '[name="service_id"', @service.name
+    fill_in 'service_quantity', with: 1
+    find('button#addService').click
+    wait_for_ajax
+	end
 
-		service.update_attributes(is_available: false)
-
-		create(:procedure, appointment: @appointment, service: service)
+	def when_i_change_the_service_to_inactive
+		@service.update_attributes(is_available: false)
 	end
 
 	def when_i_open_the_appointment_calendar_with_the_bad_procedure
-		visit_group_name = @appointment.visit_group.name
-
-		bootstrap_select '#appointment_select', visit_group_name
+		visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+		wait_for_ajax
 	end
 
 	def then_i_should_see_the_inactive_tag

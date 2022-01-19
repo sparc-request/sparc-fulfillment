@@ -18,20 +18,29 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-#complete_all_modal.modal-dialog
+#completeIncompleteAll.modal-dialog
   .modal-content
-    = render 'multiple_procedures/modal_header', modal_header: t(:multiple_procedures_modal)[:complete_header] 
-    = form_tag update_procedures_multiple_procedures_path, method: 'put', remote: true, class: "form-horizontal", role: "form" do
+    = form_with url: update_procedures_appointment_multiple_procedures_path(@appointment), method: :put, local: false do |f|
+      = f.hidden_field :status, value: 'complete'
+      - @procedure_ids.each do |pid|
+        = f.hidden_field 'procedure_ids[]', value: pid
+      .modal-header
+        %h4.modal-title
+          = t('multiple_procedures_modal.complete_header')
+        %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
+          %span{ aria: { hidden: 'true' } } &times;
       .modal-body
-        #multiple_procedures_modal_errors
-        - @procedures.each do |procedure|
-          = hidden_field_tag 'procedure_ids[]', procedure.id
-        = hidden_field_tag :status, "complete"
         .form-group
-          = label_tag "completed_date", t(:multiple_procedures_modal)[:completed_date], class: "col-sm-4 control-label"
-          .col-sm-7
-            .input-group.date
-              = text_field_tag 'completed_date', '', class: 'form-control date_field', value: format_date(DateTime.current), readonly: true
+          = f.label 'completed_date', t('multiple_procedures_modal.completed_date'), class: 'required'
+          .input-group.datetimepicker.date{ id: 'dueAtDatePicker', data: { target_input: 'nearest' } }
+            = f.text_field :completed_date, class: 'datetimepicker-input form-control', value: format_date(DateTime.current), data: { target: '#dueAtDatePicker' }
+            .input-group-append{ data: { toggle: 'datetimepicker', target: '#dueAtDatePicker' } }
+              %span.input-group-text
+                = icon('fas', 'calendar-alt')
         .form-group
-          = render 'multiple_procedures/performed_by', procedures: @procedures 
-      = render 'multiple_procedures/modal_footer'
+          = f.label 'performer_id', t('multiple_procedures_modal.performed_by'), class: 'required'
+          = f.select :performer_id, options_from_collection_for_select(performable_by, :id, :full_name), { include_blank: true }, class: 'selectpicker form-control'
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
+          = t(:actions)[:close]
+        = f.submit t('actions.submit'), class: 'btn btn-primary'
