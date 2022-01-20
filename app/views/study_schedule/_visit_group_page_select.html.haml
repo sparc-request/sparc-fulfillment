@@ -18,11 +18,11 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.col-xs-2
-  .page_change_arrow.btn.btn-info.glyphicon.glyphicon-arrow-left{title: t(:visit_groups)[:view_page_previous], type: "button", id: "arrow-left-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page - 1, disabled: page == 1, role: 'button', aria: {label: "View Previous"}, data: {toggle: "tooltip", animation: 'false'}}
--# The visit jump to drop down
-.col-xs-8
+.d-flex{ id: "select_for_arm_#{arm.id}" }
+  - disabled_left = page == 1 ? 'disabled' : ''
+  .page_change_arrow.btn.btn-info.fa.fa-arrow-left.mr-1{ class: disabled_left, title: t(:visit_groups)[:view_page_previous], type: "button", id: "arrow-left-#{arm.id}", page: page - 1, role: 'button', data: { arm_id: arm.id, toggle: "tooltip", animation: 'false' }, aria: { label: "View Previous" } }
+
   = build_visits_select(arm, page)
--# The next page arrow
-.col-xs-2
-  .page_change_arrow.btn.btn-info.btn.btn-info.glyphicon.glyphicon-arrow-right{title: t(:visit_groups)[:view_page_next], type: "button", id: "arrow-right-#{arm.id}", :'data-arm_id' => "#{arm.id}", page: page + 1, disabled: page * Visit.per_page >= arm.visit_count, role: 'button', aria: {label: "View Previous"}, data: {toggle: "tooltip", animation: 'false'}}
+
+  - disabled_right = page * Visit.per_page >= arm.visit_count ? 'disabled' : ''
+  .page_change_arrow.btn.btn-info.btn.btn-info.fa.fa-arrow-right.ml-1{ class: disabled_right, title: t(:visit_groups)[:view_page_next], type: "button", id: "arrow-right-#{arm.id}", page: page + 1, role: 'button', data: { arm_id: arm.id, toggle: "tooltip", animation: 'false' }, aria: {label: "View Previous"} }

@@ -47,16 +47,14 @@ feature "Identity views Task", js: true do
   def given_i_am_on_the_tasks_page
     visit tasks_path
     wait_for_ajax
-    save_and_open_screenshot
-    
   end
 
   def when_i_view_a_identity_task_assigned_to_myself
     assignee = Identity.first
 
-    find(".new-task").click
+    find("a.btn.btn-success").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
-    bootstrap_datepicker '#follow_up_datepicker', day: '15'
+    bootstrap_datepicker '.datetimepicker-input', day: '15'
     fill_in :task_body, with: "Test body"
     find("#new_task .modal-footer .btn-primary").click
     wait_for_ajax
@@ -80,19 +78,20 @@ feature "Identity views Task", js: true do
   end
 
   def then_i_should_see_the_identity_task_details
-    expect(page).to have_css(".modal dt", text: "Created by")
-    expect(page).to have_css(".modal dt", text: "Assigned to")
-    expect(page).to have_css(".modal dt", text: "Type")
-    expect(page).to have_css(".modal dt", text: "Task")
-    expect(page).to have_css(".modal dt", text: "Due Date")
-    expect(page).to have_css(".modal dt", text: "Completed")
+    expect(page).to have_css(".modal div", text: "Created by")
+    expect(page).to have_css(".modal div", text: "Assigned to")
+    expect(page).to have_css(".modal div", text: "Type")
+    expect(page).to have_css(".modal div", text: "Task")
+    expect(page).to have_css(".modal div", text: "Due At")
+    expect(page).to have_css(".modal div", text: "Completed")
   end
 
   def then_i_should_see_the_procedure_task_details
     then_i_should_see_the_identity_task_details
-    expect(page).to have_css(".modal dt", text: "Participant Name")
-    expect(page).to have_css(".modal dt", text: "Protocol")
-    expect(page).to have_css(".modal dt", text: "Visit")
-    expect(page).to have_css(".modal dt", text: "Arm")
+
+    expect(page).to have_css(".modal div", text: "Participant Name")
+    expect(page).to have_css(".modal div", text: "Protocol")
+    expect(page).to have_css(".modal div", text: "Visit")
+    expect(page).to have_css(".modal div", text: "Arm")
   end
 end

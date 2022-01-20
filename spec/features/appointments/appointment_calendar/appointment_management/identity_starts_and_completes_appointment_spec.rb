@@ -26,6 +26,7 @@ feature 'Start Complete Buttons', js: true do
     scenario 'and sees the start button is active and the complete button disabled' do
       given_i_am_viewing_an_appointment
       then_i_should_see_the_start_button
+      when_i_add_a_procedure
       then_i_should_see_the_complete_button_disabled
     end
   end
@@ -35,7 +36,6 @@ feature 'Start Complete Buttons', js: true do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
       when_i_load_the_page_and_select_a_visit
-      then_i_should_see_the_start_datepicker
       then_i_should_see_the_complete_button
     end
   end
@@ -45,7 +45,6 @@ feature 'Start Complete Buttons', js: true do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date_and_a_completed_date
       when_i_load_the_page
-      then_i_should_see_the_start_datepicker
       then_i_should_see_the_completed_datepicker
     end
   end
@@ -54,7 +53,6 @@ feature 'Start Complete Buttons', js: true do
     scenario 'and sees the start datepicker and the completed button' do
       given_i_am_viewing_an_appointment
       when_i_click_the_start_button
-      then_i_should_see_the_start_datepicker
       then_i_should_see_the_complete_button
     end
   end
@@ -65,21 +63,18 @@ feature 'Start Complete Buttons', js: true do
       given_there_is_a_start_date
       when_i_load_the_page_and_select_a_visit
       when_i_click_the_complete_button
-      then_i_should_see_the_start_datepicker
       then_i_should_see_the_completed_datepicker
     end
   end
 
   context 'User sets completed date and start date' do
     scenario 'and sees the completed and start date updated' do
-      now = Time.current
+      now = Date.today
 
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date_and_a_completed_date
       when_i_load_the_page
-      when_i_set_the_start_date_to now
       when_i_set_the_completed_date_to now
-      then_i_should_see_the_start_date_at now
       then_i_should_see_the_completed_date_at now
     end
   end
@@ -91,7 +86,6 @@ feature 'Start Complete Buttons', js: true do
       given_i_am_viewing_an_appointment
       given_there_is_a_start_date
       when_i_load_the_page_and_select_a_visit
-      when_i_set_the_start_date_to future
       when_i_click_the_complete_button
       then_i_should_see_the_completed_date_at future
     end
@@ -103,9 +97,20 @@ feature 'Start Complete Buttons', js: true do
     @appointment = @protocols_participant.appointments.first
     @visit_group = @appointment.visit_group
 
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
+    visit calendar_protocol_participant_path(protocol_id: @protocol.id, id: @protocols_participant.id)
     wait_for_ajax
-    bootstrap_select '#appointment_select', @visit_group.name
+    
+    find('div.list-group-flush a:nth-child(1)').click
+    wait_for_ajax
+  end
+
+  def when_i_add_a_procedure
+    visit_group = @protocols_participant.appointments.first.visit_group
+    service     = @protocol.organization.inclusive_child_services(:per_participant).first
+
+    page.find('a.list-group-item[data-appointment-id="1"]').click
+    bootstrap_select('.form-control.selectpicker', service.name)
+    page.find('button#addService').click
     wait_for_ajax
   end
 
@@ -127,23 +132,23 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def when_i_load_the_page
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
     wait_for_ajax
 
-    find('#completed-appointments-table tr', text: @visit_group.name).click
+    find('div.list-group-flush a:nth-child(1)').click
     wait_for_ajax
   end
 
   def when_i_load_the_page_and_select_a_visit
-    visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
     wait_for_ajax
 
-    bootstrap_select '#appointment_select', @visit_group.name
+    find('div.list-group-flush a:nth-child(1)').click
     wait_for_ajax
   end
 
   def when_i_click_the_start_button
-    click_button 'Start Visit'
+    find('a.btn.start-appointment').click
     wait_for_ajax
   end
 
@@ -152,31 +157,26 @@ feature 'Start Complete Buttons', js: true do
     wait_for_ajax
   end
 
-  def when_i_set_the_start_date_to date
-    page.execute_script %Q{ $('#start_date').data("DateTimePicker").date("#{date.strftime('%m/%d/%Y %l:%M %P')}") }
-    page.execute_script %Q{ $('#start_date').data("DateTimePicker").show() }
-    page.execute_script %Q{ $('#start_date').data("DateTimePicker").hide() }
-  end
-
   def when_i_set_the_completed_date_to date
-    page.execute_script %Q{ $('#completed_date').data("DateTimePicker").date("#{date.strftime('%m/%d/%Y %l:%M %P')}") }
-    page.execute_script %Q{ $('#completed_date').data("DateTimePicker").show() }
-    page.execute_script %Q{ $('#completed_date').data("DateTimePicker").hide() }
+    bootstrap_datepicker '#completed_date', date: "#{Date.today}"
   end
 
   def then_i_should_see_the_start_button
-    expect(page).to have_css('button.btn-success.start_visit', visible: true)
+    expect(page).to have_css('a.start-appointment', visible: true)
+    find('a.start-appointment').click
+    wait_for_ajax
   end
 
   def then_i_should_see_the_complete_button
-    expect(page).to have_css('button.btn-danger.complete_visit', visible: true)
+    expect(page).to have_css('button.btn-success.complete-appointment', visible: true)
   end
 
   def then_i_should_see_the_complete_button_disabled
-    expect(page).to have_css('button.btn-danger.complete_visit.disabled', visible: true)
+    expect(page).to have_css('button.complete-appointment.disabled', visible: true)
   end
 
   def then_i_should_see_the_start_datepicker
+    sleep 60
     expect(page).to have_css('input#start_date', visible: true)
   end
 
@@ -192,6 +192,6 @@ feature 'Start Complete Buttons', js: true do
   def then_i_should_see_the_completed_date_at date
     find('#completed_date')
     expected_date = page.evaluate_script %Q{ $('#completed_date').first().val(); }
-    expect(expected_date.split().first).to eq(date.strftime('%m/%d/%Y'))
+    expect(expected_date.split().first).to eq(Date.today.strftime('%m/%d/%Y'))
   end
 end

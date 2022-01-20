@@ -30,7 +30,9 @@ feature 'Identity edits document title', js: true, enqueue: false do
         then_i_should_see_the_title_has_been_updated
       end
     end
+  end
 
+  context "from the All Reports page" do
     scenario "and sees the title has changed" do
       given_i_am_viewing_the_all_reports_page_with_documents
       when_i_edit_the_title
@@ -72,26 +74,30 @@ feature 'Identity edits document title', js: true, enqueue: false do
     visit protocol_path @protocol
     wait_for_ajax
 
-    click_link 'Reports'
+    find('#reportsTabLink').click
     wait_for_ajax
   end
 
   def when_i_create_an_identity_based_document_with_a_custom_title
-    find("[data-type='invoice_report']").click
+    find('.documents a', text:'Invoice Report').click
     wait_for_ajax
 
+    sleep 2
+
     fill_in 'Title', with: "A custom title"
-    bootstrap_datepicker '#start_date', day: '10'
-    bootstrap_datepicker '#end_date', day: '10'
-    find('button.multiselect').click
-    check(@protocol.organization.name)
+
+    bootstrap_datepicker 'input#start_date', day: '10'
+    bootstrap_datepicker 'input#end_date', day: '10'
+
+    find('button[data-id="organization_select"]').click
+    find(".dropdown-menu.show .dropdown-item", text: @protocol.organization.name).click
 
     # close organization dropdown, so it's not covering protocol dropdown
     find('.modal-title').click
 
     #Actually choose protocol
-    find('.bootstrap-select').click
-    find('.dropdown-menu a', text: @protocol.short_title_with_sparc_id.truncate(50)).click
+    find('button[data-id="protocol_select"]').click
+    find(".dropdown-menu.show .dropdown-item", text: @protocol.short_title_with_sparc_id.truncate(50)).click
 
     # close protocol dropdown, so it's not covering 'Request Report' button
     find('.modal-title').click
@@ -104,7 +110,9 @@ feature 'Identity edits document title', js: true, enqueue: false do
     first("a.edit-document").click
     wait_for_ajax
 
-    fill_in 'Title', with: "A custom title"
+    sleep 2
+
+    fill_in 'document_title', with: "A custom title"
 
     find("button[type='submit']").click
     wait_for_ajax

@@ -46,7 +46,7 @@ $ ->
   $(document).on 'click', '.destroy-participant', ->
     participant_id = $(this).attr('participant_id')
     name = $(this).attr('participant_name')
-    if confirm I18n['patient']['confirm_removal_part_1'] + " #{name} " + I18n['patient']['confirm_removal_part_2']
+    if confirm(I18n.t('patient.confirm_removal_part_1') + " #{name} " + I18n.t('patient.confirm_removal_part_2'))
       $.ajax
         type: 'DELETE'
         url: "/participants/#{participant_id}"
@@ -60,3 +60,10 @@ $ ->
       if $(item).find("td.deidentified:contains('Yes')").length
         $this.addClass 'deidentified_patient'
       return
+
+  ### *DETAILS ###
+  $(document).on 'click', '.participant-details', ->
+    participant_id = $(this).attr('participant_id')
+    $.ajax
+      type: 'GET'
+      url: "/participants/#{participant_id}/details"

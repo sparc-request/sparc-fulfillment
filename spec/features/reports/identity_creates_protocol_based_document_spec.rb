@@ -86,62 +86,62 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     visit protocol_path @protocol
     wait_for_ajax
 
-    click_link 'Reports'
+    find('#reportsTabLink').click
     wait_for_ajax
   end
 
   def when_i_create_a_document_of_type(type)
     case type
     when 'study_schedule_report'
-      find("button#study_schedule_report_#{@protocol.id.to_s}").click
+      click_button "Export"
       wait_for_ajax
 
-      @document_id = find("button#study_schedule_report_#{@protocol.id.to_s}")["document_id"]
+      @document_id = first('.study-schedule-report')['data-url'].split('documentable_id=')[1].split('&')[0]
     when 'participant_report'
       click_link 'Participant Tracker'
-      first("button.participant_report").click
+      find('.participant-report').click
       wait_for_ajax
 
-      @document_id = first("button.participant_report")["document_id"]
+      @document_id = first('.participant-report')['data-url'].split('documentable_id=')[1].split('&')[0]
     end
   end
 
   def when_i_click_the_created_document_icon
-    find("button#study_schedule_report_#{@protocol.id.to_s}").click
+    find(".fa-file-download").click
     wait_for_ajax
   end
 
   def when_i_click_the_download_option
-    find("ul#document_menu_study_schedule_report_#{@protocol.id.to_s} li a[title='Download Report']").click
+    find("ul.dropdown-menu .download-report").click
     wait_for_ajax
   end
 
   def when_i_click_the_generate_new_option
-    find("ul#document_menu_study_schedule_report_#{@protocol.id.to_s} li a[title='Generate New Report']").click
+    find("ul.dropdown-menu .regenerate-report").click
     wait_for_ajax
   end
 
   def then_i_should_see_the_document
-    click_link 'Reports'
+    find('#reportsTabLink').click
     wait_for_ajax
 
     expect(page).to have_css("a#file_#{@document_id}")
   end
 
   def then_i_should_see_the_options_dropdown
-    expect(page).to have_selector("ul#document_menu_study_schedule_report_#{@protocol.id.to_s}", visible: true)
+    expect(page).to have_selector("ul.dropdown-menu", visible: true)
   end
 
   def then_i_should_see_the_button_is_defaulted
-    expect(page).to have_css("button.study_schedule_report.btn-default")
-    expect(page).not_to have_css("button.study_schedule_report span.caret")
+    expect(page).to have_css("button.study-schedule-report.btn-success")
+    expect(page).not_to have_css("button.study-schedule-report.btn-secondary")
   end
 
   def then_i_should_not_see_the_documents_counter
-    expect(page).to_not have_css(".protocol_report_notifications")
+    expect(page).to_not have_css(".notification-badge")
   end
 
   def then_i_should_see_the_counter_increment_to(value)
-    expect(page).to have_css(".protocol_report_notifications", text: value)
+    expect(page).to have_css(".notification-badge", text: value)
   end
 end
