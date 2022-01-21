@@ -63,6 +63,11 @@ class AppointmentsController < ApplicationController
     @field = params[:field]
 
     @appointment.update_attributes(appointment_params)
+
+    if(!@appointment.valid?)
+      @errors = @appointment.errors
+    end
+
   end
 
   def update_statuses
