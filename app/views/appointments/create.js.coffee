@@ -21,11 +21,15 @@
 <% if @errors %>
 $("[name^='custom_appointment']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
 $('.form-error').remove()
+
 <% @errors.messages.each do |attr, messages| %>
+<% selector = attr.to_s == "notes.reason" ? "#custom_visit_reason" : "[name='custom_appointment[#{attr.to_s}]']".html_safe %>
+
 <% messages.each do |message| %>
-$("[name='custom_appointment[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+$("<%= selector %>").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
 <% end %>
 <% end %>
+
 <% else %>
 $('#appointmentsList').replaceWith("<%= j render '/protocols_participants/appointments', protocols_participant: @protocols_participant %>")
 $("#modalContainer").modal 'hide'

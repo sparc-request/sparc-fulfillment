@@ -39,7 +39,7 @@
                 = icon('fas', 'calendar-alt')
         .form-group
           = f.label 'performer_id', t('multiple_procedures_modal.performed_by'), class: 'required'
-          = f.select :performer_id, options_from_collection_for_select(performable_by, :id, :full_name), { include_blank: true }, class: 'selectpicker form-control'
+          = f.select :performer_id, options_from_collection_for_select(performable_by, :id, :full_name, current_identity.id), { include_blank: true}, class: 'selectpicker form-control'
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

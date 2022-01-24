@@ -44,7 +44,7 @@
           = nf.hidden_field :identity_id, value: current_identity.id
           .form-group
             .row.align-items-center
-              = nf.label "reason", t(:notes)[:reason], class: "control-label col-sm-4 mb-0"
+              = nf.label "reason", t(:notes)[:reason], class: "control-label required col-sm-4 mb-0"
               .col-sm-8
                 = nf.select :reason, Appointment::NOTABLE_REASONS, {include_blank: ''}, class: "form-control selectpicker", id: "custom_visit_reason"
           .form-group
