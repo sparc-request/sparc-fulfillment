@@ -38,6 +38,8 @@ class ProtocolsParticipantsController < ApplicationController
     respond_to do |format|
       format.html {
         @appointment = Appointment.find(params[:appointment_id]) if params[:appointment_id]
+        @protocols_participant.build_appointments
+
         session[:breadcrumbs].set_base(:requests, root_url).add_crumbs([
           { label: helpers.protocol_label(@protocol) },
           { label: helpers.request_label(@protocol), url: protocol_path(@protocol) },
