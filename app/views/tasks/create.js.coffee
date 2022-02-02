@@ -28,7 +28,7 @@ $("[name='task[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-vali
 <% end %>
 <% else %>
 $("nav#siteNav").replaceWith("<%= j render 'layouts/navbar' %>")
-$("#tasks").bootstrapTable('refresh')
+$("#tasks").bootstrapTable('refresh')##TODO: This doesn't need done if we are on the appointment calendar
 $("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal('hide')
 <% end %>
@@ -37,34 +37,19 @@ $("#modalContainer").modal('hide')
 
 <% if @procedure.present? %>
 $("#followup<%= @procedure.id %>").replaceWith("<%= j render 'procedures/followup', procedure: @procedure %>")
-updateNotesBadge("procedure<%= @procedure.id %>", "<%= format_count(@procedure.notes.length) %>")
+updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.length %>")
 <% end %>
 
 <% if @appointment.present? %>
-$('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
+$('.appointments').html("<%= j render 'appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")##TODO: I'm pretty sure this doesn't actually do anything anymore...
 
-if !$('.start_date_input').hasClass('hidden')
-  start_date_init("<%= format_datetime(@appointment.start_date) %>")
-
-if !$('.completed_date_input').hasClass('hidden')
-  completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
-
-$('#appointment_content_indications').selectpicker()
-$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
-$(".selectpicker").selectpicker()
+$(".appointment-action-buttons").html("<%= j render '/appointments/appointment_action_buttons', appointment: @appointment %>")
 
 statuses = []
 <% @statuses.each do |status| %>
 statuses[statuses.length] =  "<%= status %>"
 <% end %>
 
-$(".followup_procedure_datepicker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-
-$(".completed_date_field").datetimepicker(format: 'MM/DD/YYYY')
-
 $('.row.appointment [data-toggle="tooltip"]').tooltip()
 <% end %>
-
-$(".followup_procedure_datepicker").datetimepicker(format: 'MM/DD/YYYY')
+  

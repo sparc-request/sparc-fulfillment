@@ -33,24 +33,31 @@ class ProceduresController < ApplicationController
   end
 
   def create
-    qty             = params[:qty].to_i
-    service         = Service.find params[:service_id]
-    performer_id    = params[:performer_id]
-    protocol        = @appointment.protocol
+    qty           = params[:qty].to_i
+    service       = Service.find_by(id: params[:service_id])
+    performer_id  = params[:performer_id]
 
-    qty.times do
-      Procedure.create(appointment: @appointment,
-                       service_id: service.id,
-                       service_name: service.name,
-                       performer_id: performer_id,
-                       billing_type: 'research_billing_qty',
-                       sparc_core_id: service.sparc_core_id,
-                       sparc_core_name: service.sparc_core_name)
+    new_procedure = Procedure.new(appointment: @appointment,
+                                     service_id: service.try(:id),
+                                     service_name: service.try(:name),
+                                     performer_id: performer_id,
+                                     billing_type: 'research_billing_qty',
+                                     sparc_core_id: service.try(:sparc_core_id),
+                                     sparc_core_name: service.try(:sparc_core_name))
+
+    if new_procedure.valid? && qty > 0
+      qty.times do
+        new_procedure.dup.save
+      end
+
+      @statuses = @appointment.appointment_statuses.pluck(:status)
+      render 'appointments/show'
+    else
+      @errors = new_procedure.errors
+      unless qty > 0
+        @errors.add(:base, :qty)
+      end
     end
-
-    @statuses = @appointment.appointment_statuses.pluck(:status)
-
-    render 'appointments/show'
   end
 
   def edit

@@ -20,21 +20,27 @@
 
 $ ->
 
-  setDocumentTableInterval = null
-
   $(document).on 'click', '.report-request', ->
-    setDocumentTableInterval = setInterval refreshDocumentTable, 5000
+    $('#documents_table').one 'post-body.bs.table', () ->
+      new_document_id = $('span.processing').first().data('id')
+      documentInterval = setInterval((->
+          getDocumentState(new_document_id, documentInterval)
+          ), 5000)    
 
-  clearDocumentTableInterval = (complete) ->
-    if complete == true
-      clearInterval setDocumentTableInterval
-
-  refreshDocumentTable = ->
-    $('#documents_table').bootstrapTable('refresh', {silent: "true"})
-    complete = true
-    if $('span.processing').length
-      complete = false
-    clearDocumentTableInterval(complete)
+  getDocumentState = (id, interval) ->
+    $.ajax
+      method: 'GET'
+      dataType: 'json'
+      url: "/documents/#{id}.json"
+      success: (data) ->
+        switch data.document.state
+          when 'Completed'
+            clearInterval(interval)
+            $('#documents_table').bootstrapTable('refresh', {silent: "true"})
+            add_to_report_notification_count("Identity", 1)
+          when 'Error'
+            clearInterval(interval)
+            $('#documents_table').bootstrapTable('refresh', {silent: "true"})
 
   $(document).on 'click', '.edit-document', ->
     document_id = $(this).data('document_id')
@@ -54,11 +60,26 @@ $ ->
 
   $(document).on 'change', "#organization_select", ->
     org_ids = $(this).val()
-    if org_ids != null
+    if org_ids.length == 0
+      # Hide protocols dropdown if an Organization has not been selected
+      $('#protocol_section').closest('.form-group').addClass("d-none")
+      $('#org_based_protocols').addClass('d-none')
+      $('#protocol_section').empty()
+      $('input[type=submit].report-request').prop('disabled', true)
+    else
+      $('#org_based_protocols').removeClass('d-none')
+      $('#protocol_section').empty()
+      $('#protocol_section').closest('.form-group').removeClass("d-none")
       $.ajax
         type: 'GET'
         url: "reports/update_protocols_dropdown"
         data: { org_ids: org_ids }
+
+  $(document).on 'change', "#protocol_select", ->
+    if $(this).val().length > 0
+      $('input[type=submit].report-request').prop('disabled', false)
+    else
+      $('input[type=submit].report-request').prop('disabled', true)
 
   if $("body.documents-index").length > 0
     $(document).on 'click', 'a.attached_file', ->
@@ -80,4 +101,3 @@ $ ->
 (exports ? this).refreshDocumentsTables = ->
   $('#documents_table').bootstrapTable('refresh', {silent: "true"})
   $('#reports_table').bootstrapTable('refresh', {silent: "true"})
-  

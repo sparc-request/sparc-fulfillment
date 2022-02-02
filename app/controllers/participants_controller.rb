@@ -23,7 +23,6 @@ class ParticipantsController < ApplicationController
   before_action :find_participant, only: [:show, :update_status, :update_recruitment_source, :details, :edit, :update, :destroy, :edit_arm, :edit_external_id, :update_arm, :update_external_id, :patient_registry_modal_details]
   before_action :find_protocols_participant, only: [:show, :update_status, :update_recruitment_source, :edit_arm, :edit_external_id, :update_arm, :update_external_id]
   before_action :authorize_protocol, only: [:show]
-  before_action :authorize_patient_registrar, only: [:index]
   before_action :format_participant_name, only: [:create, :update]
 
   def index
@@ -91,7 +90,7 @@ class ParticipantsController < ApplicationController
   end
 
   def find_participants(action_name)
-    @participants = Participant.search(params[:search])
+    @participants = Participant.includes(:procedures).search(params[:search])
     @total = @participants.count
     @participants = @participants.order(Arel.sql("#{@sort}")) if @sort
     @participants = @participants.limit(@limit).offset(@offset)
@@ -105,14 +104,13 @@ class ParticipantsController < ApplicationController
     end
   end
 
+  def details
+    #This is here because I spent 3 hours trying to figure out how rails was rendering an action that didn't exist -.-
+    #I don't care if it's "not needed" technically, it's a troubleshooting nightmare.
+  end
+
   private
 
-  def authorize_patient_registrar
-    unless current_identity.is_a_patient_registrar?
-      flash[:alert] = t(:protocol)[:flash_messages][:unauthorized]
-      redirect_to root_path
-    end
-  end
 
   def determine_patient_sort
     if params[:order]

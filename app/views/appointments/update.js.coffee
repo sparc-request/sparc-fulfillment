@@ -18,7 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+$(".appointment_messages").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>")
+<% unless @errors %>
+$(".appointment_messages").html("")
 $('#appointmentsList').replaceWith("<%= j render 'protocols_participants/appointments', protocols_participant: @appointment.protocols_participant, appointment: @appointment %>")
 $('#appointmentContainer').html("<%= j render '/appointments/calendar', appointment: @appointment, appointment_style: @appointment_style %>")
-
 $(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
+<% end %>
+
