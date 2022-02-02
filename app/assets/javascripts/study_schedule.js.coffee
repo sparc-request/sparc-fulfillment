@@ -25,7 +25,7 @@ $ ->
     tab = String(e.target).split("#")[1]
     date = new Date()
     date.setTime(date.getTime() + (60 * 60 * 1000))
-    $.cookie("active-schedule-tab", tab, expires: date, path: '/') # save tab to cookie
+    $.cookie("active-schedule-tab", tab, {expires: date}, path: '/') # save tab to cookie
 
   $(document).on 'click', '.page_change_arrow:not(.disabled)', ->
     data =
@@ -117,8 +117,15 @@ $ ->
 
   $(document).on 'change', '.visit-name', ->
     visit_group_id = $(this).data('visit-group-id')
+    page = $(this).closest("table").find(".visit_dropdown.selectpicker").attr('page')
     name = $(this).val()
-    data = 'visit_group' : 'name' : name
+    tab = $('#current_tab').val()
+    data =
+      current_page: page,
+      schedule_tab: tab,
+      on_page_edit: true,
+      visit_group:
+        name: name
     $.ajax
       type: 'PUT'
       url:  "/visit_groups/#{visit_group_id}"

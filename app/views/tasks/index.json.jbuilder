@@ -1,4 +1,5 @@
-json.(@tasks) do |task|
+json.total @total
+json.rows @tasks do |task|
   json.id task.id
   json.identity_name task.identity.full_name
   json.assignee_name task.assignee.full_name

@@ -33,6 +33,7 @@
         = link_to appointment_change_appointment_style_path(appointment_id: appointment.id, appointment_style: 'grouped'), remote: true, class: 'btn btn-secondary ml-1', title: t('appointments.tooltips.change_view_style.grouped'), data: { toggle: 'tooltip', placement: 'top', animation: 'false' } do
           = icon('far', 'list-alt')
   .card-body
+    .row.appointment_messages.flex-column
     .row
       = render '/appointments/start_complete_datepickers', appointment: appointment
       = render '/appointments/visit_type_dropdown', appointment: appointment
@@ -49,9 +50,9 @@
     .card-body
       .row
         .form-group.mb-0.col-8
-          = f.select :service_id, options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), 'id', 'name'), { include_blank: true }, class: 'form-control selectpicker'
+          = f.select :service_id, options_from_collection_for_select(appointment.protocol.organization.inclusive_child_services(:per_participant), 'id', 'name'), { include_blank: true }, class: 'form-control selectpicker', id: "add_procedure_dropdown"
         .form-group.mb-0.col-2
-          = f.text_field :qty, value: 1, class: 'form-control'
+          = f.text_field :qty, value: 1, class: 'form-control', id: 'service_quantity'
         .col-2
           %button.btn.btn-success.w-100#addService
             = t('appointments.add_service')

@@ -41,22 +41,6 @@ RSpec.describe NotesController, type: :controller do
     end
   end
 
-  describe 'GET #new' do
-
-    it 'should instantiate a new note' do
-      params = {
-        note: {
-          notable_type: 'Procedure',
-          notable_id: 1
-        }
-      }
-
-      get :new, params: params, xhr: true
-
-      expect(assigns(:note)).to be_a_new(Note)
-    end
-  end
-
   describe 'POST #create' do
 
     it 'should create a new note' do
@@ -72,6 +56,7 @@ RSpec.describe NotesController, type: :controller do
 
       expect{ post :create, params: params, format: :js }.to change(Note, :count).by(1)
       expect(assigns(:note)).to have_attributes(comment: 'okay')
+      expect(assigns(:next_note)).to have_attributes(comment: nil)
     end
   end
 end

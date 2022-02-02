@@ -25,9 +25,10 @@ FactoryBot.define do
     protocol { nil }
     participant { nil }
     status { Participant::STATUS_OPTIONS.select{|stat| stat != 'Screening'}.sample }
+    current_identity {Identity.first}
 
-    trait :with_protocol do 
-      protocol  
+    trait :with_protocol do
+      protocol
     end
 
     trait :with_appointments do

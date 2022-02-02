@@ -65,35 +65,35 @@ feature 'Identity views protocols', js: true do
   end
 
   def and_i_click_on_the_coordinators_dropdown
-    page.find('table.protocols tbody tr:first-child td.coordinators button').click
+    page.find('table#protocols tbody tr:first-child td.coordinators button').click
   end
 
   def and_a_change_is_made_to_the_protocol_by_another_identity
     Protocol.first.sparc_protocol.update_attribute :short_title, 'Test 123'
-    refresh_bootstrap_table('table.protocols')
+    refresh_bootstrap_table('table#protocols')
   end
 
   def then_i_should_see_protocols_for_which_i_am_a_filfillment_provider
-    expect(page).to have_css("table.protocols tbody tr td.short_title", count: 1)
+    expect(page).to have_css("table#protocols tbody tr td.short-title", count: 1)
   end
 
   def then_i_should_not_see_protocols_for_which_i_am_not_a_filfillment_provider
-    expect(page).to have_css("table.protocols tbody tr", text: "No matching records found")
+    expect(page).to have_css("table#protocols tbody tr", text: "No matching records found")
   end
 
   def and_i_should_not_be_able_to_access_protocols_for_which_i_am_not_a_filfillment_provider
     visit protocol_path(@unauthorized_protocol.id) # tries to visit protocol without access
     wait_for_ajax
-    
+
     expect(current_path).to eq root_path # gets redirected back to index
   end
 
   def then_i_should_see_a_list_of_coordinators
-    expect(page).to have_css('table.protocols tr:first-child td.coordinators ul.dropdown-menu')
+    expect(page).to have_css('table#protocols tr:first-child td.coordinators div.dropdown-menu')
   end
 
   def then_i_should_see_the_change
-    expect(page).to have_css('table.protocols td.short_title', text: 'Test 123')
+    expect(page).to have_css('table#protocols td.short-title', text: 'Test 123')
   end
 end
 
