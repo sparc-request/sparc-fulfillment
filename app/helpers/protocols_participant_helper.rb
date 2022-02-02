@@ -19,19 +19,26 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ProtocolsParticipantHelper
+  def protocols_participant_label(protocols_participant)
+    protocols_participant.full_name.truncate(50)
+  end
+
   def protocols_participant_actions(protocols_participant)
     content_tag :div, class: 'd-flex justify-content-center' do
-      raw([
-        protocols_participant_details_button(protocols_participant),
-        protocols_participant_report_button(protocols_participant),
-        protocols_participant_delete_button(protocols_participant)
-      ].join(''))
+      if action_name == 'show'
+        protocols_participant_details_button(protocols_participant)
+      else
+        raw([
+          protocols_participant_details_button(protocols_participant),
+          protocols_participant_delete_button(protocols_participant)
+        ].join(''))
+      end
     end
   end
 
   def protocols_participant_arm_dropdown(protocols_participant)
     form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
-      f.select :arm_id, options_from_collection_for_select(protocols_participant.protocol.arms, :id, :name, protocols_participant.id), { include_blank: protocols_participant.arm.nil? }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+      f.select :arm_id, options_from_collection_for_select(protocols_participant.protocol.arms, :id, :name, protocols_participant.try(:arm).try(:id)), { include_blank: protocols_participant.arm.nil? }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
     end
   end
 
@@ -39,10 +46,10 @@ module ProtocolsParticipantHelper
     protocols_participant = protocol.protocols_participants.find_by(participant_id: participant.id) || protocol.protocols_participants.new(participant_id: participant.id)
     associated            = !protocols_participant.new_record?
     disabled              = !protocols_participant.can_be_destroyed?
-    url                   = associated ? protocol_participant_path(protocols_participant, protocol_id: protocol.id) : protocol_participants_path(protocol_id: protocol.id, participant_id: participant.id)
+    url                   = associated ? destroy_protocol_participant_path(protocols_participant, protocol_id: protocol.id) : protocol_participants_path(protocol_id: protocol.id, participant_id: participant.id)
     ajax_method           = associated ? :delete : :post
-    klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger remove-participant' : 'btn-success add-participant']
-    icon_klass            = associated ? 'times' : 'check'
+    klass                 = ['btn btn-sm btn-sq', associated ? 'btn-danger remove-participant' : 'btn-primary add-participant']
+    icon_klass            = associated ? 'times' : 'plus'
     tooltip               = disabled ? 'cant_delete' : (associated ? 'remove' : 'add')
 
     link_to url, method: ajax_method, remote: true, class: klass, title: t("protocols_participants.tooltips.#{tooltip}"), data: { toggle: 'tooltip' } do
@@ -62,40 +69,56 @@ module ProtocolsParticipantHelper
   def protocols_participant_delete_button(protocols_participant)
     disabled = !protocols_participant.can_be_destroyed?
     content_tag(:div, class: 'tooltip-wrapper', title: disabled ? t('protocols_participants.tooltips.cant_delete') : t('actions.delete'), data: { toggle: 'tooltip', boundary: 'window' }) do
-      link_to protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :delete, remote: true, class: ['btn btn-sq btn-danger remove-participant', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' } do
+      link_to destroy_protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :delete, remote: true, class: ['btn btn-sq btn-danger remove-participant', disabled ? 'disabled' : ''], data: { confirm_swal: 'true' } do
         icon('fas', 'trash')
       end
     end
   end
 
   def protocols_participant_details_button(protocols_participant)
-    link_to protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), remote: true, class: 'btn btn-sq btn-info mr-1 participant-details', title: t('actions.details'), data: { toggle: 'tooltip' } do
+    link_to participant_details_path(protocols_participant.participant_id), remote: true, class: 'btn btn-sq btn-info mr-1 participant-details is-this-update', title: t('actions.details'), data: { toggle: 'tooltip' } do
       icon('fas', 'eye')
     end
   end
 
-  def protocols_participant_external_id(protocols_participant)
-    popover = render('external_id_form.html', protocols_participant: protocols_participant)
-    link_to protocols_participant.external_id || t('constants.na'), 'javascript:void(0)', data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
+  def protocols_participant_external_id(protocols_participant, opts={})
+    external_id = protocols_participant.external_id.present? ? protocols_participant.external_id : t('constants.na')
+    if opts[:readonly]
+      external_id
+    else
+      popover = render('external_id_form.html', protocols_participant: protocols_participant)
+      link_to external_id, 'javascript:void(0)', data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
+    end
   end
 
-  def protocols_participant_report_button(protocols_participant)
-    content_tag(:div, class: 'tooltip-wrapper', title: t('reports.participant_report'), data: { toggle: 'tooltip' }) do
-      content_tag(:button, class: 'btn btn-sq btn-secondary mr-1 participant-report report-button', data: { url: reports_path(report_type: 'participant_report', title: t('reports.participant_report'), documentable_id: protocols_participant.protocol_id, documentable_type: Protocol.name) }) do
-        icon('fas', 'file-alt mr-1')
+  def protocols_participant_status_dropdown(protocols_participant, opts={})
+    if opts[:readonly]
+      protocols_participant.status.present? ? protocols_participant.status : t('constants.na')
+    else
+      form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
+        f.select :status, options_for_select(Participant::STATUS_OPTIONS, protocols_participant.status), { include_blank: true }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
       end
     end
   end
 
-  def protocols_participant_status_dropdown(protocols_participant)
-    form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
-      f.select :status, options_for_select(Participant::STATUS_OPTIONS, protocols_participant.status), { include_blank: true }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+  def protocols_participant_recruitment_source_dropdown(protocols_participant, opts={})
+    if opts[:readonly]
+      protocols_participant.recruitment_source.present? ? protocols_participant.recruitment_source : t('constants.na')
+    else
+      form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
+        f.select :recruitment_source, options_for_select(Participant::RECRUITMENT_OPTIONS, protocols_participant.recruitment_source), { include_blank: true }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+      end
     end
   end
 
-  def protocols_participant_recruitment_source_dropdown(protocols_participant)
-    form_for protocols_participant, url: protocol_participant_path(protocols_participant, protocol_id: protocols_participant.protocol_id), method: :put, remote: true do |f|
-      f.select :recruitment_source, options_for_select(Participant::RECRUITMENT_OPTIONS, protocols_participant.recruitment_source), { include_blank: true }, class: 'selectpicker', onchange: "Rails.fire(this.form, 'submit')"
+  def protocols_participant_calendar_arm_options(protocols_participant)
+    arms = protocols_participant.arms.map do |arm|
+      if arm == protocols_participant.arm
+        ["#{ProtocolsParticipant.human_attribute_name(:arm)}: #{arm.name}", arm.id]
+      else
+        ["#{Arm.model_name.human}: #{arm.name}", arm.id]
+      end
     end
+    options_for_select(arms, protocols_participant.arm.id)
   end
 end

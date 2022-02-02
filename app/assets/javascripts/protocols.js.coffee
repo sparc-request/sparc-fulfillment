@@ -20,13 +20,6 @@
 
 $ ->
 
-  $('#protocolsList .export button').addClass('no-caret').siblings('.dropdown-menu').addClass('d-none')
-
-  $(document).on 'click', '#protocolsList .export button', ->
-    url = new URL($('#protocols').data('url'), window.location.origin)
-    url.pathname = url.pathname.replace('json', 'csv')
-    window.location = url
-
   if $("#protocols").length
     # Delete Protocol tab-remembering cookie
     Cookies.remove("active-protocol-tab")
@@ -49,7 +42,10 @@ $ ->
     #Index table events
     $(document).on 'change', '#protocol_status_filter', ->
       status = $(this).val()
-      $('#protocols').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
+      if status == "all"
+        $('#protocols').bootstrapTable('refresh', {url: "/protocols.json", silent: "true"})
+      else
+        $('#protocols').bootstrapTable('refresh', {url: "/protocols.json?status=" + status, silent: "true"})
 
     $(document).on 'click', '.financial:not(.active)', ->
       $(this).addClass('active')

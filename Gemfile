@@ -8,11 +8,13 @@ gem 'autoprefixer-rails', '7.2.2'
 gem 'axlsx', git: 'https://github.com/randym/axlsx', branch: 'master'
 gem 'axlsx_rails'
 gem 'babel-transpiler'
+gem 'bcrypt_pbkdf'
 gem 'coffee-rails'
 gem 'daemons'
 gem 'delayed_job_active_record'
 gem 'devise'
 gem 'dotenv-rails'
+gem 'ed25519'
 gem 'faye'
 gem 'font-awesome-sass'
 gem 'gon'
@@ -48,6 +50,7 @@ gem 'whenever', '~> 1.0.0'
 gem 'will_paginate'
 gem 'yajl-ruby', require: 'yajl'
 gem 'dalli'
+gem 'progress_bar'
 
 group :deploy do
   gem 'capistrano', '~> 3.14'
@@ -62,7 +65,6 @@ group :development, :test, :testing do
   gem "factory_bot_rails"
   gem 'faker', '~> 2.14.0'
   gem 'pry'
-  gem 'progress_bar'
 end
 
 group :development do
@@ -77,7 +79,7 @@ group :test do
   gem 'capybara'
   gem 'climate_control'
   gem 'database_cleaner'
-  gem 'geckodriver-helper', git: 'https://github.com/DevicoSolutions/geckodriver-helper.git', ref: "refs/pull/17/head"
+  # gem 'geckodriver-helper', git: 'https://github.com/DevicoSolutions/geckodriver-helper.git', ref: "refs/pull/17/head"
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec-activejob', '~> 0.6.1'
@@ -87,6 +89,6 @@ group :test do
   gem 'shoulda-matchers', "~> 4.4.1", require: false
   gem 'timecop'
   gem 'vcr', '~> 6.0.0'
-  gem 'webdrivers', '~> 4.4'
+  gem 'webdrivers', '~> 4.6'
   gem 'webmock', '~> 3.13.0'
 end

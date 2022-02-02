@@ -46,21 +46,21 @@ feature 'User changes the status of a participant on the participant tracker', j
   end
 
   def when_i_update_the_participant_status
-    bootstrap_select "#protocols_participant_status_#{@protocols_participant.id}", "Screening"
+    bootstrap_select "#protocols_participant_status", "Screening"
     wait_for_ajax
 
-    refresh_bootstrap_table 'table.participants'
+    refresh_bootstrap_table '#participantTrackerTable'
     wait_for_ajax
   end
 
   def then_i_should_see_the_updated_status
-    expect(bootstrap_selected?("protocols_participant_status_#{@protocols_participant.id}", "Screening")).to be
+    expect(bootstrap_selected?("protocols_participant_status", "Screening")).to be
   end
 
   def then_i_should_see_an_associated_note
-    expect(bootstrap_selected?("protocols_participant_status_#{@protocols_participant.id}", "Screening")).to be
+    expect(bootstrap_selected?("protocols_participant_status", "Screening")).to be
     wait_for_ajax
-    find("button.participant_notes[data-notable-id='#{@protocols_participant.id}']").click
+    find("#participant#{@protocols_participant.id}Notes a").click
     wait_for_ajax
 
     expect(page).to have_content('Status changed')

@@ -18,14 +18,14 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF eSUCH DAMAGE.~
 
-.card.w-100
+.card.w-100.h-100
   .card-header.bg-primary.text-white.justify-content-between
     %h3.mb-0<
       = "#{protocol.organization.name} (#{protocol.srid})"
     .protocol-links.d-flex
       = dashboard_link(protocol)
       = formatted_study_schedule_report(protocol)
-  %table{ id: dom_id(protocol), data: { toggle: 'table', url: protocol_path(protocol, format: :json) } }
+  %table{ id: dom_id(protocol), data: { toggle: 'table', url: protocol_path(protocol, format: :json), undefined_text: "" } }
     %thead.bg-light
       %tr
         %th.rmid{ data: { field: 'rmid', align: 'center', sortable: 'true', visible: Sparc::Setting.get_value('research_master_enabled').to_s } }

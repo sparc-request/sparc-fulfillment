@@ -62,21 +62,19 @@ feature 'Identity adds multiple Procedures', js: true do
   end
 
   def then_i_should_see_the_multiselect_instantiated_with_2_options
-    find("select#core_multiselect + .btn-group").click
-    expect(page).to have_content("Select all")
-    expect(page).to have_content("5 #{Procedure.first.service_name} R")
+    find("button[data-id='core_#{Procedure.first.sparc_core_id}_multiselect']").click
+    expect(page).to have_css("button.bs-select-all")
+    expect(page).to have_content("#{Procedure.first.service_name}")
   end
 
   def then_i_should_see_one_group_with_four_procedures
-    find('tr.procedure-group button').click
+    find("tr.info.groupBy.expanded").click
     wait_for_ajax
 
-    group_id = Procedure.first.group_id
-
-    expect(page).to have_css("tr.procedure[data-group-id='#{group_id}']", count: 4)
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
   end
 
   def then_i_should_see_two_grouped_procedures
-    expect(page).to have_css('tr.procedure-group', count: 2)
+    expect(page).to have_css("tr.info.groupBy.expanded", count: 2)
   end
 end

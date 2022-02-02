@@ -29,47 +29,51 @@
       .modal-body
         #modal_errors
         = render partial: 'required_fields'
-        .col-md-12
+        .col-md-12.mt-3
           = hidden_field_tag "report_type", report_type
           = hidden_field_tag "include_notes", false
-          .form-group
-            = label_tag "title", t(:documents)[:title], class: "control-label required"
-            .col-sm-9
+          .form-group.row.align-items-center
+            = label_tag "title", t(:documents)[:title], class: "control-label required col-sm-5 mb-0"
+            .col-sm-7
               = text_field_tag "title", title, class: 'form-control'
-          .form-group
-            = label_tag "start_date", t(:reports)[:subsidy_date_from], class: "col-form-label"
-            .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
-              = text_field_tag "start_date", nil, class: "form-control datetimepicker", readonly: true, data: { target:"#start_date" }
+          .form-group.row.align-items-center
+            = label_tag "start_date", t(:reports)[:subsidy_date_from], class: "control-label col-sm-5 mb-0"
+            .input-group.datetimepicker.date.col-sm-7{ id: 'start_date', data: {target_input: 'nearest' }}
+              = text_field_tag "start_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#start_date", toggle:"datetimepicker" }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
                 .input-group-text
                   %span.far.fa-calendar
-          .form-group
-            = label_tag "end_date", t(:reports)[:subsidy_date_to], class: "col-form-label"
-            .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
-              = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date" }
+          .form-group.row.align-items-center
+            = label_tag "end_date", t(:reports)[:subsidy_date_to], class: "control-label col-sm-5 mb-0"
+            .input-group.datetimepicker.date.col-sm-7{ id: 'end_date', data: {target_input: 'nearest'}}
+              = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date", toggle:"datetimepicker" }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
                 .input-group-text
                   %span.far.fa-calendar
-          .form-group
-            = label_tag "sort_by", t(:reports)[:sort_by], class: "control-label"
-            .col-sm-3
-              %label.radio-inline
-                = radio_button_tag "sort_by", t(:reports)[:protocol_id], true
-                = t(:reports)[:protocol_id]
-            .col-sm-3
-              %label.radio-inline
-                = radio_button_tag "sort_by", t(:reports)[:primary_pi]
-                = t(:reports)[:primary_pi]
-          .form-group
-            = label_tag "sort_order", t(:reports)[:sort_order], class: "control-label"
-            .col-sm-3
-              %label.radio-inline
-                = radio_button_tag "sort_order", t(:reports)[:asc], true
-                = t(:reports)[:ascending]
-            .col-sm-3
-              %label.radio-inline
-                = radio_button_tag "sort_order", t(:reports)[:desc]
-                = t(:reports)[:descending]
+
+          %hr
+
+          .row
+            .form-group.col-sm-6
+              %label.control-label=t(:reports)[:sort_by]
+              .form-check.ml-3
+                = radio_button_tag "sort_by", t(:reports)[:protocol_id], true, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:protocol_id]
+
+              .form-check.ml-3
+                = radio_button_tag "sort_by", t(:reports)[:primary_pi], false, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:primary_pi]
+
+            .form-group.col-sm-6
+              %label.control-label=t(:reports)[:sort_order]
+              .form-check.ml-3
+                = radio_button_tag "sort_order", t(:reports)[:asc], true, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:ascending]
+
+              .form-check.ml-3
+                = radio_button_tag "sort_order", t(:reports)[:desc], false, class: "form-check-input"
+                %label.form-check-label= t(:reports)[:descending]
+
       .modal-footer
         .center-block
           %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}

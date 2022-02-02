@@ -19,8 +19,9 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class AppointmentStatus < ApplicationRecord
-
   acts_as_paranoid
 
   belongs_to :appointment
+
+  validates_uniqueness_of :status, scope: :appointment_id
 end

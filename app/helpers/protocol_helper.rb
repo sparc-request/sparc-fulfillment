@@ -86,8 +86,14 @@ module ProtocolHelper
   end
 
   def formatted_study_schedule_report protocol
-    content_tag :button, class: 'btn btn-secondary study-schedule-report report-button', data: { url: reports_path(report_type: 'study_schedule_report', title: t('reports.study_schedule_report'), documentable_id: protocol.id, documentable_type: Protocol.name) } do
-      icon('fas', 'file-download mr-2') + t('actions.export')
+    if protocol.arms.any?
+      content_tag :button, class: "btn btn-secondary study-schedule-report report-button", data: { url: reports_path(report_type: 'study_schedule_report', title: t('reports.study_schedule_report'), documentable_id: protocol.id, documentable_type: Protocol.name) } do
+        icon('fas', 'file-download mr-2') + t('actions.export')
+      end
+    else
+      content_tag :button, class: "btn btn-secondary study-schedule-report report-button disabled", data: {toggle: "tooltip", title: "Export Report is only for clinical services"} do
+        icon('fas', 'file-download mr-2') + t('actions.export')
+      end
     end
   end
 

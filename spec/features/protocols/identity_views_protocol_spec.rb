@@ -48,7 +48,7 @@ feature "Identity views protocol", js: true do
   end
 
   def then_i_should_see_a_correctly_formatted_irb_expiration_date
-    expect(page).to have_css(".irb_expiration_date", text: /\d\d\/\d\d\/\d\d/)
+    expect(page).to have_css(".irb-expiration", text: /\d\d\/\d\d\/\d\d/)
   end
 
   def then_i_should_not_see_service_related_elements

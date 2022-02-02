@@ -38,7 +38,7 @@ RSpec.describe LineItemsController do
       it 'renders the :index action' do
         get :index, params: { protocol_id: @protocol.id }, format: :json
 
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'assigns @protocol and @line_items' do
@@ -47,23 +47,6 @@ RSpec.describe LineItemsController do
         expect(assigns(:protocol)).to be
         expect(assigns(:line_items)).to be
       end
-    end
-  end
-
-  describe "GET #new" do
-    it "should instantiate a new LineItem" do
-      get :new, params: { protocol_id: @protocol.id }, format: :js, xhr: true
-      expect(assigns(:line_item)).to be_a_new(LineItem)
-    end
-  end
-
-  describe "POST #create" do
-    it "should create a new LineItem" do
-      expect{
-        post :create, params: {
-          line_item: attributes_for(:line_item, protocol_id: @protocol.id, service_id: @service.id)
-        }, format: :js
-      }.to change(LineItem, :count).by(1)
     end
   end
 
@@ -78,11 +61,10 @@ RSpec.describe LineItemsController do
     it "should update a otf LineItem and create and associated note" do
       put :update, params: {
         id: @line_item.id,
-        line_item: attributes_for(:line_item, protocol_id: @protocol.id, service_id: @service.id, quantity_requested: 328)
+        line_item: attributes_for(:line_item, protocol_id: @protocol.id, service_id: @service.id, account_number: 328)
       }, format: :js
       @line_item.reload
-      expect(@line_item.quantity_requested).to eq 328
-      expect(@line_item.notes.map{|n| n.comment}).to include("Quantity Requested changed to 328")
+      expect(@line_item.account_number).to eq "328"
     end
 
     it "should update a pppv LineItem and update associated procedures" do
@@ -94,19 +76,6 @@ RSpec.describe LineItemsController do
       @pppv_line_item.reload
       expect(@pppv_line_item.service_id).to eq @service_2.id
       expect(@pppv_line_item.visits.map{|v| v.procedures.map{|p| p.service_id}}.flatten.uniq.first).to eq(@service_2.id)
-    end
-  end
-
-  describe "DELETE #destroy" do
-    it "should delete a line item with out fulfillments" do
-      delete :destroy, params: { id: @line_item.id }, format: :js
-      expect(@line_item.deleted?)
-    end
-
-    it "should not delete a line item with fulfilmments" do
-      fulfillment = create(:fulfillment, line_item: @line_item)
-      delete :destroy, params: { id: @line_item.id }, format: :js
-      expect(@line_item).to be
     end
   end
 end

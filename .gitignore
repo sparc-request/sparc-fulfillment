@@ -50,3 +50,5 @@ config/klok_db.yml
 fulfill.sql
 
 public/system/*
+
+/node_modules

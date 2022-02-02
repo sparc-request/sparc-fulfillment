@@ -18,80 +18,81 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-<% if @procedure.errors.present? && !@cost_error_message %>
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @procedure.errors})) %>")
+<% if @errors %>
+$("[name^='procedure']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
+$('.form-error').remove()
+
+<% @errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='procedure[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+
+<% @procedure.notes.last.errors.messages.each do |attr, messages| %>
+<% messages.each do |message| %>
+$("[name='procedure[notes_attributes][0][<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
+<% end %>
+<% end %>
+
+<% if @cost_error_message %>
+<% @procedure.reload %>
+Swal.fire("<%= @cost_error_message %>")
+date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
+date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+<% end %>
+
 <% else %>
+$("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
 
-update_complete_visit_button(<%= @procedure.appointment.can_finish? %>)
-
-date_time_picker = $(".procedure[data-id='<%= @procedure.id %>']").find(".completed_date_field").datetimepicker(format: 'MM/DD/YYYY').data("DateTimePicker")
-
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('billing-type', "<%= @procedure.billing_type %>").attr('data-billing-type', "<%= @procedure.billing_type %>")
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>']").data('group-id', "<%= @procedure.group_id %>").attr('data-group-id', "<%= @procedure.group_id %>")
+date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
+performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .selectpicker")
+date_time_picker.datetimepicker('format', 'MM/DD/YYYY')
 
 <% if @procedure.unstarted? || @procedure.follow_up? %>
-date_time_picker.date(null).disable()
+date_time_picker.datetimepicker('date', null)
+date_time_picker.datetimepicker('disable')
 $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', "")
+performer_selectpicker.selectpicker('val', "")
 
 <% elsif @procedure.incomplete? %>
-date_time_picker.date(null).disable()
-
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
+$("#modalContainer").modal('hide')
+date_time_picker.datetimepicker('date', null)
+date_time_picker.datetimepicker('disable')
+$("#procedure<%= @procedure.id %>StatusButtons").data("selected", "incomplete")
+$("#procedure<%= @procedure.id %>StatusButtons button").removeClass("active")
+$("#procedure<%= @procedure.id %>StatusButtons .incomplete-btn").addClass("active")
+performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% elsif @procedure.complete? %>
-date_time_picker.date("<%= format_date(@procedure.completed_date) %>").enable()
-
-$("table.procedures tbody tr[data-id='<%= @procedure.id %>'] td.performed-by .selectpicker").selectpicker('val', '<%= @procedure.performer_id %>')
+date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+date_time_picker.datetimepicker('enable')
+performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
 <% end %>
 
-$('.appointments').html("<%= escape_javascript(render(partial: '/appointments/calendar', locals: { appointment: @appointment })) %>")
-
-pg = new ProcedureGrouper()
-
-<% if @appointment_style == "grouped" %>
-pg.initialize()
-<% else %>
-# $("select.core_multiselect").multiselect(includeSelectAllOption: true, numberDisplayed: 1, nonSelectedText: 'Please Select')
-pg.initialize_multiselects_only()
+<% if (@billing_type_updated && @appointment_style == "grouped") || @invoiced_or_credited_changed %>
+$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
 <% end %>
 
-if !$('.start_date_input').hasClass('hidden')
-  start_date_init("<%= format_datetime(@appointment.start_date) %>")
-
-if !$('.completed_date_input').hasClass('hidden')
-  completed_date_init("<%= format_datetime(@appointment.completed_date) %>")
-
-$('#appointment_content_indications').selectpicker()
-$('#appointment_content_indications').selectpicker('val', "<%= @appointment.contents %>")
-$(".selectpicker").selectpicker()
+<% if @billing_type_updated %>
+<% core_id = @procedure.sparc_core_id %>
+select_container = $("select.core_multiselect[data-core-id='<%= core_id %>']").parents('.service-multiselect-container')
+select_container.replaceWith("<%= j render '/multiple_procedures/complete_all_select', appointment: @appointment, core_id: core_id, procedures: @appointment.procedures_grouped_by_core[core_id] %>")
+<% end %>
 
 statuses = []
 <% @statuses.each do |status| %>
 statuses[statuses.length] =  "<%= status %>"
 <% end %>
 
-$('#appointment_indications').selectpicker()
-$('#appointment_indications').selectpicker('val', statuses)
+$(".appointment-action-buttons").html("<%= j render '/appointments/appointment_action_buttons', appointment: @appointment %>")
 
-$(".followup_procedure_datepicker").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-
-$(".completed_date_field").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-
-$('.row.appointment [data-toggle="tooltip"]').tooltip()
+$('.delete-button[data-procedure="<%= @procedure.id %>"]').parent('.tooltip-wrapper').replaceWith("<%= j delete_procedure_button(@procedure) %>")
 
 $("#group-<%= @procedure.group_id %> button").trigger('click')
-$("#modalContainer").modal 'hide'
 
-<% if @cost_error_message %>
-swal("<%= @cost_error_message %>")
-<% end %>
+updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.count %>")
+
 <% end %>
 
-$('input#invoiced_procedure').bootstrapToggle()
-$('input#credited_procedure').bootstrapToggle()
+$(document).trigger('ajax:complete') # rails-ujs element replacement bug fix

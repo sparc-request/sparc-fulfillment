@@ -25,12 +25,15 @@ module TaskHelper
   end
 
   def format_task_checkbox task
-    content_tag :div, nil, class: 'form-check' do
+    hidden_export_display = content_tag(:span, t("task.complete.#{task.complete?.to_s}"), class: 'd-none')
+    checkbox = content_tag :div, nil, class: 'form-check' do
       raw([
         content_tag(:input, nil, type: 'checkbox', class: 'form-check-input complete-checkbox complete', id: "completeTask#{task.id}", task_id: task.id, checked: task.complete? ? "checked" : nil),
         content_tag(:label, nil, class: 'form-check-label', for: "completeTask#{task.id}")
       ].join(''))
     end
+
+    raw([hidden_export_display, checkbox].join(''))
   end
 
   def format_task_type task
@@ -52,7 +55,7 @@ module TaskHelper
   def format_task_due_date task
     due_date = task.due_at
     if task.complete or (due_date - 7.days) > Time.now # task is complete or due_date is greater than 7 days away
-      format_date(due_date)
+      content_tag(:span, format_date(due_date))
     elsif due_date <= Time.now # due date has passed
       content_tag(:strong, class: "text-danger"){"#{format_date(due_date)} - #{t('task.past_due')}"}
     else # due date is within 7 days
