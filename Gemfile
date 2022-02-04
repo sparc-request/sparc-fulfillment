@@ -8,15 +8,17 @@ gem 'autoprefixer-rails', '7.2.2'
 gem 'axlsx', git: 'https://github.com/randym/axlsx', branch: 'master'
 gem 'axlsx_rails'
 gem 'babel-transpiler'
+gem 'bcrypt_pbkdf'
 gem 'coffee-rails'
 gem 'daemons'
 gem 'delayed_job_active_record'
 gem 'devise'
 gem 'dotenv-rails'
+gem 'ed25519'
 gem 'faye'
 gem 'font-awesome-sass'
 gem 'gon'
-gem 'grape', '~> 1.4.0'
+gem 'grape', '~> 1.5.3'
 gem 'haml-rails'
 gem 'hashie-forbidden_attributes'
 gem 'i18n-js'
@@ -48,6 +50,7 @@ gem 'whenever', '~> 1.0.0'
 gem 'will_paginate'
 gem 'yajl-ruby', require: 'yajl'
 gem 'dalli'
+gem 'progress_bar'
 
 group :deploy do
   gem 'capistrano', '~> 3.14'
@@ -62,7 +65,6 @@ group :development, :test, :testing do
   gem "factory_bot_rails"
   gem 'faker', '~> 2.14.0'
   gem 'pry'
-  gem 'progress_bar'
 end
 
 group :development do
@@ -88,5 +90,5 @@ group :test do
   gem 'timecop'
   gem 'vcr', '~> 6.0.0'
   gem 'webdrivers', '~> 4.6'
-  gem 'webmock', '~> 3.9.1'
+  gem 'webmock', '~> 3.13.0'
 end

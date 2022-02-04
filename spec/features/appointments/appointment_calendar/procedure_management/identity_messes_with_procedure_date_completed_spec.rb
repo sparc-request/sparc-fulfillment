@@ -58,7 +58,7 @@ feature 'User messes with a procedures date completed', js: true do
   def given_i_am_viewing_an_appointment
     next_day               = Time.now.day + 1
     edited_completed_date = Time.now.strftime("%m/#{next_day}/%Y")
-    
+
     @protocol     = create_and_assign_protocol_to_me
     @protocols_participant  = @protocol.protocols_participants.first
     service      = @protocol.organization.inclusive_child_services(:per_participant).first
@@ -111,13 +111,14 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def when_i_edit_the_completed_date
-    next_day               = Time.now.day + 1
-    edited_completed_date = Time.now.strftime("%m/#{next_day}/%Y")
-    # page.execute_script %Q{ $('.procedures .completed_date_field').trigger('click'); }
-    # bootstrap_datepicker 'input#procedure1CompletedDatePicker', month: "#{next_mont}"
-    bootstrap_datepicker 'input#procedure_completed_date', day: "#{next_day}"
-    page.execute_script %Q{ $("div#procedure1CompletedDatePicker").val('#{edited_completed_date}') }
+    @complete_procedure    = Procedure.complete.first
+    existing_day           = @complete_procedure.completed_date.strftime("%-d").to_i
+    @new_day               = pick_new_date(existing_day)
+    @edited_completed_date = Time.now.change(day: @new_day)
+
+    bootstrap_datepicker 'input#procedure_completed_date', day: "#{@new_day}"
     wait_for_ajax
+    @complete_procedure.reload
   end
 
   def then_i_should_see_a_disabled_datepicker
@@ -129,10 +130,10 @@ feature 'User messes with a procedures date completed', js: true do
     expect(expected_date).to eq(Time.now.strftime('%m/%d/%Y'))
   end
 
-  def then_i_should_see_the_completed_date_has_been_updated 
-    next_day               = Time.now.day + 1
-    edited_completed_date = Time.now.strftime("%m/#{next_day}/%Y")
-    expected_date = page.evaluate_script %Q{ $('input#procedure_completed_date').val(); }
-    expect(expected_date).to eq(edited_completed_date)
+  def then_i_should_see_the_completed_date_has_been_updated
+    date_on_page = find('#procedure_completed_date').value()
+
+    expect(@complete_procedure.completed_date.strftime('%D')).to eq(@edited_completed_date.strftime('%D'))
+    expect(date_on_page).to eq(@edited_completed_date.strftime('%m/%d/%Y'))
   end
 end

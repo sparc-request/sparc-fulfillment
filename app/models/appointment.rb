@@ -49,6 +49,7 @@ class Appointment < ApplicationRecord
   validates :name, presence: true
   validates :arm_id, presence: true
   validates :protocols_participant_id, presence: true
+  validate :completed_date_after_start_date
 
   accepts_nested_attributes_for :notes
 
@@ -69,7 +70,7 @@ class Appointment < ApplicationRecord
   end
 
   def can_finish?
-    !start_date.blank? && (procedures.all? { |proc| !proc.unstarted? })
+    !start_date.blank? && !procedures.untouched.any?
   end
 
   def has_completed_procedures?
@@ -112,4 +113,15 @@ class Appointment < ApplicationRecord
   def formatted_name
     self.type == 'CustomAppointment' ? "#{self.name} (Custom Visit)" : self.visit_group.identifier
   end
+
+  private
+
+  def completed_date_after_start_date
+    if(start_date.present? && completed_date.present?)
+      if(completed_date < start_date)
+        errors.add(:completed_date, "must be the same, or later than start date.")
+      end
+    end
+  end
+
 end

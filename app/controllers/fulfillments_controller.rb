@@ -91,9 +91,7 @@ class FulfillmentsController < ApplicationController
   def destroy
     @fulfillment = Fulfillment.find(params[:id])
     @fulfillment.destroy
-    respond_to do |format|
-      format.js
-    end
+    respond_to :js
   end
 
   private

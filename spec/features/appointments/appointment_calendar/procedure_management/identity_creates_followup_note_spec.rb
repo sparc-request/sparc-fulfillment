@@ -89,7 +89,7 @@ feature 'Followup note', js: true do
 
     find('a[data-appointment-id="1"]').click
     wait_for_ajax
-    
+
     bootstrap_select '[name="service_id"', service.name
     fill_in 'service_quantity', with: 1
     find('button#addService').click
@@ -146,9 +146,9 @@ feature 'Followup note', js: true do
     procedure = Procedure.first
     expect(page).to have_css("input#followupDatePickerInput#{procedure.id}[value='#{Time.new(Time.now.year,Time.now.month,10).strftime("%m/%d/%Y")}']")
   end
-  
+
   def then_i_should_see_the_note_i_created
-    expect(page).to have_css('.note-body p', text: "Followup: #{Time.new(2021, 12, 10).strftime("%Y-%m-%d")}: Test comment")
+    expect(page).to have_css('.note-body p', text: "Followup: #{@procedure.task.due_at.strftime("%Y-%m-10")}: Test comment")
   end
 
   def then_i_should_see_the_newly_created_task

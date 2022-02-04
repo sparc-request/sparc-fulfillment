@@ -20,7 +20,7 @@
 
 class AppointmentsController < ApplicationController
   respond_to :json, :html, :js
-  before_action :find_appointment, only: [:show, :update, :update_statuses]
+  before_action :find_appointment, only: [:show, :update, :update_statuses, :change_visit_type]
   before_action :set_appointment_style, only: [:create, :show, :update]
 
   def index
@@ -63,6 +63,11 @@ class AppointmentsController < ApplicationController
     @field = params[:field]
 
     @appointment.update_attributes(appointment_params)
+
+    if(!@appointment.valid?)
+      @errors = @appointment.errors
+    end
+
   end
 
   def update_statuses
@@ -78,6 +83,10 @@ class AppointmentsController < ApplicationController
     end
 
     render body: nil
+  end
+
+  def change_visit_type
+    @appointment.update_attributes(appointment_type_params)
   end
 
   def change_appointment_style
@@ -112,4 +121,14 @@ class AppointmentsController < ApplicationController
           .permit(:arm_id, :protocols_participant_id, :name, :position,
                  notes_attributes: [:comment, :kind, :identity_id, :reason])
   end
+
+  def appointment_type_params
+    if(@appointment.type == 'CustomAppointment')
+      params.require(:custom_appointment).permit(:contents, :start_date, :completed_date)
+    else
+      params.require(:appointment).permit(:contents, :start_date, :completed_date)
+    end
+  end
+
+
 end
