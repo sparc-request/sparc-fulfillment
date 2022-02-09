@@ -38,7 +38,7 @@ class MultipleLineItemsController < ApplicationController
     @core = @service.organization
     @schedule_tab = params[:schedule_tab]
     @arm_hash = {}
-    @first_line_item = params[:first_line_item] || false
+    @first_line_item = params[:first_line_item] == 'true' ? true : false
 
     if @first_line_item # if creating first line item on protocol
       @protocol = Protocol.find(params[:protocol_id])
