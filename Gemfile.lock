@@ -305,7 +305,7 @@ GEM
       terrapin (~> 0.6.0)
     paranoia (2.4.2)
       activerecord (>= 4.0, < 6.1)
-    progress_bar (1.3.1)
+    progress_bar (1.3.3)
       highline (>= 1.6, < 3)
       options (~> 2.3.0)
     pry (0.13.1)
