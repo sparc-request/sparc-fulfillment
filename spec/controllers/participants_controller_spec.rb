@@ -83,6 +83,10 @@ RSpec.describe ParticipantsController do
       attributes.delete_if {|key| bad_attributes.include?(key)}
       attributes[:date_of_birth] = "09/10/2015"
       attributes[:mrn] = "888"
+      #Troubleshooting Travis Failure
+      puts '#' * 50
+      puts attributes
+      puts '#' * 50
       expect{
         post :create, params: { participant: attributes }, format: :js
       }.to change(Participant, :count).by(1)

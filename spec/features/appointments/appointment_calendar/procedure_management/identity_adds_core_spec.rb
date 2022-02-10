@@ -54,6 +54,7 @@ feature 'User adds a Procedure to an unstarted visit', js: true do
   end
 
   def when_i_add_2_procedures_to_same_group
+    sleep 2#Troubleshooting Travis Failure
     add_a_procedure @services.first, 2
   end
 
