@@ -283,6 +283,7 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_click_the_edit_line_item_button
+    sleep 2#Troubleshooting Travis Failure
     first(".change-line-item-service").click
     wait_for_ajax
 
