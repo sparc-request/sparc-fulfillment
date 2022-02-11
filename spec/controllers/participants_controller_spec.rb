@@ -84,9 +84,13 @@ RSpec.describe ParticipantsController do
       attributes[:date_of_birth] = "09/10/2015"
       attributes[:mrn] = "888"
       #Troubleshooting Travis Failure
+      test = Participant.new(attributes)
+      test.valid?
       puts '#' * 50
-      puts attributes
+      puts test.errors.messages.inspect
       puts '#' * 50
+      test = nil
+      ##End Travis Testing
       expect{
         post :create, params: { participant: attributes }, format: :js
       }.to change(Participant, :count).by(1)
