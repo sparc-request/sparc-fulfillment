@@ -80,7 +80,7 @@ GEM
     bcrypt (3.1.16)
     bcrypt_pbkdf (1.1.0)
     builder (3.2.4)
-    capistrano (3.14.1)
+    capistrano (3.16.0)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -497,7 +497,7 @@ DEPENDENCIES
   axlsx_rails
   babel-transpiler
   bcrypt_pbkdf
-  capistrano (~> 3.14)
+  capistrano (~> 3.16)
   capistrano-passenger
   capistrano-rails (~> 1.6)
   capistrano-rvm
