@@ -187,7 +187,7 @@ GEM
     factory_bot_rails (6.1.0)
       factory_bot (~> 6.1.0)
       railties (>= 5.0.0)
-    faker (2.14.0)
+    faker (2.19.0)
       i18n (>= 1.6, < 2)
     faye (1.4.0)
       cookiejar (>= 0.3.0)
@@ -510,7 +510,7 @@ DEPENDENCIES
   dotenv-rails
   ed25519
   factory_bot_rails
-  faker (~> 2.14.0)
+  faker (~> 2.19.0)
   faye
   font-awesome-sass
   foreman
