@@ -53,7 +53,7 @@ gem 'dalli'
 gem 'progress_bar'
 
 group :deploy do
-  gem 'capistrano', '~> 3.14'
+  gem 'capistrano', '~> 3.16'
   gem 'capistrano-rvm'
   gem 'capistrano-rails', '~> 1.6'
   gem 'capistrano-passenger'
@@ -90,5 +90,5 @@ group :test do
   gem 'timecop'
   gem 'vcr', '~> 6.0.0'
   gem 'webdrivers', '~> 4.6'
-  gem 'webmock', '~> 3.13.0'
+  gem 'webmock', '~> 3.14.0'
 end
