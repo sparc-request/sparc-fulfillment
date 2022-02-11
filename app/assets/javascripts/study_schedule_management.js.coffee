@@ -157,6 +157,18 @@ $ ->
       url: "/multiple_line_items/new_line_items"
       data: data
 
+  $(document).on 'click', '#add_first_service_button', ->
+    page_hash = {}
+    data =
+      'page_hash'   : page_hash
+      'schedule_tab': $('#current_tab').attr('value')
+      'protocol_id' : $('#add_first_service_button').data('protocol-id')
+      'first_line_item': true
+    $.ajax
+      type: 'GET'
+      url: "/multiple_line_items/new_line_items"
+      data: data
+
   $(document).on 'click', '#remove_service_button', ->
     $.ajax
       type: 'GET'

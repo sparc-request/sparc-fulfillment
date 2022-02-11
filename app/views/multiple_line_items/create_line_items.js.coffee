@@ -26,8 +26,15 @@ $('.form-error').remove()
 $("[name^='add_service_arm']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
 <% end %>
 <% end %>
+<% elsif @first_line_item %>
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
+$('#protocolTabs').replaceWith("<%= j render 'protocols/tabs', protocol: @protocol, tab: @tab, has_pppv_services: @has_pppv_services %>")
+$('#requestLoading').removeClass('active show')
+$("#<%= @tab.camelize(:lower) %>Tab").html('<%= j render "protocols/#{@tab}", protocol: @protocol %>').addClass('active show')
+$('div.study_schedule_container [data-toggle="tooltip"]').tooltip()
+$(".selectpicker").selectpicker()
+$("#modalContainer").modal 'hide'
 <% else %>
-
 <% @arm_hash.each do |arm_id, value| %>
 core_header_row = $('.arm-<%= arm_id %>-container .core-header[data-core-id="<%= @core.id %>"]')
 if core_header_row.length
