@@ -80,7 +80,7 @@ GEM
     bcrypt (3.1.16)
     bcrypt_pbkdf (1.1.0)
     builder (3.2.4)
-    capistrano (3.14.1)
+    capistrano (3.16.0)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -182,10 +182,10 @@ GEM
     erubis (2.7.0)
     eventmachine (1.2.7)
     execjs (2.7.0)
-    factory_bot (6.1.0)
+    factory_bot (6.2.0)
       activesupport (>= 5.0.0)
-    factory_bot_rails (6.1.0)
-      factory_bot (~> 6.1.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
     faker (2.19.0)
       i18n (>= 1.6, < 2)
@@ -497,7 +497,7 @@ DEPENDENCIES
   axlsx_rails
   babel-transpiler
   bcrypt_pbkdf
-  capistrano (~> 3.14)
+  capistrano (~> 3.16)
   capistrano-passenger
   capistrano-rails (~> 1.6)
   capistrano-rvm
