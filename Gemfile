@@ -41,7 +41,7 @@ gem 'rubyzip', '>= 1.2.1'
 gem 'sassc-rails'
 gem 'sdoc', '~> 1.1.0', group: :doc
 gem 'sprockets', '~> 4.0'
-gem 'slack-notifier', '~> 2.3'
+gem 'slack-notifier', '~> 2.4'
 gem 'therubyracer'
 gem 'thin'
 gem 'uglifier', '>= 1.3.0'
