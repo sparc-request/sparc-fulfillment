@@ -411,8 +411,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sdoc (1.1.0)
-      rdoc (>= 5.0)
+    sdoc (2.3.0)
+      rdoc (>= 5.0, < 6.4.0)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
@@ -547,7 +547,7 @@ DEPENDENCIES
   rspec-rails
   rubyzip (>= 1.2.1)
   sassc-rails
-  sdoc (~> 1.1.0)
+  sdoc (~> 2.3.0)
   shoulda-callback-matchers
   shoulda-matchers (~> 5.1.0)
   simplecov
