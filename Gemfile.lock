@@ -68,8 +68,8 @@ GEM
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
     arel (9.0.0)
-    autoprefixer-rails (7.2.2)
-      execjs
+    autoprefixer-rails (10.4.2.0)
+      execjs (~> 2)
     axlsx_rails (0.6.1)
       actionpack (>= 3.1)
       caxlsx (>= 3.0)
@@ -181,7 +181,7 @@ GEM
     erubi (1.10.0)
     erubis (2.7.0)
     eventmachine (1.2.7)
-    execjs (2.7.0)
+    execjs (2.8.1)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -315,7 +315,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.6)
-    puma (5.6.1)
+    puma (5.6.2)
       nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.3)
@@ -492,7 +492,7 @@ DEPENDENCIES
   activerecord-session_store
   acts_as_list
   addressable
-  autoprefixer-rails (= 7.2.2)
+  autoprefixer-rails (= 10.4.2.0)
   axlsx!
   axlsx_rails
   babel-transpiler
