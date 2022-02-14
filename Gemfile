@@ -90,5 +90,5 @@ group :test do
   gem 'timecop'
   gem 'vcr', '~> 6.0.0'
   gem 'webdrivers', '~> 4.6'
-  gem 'webmock', '~> 3.13.0'
+  gem 'webmock', '~> 3.14.0'
 end
