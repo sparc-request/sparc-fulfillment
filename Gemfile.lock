@@ -246,7 +246,8 @@ GEM
       concurrent-ruby (~> 1.0)
     i18n-js (3.9.1)
       i18n (>= 0.6.6)
-    jbuilder (2.10.1)
+    jbuilder (2.11.5)
+      actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     launchy (2.5.0)
       addressable (~> 2.7)
@@ -522,7 +523,7 @@ DEPENDENCIES
   haml-rails
   hashie-forbidden_attributes
   i18n-js
-  jbuilder (~> 2.10)
+  jbuilder (~> 2.11)
   launchy
   letter_opener
   mysql2 (= 0.5.2)
