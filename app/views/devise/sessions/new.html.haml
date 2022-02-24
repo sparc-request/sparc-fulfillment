@@ -18,20 +18,21 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+- use_shib = ENV.fetch('INCLUDE_SHIBBOLETH_AUTHENTICATION') == 'true'
+- shib_only = ENV.fetch('USE_SHIBBOLETH_ONLY') == 'true'
+
 %h1.mb-4.text-center
   = t('devise.sessions.header')
-= form_for(resource, as: resource_name, url: session_path(resource_name), :role => "form") do |f|
-  .form-group
-    = f.label :ldap_uid, class: 'required'
-    = f.text_field :ldap_uid, autofocus: true, class: 'form-control'
-  .form-group
-    = f.label :password, class: 'required'
-    = f.password_field :password, autocomplete: 'off', class: 'form-control'
-  - if devise_mapping.rememberable?
-    .form-group
-      .form-check
-        = f.check_box :remember_me, class: 'form-check-input'
-        = f.label :remember_me, class: 'form-check-label'
-  .form-group
-    = f.submit t('devise.sessions.submit'), class: 'btn btn-lg btn-block btn-outline-primary'
-= render "devise/shared/links"
+
+.form-row
+  - if use_shib
+    .form-group.col
+      = button_to t('devise.sessions.institution_users', institution: "MUSC"), identity_shibboleth_omniauth_authorize_path(), class: 'btn btn-lg btn-block btn-outline-primary'
+  - if use_shib && !shib_only
+    .form-group.col
+      %button.btn.btn-lg.btn-block.btn-outline-primary#outsideUserLogin
+        = t('devise.sessions.other_users')
+
+= render 'form', use_shib: use_shib
+- if !shib_only
+  = render "devise/shared/links"
