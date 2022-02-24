@@ -87,7 +87,7 @@ class MultipleProceduresController < ApplicationController
     @multiple_procedure_errors.store(:performer_id, t('multiple_procedures_modal.errors.performer_id')) if params[:performer_id].blank?
     @multiple_procedure_errors.store(:completed_date, t('multiple_procedures_modal.errors.completed_date')) if complete_status_detected? && params[:completed_date].blank?
     @multiple_procedure_errors.store(:reason, t('multiple_procedures_modal.errors.reason')) if incomplete_status_detected? && params[:reason].blank?
-    @multiple_procedure_errors.store(:comment, t('multiple_procedures_modal.errors.comment')) if incomplete_status_detected? && params[:comment].blank?
+    # @multiple_procedure_errors.store(:comment, t('multiple_procedures_modal.errors.comment')) if incomplete_status_detected? && params[:comment].blank?
 
     if @multiple_procedure_errors.empty?
       @multiple_procedure_errors = nil
