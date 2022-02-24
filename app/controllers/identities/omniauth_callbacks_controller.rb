@@ -35,7 +35,7 @@ class Identities::OmniauthCallbacksController < Devise::OmniauthCallbacksControl
 
   def failure
     # render :file => 'public/401.html', :status => :unauthorized, :layout => false
-    render text: params.inspect
+    render plain: params.inspect
   end
 end
 
