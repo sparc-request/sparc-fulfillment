@@ -20,12 +20,16 @@
 
 class Identities::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def shibboleth
-    @identity = Identity.where(:ldap_uid => request.env["omniauth.auth"].uid).first
-    unless @identity.blank?
-      sign_in_and_redirect @identity, :event => :authentication #this will throw if @identity is not activated
-      set_flash_message(:notice, :success, :kind => "Shibboleth") if is_navigational_format?
+    # @identity = Identity.where(:ldap_uid => request.env["omniauth.auth"].uid).first
+    @identity = Identity.find_for_shibboleth_oauth(request.env["omniauth.auth"], current_identity)
+
+    if @identity.persisted?
+      sign_in_and_redirect(@identity, event: :authentication) #this will throw if @identity is not activated
+      set_flash_message(:notice, :success, kind: "Shibboleth") if is_navigational_format?
     else
-      render :file => 'public/401.html', :status => :unauthorized, :layout => false
+      # render :file => 'public/401.html', :status => :unauthorized, :layout => false
+      session["devise.shibboleth_data"] = request.env["omniauth.auth"]
+      redirect_to new_identity_registration_url()
     end
   end
 
