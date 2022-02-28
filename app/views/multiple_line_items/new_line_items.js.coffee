@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 <% if @services.empty? %>
-Swal.fire(title: "Sorry!", text: "No services are available for this protocol.")
+Swal.fire(title: "Sorry!", text: "No active clinical services exist for this organization in SPARCCatalog.")
 <% else %>
 $("#modalContainer").html("<%= escape_javascript(render(:partial =>'study_schedule/management/manage_services/add_line_items_form', locals: { protocol: @protocol, services: @services, page_hash: @page_hash, schedule_tab: @schedule_tab, first_line_item: @first_line_item })) %>");
 $("#modalContainer").modal 'show'

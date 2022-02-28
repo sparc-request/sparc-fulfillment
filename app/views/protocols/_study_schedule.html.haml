@@ -25,7 +25,7 @@
   .card-body.px-0.pb-0
     - unless protocol.arms.map{|arm| arm.line_items}.any?
       .alert-warning.py-2.pl-2.mt-0.mb-2
-        = "This request has no Clinical Services"
+        = "This request does not have any Clinical Services"
       = link_to "Add Clinical Services", 'javascript:;', class: 'btn btn-success mx-2 my-2', id: 'add_first_service_button', data: {'protocol-id': protocol.id}
     - else
       = hidden_field_tag :current_tab, tab
