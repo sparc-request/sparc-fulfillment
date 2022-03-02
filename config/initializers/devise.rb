@@ -40,6 +40,7 @@ Devise.setup do |config|
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
   require 'devise/orm/active_record'
+  require 'omniauth-shibboleth'
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
@@ -256,12 +257,18 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
   if ENV.fetch('INCLUDE_SHIBBOLETH_AUTHENTICATION') == 'true'
-    config.omniauth :shibboleth, {:uid_field => 'eppn',
-                    :info_fields => {:email => 'mail', :name => 'cn', :last_name => 'sn', :first_name => 'givenName'},
-                    :extra_fields => [:schacHomeOrganization]
+    config.omniauth :shibboleth, {
+      uid_field: 'eppn',
+      info_fields: {
+        email: 'mail', name: 'cn', last_name: 'sn', first_name: 'givenName'
+      }, extra_fields: [:schacHomeOrganization]
     }
   end
   
+  ####If more logging for omniauth is needed, should not be used in production
+  # OmniAuth.config.logger = Rails.logger
+  ####
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

@@ -18,20 +18,20 @@ gem 'ed25519'
 gem 'faye'
 gem 'font-awesome-sass'
 gem 'gon'
-gem 'grape', '~> 1.4.0'
+gem 'grape', '~> 1.6.2'
 gem 'haml-rails'
 gem 'hashie-forbidden_attributes'
 gem 'i18n-js'
-gem 'jbuilder', '~> 2.10'
+gem 'jbuilder', '~> 2.11'
 gem 'letter_opener'
-gem 'mysql2', '0.5.2'
+gem 'mysql2', '0.5.3'
 gem 'net-ldap'
 gem 'omniauth'
 gem 'omniauth-shibboleth'
 gem 'omniauth-rails_csrf_protection'
 gem 'paperclip', '~> 6.1'
-gem 'paper_trail', '~> 11.0.0'
-gem 'paranoia', '~> 2.4'
+gem 'paper_trail', '~> 12.2.0'
+gem 'paranoia', '~> 2.5'
 gem 'puma'
 gem 'rails', '5.2.3'
 gem 'rails-erd'
@@ -39,9 +39,9 @@ gem 'remotipart'
 gem 'rest-client'
 gem 'rubyzip', '>= 1.2.1'
 gem 'sassc-rails'
-gem 'sdoc', '~> 1.1.0', group: :doc
+gem 'sdoc', '~> 2.3.1', group: :doc
 gem 'sprockets', '~> 4.0'
-gem 'slack-notifier', '~> 2.3'
+gem 'slack-notifier', '~> 2.4'
 gem 'therubyracer'
 gem 'thin'
 gem 'uglifier', '>= 1.3.0'
@@ -53,7 +53,7 @@ gem 'dalli'
 gem 'progress_bar'
 
 group :deploy do
-  gem 'capistrano', '~> 3.14'
+  gem 'capistrano', '~> 3.16'
   gem 'capistrano-rvm'
   gem 'capistrano-rails', '~> 1.6'
   gem 'capistrano-passenger'
@@ -63,7 +63,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 2.14.0'
+  gem 'faker', '~> 2.19.0'
   gem 'pry'
 end
 
@@ -86,9 +86,9 @@ group :test do
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 4.4.1", require: false
+  gem 'shoulda-matchers', "~> 5.1.0", require: false
   gem 'timecop'
   gem 'vcr', '~> 6.0.0'
-  gem 'webdrivers', '~> 4.6'
-  gem 'webmock', '~> 3.9.1'
+  gem 'webdrivers', '~> 5.0'
+  gem 'webmock', '~> 3.14.0'
 end

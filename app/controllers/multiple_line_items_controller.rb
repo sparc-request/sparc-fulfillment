@@ -25,20 +25,38 @@ class MultipleLineItemsController < ApplicationController
 
   def new_line_items
     # called to render modal to mass create line items
-    @protocol = Protocol.find params[:protocol_id]
+    @protocol = Protocol.find(params[:protocol_id])
     @services = @protocol.organization.inclusive_child_services(:per_participant)
     @page_hash = params[:page_hash]
     @schedule_tab = params[:schedule_tab]
+    @first_line_item = params[:first_line_item] || false
   end
 
   def create_line_items
     # handles submission of the add line items form
     @service = Service.find(params[:add_service_id])
+    @core = @service.organization
+    @schedule_tab = params[:schedule_tab]
+    @arm_hash = {}
+    @first_line_item = params[:first_line_item] == 'true'
 
-    if params[:add_service_arm_ids_and_pages] # if they selected arms, otherwise add error
-      @core = @service.organization
-      @schedule_tab = params[:schedule_tab]
-      @arm_hash = {}
+    if @first_line_item # if creating first line item on protocol
+      @protocol = Protocol.find(params[:protocol_id])
+      
+      @arm                      = Arm.new(protocol: @protocol, name: "Screening Phase", visit_count: 1, subject_count: 1)
+      @arm_visit_group_creator  = ArmVisitGroupsImporter.new(@arm)
+
+      if @arm_visit_group_creator.save_and_create_dependents
+        line_item = LineItem.new(protocol_id: @arm.protocol_id, arm_id: @arm.id, service_id: @service.id, subject_count: @arm.subject_count)
+        importer = LineItemVisitsImporter.new(line_item)
+        importer.save_and_create_dependents
+      end
+
+      # get pppv services and set tab for the sake of rendering the tab now that services are present
+      @tab = 'study_schedule'
+      cookies['active-protocol-tab'.to_sym] = @tab
+      @has_pppv_services = @protocol.organization.has_per_patient_per_visit_services? || @protocol.line_items.joins(:service).where(services: { one_time_fee: false }).any?
+    elsif params[:add_service_arm_ids_and_pages] # if they selected arms, otherwise add error
       params[:add_service_arm_ids_and_pages].each do |set|
         arm_id, page = set.split
         arm = Arm.find(arm_id)
