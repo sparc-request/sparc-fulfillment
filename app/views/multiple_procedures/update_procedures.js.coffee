@@ -31,8 +31,6 @@ $("#completeIncompleteAll [name='<%= attr.to_s %>']").parents('.form-group').rem
 $("#procedure<%= procedure.id %>StatusButtons button").removeClass('active')
 $("#procedure<%= procedure.id %>StatusButtons").data('selected', '<%= procedure.status %>')
 $("#procedure<%= procedure.id %>StatusButtons .<%= procedure.status %>-btn").addClass('active')
-# $("#procedure<%= procedure.id %>Notes .badge").load(location.href + " #procedure<%= procedure.id %>Notes")
-console.log("The number of notes is <%= procedure.notes.count %>")
 updateNotesBadge("procedure<%= procedure.id %>", "<%= procedure.notes.count %>")
 $(".performer #edit_procedure_<%= procedure.id %> .selectpicker").selectpicker('val', '<%= procedure.performer_id %>')
 date_time_picker = $("#procedure<%= procedure.id %>CompletedDatePicker")
