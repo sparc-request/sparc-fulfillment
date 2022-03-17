@@ -43,4 +43,4 @@ getOrder = ->
   return 0
 
 fulfillmentDateCleaner = (a) ->
-  return a.replace('<span class="fulfillment_date_for_klok_entry">', '').replace('</span><i class="far fa-clock"></i>', '')
+  return a.replace('<span class="fulfillment-date-for-klok-entry">', '').replace('</span><i class="far fa-clock"></i>', '')
