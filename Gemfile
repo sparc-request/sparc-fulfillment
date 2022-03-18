@@ -53,7 +53,7 @@ gem 'dalli'
 gem 'progress_bar'
 
 group :deploy do
-  gem 'capistrano', '~> 3.16'
+  gem 'capistrano', '~> 3.17'
   gem 'capistrano-rvm'
   gem 'capistrano-rails', '~> 1.6'
   gem 'capistrano-passenger'
