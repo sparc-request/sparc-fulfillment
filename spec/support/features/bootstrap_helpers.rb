@@ -51,8 +51,15 @@ module Features
     end
 
     def bootstrap_select(class_or_id, choice, context_selector = '')
-      expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: false)
-      bootstrap_select = page.first("#{context_selector} select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
+      retries = 0
+      begin
+        tries ||= 0
+        expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: false)
+        bootstrap_select = page.first("#{context_selector} select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
+      rescue Selenium::WebDriver::Error::StaleElementReferenceError
+        sleep 1
+        retry if (retries += 1) < 5
+      end
 
       bootstrap_select.click
       expect(page).to have_selector('.dropdown-menu.show')
