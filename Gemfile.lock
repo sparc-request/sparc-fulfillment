@@ -396,6 +396,8 @@ GEM
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
+    rspec-retry (0.6.2)
+      rspec-core (> 3.3)
     rspec-support (3.11.0)
     ruby-graphviz (1.2.5)
       rexml
@@ -544,6 +546,7 @@ DEPENDENCIES
   rspec-activejob (~> 0.6.1)
   rspec-collection_matchers
   rspec-rails
+  rspec-retry
   rubyzip (>= 1.2.1)
   sassc-rails
   sdoc (~> 2.3.1)

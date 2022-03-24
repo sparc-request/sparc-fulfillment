@@ -41,6 +41,7 @@ require 'simplecov'
 require 'rspec/active_job'
 require 'rspec/rails'
 require 'paperclip/matchers'
+require 'rspec/retry'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |file| require file }
 
@@ -95,6 +96,14 @@ RSpec.configure do |config|
   end
 
   config.backtrace_exclusion_patterns << /\/gems\//
+
+  config.default_sleep_interval = 2
+  config.verbose_retry = true
+  config.default_retry_count = 4
+
+  config.retry_callback = proc do |ex|
+    Capybara.reset!
+  end
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.

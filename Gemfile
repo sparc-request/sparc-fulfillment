@@ -92,4 +92,5 @@ group :test do
   gem 'vcr', '~> 6.0.0'
   gem 'webdrivers', '~> 5.0'
   gem 'webmock', '~> 3.14.0'
+  gem 'rspec-retry'
 end
