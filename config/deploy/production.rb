@@ -52,7 +52,7 @@ server 'bmic-sparcff.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
 # Feel free to add new variables to customise your setup.
 
 
-set :branch, 'production'
+set :branch, 'new_production'
 set :rails_env, 'production'
 set :rvm_ruby_version, '2.7.5@cwf --create'
 set :passenger_restart_with_touch, true
