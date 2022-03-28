@@ -30,8 +30,8 @@ gem 'omniauth'
 gem 'omniauth-shibboleth'
 gem 'omniauth-rails_csrf_protection'
 gem 'paperclip', '~> 6.1'
-gem 'paper_trail', '~> 12.2.0'
-gem 'paranoia', '~> 2.5'
+gem 'paper_trail', '~> 12.3.0'
+gem 'paranoia', '~> 2.6'
 gem 'puma'
 gem 'rails', '5.2.3'
 gem 'rails-erd'
@@ -64,7 +64,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 2.19.0'
+  gem 'faker', '~> 2.20.0'
   gem 'pry'
 end
 

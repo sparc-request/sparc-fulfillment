@@ -124,7 +124,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.9)
+    concurrent-ruby (1.1.10)
     cookiejar (0.3.3)
     crack (0.4.5)
       rexml
@@ -187,8 +187,8 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faker (2.19.0)
-      i18n (>= 1.6, < 2)
+    faker (2.20.0)
+      i18n (>= 1.8.11, < 2)
     faye (1.4.0)
       cookiejar (>= 0.3.0)
       em-http-request (>= 1.1.6)
@@ -251,8 +251,8 @@ GEM
       activesupport (>= 5.0.0)
     launchy (2.5.0)
       addressable (~> 2.7)
-    letter_opener (1.7.0)
-      launchy (~> 2.2)
+    letter_opener (1.8.1)
+      launchy (>= 2.2, < 3)
     loofah (2.14.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -297,7 +297,7 @@ GEM
       omniauth (>= 1.0.0)
     options (2.3.2)
     orm_adapter (0.5.0)
-    paper_trail (12.2.0)
+    paper_trail (12.3.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
     paperclip (6.1.0)
@@ -306,7 +306,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    paranoia (2.5.2)
+    paranoia (2.6.0)
       activerecord (>= 5.1, < 7.1)
     progress_bar (1.3.3)
       highline (>= 1.6, < 3)
@@ -388,7 +388,7 @@ GEM
     rspec-mocks (3.11.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
-    rspec-rails (5.1.0)
+    rspec-rails (5.1.1)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       railties (>= 5.2)
@@ -514,7 +514,7 @@ DEPENDENCIES
   ed25519
   execjs
   factory_bot_rails
-  faker (~> 2.19.0)
+  faker (~> 2.20.0)
   faye
   font-awesome-sass
   foreman
@@ -531,9 +531,9 @@ DEPENDENCIES
   omniauth
   omniauth-rails_csrf_protection
   omniauth-shibboleth
-  paper_trail (~> 12.2.0)
+  paper_trail (~> 12.3.0)
   paperclip (~> 6.1)
-  paranoia (~> 2.5)
+  paranoia (~> 2.6)
   progress_bar
   pry
   puma
