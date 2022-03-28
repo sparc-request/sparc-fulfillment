@@ -38,9 +38,6 @@ RSpec.describe ReportJob, type: :job do
       expect(@document.reload.state).to eq('Completed')
     end
 
-    it 'should enqueue a FayeJob worker' do
-      expect(FayeJob).to have_been_enqueued.with(global_id(@document))
-    end
   end
 
   describe '#rescue_from' do

@@ -57,21 +57,6 @@ RSpec.describe Protocol, type: :model do
         expect(protocol.persisted?).to be
       end
     end
-
-    describe 'callbacks' do
-
-      it 'should callback :update_via_faye after save' do
-        protocol = create_and_assign_protocol_to_me
-
-        expect(protocol).to callback(:update_faye).after(:save)
-      end
-
-      it 'should callback :update_via_faye after destroy' do
-        protocol = create_and_assign_protocol_to_me
-
-        expect(protocol).to callback(:update_faye).after(:destroy)
-      end
-    end
   end
 
   context 'instance methods' do

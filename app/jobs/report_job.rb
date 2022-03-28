@@ -31,13 +31,10 @@ class ReportJob < ActiveJob::Base
     report        = document.report_type.classify.constantize.new(params)
 
     report.generate(document)
-
-    FayeJob.perform_later document
   end
 
   rescue_from(StandardError) do |error|
     arguments.first.update_attributes state: 'Error', stack_trace: "#{error.message}\n\n#{error.backtrace.join("\n\t")}"
-    FayeJob.perform_later arguments.first
   end
 
   after_perform do |job|
