@@ -124,7 +124,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.9)
+    concurrent-ruby (1.1.10)
     cookiejar (0.3.3)
     crack (0.4.5)
       rexml
@@ -307,7 +307,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    paranoia (2.5.2)
+    paranoia (2.6.0)
       activerecord (>= 5.1, < 7.1)
     progress_bar (1.3.3)
       highline (>= 1.6, < 3)
@@ -535,7 +535,7 @@ DEPENDENCIES
   omniauth-shibboleth
   paper_trail (~> 12.3.0)
   paperclip (~> 6.1)
-  paranoia (~> 2.5)
+  paranoia (~> 2.6)
   progress_bar
   pry
   puma
