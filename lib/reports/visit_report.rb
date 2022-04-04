@@ -67,8 +67,8 @@ class VisitReport < Report
 
       result_set  = Appointment.all.joins(procedures: [{ protocols_participant: :participant}]).
                     where(
-                      Appointment.arel_table[:start_date].gt(from_start_date).and(
-                        Appointment.arel_table[:start_date].lt(to_start_date)).and(
+                      Appointment.arel_table[:start_date].gteq(from_start_date).and(
+                        Appointment.arel_table[:start_date].lteq(to_start_date)).and(
                         Procedure.arel_table[:status].not_eq("unstarted"))).distinct.
                     pluck(
                       ProtocolsParticipant.arel_table[:protocol_id], Participant.arel_table[:last_name], Participant.arel_table[:first_name],
