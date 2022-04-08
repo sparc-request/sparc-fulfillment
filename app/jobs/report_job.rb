@@ -27,6 +27,8 @@ class ReportJob < ActiveJob::Base
   end
 
   def perform(document, params)
+    #Totally random comment included for testing purposes and related to nothing at all.
+
     document_name = document.title
     report        = document.report_type.classify.constantize.new(params)
 
