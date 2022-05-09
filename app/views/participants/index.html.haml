@@ -20,7 +20,10 @@
 
 .w-100
   %h3= "Patient Registry"
-  %button.btn.btn-primary.new-participant{type: "button", aria: {label: "Create Participant"}}=t(:participant)[:new_participant]
+  - if current_identity.is_a_patient_registrar?
+    %button.btn.btn-primary.new-participant{type: "button", aria: {label: "Create Participant"}}=t(:participant)[:new_participant]
+  - else
+    %button.btn.btn-primary{disabled: true, title: "Only Patient Registrars can create Participants", type: "button", data: {toggle: "tooltip"}, aria: {label: "Create Participant"}}=t(:participant)[:new_participant]
   .bootstrap-table-dropdown-overflow
     #patient_registry
       %table.participants.table-striped{id: "patient-registry-table", data: {toggle: 'table', search: "true", trim_on_search: "false",  show_columns: "true", show_refresh: "true", show_toggle: "true", url: participants_path(format: :json), page_size: @limit, pagination: "true", side_pagination: "server", sort_name: "last_name", sort_order: 'asc', cookie: "true", cookie_id_table: "patient-registry-table", striped: "true", toolbar: "#custom-toolbar", show_export: "true", export_types: ['json', 'xml', 'csv', 'txt', 'sql'], checkbox_header: "false", undefined_text: ""}}

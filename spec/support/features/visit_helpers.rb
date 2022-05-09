@@ -27,28 +27,28 @@ module Features
     end
 
     def add_a_procedure(service, count = 1)
-      bootstrap_select '#service_list', service.name
+      bootstrap_select('.form-control.selectpicker', service.name)
       fill_in 'service_quantity', with: count
-      find('button.add_service').click
+      page.find('button#addService').click
       wait_for_ajax
     end
 
     def given_i_am_viewing_a_visit
-      visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
+      visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
       wait_for_ajax
-
-      bootstrap_select '#appointment_select', @appointment.name
+      
+      page.find('a.list-group-item[data-appointment-id="1"]').click
       wait_for_ajax
     end
 
     def given_i_am_viewing_a_started_visit
-      visit calendar_participants_path(participant_id: @protocols_participant.participant_id, protocols_participant_id: @protocols_participant.id, protocol_id: @protocol.id)
+      visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
       wait_for_ajax
 
-      bootstrap_select '#appointment_select', @appointment.name
+      page.find('a.list-group-item[data-appointment-id="1"]').click
       wait_for_ajax
       
-      find('button.start_visit').click
+      find('a.btn.start-appointment').click
       wait_for_ajax
     end
   end

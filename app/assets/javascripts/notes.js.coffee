@@ -25,5 +25,5 @@
   if parseInt(count, 10) == 0
     badge.removeClass('badge-warning').addClass('badge-secondary')
   else
-    badge.removeClass('badge-secondaru').addClass('badge-warning')
+    badge.removeClass('badge-secondary').addClass('badge-warning')
 

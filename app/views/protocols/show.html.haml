@@ -20,4 +20,4 @@
 
 = hidden_field_tag :protocol_id, @protocol.id
 = render 'protocol', protocol: @protocol
-= render 'protocols/tabs', protocol: @protocol, tab: @tab
+= render 'protocols/tabs', protocol: @protocol, has_pppv_services: @has_pppv_services, tab: @tab

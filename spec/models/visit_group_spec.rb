@@ -191,7 +191,7 @@ RSpec.describe VisitGroup, type: :model do
           @vg_c        = create(:visit_group, name: 'C', position: 3, day: 6, arm_id: @arm.id)
           @participant = create(:participant)
           @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
-          @appointment = create(:appointment, visit_group: @vg_a, protocols_participant: @protocols_participant, name: @vg_a.name, arm_id: @vg_a.arm_id, position: 1)
+          @appointment = create(:appointment, visit_group: @vg_a, protocols_participant: @protocols_participant, name: @vg_a.name, arm_id: @vg_a.arm_id, position: @vg_a.position)
           @procedure   = create(:procedure, :complete, appointment: @appointment)
         end
 
@@ -215,9 +215,10 @@ RSpec.describe VisitGroup, type: :model do
 
       describe 'check for completed data' do
         it "should allow the appointment to be deleted if it is not completed" do
+          appointment_count = @protocols_participant.appointments.count
           @procedure.update_attributes(status: "unstarted")
           @vg_a.destroy
-          expect(@protocols_participant.appointments.empty?).to eq(true)
+          expect(@protocols_participant.appointments.count).to eq(appointment_count - 2)
         end
 
         it "should not allow the appointment to be deleted if it is completed" do

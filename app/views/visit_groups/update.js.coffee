@@ -19,6 +19,11 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 <% if @errors %>
+<% if @on_page_edit %>
+arm_id = <%= @arm.id %>
+$(".visit_groups_for_#{arm_id}").html("<%= j render '/study_schedule/visit_groups', arm: @arm, visit_groups: @visit_groups, tab: @schedule_tab %>")
+$("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
+<% else %>
 $("[name^='visit_group']:not([type='hidden'])").parents('.form-group').removeClass('is-invalid').addClass('is-valid')
 $('.form-error').remove()
 <% @errors.messages.each do |attr, messages| %>
@@ -26,7 +31,8 @@ $('.form-error').remove()
 $("[name='visit_group[<%= attr.to_s %>]']").parents('.form-group').removeClass('is-valid').addClass('is-invalid').append("<small class='form-text form-error'><%= message.capitalize.html_safe %></small>")
 <% end %>
 <% end %>
-<% else %>
+<% end %>#if @on_page_edit
+<% else %>#if @errors
 $("#flashContainer").replaceWith("<%= j render 'layouts/flash' %>")
 $("#modalContainer").modal 'hide'
 

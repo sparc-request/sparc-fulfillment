@@ -54,6 +54,7 @@ feature 'User adds a Procedure to an unstarted visit', js: true do
   end
 
   def when_i_add_2_procedures_to_same_group
+    sleep 2#Troubleshooting Travis Failure
     add_a_procedure @services.first, 2
   end
 
@@ -66,10 +67,10 @@ feature 'User adds a Procedure to an unstarted visit', js: true do
   end
 
   def then_i_should_see_that_it_the_incomplete_button_is_disabled
-  	expect(page).to have_css('button.complete_all.disabled')
+  	expect(page).to have_css('button.complete-all.disabled')
   end
 
   def then_i_should_see_that_it_the_complete_button_is_disabled
-  	expect(page).to have_css('button.incomplete_all.disabled')
+  	expect(page).to have_css('button.incomplete-all.disabled')
   end
 end

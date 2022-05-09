@@ -29,7 +29,7 @@ class SubsidyReport < Report
     filtered_protocols = []
     protocols.each do |protocol|
       subsidy_date = protocol.sub_service_request.subsidy.approved_at
-      if (subsidy_date > @start_date) && (subsidy_date < @end_date)
+      if (subsidy_date >= @start_date) && (subsidy_date <= @end_date)
         filtered_protocols << protocol
       end
     end

@@ -40,15 +40,11 @@ feature 'User changes Participant Arm', js: true do
   end
 
   def when_i_change_a_participants_arm
-    page.find('table.participants tbody tr:first-child td.change_arm a').click
-    wait_for_ajax
     bootstrap_select "#protocols_participant_arm_id", @second_arm.name
-
-    click_button 'Save'
     wait_for_ajax
   end
 
   def then_i_should_see_the_arm_is_updated
-    expect(page).to have_css('table.participants tbody tr:first-child td.arm_name', text: @second_arm.name)
+    expect(page).to have_css('#participantTrackerTable tbody tr:first-child td.arm', text: @second_arm.name)
   end
 end

@@ -84,4 +84,18 @@ class Identity < SparcDbBase
   def is_a_patient_registrar?
     patient_registrars.any?
   end
+
+  # DEVISE specific methods
+  def self.find_for_shibboleth_oauth(auth, signed_in_resource=nil)
+    identity = Identity.where(ldap_uid: auth.uid).first
+
+    ##CWF doesn't need to create new ldap users
+    # unless identity
+    #   email = auth.info.email.blank? ? auth.uid : auth.info.email # in case shibboleth doesn't return the required parameters
+    #   identity = Identity.create ldap_uid: auth.uid, first_name: auth.info.first_name, last_name: auth.info.last_name, email: email, password: Devise.friendly_token[0,20], approved: true
+    # end
+    
+    identity
+  end
+
 end
