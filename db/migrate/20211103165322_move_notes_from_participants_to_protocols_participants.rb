@@ -21,11 +21,64 @@
 class Participant < ApplicationRecord
   has_many :notes, as: :notable
   has_many :protocols_participants, dependent: :destroy
+  has_paper_trail
 end
 
 class MoveNotesFromParticipantsToProtocolsParticipants < ActiveRecord::Migration[5.2]
   def change
     CSV.open(Rails.root.join("tmp/participant_notes_exceptions.csv"), "wb") do |csv|
+      csv << ["Note ID", "Participant ID", "Error:"]
+
+      #establish the date/time when the first protocol participant was created
+      note_date = "2019-05-16 17:50:00".to_datetime
+      notes_bar = ProgressBar.new(Note.where('notes.notable_type = ? AND notes.created_at <= ?', "Participant", note_date).count)
+
+      #find each of the notes with type as Participant created before the above date/time
+      Note.where('notes.notable_type = ? AND notes.created_at <= ?', "Participant", note_date).find_each do |note|
+        participant = note.notable
+
+        #If we can't find the participant, add note to the csv, and skip to the next record
+        if !participant
+          csv << [note.id, note.notable_id, "Participant could not be found"]
+          notes_bar.increment!
+          next
+        end
+
+        #check each of the previous versions for the one with the most recent protocol_id
+        latest_version_with_protocol_id_change = participant.versions.select{|version| YAML::load(version.object_changes)["protocol_id"]}.last
+
+        #if we can't find a valid version with a protocol id, add note to the csv, and skip to the next record
+        if !latest_version_with_protocol_id_change
+          csv << [note.id, note.notable_id, "Could not find past version with protocol id"]
+          notes_bar.increment!
+          next
+        end
+
+        #grab the protocol_id 
+        protocol_id = YAML::load(latest_version_with_protocol_id_change.object_changes)["protocol_id"].last.to_i
+
+        #find the protocols_participant associated with the participant
+        protocols_participant = participant.protocols_participants.where(protocol_id: protocol_id).first
+
+        #if we can't find the protocols_participant, add note to the csv, and skip to the next record
+        if !protocols_participant
+          csv << [note.id, note.notable_id, "Protocols Participant could not be found, protocol_id: #{protocol_id}"]
+          notes_bar.increment!
+          next
+        end
+
+        #assign the note to the protocols_participant
+        note.notable = protocols_participant
+        note.save
+      
+        notes_bar.increment!
+      end
+
+      csv << [""]
+      csv << [""]
+      csv << [""]
+      csv << [""]
+      
       csv << ["Participant ID:", "Notes Count:", "Note IDs:"]
 
       bar = ProgressBar.new(Participant.count)
@@ -58,7 +111,9 @@ class MoveNotesFromParticipantsToProtocolsParticipants < ActiveRecord::Migration
         end
       end
     end
+
     bar2 = ProgressBar.new(Note.where(notable_type: "Participant").count)
+
     ##Clear out notes that have no participant in the first place
     Note.with_deleted.where(notable_type: "Participant").each do |note|
       if Participant.find_by_id(note.notable_id).nil?
