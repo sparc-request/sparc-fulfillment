@@ -36,9 +36,12 @@ class Import < ApplicationRecord
         Klok::Person.destroy_all
 
         d = File.read(file.path)
-
+        puts "********************************************** d "
+puts d
         h = Hash.from_xml(d)
-
+        puts "*************************************************** h *****************"
+puts h
+puts "******* h class ===== #{h.class}"
         h['report']['people']['person'].each do |person|
           d = Klok::Person.new
           d.attributes = person.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
@@ -60,19 +63,18 @@ class Import < ApplicationRecord
 
       rescue Exception => e
         valid = false
-        puts e.inspect
-        puts e.backtrace.inspect
+        puts "####################### rescue Exception => e, line 66 #####>>>>>>>>>>>>>>>>>>>>>#{e.inspect}## #####################"
+        puts "************************************** e.backtrace.inspect >>>>>>>>>>>>>>>>>>>>> #{e.backtrace.inspect} *******************************************************************"
       end
 
-      ####### now that we have populated the KlokShard we can bring the same data in as line items ########
+      ####### now that we have populated the Klok tables we can bring the same data in as line items ########
 
       csv << ['']
       csv << ["ssr_id", "reason", "created_at", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
               "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
               "end_time_stamp", "rollup_to", "enabled"
             ]
-
-      puts "Populating data from KlokShard"
+      puts "Populating data from Klok tables"
 
       Klok::Entry.all.each do |entry|
 

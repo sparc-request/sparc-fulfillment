@@ -18,8 +18,9 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Klok::Person < KlokDbBase
+class Klok::Person < ApplicationRecord
   self.primary_key = 'resource_id'
+  self.table_name = 'klok_people'
 
   has_many :klok_entries, class_name: 'Klok::Entry', foreign_key: :resource_id
 
