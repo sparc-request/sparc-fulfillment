@@ -35,18 +35,12 @@ class ImportsController < ApplicationController
   end
 
   def create
-    import = Import.create(import_params) # params[:import]
-    puts "this is import #{import} ******************************************************"
-    puts "this is import_params #{import_params}******************************************"
+    import = Import.create(import_params)
     respond_to do |format|
       if import.save
         import.update_attribute(:title, determine_if_proof_report ? I18n.t('imports.proof_report_submit') : I18n.t('imports.klok_report_submit'))
         begin
           log_file, valid = import.generate(import.xml_file, determine_if_proof_report)
-          puts "import.xml_file **************************   #{import.xml_file}"
-          puts "log_file ===== #{log_file} *********************************"
-          puts "valid ============#{valid}"
-
           import.update_attribute(:file, File.open(log_file))
           @valid = valid
           if @valid
@@ -58,7 +52,7 @@ class ImportsController < ApplicationController
           end
         rescue Exception => e
           import.destroy # remove the import since it has an error
-          format.js { render js: "Swal.fire(title: 'Error', text: \"#{e.message}\", icon: 'error', showCancelButton: false)"}
+                   format.js { render js: "Swal.fire(title: 'Error', text: \"#{e.message}\", icon: 'error', showCancelButton: false)"}
           format.html { render :new }
         end
       else
