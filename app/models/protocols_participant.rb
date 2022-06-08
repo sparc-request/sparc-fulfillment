@@ -126,12 +126,12 @@ class ProtocolsParticipant < ApplicationRecord
     if status_changed?
       old_val = status_change[0].present? ? status_change[0] : I18n.t('actions.n_a')
       new_val = status_change[1].present? ? status_change[1] : I18n.t('actions.n_a')
-      self.participant.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:status), old: old_val, new: new_val))
+      self.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:status), old: old_val, new: new_val))
     end
     if arm_id_changed?
       old_val = arm_id_change[0].present? ? Arm.find(arm_id_change[0]).name : I18n.t('actions.n_a')
       new_val = arm_id_change[1].present? ? Arm.find(arm_id_change[1]).name : I18n.t('actions.n_a')
-      self.participant.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:arm), old: old_val, new: new_val))
+      self.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:arm), old: old_val, new: new_val))
     end
   end
 
