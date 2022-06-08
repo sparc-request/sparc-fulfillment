@@ -31,17 +31,17 @@
       .modal-body
         .form-group
           .row.align-items-center
-            = f.label 'name', t('arm.name'), class: 'control-label required col-sm-4 mb-0'
+            = f.label 'name', t('arm.form.arm_name'), class: 'control-label col-sm-4 mb-0'
             .col-sm-8
               = f.text_field :name, { class: 'form-control' }
         .form-group
           .row.align-items-center
-            = f.label 'subject_count', t('arm.subject_count'), class: 'control-label required col-sm-4 mb-0'
+            = f.label 'subject_count', t('arm.form.subject_count'), class: 'control-label col-sm-4 mb-0'
             .col-sm-8
               = f.text_field :subject_count, { class: 'form-control' }
         .form-group
           .row.align-items-center
-            = f.label 'visit_count', t('arm.visit_count'), class: 'control-label required col-sm-4 mb-0'
+            = f.label 'visit_count', t('arm.form.visit_count'), class: 'control-label col-sm-4 mb-0'
             .col-sm-8
               = f.text_field :visit_count, { class: 'form-control' }
         .form-group

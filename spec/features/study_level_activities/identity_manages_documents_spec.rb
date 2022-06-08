@@ -64,8 +64,9 @@ feature 'Identity manages Doucuments', js: true do
   end
 
   def when_i_click_on_line_item_documents_icon
-    first('.documents.list').click
+    first('.documents a').click
     wait_for_ajax
+    sleep 2
   end
 
   def when_i_have_a_document_to_upload
@@ -87,7 +88,6 @@ feature 'Identity manages Doucuments', js: true do
   def when_i_upload_a_document
     attach_file(find("input[type='file']")[:id], @filename)
     click_button "Save"
-    wait_for_ajax
   end
 
   def then_i_should_see_the_line_item_documents_list
@@ -99,12 +99,12 @@ feature 'Identity manages Doucuments', js: true do
   end
 
   def when_i_click_the_delete_icon
-    first("div.delete a").click
+    first('.delete a').click
     wait_for_ajax
   end
 
   def then_i_should_not_see_the_document
-    expect(page).to_not have_css("div.comment a")
+    expect(page).to_not have_css(".comment a")
     expect(page).to have_text("This line item has no documents")
   end
 end

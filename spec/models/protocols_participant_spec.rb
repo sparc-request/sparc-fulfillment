@@ -25,6 +25,8 @@ RSpec.describe ProtocolsParticipant, type: :model do
   it { is_expected.to belong_to(:protocol) }
   it { is_expected.to belong_to(:participant) }
   it { is_expected.to belong_to(:arm) }
+  it { is_expected.to belong_to(:protocol) }
+  it { is_expected.to belong_to(:participant) }
 
   it { is_expected.to have_many(:appointments) }
 
@@ -33,12 +35,6 @@ RSpec.describe ProtocolsParticipant, type: :model do
     @participant = create(:participant) 
     @arm = create(:arm, protocol_id: @protocol.id) 
     @protocols_participant = create(:protocols_participant, arm_id: @arm.id, protocol_id: @protocol.id, participant_id: @participant.id) 
-  end
-
-  context 'validations' do
-
-    it { is_expected.to validate_presence_of(:protocol_id) }
-    it { is_expected.to validate_presence_of(:participant_id) }
   end
 
   context 'class methods' do
@@ -54,12 +50,12 @@ RSpec.describe ProtocolsParticipant, type: :model do
     describe 'update appointments on arm change' do
 
       it "should set appointments with completed procedures to completed" do
-        appts_with_completes = protocols_participant.appointments.map{|a| a.has_completed_procedures}
+        appts_with_completes = protocols_participant.appointments.map{|a| a.has_completed_procedures?}
         protocols_participant.update_appointments_on_arm_change
         expect(protocols_participant.appointments.include?(appts_with_completes))
       end
       it "should delete incomplete appointments" do
-        appts_with_completes = protocols_participant.appointments.map{|a| a.has_completed_procedures}
+        appts_with_completes = protocols_participant.appointments.map{|a| a.has_completed_procedures?}
         protocols_participant.update_appointments_on_arm_change
         expect(protocols_participant.appointments.exclude?(appts_with_completes))
       end

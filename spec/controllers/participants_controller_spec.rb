@@ -65,7 +65,7 @@ RSpec.describe ParticipantsController do
     it "should get participants" do
       @participant2 = create(:participant)
       get :index, format: :json
-      expect(assigns(:participants)).to eq([@participant, @participant2])
+      expect(assigns(:participants)).to eq([@participant2, @participant])
     end
   end
 
@@ -83,29 +83,17 @@ RSpec.describe ParticipantsController do
       attributes.delete_if {|key| bad_attributes.include?(key)}
       attributes[:date_of_birth] = "09/10/2015"
       attributes[:mrn] = "888"
+      #Troubleshooting Travis Failure
+      test = Participant.new(attributes)
+      test.valid?
+      puts '#' * 50
+      puts test.errors.messages.inspect
+      puts '#' * 50
+      test = nil
+      ##End Travis Testing
       expect{
         post :create, params: { participant: attributes }, format: :js
       }.to change(Participant, :count).by(1)
-    end
-
-    it "should assign the arm if there is only one arm on a protocol" do
-      post :update_protocol_association, params: {
-        protocol_id: @protocol.id,
-        participant_id: create(:participant),
-        checked: true
-      }, format: :js, xhr: true
-      expect(assigns(:protocols_participant).arm).to eq(@arm)
-    end
-
-    it "should not assign the arm if there are multiple arms on a protocol" do
-      create(:arm, protocol_id: @protocol.id)
-      
-      post :update_protocol_association, params: {
-        protocol_id: @protocol.id,
-        participant_id: create(:participant).id,
-        checked: true
-      }, format: :js, xhr: true
-      expect(assigns(:protocols_participant).arm.nil?).to eq(true)
     end
   end
 
@@ -138,40 +126,6 @@ RSpec.describe ParticipantsController do
           id: @participant.id
         }, format: :js
       }.to change(Participant, :count).by(-1)
-    end
-  end
-
-  describe "GET #edit_arm" do
-    it "should find the participant" do
-      get :edit_arm, params: {
-        protocol_id: @protocol.id,
-        participant_id: @participant.id
-      }, format: :js, xhr: true
-      expect(assigns(:participant)).to eq(@participant)
-    end
-  end
-
-  describe "PUT #update_arm" do
-    it "should change a participant's arm" do
-      @protocols_participant.update_attributes(protocol_id: @protocol.id, participant_id: @participant.id)
-      @arm = create(:arm, protocol_id: @protocol.id)
-      put :update_arm, params: {
-        protocol_id: @protocol.id,
-        participant_id: @participant.id,
-        protocols_participant: {arm_id: @arm.id}
-      }, format: :js
-      @protocols_participant.reload
-      expect(@protocols_participant.arm_id).to eq @arm.id
-    end
-  end
-
-  describe "GET #details" do
-    it "should select an instantiated participant" do
-      get :details, params: {
-        protocol_id: @protocol.id,
-        participant_id: @participant.id
-      }, format: :js, xhr: true
-      expect(assigns(:participant)).to eq(@participant)
     end
   end
 end

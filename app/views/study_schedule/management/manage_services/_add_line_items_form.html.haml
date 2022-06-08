@@ -21,7 +21,9 @@
 .modal-dialog
   .modal-content
     = form_tag create_line_items_multiple_line_items_path, method: :put, remote: true do
+      = hidden_field_tag :protocol_id, protocol.id
       = hidden_field_tag :schedule_tab, schedule_tab
+      = hidden_field_tag :first_line_item, first_line_item
       .modal-header
         %h4.modal-title
           = t(:services)[:add_services]
@@ -33,11 +35,12 @@
             = label_tag "add_service_id", t(:services)[:object], class: 'control-label mb-0 col-sm-4'
             .col-sm-8
               = select_tag "add_service_id", options_from_collection_for_select(services, 'id' , 'name'), class: "form-control selectpicker"
-        .form-group
-          .row.align-items-center
-            = label_tag "add_service_arm_ids_and_pages", t(:arm)[:objects], class: "required control-label mb-0 col-sm-4"
-            .col-sm-8
-              = select_tag "add_service_arm_ids_and_pages[]", create_line_items_options(page_hash), { class: "form-control selectpicker", multiple: "", title: "Please Select Arms", 'data-selected-text-format' => 'count>2'}
+        - unless first_line_item
+          .form-group
+            .row.align-items-center
+              = label_tag "add_service_arm_ids_and_pages", t(:services)[:arm], class: "control-label mb-0 col-sm-4"
+              .col-sm-8
+                = select_tag "add_service_arm_ids_and_pages[]", create_line_items_options(page_hash), { class: "form-control selectpicker", multiple: "", title: "Please Select Arms", 'data-selected-text-format' => 'count>2'}
       .modal-footer
         %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
           = t(:actions)[:close]

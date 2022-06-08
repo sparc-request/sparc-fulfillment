@@ -42,6 +42,10 @@ $ ->
   $(document).on 'refresh.bs.table', ->
     $('.popover').popover('hide')
 
+  #Login Form JS
+  $(document).on 'click', '#outsideUserLogin', ->
+    $('form#new_identity').removeClass('d-none')
+
   # Back To Top button scroll
   $(window).scroll ->
     if $(this).scrollTop() > 50

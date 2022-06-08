@@ -32,15 +32,7 @@ module ParticipantHelper
   end
 
   def registry_actions_formatter(participant)
-    destroy_array = choose_destroy_action(participant)
-
-    return_array = [
-      "<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>",
-      "#{icon('fas', 'edit')}",
-      "</a>",
-      "&nbsp&nbsp"] + destroy_array  
-    
-    return_array.join ""
+    return [choose_edit_action(participant), "&nbsp&nbsp", choose_destroy_action(participant)].join("")
   end
 
   def phoneNumberFormatter(participant)
@@ -62,11 +54,23 @@ module ParticipantHelper
     "<input class='associate' type='checkbox' " + (protocols_participant_cannot_be_destroyed && associate ? "checked='checked' disabled" : associate ? "checked='checked'" : "") + " protocol_id='#{protocol.id}' participant_id='#{participant.id}'>"
   end
 
-  def choose_destroy_action(participant)
-    if participant.can_be_destroyed?
-      return ["<a class='remove destroy-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>", "<i class='far fa-trash-alt'></i>", "</a>"]
+  def choose_edit_action(participant)
+    if current_identity.is_a_patient_registrar?
+      ["<a class='edit edit-participant ml10' href='javascript:void(0)' title='Edit' participant_id='#{participant.id}'>", "#{icon('fas', 'edit')}", "</a>"]
     else
-      return ["<a data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>", "<i class='far fa-trash-alt' style='cursor:default'></i>"]
+      ["<span class='edit ml10 disabled tooltip-wrapper' title='Only Patient Registrars can edit participants' disabled='disabled' data-toggle='tooltip' data-placement='left'>", "#{icon('fas', 'edit')}", "</span>"]
+    end
+  end
+
+  def choose_destroy_action(participant)
+    if current_identity.is_a_patient_registrar?
+      if participant.can_be_destroyed?
+        return ["<a class='remove destroy-participant' href='javascript:void(0)' title='Remove' participant_id='#{participant.id}' participant_name='#{participant.full_name}'>", "<i class='far fa-trash-alt'></i>", "</a>"]
+      else
+        return ["<a data-toggle='tooltip' data-placement='left' data-animation='false' title='Participants with procedure data cannot be deleted.'>", "<i class='far fa-trash-alt' style='cursor:default'></i>"]
+      end
+    else
+      return ["<a data-toggle='tooltip' data-placement='left' data-animation='false' title='Only Patient Registrars can delete participants'>", "<i class='far fa-trash-alt' style='cursor:default'></i>"]
     end
   end
 end

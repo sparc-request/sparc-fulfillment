@@ -47,11 +47,11 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   context 'User changes a visit groups name to an invalid name' do
-    scenario 'and sees the name revert to the original' do
+    scenario 'and sees the error message and also sees the name revert to the original' do
       given_i_am_viewing_a_protocol
       when_i_fill_in_a_visit_group_name_with 'vanilla ice cream'
       when_i_fill_in_a_visit_group_name_with ''
-      then_i_should_see_that_the_name_is_still 'vanilla ice cream'
+      then_it_should_throw_error_message_and_see_that_the_name_is_still 'vanilla ice cream'
     end
   end
 
@@ -130,12 +130,13 @@ RSpec.describe 'Study Schedule', js: true do
 
   context 'User views the quantity/billing tab' do
     context 'and sets a quantity to blank' do
-      scenario 'and sees the quantity revert to the previous value' do
+      scenario 'and sees the error message' do
         given_i_am_viewing_a_protocol
         given_i_am_viewing_the_quantity_billing_tab
+        when_i_click_the_visit_modal
         when_i_set_the_research_billing_quantity_to '6'
         when_i_set_the_research_billing_quantity_to ''
-        then_i_should_see_the_research_billing_quantity_is '6'
+        then_i_should_see_not_a_number_error_message
       end
     end
 
@@ -143,9 +144,10 @@ RSpec.describe 'Study Schedule', js: true do
       scenario 'and sees the quantity revert to the previous value' do
         given_i_am_viewing_a_protocol
         given_i_am_viewing_the_quantity_billing_tab
+        when_i_click_the_visit_modal
         when_i_set_the_research_billing_quantity_to '6'
         when_i_set_the_research_billing_quantity_to '-1'
-        then_i_should_see_the_research_billing_quantity_is '6'
+        then_i_should_see_greater_than_error_message
       end
     end
   end
@@ -160,7 +162,7 @@ RSpec.describe 'Study Schedule', js: true do
     scenario 'and sees the inclusive child services of the organization' do
       given_i_am_viewing_a_protocol
       when_i_click_the_edit_line_item_button
-      then_i_should_see_the_correct_services
+      then_i_should_see_the_correct_service
     end
 
     context 'and saves changes' do
@@ -186,6 +188,9 @@ RSpec.describe 'Study Schedule', js: true do
     @visit          = @line_item.visits.first
     visit protocol_path(@protocol.id)
     wait_for_ajax
+
+    find('#studyScheduleTabLink').click
+    wait_for_ajax
   end
 
   def given_i_am_viewing_the_quantity_billing_tab
@@ -205,7 +210,9 @@ RSpec.describe 'Study Schedule', js: true do
 
   def when_i_fill_in_a_visit_group_name_with name
     fill_in "visit_group_#{@visit_group.id}", with: name
-    first('.study_schedule.service').click()
+    wait_for_ajax
+
+    first('.study-schedule-table .service-name').click
     wait_for_ajax
   end
 
@@ -237,12 +244,12 @@ RSpec.describe 'Study Schedule', js: true do
     @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1
     data_id = "visits_select_for_#{@arm.id}"
     find("button[data-id = #{data_id}]").click()
-    all(".visit_dropdown ul.dropdown-menu li a")[10].click()
+    all("a.dropdown-item")[9].click
     wait_for_ajax
   end
 
   def when_i_click_a_check_all_row_box
-    find("#line_item_#{@line_item.id} .check_row").click()
+    find("#line_item_#{@line_item.id} .check-row").click
     accept_confirm
     wait_for_ajax
   end
@@ -253,7 +260,7 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_click_a_check_all_column_box
-    first(".check_column").click()
+    find("button[data-visit-group-id='#{@visit.id}']").click
     accept_confirm
     wait_for_ajax
   end
@@ -263,16 +270,23 @@ RSpec.describe 'Study Schedule', js: true do
     when_i_click_a_check_all_column_box #Uncheck
   end
 
+  def when_i_click_the_visit_modal
+    first("#visit#{@visit.id} a").click()
+    wait_for_ajax
+  end
+
   def when_i_set_the_research_billing_quantity_to value
-    fill_in "visits_#{@visit.id}_research_billing_qty", :with => value
-    first('.study_schedule.service').click()
+    fill_in "visit_research_billing_qty", :with => value
+    wait_for_ajax
+    find("input[type='submit']").click
     wait_for_ajax
   end
 
   def when_i_click_the_edit_line_item_button
-    first(".change_line_item_service").click
+    sleep 2#Troubleshooting Travis Failure
+    first(".change-line-item-service").click
     wait_for_ajax
-    
+
   end
 
   def when_i_set_the_service_to service
@@ -281,37 +295,38 @@ RSpec.describe 'Study Schedule', js: true do
   end
 
   def when_i_submit_the_service_changes
-    click_button 'Save'
+    find("input[type='submit']").click
     wait_for_ajax
   end
 
   def then_i_should_see_the_study_schedule_and_its_components
-    expect(page).to have_css(".study_schedule.service.arm_#{@arm.id}")
+    expect(page).to have_css(".study-schedule-container .arm-#{@arm.id}-container")
     expect(page).to have_css("#visit-name-display-#{@visit_group.id}")
     expect(page).to have_css("#line_item_#{@line_item.id}")
     expect(page).to have_css("#visit_check_#{@visit.id}")
   end
 
   def then_i_should_see_the_tab
-    expect(page).to have_css("#visits_#{@visit.id}_research_billing_qty")
-    expect(page).to have_css("#visits_#{@visit.id}_insurance_billing_qty")
+    expect(page).to have_css(".r-label")
+    expect(page).to have_css(".t-label")
   end
 
   def then_i_should_see_the_same_tab
-    expect(page).to have_css("#visits_#{@visit.id}_research_billing_qty")
-    expect(page).to have_css("#visits_#{@visit.id}_insurance_billing_qty")
+    expect(page).to have_css(".r-label")
+    expect(page).to have_css(".t-label")
   end
 
-  def then_i_should_see_that_the_name_is_still name
+  def then_it_should_throw_error_message_and_see_that_the_name_is_still name
+    expect(page).to have_content("Visit Name can't be blank")
     expect(find_field("visit_group_#{@visit_group.id}").value).to eq(name)
   end
 
   def then_i_should_see_the_previous_page_button_is_disabled
-    expect(page).to have_css("#arrow-left-#{@arm.id}[disabled]")
+    expect(page).to have_css("#arrow-left-#{@arm.id}.disabled")
   end
 
   def then_i_should_see_the_next_page_button_is_disabled
-    expect(page).to have_css("#arrow-right-#{@arm.id}[disabled]")
+    expect(page).to have_css("#arrow-right-#{@arm.id}.disabled")
   end
 
   def then_i_should_see_the_next_page
@@ -368,22 +383,20 @@ RSpec.describe 'Study Schedule', js: true do
     end
   end
 
-  def then_i_should_see_the_research_billing_quantity_is value
-    expect(find_field("visits_#{@visit.id}_research_billing_qty").value).to eq(value)
+  def then_i_should_see_not_a_number_error_message
+    expect(page).to have_content("Is not a number")
+  end
+
+  def then_i_should_see_greater_than_error_message
+    expect(page).to have_content("Must be greater than or equal to 0")
   end
 
   def then_i_should_see_the_edit_line_item_modal
     expect(page).to have_content("Change Service")
   end
 
-  def then_i_should_see_the_correct_services
-    services = @line_item.service.organization.inclusive_child_services(:per_participant)
-    index = 0
-
-    all(".text").each do |service|
-      expect(service.text).to eq(services[index])
-      index += 1
-    end
+  def then_i_should_see_the_correct_service
+    expect(find("button.dropdown-toggle[data-id='line_item_service_id']")["title"]).to eq(@line_item.service.name)
   end
 
   def then_i_should_see_the_updated_service
