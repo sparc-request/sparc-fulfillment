@@ -114,9 +114,6 @@ class ProtocolImporter
       end
       # end one_time_fee line_item creation
 
-      # update views via Faye
-      FayeJob.perform_later fulfillment_protocol
-      # end Faye
       @logger.info "ActiveRecord transaction completed for sparc_sub_service_request: #{sparc_sub_service_request.inspect}"
     end # end Active Record Transaction
 
