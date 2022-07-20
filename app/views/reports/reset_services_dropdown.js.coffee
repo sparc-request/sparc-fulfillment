@@ -18,45 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class InvoiceReportGroupedOptions
-  include ActionView::Helpers::TagHelper
+$('#service_section').html('<%= escape_javascript(select_tag "services", options_for_select(@grouped_options_services), multiple: true, id: "service_select", title: t(:reports)[:select_services], class: "selectpicker form-control") %>')
 
-  def initialize(org_or_service, type)
-    @organizations = org_or_service if type = 'organization'
-    @services = org_or_service if type = 'service'
-  end
-
-  def collect_grouped_options
-    groups = @organizations.
-      sort { |lhs, rhs| lhs.name <=> rhs.name }.
-      group_by(&:type)
-    options = ["Institution", "Provider", "Program", "Core"].map do |type|
-      next unless groups[type].present?
-      [type.pluralize, extract_name_and_id(groups[type])]
-    end
-    options.compact
-  end
-
-  def collect_grouped_options_services
-    services = @services.sort { |lhs, rhs| lhs.name <=> rhs.name }
-
-    service_options = []
-    services.each do |service|
-      inactive_indicator = service.is_available ? '' : '<small class="text-danger ml-1"><em>Inactive</em></small>'
-      service_options << [{'data-content': service.name + inactive_indicator}, service.id]
-    end
-
-    service_options.compact
-  end
-
-  private
-
-  def extract_name_and_id(orgs)
-    org_options = []
-    orgs.each do |org|
-      inactive_indicator = org.is_available ? '' : '<small class="text-danger ml-1"><em>Inactive</em></small>'
-      org_options << [{'data-content': org.name + inactive_indicator}, org.id]
-    end
-    org_options
-  end
-end
+$(".modal-content #service_select").selectpicker({
+  selectedTextFormat: 'count',
+  countSelectedText: (selected, total) -> if (selected == total) then "All Services" else "#{selected} Services selected"
+  actionsBox: true,
+  liveSearch: true
+})
