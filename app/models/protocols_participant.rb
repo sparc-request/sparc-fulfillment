@@ -21,7 +21,7 @@
 class ProtocolsParticipant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
-  
+
   belongs_to :protocol
   belongs_to :participant
   belongs_to :arm
@@ -29,6 +29,7 @@ class ProtocolsParticipant < ApplicationRecord
   has_many :appointments, dependent: :destroy
 
   has_many :procedures, through: :appointments
+  after_touch :set_deletable_flag
   has_many :arms, -> { distinct }, through: :appointments
 
   attr_accessor :current_identity
@@ -88,7 +89,8 @@ class ProtocolsParticipant < ApplicationRecord
   end
 
   def can_be_destroyed?
-    procedures.where.not(status: 'unstarted').empty?
+    self.deletable?
+    #procedures.where.not(status: 'unstarted').empty?
   end
 
   def label
@@ -99,6 +101,16 @@ class ProtocolsParticipant < ApplicationRecord
     end
 
     label
+  end
+
+def set_deletable_flag
+    if procedures.where.not(status: 'unstarted').empty?
+      self.deletable = true
+      self.save
+    else
+      self.deletable = false
+      self.save
+    end
   end
 
   private

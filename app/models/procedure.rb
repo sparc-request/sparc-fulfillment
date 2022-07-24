@@ -49,6 +49,9 @@ class Procedure < ApplicationRecord
   has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
+  delegate :set_deletable_flag, to: :protocols_participant
+
+  after_initialize :set_deletable_flag
   before_update :set_save_dependencies, :set_subsidy_and_funding_source
 
   validates_inclusion_of :status, in: STATUS_TYPES,
