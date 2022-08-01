@@ -39,9 +39,6 @@ class ProtocolsParticipant < ApplicationRecord
   before_save :note_changes,                      if: Proc.new{ |p| p.arm_id_changed? || p.status_changed? }
   after_save :update_appointments_on_arm_change,  if: Proc.new{ |p| p.saved_change_to_arm_id? }
 
-  after_save :update_faye
-  after_destroy :update_faye
-
   scope :search, -> (term) {
     eager_load(:arm).where(participant: Participant.search(term)
     ).or(
@@ -140,9 +137,5 @@ def set_deletable_flag
       new_val = arm_id_change[1].present? ? Arm.find(arm_id_change[1]).name : I18n.t('actions.n_a')
       self.participant.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:arm), old: old_val, new: new_val))
     end
-  end
-
-  def update_faye
-    FayeJob.perform_later protocol
   end
 end

@@ -54,9 +54,6 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
         expect(@sibling_protocol.reload.sponsor_name).to eq("GILEAD")
       end
 
-      it 'should not POST to the Faye server' do
-        expect(a_request(:post, /#{ENV['CWF_FAYE_HOST']}/)).to_not have_been_made
-      end
     end
   end
 end

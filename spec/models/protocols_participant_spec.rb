@@ -88,12 +88,6 @@ RSpec.describe ProtocolsParticipant, type: :model do
 
     describe 'callbacks' do
 
-      it 'should callback :update_via_faye after save' do
-        protocols_participant = create(:protocols_participant, arm_id: create(:arm).id, protocol_id: create(:protocol).id, participant_id: create(:participant).id)
-
-        expect(protocols_participant).to callback(:update_faye).after(:save)
-      end
-
       it 'should create a note when the arm is updated' do
         notes_before_update = protocols_participant.participant.notes.count
         arm2 = create(:arm, protocol_id: protocol.id)
