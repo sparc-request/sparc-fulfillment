@@ -24,7 +24,7 @@ FactoryBot.define do
     appointment { nil }
     visit { nil }
     service { create(:service) }
-
+    protocols_participant
     trait :insurance_billing_qty do
       billing_type { 'insurance_billing_qty' }
     end

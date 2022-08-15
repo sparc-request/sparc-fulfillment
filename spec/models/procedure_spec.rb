@@ -40,13 +40,32 @@ RSpec.describe Procedure, type: :model do
   context 'class methods' do
 
     before :each do
+      notes                 = create(:notes)
       @service              = create(:service)
       protocol              = create(:protocol)
       sub_service_request   = create(:sub_service_request, protocol: protocol)
       participant           = create(:participant)
       arm                   = create(:arm, protocol: protocol)
-      protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
+      protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant, notes: notes)
       @appointment          = create(:appointment, arm: arm, protocols_participant: protocols_participant, name: "Super Arm", protocol: protocol)
+    end
+
+    describe "set_protocols_participant_can_be_destroyed_flag" do
+      before :each do
+        notes                 = create(:notes)
+        @service              = create(:service)
+        protocol              = create(:protocol)
+        sub_service_request   = create(:sub_service_request, protocol: protocol)
+        participant           = create(:participant)
+        arm                   = create(:arm, protocol: protocol)
+        protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant, notes: notes)
+        @appointment          = create(:appointment, arm: arm, protocols_participant: protocols_participant, name: "Super Arm", protocol: protocol)
+        @procedure = create(:procedure, service: @service, appointment: @appointment)
+      end
+      it 'should be fired before update' do
+          @procedure.status= "unstarted"
+          expect(protocols_participant.can_be_destroyed.changed?).to be
+        end
     end
 
     describe 'service_name' do
@@ -92,6 +111,21 @@ RSpec.describe Procedure, type: :model do
           procedure = create(:procedure, status.to_sym)
 
           expect { procedure.destroy }.to raise_error(ActiveRecord::ActiveRecordError)
+        end
+      end
+    end
+    describe '.set_protocols_participant_can_be_destroyed_flag' do
+      context 'status changed to complete' do
+        before do
+          @protocols_participant = procedure.protocols_participant
+          to_status = 'complete'
+          @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
+            procedure = create(:procedure, from_status.to_sym)
+            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment, protocols_participant: @protocols_participant, notes: notes)
+          end
+        end
+        it 'should set flag to false' do
+          expect(@procedures.map(&:set_protocols_participant_can_be_destroyed_flag)).to_not be_any
         end
       end
     end

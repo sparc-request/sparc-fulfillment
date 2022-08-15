@@ -21,7 +21,7 @@
 class ProtocolsParticipant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
-  
+
   belongs_to :protocol
   belongs_to :participant
   belongs_to :arm
@@ -85,7 +85,7 @@ class ProtocolsParticipant < ApplicationRecord
   end
 
   def can_be_destroyed?
-    procedures.where.not(status: 'unstarted').empty?
+    self.can_be_destroyed
   end
 
   def label
