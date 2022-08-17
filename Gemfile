@@ -8,13 +8,11 @@ gem 'autoprefixer-rails', '7.2.2'
 gem 'axlsx', git: 'https://github.com/randym/axlsx', branch: 'master'
 gem 'axlsx_rails'
 gem 'babel-transpiler'
-gem 'bcrypt_pbkdf'
 gem 'coffee-rails'
 gem 'daemons'
 gem 'delayed_job_active_record'
 gem 'devise'
 gem 'dotenv-rails'
-gem 'ed25519'
 gem 'font-awesome-sass'
 gem 'gon'
 gem 'grape', '~> 1.6.2'
@@ -64,6 +62,8 @@ group :development, :test, :testing do
   gem "factory_bot_rails"
   gem 'faker', '~> 2.20.0'
   gem 'pry'
+  gem 'bcrypt_pbkdf'
+  gem 'ed25519'
 end
 
 group :development do
