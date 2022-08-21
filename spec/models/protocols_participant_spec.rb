@@ -30,14 +30,11 @@ RSpec.describe ProtocolsParticipant, type: :model do
 
   it { is_expected.to have_many(:appointments) }
 
-  it { is_expected.to have_many(:procedures) }
-
   before :each do
     @protocol = create(:protocol)
     @participant = create(:participant)
     @arm = create(:arm, protocol_id: @protocol.id)
-    #note = create(:note, comment: "hello")
-    #@protocols_participant = create(:protocols_participant, arm_id: @arm.id, protocol_id: @protocol.id, participant_id: @participant.id)
+    @protocols_participant = create(:protocols_participant, arm_id: @arm.id, protocol_id: @protocol.id, participant_id: @participant.id)
   end
 
   context 'class methods' do
@@ -50,10 +47,13 @@ RSpec.describe ProtocolsParticipant, type: :model do
     let!(:protocols_participant)  { create(:protocols_participant, arm: arm, protocol: protocol, participant: participant) }
 
     describe 'can_be_destroyed?' do
-      it 'should return true if can_be_destroyed flag is set to true' do
-        expect(protocols_participant.can_be_destroyed?).to eq true
+
+      it 'should be true if all procedures are unstarted' do
+        procedures = protocols_participant.procedures
+        expect(procedures.touched.any?).to eq false
       end
     end
+
     describe 'update appointments on arm change' do
 
       it "should set appointments with completed procedures to completed" do
@@ -101,12 +101,6 @@ RSpec.describe ProtocolsParticipant, type: :model do
 
         protocols_participant.update(arm: arm2)
         expect(protocols_participant.participant.notes.count).to eq(notes_before_update + 1)
-      end
-
-      it 'should set "can_be_destroyed" flag when procedures collection changes' do
-        status_before_update = protocols_participant.procedures.touched.any?
-        new_procedure = create(:procedure)
-
       end
     end
   end

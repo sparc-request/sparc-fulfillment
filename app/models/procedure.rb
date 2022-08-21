@@ -49,7 +49,9 @@ class Procedure < ApplicationRecord
   has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
-  before_update :set_save_dependencies, :set_subsidy_and_funding_source, :set_protocols_participant_can_be_destroyed_flag
+  before_update :set_save_dependencies, :set_subsidy_and_funding_source
+
+  after_commit :set_protocols_participant_can_be_destroyed_flag
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }

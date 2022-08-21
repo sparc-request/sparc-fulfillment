@@ -3,7 +3,11 @@ class AddCanBeDestroyedFlagToProtocolsParticipant < ActiveRecord::Migration[5.2]
     add_column :protocols_participants, :can_be_destroyed, :boolean
 
     ProtocolsParticipant.find_each do |p|
-      p.update_attribute(:can_be_destroyed, true) if !p.procedures.touched.any?
+      if p.procedures.touched.any?
+        p.update_attribute(:can_be_destroyed, false)
+      else
+        p.update_attribute(:can_be_destroyed, true)
+      end
     end
   end
 end

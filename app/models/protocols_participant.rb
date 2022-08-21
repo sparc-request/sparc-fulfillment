@@ -27,7 +27,6 @@ class ProtocolsParticipant < ApplicationRecord
   belongs_to :arm
 
   has_many :appointments, dependent: :destroy
-
   has_many :procedures, through: :appointments
   has_many :arms, -> { distinct }, through: :appointments
 
