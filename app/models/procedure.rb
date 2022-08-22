@@ -72,11 +72,13 @@ class Procedure < ApplicationRecord
         where("procedures.completed_date is not NULL AND procedures.completed_date between ? AND ? AND billing_type = ?", start_date, end_date, "research_billing_qty")}
 
   def set_protocols_participant_can_be_destroyed_flag
-    protocols_participant = self.protocols_participant
-      if protocols_participant.procedures.touched.any?
-        protocols_participant.update_attribute :can_be_destroyed, false
-      else
-        protocols_participant.update_attribute :can_be_destroyed, true
+    if self.status_changed?(from:'unstarted') || self.status_changed?(to:'unstarted')
+      protocols_participant = self.protocols_participant
+        if protocols_participant.procedures.touched.any?
+          protocols_participant.update_attribute :can_be_destroyed, false
+        else
+          protocols_participant.update_attribute :can_be_destroyed, true
+      end
     end
   end
 
