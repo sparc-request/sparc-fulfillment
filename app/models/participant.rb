@@ -50,7 +50,7 @@ class Participant < ApplicationRecord
   validates :ethnicity, presence: true
   validates :race, presence: true
   validates :address, presence: true
-  validates :city, presence: true
+  validates_format_of :city, with: /\A[a-z\s]+\z/i, presence: true
   validates :state, presence: true
 
   validates :zipcode, presence: true
