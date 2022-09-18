@@ -23,7 +23,9 @@ CWF_VERSION=v3.3.0
 GLOBAL_SCHEME=http
 SPARC_API_HOST=localhost:5000
 SPARC_API_VERSION=v1
-SPARC_API_CLIENT_ID=get_client_id_from_sparc
+
+# Create API Client ID and Secret at SPARCAdmin /admin/applications/new
+SPARC_API_CLIENT_ID=get_client_id_from_sparc 
 SPARC_API_CLIENT_SECRET=get_client_secret_from_sparc
 
 CWF_API_USERNAME=iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0
