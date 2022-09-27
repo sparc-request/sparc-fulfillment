@@ -59,9 +59,6 @@ class Protocol < ApplicationRecord
 
   before_save :set_documents_count
 
-  after_save :update_faye
-  after_destroy :update_faye
-
   delegate  :irb_approval_date,
             :irb_expiration_date,
             :irb_number,
@@ -202,10 +199,6 @@ class Protocol < ApplicationRecord
 
   ##### PRIVATE METHODS #####
   private
-
-  def update_faye
-    FayeJob.perform_later(self) unless self.document_counter_updated
-  end
 
   def set_documents_count
     update_attributes(unaccessed_documents_count: 0) if self.unaccessed_documents_count < 0

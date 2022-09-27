@@ -23,16 +23,15 @@ CWF_VERSION=v3.3.0
 GLOBAL_SCHEME=http
 SPARC_API_HOST=localhost:5000
 SPARC_API_VERSION=v1
-SPARC_API_CLIENT_ID=get_client_id_from_sparc
+
+# Create API Client ID and Secret at SPARCAdmin /admin/applications/new
+SPARC_API_CLIENT_ID=get_client_id_from_sparc 
 SPARC_API_CLIENT_SECRET=get_client_secret_from_sparc
 
 CWF_API_USERNAME=iyqu2bm3T4rDWWpnwYfEl2i6o2Sphpuq_TKvFnIOTA0
 CWF_API_PASSWORD=qL1oZmdMi7OU7G1f0q6aCTVR6HrmoNmpZVNc8DfHqek
 
 APPLICATION_TIME_ZONE=Eastern Time (US & Canada)
-FAYE_REFRESH_INTERVAL=25
-FAYE_TOKEN=3bd16424a2154769a1fb4adc081b10747bdbfdbd93682032
-CWF_FAYE_HOST=localhost:9292
 DOCUMENTS_FOLDER=public/system/documents
 INCLUDE_SHIBBOLETH_AUTHENTICATION=false
 USE_SHIBBOLETH_ONLY=false
