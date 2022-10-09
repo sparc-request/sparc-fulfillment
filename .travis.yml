@@ -54,7 +54,7 @@ jobs:
       - bundle exec rspec spec/controllers
       - bundle exec rspec spec/helpers
       - bundle exec rspec spec/jobs
-    -script:
+    - script:
       - bundle exec rspec spec/lib
       - bundle exec rspec spec/models
       - bundle exec rspec spec/requests
