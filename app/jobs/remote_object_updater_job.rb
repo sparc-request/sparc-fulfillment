@@ -22,14 +22,6 @@ class RemoteObjectUpdaterJob < ActiveJob::Base
 
   queue_as :sparc_api_requests
 
-  before_perform do
-    skip_faye_callbacks
-  end
-
-  after_perform do
-    set_faye_callbacks
-  end
-
   def perform(notification)
     object_class          = normalized_object_class(notification)
     local_object          = object_class.constantize.find_or_create_by(sparc_id: notification.sparc_id)
@@ -62,15 +54,5 @@ class RemoteObjectUpdaterJob < ActiveJob::Base
     else
       notification.kind.classify
     end
-  end
-
-  def skip_faye_callbacks
-    Protocol.skip_callback    :save, :after, :update_faye
-    ProtocolsParticipant.skip_callback :save, :after, :update_faye
-  end
-
-  def set_faye_callbacks
-    Protocol.set_callback    :save, :after, :update_faye
-    ProtocolsParticipant.set_callback :save, :after, :update_faye
   end
 end

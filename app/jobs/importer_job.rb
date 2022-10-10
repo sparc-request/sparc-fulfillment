@@ -25,30 +25,10 @@ class ImporterJob < ActiveJob::Base
   end
 
   def perform sparc_id, callback_url, action
-    skip_faye_callbacks
-
-    begin
-      yield
-    ensure
-      set_faye_callbacks
-    end
+    #This probably isn't needed anymore
+    #but is a stub from when there was faye logic in here
+    yield
   end
 
   private
-
-  # Disable #update_faye callback on save
-  def skip_faye_callbacks
-    Protocol.skip_callback    :save, :after, :update_faye
-    ProtocolsParticipant.skip_callback :save, :after, :update_faye
-  end
-
-  # Enable #update_faye callback on save
-  def set_faye_callbacks
-    Protocol.set_callback    :save, :after, :update_faye
-    ProtocolsParticipant.set_callback :save, :after, :update_faye
-  end
-
-  def update_faye(object)
-    FayeJob.perform_later object
-  end
 end

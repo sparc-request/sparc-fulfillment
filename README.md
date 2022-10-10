@@ -25,7 +25,6 @@ Work Fulfillment
 7. configure local databases named sparc_fulfillment, test_sparc_fulfillment, and test_sparc_request for development and test environments: 
   1. configure config/database.yml to connect to your dev and test databases
   2. configure config/shards.yml to connect to your dev and test sparc-request databases
-  3. configure config/faye.xml 
   4. configure .env by copying from dotenv.example
 8. run: rake db:migrate
 9. run tests: bundle exec rspec
@@ -40,4 +39,3 @@ Work Fulfillment
 11. start sparc-fulfillment on port 5000 with: 
   1. rails server -p 5000
   2. bundle exec bin/delayed_job start
-  3. thin -C config/faye.yml start

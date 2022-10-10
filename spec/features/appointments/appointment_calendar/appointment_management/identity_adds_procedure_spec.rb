@@ -47,6 +47,7 @@ feature 'Identity adds Procedure', js: true do
 
     # bootstrap_select('.list-group-item', visit_group.name)
     page.find('a.list-group-item[data-appointment-id="1"]').click
+    wait_for_ajax
     bootstrap_select('.form-control.selectpicker', service.name)
     # fill_in 'input[value="1"]', with: '1'
     page.find('button#addService').click
