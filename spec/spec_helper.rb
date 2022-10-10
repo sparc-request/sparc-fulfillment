@@ -45,19 +45,6 @@ require 'rspec/retry'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |file| require file }
 
-Capybara.register_driver :webkit do |app|
-  driver = Capybara::Webkit::Driver.new(app, { set_skip_image_loading: true })
-  driver
-end
-
-Shoulda::Matchers.configure do |config|
-  config.integrate do |with|
-    # Choose a test framework:
-    with.test_framework :rspec
-    with.library :rails
-  end
-end
-
 SimpleCov.start do
   add_group "Models", "app/models"
   add_group "Controllers", "app/controllers"
@@ -95,8 +82,6 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  config.backtrace_exclusion_patterns << /\/gems\//
-
   config.default_sleep_interval = 2
   config.verbose_retry = true
   config.default_retry_count = 4
@@ -107,7 +92,7 @@ RSpec.configure do |config|
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
-=begin
+
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
   # `:focus` metadata. When nothing is tagged with `:focus`, all examples
@@ -141,12 +126,27 @@ RSpec.configure do |config|
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
   #     --seed 1234
-  config.order = :random
+  # config.order = :random
 
   # Seed global randomization in this process using the `--seed` CLI option.
   # Setting this allows you to use `--seed` to deterministically reproduce
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
-=end
+
+  config.backtrace_exclusion_patterns << /gems/
+
+end
+
+Capybara.register_driver :webkit do |app|
+  driver = Capybara::Webkit::Driver.new(app, { set_skip_image_loading: true })
+  driver
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    # Choose a test framework:
+    with.test_framework :rspec
+    with.library :rails
+  end
 end
