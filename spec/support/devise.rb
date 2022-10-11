@@ -33,7 +33,7 @@ module ControllerMacros
 
     before(:each) do
       @request.env['devise.mapping']  = Devise.mappings[:identity]
-      identity                        = create(:identity)
+      identity                        = create(:identity)##TODO: This should really check for an existing identity first
 
       sign_in identity
     end
