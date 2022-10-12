@@ -30,17 +30,17 @@ RSpec.configure do |config|
     end
   end
 
-  config.before(:each, type: :feature) do
-    FEATURE_TEST_MODELS.each do |model|
-      DatabaseCleaner[:active_record, model: model].strategy = :truncation
-      DatabaseCleaner[:active_record, model: model].start
-    end
-  end
+  # config.before(:each, type: :feature) do
+  #   FEATURE_TEST_MODELS.each do |model|
+  #     DatabaseCleaner[:active_record, model: model].strategy = :truncation
+  #     DatabaseCleaner[:active_record, model: model].start
+  #   end
+  # end
 
   # Clean data post-test
-  config.append_after(:each, type: :feature) do
-    FEATURE_TEST_MODELS.each do |model|
-      DatabaseCleaner[:active_record, model: model].clean
-    end
-  end
+  # config.append_after(:each, type: :feature) do
+  #   FEATURE_TEST_MODELS.each do |model|
+  #     DatabaseCleaner[:active_record, model: model].clean
+  #   end
+  # end
 end

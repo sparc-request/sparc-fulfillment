@@ -21,7 +21,7 @@
 module DeviseHelpers
 
   def sign_in
-    identity = create(:identity)
+    identity = Identity.first || create(:identity)
 
     login_as(identity, run_callbacks: false)
   end
@@ -33,7 +33,7 @@ module ControllerMacros
 
     before(:each) do
       @request.env['devise.mapping']  = Devise.mappings[:identity]
-      identity                        = create(:identity)##TODO: This should really check for an existing identity first
+      identity                        = Identity.first || create(:identity)
 
       sign_in identity
     end

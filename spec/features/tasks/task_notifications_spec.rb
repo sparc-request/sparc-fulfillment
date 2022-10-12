@@ -43,13 +43,13 @@ feature "Task notifications", js: true do
   end
 
   def given_i_have_no_tasks
-    # Devise#sign_in
+    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
   end
 
   def given_i_have_one_task
     assignee = Identity.first
     assignor = create(:identity)
-
+    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
     create(:task, identity: assignor, assignee: assignee)
   end
 
@@ -59,7 +59,7 @@ feature "Task notifications", js: true do
   end
 
   def when_i_click_on_the_task_notification
-    find("input[type='checkbox']").set(true)
+    first("input[type='checkbox']").set(true)
   end
 
   def then_i_should_be_on_the_tasks_page

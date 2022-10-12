@@ -81,14 +81,14 @@ feature 'Invoice Procedure', js: true do
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
 
-    page.find('a.list-group-item[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     bootstrap_select '[name="service_id"]', @service.name
     fill_in 'service_quantity', with: 1
     find('button#addService').click
   end
 
   def and_i_am_adding_a_procedure
-    page.find('a.list-group-item[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     bootstrap_select '[name="service_id"]', @service.name
     fill_in 'service_quantity', with: 1
     find('button#addService').click

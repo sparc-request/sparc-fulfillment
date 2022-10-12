@@ -108,7 +108,7 @@ feature 'Start Complete Buttons', js: true do
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    page.find('a.list-group-item[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     bootstrap_select('.form-control.selectpicker', service.name)
     page.find('button#addService').click
     wait_for_ajax
