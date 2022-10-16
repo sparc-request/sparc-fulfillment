@@ -85,7 +85,6 @@ feature 'Complete Visit', js: true do
 
   def given_i_am_viewing_an_appointment
     protocol     = create_and_assign_protocol_to_me
-    @identity    = Identity.first
     protocols_participant  = protocol.protocols_participants.first
     @visit_group = protocols_participant.appointments.first.visit_group
     @service     = protocol.organization.inclusive_child_services(:per_participant).first
@@ -133,7 +132,7 @@ feature 'Complete Visit', js: true do
   def when_i_add_a_follow_up_date
     find("td.followup").click
     wait_for_ajax
-    bootstrap_select '#task_assignee_id', @identity.full_name
+    bootstrap_select '#task_assignee_id', @logged_in_identity.full_name
     bootstrap_datepicker '#task_due_at', day: '10'
     fill_in 'task_notes_comment', with: 'Test comment'
     click_button 'Submit'

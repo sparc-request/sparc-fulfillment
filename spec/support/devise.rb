@@ -22,6 +22,7 @@ module DeviseHelpers
 
   def sign_in
     identity = Identity.first || create(:identity)
+    @logged_in_identity = identity
 
     login_as(identity, run_callbacks: false)
   end

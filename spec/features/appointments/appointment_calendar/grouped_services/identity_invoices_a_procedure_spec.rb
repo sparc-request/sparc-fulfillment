@@ -71,7 +71,7 @@ feature 'Invoice Procedure', js: true do
   def and_i_am_adding_a_procedure
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
 
-    find('a.list-group-item[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
     
     bootstrap_select '[name="service_id"]', @service.name
@@ -88,7 +88,7 @@ feature 'Invoice Procedure', js: true do
             completed_date: DateTime.current.strftime('%m/%d/%Y'),
             invoiced: true)
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    find('a.list-group-item[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
   end
 
@@ -100,7 +100,7 @@ feature 'Invoice Procedure', js: true do
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
 
-    find('a.list-group-item[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
     
     bootstrap_select '[name="service_id"]', service.name

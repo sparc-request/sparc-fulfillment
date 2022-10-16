@@ -102,7 +102,7 @@ feature 'User messes with a procedures date completed', js: true do
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    find('a[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
     bootstrap_select '[name="service_id"', service.name
     fill_in 'service_quantity', with: 1
