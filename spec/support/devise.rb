@@ -35,6 +35,8 @@ module ControllerMacros
       @request.env['devise.mapping']  = Devise.mappings[:identity]
       identity                        = Identity.first || create(:identity)
 
+      @logged_in_identity = identity
+
       sign_in identity
     end
   end
