@@ -70,10 +70,7 @@ feature 'User completes Procedure', js: true do
     first('a.list-group-item.appointment-link').click
     wait_for_ajax
     
-    bootstrap_select '[name="service_id"', service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    add_a_procedure(service)
 
     visit_group.appointments.first.procedures.reload
     @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
@@ -109,7 +106,7 @@ feature 'User completes Procedure', js: true do
   end
 
   def when_i_view_the_notes_list
-    find('div#procedure1Notes').click
+    find("div#procedure#{@procedure.id}Notes").click
   end
 
   def then_i_should_see_complete_notes count=1
@@ -121,6 +118,6 @@ feature 'User completes Procedure', js: true do
   end
 
   def then_i_should_see_a_helpful_message
-    expect(page).to have_css("div#procedure1StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: false)
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: false)
   end
 end

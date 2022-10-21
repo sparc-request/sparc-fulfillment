@@ -151,9 +151,4 @@ feature 'Complete Visit', js: true do
     expect(page).to have_css("button.disabled")
     wait_for_ajax
   end
-
-  def when_i_view_the_procedures_in_the_group
-    find('tr.procedure-group button').click
-    wait_for_ajax
-  end
 end

@@ -28,6 +28,7 @@ feature 'Invoice Procedure', js: true do
     end
 
     scenario 'and should only see toggle button invoiced column' do
+      given_i_am_viewing_a_visit
       and_i_am_adding_a_procedure
       when_i_start_the_appointment
       then_i_should_see_the_invoiced_column_as_a_toggle_button
@@ -51,7 +52,6 @@ feature 'Invoice Procedure', js: true do
   end
 
   def given_i_am_a_billing_manager
-    identity              = Identity.first
     sub_service_request   = create(:sub_service_request_with_organization)
     subsidy               = create(:subsidy, sub_service_request: sub_service_request)
     @protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
@@ -59,9 +59,9 @@ feature 'Invoice Procedure', js: true do
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
     organization.update_attributes(parent: organization_program, name: "Core")
-    create(:clinical_provider, identity: identity, organization: organization)
-    create(:project_role_pi, identity: identity, protocol: @protocol)
-    create(:super_user, identity: identity, organization: organization_provider, billing_manager: true)
+    create(:clinical_provider, identity: @logged_in_identity, organization: organization)
+    create(:project_role_pi, identity: @logged_in_identity, protocol: @protocol)
+    create(:super_user, identity: @logged_in_identity, organization: organization_provider, billing_manager: true)
 
     @protocols_participant   = @protocol.protocols_participants.first
     @visit_group   = @protocols_participant.appointments.first.visit_group
@@ -69,14 +69,7 @@ feature 'Invoice Procedure', js: true do
   end
 
   def and_i_am_adding_a_procedure
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-
-    first('a.list-group-item.appointment-link').click
-    wait_for_ajax
-    
-    bootstrap_select '[name="service_id"]', @service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
+    add_a_procedure(@service)
   end
 
   def and_i_am_viewing_procedures
@@ -87,9 +80,8 @@ feature 'Invoice Procedure', js: true do
             service: @service,
             completed_date: DateTime.current.strftime('%m/%d/%Y'),
             invoiced: true)
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+
+    given_i_am_viewing_a_visit
   end
 
   def given_i_am_viewing_procedures_as_a_non_billing_manager
@@ -99,13 +91,12 @@ feature 'Invoice Procedure', js: true do
     service       = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
+    wait_for_ajax
 
     first('a.list-group-item.appointment-link').click
     wait_for_ajax
     
-    bootstrap_select '[name="service_id"]', service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
+    add_a_procedure(service)
   end
 
   def when_i_start_the_appointment
@@ -132,10 +123,4 @@ feature 'Invoice Procedure', js: true do
   def then_i_should_see_the_remove_button_as_non_disabled
     expect(page).to have_selector('a.delete-button:not(:disabled)', count: 1)
   end
-    # expect(page).to have_selector("td.invoiced_toggle .toggle #invoiced_procedure[disabled]") 
-    # expect(find('.toggle')).to be_disabled
-
-    # expect(find_by_id('invoiced_procedure')).to be_disabled
-    # expect(page).to have_selector('td.invoiced_toggle .toggle #invoiced_procedure:disabled', count: 1)
-    # expect(page).to have_selector('div.toggle:disabled', count: 1)
 end

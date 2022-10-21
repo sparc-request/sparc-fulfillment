@@ -90,10 +90,7 @@ feature 'Followup note', js: true do
     first('a.list-group-item.appointment-link').click
     wait_for_ajax
 
-    bootstrap_select '[name="service_id"', service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    add_a_procedure(service)
 
     @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
   end
@@ -110,7 +107,7 @@ feature 'Followup note', js: true do
   end
 
   def when_i_click_the_followup_button
-    find('td.followup div#followup1').click
+    find("td.followup div#followup#{@procedure.id}").click
   end
 
   def when_i_fill_out_and_submit_the_followup_form
@@ -122,7 +119,7 @@ feature 'Followup note', js: true do
   end
 
   def when_i_view_the_notes_list
-    find('div#procedure1Notes a.btn').click
+    find("div#procedure#{@procedure.id}Notes a.btn").click
   end
 
   def when_i_visit_the_tasks_index_page
@@ -131,7 +128,7 @@ feature 'Followup note', js: true do
   end
 
   def when_i_try_to_add_a_follow_up_note
-    find('td.followup div#followup1').click
+    find("td.followup div#followup#{@procedure.id}").click
     alert = page.driver.browser.switch_to.alert
     @alert_message = alert.text
     alert.accept
@@ -139,12 +136,11 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_see_the_followup_button
-    expect(page).to have_css('td.followup div#followup1')
+    expect(page).to have_css("td.followup div#followup#{@procedure.id}")
   end
 
   def then_i_should_see_a_text_field_with_the_followup_date
-    procedure = Procedure.first
-    expect(page).to have_css("input#followupDatePickerInput#{procedure.id}[value='#{Time.new(Time.now.year,Time.now.month,10).strftime("%m/%d/%Y")}']")
+    expect(page).to have_css("input#followupDatePickerInput#{@procedure.id}[value='#{Time.new(Time.now.year,Time.now.month,10).strftime("%m/%d/%Y")}']")
   end
 
   def then_i_should_see_the_note_i_created
@@ -156,7 +152,7 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_be_able_to_edit_the_followup_date
-    bootstrap_datepicker '#followupDatePickerInput1', day: '15'
+    bootstrap_datepicker "#followupDatePickerInput#{@procedure.id}", day: '15'
   end
 
   def then_i_should_see_the_date_change
@@ -164,6 +160,6 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_see_a_helpful_message
-    expect(page).to have_css("div#procedure1StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: false)
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: false)
   end
 end
