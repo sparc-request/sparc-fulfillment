@@ -256,6 +256,7 @@ RSpec.describe 'Study Schedule', js: true do
 
   def when_i_click_an_uncheck_all_row_box
     when_i_click_a_check_all_row_box #Check
+    sleep 1
     when_i_click_a_check_all_row_box #Uncheck
   end
 
