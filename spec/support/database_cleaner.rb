@@ -20,7 +20,7 @@
 
 RSpec.configure do |config|
   MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
-  FEATURE_TEST_MODELS = [Identity]
+  # FEATURE_TEST_MODELS = [Identity]
 
   # Clean data before running the suite
   config.before(:suite) do

@@ -22,6 +22,10 @@ require 'rails_helper'
 
 feature 'Identity downloads a document from the reports tab', js: true, enqueue: false do
 
+  before :each do
+    DatabaseCleaner[:active_record, model: Document].clean_with(:truncation)
+  end
+
   scenario 'and sees the viewed_at date has been updated' do
     given_i_am_viewing_the_reports_tab_with_documents
     when_i_download_the_report

@@ -50,7 +50,7 @@ feature 'User views the participant tracker page', js: true do
 
   def given_i_am_viewing_the_participant_tracker
     @protocol = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.first
+    @protocols_participant = @protocol.protocols_participants.last
     @original_arm = @protocols_participant.arm
 
     visit protocol_path @protocol
