@@ -61,7 +61,7 @@ feature 'User views the participant tracker page', js: true do
   end
 
   def when_i_click_on_the_notes_button
-    find("#participant#{@protocols_participant.id}Notes a").click
+    find("#participant#{@protocols_participant.participant_id}Notes a").click
     wait_for_ajax
 
     sleep 2#Travis failure

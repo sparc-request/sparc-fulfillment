@@ -24,7 +24,7 @@ feature 'User views Participant', js: true do
 
   scenario 'and does not have access' do
     given_i_do_not_have_access_to_a_protocol
-    when_i_view_a_participants_calendar
+    when_i_try_to_view_a_participants_calendar
     then_i_should_be_redirected_to_the_home_page
   end
 
@@ -62,6 +62,11 @@ feature 'User views Participant', js: true do
 
   def when_i_view_a_participants_calendar
     given_i_am_viewing_a_visit
+  end
+
+  def when_i_try_to_view_a_participants_calendar
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    wait_for_ajax
   end
 
   def then_i_should_be_redirected_to_the_home_page
