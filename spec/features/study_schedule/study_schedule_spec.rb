@@ -250,7 +250,9 @@ RSpec.describe 'Study Schedule', js: true do
 
   def when_i_click_a_check_all_row_box
     find("#line_item_#{@line_item.id} .check-row").click
+    sleep 2
     accept_confirm
+    sleep 2
     wait_for_ajax
   end
 
@@ -262,7 +264,9 @@ RSpec.describe 'Study Schedule', js: true do
 
   def when_i_click_a_check_all_column_box
     find("button[data-visit-group-id='#{@visit_group.id}']").click
+    sleep 2
     accept_confirm
+    sleep 2
     wait_for_ajax
   end
 
