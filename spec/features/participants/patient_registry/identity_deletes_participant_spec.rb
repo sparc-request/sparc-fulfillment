@@ -42,9 +42,9 @@ feature 'User deletes Participant', js: true do
   end
 
   def given_i_have_a_participant
+    DatabaseCleaner[:active_record, model: Participant].clean_with(:truncation)
     @protocol = create_and_assign_protocol_to_me
-    @participants = Participant.all.order(Arel.sql("participants.last_name asc"))
-    @participant = @participants.first
+    @participant = Participant.last
   end
 
   def and_the_participant_has_procedure_data
