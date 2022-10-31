@@ -22,11 +22,12 @@ require "rails_helper"
 
 feature "create Task", js: true do
   before :each do
-    identity = Identity.first
-    create(:protocol_imported_from_sparc)
-    ClinicalProvider.create(organization: Organization.first, identity: identity)
-    clinical_providers = ClinicalProvider.where(organization_id: identity.protocols.map{|p| p.sub_service_request.organization_id })
-    @assignee = clinical_providers.first.identity
+    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
+    @assignee = Identity.first
+    @second_assignee = create(:identity)
+    protocol = create(:protocol_imported_from_sparc)
+    ClinicalProvider.create(organization: protocol.sub_service_request.organization, identity: @assignee)
+    ClinicalProvider.create(organization: protocol.sub_service_request.organization, identity: @second_assignee)
   end
 
   scenario 'Identity creates a multiple Tasks for themselves' do
@@ -61,7 +62,7 @@ feature "create Task", js: true do
 
   def when_i_create_a_task_assigned_to_another_identity
     find("a.btn.btn-success").click
-    bootstrap_select '#task_assignee_id', @assignee.full_name
+    bootstrap_select '#task_assignee_id', @second_assignee.full_name
     bootstrap_datepicker '.datetimepicker-input', day: '15'
     fill_in :task_body, with: "Test body"
     find("#new_task .modal-footer .btn-primary").click
@@ -84,6 +85,6 @@ feature "create Task", js: true do
   end
 
   def then_i_should_see_the_task_is_assigned_to_the_identity
-    expect(page).to have_css("table.tasks tbody td:nth-child(2)", count: 1, text: @assignee.full_name)
+    expect(page).to have_css("table.tasks tbody td:nth-child(2)", count: 1, text: @second_assignee.full_name)
   end
 end
