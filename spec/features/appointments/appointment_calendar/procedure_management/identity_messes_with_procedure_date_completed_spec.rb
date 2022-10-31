@@ -85,14 +85,15 @@ feature 'User messes with a procedures date completed', js: true do
   end
 
   def when_i_complete_the_procedure
-    find('div#procedure1StatusButtons button.complete-btn').click
+    find("div#procedure#{@procedure.id}StatusButtons button.complete-btn").click
     wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
     reason = Procedure::NOTABLE_REASONS.first
 
-    find('div#procedure1StatusButtons button.incomplete-btn').click
+    find("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn").click
+    wait_for_ajax
     bootstrap_select '#procedure_notes_attributes_0_reason', reason
     fill_in 'Comment', with: 'Test comment'
     find('input.btn[type="submit"]').click
@@ -102,16 +103,16 @@ feature 'User messes with a procedures date completed', js: true do
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    find('a[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
-    bootstrap_select '[name="service_id"', service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    
+    add_a_procedure(service)
+
+    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
   end
 
   def when_i_edit_the_completed_date
-    @complete_procedure    = Procedure.complete.first
+    @complete_procedure    = Procedure.complete.last
     existing_day           = @complete_procedure.completed_date.strftime("%-d").to_i
     @new_day               = pick_new_date(existing_day)
     @edited_completed_date = Time.now.change(day: @new_day)

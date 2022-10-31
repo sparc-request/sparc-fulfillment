@@ -36,7 +36,7 @@ feature 'User changes the status of a participant on the participant tracker', j
 
   def given_i_am_viewing_the_participant_tracker
     @protocol    = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.first
+    @protocols_participant = @protocol.protocols_participants.last
 
     visit protocol_path @protocol.id
     wait_for_ajax

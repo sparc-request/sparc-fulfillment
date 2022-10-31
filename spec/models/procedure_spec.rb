@@ -96,11 +96,12 @@ RSpec.describe Procedure, type: :model do
       end
 
       it 'should destroy the record if the status is unstarted' do
+        count_before_test = Procedure.count
         procedure = create(:procedure)
 
         procedure.destroy
 
-        expect(Procedure.count).to eq(0)
+        expect(Procedure.count).to eq(count_before_test)
       end
 
       it 'should not destroy the record if the status is not unstarted' do

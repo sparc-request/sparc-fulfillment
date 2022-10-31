@@ -35,6 +35,7 @@ feature "View Tasks", js: true do
   end
 
   scenario "Identity views only their Tasks" do
+    given_i_have_no_tasks
     given_other_users_have_assigned_tasks
     when_i_visit_the_tasks_page
     then_i_should_only_see_tasks_assigned_to_me
@@ -72,6 +73,7 @@ feature "View Tasks", js: true do
   end
 
   def given_other_tasks_have_been_assigned_to_a_different_identity
+    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
     given_i_have_incomplete_tasks
 
     other_user = create(:identity)
@@ -90,7 +92,7 @@ feature "View Tasks", js: true do
   end
 
   def given_i_have_no_tasks
-    # Devise#sign_in
+    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
   end
 
   def when_i_view_complete_tasks
@@ -125,6 +127,6 @@ feature "View Tasks", js: true do
   end
 
   def then_i_should_see_all_tasks
-    expect(page).to have_css("table.tasks tbody tr", count: 4)
+    expect(page).to have_css("table.tasks tbody tr", count: Task.count)
   end
 end

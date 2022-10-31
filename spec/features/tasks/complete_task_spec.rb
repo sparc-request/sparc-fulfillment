@@ -29,7 +29,7 @@ feature "Completing a Task", js: true do
   end
 
   def given_i_have_an_assigned_task
-    assignee = Identity.first
+    assignee = @logged_in_identity
     assignor = create(:identity)
     create_list(:task, 2, identity: assignor, assignee: assignee)
 
@@ -38,10 +38,11 @@ feature "Completing a Task", js: true do
   end
 
   def when_i_mark_the_task_as_complete
+    @count_before_marked = Task.where(assignee: @logged_in_identity).count
     first('input.complete').click
   end
 
   def then_i_should_not_see_the_task
-    expect(page).to have_css("table.tasks tbody tr", count: 1)
+    expect(page).to have_css("table.tasks tbody tr", count: (@count_before_marked - 1))
   end
 end
