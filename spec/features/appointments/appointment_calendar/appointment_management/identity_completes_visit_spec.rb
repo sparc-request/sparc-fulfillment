@@ -85,7 +85,6 @@ feature 'Complete Visit', js: true do
 
   def given_i_am_viewing_an_appointment
     protocol     = create_and_assign_protocol_to_me
-    @identity    = Identity.first
     protocols_participant  = protocol.protocols_participants.first
     @visit_group = protocols_participant.appointments.first.visit_group
     @service     = protocol.organization.inclusive_child_services(:per_participant).first
@@ -93,7 +92,7 @@ feature 'Complete Visit', js: true do
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
     
-    page.find('a.list-group-item[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
   end
 
@@ -133,7 +132,7 @@ feature 'Complete Visit', js: true do
   def when_i_add_a_follow_up_date
     find("td.followup").click
     wait_for_ajax
-    bootstrap_select '#task_assignee_id', @identity.full_name
+    bootstrap_select '#task_assignee_id', @logged_in_identity.full_name
     bootstrap_datepicker '#task_due_at', day: '10'
     fill_in 'task_notes_comment', with: 'Test comment'
     click_button 'Submit'
@@ -150,11 +149,6 @@ feature 'Complete Visit', js: true do
 
   def then_i_should_not_be_able_to_complete_visit
     expect(page).to have_css("button.disabled")
-    wait_for_ajax
-  end
-
-  def when_i_view_the_procedures_in_the_group
-    find('tr.procedure-group button').click
     wait_for_ajax
   end
 end

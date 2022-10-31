@@ -63,7 +63,7 @@ RSpec.describe VisitGroup, type: :model do
 
       context "insertion results in out-of-order days" do
         it "should be invalid" do
-          arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+          arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm2")
           create(:visit_group, position: 1, day: 1, arm: arm)
           create(:visit_group, position: 2, day: 8, arm: arm)
 
@@ -76,7 +76,7 @@ RSpec.describe VisitGroup, type: :model do
       context "changing position towards the beginning" do
         context "results in in-order days" do
           it "should be valid" do
-            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm3")
             create(:visit_group, position: 1, day: 1, arm: arm)
             create(:visit_group, position: 2, day: 8, arm: arm)
             vg = build(:visit_group, position: 3, day: 4, arm: arm)
@@ -90,7 +90,7 @@ RSpec.describe VisitGroup, type: :model do
 
         context "result in out-of-order days" do
           it "should be invalid" do
-            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm4")
             create(:visit_group, position: 1, day: 1, arm: arm)
             create(:visit_group, position: 2, day: 8, arm: arm)
             vg = create(:visit_group, position: 3, day: 16, arm: arm)
@@ -105,7 +105,7 @@ RSpec.describe VisitGroup, type: :model do
       context "changing position towards the end" do
         context "results in in-order days" do
           it "should be valid" do
-            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm5")
             vg = create(:visit_group, position: 1, day: 4, arm: arm)
             build(:visit_group, position: 2, day: 1, arm: arm).save(validate: false)
             build(:visit_group, position: 3, day: 8, arm: arm)
@@ -119,7 +119,7 @@ RSpec.describe VisitGroup, type: :model do
 
         context "result in out-of-order days" do
           it "should be invalid" do
-            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm6")
             vg = create(:visit_group, position: 1, day: 1, arm: arm)
             create(:visit_group, position: 2, day: 8, arm: arm)
             create(:visit_group, position: 3, day: 16, arm: arm)
@@ -134,7 +134,7 @@ RSpec.describe VisitGroup, type: :model do
       context "adding visit as last" do
         context "result in out-of-order days" do
           it "should be invalid" do
-            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm1")
+            arm = Arm.create(subject_count: 1, visit_count: 1, name: "Arm7")
             create(:visit_group, position: 1, day: 1, arm: arm)
             create(:visit_group, position: 2, day: 8, arm: arm)
             vg = build(:visit_group, position: nil, day: 7, arm: arm)
@@ -166,6 +166,7 @@ RSpec.describe VisitGroup, type: :model do
     describe 'default_scope' do
 
       it 'should be scoped to position' do
+        DatabaseCleaner[:active_record, model: VisitGroup].clean_with(:truncation)
         groups = []
         # create them with positions 3,2,1
         (3..1).each do |p|

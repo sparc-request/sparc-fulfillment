@@ -38,7 +38,7 @@ RSpec.describe ImportsController, type: :controller do
 
       get :index
 
-      expect(assigns(:imports)).to eq [import]
+      expect(assigns(:imports)).to include(import)
     end
   end
 

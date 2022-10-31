@@ -28,6 +28,8 @@ feature 'User views Participant Tracker', js: true do
   end
 
   def given_i_am_viewing_the_participant_tracker
+    DatabaseCleaner[:active_record, model: Participant].clean_with(:truncation)
+    DatabaseCleaner[:active_record, model: ProtocolsParticipant].clean_with(:truncation)
     protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)

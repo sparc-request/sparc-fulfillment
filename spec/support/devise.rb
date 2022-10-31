@@ -21,7 +21,8 @@
 module DeviseHelpers
 
   def sign_in
-    identity = create(:identity)
+    identity = Identity.first || create(:identity)
+    @logged_in_identity = identity
 
     login_as(identity, run_callbacks: false)
   end
@@ -33,7 +34,9 @@ module ControllerMacros
 
     before(:each) do
       @request.env['devise.mapping']  = Devise.mappings[:identity]
-      identity                        = create(:identity)
+      identity                        = Identity.first || create(:identity)
+
+      @logged_in_identity = identity
 
       sign_in identity
     end
