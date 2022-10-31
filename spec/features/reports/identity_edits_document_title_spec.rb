@@ -22,6 +22,10 @@ require 'rails_helper'
 
 feature 'Identity edits document title', js: true, enqueue: false do
 
+  before :each do
+    DatabaseCleaner[:active_record, model: Document].clean_with(:truncation)
+  end
+
   context "from the All Reports page" do
     context "when creating a report" do
       scenario "and sees the custom title" do

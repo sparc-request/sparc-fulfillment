@@ -55,13 +55,12 @@ feature 'User sets Procedure performer', js: true do
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    find("#appointmentsList a[data-appointment-id='#{visit_group.id}']").click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
 
-    bootstrap_select '[name="service_id"', service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    add_a_procedure(service)
+
+    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
   end
 
   def given_i_have_completed_a_procedure
@@ -82,12 +81,12 @@ feature 'User sets Procedure performer', js: true do
   end
 
   def when_i_uncomplete_the_procedure
-    find('button.incomplete-btn').click
+    find('button.unstarted-btn').click
     wait_for_ajax
   end
 
   def when_i_un_incomplete_the_procedure
-    find('button.incomplete-btn').click
+    find('button.unstarted-btn').click
     wait_for_ajax
   end
 
@@ -108,12 +107,10 @@ feature 'User sets Procedure performer', js: true do
   end
 
   def then_i_should_see_that_i_am_the_procedure_performer
-    @identity   = Identity.first
-    expect(page).to have_css("#core1ProceduresGroupedView td.performer div.filter-option", text: @identity.full_name)
+    expect(page).to have_css("#core#{@procedure.sparc_core_id}ProceduresGroupedView td.performer div.filter-option", text: @logged_in_identity.full_name)
   end
 
   def then_i_should_see_that_the_performer_has_not_been_set
-    @identity   = Identity.first
-    expect(page).to have_css("#core1ProceduresGroupedView td.performer div.filter-option", text: @identity.full_name)
+    expect(page).to_not have_css("#core#{@procedure.sparc_core_id}ProceduresGroupedView td.performer div.filter-option", text: @logged_in_identity.full_name)
   end
 end

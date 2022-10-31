@@ -109,6 +109,7 @@ feature 'Identity deletes a document', js: true, enqueue: false do
   end
 
   def when_i_click_the_delete_icon
+    @count_before_delete = @logged_in_identity.unaccessed_documents_count
     first("a.remove-document").click
     accept_confirm
     wait_for_ajax
@@ -123,7 +124,7 @@ feature 'Identity deletes a document', js: true, enqueue: false do
   end
 
   def then_i_should_see_the_identity_docs_counter_was_decremented
-    expect(page).to have_css(".identity_report_notifications", text: 1)
+    expect(page).to have_css(".identity_report_notifications", text: (@count_before_delete - 1))
   end
 
   def then_i_should_see_the_protocol_docs_counter_was_decremented

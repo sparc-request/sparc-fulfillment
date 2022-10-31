@@ -50,14 +50,13 @@ feature 'User creates a procedure note', js: true do
     find('a.start-appointment').click
     wait_for_ajax
 
-    bootstrap_select '[name="service_id"', service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    add_a_procedure(service)
+
+    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
   end
 
   def when_i_set_a_followup
-    find('div#followup1 a.btn').click
+    find("div#followup#{@procedure.id} a.btn").click
 
     bootstrap_select '#task_assignee_id', @assignee.full_name
     bootstrap_datepicker '#task_due_at', day: '10'
@@ -67,7 +66,7 @@ feature 'User creates a procedure note', js: true do
   end
 
   def when_i_view_the_notes_list
-    find('div#procedure1Notes a.btn').click
+    find("div#procedure#{@procedure.id}Notes a.btn").click
   end
 
   def then_i_should_see_a_notice_that_there_are_no_notes

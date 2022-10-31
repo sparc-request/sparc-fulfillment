@@ -63,7 +63,7 @@ feature 'Custom appointment', js: true do
 
     case has_arm
     when :with_arm
-      @protocols_participant.update_attribute(:arm, Arm.first)
+      @protocols_participant.update_attribute(:arm, Arm.last)
     when :without_arm
       @protocols_participant.update_attribute(:arm, nil)
     end

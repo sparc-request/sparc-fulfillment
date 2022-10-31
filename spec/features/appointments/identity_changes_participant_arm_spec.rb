@@ -51,16 +51,12 @@ feature "Change Participant Arm", js: :true do
     @service.update_attributes(name: 'Test Service')
     @original_appointment.update_attributes(name: "First Arm Appointment")
 
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
+    given_i_am_viewing_a_visit
 
     find('a.start-appointment').click
     wait_for_ajax
 
-    bootstrap_select '#add_procedure_dropdown', 'Test Service'
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    add_a_procedure(@service)
   end
 
   def and_i_complete_a_procedure
@@ -80,8 +76,7 @@ feature "Change Participant Arm", js: :true do
   end
 
   def and_i_visit_the_calendar_again
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
+    given_i_am_viewing_a_visit
   end
 
   def i_should_see_new_and_old_appointments

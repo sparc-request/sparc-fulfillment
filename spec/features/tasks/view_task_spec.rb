@@ -22,14 +22,12 @@ require "rails_helper"
 
 feature "Identity views Task", js: true do
   before :each do
-    identity = Identity.first
-    create(:protocol_imported_from_sparc)
+    @assignee = Identity.first
+    protocol = create(:protocol_imported_from_sparc)
     @core = Organization.where(type: "Core").first
     @program = create(:organization_program)
     @core.update_attributes(parent_id: @program.id)
-    ClinicalProvider.create(organization: Organization.first, identity: identity)
-    clinical_providers = ClinicalProvider.where(organization_id: identity.protocols.map{|p| p.sub_service_request.organization_id })
-    @assignee = clinical_providers.first.identity
+    ClinicalProvider.create(organization: protocol.sub_service_request.organization, identity: @assignee)
   end
 
   scenario "Identity views a Task that have assigned to themselves" do
@@ -63,6 +61,8 @@ feature "Identity views Task", js: true do
   end
 
   def given_i_have_been_assigned_a_procedure_task
+    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
+    
     create(:protocol_imported_from_sparc)
     identity        = Identity.first
     appointment = Appointment.first
@@ -74,7 +74,7 @@ feature "Identity views Task", js: true do
 
   def when_i_view_the_procedure_task_assigned_to_myself
     given_i_am_on_the_tasks_page
-    find("table.tasks tbody tr:first-child").click
+    first("table.tasks tbody tr:first-child td").click
   end
 
   def then_i_should_see_the_identity_task_details

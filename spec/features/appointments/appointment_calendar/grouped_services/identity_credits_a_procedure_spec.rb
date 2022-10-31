@@ -56,17 +56,16 @@ feature 'Invoice Procedure', js: true do
   end
 
   def given_i_am_a_billing_manager
-    identity              = Identity.first
     sub_service_request   = create(:sub_service_request_with_organization)
     subsidy               = create(:subsidy, sub_service_request: sub_service_request)
-    @protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
+    @protocol             = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
     organization.update_attributes(parent: organization_program, name: "Core")
-    create(:clinical_provider, identity: identity, organization: organization)
-    create(:project_role_pi, identity: identity, protocol: @protocol)
-    create(:super_user, identity: identity, organization: organization_provider, billing_manager: true, allow_credit: true)
+    create(:clinical_provider, identity: @logged_in_identity, organization: organization)
+    create(:project_role_pi, identity: @logged_in_identity, protocol: @protocol)
+    create(:super_user, identity: @logged_in_identity, organization: organization_provider, billing_manager: true, allow_credit: true)
 
     @protocols_participant   = @protocol.protocols_participants.first
     @visit_group   = @protocols_participant.appointments.first.visit_group
@@ -81,17 +80,11 @@ feature 'Invoice Procedure', js: true do
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
 
-    page.find('a.list-group-item[data-appointment-id="1"]').click
-    bootstrap_select '[name="service_id"]', @service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
+    add_a_procedure(@service)
   end
 
   def and_i_am_adding_a_procedure
-    page.find('a.list-group-item[data-appointment-id="1"]').click
-    bootstrap_select '[name="service_id"]', @service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
+    add_a_procedure(@service)
   end
 
   def and_i_am_viewing_uncompleted_procedures
@@ -100,7 +93,7 @@ feature 'Invoice Procedure', js: true do
             appointment: appointment,
             service: @service,
             credited: true)
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    given_i_am_viewing_a_visit
   end
 
   def and_i_am_viewing_completed_procedures
@@ -111,7 +104,7 @@ feature 'Invoice Procedure', js: true do
             service: @service,
             completed_date: DateTime.current.strftime('%m/%d/%Y'),
             credited: true)
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    given_i_am_viewing_a_visit
   end
 
   def when_i_start_the_appointment
