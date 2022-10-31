@@ -37,6 +37,7 @@ feature 'Identity changes a Service', js: true do
     when_i_start_the_appointment
     when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
     then_i_should_see_the_procedure_in_the_group
+    then_i_should_see_the_procedure_group_counter_is_four
   end
 
   scenario 'and sees it is not longer in its original group' do
@@ -60,14 +61,6 @@ feature 'Identity changes a Service', js: true do
     then_i_should_see_one_procedure_group
   end
 
-  scenario 'and sees the Service counter of the joined group has been incremented' do
-    given_i_am_viewing_a_visit_with_one_procedure_group
-    when_i_start_the_appointment
-    and_the_visit_has_one_ungrouped_procedure
-    when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
-    then_i_should_see_the_procedure_group_counter_is_four
-  end
-
   scenario 'and sees the Service counter of the original group has been decremented' do
     given_i_am_viewing_a_visit_with_one_procedure_group
     when_i_start_the_appointment
@@ -79,13 +72,14 @@ feature 'Identity changes a Service', js: true do
     create(:procedure_insurance_billing_qty_with_notes,
             appointment: @appointment,
             service: @services.first,
-            sparc_core_name: 'Core',
-            sparc_core_id: 1)
+            sparc_core_name: @services.first.organization.name,
+            sparc_core_id: @services.first.organization_id)
+
     create(:procedure_research_billing_qty_with_notes,
             appointment: @appointment,
             service: @services.first,
-            sparc_core_name: 'Core',
-            sparc_core_id: 1)
+            sparc_core_name: @services.first.organization.name,
+            sparc_core_id: @services.first.organization_id)
 
     given_i_am_viewing_a_visit
   end
@@ -94,8 +88,8 @@ feature 'Identity changes a Service', js: true do
     create_list(:procedure_insurance_billing_qty_with_notes, 3,
                 appointment: @appointment,
                 service: @services.first,
-                sparc_core_name: 'Core',
-                sparc_core_id: 1)
+                sparc_core_name: @services.first.organization.name,
+                sparc_core_id: @services.first.organization_id)
 
     given_i_am_viewing_a_visit
   end
@@ -115,23 +109,24 @@ feature 'Identity changes a Service', js: true do
 
   def and_the_visit_has_one_ungrouped_procedure
     add_a_procedure @services.first
+    @ungrouped_procedure = Procedure.last
   end
 
   def when_i_change_one_procedure_billing_type_to_be_the_same_as_the_other
-    # find('tr.info.groupBy.expanded').click
-    # wait_for_ajax
-
     bootstrap_select '#procedure_billing_type', 'T'
   end
 
   def when_i_move_all_procedures_out_of_the_group
-    find('tr.info.groupBy.expanded').click
     wait_for_ajax
-
-    Procedure.all.each do |procedure|
-        bootstrap_select '#procedure_billing_type', 'R'
-        wait_for_ajax
-    end
+    find('tr.info.groupBy.expanded').click
+    @original_group_id = page.first('tr td.name div')['data-group-id']
+    bootstrap_select '#procedure_billing_type', 'R'
+    wait_for_ajax
+    find('tr.info.groupBy.expanded').click
+    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
+    wait_for_ajax
+    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'      
+    wait_for_ajax
   end
 
   def when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
@@ -143,7 +138,7 @@ feature 'Identity changes a Service', js: true do
   end
 
   def when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
-    bootstrap_select '#procedure_billing_type', 'T'
+    bootstrap_select '#procedure_billing_type', 'T', "#edit_procedure_#{@ungrouped_procedure.id}"
   end
 
   def then_i_should_see_the_procedure_group_counter_is_two
@@ -151,21 +146,18 @@ feature 'Identity changes a Service', js: true do
   end
 
   def then_i_should_see_the_procedure_group_counter_is_four
-    expect(page).to have_css('tr.expanded.groupBy strong.badge', text: '4')
+    expect(page).to have_css('tr.collapsed.groupBy strong.badge', text: '4')
   end
 
   def then_i_should_see_one_procedure_group
-    # expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
     expect(page).to have_css('tr.expanded.groupBy', count: 1)
   end
 
   def then_i_should_not_see_the_procedure_group
-    expect(page).to_not have_css("tr.procedure-group[data-group-id='#{@original_group_id}']")
+    expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
-    # group_id = Procedure.first.group_id
-
     expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
   end
 

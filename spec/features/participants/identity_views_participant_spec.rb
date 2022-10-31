@@ -24,7 +24,7 @@ feature 'User views Participant', js: true do
 
   scenario 'and does not have access' do
     given_i_do_not_have_access_to_a_protocol
-    when_i_view_a_participants_calendar
+    when_i_try_to_view_a_participants_calendar
     then_i_should_be_redirected_to_the_home_page
   end
 
@@ -61,8 +61,11 @@ feature 'User views Participant', js: true do
   end
 
   def when_i_view_a_participants_calendar
+    given_i_am_viewing_a_visit
+  end
+
+  def when_i_try_to_view_a_participants_calendar
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
     wait_for_ajax
   end
 
@@ -72,12 +75,12 @@ feature 'User views Participant', js: true do
 
   def then_i_should_see_the_participant_calendar
     expect(page).to have_css('#participantDetailsTable')
+    expect(page).to have_css('#appointmentsList')
     expect(page).to have_content(@protocols_participant.participant.full_name)
     expect(page).to have_content(@protocols_participant.participant.mrn) unless @protocols_participant.participant.mrn.blank?
     expect(page).to have_content(@protocols_participant.external_id) unless @protocols_participant.external_id.blank?
     expect(page).to have_content(@protocols_participant.arm.name) unless @protocols_participant.arm.blank?
     expect(page).to have_content(@protocols_participant.status)
-    expect(page).to have_content(@protocol.id)
   end
 
   def then_i_should_see_an_ordered_list_of_visits

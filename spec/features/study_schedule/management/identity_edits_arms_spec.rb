@@ -148,6 +148,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def when_i_click_the_add_submit_button
     wait_for_ajax
+    sleep 5 #Travis Failure
     find('input[type="submit"]').click
     wait_for_ajax
   end
@@ -159,7 +160,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def when_i_click_the_save_submit_button
-    sleep 2
+    sleep 5
     find('input[type="submit"]').click
     wait_for_ajax
   end

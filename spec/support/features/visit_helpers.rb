@@ -37,7 +37,7 @@ module Features
       visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
       wait_for_ajax
       
-      page.find('a.list-group-item[data-appointment-id="1"]').click
+      first('a.list-group-item.appointment-link').click
       wait_for_ajax
     end
 
@@ -45,7 +45,7 @@ module Features
       visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
       wait_for_ajax
 
-      page.find('a.list-group-item[data-appointment-id="1"]').click
+      first('a.list-group-item.appointment-link').click
       wait_for_ajax
       
       find('a.btn.start-appointment').click

@@ -170,6 +170,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def when_i_click_the_remove_submit_button
+    sleep 5
     @visit_group_id_to_be_deleted = @visit_groups.first.id
     find('#removeVisitGroupButton').click
     find('button.swal2-confirm').click

@@ -24,8 +24,8 @@ feature 'User adds a Procedure to an unstarted visit', js: true do
 
   before :each do
     @protocol     = create_and_assign_protocol_to_me
-    @protocols_participant  = ProtocolsParticipant.first
-    @appointment  = Appointment.first
+    @protocols_participant  = @protocol.protocols_participants.first
+    @appointment  = @protocols_participant.appointments.first
     @services     = @protocol.organization.inclusive_child_services(:per_participant)
   end
 
@@ -54,7 +54,6 @@ feature 'User adds a Procedure to an unstarted visit', js: true do
   end
 
   def when_i_add_2_procedures_to_same_group
-    sleep 2#Troubleshooting Travis Failure
     add_a_procedure @services.first, 2
   end
 
