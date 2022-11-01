@@ -55,8 +55,7 @@ RSpec.describe DocumentsController, type: :controller do
     context 'format: :json' do
 
       before :each do
-        identity = Identity.first
-        @document = create(:document, documentable_type: 'Identity', documentable_id: identity.id)
+        @document = create(:document, documentable_type: 'Identity', documentable_id: @logged_in_identity.id)
       end
 
       it 'should render with :success' do
@@ -67,8 +66,7 @@ RSpec.describe DocumentsController, type: :controller do
 
       it 'should assign documents' do
         get :index, format: :json
-
-        expect(assigns(:documents)).to eq([@document])
+        expect(assigns(:documents)).to include(@document)
       end
     end
   end
