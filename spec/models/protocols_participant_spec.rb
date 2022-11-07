@@ -89,11 +89,11 @@ RSpec.describe ProtocolsParticipant, type: :model do
     describe 'callbacks' do
 
       it 'should create a note when the arm is updated' do
-        notes_before_update = protocols_participant.participant.notes.count
+        notes_before_update = protocols_participant.notes.count
         arm2 = create(:arm, protocol_id: protocol.id)
 
         protocols_participant.update(arm: arm2)
-        expect(protocols_participant.participant.notes.count).to eq(notes_before_update + 1)
+        expect(protocols_participant.notes.count).to eq(notes_before_update + 1)
       end
     end
   end

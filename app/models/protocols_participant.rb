@@ -21,12 +21,13 @@
 class ProtocolsParticipant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
-  
+
   belongs_to :protocol
   belongs_to :participant
   belongs_to :arm
 
   has_many :appointments, dependent: :destroy
+  has_many :notes, as: :notable
 
   has_many :procedures, through: :appointments
   has_many :arms, -> { distinct }, through: :appointments
@@ -35,7 +36,7 @@ class ProtocolsParticipant < ApplicationRecord
 
   delegate :first_name, :last_name, :first_middle, :full_name, :mrn, to: :participant
 
-  before_save :note_changes,                      if: Proc.new{ |p| p.arm_id_changed? || p.status_changed? }
+  after_save :note_changes,                      if: Proc.new{ |p| p.arm_id_changed? || p.status_changed? }
   after_save :update_appointments_on_arm_change,  if: Proc.new{ |p| p.saved_change_to_arm_id? }
 
   scope :search, -> (term) {
@@ -98,6 +99,10 @@ class ProtocolsParticipant < ApplicationRecord
     label
   end
 
+  def friendly_notable_type
+    "Participant"
+  end
+
   private
 
   def has_new_visit_groups?
@@ -118,12 +123,12 @@ class ProtocolsParticipant < ApplicationRecord
     if status_changed?
       old_val = status_change[0].present? ? status_change[0] : I18n.t('actions.n_a')
       new_val = status_change[1].present? ? status_change[1] : I18n.t('actions.n_a')
-      self.participant.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:status), old: old_val, new: new_val))
+      self.notes.create!(identity: self.current_identity, comment: I18n.t('participant.change_note', attr: self.class.human_attribute_name(:status), old: old_val, new: new_val))
     end
     if arm_id_changed?
       old_val = arm_id_change[0].present? ? Arm.find(arm_id_change[0]).name : I18n.t('actions.n_a')
       new_val = arm_id_change[1].present? ? Arm.find(arm_id_change[1]).name : I18n.t('actions.n_a')
-      self.participant.notes.create(identity: self.current_identity, comment: I18n.t('participants.change_note', attr: self.class.human_attribute_name(:arm), old: old_val, new: new_val))
+      self.notes.create!(identity: self.current_identity, comment: I18n.t('participant.change_note', attr: self.class.human_attribute_name(:arm), old: old_val, new: new_val))
     end
   end
 end

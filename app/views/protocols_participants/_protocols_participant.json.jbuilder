@@ -9,7 +9,7 @@ json.external_id_read         protocols_participant_external_id(protocols_partic
 json.first_middle             protocols_participant.first_middle
 json.last_name                protocols_participant.last_name
 json.mrn                      protocols_participant.mrn
-json.notes                    notes_button(protocols_participant.participant, tooltip: t('participants.tooltips.notes'))
+json.notes                    notes_button(protocols_participant, tooltip: t('participants.tooltips.notes'))
 json.recruitment_source       protocols_participant_recruitment_source_dropdown(protocols_participant)
 json.recruitment_source_read  protocols_participant_recruitment_source_dropdown(protocols_participant, readonly: true)
 json.status                   protocols_participant_status_dropdown(protocols_participant)
@@ -17,4 +17,4 @@ json.status_read              protocols_participant_status_dropdown(protocols_pa
 json.arm_export               protocols_participant.arm.try(:name)
 json.status_export            protocols_participant.status
 json.recruitment_export       protocols_participant.recruitment_source
-json.notes_export             notes(protocols_participant.participant.notes)
+json.notes_export             notes(protocols_participant.notes)

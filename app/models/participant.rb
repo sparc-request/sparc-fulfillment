@@ -29,7 +29,6 @@ class Participant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
-  has_many :notes, as: :notable
   has_many :protocols_participants, dependent: :destroy
 
   has_many :protocols, through: :protocols_participants
