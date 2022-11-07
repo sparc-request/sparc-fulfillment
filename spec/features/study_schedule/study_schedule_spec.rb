@@ -96,41 +96,37 @@ RSpec.describe 'Study Schedule', js: true do
     end
   end
 
-  context 'User clicks the check all button for a row' do
-    scenario 'and sees all visits for the line item are checked' do
-      clear_database
-      given_i_am_viewing_a_protocol
-      when_i_click_a_check_all_row_box
-      then_i_should_see_the_row_checked_in_the_tab 'template'
-    end
-  end
+  # context 'User clicks the check all button for a row' do
+  #   scenario 'and sees all visits for the line item are checked' do
+  #     given_i_am_viewing_a_protocol
+  #     when_i_click_a_check_all_row_box
+  #     then_i_should_see_the_row_checked_in_the_tab 'template'
+  #   end
+  # end
 
-  context 'User clicks the uncheck all button for a row' do
-    scenario 'and sees all visits for the line item are unchecked' do
-      clear_database
-      given_i_am_viewing_a_protocol
-      when_i_click_an_uncheck_all_row_box
-      then_i_should_see_the_row_unchecked_in_the_tab 'template'
-    end
-  end
+  # context 'User clicks the uncheck all button for a row' do
+  #   scenario 'and sees all visits for the line item are unchecked' do
+  #     given_i_am_viewing_a_protocol
+  #     when_i_click_an_uncheck_all_row_box
+  #     then_i_should_see_the_row_unchecked_in_the_tab 'template'
+  #   end
+  # end
 
-  context 'User clicks the check all button for a column' do
-    scenario 'and sees all visits for the visit group are checked' do
-      clear_database
-      given_i_am_viewing_a_protocol
-      when_i_click_a_check_all_column_box
-      then_i_should_see_the_column_checked_in_the_tab 'template'
-    end
-  end
+  # context 'User clicks the check all button for a column' do
+  #   scenario 'and sees all visits for the visit group are checked' do
+  #     given_i_am_viewing_a_protocol
+  #     when_i_click_a_check_all_column_box
+  #     then_i_should_see_the_column_checked_in_the_tab 'template'
+  #   end
+  # end
 
-  context 'User clicks the uncheck all button for a column' do
-    scenario 'and sees all visits for the visit group are unchecked' do
-      clear_database
-      given_i_am_viewing_a_protocol
-      when_i_click_an_uncheck_all_column_box
-      then_i_should_see_the_column_unchecked_in_the_tab 'template'
-    end
-  end
+  # context 'User clicks the uncheck all button for a column' do
+  #   scenario 'and sees all visits for the visit group are unchecked' do
+  #     given_i_am_viewing_a_protocol
+  #     when_i_click_an_uncheck_all_column_box
+  #     then_i_should_see_the_column_unchecked_in_the_tab 'template'
+  #   end
+  # end
 
   context 'User views the quantity/billing tab' do
     context 'and sets a quantity to blank' do
