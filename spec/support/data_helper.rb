@@ -99,4 +99,11 @@ module DataHelpers
     participant = create_and_assign_participant_to_me
     create(:appointment, name: "Appointment", participant: participant, arm: participant.arm)
   end
+
+  def clear_database
+    models = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
+    models.each do |model|
+      DatabaseCleaner[:active_record, model: model].clean_with(:truncation)
+    end
+  end
 end
