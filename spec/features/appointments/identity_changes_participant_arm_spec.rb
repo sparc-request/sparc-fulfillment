@@ -56,6 +56,8 @@ feature "Change Participant Arm", js: :true do
     find('a.start-appointment').click
     wait_for_ajax
 
+    sleep 2
+
     add_a_procedure(@service)
   end
 
