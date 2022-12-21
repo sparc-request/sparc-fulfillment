@@ -39,7 +39,7 @@ gem 'rest-client'
 gem 'rubyzip', '>= 1.2.1'
 gem 'sassc-rails'
 gem 'sdoc', '~> 2.3.1', group: :doc
-gem 'sprockets', '~> 4.0'
+gem 'sprockets', '~> 4.2'
 gem 'slack-notifier', '~> 2.4'
 gem 'execjs'
 gem 'thin'
