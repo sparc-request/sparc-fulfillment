@@ -35,7 +35,7 @@
         = f.label :arm_id, t(:appointments)[:arm_change_label]
         = f.select :arm_id, protocols_participant_calendar_arm_options(protocols_participant), {}, class: 'selectpicker', id: "change_arm_dropdown", onchange: "Rails.fire(this.form, 'submit')"
     .list-group.list-group-flush
-      - appointments.each do |appt|
+      - appointments.sort_by{|appt| appt.position}.each do |appt|
         = link_to appointment_path(appt), remote: true, class: ['list-group-item list-group-item-action d-flex justify-content-between appointment-link', appt == appointment ? 'active' : ''], data: { appointment_id: appt.id } do
           %span.w-90
             = appt.formatted_name

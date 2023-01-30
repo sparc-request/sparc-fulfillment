@@ -385,6 +385,7 @@ en:
     documents: "Documents"
     edit: "Edit Non-clinical Service"
     edit_in_sparc: "Only Account and Contact fields can be edited for non-clinical services. All other editing should be done in SPARCDashboard"
+    edit_clincal_services_in_sparc: "All calendar revisions must be completed in SPARCDashboard."
     flash_messages:
       created: "Non-clinical Service Created"
       deleted: "Non-clinical Service Deleted"

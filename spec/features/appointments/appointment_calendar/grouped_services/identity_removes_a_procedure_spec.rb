@@ -77,8 +77,6 @@ feature 'Identity removes a Procedure', js: true do
     find("tr.info.groupBy.expanded").click
     wait_for_ajax
 
-    procedure = Procedure.first
-
     first('a.delete-button').click
     wait_for_ajax
 

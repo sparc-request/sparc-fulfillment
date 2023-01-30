@@ -59,12 +59,13 @@ feature 'Identity adds multiple Procedures', js: true do
 
   def when_i_add_5_procedures
     add_a_procedure @services.first, 5
+    @example_procedure = Procedure.last
   end
 
   def then_i_should_see_the_multiselect_instantiated_with_2_options
-    find("button[data-id='core_#{Procedure.first.sparc_core_id}_multiselect']").click
+    find("button[data-id='core_#{@example_procedure.sparc_core_id}_multiselect']").click
     expect(page).to have_css("button.bs-select-all")
-    expect(page).to have_content("#{Procedure.first.service_name}")
+    expect(page).to have_content("#{@example_procedure.service_name}")
   end
 
   def then_i_should_see_one_group_with_four_procedures

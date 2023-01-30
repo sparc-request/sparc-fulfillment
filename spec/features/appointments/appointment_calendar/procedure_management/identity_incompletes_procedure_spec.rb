@@ -81,29 +81,15 @@ feature 'Incomplete Procedure', js: true do
       end
     end
 
-    context 'and marks a procedure as incomplete and then changes their mind, clicking incomplete again' do
-      scenario 'and sees that there is a status reset note' do
+    context 'and marks a procedure as incomplete and then changes their mind, clicking unstarted' do
+      scenario 'and sees the status reset note, and status and performed by have been reset' do
         given_i_am_viewing_an_appointment_with_a_procedure
         when_i_begin_the_appointment
         when_i_incomplete_the_procedure
-        when_i_click_the_incomplete_button
+        when_i_unstart_the_procedure
         when_i_view_the_notes_list
         then_i_should_see_one_status_incomplete_note
-      end
-
-      scenario 'and sees that the status has been reset' do
-        given_i_am_viewing_an_appointment_with_a_procedure
-        when_i_begin_the_appointment
-        when_i_incomplete_the_procedure
-        when_i_click_the_incomplete_button
         then_i_should_see_that_the_procedure_status_has_been_reset
-      end
-
-      scenario 'and sees that the performed by dropdown has been reset' do
-        given_i_am_viewing_an_appointment_with_a_procedure
-        when_i_begin_the_appointment
-        when_i_incomplete_the_procedure
-        when_i_click_the_incomplete_button
         then_i_should_see_that_the_procedure_performed_by_has_been_reset
       end
     end
@@ -128,19 +114,18 @@ feature 'Incomplete Procedure', js: true do
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    find('a[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
     
-    bootstrap_select '[name="service_id"', service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    add_a_procedure(service)
+
+    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
   end
 
   def given_i_am_viewing_a_procedure_marked_as_complete
     given_i_am_viewing_an_appointment_with_a_procedure
     when_i_begin_the_appointment
-    find('div#procedure1StatusButtons button.complete-btn').click
+    find("div#procedure#{@procedure.id}StatusButtons button.complete-btn").click
     wait_for_ajax
   end
 
@@ -150,7 +135,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def when_i_complete_the_procedure
-    find('div#procedure1StatusButtons button.complete-btn').click
+    find("div#procedure#{@procedure.id}StatusButtons button.complete-btn").click
     wait_for_ajax
   end
 
@@ -160,8 +145,13 @@ feature 'Incomplete Procedure', js: true do
     when_i_save_the_incomplete
   end
 
+  def when_i_unstart_the_procedure
+    find("div#procedure#{@procedure.id}StatusButtons button.unstarted-btn").click
+    wait_for_ajax
+  end
+
   def when_i_click_the_incomplete_button
-    find('div#procedure1StatusButtons button.incomplete-btn').click
+    find("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn").click
     wait_for_ajax
   end
 
@@ -174,21 +164,21 @@ feature 'Incomplete Procedure', js: true do
   def when_i_save_the_incomplete
     sleep 1
     find('input[type="submit"]').click
+    wait_for_ajax
   end
 
   def when_i_cancel_the_incomplete
+    sleep 1
     find("button.btn-secondary").click
+    wait_for_ajax
   end
 
   def then_i_should_see_that_i_am_the_procedure_performer
-    procedure  = Procedure.first
-    identity   = Identity.first
-
-    expect(page).to have_css("td.performer button.btn[title='#{identity.first_name} #{identity.last_name}']")
+    expect(page).to have_css("td.performer button.btn[title='#{@logged_in_identity.first_name} #{@logged_in_identity.last_name}']")
   end
 
   def when_i_view_the_notes_list
-    find('div#procedure1Notes a.btn').click
+    find("div#procedure#{@procedure.id}Notes a.btn").click
   end
 
   def when_i_close_the_notes_list
@@ -196,7 +186,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def when_i_try_to_incomplete_the_procedure
-    find('div#procedure1StatusButtons button.incomplete-btn').click
+    find("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn").click
     wait_for_ajax
   end
 
@@ -227,17 +217,14 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def then_i_should_see_that_the_procedure_status_has_been_reset
-    expect(page).to have_css("td.completed-date input#procedure_completed_date[disabled]")
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons .unstarted-btn.active")
   end
 
   def then_i_should_see_that_the_procedure_performed_by_has_been_reset
-    procedure  = Procedure.first
-    identity   = Identity.first
-
-    expect(page).to have_css("td.performer button.btn[title='#{identity.first_name} #{identity.last_name}']")
+    expect(page).to_not have_css("td.performer button.btn[title='#{@logged_in_identity.first_name} #{@logged_in_identity.last_name}']")
   end
 
   def then_i_should_see_a_helpful_message
-    expect(page).to have_css("div#procedure1StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: false)
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: false)
   end
 end

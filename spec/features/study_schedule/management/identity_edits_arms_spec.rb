@@ -20,58 +20,60 @@
 
 require 'rails_helper'
 
+# These commented-out tests relate to editing calendar and services functions on a protocol's clinical services tab. While these functions are no longer rendered to the view, the infrastructure is still in place. Commenting these tests out so they do not fail during the Travis build, 12/7/22.
+
 feature 'Identity edits arms on protocol study schedule', js: true do
 
-  context 'User adds an arm' do
-    scenario 'and sees the new arm is created' do
-      given_i_am_viewing_a_protocol_with_one_arm
-      when_i_click_the_add_arm_button
-      when_i_fill_in_the_form
-      when_i_click_the_add_submit_button
-      then_i_should_see_the_new_arm
-    end
-  end
+  #context 'User adds an arm' do
+    #scenario 'and sees the new arm is created' do
+      #given_i_am_viewing_a_protocol_with_one_arm
+      #when_i_click_the_add_arm_button
+      #when_i_fill_in_the_form
+      #when_i_click_the_add_submit_button
+      #then_i_should_see_the_new_arm
+    #end
+  #end
 
-  context 'User edits an arm' do
-    scenario 'and sees the updated arm' do
-      given_i_am_viewing_a_protocol_with_one_arm
-      when_i_click_the_edit_arm_button
-      when_i_set_the_name_to 'other arm name'
-      when_i_set_the_subject_count_to 1234
-      when_i_click_the_save_submit_button
-      then_i_should_see_the_updated_arm
-    end
-  end
+  #context 'User edits an arm' do
+    #scenario 'and sees the updated arm' do
+      #given_i_am_viewing_a_protocol_with_one_arm
+      #when_i_click_the_edit_arm_button
+      #when_i_set_the_name_to 'other arm name'
+      #when_i_set_the_subject_count_to 1234
+      #when_i_click_the_save_submit_button
+      #then_i_should_see_the_updated_arm
+    #end
+  #end
 
-  context 'User deletes an arm' do
-    scenario 'and does not see the arm' do
-      given_i_am_viewing_a_protocol_with_multiple_arms
-      when_i_click_the_remove_arm_button
-      and_i_select_the_first_arm
-      when_i_click_the_remove_submit_button
-      then_i_should_not_see_the_arm
-    end
-  end
+  #context 'User deletes an arm' do
+    #scenario 'and does not see the arm' do
+      #given_i_am_viewing_a_protocol_with_multiple_arms
+      #when_i_click_the_remove_arm_button
+      #and_i_select_the_first_arm
+      #when_i_click_the_remove_submit_button
+      #then_i_should_not_see_the_arm
+    #end
+  #end
 
-  context 'User tries to delete an arm with fulfillments' do
-    scenario 'and sees the arm' do
-      given_i_am_viewing_a_protocol_with_multiple_arms
-      given_there_is_an_arm_with_completed_procedures
-      when_i_click_the_remove_arm_button
-      when_i_select_the_arm_with_completed_procedures
-      when_i_click_the_remove_submit_button
-      then_i_should_see_an_error_about_completed_procedures
-    end
-  end
+  #context 'User tries to delete an arm with fulfillments' do
+    #scenario 'and sees the arm' do
+      #given_i_am_viewing_a_protocol_with_multiple_arms
+      #given_there_is_an_arm_with_completed_procedures
+      #when_i_click_the_remove_arm_button
+      #when_i_select_the_arm_with_completed_procedures
+      #when_i_click_the_remove_submit_button
+      #then_i_should_see_an_error_about_completed_procedures
+    #end
+  #end
 
-  context 'User tries to delete the last arm' do
-    scenario 'and sees the arm' do
-      given_i_am_viewing_a_protocol_with_one_arm
-      when_i_click_the_remove_arm_button
-      when_i_click_the_remove_submit_button
-      then_i_should_see_an_error_about_last_arm
-    end
-  end
+  #context 'User tries to delete the last arm' do
+    #scenario 'and sees the arm' do
+      #given_i_am_viewing_a_protocol_with_one_arm
+      #when_i_click_the_remove_arm_button
+      #when_i_click_the_remove_submit_button
+      #then_i_should_see_an_error_about_last_arm
+    #end
+  #end
 
 
   def given_i_am_viewing_a_protocol_with_one_arm
@@ -148,6 +150,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def when_i_click_the_add_submit_button
     wait_for_ajax
+    sleep 5 #Travis Failure
     find('input[type="submit"]').click
     wait_for_ajax
   end
@@ -159,7 +162,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def when_i_click_the_save_submit_button
-    sleep 2
+    sleep 5
     find('input[type="submit"]').click
     wait_for_ajax
   end

@@ -50,7 +50,7 @@ feature 'Delete Procedure', js: true do
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    find('.appointment-link[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
 
     bootstrap_select '[name="service_id"]', service.name

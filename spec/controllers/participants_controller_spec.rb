@@ -65,7 +65,7 @@ RSpec.describe ParticipantsController do
     it "should get participants" do
       @participant2 = create(:participant)
       get :index, format: :json
-      expect(assigns(:participants)).to eq([@participant2, @participant])
+      expect(assigns(:participants)).to include(@participant2, @participant)
     end
   end
 

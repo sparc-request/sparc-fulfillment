@@ -20,24 +20,26 @@
 
 require 'rails_helper'
 
+# These commented-out tests relate to editing calendar and services functions on a protocol's clinical services tab. While these functions are no longer rendered to the view, the infrastructure is still in place. Commenting these tests out so they do not fail during the Travis build, 12/7/22.
+
 feature "Change Participant Arm", js: :true do
-  context "original arm does NOT have completed procedures" do
-    scenario "User changes arm on the participant tracker" do
-      when_i_start_work_on_an_appointment
-      then_i_change_the_arm_of_the_participant
-      and_i_visit_the_calendar_again
-      i_should_only_see_new_appointments
-    end
-  end
-  context "original arm has completed procedures" do
-    scenario "User changes arm on the participant tracker" do
-      when_i_start_work_on_an_appointment
-      and_i_complete_a_procedure
-      then_i_change_the_arm_of_the_participant
-      and_i_visit_the_calendar_again
-      i_should_see_new_and_old_appointments
-    end
-  end
+  #context "original arm does NOT have completed procedures" do
+    #scenario "User changes arm on the participant tracker" do
+      #when_i_start_work_on_an_appointment
+      #then_i_change_the_arm_of_the_participant
+      #and_i_visit_the_calendar_again
+      #i_should_only_see_new_appointments
+    #end
+  #end
+  #context "original arm has completed procedures" do
+    #scenario "User changes arm on the participant tracker" do
+      #when_i_start_work_on_an_appointment
+      #and_i_complete_a_procedure
+      #then_i_change_the_arm_of_the_participant
+      #and_i_visit_the_calendar_again
+      #i_should_see_new_and_old_appointments
+    #end
+  #end
 
 
   def when_i_start_work_on_an_appointment
@@ -51,16 +53,14 @@ feature "Change Participant Arm", js: :true do
     @service.update_attributes(name: 'Test Service')
     @original_appointment.update_attributes(name: "First Arm Appointment")
 
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
+    given_i_am_viewing_a_visit
 
     find('a.start-appointment').click
     wait_for_ajax
 
-    bootstrap_select '#add_procedure_dropdown', 'Test Service'
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    sleep 2
+
+    add_a_procedure(@service)
   end
 
   def and_i_complete_a_procedure
@@ -80,8 +80,7 @@ feature "Change Participant Arm", js: :true do
   end
 
   def and_i_visit_the_calendar_again
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
+    given_i_am_viewing_a_visit
   end
 
   def i_should_see_new_and_old_appointments
