@@ -20,85 +20,87 @@
 
 require 'rails_helper'
 
+# These commented-out tests relate to editing calendar and services functions on a protocol's clinical services tab. While these functions are no longer rendered to the view, the infrastructure is still in place. Commenting these tests out so they do not fail during the Travis build, 12/7/22.
+
 feature 'Identity edits visit groups for a particular protocol', js: true do
 
-  context "User adds a visit group to an arm" do
-    scenario "and sees the visit group on the arm" do
-      given_i_am_viewing_an_arm_with_multiple_visit_groups
+  #context "User adds a visit group to an arm" do
+    #scenario "and sees the visit group on the arm" do
+      #given_i_am_viewing_an_arm_with_multiple_visit_groups
 
-      @original_visit_group_1 = @arm.visit_groups.first
-      @original_visit_group_2 = @arm.visit_groups.second
-      @original_visit_group_1.day = 1
-      @original_visit_group_2.day = 3
-      @original_visit_group_1.save
-      @original_visit_group_2.save
+      #@original_visit_group_1 = @arm.visit_groups.first
+      #@original_visit_group_2 = @arm.visit_groups.second
+      #@original_visit_group_1.day = 1
+      #@original_visit_group_2.day = 3
+      #@original_visit_group_1.save
+      #@original_visit_group_2.save
 
-      when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
-      when_i_click_the_add_submit_button
-      then_i_should_see_the_visit_group
-    end
+      #when_i_click_the_add_visit_group_button
+      #when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
+      #when_i_click_the_add_submit_button
+      #then_i_should_see_the_visit_group
+    #end
 
-    scenario "and sees it in the correct position" do
-      given_i_am_viewing_an_arm_with_multiple_visit_groups
+    #scenario "and sees it in the correct position" do
+      #given_i_am_viewing_an_arm_with_multiple_visit_groups
 
-      @original_visit_group_1 = @arm.visit_groups.first
-      @original_visit_group_2 = @arm.visit_groups.second
-      @original_visit_group_1.day = 1
-      @original_visit_group_2.day = 3
-      @original_visit_group_1.save
-      @original_visit_group_2.save
+      #@original_visit_group_1 = @arm.visit_groups.first
+      #@original_visit_group_2 = @arm.visit_groups.second
+      #@original_visit_group_1.day = 1
+      #@original_visit_group_2.day = 3
+      #@original_visit_group_1.save
+      #@original_visit_group_2.save
 
 
-      when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: @arm.visit_groups.second.day-1)
-      when_i_click_the_add_submit_button
-      then_i_should_see_the_position_is 1
-    end
-  end
+      #when_i_click_the_add_visit_group_button
+      #when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: @arm.visit_groups.second.day-1)
+      #when_i_click_the_add_submit_button
+      #then_i_should_see_the_position_is 1
+    #end
+  #end
 
-  context "User edits a visit group on an arm" do
-    scenario "and sees the updated arm" do
-      given_i_am_viewing_an_arm_with_multiple_visit_groups
-      when_i_click_the_edit_visit_group_button
-      when_i_set_the_name_to 'VG 2'
-      wait_for_ajax
-      when_i_set_the_day_to 2
-      wait_for_ajax
-      sleep 2
-      when_i_click_the_save_submit_button
-      then_i_should_see_the_updated_visit_group
-    end
-  end
+  #context "User edits a visit group on an arm" do
+    #scenario "and sees the updated arm" do
+      #given_i_am_viewing_an_arm_with_multiple_visit_groups
+      #when_i_click_the_edit_visit_group_button
+      #when_i_set_the_name_to 'VG 2'
+      #wait_for_ajax
+      #when_i_set_the_day_to 2
+      #wait_for_ajax
+      #sleep 2
+      #when_i_click_the_save_submit_button
+      #then_i_should_see_the_updated_visit_group
+    #end
+  #end
 
-  context "User edits a visit groups name in the service calendar" do
-    context "and provides a name" do
-      scenario "and sees the updated name" do
-        given_i_am_viewing_an_arm_with_one_visit_group
-        when_i_enter_the_name "VG YO"
-        then_i_should_see_the_name "VG YO"
-      end
-    end
+  #context "User edits a visit groups name in the service calendar" do
+    #context "and provides a name" do
+      #scenario "and sees the updated name" do
+        #given_i_am_viewing_an_arm_with_one_visit_group
+        #when_i_enter_the_name "VG YO"
+        #then_i_should_see_the_name "VG YO"
+      #end
+    #end
 
-    context "and leaves the name blank" do
-      scenario "and sees the original name" do
-        given_i_am_viewing_an_arm_with_one_visit_group
-        @original_name = @arm.visit_groups.first.name
+    #context "and leaves the name blank" do
+      #scenario "and sees the original name" do
+        #given_i_am_viewing_an_arm_with_one_visit_group
+        #@original_name = @arm.visit_groups.first.name
 
-        when_i_enter_the_name ""
-        then_i_should_see_the_original_name
-      end
-    end
-  end
+        #when_i_enter_the_name ""
+        #then_i_should_see_the_original_name
+      #end
+    #end
+  #end
 
-  context "User deletes a visit group from an arm" do
-    scenario "and does not see the visit group on the arm" do
-      given_i_am_viewing_an_arm_with_multiple_visit_groups
-      when_i_click_the_remove_visit_group_button
-      when_i_click_the_remove_submit_button
-      then_i_should_not_see_the_visit_group
-    end
-  end
+  #context "User deletes a visit group from an arm" do
+    #scenario "and does not see the visit group on the arm" do
+      #given_i_am_viewing_an_arm_with_multiple_visit_groups
+      #when_i_click_the_remove_visit_group_button
+      #when_i_click_the_remove_submit_button
+      #then_i_should_not_see_the_visit_group
+    #end
+  #end
 
   def given_i_am_viewing_an_arm_with_multiple_visit_groups
     @protocol = create_and_assign_protocol_to_me
