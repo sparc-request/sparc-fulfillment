@@ -300,6 +300,7 @@ en:
     fulfillments: "Fulfillments"
     fulfillment_month_year: "Month Year"
     fulfillment_date: "Fulfillment Date"
+    invoiced_date: "Invoiced Date"
     log_notes:
       account_number: "Account Number changed to "
       fulfilled_at: "Fulfillment Date changed to "

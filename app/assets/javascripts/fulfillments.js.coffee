@@ -37,6 +37,19 @@ $(document).on 'click', '.fulfillment_documents', ->
       url: '/documents.js'
       data: data
 
+$(document).on 'click', '.fulfillment-invoiced-date', ->
+  unless $(this).hasClass('disabled')
+    console.log('invoiced calendar icon clicked')
+    fulfillment_id = $(this).data('fulfillment_id')
+    data = fulfilllment:
+             fulfillment_id: fulfillment_id
+
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments/invoiced_date/#{fulfillment_id}"
+      data: data
+
+
 $(document).on 'click', '.fulfillment_notes',  ->
     unless $(this).hasClass('disabled')
       id = $(this).data('notable-id')

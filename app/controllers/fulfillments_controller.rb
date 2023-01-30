@@ -77,8 +77,26 @@ class FulfillmentsController < ApplicationController
   def toggle_invoiced
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
+    @fulfillment.update_attributes(invoiced_date: Time.now) if @fulfillment.invoiced
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
     detect_changes_and_create_notes
+  end
+
+  def invoiced_date
+    @fulfillment=Fulfillment.find(params[:id])
+    Rails.logger.debug "#"*50+"#{@fulfillment}"
+    fulfillmennt_id = Fulfillment.find(params[:id])
+    @line_item = @fulfillment.line_item
+    @fulfillment = Fulfillment.find(params[:id])
+    @fulfillment.update_attributes[invoiced_date: fulfillment_params[:invoiced_date]] if @fulfillment.invoiced
+    respond_to do |format|
+      format.js { render }
+      format.json {
+        @fulfillments = @line_item.fulfillments
+
+        render
+      }
+    end
   end
 
   def toggle_credit
@@ -152,7 +170,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :credited, :components)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :invoiced_date_custom,:credited, :components)
   end
 
   def find_fulfillment

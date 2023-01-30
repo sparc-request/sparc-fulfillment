@@ -58,3 +58,5 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
+
+

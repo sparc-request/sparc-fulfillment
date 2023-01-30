@@ -80,6 +80,10 @@ Rails.application.routes.draw do
       put 'toggle_invoiced(/:id)', to: 'fulfillments#toggle_invoiced'
       put 'toggle_credit(/:id)', to: 'fulfillments#toggle_credit'
     end
+    collection do 
+      get 'invoiced_date(/:id)', to: 'fulfillments#invoiced_date'
+      post 'invoiced_date(/:id)', to: 'fulfillments#invoiced_date'
+    end
   end
 
   resources :arms, only: [:new, :create, :update, :destroy] do

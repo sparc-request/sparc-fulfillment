@@ -64,6 +64,12 @@ module StudyLevelActivitiesHelper
     protocol.protocol_type == 'Study'
   end
 
+  def invoiced_date_custom(fulfillment)
+    invoiced_date=["<a class='fulfillment-invoiced-date' href='javascript:void(0)' title='Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>",
+      "<i class='fas fa-calendar'></i>",
+      "</a>"]
+  end
+
   def fulfillment_actions(fulfillment)
     notes_documents_array = [
       "<a class='fulfillment_notes' href='javascript:void(0)' title='Notes' data-notable-id='#{fulfillment.id}' data-notable-type='Fulfillment'>",
@@ -96,6 +102,16 @@ module StudyLevelActivitiesHelper
       invoice_toggle_button(fulfillment)
     else
       invoice_read_only(fulfillment)
+    end
+  end
+
+  def invoiced_date(fulfillment)
+    if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
+      invoiced_date_custom(fulfillment)
+    elsif fulfillment.invoiced_date
+      format_date(fulfillment.invoiced_date)
+    else
+      fulfillment.update_attribute(:invoiced_date, "N/A")
     end
   end
 

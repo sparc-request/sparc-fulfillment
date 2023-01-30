@@ -1,5 +1,5 @@
 json.(fulfillment)
-
+Rails.logger.debug "*"*50 + "#{fulfillment.inspect}"
 json.id fulfillment.id
 json.month_year          month_year_formatter(fulfillment)
 json.fulfillment_date    fulfillment_date_formatter(fulfillment)
@@ -9,6 +9,7 @@ json.performed_by        fulfillment.performer.full_name if fulfillment.performe
 json.components          fulfillment_components_formatter(fulfillment.components)
 json.actions             fulfillment_actions(fulfillment)
 json.invoiced            toggle_invoiced(fulfillment)
+json.invoiced_date       invoiced_date_custom(fulfillment)
 json.credited				     toggle_credited(fulfillment)
 json.notes               notes(fulfillment.notes)
 json.documents           documents(fulfillment.documents)
