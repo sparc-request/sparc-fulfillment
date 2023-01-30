@@ -13,6 +13,7 @@
 ActiveRecord::Schema.define(version: 2022_08_11_144630) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
+
     t.string "status"
     t.datetime "created_at"
     t.datetime "updated_at"

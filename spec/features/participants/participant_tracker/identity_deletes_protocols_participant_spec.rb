@@ -37,7 +37,7 @@ feature 'User deletes Participant', js: true do
   end
 
   def and_the_participant_is_not_deletable
-    protocols_participant = ProtocolsParticipant.first
+    protocols_participant = ProtocolsParticipant.last
     create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
   end
 

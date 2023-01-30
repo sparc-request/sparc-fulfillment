@@ -32,6 +32,10 @@ RSpec.describe Notification, type: :model do
 
     describe '.duplicate_not_present?' do
 
+      before :each do
+        DatabaseCleaner[:active_record, model: Notification].clean_with(:truncation)
+      end
+
       context 'duplicate present' do
 
         it 'should not allow the object to be persisted' do
