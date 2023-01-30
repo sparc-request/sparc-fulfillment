@@ -52,3 +52,6 @@ fulfill.sql
 public/system/*
 
 /node_modules
+lib/tasks/auto_annotate_models.rake
+.gitignore
+.vscode/
