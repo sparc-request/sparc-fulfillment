@@ -22,8 +22,8 @@ class InvoiceReportGroupedOptions
   include ActionView::Helpers::TagHelper
 
   def initialize(org_or_service, type)
-    @organizations = org_or_service if type = 'organization'
-    @services = org_or_service if type = 'service'
+    @organizations = org_or_service if type == 'organization'
+    @services = org_or_service if type == 'service'
   end
 
   def collect_grouped_options
