@@ -20,7 +20,8 @@
 
 class FulfillmentsController < ApplicationController
 
-  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit]
+  helper :study_level_activities
+  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit, :invoiced_date, :edit_invoiced_date]
 
   def index
     @line_item = LineItem.find(params[:line_item_id])
@@ -57,6 +58,19 @@ class FulfillmentsController < ApplicationController
     end
   end
 
+  def edit_invoiced_date
+
+    @fulfillment.update_attributes(fulfillment_params)
+    @line_item = LineItem.find(params[:line_item_id])
+    respond_to do |format|
+      format.js { render }
+      format.json {
+        @fulfillments = @line_item.fulfillments
+        render
+      }
+    end
+  end
+
   def edit
     @line_item = @fulfillment.line_item
     @clinical_providers = ClinicalProvider.where(organization_id: @line_item.protocol.sub_service_request.organization_id)
@@ -79,23 +93,16 @@ class FulfillmentsController < ApplicationController
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
     @fulfillment.update_attributes(invoiced_date: Time.now) if @fulfillment.invoiced
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
+    @fulfillment.update_attributes(invoiced_date: "") if @fulfillment.credited
     detect_changes_and_create_notes
   end
 
   def invoiced_date
-    @fulfillment=Fulfillment.find(params[:id])
-    Rails.logger.debug "#"*50+"#{@fulfillment}"
-    fulfillmennt_id = Fulfillment.find(params[:id])
-    @line_item = @fulfillment.line_item
-    @fulfillment = Fulfillment.find(params[:id])
-    @fulfillment.update_attributes[invoiced_date: fulfillment_params[:invoiced_date]] if @fulfillment.invoiced
-    respond_to do |format|
-      format.js { render }
-      format.json {
-        @fulfillments = @line_item.fulfillments
-
-        render
-      }
+    Rails.logger.debug "#"*50+"#{@fulfillment.id}"
+    if @fulfillment.invoiced_date
+      invoiced_date = @fulfillment.invoiced_date
+    else
+      @fulfillment.update_attributes(invoiced_date: Time.now)
     end
   end
 
@@ -170,10 +177,12 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :invoiced_date_custom,:credited, :components)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :invoiced_date_custom, :credited, :components, :edit_invoiced_date)
   end
 
   def find_fulfillment
-    @fulfillment = Fulfillment.find(params[:id])
+    if params[:id]
+      @fulfillment = Fulfillment.find(params[:id])
+    end
   end
 end

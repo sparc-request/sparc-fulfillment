@@ -1,3 +1,4 @@
+
 .modal-dialog
   .modal-content
     = form_for fulfillment, {method: :patch, remote: true, html: {class: "form-horizontal fulfillment-form", role: "form"}} do |form|
@@ -24,3 +25,4 @@
           = t(:actions)[:close]
         %button#edit_invoiced_date.btn.btn-primary{ type: 'button', data: {line_item_id: @fulfillment.line_item_id, id: @fulfillment.id}}
           = t(:actions)[:save]
+

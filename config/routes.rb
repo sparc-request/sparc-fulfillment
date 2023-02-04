@@ -79,10 +79,8 @@ Rails.application.routes.draw do
     collection do
       put 'toggle_invoiced(/:id)', to: 'fulfillments#toggle_invoiced'
       put 'toggle_credit(/:id)', to: 'fulfillments#toggle_credit'
-    end
-    collection do 
-      get 'invoiced_date(/:id)', to: 'fulfillments#invoiced_date'
-      post 'invoiced_date(/:id)', to: 'fulfillments#invoiced_date'
+      get 'invoiced_date/:id(.:format)', to: 'fulfillments#invoiced_date'
+      patch 'edit_invoiced_date/:id(.:format)', to: 'fulfillments#edit_invoiced_date'
     end
   end
 

@@ -65,10 +65,15 @@ module StudyLevelActivitiesHelper
   end
 
   def invoiced_date_custom(fulfillment)
-    invoiced_date=["<a class='fulfillment-invoiced-date' href='javascript:void(0)' title='Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>",
+    custom_invoiced_date_button=["<a class='fulfillment-invoiced-date' href='javascript:void(0)' title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>",
       "<i class='fas fa-calendar'></i>",
       "</a>"]
+    date = format_date(fulfillment.invoiced_date)
+    invoiced_date_array=[date, custom_invoiced_date_button]
+    invoiced_date_array.join"<br>"
   end
+
+
 
   def fulfillment_actions(fulfillment)
     notes_documents_array = [

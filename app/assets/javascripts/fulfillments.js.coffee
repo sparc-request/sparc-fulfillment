@@ -43,12 +43,26 @@ $(document).on 'click', '.fulfillment-invoiced-date', ->
     fulfillment_id = $(this).data('fulfillment_id')
     data = fulfilllment:
              fulfillment_id: fulfillment_id
-
+             id: fulfillment_id
     $.ajax
       type: 'GET'
-      url: "/fulfillments/invoiced_date/#{fulfillment_id}"
+      url: "/fulfillments/invoiced_date/#{$(this).data('fulfillment_id')}.js"
       data: data
+      fulfillment_id: fulfillment_id
+      id: $(this).data('fulfillment_id')
 
+$(document).on 'click', '.invoiced-date-custom', ->
+    console.log("save clicked")
+    fulfillment_id = $(this).data('fulfillment_id')
+    id = $(this).data('id')
+    invioced_date = $(this).data("invoiced_date")
+    data = fulfillment:
+      fulfillment_id: fulfillment_id
+
+    $.ajax
+      type: 'POST'
+      url: "/fulfillments/invoiced_date/#{fulfillment_id}.js"
+      data: data
 
 $(document).on 'click', '.fulfillment_notes',  ->
     unless $(this).hasClass('disabled')
@@ -61,3 +75,6 @@ $(document).on 'click', '.fulfillment_notes',  ->
         type: 'GET'
         url: '/notes.js'
         data: data
+
+
+

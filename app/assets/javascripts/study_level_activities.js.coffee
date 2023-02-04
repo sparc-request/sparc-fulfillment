@@ -51,6 +51,34 @@ $ ->
       url: "/fulfillments"
       data: "line_item_id" : line_item_id
 
+  $(document).on 'click', 'button#edit_invoiced_date', ->
+    line_item_id = $(this).data('line-item-id')
+    data = line_item_id: line_item_id
+    id = $(this).data('fulfillment_id')
+    fulfillment_id = $(this).data('fulfillment_id')
+    invoiced_date = $(this).data('fulfillment_invoiced_date')
+    $.ajax
+      type: 'PATCH'
+      url: "/fulfillments/edit_invoiced_date/#{$(this).data('id')}"
+      data:
+        "line_item_id" : line_item_id
+        fulfillment:
+          id: fulfillment_id
+          line_item_id: line_item_id
+          invoiced_date: invoiced_date
+
+  $(document).on 'click', '.edit-invoiced-date', ->
+    console.log("sla")
+    line_item_id = $(this).data('line-item-id')
+    fulfillment_id = $(this).data('fulfillment_id')
+    data = fulfillment:
+      id: fulfillment_id
+    $.ajax
+      type: 'PATCH'
+      url: "/fulfillments/edit_invoiced_date/#{$(this).data('fulfillment_id')}"
+      data: data
+
+
   # Fulfillment Bindings
 
   $(document).on 'click', '.otf-fulfillment-edit', ->
@@ -58,5 +86,16 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
+
+  $(document).on 'click', 'fulfillment-invoiced-date', ->
+    fulfillment_id = $(this).data('fulfillment_id')
+    $.ajax
+      type: 'GET'
+      url: "/fulfillments/invoiced_date/#{fulfillment_id}"
+      data:
+        fulfillment:
+          invoiced_date: invoiced_date
+
+
 
 
