@@ -116,7 +116,6 @@ ActiveRecord::Schema.define(version: 2023_01_22_122549) do
     t.integer "klok_entry_id"
     t.boolean "invoiced"
     t.datetime "invoiced_date"
-    t.datetime "invoiced_date_custom"
     t.boolean "credited"
     t.float "percent_subsidy"
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id"

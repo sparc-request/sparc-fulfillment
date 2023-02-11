@@ -20,8 +20,7 @@
 
 class FulfillmentsController < ApplicationController
 
-  helper :study_level_activities
-  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit, :invoiced_date, :edit_invoiced_date]
+  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit, :invoiced_date_edit, :invoiced_date_update]
 
   def index
     @line_item = LineItem.find(params[:line_item_id])
@@ -58,19 +57,6 @@ class FulfillmentsController < ApplicationController
     end
   end
 
-  def edit_invoiced_date
-
-    @fulfillment.update_attributes(fulfillment_params)
-    @line_item = LineItem.find(params[:line_item_id])
-    respond_to do |format|
-      format.js { render }
-      format.json {
-        @fulfillments = @line_item.fulfillments
-        render
-      }
-    end
-  end
-
   def edit
     @line_item = @fulfillment.line_item
     @clinical_providers = ClinicalProvider.where(organization_id: @line_item.protocol.sub_service_request.organization_id)
@@ -91,19 +77,37 @@ class FulfillmentsController < ApplicationController
   def toggle_invoiced
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
-    @fulfillment.update_attributes(invoiced_date: Time.now) if @fulfillment.invoiced
+    @fulfillment.update_attribute(:invoiced_date, Time.now) if @fulfillment.invoiced
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
     @fulfillment.update_attributes(invoiced_date: "") if @fulfillment.credited
     detect_changes_and_create_notes
   end
 
-  def invoiced_date
-    Rails.logger.debug "#"*50+"#{@fulfillment.id}"
-    if @fulfillment.invoiced_date
-      invoiced_date = @fulfillment.invoiced_date
+  def invoiced_date_edit
+  end
+
+  def invoiced_date_update
+    @line_item = LineItem.find @fulfillment.line_item.id
+    Rails.logger.debug "#"*50 + "fulfillment_params #{fulfillment_params}"
+    persist_original_attributes_to_track_changes
+    @line_item = @fulfillment.line_item
+    if @fulfillment.update_attributes(fulfillment_params)
+      update_components_and_create_notes('update')
+      detect_changes_and_create_notes
+      flash[:success] = t(:fulfillment)[:flash_messages][:updated]
     else
-      @fulfillment.update_attributes(invoiced_date: Time.now)
+      @errors = @fulfillment.errors
     end
+
+    #respond_to do |format|
+      #format.js { render }
+      #format.json {
+        #@fulfillments = @line_item.fulfillments
+
+        #render fulfillments_path
+      #}
+    #redirect_to '/fulfillments/#{@line_item.id}/index.js'
+    #end
   end
 
   def toggle_credit
@@ -177,7 +181,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :invoiced_date_custom, :credited, :components, :edit_invoiced_date)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :credited, :components)
   end
 
   def find_fulfillment

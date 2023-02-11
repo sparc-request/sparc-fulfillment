@@ -64,17 +64,6 @@ module StudyLevelActivitiesHelper
     protocol.protocol_type == 'Study'
   end
 
-  def invoiced_date_custom(fulfillment)
-    custom_invoiced_date_button=["<a class='fulfillment-invoiced-date' href='javascript:void(0)' title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>",
-      "<i class='fas fa-calendar'></i>",
-      "</a>"]
-    date = format_date(fulfillment.invoiced_date)
-    invoiced_date_array=[date, custom_invoiced_date_button]
-    invoiced_date_array.join"<br>"
-  end
-
-
-
   def fulfillment_actions(fulfillment)
     notes_documents_array = [
       "<a class='fulfillment_notes' href='javascript:void(0)' title='Notes' data-notable-id='#{fulfillment.id}' data-notable-type='Fulfillment'>",
@@ -102,6 +91,11 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def billing_manager
+    Rails.logger.inspect "^"*50+"#{self}"
+    self.current_identity.billing_manager_protocols.include?(fulfillment.protocol)
+  end
+
   def toggle_invoiced(fulfillment)
     if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
       invoice_toggle_button(fulfillment)
@@ -111,13 +105,12 @@ module StudyLevelActivitiesHelper
   end
 
   def invoiced_date(fulfillment)
-    if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
-      invoiced_date_custom(fulfillment)
-    elsif fulfillment.invoiced_date
-      format_date(fulfillment.invoiced_date)
-    else
-      fulfillment.update_attribute(:invoiced_date, "N/A")
-    end
+    arr = [
+      format_date(fulfillment.invoiced_date),
+
+    "<a class='fulfillment-invoiced-date-edit ml10' href='javascript:void(0)', Title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>", "<i class='fas fa-edit'>"
+    ]
+    arr.join"<br>"
   end
 
   def toggle_credited(fulfillment)

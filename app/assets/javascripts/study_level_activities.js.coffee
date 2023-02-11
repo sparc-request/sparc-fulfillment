@@ -51,32 +51,34 @@ $ ->
       url: "/fulfillments"
       data: "line_item_id" : line_item_id
 
-  $(document).on 'click', 'button#edit_invoiced_date', ->
+  $(document).on 'click', 'button#invoiced_date_update', ->
     line_item_id = $(this).data('line-item-id')
     data = line_item_id: line_item_id
-    id = $(this).data('fulfillment_id')
-    fulfillment_id = $(this).data('fulfillment_id')
-    invoiced_date = $(this).data('fulfillment_invoiced_date')
+    id = $(this).data('id')
+    fulfillment_id = $(this).data('id')
+    invoiced_date = $(this).data('invoiced_date')
     $.ajax
       type: 'PATCH'
-      url: "/fulfillments/edit_invoiced_date/#{$(this).data('id')}"
+      url: "/fulfillments/invoiced_date_update/#{id}"
       data:
         "line_item_id" : line_item_id
         fulfillment:
           id: fulfillment_id
           line_item_id: line_item_id
           invoiced_date: invoiced_date
+        id: id
 
-  $(document).on 'click', '.edit-invoiced-date', ->
-    console.log("sla")
-    line_item_id = $(this).data('line-item-id')
-    fulfillment_id = $(this).data('fulfillment_id')
-    data = fulfillment:
-      id: fulfillment_id
-    $.ajax
-      type: 'PATCH'
-      url: "/fulfillments/edit_invoiced_date/#{$(this).data('fulfillment_id')}"
-      data: data
+  #$(document).on 'click', '#edit-invoiced-date', ->
+    #console.log("sla")
+    #line_item_id = $(this).data('line-item-id')
+    #fulfillment_id = $(this).data('id')
+    #data = fulfillment:
+      #id: id
+      #line_item_id: line_item_id
+    #$.ajax
+      #type: 'PUT'
+      #url: "/fulfillments/invoiced_date/#{$(this).data('id')}"
+      #data: data
 
 
   # Fulfillment Bindings
