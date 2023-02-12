@@ -25,12 +25,14 @@ $ ->
   $(document).on 'change', 'input.invoice_toggle', ->
     invoiced = $(this).prop('checked')
     fulfillment_id = $(this).data('id')
+    invoiced_date = Date()
     $.ajax
       type: 'PUT'
       url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
       data:
         fulfillment:
           invoiced: invoiced
+          invioced_date: invoiced_date
 
   $(document).on 'change', 'input.credit_toggle', ->
     credited = $(this).prop('checked')
@@ -65,21 +67,9 @@ $ ->
         fulfillment:
           id: fulfillment_id
           line_item_id: line_item_id
-          invoiced_date: invoiced_date
+          invoiced_date: $(this).data('invoiced_date')
         id: id
-
-  #$(document).on 'click', '#edit-invoiced-date', ->
-    #console.log("sla")
-    #line_item_id = $(this).data('line-item-id')
-    #fulfillment_id = $(this).data('id')
-    #data = fulfillment:
-      #id: id
-      #line_item_id: line_item_id
-    #$.ajax
-      #type: 'PUT'
-      #url: "/fulfillments/invoiced_date/#{$(this).data('id')}"
-      #data: data
-
+        invoiced_date: $(this).data('invoiced_date')
 
   # Fulfillment Bindings
 

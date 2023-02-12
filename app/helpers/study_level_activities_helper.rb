@@ -92,7 +92,6 @@ module StudyLevelActivitiesHelper
   end
 
   def billing_manager
-    Rails.logger.inspect "^"*50+"#{self}"
     self.current_identity.billing_manager_protocols.include?(fulfillment.protocol)
   end
 
@@ -106,11 +105,13 @@ module StudyLevelActivitiesHelper
 
   def invoiced_date(fulfillment)
     arr = [
-      format_date(fulfillment.invoiced_date),
-
-    "<a class='fulfillment-invoiced-date-edit ml10' href='javascript:void(0)', Title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>", "<i class='fas fa-edit'>"
+      format_date(fulfillment.invoiced_date), "<a class='fulfillment-invoiced-date-edit ml10' href='javascript:void(0)' Title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}' data-id='#{fulfillment.id}'>", "<i class='fas fa-edit'>"
     ]
-    arr.join"<br>"
+    if (current_identity.billing_manager_protocols.include?(fulfillment.protocol) && !fulfillment.credited? && fulfillment.invoiced?)
+      arr.join"<center>"
+    else
+      format_date(fulfillment.invoiced_date)
+    end
   end
 
   def toggle_credited(fulfillment)

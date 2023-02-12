@@ -77,9 +77,10 @@ class FulfillmentsController < ApplicationController
   def toggle_invoiced
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
-    @fulfillment.update_attribute(:invoiced_date, Time.now) if @fulfillment.invoiced
+    @fulfillment.invoiced_date = Time.now if @fulfillment.invoiced
+    @fulfillment.invoiced_date.save
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
-    @fulfillment.update_attributes(invoiced_date: "") if @fulfillment.credited
+    @fulfillment.update_attributes(invoiced_date: "") unless @fulfillment.invoiced
     detect_changes_and_create_notes
   end
 
@@ -87,8 +88,6 @@ class FulfillmentsController < ApplicationController
   end
 
   def invoiced_date_update
-    @line_item = LineItem.find @fulfillment.line_item.id
-    Rails.logger.debug "#"*50 + "fulfillment_params #{fulfillment_params}"
     persist_original_attributes_to_track_changes
     @line_item = @fulfillment.line_item
     if @fulfillment.update_attributes(fulfillment_params)
@@ -98,16 +97,6 @@ class FulfillmentsController < ApplicationController
     else
       @errors = @fulfillment.errors
     end
-
-    #respond_to do |format|
-      #format.js { render }
-      #format.json {
-        #@fulfillments = @line_item.fulfillments
-
-        #render fulfillments_path
-      #}
-    #redirect_to '/fulfillments/#{@line_item.id}/index.js'
-    #end
   end
 
   def toggle_credit
@@ -130,13 +119,13 @@ class FulfillmentsController < ApplicationController
   end
 
   def detect_changes_and_create_notes
-    tracked_fields = [:fulfilled_at, :account_number, :quantity, :performer_id, :invoiced]
+    tracked_fields = [:fulfilled_at, :account_number, :quantity, :performer_id, :invoiced, :invoced_date]
     tracked_fields.each do |field|
       current_field = @original_attributes[field.to_s]
       new_field = fulfillment_params[field]
       unless new_field.blank?
         unless current_field.blank?
-          current_field = (field == :fulfilled_at ? current_field.to_date.to_s : current_field.to_s)
+          current_field = ((field == :fulfilled_at || field == :invoiced_date) ? current_field.to_date.to_s : current_field.to_s)
           new_field = (field == :fulfilled_at ? Time.strptime(new_field, "%m/%d/%Y").to_date.to_s : new_field.to_s)
         end
         if current_field != new_field
@@ -181,7 +170,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :credited, :components)
+    params.require(:fulfillment).permit(:id, :line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :credited, :components)
   end
 
   def find_fulfillment

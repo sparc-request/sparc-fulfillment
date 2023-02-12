@@ -7,22 +7,20 @@
           %span{"aria-hidden" => "true"} &times;
       .modal-body
         #modal_errors
-        = render partial: 'required_fields'
         .row.mt-3
           .col-md-12
             = form.hidden_field :line_item_id
-            = form.hidden_field :id
-            = form.hidden_field :invoiced_date
+
             .form-group.row.align-items-center
               = form.label "invoiced_date", t(:fulfillment)[:invoiced_date], class: 'control-label mb-0 col-sm-4'
-              .input-group.datetimepicker.date.col-sm-8{ id: 'invoiced_date', data: {target_input: 'nearest' }}
-                = form.text_field "invoiced_date", {class: "form-control datetimepicker-input", readonly: true, data: { target:"#invoiced_date", toggle: 'datetimepicker' }, value:  format_date(@fulfillment.invoiced_date) }
+              .input-group.datetimepicker.date.col-sm-8{id: 'invoiced_date', data: {target_input: 'nearest' }}
+                = form.text_field :invoiced_date, {class: "form-control datetimepicker-input", readonly: true, data: { target:"#invoiced_date", toggle: 'datetimepicker'}, value:  format_date(fulfillment.invoiced_date) }
                 .input-group-append{ data: { toggle: 'datetimepicker', target: '#invoiced_date' }}
                   .input-group-text
                     %span.far.fa-calendar
-    .modal-footer
-      .center-block
-        %button#fulfillments_back.btn.btn-secondary{type: 'button', data: {line_item_id: @fulfillment.line_item_id}}
-          = t(:actions)[:close]
-        %button#invoiced_date_update.btn.btn-primary{ type: 'submit', data: {  line_item_id: @fulfillment.line_item_id, id: @fulfillment.id, fulfillment_id: @fulfillment.id }}
-          = t(:actions)[:save]
+      .modal-footer
+        .center-block
+          %button#fulfillments_back.btn.btn-secondary{type: 'button', data: {line_item_id: fulfillment.line_item_id}}
+            = t(:actions)[:close]
+          %button#invoiced_date_update.btn.btn-primary{ type: 'submit', data: { id: fulfillment.id, line_item_id: fulfillment.line_item_id}}
+            = t(:actions)[:save]

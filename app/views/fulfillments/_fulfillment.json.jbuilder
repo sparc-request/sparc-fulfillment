@@ -1,5 +1,4 @@
 json.(fulfillment)
-Rails.logger.debug "*"*50 + "#{fulfillment.inspect}"
 json.id fulfillment.id
 json.month_year          month_year_formatter(fulfillment)
 json.fulfillment_date    fulfillment_date_formatter(fulfillment)

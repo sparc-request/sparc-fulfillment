@@ -39,19 +39,11 @@ $(document).on 'click', '.fulfillment_documents', ->
 
 $(document).on 'click', '.fulfillment-invoiced-date-edit', ->
   unless $(this).hasClass('disabled')
-    console.log('invoiced calendar icon clicked')
-    fulfillment_id = $(this).data('fulfillment_id')
-    data = fulfilllment:
-             fulfillment_id: fulfillment_id
-             id: fulfillment_id
     $.ajax
       type: 'GET'
-      url: "/fulfillments/invoiced_date_edit/#{$(this).data('fulfillment_id')}.js"
-      data: data
-      fulfillment_id: fulfillment_id
-      id: $(this).data('fulfillment_id')
+      url: "/fulfillments/invoiced_date_edit/#{$(this).data('fulfillment_id')}"
 
-$(document).on 'click', '.invoiced-date-custom', ->
+$(document).on 'click', '.invoiced-date-update', ->
     console.log("save clicked")
     fulfillment_id = $(this).data('fulfillment_id')
     id = $(this).data('id')
@@ -60,8 +52,8 @@ $(document).on 'click', '.invoiced-date-custom', ->
       fulfillment_id: fulfillment_id
 
     $.ajax
-      type: 'POST'
-      url: "/fulfillments/invoiced_date/#{fulfillment_id}.js"
+      type: 'PATCH'
+      url: "/fulfillments/invoiced_date_update/#{fulfillment_id}.js"
       data: data
 
 $(document).on 'click', '.fulfillment_notes',  ->
@@ -76,5 +68,21 @@ $(document).on 'click', '.fulfillment_notes',  ->
         url: '/notes.js'
         data: data
 
-
+ $(document).on 'click', 'button#invoiced_date_update', ->
+    line_item_id = $(this).data('line-item-id')
+    data = line_item_id: line_item_id
+    id = $(this).data('id')
+    fulfillment_id = $(this).data('id')
+    invoiced_date = $(this).data('invoiced_date')
+    $.ajax
+      type: 'PATCH'
+      url: "/fulfillments/invoiced_date_update/#{id}"
+      data:
+        "line_item_id" : line_item_id
+        fulfillment:
+          id: fulfillment_id
+          line_item_id: line_item_id
+          invoiced_date: $(this).data('invoiced_date')
+        id: id
+        invoiced_date: $(this).data('invoiced_date')
 
