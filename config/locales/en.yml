@@ -52,6 +52,7 @@ en:
         credited: "Credited"
         fulfilled_at: "Fulfillment Date"
         invoiced: "Invoiced"
+        invoiced_date: "Invoiced Date"
         quantity_type: "Qty Type"
       identity:
         ldap_uid: "Login"
@@ -307,6 +308,7 @@ en:
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
       invoiced: "Invoiced changed to "
+      invoiced_date: "Invoiced date changed to "
     no_components: "Fulfillment Has No Components"
     view: "View Fulfillment Buttons"
     klok_description: "Imported via Klok"

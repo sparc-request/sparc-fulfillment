@@ -103,14 +103,13 @@ module StudyLevelActivitiesHelper
     end
   end
 
-  def date_invoiced_formatter(fulfillment)
-    Rails.logger.debug "*"*50 + "#{format_date(fulfillment.invoiced_date)} #{fulfillment}"
-    arr = [
+  def invoiced_date(fulfillment)
+      date = [format_date(fulfillment.invoiced_date), "<br>",  "<a class='edit fulfillment-invoiced-date-edit ml10' href='javascript:void(0)' title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>",
+      "<i class='fas fa-edit'></i>",
+      "</a>"]
 
-      format_date(fulfillment.invoiced_date), "<a class='fulfillment-invoiced-date-edit ml10' href='javascript:void(0)' Title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}' >", "<i class='fas fa-edit'>"
-    ]
     if (current_identity.billing_manager_protocols.include?(fulfillment.protocol) && !fulfillment.credited? && fulfillment.invoiced?)
-      arr.join"<center>"
+      return date.join""
     else
       format_date(fulfillment.invoiced_date)
     end

@@ -51,7 +51,7 @@
               = Fulfillment.human_attribute_name(:invoiced)
             %th.invoiced-date{ data: { field: 'invoiced_date', align: 'center' } }
               = Fulfillment.human_attribute_name(:invoiced_date)
-            %th.credited{ data: { field: 'credited', align: 'left' } }
+            %th.credited{ data: { field: 'credited', align: 'left', sortable: 'true', sorter: 'fulfillmentDateSorter' } }
               = Fulfillment.human_attribute_name(:credited)
             %th.credited_export.d-none{ data: { field: 'credited_export', switchable: 'false' } }
               = Fulfillment.human_attribute_name(:credited)

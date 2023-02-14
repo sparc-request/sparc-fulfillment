@@ -3,7 +3,7 @@ namespace :data do
   task add_invoiced_date_to_fulfillments: :environment do
     puts "*"*10 + " Adding invoiced_date to invoiced fulfillments... " + "*"*10
     bar = ProgressBar.new(Fulfillment.count)
-    invoiced_fulfillments = Fulfillment.joins(:notes).where(invoiced:true)
+    invoiced_fulfillments = Fulfillment.joins(:notes).where(invoiced: true)
     invoiced_fulfillments.find_each do |fulfillment|
       begin
         date = fulfillment.notes.last.updated_at
@@ -11,7 +11,7 @@ namespace :data do
 
         bar.increment! rescue nil
 
-      rescue Exception => each
+      rescue Exception => e
         puts "Error with #{fulfillment.inspect}, Message: #{e.message}"
         bar.increment! rescue nil
         next

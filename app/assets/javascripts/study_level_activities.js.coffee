@@ -53,7 +53,7 @@ $ ->
       url: "/fulfillments"
       data: "line_item_id" : line_item_id
 
-  $(document).on 'click', 'button#invoiced_date_update', ->
+  $(document).on 'click', 'input#invoiced_date_update', ->
     line_item_id = $(this).data('line-item-id')
     data = line_item_id: line_item_id
     id = $(this).data('id')
@@ -79,14 +79,12 @@ $ ->
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
 
-  $(document).on 'click', 'fulfillment-invoiced-date', ->
+  # Fulfillment Invoiced Date Edit Icon
+  $(document).on 'click', '.fulfillment-invoiced-date-edit', ->
     fulfillment_id = $(this).data('fulfillment_id')
     $.ajax
       type: 'GET'
-      url: "/fulfillments/invoiced_date/#{fulfillment_id}"
-      data:
-        fulfillment:
-          invoiced_date: invoiced_date
+      url: "/fulfillments/invoiced_date_edit/#{fulfillment_id}"
 
 
 

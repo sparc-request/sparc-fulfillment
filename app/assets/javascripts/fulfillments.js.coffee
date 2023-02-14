@@ -37,11 +37,7 @@ $(document).on 'click', '.fulfillment_documents', ->
       url: '/documents.js'
       data: data
 
-$(document).on 'click', '.fulfillment-invoiced-date-edit', ->
-  unless $(this).hasClass('disabled')
-    $.ajax
-      type: 'GET'
-      url: "/fulfillments/invoiced_date_edit/#{$(this).data('fulfillment_id')}"
+
 
 $(document).on 'click', '.invoiced-date-update', ->
     console.log("save clicked")

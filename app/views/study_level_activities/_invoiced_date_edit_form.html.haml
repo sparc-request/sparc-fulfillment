@@ -2,7 +2,7 @@
   .modal-content
     = form_for fulfillment, {remote: true, html: {class: "form-horizontal fulfillment-form", role: "form"}} do |form|
       .modal-header
-        %h4.modal-title.text-center= header_text
+        %h4.modal-title.text-center="Edit Invoiced Date"
         %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} &times;
       .modal-body

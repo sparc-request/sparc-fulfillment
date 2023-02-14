@@ -20,7 +20,7 @@
 
 class FulfillmentsController < ApplicationController
 
-  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit, :invoiced_date_edit, :invoiced_date_update]
+  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit, :invoiced_date_edit]
 
   def index
     @line_item = LineItem.find(params[:line_item_id])
@@ -78,7 +78,6 @@ class FulfillmentsController < ApplicationController
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced], invoiced_date: Time.now)
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
-    @fulfillment.update_attributes(invoiced_date: "") unless @fulfillment.invoiced
     detect_changes_and_create_notes
   end
 
@@ -117,14 +116,14 @@ class FulfillmentsController < ApplicationController
   end
 
   def detect_changes_and_create_notes
-    tracked_fields = [:fulfilled_at, :account_number, :quantity, :performer_id, :invoiced, :invoced_date]
+    tracked_fields = [:fulfilled_at, :account_number, :quantity, :performer_id, :invoiced, :invoiced_date]
     tracked_fields.each do |field|
       current_field = @original_attributes[field.to_s]
       new_field = fulfillment_params[field]
       unless new_field.blank?
         unless current_field.blank?
-          current_field = ((field == :fulfilled_at || field == :invoiced_date) ? current_field.to_date.to_s : current_field.to_s)
-          new_field = ((field == :fulfilled_at || field == :invoiced_date) ? Time.strptime(new_field, "%m/%d/%Y").to_date.to_s : new_field.to_s)
+          current_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? current_field.to_date.to_s : current_field.to_s)
+          new_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? Time.strptime(new_field, "%m/%d/%Y").to_date.to_s : new_field.to_s)
         end
         if current_field != new_field
           comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : new_field.to_s)
