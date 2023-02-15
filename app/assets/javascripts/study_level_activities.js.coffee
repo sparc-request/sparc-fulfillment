@@ -25,14 +25,14 @@ $ ->
   $(document).on 'change', 'input.invoice_toggle', ->
     invoiced = $(this).prop('checked')
     fulfillment_id = $(this).data('id')
-    invoiced_date = Date()
+    invoiced_date = moment().format('MM/DD/YYYY')
     $.ajax
       type: 'PUT'
       url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
       data:
         fulfillment:
           invoiced: invoiced
-          invioced_date: invoiced_date
+          invoiced_date: invoiced_date
 
   $(document).on 'change', 'input.credit_toggle', ->
     credited = $(this).prop('checked')
@@ -53,24 +53,6 @@ $ ->
       url: "/fulfillments"
       data: "line_item_id" : line_item_id
 
-  $(document).on 'click', 'input#invoiced_date_update', ->
-    line_item_id = $(this).data('line-item-id')
-    data = line_item_id: line_item_id
-    id = $(this).data('id')
-    fulfillment_id = $(this).data('id')
-    invoiced_date = $(this).data('invoiced_date')
-    $.ajax
-      type: 'PATCH'
-      url: "/fulfillments/invoiced_date_update/#{id}"
-      data:
-        "line_item_id" : line_item_id
-        fulfillment:
-          id: fulfillment_id
-          line_item_id: line_item_id
-          invoiced_date: $(this).data('invoiced_date')
-        id: id
-        invoiced_date: $(this).data('invoiced_date')
-
   # Fulfillment Bindings
 
   $(document).on 'click', '.otf-fulfillment-edit', ->
@@ -79,7 +61,6 @@ $ ->
       type: 'GET'
       url: "/fulfillments/#{fulfillment_id}/edit"
 
-  # Fulfillment Invoiced Date Edit Icon
   $(document).on 'click', '.fulfillment-invoiced-date-edit', ->
     fulfillment_id = $(this).data('fulfillment_id')
     $.ajax

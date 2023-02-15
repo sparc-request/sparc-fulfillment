@@ -76,9 +76,12 @@ class FulfillmentsController < ApplicationController
 
   def toggle_invoiced
     persist_original_attributes_to_track_changes
-    @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced], invoiced_date: Time.now)
+    @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
+    @fulfillment.update_attributes(invoiced_date: fulfillment_params[:invoiced_date])
+    Rails.logger.debug "#"*50 + "#{fulfillment_params[:invoiced_date]}" + "#{@fulfillment}"
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
     detect_changes_and_create_notes
+
   end
 
   def invoiced_date_edit
