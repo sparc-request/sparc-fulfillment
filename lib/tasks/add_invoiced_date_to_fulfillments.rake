@@ -1,5 +1,5 @@
 namespace :data do
-  desc 'Add invoiced_date value to fulfillments that have been flagged as invoiced'
+  desc 'Add invoiced_date value to fulfillments that have been previously flagged as invoiced'
   task add_invoiced_date_to_fulfillments: :environment do
     puts "*"*10 + " Adding invoiced_date to invoiced fulfillments... " + "*"*10
     bar = ProgressBar.new(Fulfillment.count)
