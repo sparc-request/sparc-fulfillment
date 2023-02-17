@@ -85,18 +85,6 @@ class FulfillmentsController < ApplicationController
   def invoiced_date_edit
   end
 
-  def invoiced_date_update
-    persist_original_attributes_to_track_changes
-    @line_item = @fulfillment.line_item
-    if @fulfillment.update_attributes(fulfillment_params)
-      update_components_and_create_notes('update')
-      detect_changes_and_create_notes
-      flash[:success] = t(:fulfillment)[:flash_messages][:updated]
-    else
-      @errors = @fulfillment.errors
-    end
-  end
-
   def toggle_credit
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(credited: fulfillment_params[:credited])
