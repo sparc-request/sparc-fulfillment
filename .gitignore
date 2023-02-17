@@ -52,4 +52,4 @@ fulfill.sql
 public/system/*
 
 /node_modules
-.vscode/launch.json
+.vscode/*

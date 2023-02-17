@@ -56,9 +56,7 @@ class Fulfillment < ApplicationRecord
   end
 
   def invoiced_date=(date_time)
-    Rails.logger.debug "#"*100 + "#{date_time.inspect}"
     write_attribute(:invoiced_date, Time.strptime(date_time, "%m/%d/%Y")) if date_time.present?
-    Rails.logger.debug "#"*100 + "#{date_time.inspect}"
   end
 
   def total_cost

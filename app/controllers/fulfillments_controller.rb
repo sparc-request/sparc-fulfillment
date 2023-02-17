@@ -80,7 +80,6 @@ class FulfillmentsController < ApplicationController
     @fulfillment.update_attributes(invoiced_date: fulfillment_params[:invoiced_date])
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
     detect_changes_and_create_notes
-
   end
 
   def invoiced_date_edit
@@ -169,12 +168,10 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:id, :line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :credited, :components)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :credited, :components)
   end
 
   def find_fulfillment
-    if params[:id]
-      @fulfillment = Fulfillment.find(params[:id])
-    end
+    @fulfillment = Fulfillment.find(params[:id])
   end
 end

@@ -96,6 +96,8 @@ RSpec.describe FulfillmentsController do
         fulfillment: attributes_for(:fulfillment, line_item_id: @line_item.id, quantity: 328, invoiced: true, invoiced_date: "09/08/2025")
       }, format: :js
       @fulfillment.reload
+      expect(@fulfillment.quantity).to eq 328
+      expect(@fulfillment.invoiced).to eq true
     end
   end
 
