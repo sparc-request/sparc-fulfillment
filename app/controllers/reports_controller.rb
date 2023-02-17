@@ -25,7 +25,11 @@ class ReportsController < ApplicationController
   def new
     @title = @report_type.titleize
     @organizations = IdentityOrganizations.new(current_identity.id).fulfillment_organizations_with_protocols
-    @grouped_options = InvoiceReportGroupedOptions.new(@organizations).collect_grouped_options
+    @grouped_options = InvoiceReportGroupedOptions.new(@organizations, 'organization').collect_grouped_options
+
+    @services = Service.where(organization_id: @organizations.pluck(:id))
+    @grouped_options_services = InvoiceReportGroupedOptions.new(@services, 'service').collect_grouped_options_services
+
   end
 
   def create
@@ -46,14 +50,32 @@ class ReportsController < ApplicationController
     end
   end
 
-  def update_protocols_dropdown
+  def update_services_protocols_dropdown
     @single_protocol = (params[:report_type] == "project_summary_report")
 
     if params[:org_ids]
       @protocols = Protocol.where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
+      @services = Service.where(organization_id: all_child_organizations_with_self(params[:org_ids])).distinct
+      @grouped_options_services = InvoiceReportGroupedOptions.new(@services, 'service').collect_grouped_options_services
     else
       @protocols = current_identity.protocols
     end
+  end
+
+  def update_protocols_dropdown
+    @single_protocol = (params[:report_type] == "project_summary_report")
+
+    if params[:service_ids]
+      @protocols = Protocol.joins(:sub_service_request, :line_items).where(line_items: {service_id: params[:service_ids]}).distinct
+    else
+      @protocols = current_identity.protocols
+    end
+  end
+
+  def reset_services_dropdown
+    @organizations = IdentityOrganizations.new(current_identity.id).fulfillment_organizations_with_protocols
+    @services = Service.where(organization_id: @organizations.pluck(:id))
+    @grouped_options_services = InvoiceReportGroupedOptions.new(@services, 'service').collect_grouped_options_services
   end
 
   private
@@ -68,6 +90,24 @@ class ReportsController < ApplicationController
 
   def find_report_type
     @report_type = reports_params[:report_type]
+  end
+
+  def all_child_organizations(org_ids)
+    org_ids = org_ids.compact
+    if org_ids.empty?
+      []
+    else
+      orgs = Organization.where(parent_id: org_ids)
+      orgs | all_child_organizations(orgs.pluck(:id))
+    end
+  end
+
+  def all_child_organizations_with_self(org_ids)
+    child_orgs = all_child_organizations(org_ids)
+    org_ids.each do |id|
+      child_orgs << id
+    end
+    child_orgs
   end
 
   def reports_params
