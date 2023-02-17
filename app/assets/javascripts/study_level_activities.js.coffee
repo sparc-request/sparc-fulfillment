@@ -66,7 +66,3 @@ $ ->
     $.ajax
       type: 'GET'
       url: "/fulfillments/invoiced_date_edit/#{fulfillment_id}"
-
-
-
-
