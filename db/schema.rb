@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_11_144630) do
+ActiveRecord::Schema.define(version: 2023_01_22_122549) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
-
     t.string "status"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -116,6 +115,7 @@ ActiveRecord::Schema.define(version: 2022_08_11_144630) do
     t.integer "service_cost"
     t.integer "klok_entry_id"
     t.boolean "invoiced"
+    t.datetime "invoiced_date"
     t.boolean "credited"
     t.float "percent_subsidy"
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id"
@@ -148,44 +148,6 @@ ActiveRecord::Schema.define(version: 2022_08_11_144630) do
     t.string "xml_file_content_type"
     t.integer "xml_file_file_size"
     t.datetime "xml_file_updated_at"
-  end
-
-  create_table "klok_entries", primary_key: "entry_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
-    t.integer "project_id", null: false
-    t.integer "resource_id"
-    t.integer "rate"
-    t.datetime "date"
-    t.string "start_time_stamp_formatted"
-    t.datetime "start_time_stamp"
-    t.integer "duration"
-    t.integer "submission_id"
-    t.integer "device_id"
-    t.text "comments"
-    t.string "end_time_stamp_formatted"
-    t.datetime "end_time_stamp"
-    t.integer "rollup_to"
-    t.integer "enabled"
-    t.datetime "created_at"
-  end
-
-  create_table "klok_people", primary_key: "resource_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
-    t.string "name"
-    t.string "username"
-    t.datetime "created_at"
-  end
-
-  create_table "klok_projects", primary_key: "project_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
-    t.string "contact_email"
-    t.integer "path"
-    t.string "code"
-    t.string "contact_phone"
-    t.datetime "updated_at"
-    t.string "project_type"
-    t.string "name"
-    t.integer "parent_id"
-    t.datetime "created_at"
-    t.string "contact_name"
-    t.integer "rollup_to"
   end
 
   create_table "line_items", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|

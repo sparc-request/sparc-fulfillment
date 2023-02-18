@@ -66,14 +66,29 @@ $ ->
       $('#org_based_protocols').addClass('d-none')
       $('#protocol_section').empty()
       $('input[type=submit].report-request').prop('disabled', true)
+      $.ajax
+        type: 'GET'
+        url: "reports/reset_services_dropdown"
     else
       $('#org_based_protocols').removeClass('d-none')
       $('#protocol_section').empty()
       $('#protocol_section').closest('.form-group').removeClass("d-none")
       $.ajax
         type: 'GET'
-        url: "reports/update_protocols_dropdown"
+        url: "reports/update_services_protocols_dropdown"
         data: { org_ids: org_ids }
+
+  $(document).on 'change', "#service_select", ->
+    service_ids = $(this).val()
+    if service_ids.length > 0
+      $('#org_based_protocols').removeClass('d-none')
+      $('#protocol_section').empty()
+      $('#protocol_section').closest('.form-group').removeClass("d-none")
+      $.ajax
+        type: 'GET'
+        url: "reports/update_protocols_dropdown"
+        data: { service_ids: service_ids }
+
 
   $(document).on 'change', "#protocol_select", ->
     if $(this).val().length > 0

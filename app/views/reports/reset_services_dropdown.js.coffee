@@ -18,6 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+$('#service_section').html('<%= escape_javascript(select_tag "services", options_for_select(@grouped_options_services), multiple: true, id: "service_select", title: t(:reports)[:select_services], class: "selectpicker form-control") %>')
+
+$(".modal-content #service_select").selectpicker({
+  selectedTextFormat: 'count',
+  countSelectedText: (selected, total) -> if (selected == total) then "All Services" else "#{selected} Services selected"
+  actionsBox: true,
+  liveSearch: true
+})
