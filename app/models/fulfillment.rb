@@ -55,6 +55,10 @@ class Fulfillment < ApplicationRecord
     write_attribute(:fulfilled_at, Time.strptime(date_time, "%m/%d/%Y")) if date_time.present?
   end
 
+  def invoiced_date=(date_time)
+    write_attribute(:invoiced_date, Time.strptime(date_time, "%m/%d/%Y")) if date_time.present?
+  end
+
   def total_cost
     quantity * service_cost
   end

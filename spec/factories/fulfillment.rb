@@ -25,6 +25,8 @@ FactoryBot.define do
     fulfilled_at { "09/09/2025" }
     quantity     { 5 }
     performer_id { 1 }
+    invoiced { true }
+    invoiced_date { "09/09/2025" }
 
     trait :without_validations do
       to_create { |instance| instance.save(validate: false) }
