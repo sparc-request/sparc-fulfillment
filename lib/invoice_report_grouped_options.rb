@@ -21,8 +21,9 @@
 class InvoiceReportGroupedOptions
   include ActionView::Helpers::TagHelper
 
-  def initialize(organizations)
-    @organizations = organizations
+  def initialize(org_or_service, type)
+    @organizations = org_or_service if type == 'organization'
+    @services = org_or_service if type == 'service'
   end
 
   def collect_grouped_options
@@ -34,6 +35,18 @@ class InvoiceReportGroupedOptions
       [type.pluralize, extract_name_and_id(groups[type])]
     end
     options.compact
+  end
+
+  def collect_grouped_options_services
+    services = @services.sort { |lhs, rhs| lhs.name <=> rhs.name }
+
+    service_options = []
+    services.each do |service|
+      inactive_indicator = service.is_available ? '' : '<small class="text-danger ml-1"><em>Inactive</em></small>'
+      service_options << [{'data-content': service.name + inactive_indicator}, service.id]
+    end
+
+    service_options.compact
   end
 
   private

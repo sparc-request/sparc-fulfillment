@@ -36,13 +36,25 @@ RSpec.describe InvoiceReportGroupedOptions do
         program_id = ("#{program_with_protocols.id}").to_i
         core_id = ("#{core_with_protocols.id}").to_i
 
+        provider_service = create(:service, name: "Harry's Service", organization: provider_with_protocols)
+        program_service = create(:service, name: "Ron's Service", organization: program_with_protocols)
+        core_service = create(:service, name: "Hermione's Service", organization: core_with_protocols)
+
         organizations = [
           provider_with_protocols,
           program_with_protocols,
           core_with_protocols,
         ]
+
+        services = Service.where(organization_id: organizations.pluck(:id))
         
-        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Providers", [[{:"data-content"=>"Gryffindor"}, provider_id]]], ["Programs", [[{:"data-content"=>"Slytherin"}, program_id]]], ["Cores", [[{:"data-content"=>"Hufflepuff"}, core_id]]]])
+        expect(InvoiceReportGroupedOptions.new(organizations, 'organization').collect_grouped_options).to eq([["Providers", [[{:"data-content"=>"Gryffindor"}, provider_id]]], ["Programs", [[{:"data-content"=>"Slytherin"}, program_id]]], ["Cores", [[{:"data-content"=>"Hufflepuff"}, core_id]]]])
+
+        expect(InvoiceReportGroupedOptions.new(services, 'service').collect_grouped_options_services).to match_array([
+          [{:"data-content"=>"Harry's Service"}, provider_service.id],
+          [{:"data-content"=>"Ron's Service"}, program_service.id],
+          [{:"data-content"=>"Hermione's Service"}, core_service.id]
+        ])
 
       end
     end
@@ -57,12 +69,22 @@ RSpec.describe InvoiceReportGroupedOptions do
         program_id = ("#{program_with_protocols.id}").to_i
         core_id = ("#{core_with_protocols.id}").to_i
 
+        program_service = create(:service, name: "Ron's Service", organization: program_with_protocols)
+        core_service = create(:service, name: "Hermione's Service", organization: core_with_protocols)
+
         organizations = [
           program_with_protocols,
           core_with_protocols
         ]
 
-        expect(InvoiceReportGroupedOptions.new(organizations).collect_grouped_options).to eq([["Programs", [[{:"data-content"=>"Slytherin"}, program_id]]], ["Cores", [[{:"data-content"=>"Hufflepuff"}, core_id]]]])
+        services = Service.where(organization_id: organizations.pluck(:id))
+
+        expect(InvoiceReportGroupedOptions.new(organizations, 'organization').collect_grouped_options).to eq([["Programs", [[{:"data-content"=>"Slytherin"}, program_id]]], ["Cores", [[{:"data-content"=>"Hufflepuff"}, core_id]]]])
+
+        expect(InvoiceReportGroupedOptions.new(services, 'service').collect_grouped_options_services).to match_array([
+          [{:"data-content"=>"Ron's Service"}, program_service.id],
+          [{:"data-content"=>"Hermione's Service"}, core_service.id]
+        ])
 
       end
     end

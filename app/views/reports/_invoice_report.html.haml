@@ -56,6 +56,11 @@
             .col-sm-8
               = select_tag 'organizations',grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "selectpicker form-control", id: "organization_select"
 
+          .form-group.row.align-items-center
+            = label_tag "services", t(:reports)[:service], class: "control-label col-sm-4 mb-0"
+            .col-sm-8#service_section
+              = select_tag 'services', options_for_select(@grouped_options_services), multiple: true, data: {actions_box: true, live_search: true }, class: "selectpicker form-control", id: "service_select"
+
           .form-group.d-none.row.align-items-center
             = label_tag "protocol", t(:reports)[:protocols], class: "control-label required col-sm-4 mb-0"
             .col-sm-8#protocol_section
