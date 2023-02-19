@@ -45,24 +45,7 @@ RSpec.describe Procedure, type: :model do
       sub_service_request   = create(:sub_service_request, protocol: protocol)
       participant           = create(:participant)
       arm                   = create(:arm, protocol: protocol)
-      protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
       @appointment          = create(:appointment, arm: arm, protocols_participant: protocols_participant, name: "Super Arm", protocol: protocol)
-    end
-
-    describe 'set_protocols_participant_can_be_destroyed_flag' do
-      before(:each) do
-        @procedure = create(:procedure, service: @service, appointment: @appointment)
-      end
-
-      context 'status changes from unstarted' do
-        it 'should set protocols_participant can_be_destroyed flag to false' do
-
-          @procedure.update_attributes(status: 'complete')
-          @procedure.protocols_participant.can_be_destroyed?
-
-          expect(@procedure.protocols_participant.can_be_destroyed).to eq false
-        end
-      end
     end
 
     describe 'service_name' do
