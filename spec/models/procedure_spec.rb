@@ -45,6 +45,7 @@ RSpec.describe Procedure, type: :model do
       sub_service_request   = create(:sub_service_request, protocol: protocol)
       participant           = create(:participant)
       arm                   = create(:arm, protocol: protocol)
+      protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
       @appointment          = create(:appointment, arm: arm, protocols_participant: protocols_participant, name: "Super Arm", protocol: protocol)
     end
 
