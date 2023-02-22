@@ -18,37 +18,37 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.alert.alert-warning.mb-0.rounded-0.border-bottom
-  %p.text-warning.mb-0
-    = icon('fas', 'exclamation-circle mr-1')
-    = t(:line_item)[:edit_clincal_services_in_sparc]
--# Infrastructure for managing calendar and services edits still exists, but is commented out here in favor of these edits being made solely in SPARCDashboard.
--##study_schedule_buttons{ data: { protocol_id: protocol.id } }
-  -#.row
-    -#.col-sm-4.col-md-4.text-center.h5
-      -#=t(:protocol)[:study_schedule][:manage_arms]
-      -##manage_arms.mt-1
-        -#= link_to new_arm_path(protocol_id: protocol.id, schedule_tab: tab), remote: true, class: 'btn btn-success btn-sm mr-1', title: t('protocol.study_schedule.add_arm'), type: 'button', aria: { label: 'Add Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
+-#Calendar and services edits were previously disabled in favor of requiring all edits to be made in SPARC Request Dashboard:
+-#.alert.alert-warning.mb-0.rounded-0.border-bottom
+  -#%p.text-warning.mb-0
+    -#= icon('fas', 'exclamation-circle mr-1')
+    -#= t(:line_item)[:edit_clincal_services_in_sparc]
+#study_schedule_buttons{ data: { protocol_id: protocol.id } }
+  .row
+    .col-sm-4.col-md-4.text-center.h5
+      =t(:protocol)[:study_schedule][:manage_arms]
+      #manage_arms.mt-1
+        = link_to new_arm_path(protocol_id: protocol.id, schedule_tab: tab), remote: true, class: 'btn btn-success btn-sm mr-1', title: t('protocol.study_schedule.add_arm'), type: 'button', aria: { label: 'Add Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
           -#= icon('fas', 'plus')
-        -#= link_to navigate_arms_path(protocol_id: protocol.id, intended_action: 'destroy'), remote: true, class: 'btn btn-danger btn-sm mr-1', title: t('protocol.study_schedule.remove_arm'), type: 'button', aria: { label: 'Remove Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
+        = link_to navigate_arms_path(protocol_id: protocol.id, intended_action: 'destroy'), remote: true, class: 'btn btn-danger btn-sm mr-1', title: t('protocol.study_schedule.remove_arm'), type: 'button', aria: { label: 'Remove Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
           -#= icon('fas', 'minus')
-        -#= link_to navigate_arms_path(protocol_id: protocol.id, intended_action: 'edit'), remote: true, class: 'btn btn-warning btn-sm', title: t('protocol.study_schedule.edit_arm'), type: 'button', aria: { label: 'Edit Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
-          -#= icon('fas', 'edit')
+        = link_to navigate_arms_path(protocol_id: protocol.id, intended_action: 'edit'), remote: true, class: 'btn btn-warning btn-sm', title: t('protocol.study_schedule.edit_arm'), type: 'button', aria: { label: 'Edit Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
+          = icon('fas', 'edit')
 
-    -#.col-sm-4.col-md-4.text-center.h5
-      -#=t(:protocol)[:study_schedule][:manage_visits]
-      -##manage_visit_groups.mt-1
-        -#= link_to 'javascript:;', id: 'add_visit_group_button', class: 'btn btn-success btn-sm mr-1', title: t('protocol.study_schedule.add_visit_group'), type: 'button', aria: { label: 'Add Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
-          -#= icon('fas', 'plus')
-        -#= link_to 'javascript:;', id: 'remove_visit_group_button', class: 'btn btn-danger btn-sm mr-1', title: t('protocol.study_schedule.remove_visit_group'), type: 'button', aria: { label: 'Remove Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
+    .col-sm-4.col-md-4.text-center.h5
+      =t(:protocol)[:study_schedule][:manage_visits]
+      #manage_visit_groups.mt-1
+        = link_to 'javascript:;', id: 'add_visit_group_button', class: 'btn btn-success btn-sm mr-1', title: t('protocol.study_schedule.add_visit_group'), type: 'button', aria: { label: 'Add Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
+          = icon('fas', 'plus')
+        = link_to 'javascript:;', id: 'remove_visit_group_button', class: 'btn btn-danger btn-sm mr-1', title: t('protocol.study_schedule.remove_visit_group'), type: 'button', aria: { label: 'Remove Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
           -#= icon('fas', 'minus')
-        -#= link_to 'javascript:;', id: 'edit_visit_group_button', class: 'btn btn-warning btn-sm', title: t('protocol.study_schedule.edit_visit_group'), type: 'button', aria: { label: 'Edit Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
-          -#= icon('fas', 'edit')
-    -#.col-sm-4.col-md-4.text-center.h5
-      -#=t(:protocol)[:study_schedule][:manage_services]
-      -##manage_services.mt-1
-        -#= link_to 'javascript:;', id: 'add_service_button', class: 'btn btn-success btn-sm mr-1', title: t('protocol.study_schedule.add_service'), type: 'button', aria: { label: 'Add Service' }, data: { toggle: 'tooltip', animation: 'false' } do
-          -#= icon('fas', 'plus')
+        = link_to 'javascript:;', id: 'edit_visit_group_button', class: 'btn btn-warning btn-sm', title: t('protocol.study_schedule.edit_visit_group'), type: 'button', aria: { label: 'Edit Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
+          = icon('fas', 'edit')
+    .col-sm-4.col-md-4.text-center.h5
+      =t(:protocol)[:study_schedule][:manage_services]
+      #manage_services.mt-1
+        = link_to 'javascript:;', id: 'add_service_button', class: 'btn btn-success btn-sm mr-1', title: t('protocol.study_schedule.add_service'), type: 'button', aria: { label: 'Add Service' }, data: { toggle: 'tooltip', animation: 'false' } do
+          = icon('fas', 'plus')
 
-        -#= link_to 'javascript:;', id: 'remove_service_button', class: 'btn btn-danger btn-sm', title: t('protocol.study_schedule.remove_service'), type: 'button', aria: { label: 'Remove Service' }, data: { toggle: 'tooltip', animation: 'false' } do
-          -#= icon('fas', 'minus')
+        = link_to 'javascript:;', id: 'remove_service_button', class: 'btn btn-danger btn-sm', title: t('protocol.study_schedule.remove_service'), type: 'button', aria: { label: 'Remove Service' }, data: { toggle: 'tooltip', animation: 'false' } do
+          = icon('fas', 'minus')
