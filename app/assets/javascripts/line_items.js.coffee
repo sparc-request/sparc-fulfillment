@@ -18,43 +18,6 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$ ->
-
-  # Line Item Bindings
-
-  $(document).on 'change', 'input.invoice_toggle', ->
-    invoiced = $(this).prop('checked')
-    fulfillment_id = $(this).data('id')
-    $.ajax
-      type: 'PUT'
-      url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
-      data:
-        fulfillment:
-          invoiced: invoiced
-
-  $(document).on 'change', 'input.credit_toggle', ->
-    credited = $(this).prop('checked')
-    fulfillment_id = $(this).data('id')
-    $.ajax
-      type: 'PUT'
-      url: "/fulfillments/toggle_credit/#{fulfillment_id}"
-      data:
-        fulfillment:
-          credited: credited
-
-  # This binding is also used in fulfillment notes
-  $(document).on 'click', 'button#fulfillments_back', ->
-    line_item_id = $(this).data('line-item-id')
-    data = line_item_id: line_item_id
-    $.ajax
-      type: 'GET'
-      url: "/fulfillments"
-      data: "line_item_id" : line_item_id
-
-  # Fulfillment Bindings
-
-  $(document).on 'click', '.otf-fulfillment-edit', ->
-    fulfillment_id = $(this).data('fulfillment_id')
-    $.ajax
-      type: 'GET'
-      url: "/fulfillments/#{fulfillment_id}/edit"
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://coffeescript.org/

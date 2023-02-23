@@ -91,28 +91,11 @@ module StudyLevelActivitiesHelper
     end
   end
 
-  def billing_manager
-    self.current_identity.billing_manager_protocols.include?(fulfillment.protocol)
-  end
-
   def toggle_invoiced(fulfillment)
     if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
       invoice_toggle_button(fulfillment)
     else
       invoice_read_only(fulfillment)
-    end
-  end
-
-  def invoiced_date(fulfillment)
-    date = content_tag(:span, fulfillment.invoiced_date.strftime('%m/%d/%Y'), class: 'invoiced-date') if fulfillment.invoiced_date
-    arr = [date, "<br>",
-    "<a class='edit fulfillment-invoiced-date-edit ml10' href='javascript:void(0)' title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>",
-    "<i class='fas fa-edit'></i>",
-    "</a>"]
-    if (current_identity.billing_manager_protocols.include?(fulfillment.protocol) && !fulfillment.credited? && fulfillment.invoiced?)
-      return arr.join ""
-    else
-      fulfillment.invoiced_date.strftime('%m/%d/%Y') if fulfillment.invoiced
     end
   end
 
