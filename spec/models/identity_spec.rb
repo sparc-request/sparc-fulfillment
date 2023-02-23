@@ -158,18 +158,20 @@ RSpec.describe Identity, type: :model do
     context "IdentityCounter exists" do
 
       it "should not create a new IdentityCounter" do
+        count_before_test = IdentityCounter.count
         identity = create(:identity_with_counter)
         expect(identity.identity_counter).to be
-        expect(IdentityCounter.count).to eq(1)
+        expect(IdentityCounter.count).to eq(count_before_test + 1)
       end
     end
 
     context "IdentityCounter does not exist" do
 
       it "should create an IdentityCounter if it does not exist" do
+        count_before_test = IdentityCounter.count
         identity = create(:identity)
         expect(identity.identity_counter).to be
-        expect(IdentityCounter.count).to eq(1)
+        expect(IdentityCounter.count).to eq(count_before_test + 1)
       end
     end
   end

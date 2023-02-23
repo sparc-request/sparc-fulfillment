@@ -145,7 +145,7 @@ class StudyScheduleReport < Report
   def study_information_id_row
     [
       [@protocol.class.to_s, "ID:"].join(" "),
-      @protocol.id
+      @protocol.sparc_id
     ].flatten
   end
 
@@ -157,7 +157,7 @@ class StudyScheduleReport < Report
   end
 
   def file_name
-    ["protocol", @protocol.id].join("_")
+    ["protocol", @protocol.sparc_id].join("_")
   end
 
   private

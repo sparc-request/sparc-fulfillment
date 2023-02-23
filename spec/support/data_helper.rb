@@ -21,7 +21,7 @@
 module DataHelpers
 
   def create_and_assign_protocol_with_a_single_service
-    identity              = Identity.first
+    identity              = @logged_in_identity
     sub_service_request   = create(:sub_service_request_with_organization)
     protocol              = create(:protocol_with_single_service, sub_service_request: sub_service_request)
     organization_provider = create(:organization_provider, name: "Provider")
@@ -35,7 +35,7 @@ module DataHelpers
   end
 
   def create_and_assign_protocol_with_duplicate_services
-    identity              = Identity.first
+    identity              = @logged_in_identity
     sub_service_request   = create(:sub_service_request_with_organization)
     protocol              = create(:protocol_with_duplicate_services, sub_service_request: sub_service_request)
     organization_provider = create(:organization_provider, name: "Provider")
@@ -49,7 +49,7 @@ module DataHelpers
   end
 
   def create_and_assign_protocol_to_me
-    identity              = Identity.first
+    identity              = @logged_in_identity
     sub_service_request   = create(:sub_service_request_with_organization)
     subsidy               = create(:subsidy, sub_service_request: sub_service_request)
     protocol              = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
@@ -64,7 +64,7 @@ module DataHelpers
   end
 
   def create_and_assign_protocol_without_services_to_me
-    identity              = Identity.first
+    identity              = @logged_in_identity
     sub_service_request   = create(:sub_service_request_with_organization)
     protocol              = create(:protocol_imported_from_sparc, :without_services, sub_service_request: sub_service_request)
     organization_provider = create(:organization_provider, name: "Provider")
@@ -78,7 +78,7 @@ module DataHelpers
   end
 
   def create_and_assign_blank_protocol_to_me
-    identity              = Identity.first
+    identity              = @logged_in_identity
     protocol              = create(:protocol_with_sub_service_request)
     organization          = protocol.organization
     organization_provider = create(:organization_provider, name: "Provider")

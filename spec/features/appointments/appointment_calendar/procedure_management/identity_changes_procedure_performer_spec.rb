@@ -40,13 +40,10 @@ feature 'User changes performer of a procedure', js: true do
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    find('a[data-appointment-id="1"]').click
+    first('a.list-group-item.appointment-link').click
     wait_for_ajax
     
-    bootstrap_select '[name="service_id"', service.name
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    wait_for_ajax
+    add_a_procedure(service)
 
     find('a.start-appointment').click
     wait_for_ajax
@@ -60,7 +57,7 @@ feature 'User changes performer of a procedure', js: true do
   end
 
   def when_i_view_the_notes
-    find('div#procedure1Notes').click
+    find("div#procedure#{@procedure.id}Notes").click
   end
 
   def then_i_should_see_a_note_indicating_that_the_performer_was_changed

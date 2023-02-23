@@ -22,6 +22,10 @@ require 'rails_helper'
 
 feature 'Identity downloads a document from the documents page', js: true, enqueue: false do
 
+  before :each do
+    DatabaseCleaner[:active_record, model: Document].clean_with(:truncation)
+  end
+
   scenario 'and sees the viewed_at date has been updated' do
     given_i_am_viewing_the_all_reports_page_with_documents
     when_i_download_the_report
@@ -40,7 +44,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     scenario 'and sees the documents counter decrement' do
       given_i_am_viewing_the_all_reports_page_with_documents(2)
       when_i_download_the_report
-      then_i_should_see_the_documents_counter_decrement_to(1)
+      then_i_should_see_the_documents_counter_decrement_to(@count_before_download - 1)
     end
   end
 
@@ -48,7 +52,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     @protocol = create_and_assign_protocol_to_me
 
     count.times do
-      create(:document_of_identity_report, documentable_id: Identity.first.id)
+      create(:document_of_identity_report, documentable_id: @logged_in_identity.id)
     end
 
     visit documents_path
@@ -56,6 +60,7 @@ feature 'Identity downloads a document from the documents page', js: true, enque
   end
 
   def when_i_download_the_report
+    @count_before_download = @logged_in_identity.unaccessed_documents_count
     first("a.attached_file").click
     wait_for_ajax
   end
