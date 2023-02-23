@@ -20,26 +20,24 @@
 
 require 'rails_helper'
 
-# These commented-out tests relate to editing calendar and services functions on a protocol's clinical services tab. While these functions are no longer rendered to the view, the infrastructure is still in place. Commenting these tests out so they do not fail during the Travis build, 12/7/22.
-
 feature "Change Participant Arm", js: :true do
-  #context "original arm does NOT have completed procedures" do
-    #scenario "User changes arm on the participant tracker" do
-      #when_i_start_work_on_an_appointment
-      #then_i_change_the_arm_of_the_participant
-      #and_i_visit_the_calendar_again
-      #i_should_only_see_new_appointments
-    #end
-  #end
-  #context "original arm has completed procedures" do
-    #scenario "User changes arm on the participant tracker" do
-      #when_i_start_work_on_an_appointment
-      #and_i_complete_a_procedure
-      #then_i_change_the_arm_of_the_participant
-      #and_i_visit_the_calendar_again
-      #i_should_see_new_and_old_appointments
-    #end
-  #end
+  context "original arm does NOT have completed procedures" do
+    scenario "User changes arm on the participant tracker" do
+      when_i_start_work_on_an_appointment
+      then_i_change_the_arm_of_the_participant
+      and_i_visit_the_calendar_again
+      i_should_only_see_new_appointments
+    end
+  end
+  context "original arm has completed procedures" do
+    scenario "User changes arm on the participant tracker" do
+      when_i_start_work_on_an_appointment
+      and_i_complete_a_procedure
+      then_i_change_the_arm_of_the_participant
+      and_i_visit_the_calendar_again
+      i_should_see_new_and_old_appointments
+    end
+  end
 
 
   def when_i_start_work_on_an_appointment

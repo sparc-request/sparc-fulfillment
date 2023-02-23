@@ -20,31 +20,29 @@
 
 require 'rails_helper'
 
-# These commented-out tests relate to editing calendar and services functions on a protocol's clinical services tab. While these functions are no longer rendered to the view, the infrastructure is still in place. Commenting these tests out so they do not fail during the Travis build, 12/7/22.
-
 feature 'Identity edits services for a particular protocol', js: true, enqueue: false do
 
-  #context 'User adds a service to an arm' do
-    #scenario 'and sees the service on the arm' do
-      #given_i_am_viewing_a_protocol
-      #given_an_arm_has_services
-      #when_i_click_the_add_services_button
-      #when_i_fill_in_the_form
-      #when_i_click_the_add_submit_button
-      #then_i_should_see_it_on_that_arm
-    #end
-  #end
+  context 'User adds a service to an arm' do
+    scenario 'and sees the service on the arm' do
+      given_i_am_viewing_a_protocol
+      given_an_arm_has_services
+      when_i_click_the_add_services_button
+      when_i_fill_in_the_form
+      when_i_click_the_add_submit_button
+      then_i_should_see_it_on_that_arm
+    end
+  end
 
-  #context 'User deletes a service from an arm' do
-    #scenario 'and sees the service is gone' do
-      #given_i_am_viewing_a_protocol
-      #given_an_arm_has_services
-      #when_i_click_the_remove_services_button
-      #when_i_select_a_service_and_arm
-      #when_i_click_the_remove_submit_button
-      #then_i_should_not_see_it_on_that_arm
-    #end
-  #end
+  context 'User deletes a service from an arm' do
+    scenario 'and sees the service is gone' do
+      given_i_am_viewing_a_protocol
+      given_an_arm_has_services
+      when_i_click_the_remove_services_button
+      when_i_select_a_service_and_arm
+      when_i_click_the_remove_submit_button
+      then_i_should_not_see_it_on_that_arm
+    end
+  end
 
   def given_i_am_viewing_a_protocol
     @protocol  = create_and_assign_protocol_to_me
