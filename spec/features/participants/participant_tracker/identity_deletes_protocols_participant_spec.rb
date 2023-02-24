@@ -24,13 +24,12 @@ feature 'User deletes Participant', js: true do
 
   scenario 'and sees the Participant is removed from the list' do
     given_i_have_a_participant
-    #and_the_participant_is_deletable
     given_i_am_viewing_the_participant_tracker
     when_i_delete_a_participant
     then_i_should_not_see_the_participant
   end
 
-  scenario 'and connot delete when there is procedure data' do
+  scenario 'and cannot delete when there is procedure data' do
     given_i_have_a_participant
     and_the_participant_is_not_deletable
     given_i_am_viewing_the_participant_tracker
