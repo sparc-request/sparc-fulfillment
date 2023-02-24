@@ -24,7 +24,7 @@ feature 'User deletes Participant', js: true do
 
   scenario 'and sees the Participant is removed from the list' do
     given_i_have_a_participant
-    and_the_participant_is_deletable
+    #and_the_participant_is_deletable
     given_i_am_viewing_the_participant_tracker
     when_i_delete_a_participant
     then_i_should_not_see_the_participant
@@ -58,7 +58,7 @@ feature 'User deletes Participant', js: true do
     wait_for_ajax
 
     click_link 'Participant Tracker'
-    #wait_for_ajax
+    wait_for_ajax
   end
 
   def when_i_delete_a_participant

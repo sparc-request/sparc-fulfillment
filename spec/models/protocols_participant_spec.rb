@@ -25,9 +25,6 @@ RSpec.describe ProtocolsParticipant, type: :model do
   it { is_expected.to belong_to(:protocol) }
   it { is_expected.to belong_to(:participant) }
   it { is_expected.to belong_to(:arm) }
-  it { is_expected.to belong_to(:protocol) }
-  it { is_expected.to belong_to(:participant) }
-
   it { is_expected.to have_many(:appointments) }
 
   before :each do
