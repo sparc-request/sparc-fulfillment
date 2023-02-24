@@ -38,12 +38,13 @@ feature 'User deletes Participant', js: true do
 
   def and_the_participant_is_not_deletable
     protocols_participant = ProtocolsParticipant.last
+    protocols_participant.update_attributes can_be_destroyed: false
     create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
   end
 
   def and_the_participant_is_deletable
     protocols_participant = ProtocolsParticipant.last
-    protocols_participant.update_attributes can_be_destroyed: false
+    protocols_participant.update_attributes can_be_destroyed: true
     wait_for_ajax
     create(:procedure, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
   end
