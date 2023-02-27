@@ -52,11 +52,12 @@ class ImportsController < ApplicationController
           end
         rescue Exception => e
           import.destroy # remove the import since it has an error
-          format.js { render js: "Swal.fire(title: 'Error', text: \"#{e.message}\", icon: 'error', showCancelButton: false)"}
+                   format.js { render js: "Swal.fire(title: 'Error', text: \"#{e.message}\", icon: 'error', showCancelButton: false)"}
           format.html { render :new }
         end
       else
         ##Needs to handle error state of import.save
+
       end
     end
   end
