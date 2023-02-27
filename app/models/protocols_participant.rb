@@ -83,10 +83,6 @@ class ProtocolsParticipant < ApplicationRecord
     self.build_appointments
   end
 
-  def can_be_destroyed?
-    self.can_be_destroyed
-  end
-
   def label
     label = nil
 
