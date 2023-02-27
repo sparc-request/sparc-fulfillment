@@ -88,6 +88,19 @@ module ProceduresHelper
     end
   end
 
+  def procedure_invoiced_date_display(procedure)
+    date = content_tag(:span, procedure.invoiced_date.strftime('%m/%d/%Y'), class: 'invoiced-date') if procedure.invoiced_date
+    arr = [date, "<br>",
+    "<a class='edit procedure-invoiced-date-edit ml10' href='javascript:void(0)' title='Edit Invoiced Date' data-procedure_id='#{procedure.id}'>",
+    "<i class='fas fa-edit'></i>",
+    "</a>"]
+    #if (current_identity.billing_manager_protocols.include?(procedure.protocol) && !procedure.credited? && procedure.invoiced?)
+    return arr.join ""
+    #else
+    #  procedure.invoiced_date.strftime('%m/%d/%Y') if procedure.invoiced
+    #end
+  end
+
   def procedure_credited_display(procedure)
     disabled = !procedure.complete? || procedure.invoiced? || procedure.credited?
     tooltip =

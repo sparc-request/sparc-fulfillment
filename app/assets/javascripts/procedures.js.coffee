@@ -76,6 +76,12 @@ $ ->
         movement_type: movement_type
       url: "/procedures/change_procedure_position/#{id}.js"
 
+  $(document).on 'click', '.procedure-invoiced-date-edit', ->
+    procedure_id = $(this).data('procedure_id')
+    $.ajax
+      type: 'GET'
+      url: "/procedures/edit/#{procedure_id}"
+
 (exports ? this).proceduresGroupFormatter = (value, idx, data) ->
   single_procedure = if data.length == 1 then 'group-of-one' else ''
   badge = '<strong class="badge badge-primary px-2 my-1 mr-2">' + data.length + '</strong>'

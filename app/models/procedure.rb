@@ -178,6 +178,14 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def invoiced_date=(invoiced_date)
+    if invoiced_date.present?
+      write_attribute(:invoiced_date, Time.strptime(invoiced_date, "%m/%d/%Y"))
+    else
+      write_attribute(:invoiced_date, nil)
+    end
+  end
+
   def service_name
     if unstarted?
       service.present? ? service.name : ''

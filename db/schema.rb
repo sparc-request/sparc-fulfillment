@@ -236,6 +236,7 @@ ActiveRecord::Schema.define(version: 2023_01_22_122549) do
     t.integer "performer_id"
     t.datetime "incompleted_date"
     t.boolean "invoiced"
+    t.datetime "invoiced_date"
     t.string "funding_source"
     t.boolean "credited"
     t.float "percent_subsidy"
@@ -277,6 +278,7 @@ ActiveRecord::Schema.define(version: 2023_01_22_122549) do
     t.datetime "updated_at", null: false
     t.string "external_id"
     t.string "recruitment_source"
+    t.boolean "can_be_destroyed"
     t.index ["arm_id"], name: "index_protocols_participants_on_arm_id"
     t.index ["participant_id"], name: "index_protocols_participants_on_participant_id"
     t.index ["protocol_id", "participant_id"], name: "index_protocols_participants_on_protocol_id_and_participant_id"
