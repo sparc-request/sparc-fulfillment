@@ -109,9 +109,12 @@ Rails.application.routes.draw do
 
     get 'change_appointment_style'
 
-    resources :procedures, only: [:index, :create, :edit, :update, :destroy] do
+    resources :procedures, only: [:index, :create, :edit, :invoiced_date_edit, :update, :destroy] do
       member do
         put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position', as: 'change_position'
+      end
+      collection do
+        get '/:id(.:format)/invoiced_date_edit', to: 'procedures#invoiced_date_edit'
       end
     end
 

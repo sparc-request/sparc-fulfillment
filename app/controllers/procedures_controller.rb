@@ -19,8 +19,8 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ProceduresController < ApplicationController
-  before_action :find_appointment, only: [:index, :create, :edit, :update, :destroy, :change_procedure_position]
-  before_action :find_procedure, only: [:edit, :update, :destroy, :change_procedure_position]
+  before_action :find_appointment, only: [:index, :create, :edit, :update, :destroy, :change_procedure_position, :invoiced_date_edit]
+  before_action :find_procedure, only: [:edit, :update, :destroy,:invoiced_date_edit, :change_procedure_position]
   before_action :save_original_procedure_status, only: [:update]
   before_action :create_note_before_update, only: [:update]
   before_action :set_appointment_style, only: [:create, :index, :update, :destroy, :change_procedure_position]
@@ -73,8 +73,11 @@ class ProceduresController < ApplicationController
     end
   end
 
+  def invoiced_date_edit
+  end
+
   def update
-    respond_to :js
+    respond_to :js, :html
 
     unless @procedure.update_attributes(procedure_params)
       @errors = @procedure.errors
@@ -84,6 +87,7 @@ class ProceduresController < ApplicationController
     @invoiced_or_credited_changed = change_in_invoiced_or_credited_detected?
     @statuses = @appointment.appointment_statuses.pluck(:status)
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
+
   end
 
   def destroy
@@ -180,6 +184,7 @@ class ProceduresController < ApplicationController
              :billing_type,
              :performer_id,
              :invoiced,
+             :invoiced_date,
              :credited,
              notes_attributes: [:comment, :kind, :identity_id, :reason],
              tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])

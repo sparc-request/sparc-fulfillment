@@ -89,9 +89,10 @@ module ProceduresHelper
   end
 
   def procedure_invoiced_date_display(procedure)
+    Rails.logger.debug "$"*50 + "#{procedure} **************** #{procedure.appointment.id}"
     date = content_tag(:span, procedure.invoiced_date.strftime('%m/%d/%Y'), class: 'invoiced-date') if procedure.invoiced_date
     arr = [date, "<br>",
-    "<a class='edit procedure-invoiced-date-edit ml10' href='javascript:void(0)' title='Edit Invoiced Date' data-procedure_id='#{procedure.id}'>",
+    "<a class='edit procedure-invoiced-date-edit ml10' href='javascript:void(0)' title='Edit Invoiced Date' data-procedure_id='#{procedure.id}' data-appointment_id='#{procedure.appointment.id}'>",
     "<i class='fas fa-edit'></i>",
     "</a>"]
     #if (current_identity.billing_manager_protocols.include?(procedure.protocol) && !procedure.credited? && procedure.invoiced?)

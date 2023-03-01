@@ -95,4 +95,6 @@ updateNotesBadge("procedure<%= @procedure.id %>", "<%= @procedure.notes.count %>
 
 <% end %>
 
+$("#modalContainer").modal('hide')
+
 $(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
