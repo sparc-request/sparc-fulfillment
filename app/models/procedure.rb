@@ -51,6 +51,9 @@ class Procedure < ApplicationRecord
 
   before_update :set_save_dependencies, :set_subsidy_and_funding_source
 
+  before_save :set_invoiced_date
+
+
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
 
@@ -203,6 +206,12 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def set_invoiced_date
+    if self.invoiced? and self.invoiced_changed?
+      self.invoiced_date = Time.now
+    end
+  end
 
   def cost_available
     date = completed_date ? completed_date : Date.today

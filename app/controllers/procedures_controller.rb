@@ -77,7 +77,7 @@ class ProceduresController < ApplicationController
   end
 
   def update
-    respond_to :js, :html
+    respond_to :js
 
     unless @procedure.update_attributes(procedure_params)
       @errors = @procedure.errors
@@ -150,6 +150,12 @@ class ProceduresController < ApplicationController
       Time.strptime(procedure_params[:completed_date], "%m/%d/%Y") != @procedure.completed_date
     else
       return false
+    end
+  end
+
+  def set_invoiced_date
+    if procedure_params[:invoiced] == 'true'
+      @procedure.update_attributes :invoiced_date, Time.now
     end
   end
 
