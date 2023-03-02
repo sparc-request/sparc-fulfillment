@@ -87,6 +87,7 @@ class ProceduresController < ApplicationController
     @invoiced_or_credited_changed = change_in_invoiced_or_credited_detected?
     @statuses = @appointment.appointment_statuses.pluck(:status)
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
+    render js: 'window.top.location.reload(true);'
 
   end
 
@@ -142,6 +143,18 @@ class ProceduresController < ApplicationController
       @procedure.notes.create(identity: current_identity,
                               comment: "Performer changed to #{new_performer.full_name}",
                               kind: 'log')
+      elsif change_in_invoiced_date_detected?
+        @procedure.notes.create(identity: current_identity,
+                                comment: "Invoiced date changed to #{procedure_params[:invoiced_date]}",
+                                kind: 'log')
+    end
+  end
+
+  def change_in_invoiced_date_detected?
+    if procedure_params[:invoiced_date]
+      Time.strptime(procedure_params[:invoiced_date], "%m/%d/%Y") != @procedure.invoiced_date
+    else
+      return false
     end
   end
 
@@ -153,11 +166,11 @@ class ProceduresController < ApplicationController
     end
   end
 
-  def set_invoiced_date
-    if procedure_params[:invoiced] == 'true'
-      @procedure.update_attributes :invoiced_date, Time.now
-    end
-  end
+  # def set_invoiced_date
+  #   if procedure_params[:invoiced] == 'true'
+  #     @procedure.update_attributes :invoiced_date, Time.now
+  #   end
+  # end
 
   def reset_status_detected?
     procedure_params[:status] == "unstarted"
@@ -192,6 +205,7 @@ class ProceduresController < ApplicationController
              :invoiced,
              :invoiced_date,
              :credited,
+             :appointment_id,
              notes_attributes: [:comment, :kind, :identity_id, :reason],
              tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
   end
