@@ -56,7 +56,6 @@ class Fulfillment < ApplicationRecord
   end
 
   def invoiced_date=(date_time)
-    Rails.logger.debug "*"*50 + "#{self} + #{self.invoiced_date}"
     write_attribute(:invoiced_date, Time.strptime(date_time, "%m/%d/%Y")) if date_time.class == String
   end
 

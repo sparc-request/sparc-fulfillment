@@ -143,10 +143,22 @@ class ProceduresController < ApplicationController
       @procedure.notes.create(identity: current_identity,
                               comment: "Performer changed to #{new_performer.full_name}",
                               kind: 'log')
+      elsif change_in_invoiced_status_detected?
+         @procedure.notes.create(identity: current_identity,
+                                 comment: "Invoiced changed to #{procedure_params[:invoiced] == "1" ? "yes" : "no" }",
+                                 kind: 'log')
       elsif change_in_invoiced_date_detected?
         @procedure.notes.create(identity: current_identity,
                                 comment: "Invoiced date changed to #{procedure_params[:invoiced_date]}",
                                 kind: 'log')
+    end
+  end
+
+  def change_in_invoiced_status_detected?
+    if procedure_params[:invoiced]
+      procedure_params[:invoiced] != @procedure.invoiced
+    else
+      return false
     end
   end
 
