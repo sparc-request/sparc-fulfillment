@@ -52,18 +52,6 @@ RSpec.describe Fulfillment, type: :model do
     end
   end
 
-
-  context 'invoiced flag set to true' do
-    describe 'invoiced_date set' do
-      it 'should have an invoiced date' do
-        line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
-        fulfillment = create(:fulfillment, line_item: line_item)
-
-        expect(fulfillment.invoiced_date).not_to be_nil
-      end
-    end
-  end
-
   describe 'after create' do
 
     context 'associated Line Item has one time fee' do

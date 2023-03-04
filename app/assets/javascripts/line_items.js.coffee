@@ -18,23 +18,6 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class KlokDbBase < ApplicationRecord
-  self.abstract_class = true
-  establish_connection(KLOK_DB)
-
-  def self.inherited(child)
-    child.establish_connection(KLOK_DB)
-    super
-  end
-
-  def self.klok_record?
-    true
-  end
-
-  # Allow queries (in particular, JOINs) across both SPARC and
-  # CWF databases by explicitly prefixing the appropriate SPARC
-  # database name to tables belonging to it.
-  def self.table_name_prefix
-    KLOK_DB["database"] + '.'
-  end
-end
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://coffeescript.org/
