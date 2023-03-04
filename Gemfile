@@ -68,11 +68,10 @@ end
 
 group :development do
   gem 'foreman'
-  gem 'rack-mini-profiler', require: false
+  #gem 'rack-mini-profiler', require: false
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'simplecov', :require => false, :group => :testend
-  gem 'meta_request'
 end
 
 group :test do
