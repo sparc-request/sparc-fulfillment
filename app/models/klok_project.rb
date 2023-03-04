@@ -18,15 +18,19 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Klok::Project < KlokDbBase
+class KlokProject < ApplicationRecord
   self.primary_key = 'project_id'
 
-  belongs_to :service, foreign_key: :code
-  belongs_to :parent_project, class_name: 'Klok::Project', foreign_key: :parent_id
-  has_many :klok_entries, class_name: 'Klok::Entry', foreign_key: :project_id
-  has_many :child_projects, class_name: 'Klok::Project', foreign_key: :parent_id
+  belongs_to :parent_project, class_name: 'KlokProject', foreign_key: :parent_id
+  has_many :child_projects, class_name: 'KlokProject', foreign_key: :parent_id
+  has_many :klok_entries, foreign_key: :project_id
+  has_many :klok_people, foreign_key: :resource_id, through: :klok_entries
+  
+  delegate :local_protocol, to: :klok_entry, allow_nil: true
 
-  has_many :klok_people, class_name: 'Klok::Person', foreign_key: :resource_id, through: :klok_entries
+  def service
+    Service.where(id: self.code).first
+  end
 
   def ssr_id
     parent_project.try(:code) || code
