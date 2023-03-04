@@ -107,6 +107,7 @@ class InvoiceReport < Report
           header << "Modified Rate"
           header << "Percent Subsidy" if protocol.sub_service_request.subsidy
           header << "Invoiced" if @params[:include_invoiced] == "true"
+          header << "Invoiced Date" if @params[:include_invoiced] == "true"
 
           csv << header
 
@@ -138,6 +139,7 @@ class InvoiceReport < Report
               data << (fulfillment.line_item.admin_rates.any? ? "Yes" : "No")
               data << display_subsidy_percent(fulfillment) if fulfillment.percent_subsidy
               data << (fulfillment.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
+              data << format_date(fulfillment.invoiced_date) if fulfillment.invoiced_date
 
               csv << data
 
@@ -178,6 +180,7 @@ class InvoiceReport < Report
           header << "Modified Rate"
           header << "Percent Subsidy" if protocol.sub_service_request.subsidy
           header << "Invoiced" if @params[:include_invoiced] == "true"
+          header << "Invoiced Date" if @params[:include_invoiced] == "true"
 
           csv << header
 
@@ -219,6 +222,7 @@ class InvoiceReport < Report
                     data << display_modified_rate_column(procedure)
                     data << display_subsidy_percent(procedure) if procedure.percent_subsidy
                     data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
+                    data << format_date(procedure.invoiced_date) if procedure.invoiced_date
 
                     csv << data
 
