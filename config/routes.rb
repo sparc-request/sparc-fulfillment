@@ -113,8 +113,9 @@ Rails.application.routes.draw do
       member do
         put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position', as: 'change_position'
       end
-      collection do
-        get '/:id(.:format)/invoiced_date_edit', to: 'procedures#invoiced_date_edit'
+      member do
+        #get '/:id(.:format)/invoiced_date_edit', to: 'procedures#invoiced_date_edit'
+        get '/invoiced_date_edit(/:id)', to: 'procedures#invoiced_date_edit'
       end
     end
 

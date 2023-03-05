@@ -217,7 +217,6 @@ class ProceduresController < ApplicationController
              :invoiced,
              :invoiced_date,
              :credited,
-             :appointment_id,
              notes_attributes: [:comment, :kind, :identity_id, :reason],
              tasks_attributes: [:assignee_id, :identity_id, :body, :due_at])
   end

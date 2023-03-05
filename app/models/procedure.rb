@@ -53,7 +53,6 @@ class Procedure < ApplicationRecord
 
   before_save :set_invoiced_date
 
-
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
 
@@ -209,7 +208,6 @@ class Procedure < ApplicationRecord
 
   def set_invoiced_date
     if self.invoiced? and self.invoiced_changed?
-      #self.invoiced_date = Time.now
       write_attribute :invoiced_date, Time.now
     end
   end

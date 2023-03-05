@@ -9,7 +9,7 @@
         #modal_errors
         .row.mt-3
           .col-md-12
-            = form.hidden_field :appointment_id
+            -#= form.hidden_field :appointment_id
             .form-group.row.align-items-center
               = form.label "invoiced_date", t(:fulfillment)[:invoiced_date], class: 'control-label mb-0 col-sm-4'
               .input-group.datetimepicker.date.col-sm-8{ id: 'invoiced_date', data: {target_input: 'nearest' }}
