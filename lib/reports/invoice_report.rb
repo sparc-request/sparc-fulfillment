@@ -56,9 +56,6 @@ class InvoiceReport < Report
     #then convert to UTC to match database times
     @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
-    #This allows us to optionally filter by services
-    @specific_services = @params[:services].present? ? { service: @params[:services] } : {}
-
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
@@ -79,8 +76,8 @@ class InvoiceReport < Report
         total = 0
         total_with_subsidy = 0
 
-        fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).where(@specific_services)
-        procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date).where(@specific_services)
+        fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date)
+        procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date)
 
         if fulfillments.any?
           csv << ["Non-clinical Services"]

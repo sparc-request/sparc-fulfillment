@@ -18,11 +18,13 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class KlokEntry < ApplicationRecord
+class Klok::Entry < KlokDbBase
   self.primary_key = 'entry_id'
 
-  belongs_to :klok_person, foreign_key: :resource_id
-  belongs_to :klok_project, foreign_key: :project_id
+  belongs_to :klok_person, class_name: 'Klok::Person', foreign_key: :resource_id
+  belongs_to :klok_project, class_name: 'Klok::Project', foreign_key: :project_id
+
+  has_one :service, through: :klok_project
 
   delegate :local_protocol,
            to: :klok_project,
@@ -31,11 +33,6 @@ class KlokEntry < ApplicationRecord
   delegate :local_identity,
            to: :klok_person,
            allow_nil: true
-
-  def service
-    self.klok_project.service
-  end
-
 
   def start_time_stamp=(value)
     super(DateTime.strptime(value,'%Q'))

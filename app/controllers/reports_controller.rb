@@ -134,7 +134,6 @@ class ReportsController < ApplicationController
               :protocol_level,
               :mrns => [],
               :organizations => [],
-              :services => [], 
               :protocols => []).merge(identity_id: current_identity.id)
   end
 end
