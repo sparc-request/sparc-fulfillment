@@ -199,7 +199,7 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def then_i_should_see_errors
-    sleep 1
+    sleep 5
     expect(page).to have_css('small.form-text.form-error', text: "Can't be blank")
   end
 

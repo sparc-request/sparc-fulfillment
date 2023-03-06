@@ -77,7 +77,6 @@ $ ->
       url: "/procedures/change_procedure_position/#{id}.js"
 
   $(document).on 'click', '.procedure-invoiced-date-edit', ->
-    console.log("hello")
     id = $(this).data('procedure_id')
     #procedure_id = $(this).data('procedure_id')
     appointment_id = $(this).data('appointment_id')
