@@ -20,7 +20,7 @@
 
 class ProceduresController < ApplicationController
   before_action :find_appointment, only: [:index, :create, :edit, :update, :destroy, :change_procedure_position, :invoiced_date_edit]
-  before_action :find_procedure, only: [:edit, :update, :destroy,:invoiced_date_edit, :change_procedure_position]
+  before_action :find_procedure, only: [:edit, :update, :destroy,    :invoiced_date_edit, :change_procedure_position]
   before_action :save_original_procedure_status, only: [:update]
   before_action :create_note_before_update, only: [:update]
   before_action :set_appointment_style, only: [:create, :index, :update, :destroy, :change_procedure_position]
@@ -177,12 +177,6 @@ class ProceduresController < ApplicationController
       return false
     end
   end
-
-  # def set_invoiced_date
-  #   if procedure_params[:invoiced] == 'true'
-  #     @procedure.update_attributes :invoiced_date, Time.now
-  #   end
-  # end
 
   def reset_status_detected?
     procedure_params[:status] == "unstarted"
