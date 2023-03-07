@@ -30,6 +30,9 @@ $ ->
   $(document).on 'hide.datetimepicker', '.procedure-completed-datepicker', ->
     Rails.fire($(this).parents('form')[0], 'submit')
 
+  $(document).on 'hide.datetimepicker', '.procedure-invoiced-date-datepicker', ->
+    Rails.fire($(this).parents('form')[0], 'submit')
+
   $(document).on('mouseenter', '.appointment-status-buttons button:not(.disabled)', ->
     $(this).siblings('.active').removeClass('active')
     $(this).addClass('active')
@@ -76,13 +79,13 @@ $ ->
         movement_type: movement_type
       url: "/procedures/change_procedure_position/#{id}.js"
 
-  $(document).on 'click', '.procedure-invoiced-date-edit', ->
-    id = $(this).data('procedure_id')
-    #procedure_id = $(this).data('procedure_id')
-    appointment_id = $(this).data('appointment_id')
-    $.ajax
-      type: 'GET'
-      url: "/appointments/#{appointment_id}/procedures/#{id}/invoiced_date_edit"
+  # $(document).on 'click', '.procedure-invoiced-date-edit', ->
+  #   id = $(this).data('procedure_id')
+  #   #procedure_id = $(this).data('procedure_id')
+  #   appointment_id = $(this).data('appointment_id')
+  #   $.ajax
+  #     type: 'GET'
+  #     url: "/appointments/#{appointment_id}/procedures/#{id}/invoiced_date_edit"
 
 (exports ? this).proceduresGroupFormatter = (value, idx, data) ->
   single_procedure = if data.length == 1 then 'group-of-one' else ''

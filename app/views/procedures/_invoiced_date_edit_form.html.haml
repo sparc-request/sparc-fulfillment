@@ -1,6 +1,7 @@
 .modal-dialog
   .modal-content
-    = form_for( [@appointment, procedure], {remote: true, html: {class: "form-horizontal procedure-form", role: "form"}}) do |form|
+    -#= form_for( [@appointment, procedure], {remote: true, html: {class: "form-horizontal procedure-form", role: "form"}}) do |form|
+    = form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, html: {class: "form-horizontal procedure-form", role: "form"}, method: :patch do |form|
       .modal-header
         %h4.modal-title.text-center="Edit Invoiced Date"
         %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}

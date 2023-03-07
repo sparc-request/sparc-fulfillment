@@ -63,7 +63,7 @@ module ProceduresHelper
   end
 
   def procedure_invoiced_display(procedure)
-    disabled = !procedure.complete? || procedure.invoiced? || procedure.credited?
+    disabled = !procedure.complete? || procedure.invoiced? || procedure.credited? || procedure.incomplete?
     tooltip =
       if !procedure.appointment.started?
         t('procedures.tooltips.unstarted_appointment')

@@ -77,7 +77,7 @@ class ProceduresController < ApplicationController
   end
 
   def update
-    respond_to :js
+    #respond_to :js
 
     unless @procedure.update_attributes(procedure_params)
       @errors = @procedure.errors
@@ -87,7 +87,9 @@ class ProceduresController < ApplicationController
     @invoiced_or_credited_changed = change_in_invoiced_or_credited_detected?
     @statuses = @appointment.appointment_statuses.pluck(:status)
     @cost_error_message = @procedure.errors.messages[:service_cost].detect{|message| message == "No cost found, ensure that a valid pricing map exists for that date."}
-    render js: 'window.top.location.reload(true);'
+    #if procedure_params[:invoiced_date]
+    #render js: 'window.top.location.reload(true);'
+
 
   end
 
@@ -143,14 +145,14 @@ class ProceduresController < ApplicationController
       @procedure.notes.create(identity: current_identity,
                               comment: "Performer changed to #{new_performer.full_name}",
                               kind: 'log')
-      elsif change_in_invoiced_status_detected?
-         @procedure.notes.create(identity: current_identity,
-                                 comment: "Invoiced changed to #{procedure_params[:invoiced] == "1" ? "yes" : "no" }",
-                                 kind: 'log')
-      elsif change_in_invoiced_date_detected?
+    elsif change_in_invoiced_status_detected?
         @procedure.notes.create(identity: current_identity,
-                                comment: "Invoiced date changed to #{procedure_params[:invoiced_date]}",
+                                comment: "Invoiced changed to #{procedure_params[:invoiced] == "1" ? "yes" : "no" }",
                                 kind: 'log')
+    elsif change_in_invoiced_date_detected?
+      @procedure.notes.create(identity: current_identity,
+                              comment: "Invoiced date changed to #{procedure_params[:invoiced_date]}",
+                              kind: 'log')
     end
   end
 

@@ -54,6 +54,9 @@ $ ->
       data: "line_item_id" : line_item_id
 
   # Fulfillment Bindings
+  $(document).on 'hide.datetimepicker', '.fulfillment-invoiced-date-datepicker', ->
+    Rails.fire($(this).parents('form')[0], 'submit')
+
 
   $(document).on 'click', '.otf-fulfillment-edit', ->
     fulfillment_id = $(this).data('fulfillment_id')

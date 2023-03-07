@@ -49,9 +49,9 @@ class Procedure < ApplicationRecord
   has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
-  before_update :set_save_dependencies, :set_subsidy_and_funding_source
+  before_update :set_save_dependencies, :set_subsidy_and_funding_source, :set_invoiced_date
 
-  before_save :set_invoiced_date
+  #before_save :set_invoiced_date
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
@@ -207,9 +207,7 @@ class Procedure < ApplicationRecord
   private
 
   def set_invoiced_date
-    if self.invoiced? and self.invoiced_changed?
-      write_attribute :invoiced_date, Time.now
-    end
+    write_attribute :invoiced_date, Time.now if self.invoiced? && self.invoiced_changed?
   end
 
   def cost_available

@@ -537,6 +537,8 @@ en:
         incomplete_procedure: "Can only be toggled after the Procedure has been completed."
         warning: "Warning: Once this procedure has been invoiced it cannot be undone"
         disabled: "This procedure has been invoiced and cannot be altered."
+      invoiced_date:
+        disabled: "This procedure has not been invoiced"
       credited:
         incomplete_procedure: "Can only be toggled after the Procedure has been completed."
         warning: "Warning: Once this procedure has been credited it cannot be undone"
