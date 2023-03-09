@@ -73,7 +73,6 @@ class Protocol < ApplicationRecord
   delegate :short_title,
            :title,
            :funding_source,
-           :potential_funding_source,
            :research_master_id,
            to: :sparc_protocol,
            :allow_nil => true
