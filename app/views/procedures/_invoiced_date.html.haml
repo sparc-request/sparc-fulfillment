@@ -18,15 +18,15 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-- disabled = !procedure.invoiced? || procedure.credited? || !procedure.complete?
+- disabled = !procedure.invoiced?
 - if !procedure.invoiced?
   - tooltip = t('procedures.tooltips.invoiced_date.disabled')
-- if procedure.credited?
+- elsif procedure.credited?
   - tooltip = t('procedures.tooltips.credited.disabled')
 - elsif !procedure.appointment.started?
   - tooltip = t('procedures.tooltips.unstarted_appointment')
 
 .tooltip-wrapper{ title: tooltip, data: { toggle: disabled ? 'tooltip' : '' } }
   = form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
-    .input-group.datetimepicker.date.procedure-invoiced-date-datepicker{ id: "procedure#{procedure.id}InvoicedDatePicker", data: { target_input: 'nearest' } }
+    .input-group.datetimepicker.date.procedure-invoiced-datepicker{ id: "procedure#{procedure.id}InvoicedDatePicker", data: { target_input: 'nearest' } }
       = f.text_field :invoiced_date, class: 'datetimepicker-input form-control', value: format_date(procedure.invoiced_date), disabled: disabled, data: { target: "#procedure#{procedure.id}InvoicedDatePicker" }

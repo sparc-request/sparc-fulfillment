@@ -49,13 +49,15 @@ performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .sel
 invoiced_date_time_picker = $("#procedure<%= @procedure.id %>InvoicedDatePicker")
 date_time_picker.datetimepicker('format', 'MM/DD/YYYY')
 invoiced_date_time_picker.datetimepicker('format', 'MM/DD/YYYY')
-invoiced = $("")
 
 <% if @procedure.unstarted? || @procedure.follow_up? %>
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
 $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
 performer_selectpicker.selectpicker('val', "")
+
+$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
+$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
 
 <% elsif @procedure.incomplete? %>
 $("#modalContainer").modal('hide')
@@ -65,28 +67,25 @@ $("#procedure<%= @procedure.id %>StatusButtons").data("selected", "incomplete")
 $("#procedure<%= @procedure.id %>StatusButtons button").removeClass("active")
 $("#procedure<%= @procedure.id %>StatusButtons .incomplete-btn").addClass("active")
 performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
-$()
-
-<% elsif @procedure.complete? %>
-date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
-#invoiced_date_time_picker.datetimepicker('date', "<%= format_date(@procedure.invoiced_date) %>")
-date_time_picker.datetimepicker('enable')
-
-<% if @procedure.invoiced? %>
-invoiced_date_time_picker.datetimepicker('enable')
-<% else %>
-invoiced_date_time_picker.datetimepicker('date', null)
-invoiced_date_time_picker.datetimepicker('disable')
-<% end %>
-performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
-
-<% end %>
-
-<% if (@billing_type_updated && @appointment_style == "grouped") || @invoiced_or_credited_changed || @invoiced_date_changed %>
 $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
+$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
+
+<% elsif @procedure.complete? && !@procedure.invoiced? %>
+date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+
+date_time_picker.datetimepicker('enable')
+performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
+$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
+$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
+
 <% end %>
 
-<% if @billing_type_updated %>
+<% if @invoiced_or_credited_changed || (@billing_type_updated && @appointment_style == "grouped") %>
+$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
+$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
+<% end %>
+
+<% if @billing_type_updated || @status_changed_from_complete %>
 <% core_id = @procedure.sparc_core_id %>
 select_container = $("select.core_multiselect[data-core-id='<%= core_id %>']").parents('.service-multiselect-container')
 select_container.replaceWith("<%= j render '/multiple_procedures/complete_all_select', appointment: @appointment, core_id: core_id, procedures: @appointment.procedures_grouped_by_core[core_id] %>")
