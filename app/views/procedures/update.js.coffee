@@ -85,7 +85,7 @@ $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh
 $('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
 <% end %>
 
-<% if @billing_type_updated || @status_changed_from_complete %>
+<% if @billing_type_updated %>
 <% core_id = @procedure.sparc_core_id %>
 select_container = $("select.core_multiselect[data-core-id='<%= core_id %>']").parents('.service-multiselect-container')
 select_container.replaceWith("<%= j render '/multiple_procedures/complete_all_select', appointment: @appointment, core_id: core_id, procedures: @appointment.procedures_grouped_by_core[core_id] %>")
