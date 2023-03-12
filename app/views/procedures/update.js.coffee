@@ -56,9 +56,6 @@ date_time_picker.datetimepicker('disable')
 $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
 performer_selectpicker.selectpicker('val', "")
 
-$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
-
 <% elsif @procedure.incomplete? %>
 $("#modalContainer").modal('hide')
 date_time_picker.datetimepicker('date', null)
