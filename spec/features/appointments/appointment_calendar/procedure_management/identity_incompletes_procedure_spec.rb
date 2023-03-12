@@ -51,7 +51,7 @@ feature 'Incomplete Procedure', js: true do
         when_i_view_the_notes_list
         then_i_should_see_one_complete_note_and_one_incomplete_note
       end
-
+      
       scenario 'and sees they are the performer' do
         given_i_am_viewing_a_procedure_marked_as_complete
         when_i_incomplete_the_procedure
@@ -116,7 +116,7 @@ feature 'Incomplete Procedure', js: true do
 
     first('a.list-group-item.appointment-link').click
     wait_for_ajax
-
+    
     add_a_procedure(service)
 
     @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
@@ -199,10 +199,10 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def then_i_should_see_errors
-    sleep 5
+    sleep 1
     expect(page).to have_css('small.form-text.form-error', text: "Can't be blank")
   end
-
+  
   def then_i_should_see_one_complete_note_and_one_incomplete_note
     then_i_should_see_one_complete_note
     then_i_should_see_one_incomplete_note

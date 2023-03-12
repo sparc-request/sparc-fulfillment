@@ -18,66 +18,26 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class ImportsController < ApplicationController
-  def index
-    @imports = Import.all
-    respond_to do |format|
-      format.html
-      format.json
-    end
+class KlokProject < ApplicationRecord
+  self.primary_key = 'project_id'
+
+  belongs_to :parent_project, class_name: 'KlokProject', foreign_key: :parent_id
+  has_many :child_projects, class_name: 'KlokProject', foreign_key: :parent_id
+  has_many :klok_entries, foreign_key: :project_id
+  has_many :klok_people, foreign_key: :resource_id, through: :klok_entries
+  
+  delegate :local_protocol, to: :klok_entry, allow_nil: true
+
+  def service
+    Service.where(id: self.code).first
   end
 
-  def new
-    @import = Import.new
-    respond_to do |format|
-      format.js
-    end
+  def ssr_id
+    parent_project.try(:code) || code
   end
 
-  def create
-    import = Import.create(import_params)
-    respond_to do |format|
-      if import.save
-        import.update_attribute(:title, determine_if_proof_report ? I18n.t('imports.proof_report_submit') : I18n.t('imports.klok_report_submit'))
-        begin
-          log_file, valid = import.generate(import.xml_file, determine_if_proof_report)
-          import.update_attribute(:file, File.open(log_file))
-          @valid = valid
-          if @valid
-            format.js
-            format.html { redirect_to imports_path }
-          else
-            import.destroy
-            format.js
-          end
-        rescue Exception => e
-          import.destroy # remove the import since it has an error
-                   format.js { render js: "Swal.fire(title: 'Error', text: \"#{e.message}\", icon: 'error', showCancelButton: false)"}
-          format.html { render :new }
-        end
-      else
-        ##Needs to handle error state of import.save
-
-      end
-    end
-  end
-
-
-  private
-
-  def determine_if_proof_report
-    if params[:commit] == I18n.t('imports.proof_report_submit')
-      true
-    else
-      false
-    end
-  end
-
-  def import_params
-    params.require(:import).permit(:xml_file, :title, :file)
-  end
-
-  def set_highlighted_link
-    @highlighted_link ||= 'imports'
+  def local_protocol
+    sparc_id, ssr_version = ssr_id.split('-')
+    Protocol.where(sparc_id: sparc_id).where.not(sub_service_request_id: nil).select{|p| p.sub_service_request.try(:ssr_id) == ssr_version}.first
   end
 end
