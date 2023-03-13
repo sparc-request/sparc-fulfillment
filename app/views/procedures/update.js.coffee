@@ -46,9 +46,6 @@ $("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', 
 
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
 performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .selectpicker")
-invoiced_date_time_picker = $("#procedure<%= @procedure.id %>InvoicedDatePicker")
-date_time_picker.datetimepicker('format', 'MM/DD/YYYY')
-invoiced_date_time_picker.datetimepicker('format', 'MM/DD/YYYY')
 
 <% if @procedure.unstarted? || @procedure.follow_up? %>
 date_time_picker.datetimepicker('date', null)
