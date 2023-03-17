@@ -15,7 +15,7 @@ class CombineKlokDbIntoFulfillment < ActiveRecord::Migration[5.2]
       t.column :end_time_stamp_formatted, :string, limit: 255
       t.column :end_time_stamp, :datetime
       t.column :rollup_to, :integer
-      t.column :enabled, :integer
+      t.column :enabled, :boolean
       t.column :created_at, :datetime
     end
 

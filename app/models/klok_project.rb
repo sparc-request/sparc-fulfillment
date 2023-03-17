@@ -25,7 +25,8 @@ class KlokProject < ApplicationRecord
   has_many :child_projects, class_name: 'KlokProject', foreign_key: :parent_id
   has_many :klok_entries, foreign_key: :project_id
   has_many :klok_people, foreign_key: :resource_id, through: :klok_entries
-  
+
+
   delegate :local_protocol, to: :klok_entry, allow_nil: true
 
   def service
