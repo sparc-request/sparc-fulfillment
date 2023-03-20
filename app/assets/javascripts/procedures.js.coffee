@@ -30,6 +30,9 @@ $ ->
   $(document).on 'hide.datetimepicker', '.procedure-completed-datepicker', ->
     Rails.fire($(this).parents('form')[0], 'submit')
 
+  $(document).on 'hide.datetimepicker', '.procedure-invoiced-datepicker', ->
+    Rails.fire($(this).parents('form')[0], 'submit')
+
   $(document).on('mouseenter', '.appointment-status-buttons button:not(.disabled)', ->
     $(this).siblings('.active').removeClass('active')
     $(this).addClass('active')
