@@ -49,7 +49,9 @@ class Procedure < ApplicationRecord
   has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
-  before_update :set_save_dependencies, :set_subsidy_and_funding_source
+  before_update :set_save_dependencies, :set_subsidy_and_funding_source, :set_invoiced_date
+
+  #before_save :set_invoiced_date
 
   after_commit :set_protocols_participant_can_be_destroyed_flag
 
@@ -191,6 +193,14 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def invoiced_date=(invoiced_date)
+    if invoiced_date.present?
+      write_attribute(:invoiced_date, Time.strptime(invoiced_date, "%m/%d/%Y"))
+    else
+      write_attribute(:invoiced_date, nil)
+    end
+  end
+
   def service_name
     if unstarted?
       service.present? ? service.name : ''
@@ -208,6 +218,10 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def set_invoiced_date
+    write_attribute :invoiced_date, Time.now if self.invoiced? && self.invoiced_changed?
+  end
 
   def cost_available
     date = completed_date ? completed_date : Date.today
