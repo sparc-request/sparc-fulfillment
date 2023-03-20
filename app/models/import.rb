@@ -59,8 +59,8 @@ class Import < ApplicationRecord
 
       rescue Exception => e
         valid = false
-        puts e.inspect
-        puts e.backtrace.inspect
+        Rails.logger.info "#{e.inspect}"
+        Rails.logger.info "#{e.backtrace.inspect}"
       end
 
       ####### now that we have populated the Klok tables we can bring the same data in as line items ########
@@ -71,7 +71,7 @@ class Import < ApplicationRecord
               "end_time_stamp", "rollup_to", "enabled", "created_at",
             ]
 
-      puts "Populating data from Klok tables"
+      Rails.logger.info "Populating data from Klok tables"
 
       KlokEntry.all.each do |entry|
 
