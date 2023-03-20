@@ -26,8 +26,7 @@ class Sparc::Protocol < SparcDbBase
 
   def funding_source_based_on_status
     funding_source = case self.funding_status
-      when 'pending_funding' then self.potential_funding_source
-      when 'funded' then self.funding_source
+      when 'pending_funding', 'funded' then self.funding_source
       else raise ArgumentError, "Invalid funding status: #{self.funding_status.inspect}"
       end
 

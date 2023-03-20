@@ -63,7 +63,7 @@ module ProceduresHelper
   end
 
   def procedure_invoiced_display(procedure)
-    disabled = !procedure.complete? || procedure.invoiced? || procedure.credited?
+    disabled = !procedure.appointment.started? || !procedure.complete? || procedure.invoiced? || procedure.credited?
     tooltip =
       if !procedure.appointment.started?
         t('procedures.tooltips.unstarted_appointment')
@@ -80,7 +80,7 @@ module ProceduresHelper
     if current_identity.billing_manager_protocols.include?(procedure.protocol)
       form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
         content_tag :div, class: 'tooltip-wrapper', title: tooltip, data: { toggle: 'tooltip' } do
-          f.check_box :invoiced, disabled: disabled, onchange: "Rails.fire(this.form, 'submit')", data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select') }
+          f.check_box :invoiced, disabled: disabled, onchange: "Rails.fire(this.form, 'submit')", class: ['btn btn-light', disabled ? 'disabled' : ''], data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select') }
         end
       end
     else
@@ -106,7 +106,7 @@ module ProceduresHelper
     if current_identity.billing_manager_protocols_allow_credit.include?(procedure.protocol)
       form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
         content_tag :div, class: 'tooltip-wrapper', title: tooltip, data: { toggle: 'tooltip' } do
-          f.check_box :credited, disabled: disabled, onchange: "Rails.fire(this.form, 'submit')", data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select') }
+          f.check_box :credited, disabled: disabled, onchange: "Rails.fire(this.form, 'submit')", class: ['btn btn-light', disabled ? 'disabled' : ''], data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select') }
         end
       end
     else

@@ -18,6 +18,9 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+$(document).on 'hide.datetimepicker', '.fulfillment-invoiced-date-datepicker', ->
+  Rails.fire($(this).parents('form')[0], 'submit')
+
 $(document).on 'click', '.otf-fulfillment-delete', ->
   proceed = confirm "Are you sure you want to delete this fulfillment?"
   if proceed
@@ -26,7 +29,6 @@ $(document).on 'click', '.otf-fulfillment-delete', ->
       url: "/fulfillments/#{$(this).data('fulfillment_id')}.js"
 
 $(document).on 'click', '.fulfillment_documents', ->
-    console.log('Clicked')
     id = $(this).data('documentable-id')
     type = $(this).data('documentable-type')
     data  = document:
