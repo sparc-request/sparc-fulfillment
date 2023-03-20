@@ -18,21 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Klok::Person < KlokDbBase
-  self.primary_key = 'resource_id'
+$('#service_section').html('<%= escape_javascript(select_tag "services", options_for_select(@grouped_options_services), multiple: true, id: "service_select", title: t(:reports)[:select_services], class: "selectpicker form-control") %>')
 
-  has_many :klok_entries, class_name: 'Klok::Entry', foreign_key: :resource_id
-
-  has_many :klok_projects, class_name: 'Klok::Project', foreign_key: :resource_id, through: :klok_entries
-
-  def local_identity
-    if name.match(/\([^()]*\)(?![^\[]*])/)
-      ldap_uid = name.split(" ").last.gsub(/[\(\)]*/, '')
-      ldap_uid += "@musc.edu" #### TODO, update Klok so that @musc.edu is added
-      Identity.where(ldap_uid: ldap_uid).first
-    else
-      raise StandardError, "Improper Format"
-    end
-  end
-end
-
+$(".modal-content #service_select").selectpicker({
+  selectedTextFormat: 'count',
+  countSelectedText: (selected, total) -> if (selected == total) then "All Services" else "#{selected} Services selected"
+  actionsBox: true,
+  liveSearch: true
+})

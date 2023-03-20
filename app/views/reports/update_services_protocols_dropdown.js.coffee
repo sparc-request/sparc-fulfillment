@@ -18,6 +18,25 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+$('#service_section').html('<%= escape_javascript(select_tag "services", options_for_select(@grouped_options_services), multiple: true, id: "service_select", title: t(:reports)[:select_services], class: "selectpicker form-control") %>')
+
+$('#protocol_section').html('<%= escape_javascript(select_tag (@single_protocol ? "protocol" : "protocols"), truncated_options_from_collection_for_select(@protocols, "id", "short_title_with_sparc_id"), multiple: (@single_protocol ? false : true), id: "protocol_select", title: t(:reports)[:select_protocols], class: "selectpicker form-control") %>')
+
+$(".modal-content #protocol_select").selectpicker({
+  selectedTextFormat: 'count',
+  countSelectedText: (selected, total) -> if (selected == total) then "All Protocols" else "#{selected} Protocols selected"
+  actionsBox: true,
+  liveSearch: true
+})
+
+$(".modal-content #service_select").selectpicker({
+  selectedTextFormat: 'count',
+  countSelectedText: (selected, total) -> if (selected == total) then "All Services" else "#{selected} Services selected"
+  actionsBox: true,
+  liveSearch: true
+})
+
+if $('#org_based_protocols').length
+  $('#org_based_protocols').addClass('d-none')
+else
+  $('.fas.fa-cog.fa-spin').remove()

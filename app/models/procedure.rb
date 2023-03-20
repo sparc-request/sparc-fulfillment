@@ -49,7 +49,11 @@ class Procedure < ApplicationRecord
   has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
-  before_update :set_save_dependencies, :set_subsidy_and_funding_source
+  before_update :set_save_dependencies, :set_subsidy_and_funding_source, :set_invoiced_date
+
+  #before_save :set_invoiced_date
+
+  after_commit :set_protocols_participant_can_be_destroyed_flag
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
@@ -68,6 +72,17 @@ class Procedure < ApplicationRecord
   scope :belonging_to_unbegun_appt, -> { joins(:appointment).where('appointments.start_date IS NULL') }
   scope :completed_r_in_date_range, ->(start_date, end_date) {
         where("procedures.completed_date is not NULL AND procedures.completed_date between ? AND ? AND billing_type = ?", start_date, end_date, "research_billing_qty")}
+
+  def set_protocols_participant_can_be_destroyed_flag
+    if self.status_changed?(from:'unstarted') || self.status_changed?(to:'unstarted')
+      protocols_participant = self.protocols_participant
+        if protocols_participant.procedures.touched.any?
+          protocols_participant.update_attribute :can_be_destroyed, false
+        else
+          protocols_participant.update_attribute :can_be_destroyed, true
+      end
+    end
+  end
 
   def self.billing_display
     [["R", "research_billing_qty"],
@@ -178,6 +193,14 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def invoiced_date=(invoiced_date)
+    if invoiced_date.present?
+      write_attribute(:invoiced_date, Time.strptime(invoiced_date, "%m/%d/%Y"))
+    else
+      write_attribute(:invoiced_date, nil)
+    end
+  end
+
   def service_name
     if unstarted?
       service.present? ? service.name : ''
@@ -195,6 +218,10 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def set_invoiced_date
+    write_attribute :invoiced_date, Time.now if self.invoiced? && self.invoiced_changed?
+  end
 
   def cost_available
     date = completed_date ? completed_date : Date.today
