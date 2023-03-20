@@ -29,9 +29,9 @@
       =t(:protocol)[:study_schedule][:manage_arms]
       #manage_arms.mt-1
         = link_to new_arm_path(protocol_id: protocol.id, schedule_tab: tab), remote: true, class: 'btn btn-success btn-sm mr-1', title: t('protocol.study_schedule.add_arm'), type: 'button', aria: { label: 'Add Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
-          -#= icon('fas', 'plus')
+          = icon('fas', 'plus')
         = link_to navigate_arms_path(protocol_id: protocol.id, intended_action: 'destroy'), remote: true, class: 'btn btn-danger btn-sm mr-1', title: t('protocol.study_schedule.remove_arm'), type: 'button', aria: { label: 'Remove Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
-          -#= icon('fas', 'minus')
+          = icon('fas', 'minus')
         = link_to navigate_arms_path(protocol_id: protocol.id, intended_action: 'edit'), remote: true, class: 'btn btn-warning btn-sm', title: t('protocol.study_schedule.edit_arm'), type: 'button', aria: { label: 'Edit Arm' }, data: { toggle: 'tooltip', animation: 'false' } do
           = icon('fas', 'edit')
 
@@ -41,7 +41,7 @@
         = link_to 'javascript:;', id: 'add_visit_group_button', class: 'btn btn-success btn-sm mr-1', title: t('protocol.study_schedule.add_visit_group'), type: 'button', aria: { label: 'Add Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
           = icon('fas', 'plus')
         = link_to 'javascript:;', id: 'remove_visit_group_button', class: 'btn btn-danger btn-sm mr-1', title: t('protocol.study_schedule.remove_visit_group'), type: 'button', aria: { label: 'Remove Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
-          -#= icon('fas', 'minus')
+          = icon('fas', 'minus')
         = link_to 'javascript:;', id: 'edit_visit_group_button', class: 'btn btn-warning btn-sm', title: t('protocol.study_schedule.edit_visit_group'), type: 'button', aria: { label: 'Edit Visit Group' }, data: { toggle: 'tooltip', animation: 'false' } do
           = icon('fas', 'edit')
     .col-sm-4.col-md-4.text-center.h5

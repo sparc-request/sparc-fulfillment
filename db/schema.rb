@@ -149,7 +149,7 @@ ActiveRecord::Schema.define(version: 2023_01_22_122549) do
     t.integer "xml_file_file_size"
     t.datetime "xml_file_updated_at"
   end
-
+  
   create_table "line_items", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
     t.integer "sparc_id"
     t.integer "arm_id"
