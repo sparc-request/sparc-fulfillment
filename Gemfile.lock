@@ -433,7 +433,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
-    vcr (6.0.0)
+    vcr (6.1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     webdrivers (5.1.0)
@@ -531,7 +531,7 @@ DEPENDENCIES
   timecop
   uglifier (>= 1.3.0)
   underscore-rails (~> 1.8.3)
-  vcr (~> 6.0.0)
+  vcr (~> 6.1.0)
   webdrivers (~> 5.0)
   webmock (~> 3.14.0)
   whenever (~> 1.0.0)
