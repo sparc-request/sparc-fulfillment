@@ -85,7 +85,7 @@ group :test do
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
-  gem 'shoulda-matchers', "~> 5.1.0", require: false
+  gem 'shoulda-matchers', "~> 5.3.0", require: false
   gem 'timecop'
   gem 'vcr', '~> 6.0.0'
   gem 'webdrivers', '~> 5.0'
