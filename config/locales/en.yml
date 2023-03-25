@@ -309,7 +309,7 @@ en:
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
       invoiced: "Invoiced changed to "
-      invoiced_date: "Invoiced date changed to "
+      invoiced_date: "Invoiced date updated to "
     no_components: "Fulfillment Has No Components"
     tooltips:
       invoiced_date:

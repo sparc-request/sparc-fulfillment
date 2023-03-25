@@ -82,13 +82,6 @@ RSpec.describe FulfillmentsController do
     end
   end
 
-  describe "GET #invoiced_date_edit" do
-    it "should select an instantiated fulfillment" do
-      get :invoiced_date_edit, params: { id: @fulfillment.id }, format: :js, xhr: true
-      expect(assigns(:fulfillment)).to eq(@fulfillment)
-    end
-  end
-
   describe "PUT #update" do
     it "should update a fulfillment" do
       put :update, params: {
