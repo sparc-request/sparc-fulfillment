@@ -73,7 +73,6 @@ class Protocol < ApplicationRecord
   delegate :short_title,
            :title,
            :funding_source,
-           :potential_funding_source,
            :research_master_id,
            to: :sparc_protocol,
            :allow_nil => true
@@ -170,8 +169,11 @@ class Protocol < ApplicationRecord
     sparc_protocol.type
   end
 
+  # Leaving this method in for now because it's referenced in migrations (and several dozen times within the application, increasing the liklihood that its sudden removal might negatively impact existing Tableau report templates).
   def sparc_funding_source
-    funding_source.blank? ? potential_funding_source : funding_source
+    # Formerly used to point to either a "potential_funding_source" attribute (now defunct) or a "funding_source" attribute from SPARC Request.
+    # funding_source.blank? ? potential_funding_source : funding_source
+    funding_source
   end
 
   def billing_business_managers
