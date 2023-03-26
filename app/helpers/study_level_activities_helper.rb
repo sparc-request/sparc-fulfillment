@@ -103,6 +103,18 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def invoiced_date(fulfillment)
+    if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
+      render 'invoiced_date.html', fulfillment: fulfillment
+    else
+      invoiced_date_read_only(fulfillment)
+    end
+  end
+
+  def invoiced_date_read_only(fulfillment)
+    (fulfillment.invoiced_date? ? format_date(fulfillment.invoiced_date) : "" )
+  end
+
   def toggle_credited(fulfillment)
     if current_identity.billing_manager_protocols_allow_credit.include?(fulfillment.protocol)
       credit_toggle_button(fulfillment)
