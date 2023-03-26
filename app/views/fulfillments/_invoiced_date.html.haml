@@ -25,5 +25,5 @@
   - tooltip = t('fulfillment.tooltips.credited.disabled')
 .tooltip-wrapper{ title: tooltip, data: { toggle: disabled ? 'tooltip' : '' } }
   = form_for fulfillment, url: fulfillment_path(id: fulfillment.id), remote: true, method: :put do |f|
-    .input-group.datetimepicker.date.fulfillment-invoiced-date-datepicker{ id: "fulfillment#{fulfillment.id}InvoicedDatePicker", data: { target_input: 'nearest' } }
+    .input-group.datetimepicker.date.fulfillment-invoiced-date-datepicker.patination-centered{ id: "fulfillment#{fulfillment.id}InvoicedDatePicker", data: { target_input: 'nearest' } }
       = f.text_field :invoiced_date, class: 'datetimepicker-input form-control', value: format_date(fulfillment.invoiced_date), disabled: disabled, data: { target: "#fulfillment#{fulfillment.id}InvoicedDatePicker" }
