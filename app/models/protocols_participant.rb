@@ -21,13 +21,12 @@
 class ProtocolsParticipant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
-  
+
   belongs_to :protocol
   belongs_to :participant
   belongs_to :arm
 
   has_many :appointments, dependent: :destroy
-
   has_many :procedures, through: :appointments
   has_many :arms, -> { distinct }, through: :appointments
 
@@ -82,10 +81,6 @@ class ProtocolsParticipant < ApplicationRecord
   def update_appointments_on_arm_change
     self.appointments.select(&:can_be_destroyed?).each(&:destroy)
     self.build_appointments
-  end
-
-  def can_be_destroyed?
-    procedures.where.not(status: 'unstarted').empty?
   end
 
   def label

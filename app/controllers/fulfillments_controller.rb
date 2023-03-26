@@ -121,7 +121,7 @@ class FulfillmentsController < ApplicationController
           new_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? new_field.to_s : new_field.to_s)
         end
         if current_field != new_field
-          comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : (field == :fulfilled_at || field == :invoiced_date) ? new_field.to_s : new_field.to_s)
+          comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : (field == :fulfilled_at || field == :invoiced_date) ? new_field.to_s : (field == :invoiced) ? "" : new_field.to_s)
           @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
         end
       end
