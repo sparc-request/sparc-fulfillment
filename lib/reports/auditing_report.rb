@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -116,15 +116,12 @@ class AuditingReport < Report
         header << "Documents"
         header << "Fields Modified"
         header << "Date"
-        header << "Quantity of Each Service Completed"
-        header << "What was the Charge"
-        header << "Who was the Payer"
 
         csv << header
 
         protocols.each do |protocol|
           protocol.line_items.each do |line_item|
-            next unless line_item.versions.where(event: ["create", "update"], created_at: @start_date..@end_date).any? && line_item.service.one_time_fee?
+            next unless line_item.versions.where(event: ["create", "update"], created_at: @start_date..@end_date).any?
             line_item.versions.where(event: ["create", "update"]).each do |version|
               data = [ protocol.srid ]
               data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
@@ -145,10 +142,6 @@ class AuditingReport < Report
               data << line_item.documents.map(&:title).join(' | ')
               data << changeset_formatter(version.changeset)
               data << format_date(version.created_at)
-              data << line_item.fulfillments.map(&:quantity).join(' | ')
-              data << line_item.fulfillments.map{ |f| display_cost(f.service_cost)}.join(' | ')
-              data << line_item.fulfillments.map(&:funding_source).join(' | ')
-
 
               csv << data
             end
@@ -192,8 +185,5 @@ class AuditingReport < Report
       end
     end
     formatted.join(' | ')
-  end
-
-  def completed_service_formatter
   end
 end
