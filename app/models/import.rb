@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -58,20 +58,20 @@ class Import < ApplicationRecord
         end
 
       rescue Exception => e
-        Rails.logger.info "#"*50
-        Rails.logger.info e.inspect
         valid = false
+        Rails.logger.info "#{e.inspect}"
+        Rails.logger.info "#{e.backtrace.inspect}"
       end
 
       ####### now that we have populated the Klok tables we can bring the same data in as line items ########
 
       csv << ['']
-      csv << ["ssr_id", "reason", "created_at", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
+      csv << ["ssr_id", "reason", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
               "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
-              "end_time_stamp", "rollup_to", "enabled"
+              "end_time_stamp", "rollup_to", "enabled", "created_at",
             ]
 
-      puts "Populating data from Klok tables"
+      Rails.logger.info "Populating data from Klok tables"
 
       KlokEntry.all.each do |entry|
 
