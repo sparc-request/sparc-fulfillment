@@ -105,7 +105,8 @@ class ProtocolsParticipant < ApplicationRecord
 
   def create_appointments_for_visit_groups visit_groups
     visit_groups.each do |vg|
-      appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
+      new_position = vg.last? ? nil : Appointment.where(protocols_participant: self.id, arm: self.arm, visit_group: vg.lower_item.id).first.position - 1
+      appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: new_position, name: vg.name, arm_id: vg.arm_id)
     end
   end
 
