@@ -68,7 +68,7 @@ class Import < ApplicationRecord
       csv << ['']
       csv << ["ssr_id", "reason", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
               "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
-              "end_time_stamp", "rollup_to", "enabled", "created_at",
+              "end_time_stamp", "rollup_to", "enabled", "created_at"
             ]
 
       Rails.logger.info "Populating data from Klok tables"

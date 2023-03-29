@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_17_133916) do
+ActiveRecord::Schema.define(version: 2023_03_27_134018) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
     t.string "status"
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 2023_03_17_133916) do
     t.string "end_time_stamp_formatted"
     t.datetime "end_time_stamp"
     t.integer "rollup_to"
-    t.boolean "enabled"
+    t.boolean "enabled", default: false
     t.datetime "created_at"
   end
 

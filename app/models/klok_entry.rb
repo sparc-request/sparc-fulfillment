@@ -23,6 +23,7 @@ class KlokEntry < ApplicationRecord
 
   belongs_to :klok_person, foreign_key: :resource_id
   belongs_to :klok_project, foreign_key: :project_id
+  has_one :service, through: :klok_project
 
   delegate :local_protocol,
            to: :klok_project,
