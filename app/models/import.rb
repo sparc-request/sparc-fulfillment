@@ -1,4 +1,4 @@
-# Copyright © 2011-2023 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -31,56 +31,57 @@ class Import < ApplicationRecord
     CSV.open(log_file, "wb") do |csv|
       dup_entry_header = true
       begin
-        KlokEntry.destroy_all
-        KlokProject.destroy_all
-        KlokPerson.destroy_all
+        Klok::Entry.destroy_all
+        Klok::Project.destroy_all
+        Klok::Person.destroy_all
 
         d = File.read(file.path)
 
         h = Hash.from_xml(d)
 
         h['report']['people']['person'].each do |person|
-          d = KlokPerson.new
+          d = Klok::Person.new
           d.attributes = person.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
           d.save
         end
 
         h['report']['projects']['project'].each do |project|
-          d = KlokProject.new
+          d = Klok::Project.new
           d.attributes = project.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
           d.save
         end
 
         h['report']['entries']['entry'].each do |entry|
-          d = KlokEntry.new
+
+          d = Klok::Entry.new
           d.attributes = entry.reject{|k,v| !d.attributes.keys.member?(k.to_s)}
           d.save
         end
 
       rescue Exception => e
         valid = false
-        Rails.logger.info "#{e.inspect}"
-        Rails.logger.info "#{e.backtrace.inspect}"
+        puts e.inspect
+        puts e.backtrace.inspect
       end
 
-      ####### now that we have populated the Klok tables we can bring the same data in as line items ########
+      ####### now that we have populated the KlokShard we can bring the same data in as line items ########
 
       csv << ['']
-      csv << ["ssr_id", "reason", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
+      csv << ["ssr_id", "reason", "created_at", "project_id", "resource_id", "rate", "date", "start_time_stamp_formatted",
               "start_time_stamp", "entry_id", "duration", "submission_id", "device_id", "comments", "end_time_stamp_formatted",
-              "end_time_stamp", "rollup_to", "enabled", "created_at",
+              "end_time_stamp", "rollup_to", "enabled"
             ]
 
-      Rails.logger.info "Populating data from Klok tables"
+      puts "Populating data from KlokShard"
 
-      KlokEntry.all.each do |entry|
+      Klok::Entry.all.each do |entry|
 
         if entry.is_valid?
 
           local_protocol = entry.local_protocol
           local_identity = entry.local_identity
 
-          service = entry.klok_project.service
+          service = entry.service
 
           line_item = LineItem.where(protocol: local_protocol, service: service).first_or_create(quantity_requested: 1, quantity_type: 'Hour')
           fulfillment = Fulfillment.where(klok_entry_id: entry.entry_id, line_item: line_item).first_or_initialize
