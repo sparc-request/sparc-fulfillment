@@ -350,7 +350,7 @@ en:
       sign_out: "Sign Out"
     footer:
       version: "SPARCFulfillment %{version}"
-      copyright: "&copy; 2011-2021 MUSC Foundation for Research Development"
+      copyright: "&copy; 2011-2023 MUSC Foundation for Research Development"
       github: "GitHub"
       about:
         header: "About"
