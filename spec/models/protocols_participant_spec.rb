@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development
+# Copyright © 2011-2023 MUSC Foundation for Research Development
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -31,10 +31,10 @@ RSpec.describe ProtocolsParticipant, type: :model do
   it { is_expected.to have_many(:appointments) }
 
   before :each do
-    @protocol = create(:protocol) 
-    @participant = create(:participant) 
-    @arm = create(:arm, protocol_id: @protocol.id) 
-    @protocols_participant = create(:protocols_participant, arm_id: @arm.id, protocol_id: @protocol.id, participant_id: @participant.id) 
+    @protocol = create(:protocol)
+    @participant = create(:participant)
+    @arm = create(:arm, protocol_id: @protocol.id)
+    @protocols_participant = create(:protocols_participant, arm_id: @arm.id, protocol_id: @protocol.id, participant_id: @participant.id)
   end
 
   context 'class methods' do
