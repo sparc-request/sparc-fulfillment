@@ -90,6 +90,7 @@ class ProceduresController < ApplicationController
     respond_to :js
 
     @procedure.destroy
+    render 'appointments/show'
   end
 
   def change_procedure_position
