@@ -18,26 +18,23 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class KlokProject < ApplicationRecord
-  self.primary_key = 'project_id'
+class KlokDbBase < ApplicationRecord
+  self.abstract_class = true
+  establish_connection(KLOK_DB)
 
-  belongs_to :parent_project, class_name: 'KlokProject', foreign_key: :parent_id
-  has_many :child_projects, class_name: 'KlokProject', foreign_key: :parent_id
-  has_many :klok_entries, foreign_key: :project_id
-  has_many :klok_people, foreign_key: :resource_id, through: :klok_entries
-
-  delegate :local_protocol, to: :klok_entry, allow_nil: true
-
-  def service
-    Service.where(id: self.code).first
+  def self.inherited(child)
+    child.establish_connection(KLOK_DB)
+    super
   end
 
-  def ssr_id
-    parent_project.try(:code) || code
+  def self.klok_record?
+    true
   end
 
-  def local_protocol
-    sparc_id, ssr_version = ssr_id.split('-')
-    Protocol.where(sparc_id: sparc_id).where.not(sub_service_request_id: nil).select{|p| p.sub_service_request.try(:ssr_id) == ssr_version}.first
+  # Allow queries (in particular, JOINs) across both SPARC and
+  # CWF databases by explicitly prefixing the appropriate SPARC
+  # database name to tables belonging to it.
+  def self.table_name_prefix
+    KLOK_DB["database"] + '.'
   end
 end
