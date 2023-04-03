@@ -18,10 +18,22 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modalContainer").html("<%= escape_javascript(render(:partial => 'study_level_activities/invoiced_date_edit_form', locals: {line_item: @line_item, fulfillment: @fulfillment, invoiced_date: @fulfillment.invoiced_date, header_text: 'Edit Fulfillment Invoiced Date'})) %>");
-$("#modalContainer").modal 'show'
-$("#invoiced_date").datetimepicker
-  format: 'MM/DD/YYYY'
-  ignoreReadonly: true
-  allowInputToggle: false
-$(".selectpicker").selectpicker()
+class Klok::Project < KlokDbBase
+  self.primary_key = 'project_id'
+
+  belongs_to :service, foreign_key: :code
+  belongs_to :parent_project, class_name: 'Klok::Project', foreign_key: :parent_id
+  has_many :klok_entries, class_name: 'Klok::Entry', foreign_key: :project_id
+  has_many :child_projects, class_name: 'Klok::Project', foreign_key: :parent_id
+
+  has_many :klok_people, class_name: 'Klok::Person', foreign_key: :resource_id, through: :klok_entries
+
+  def ssr_id
+    parent_project.try(:code) || code
+  end
+
+  def local_protocol
+    sparc_id, ssr_version = ssr_id.split('-')
+    Protocol.where(sparc_id: sparc_id).where.not(sub_service_request_id: nil).select{|p| p.sub_service_request.try(:ssr_id) == ssr_version}.first
+  end
+end
