@@ -51,8 +51,6 @@ class Procedure < ApplicationRecord
 
   before_update :set_save_dependencies, :set_subsidy_and_funding_source, :set_invoiced_date
 
-  #before_save :set_invoiced_date
-
   after_commit :set_protocols_participant_can_be_destroyed_flag
 
   validates_inclusion_of :status, in: STATUS_TYPES,
