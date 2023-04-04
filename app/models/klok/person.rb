@@ -18,11 +18,12 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class KlokPerson < ApplicationRecord
+class Klok::Person < KlokDbBase
   self.primary_key = 'resource_id'
 
-  has_many :klok_entries, foreign_key: :resource_id
-  has_many :klok_projects, foreign_key: :resource_id, through: :klok_entries
+  has_many :klok_entries, class_name: 'Klok::Entry', foreign_key: :resource_id
+
+  has_many :klok_projects, class_name: 'Klok::Project', foreign_key: :resource_id, through: :klok_entries
 
   def local_identity
     if name.match(/\([^()]*\)(?![^\[]*])/)
