@@ -78,7 +78,6 @@ class FulfillmentsController < ApplicationController
     respond_to :js
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
-    #@fulfillment.update_attributes(invoiced_date: fulfillment_params[:invoiced_date]) if change_in_invoiced_date_detected?
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
     detect_changes_and_create_notes
   end
@@ -97,14 +96,6 @@ class FulfillmentsController < ApplicationController
   end
 
   private
-
-  # def change_in_invoiced_date_detected?
-  #   if fulfillment_params[:invoiced_date]
-  #     Time.strptime(fulfillment_params[:invoiced_date], "%m/%d/%Y") != @fulfillment.invoiced_date
-  #   else
-  #     return false
-  #   end
-  # end
 
   def persist_original_attributes_to_track_changes
     @original_attributes = @fulfillment.attributes
