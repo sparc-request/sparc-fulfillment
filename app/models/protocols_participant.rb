@@ -73,6 +73,13 @@ class ProtocolsParticipant < ApplicationRecord
           create_appointments_for_visit_groups(arm.visit_groups)
         elsif has_new_visit_groups?
           create_appointments_for_visit_groups(new_visit_groups)
+          # If in addition to new visit groups, there are updated visit groups then...
+          if has_updated_visit_groups?
+            update_appointments_for_visit_groups
+          end
+        # If there are no new visit groups, but there *are* updated visit groups then...
+        elsif has_updated_visit_groups?
+          update_appointments_for_visit_groups
         end
       end
     end
@@ -101,6 +108,37 @@ class ProtocolsParticipant < ApplicationRecord
 
   def new_visit_groups
     @new_visit_groups ||= self.arm.visit_groups.where.not(id: self.appointments.pluck(:visit_group_id))
+  end
+
+  def has_updated_visit_groups?
+    updated_visit_groups.any?
+  end
+
+  def updated_visit_groups
+    @updated_visit_groups = []
+
+    self.arm.visit_groups.each do |vg|
+      if vg.updated_at >= self.appointments.where(visit_group: vg).first.updated_at
+        @updated_visit_groups << vg
+      end
+    end
+
+    @updated_visit_groups
+  end
+
+  def update_appointments_for_visit_groups
+    updated_visit_groups.each do |vg|
+      appt = self.appointments.where(visit_group: vg).first
+      
+      appt.assign_attributes(name: vg.name)
+      
+      #Check if position of visit group has changed before updating position on appointments
+      if vg.position != appt.visit_group_position
+        appt.assign_attributes(visit_group_position: vg.position, position: Appointment.where(protocols_participant: self.id, arm: self.arm, visit_group: vg.lower_item.id).first.position - 1)
+      end
+
+      appt.save
+    end
   end
 
   def create_appointments_for_visit_groups visit_groups
