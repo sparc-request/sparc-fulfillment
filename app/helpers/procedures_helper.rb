@@ -88,7 +88,7 @@ module ProceduresHelper
     end
   end
 
-  def invoiced_date(procedure)
+  def procedure_invoiced_date(procedure)
     if current_identity.billing_manager_protocols.include?(procedure.protocol)
       render 'invoiced_date.html', procedure: procedure
     else
