@@ -66,7 +66,13 @@ class ReportsController < ApplicationController
     @single_protocol = (params[:report_type] == "project_summary_report")
 
     if params[:service_ids]
-      @protocols = Protocol.joins(:sub_service_request, :line_items).where(line_items: {service_id: params[:service_ids]}).distinct
+      @protocols = []
+      base_protocols = Protocol.includes(:sub_service_request, :line_items, protocols_participants: [appointments: [:procedures]])
+
+      #These are separated into different queries because acitverecord is stalling out when attempting to chain them together with an 'or' method
+      @protocols << base_protocols.where(line_items: {service_id: params[:service_ids]})
+      @protocols << base_protocols.where(procedures: {service_id: params[:service_ids]})
+      @protocols = @protocols.flatten
     else
       @protocols = current_identity.protocols
     end
@@ -92,22 +98,19 @@ class ReportsController < ApplicationController
     @report_type = reports_params[:report_type]
   end
 
-  def all_child_organizations(org_ids)
-    org_ids = org_ids.compact
-    if org_ids.empty?
-      []
-    else
-      orgs = Organization.where(parent_id: org_ids)
-      orgs | all_child_organizations(orgs.pluck(:id))
-    end
-  end
-
   def all_child_organizations_with_self(org_ids)
-    child_orgs = all_child_organizations(org_ids)
-    org_ids.each do |id|
-      child_orgs << id
+    org_ids = org_ids.compact
+    result = []
+    unless org_ids.empty?
+      result << org_ids
+      
+      orgs = Organization.find(org_ids)
+      orgs.each do |org|
+        result << org.all_child_organizations.pluck(:id)
+      end
     end
-    child_orgs
+
+    result.flatten
   end
 
   def reports_params

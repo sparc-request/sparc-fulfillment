@@ -104,16 +104,15 @@ module StudyLevelActivitiesHelper
   end
 
   def invoiced_date(fulfillment)
-    date = content_tag(:span, fulfillment.invoiced_date.strftime('%m/%d/%Y'), class: 'invoiced-date') if fulfillment.invoiced_date
-    arr = [date, "<br>",
-    "<a class='edit fulfillment-invoiced-date-edit ml10' href='javascript:void(0)' title='Edit Invoiced Date' data-fulfillment_id='#{fulfillment.id}'>",
-    "<i class='fas fa-edit'></i>",
-    "</a>"]
-    if (current_identity.billing_manager_protocols.include?(fulfillment.protocol) && !fulfillment.credited? && fulfillment.invoiced?)
-      return arr.join ""
+    if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
+      render 'invoiced_date.html', fulfillment: fulfillment
     else
-      fulfillment.invoiced_date.strftime('%m/%d/%Y') if fulfillment.invoiced
+      invoiced_date_read_only(fulfillment)
     end
+  end
+
+  def invoiced_date_read_only(fulfillment)
+    (fulfillment.invoiced_date? ? format_date(fulfillment.invoiced_date) : "" )
   end
 
   def toggle_credited(fulfillment)

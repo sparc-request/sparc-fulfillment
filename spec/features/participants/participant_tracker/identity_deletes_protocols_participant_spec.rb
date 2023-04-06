@@ -29,7 +29,7 @@ feature 'User deletes Participant', js: true do
     then_i_should_not_see_the_participant
   end
 
-  scenario 'and cannot delete when there is procedure data' do
+  scenario 'and connot delete when there is procedure data' do
     given_i_have_a_participant
     and_the_participant_is_not_deletable
     given_i_am_viewing_the_participant_tracker
@@ -38,15 +38,7 @@ feature 'User deletes Participant', js: true do
 
   def and_the_participant_is_not_deletable
     protocols_participant = ProtocolsParticipant.last
-    protocols_participant.update_attributes can_be_destroyed: false
     create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
-  end
-
-  def and_the_participant_is_deletable
-    protocols_participant = ProtocolsParticipant.last
-    protocols_participant.update_attributes can_be_destroyed: true
-    wait_for_ajax
-    create(:procedure, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
   end
 
   def given_i_have_a_participant
