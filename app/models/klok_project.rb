@@ -1,4 +1,4 @@
-# Copyright © 2011-2023 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -18,21 +18,26 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Klok::Person < KlokDbBase
-  self.primary_key = 'resource_id'
+class KlokProject < ApplicationRecord
+  self.primary_key = 'project_id'
 
-  has_many :klok_entries, class_name: 'Klok::Entry', foreign_key: :resource_id
+  belongs_to :parent_project, class_name: 'KlokProject', foreign_key: :parent_id
+  has_many :child_projects, class_name: 'KlokProject', foreign_key: :parent_id
+  has_many :klok_entries, foreign_key: :project_id
+  has_many :klok_people, foreign_key: :resource_id, through: :klok_entries
 
-  has_many :klok_projects, class_name: 'Klok::Project', foreign_key: :resource_id, through: :klok_entries
+  delegate :local_protocol, to: :klok_entry, allow_nil: true
 
-  def local_identity
-    if name.match(/\([^()]*\)(?![^\[]*])/)
-      ldap_uid = name.split(" ").last.gsub(/[\(\)]*/, '')
-      ldap_uid += "@musc.edu" #### TODO, update Klok so that @musc.edu is added
-      Identity.where(ldap_uid: ldap_uid).first
-    else
-      raise StandardError, "Improper Format"
-    end
+  def service
+    Service.where(id: self.code).first
+  end
+
+  def ssr_id
+    parent_project.try(:code) || code
+  end
+
+  def local_protocol
+    sparc_id, ssr_version = ssr_id.split('-')
+    Protocol.where(sparc_id: sparc_id).where.not(sub_service_request_id: nil).select{|p| p.sub_service_request.try(:ssr_id) == ssr_version}.first
   end
 end
-
