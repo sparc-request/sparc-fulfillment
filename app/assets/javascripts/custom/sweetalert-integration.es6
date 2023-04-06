@@ -1,4 +1,4 @@
-// Copyright © 2011-2020 MUSC Foundation for Research Development
+// Copyright © 2011-2023 MUSC Foundation for Research Development
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,77 +21,82 @@
 // This file has to be required before rails-ujs
 // To use it change `data-confirm` of your links to `data-confirm-swal`
 
-(function() {
-  window.handleConfirm = function(element) {
-    var target = this.tagName === 'A' ? this : element;
-    if (!allowAction(target) && this.tagName === 'A') {
-      Rails.stopEverything(element)
+(function () {
+  window.handleConfirm = function (element) {
+    var target = this.tagName === "A" ? this : element;
+    if (!allowAction(target) && this.tagName === "A") {
+      Rails.stopEverything(element);
     }
-  }
+  };
 
-  const allowAction = element => {
-    if (element.getAttribute('data-confirm-swal') !== 'true') {
-      return true
+  const allowAction = (element) => {
+    if (element.getAttribute("data-confirm-swal") !== "true") {
+      return true;
     }
 
-    showConfirmationDialog(element)
-    return false
-  }
+    showConfirmationDialog(element);
+    return false;
+  };
 
   // Display the confirmation dialog
-  const showConfirmationDialog = element => {
-    var title = element.getAttribute('data-title');
-    var text = element.getAttribute('data-text');
-    var html = element.getAttribute('data-html');
-    var type = element.getAttribute('data-type');
-    var confirmText = element.getAttribute('data-confirm-text');
-    var cancelText = element.getAttribute('data-cancel-text');
+  const showConfirmationDialog = (element) => {
+    var title = element.getAttribute("data-title");
+    var text = element.getAttribute("data-text");
+    var html = element.getAttribute("data-html");
+    var type = element.getAttribute("data-type");
+    var confirmText = element.getAttribute("data-confirm-text");
+    var cancelText = element.getAttribute("data-cancel-text");
 
     Swal.fire({
-      title: title || I18n.t('confirm.title') || "Are you sure?",
-      text: text || (html ? "" : (I18n.t('confirm.text') || "This action cannot be undone.")),
+      title: title || I18n.t("confirm.title") || "Are you sure?",
+      text:
+        text ||
+        (html ? "" : I18n.t("confirm.text") || "This action cannot be undone."),
       html: html || "",
-      icon: type === null ? 'warning' : type,
+      icon: type === null ? "warning" : type,
       showCancelButton: true,
-      confirmButtonText: confirmText || I18n.t('confirm.confirm') || "Yes",
-      cancelButtonText: cancelText || I18n.t('confirm.cancel') || "No",
+      confirmButtonText: confirmText || I18n.t("confirm.confirm") || "Yes",
+      cancelButtonText: cancelText || I18n.t("confirm.cancel") || "No",
       customClass: {
-        confirmButton: 'btn btn-lg btn-primary mr-1',
-        cancelButton: 'btn btn-lg btn-secondary ml-1'
-      }
-    }).then(result => confirmed(element, result))
-  }
+        confirmButton: "btn btn-lg btn-primary mr-1",
+        cancelButton: "btn btn-lg btn-secondary ml-1",
+      },
+    }).then((result) => confirmed(element, result));
+  };
 
   const confirmed = (element, result) => {
     // User clicked confirm button
     if (result.value) {
-      var method  = element.getAttribute('data-method');
+      var method = element.getAttribute("data-method");
       var tagName = element.tagName;
-      var href    = element.getAttribute('href');
-      var url     = element.getAttribute('data-url');
-      var remote  = element.getAttribute('data-remote');
+      var href = element.getAttribute("href");
+      var url = element.getAttribute("data-url");
+      var remote = element.getAttribute("data-remote");
 
-      if (tagName === 'A' && href !== 'javascript:void(0)' && remote !== 'true') {
+      if (
+        tagName === "A" &&
+        href !== "javascript:void(0)" &&
+        remote !== "true"
+      ) {
         window.location = href;
         NProgress.start();
       } else {
         $.ajax({
-          method: method || 'GET',
-          url: (tagName === 'A' && href !== 'javascript:void(0)') ? href : url,
-          dataType: 'script',
+          method: method || "GET",
+          url: tagName === "A" && href !== "javascript:void(0)" ? href : url,
+          dataType: "script",
           data: {
-            authenticity_token: $('meta[name=csrf-token]').attr('content')
-          }
+            authenticity_token: $("meta[name=csrf-token]").attr("content"),
+          },
         });
       }
     }
-  }
+  };
 
   // Hook the event before the other rails events so it works togeter
   // with `method: :delete`.
   // See https://github.com/rails/rails/blob/master/actionview/app/assets/javascripts/rails-ujs/start.coffee#L69
-  document.addEventListener('rails:attachBindings', element => {
-    Rails.delegate(document, '[data-confirm-swal]', 'click', handleConfirm)
-  })
-
-}).call(this)
+  document.addEventListener("rails:attachBindings", (element) => {
+    Rails.delegate(document, "[data-confirm-swal]", "click", handleConfirm);
+  });
+}.call(this));
