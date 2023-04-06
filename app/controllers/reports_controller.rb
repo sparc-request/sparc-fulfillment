@@ -40,7 +40,7 @@ class ReportsController < ApplicationController
     if @report.valid?
       @reports_params = reports_params
       @documentable.documents.push @document
-      ReportJob.perform_later(@document, reports_params.to_h)
+      ReportJob.perform_now(@document, reports_params.to_h)
     end
     respond_to do |format|
       format.js
@@ -72,6 +72,8 @@ class ReportsController < ApplicationController
       #These are separated into different queries because acitverecord is stalling out when attempting to chain them together with an 'or' method
       @protocols << base_protocols.where(line_items: {service_id: params[:service_ids]})
       @protocols << base_protocols.where(procedures: {service_id: params[:service_ids]})
+      
+      binding.pry
       @protocols = @protocols.flatten
     else
       @protocols = current_identity.protocols
