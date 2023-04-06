@@ -21,8 +21,8 @@
 class KlokProject < ApplicationRecord
   self.primary_key = 'project_id'
 
-  belongs_to :parent_project, class_name: 'KlokProject', foreign_key: :parent_id
-  has_many :child_projects, class_name: 'KlokProject', foreign_key: :parent_id
+  belongs_to :parent_project, foreign_key: :parent_id
+  has_many :child_projects, foreign_key: :parent_id
   has_many :klok_entries, foreign_key: :project_id
   has_many :klok_people, foreign_key: :resource_id, through: :klok_entries
 
