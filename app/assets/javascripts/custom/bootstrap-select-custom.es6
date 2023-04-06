@@ -1,4 +1,4 @@
-// Copyright © 2011-2023 MUSC Foundation for Research Development
+// Copyright © 2011-2020 MUSC Foundation for Research Development
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -18,26 +18,17 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-(function ($) {
+(function($) {
   $.extend($.fn.selectpicker.Constructor.Defaults, { counter: false });
 
-  var render = $.fn.selectpicker.Constructor.prototype.render,
-    createDropdown = $.fn.selectpicker.Constructor.prototype.createDropdown;
+  var render          = $.fn.selectpicker.Constructor.prototype.render,
+      createDropdown  = $.fn.selectpicker.Constructor.prototype.createDropdown;
 
-  $.fn.selectpicker.Constructor.prototype.render = function () {
-    if (
-      this.options.counter &&
-      this.$button.find(".bootstrap-select-badge").length === 0
-    ) {
-      var badgeContext = this.$button.hasClass("btn-light")
-        ? "badge-secondary"
-        : "badge-light";
-      var count = this.$element.find("option:not([value=''])").length;
-      this.$button
-        .find(".filter-option-inner")
-        .append(
-          `<span class='badge badge-pill ${badgeContext} ml-1'>${count}</span>`
-        );
+  $.fn.selectpicker.Constructor.prototype.render = function() {
+    if (this.options.counter && this.$button.find('.bootstrap-select-badge').length === 0) {
+      var badgeContext  = this.$button.hasClass('btn-light') ? 'badge-secondary' : 'badge-light';
+      var count         = this.$element.find("option:not([value=''])").length;
+      this.$button.find('.filter-option-inner').append(`<span class='badge badge-pill ${badgeContext} ml-1'>${count}</span>`);
     }
 
     render.apply(this);
@@ -45,12 +36,13 @@
 
   // Related to https://www.pivotaltracker.com/story/show/172977589
   // bootstrap-select doesn't properly take into account the `flip` option telling dropsdowns not to auto-flip to fit the screen
-  $.fn.selectpicker.Constructor.prototype.createDropdown = function () {
+  $.fn.selectpicker.Constructor.prototype.createDropdown = function() {
     var $newElement = createDropdown.apply(this),
-      $button = $newElement.find("button");
+        $button     = $newElement.find('button');
 
-    if (this.options.flip === false) $button.data("flip", false);
+    if (this.options.flip === false) $button.data('flip', false);
 
     return $newElement;
   };
+
 })(jQuery);

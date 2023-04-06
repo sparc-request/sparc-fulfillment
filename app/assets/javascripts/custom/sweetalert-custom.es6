@@ -1,4 +1,4 @@
-// Copyright © 2011-2023 MUSC Foundation for Research Development
+// Copyright © 2011-2020 MUSC Foundation for Research Development
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,24 +21,24 @@
 const Swal = Swal.mixin({
   showCancelButton: true,
   customClass: {
-    input: "form-control",
-    confirmButton: "btn-primary",
-    cancelButton: "btn-secondary",
-  },
-});
+    input: 'form-control',
+    confirmButton: 'btn-primary',
+    cancelButton: 'btn-secondary'
+  }
+})
 
 const ConfirmSwal = Swal.mixin({
-  title: I18n.t("confirm.title"),
-  text: I18n.t("confirm.text"),
-  icon: "warning",
+  title: I18n.t('confirm.title'),
+  text: I18n.t('confirm.text'),
+  icon: 'warning',
   showCloseButton: true,
-  confirmButtonText: I18n.t("constants.yes_select"),
-  cancelButtonText: I18n.t("constants.no_select"),
-});
+  confirmButtonText: I18n.t('constants.yes_select'),
+  cancelButtonText: I18n.t('constants.no_select'),
+})
 
 const AlertSwal = Swal.mixin({
-  icon: "info",
+  icon: 'info',
   showCloseButton: true,
   showConfirmButton: false,
-  cancelButtonText: I18n.t("actions.close"),
-});
+  cancelButtonText: I18n.t('actions.close'),
+})
