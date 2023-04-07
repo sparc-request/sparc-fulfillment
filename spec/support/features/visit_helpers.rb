@@ -37,8 +37,10 @@ module Features
       visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
       wait_for_ajax
 
-      using_wait_time = 15
+      using_wait_time(15) do
       first('a.list-group-item.appointment-link').click
+      end
+
       wait_for_ajax
     end
 
