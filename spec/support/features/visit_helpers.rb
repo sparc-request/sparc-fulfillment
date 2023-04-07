@@ -42,10 +42,10 @@ module Features
     end
 
     def given_i_am_viewing_a_started_visit
-      visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol, { wait: 5 })
+      visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol, { wait: 20 }
       wait_for_ajax
 
-      first('a.list-group-item.appointment-link', { wait: 5 }).click
+      first('a.list-group-item.appointment-link').click
       wait_for_ajax
 
       find('a.btn.start-appointment').click
