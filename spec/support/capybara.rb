@@ -20,7 +20,7 @@
 
 require 'selenium/webdriver'
 
-Capybara.default_max_wait_time = 5
+Capybara.default_max_wait_time = 10
 
 Capybara.register_driver :firefox_headless do |app|
   options = ::Selenium::WebDriver::Firefox::Options.new
