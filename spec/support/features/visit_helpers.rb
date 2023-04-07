@@ -36,7 +36,12 @@ module Features
     def given_i_am_viewing_a_visit
       visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
       wait_for_ajax
+<<<<<<< ours
       
+=======
+
+      using_wait_time = 15
+>>>>>>> theirs
       first('a.list-group-item.appointment-link').click
       wait_for_ajax
     end
