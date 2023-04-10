@@ -88,6 +88,18 @@ module ProceduresHelper
     end
   end
 
+  def procedure_invoiced_date(procedure)
+    if current_identity.billing_manager_protocols.include?(procedure.protocol)
+      render 'invoiced_date.html', procedure: procedure
+    else
+      invoiced_date_read_only(procedure)
+    end
+  end
+
+  def invoiced_date_read_only(procedure)
+    (procedure.invoiced_date? ? format_date(procedure.invoiced_date) : "" )
+  end
+
   def procedure_credited_display(procedure)
     disabled = !procedure.complete? || procedure.invoiced? || procedure.credited?
     tooltip =

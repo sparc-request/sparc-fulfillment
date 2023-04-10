@@ -141,7 +141,7 @@ class ProceduresController < ApplicationController
                               kind: 'log')
     elsif change_in_invoiced_status_detected?
         @procedure.notes.create(identity: current_identity,
-                                comment: "Invoiced changed to #{procedure_params[:invoiced] == "1" ? "yes" : "no" }",
+                                comment: "Invoiced changed to #{procedure_params[:invoiced] == "1" ? "true" : "false" }",
                                 kind: 'log')
     elsif change_in_invoiced_date_detected?
       @procedure.notes.create(identity: current_identity,
