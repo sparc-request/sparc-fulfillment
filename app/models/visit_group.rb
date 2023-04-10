@@ -44,6 +44,9 @@ class VisitGroup < ApplicationRecord
   validate :day_must_be_in_order, unless: -> { day.blank? || arm_id.blank? }
   validates :day, numericality: { only_integer: true }, unless: -> { day.blank? }
 
+  after_create :create_appointments
+  after_update :update_appointments
+
   def identifier
     "#{self.name} (#{self.class.human_attribute_name(:day)} #{self.day})"
   end
@@ -69,6 +72,183 @@ class VisitGroup < ApplicationRecord
   end
 
   private
+
+  def create_appointments
+    # GEM NOTE:  some methods like 'move_to_bottom', 'last?', and 'move_higher' reference the acts_as_list gem.  Check that gem's documentation on github for anything you're uncertain about
+
+    # If the arm this visit group belongs to has protocols_participants (a.k.a. test subjects)...
+    if self.arm.protocols_participants
+      # ...then for each subject...
+      self.arm.protocols_participants.each do |pp|
+        # ...check if the subject has any appointments...
+        if pp.appointments.none?
+          # ...if not, go ahead and create all appointments for all of the arm's visit groups
+          self.arm.visit_groups.each do |vg|
+            pp.appointment.create(arm: vg.arm, visit_group: vg, name: vg.name, visit_group_position: vg.position, position: vg.position)
+          end
+        # ...if the subeject *has* appointments, we just need to create all missing appointments...
+        else
+          #...find all missing appointments and then create them but ignore order (we'll fix the positioning in a bit)...
+          missing_appointments_by_visit_group_ids = self.arm.visit_groups.pluck(:id).difference(pp.appointments.pluck(:visit_group_id))
+          missing_appointments_by_visit_group_ids.each do |missing_vg|
+            vg = VisitGroup.find(missing_vg)
+            pp.appointments.create(arm: vg.arm, visit_group: vg, name: vg.name, visit_group_position: vg.position, position: nil)
+          end
+
+          #...now, re-order all appointments that are associated with a visit group for this subject to match the ordering of visit groups on the arm
+          pp.appointments.where.not(visit_group: nil).each do |appt|
+            #Check if current appointment *should* be at the bottom of the appointment list...
+            if appt.visit_group.last?
+              #...if so, move appointment to the bottom of the list
+              appt.move_to_bottom
+            #...if not, check if appointment is currently at the bottom of the list
+            elsif appt.last?
+              #...if it is at the bottom, then we know the position it's changing to is somehwere higher in the list since we just established which appointment is supposed to be at the bottom of the list so move it...
+              until !appt.last? and (appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item) do
+                appt.move_higher
+              end
+            #...if appointment is not at the bottom of the list, check if it's at the top (and make sure that it's not *supposed* to be at the top)...
+            elsif appt.first? && !appt.visit_group.first? && !(appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item)
+              #...if it is at the top, then we know the position is changing to somewhere lower in the list so move it...
+              until !appt.first? and (appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item) do
+                appt.move_lower
+              end
+            #...if the appointment not supposed to be at the bottom of the list and is currently neither at the top of the list nor at the bottom, we can safely assume that there are supposed to appointments beneath it so check if the next appointment associated with a visit_group in the list matches with the next visit_group in the list for the arm...
+            elsif appt.lower_items.where.not(visit_group: nil).first.visit_group != appt.visit_group.lower_item
+              #...if it doesn't match, then let's check if the appointment that is supposed to be next is currently higher in the list...
+              if appt.higher_items.where.not(visit_group: nil).pluck(:visit_group_id).include?(appt.visit_group.lower_item.id)
+                #...if the appointment we're looking for *is* higher in the list, then move the current appointment up the list until the next appointment associated with a visit_group is the expected one
+                until appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item do
+                  appt.move_higher
+                end
+              #...if the appointment we're looking for *isn't* higher in the list, we can safely assume that it's currently lower in the list...  
+              else
+                #...so move the current appointment down the list until the next appointment associated with a visit_group is the expected one
+                until appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item do
+                  appt.move_lower
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def update_appointments
+    # GEM NOTE:  some methods like 'move_to_bottom', 'last?', and 'move_higher' reference the acts_as_list gem.  Check that gem's documentation on github for anything you're uncertain about
+
+    #WARNING TO FUTURE DEVS:  This callback is going to be very complicated because the order of presentation matters in the apppointments list.  Further, we have to account for the possibility of arbitrary custom appointments that can be added to each subject which are not visible to the visit group but whose order matters for the specific subject in question.  All of this means we can't simply work off of the visit group position for the ordering and re-ordering of appointments but have to customize the position of each individual appointment within the unique context of the appointment list of a given subject.
+
+    # If the arm this visit group belongs to has protocols_participants (a.k.a. test subjects)...
+    if self.arm.protocols_participants
+      # ...then for each subject...
+      self.arm.protocols_participants.each do |pp|
+        # ...check if the subject has any appointments...
+        if pp.appointments.none?
+          # ...if not, go ahead and create all appointments for all of the arm's visit groups
+          self.arm.visit_groups.each do |vg|
+            pp.appointments.create(arm: vg.arm, visit_group: vg, name: vg.name, visit_group_position: vg.position, position: vg.position)
+          end
+        #...if the subject *has* appointments already, then we should...
+        else
+          #...check whether the subject is missing any appointments that we'd expect them to have based on the current arm...
+          missing_appointments_by_visit_group_ids = self.arm.visit_groups.pluck(:id).difference(pp.appointments.pluck(:visit_group_id))
+          if missing_appointments_by_visit_group_ids.any?
+            #...if so, create all missing appointments but ignore order (we'll fix the positioning in a bit)
+            missing_appointments_by_visit_group_ids.each do |missing_vg|
+              vg = VisitGroup.find(missing_vg)
+              pp.appointments.create(arm: vg.arm, visit_group: vg, name: vg.name, visit_group_position: vg.position, position: nil)
+            end
+
+            #...next, update the appointment for this subject that corresponds to the visit_group that was actually updated in the first place (again, without worrying about position yet)
+            pp.appointments.where(visit_group: self).update(name: self.name, visit_group_position: self.position)
+
+            #...finally, re-order all appointments that are associated with a visit group for this subject to match the ordering of visit groups on the arm
+            pp.appointments.where.not(visit_group: nil).each do |appt|
+              #Check if current appointment is supposed to be at the bottom of the appointment list...
+              if appt.visit_group.last?
+                #...if so, move appointment to the bottom of the list
+                appt.move_to_bottom
+              #...if not, check if appointment is currently at the bottom of the list
+              elsif appt.last?
+                #...if it is at the bottom, then we know the position it's changing to is somehwere higher in the list so move it...
+                until !appt.last? and (appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item) do
+                  appt.move_higher
+                end
+              #...if appointment is not at the bottom of the list, check if it's at the top (and make sure it's not supposed to be at the top)...
+              elsif appt.first? && !appt.visit_group.first? && !(appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item)
+                #...if it is at the top, then we know the position is changing to somewhere lower in the list so move it...
+                until !appt.first? and (appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item) do
+                  appt.move_lower
+                end
+              #...if the appointment is neither at the top of the list nor at the bottom, we can safely assume that there are supposed to appointments beneath it so check if the next appointment associated with a visit_group in the list matches with the next visit_group in the list for the arm...
+              elsif appt.lower_items.where.not(visit_group: nil).first.visit_group != appt.visit_group.lower_item
+                #...if it doesn't match, then let's check if the appointment that is supposed to be next is currently higher in the list...
+                if appt.higher_items.where.not(visit_group: nil).pluck(:visit_group_id).include?(appt.visit_group.lower_item.id)
+                  #...if the appointment we're looking for *is* higher in the list, then move the current appointment up the list until the next appointment associated with a visit_group is the expected one
+                  until appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item do
+                    appt.move_higher
+                  end
+
+                #...if the appointment we're looking for *isn't* higher in the list, we can safely assume that it's currently lower in the list...  
+                else
+                  #...so move the current appointment down the list until the next appointment associated with a visit_group is the expected one
+                  until appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item do
+                    appt.move_lower
+                  end
+                end
+              end
+            end
+          #...if, on the other hand, the subject is *not* missing any appointments, then we just need update the current appointment and move it to the correct position
+          else
+            appt = pp.appointments.where(visit_group: self).first
+
+            #...before updating, check to see if there's been a change to the visit_group's position
+            visit_group_position_changed = !(appt.visit_group_position == appt.visit_group.position)
+
+            appt.update(name: self.name, visit_group_position: self.position)
+
+            # Only bother with the rest if the position of this visit group position actually changed...
+            if visit_group_position_changed
+              #Check if current appointment is *supposed* to be at the bottom of the appointment list...
+              if appt.visit_group.last?
+                #...if so, move appointment to the bottom of the list
+                appt.move_to_bottom
+              #...if not, check if appointment is currently at the bottom of the list
+              elsif appt.last?
+                #...if it is at the bottom, then we know the position it's changing to is somehwere higher in the list so move it...
+                until !appt.last? and (appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item) do
+                  appt.move_higher
+                end
+              #...if appointment is not at the bottom of the list, check if it's at the top...
+              elsif appt.first? && !appt.visit_group.first? && !(appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item)
+                #...if it is at the top, then we know the position is changing to somewhere lower in the list so move it...
+                until !appt.first? and (appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item) do
+                  appt.move_lower
+                end
+              #...if the appointment is neither at the top of the list nor at the bottom, we can safely assume that there are supposed to appointments beneath it so check if the next appointment associated with a visit_group in the list matches with the next visit_group in the list for the arm...
+              elsif appt.lower_items.where.not(visit_group: nil).first.visit_group != appt.visit_group.lower_item
+                #...if it doesn't match, then let's check if the appointment that is supposed to be next is currently higher in the list...
+                if appt.higher_items.where.not(visit_group: nil).pluck(:visit_group_id).include?(appt.visit_group.lower_item.id)
+                  #...if the appointment we're looking for *is* higher in the list, then move the current appointment up the list until the next appointment associated with a visit_group is the expected one
+                  until appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item do
+                    appt.move_higher
+                  end
+                #...if the appointment we're looking for *isn't* higher in the list, we can safely assume that it's currently lower in the list... 
+                else
+                  #...so move the current appointment down the list until the next appointment associated with a visit_group is the expected one
+                  until appt.lower_items.where.not(visit_group: nil).first.visit_group == appt.visit_group.lower_item do
+                    appt.move_lower
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
 
   # Used to validate :day, when present. Preceding VisitGroup must have a
   # smaller :day, and succeeding VisitGroup must have a larger :day (on same Arm).
