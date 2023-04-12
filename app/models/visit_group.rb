@@ -84,7 +84,7 @@ class VisitGroup < ApplicationRecord
         if pp.appointments.none?
           # ...if not, go ahead and create all appointments for all of the arm's visit groups
           self.arm.visit_groups.each do |vg|
-            pp.appointment.create(arm: vg.arm, visit_group: vg, name: vg.name, visit_group_position: vg.position, position: vg.position)
+            pp.appointments.create(arm: vg.arm, visit_group: vg, name: vg.name, visit_group_position: vg.position, position: vg.position)
           end
         # ...if the subeject *has* appointments, we just need to create all missing appointments...
         else
