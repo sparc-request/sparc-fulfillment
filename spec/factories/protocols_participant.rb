@@ -26,7 +26,6 @@ FactoryBot.define do
     participant { nil }
     status { Participant::STATUS_OPTIONS.select{|stat| stat != 'Screening'}.sample }
     current_identity {Identity.first}
-    can_be_destroyed { true }
 
     trait :with_protocol do
       protocol
@@ -74,10 +73,7 @@ FactoryBot.define do
     end
 
     factory :protocols_participant_with_protocol, traits: [:with_protocol]
-    factory :protocols_participant_with_protocol_with_notes, traits: [:with_protocol, :with_notes]
     factory :protocols_participant_with_appointments, traits: [:with_appointments]
-    factory :protocols_participant_with_appointments_with_notes, traits:
-    [:with_appointments, :with_notes]
     factory :protocols_participant_with_completed_appointments, traits: [:with_completed_appointments]
   end
 end
