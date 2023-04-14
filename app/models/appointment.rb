@@ -27,7 +27,7 @@ class Appointment < ApplicationRecord
 
   has_paper_trail
   acts_as_paranoid
-  acts_as_list scope: [:arm, :protocols_participant, deleted_at: nil]
+  acts_as_list scope: 'arm_id = #{arm_id} AND protocols_participant_id = #{protocols_participant_id} AND deleted_at IS NULL'
 
   include CustomPositioning #custom methods around positioning, acts_as_list
 
