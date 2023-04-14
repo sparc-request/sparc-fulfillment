@@ -51,6 +51,10 @@ FactoryBot.define do
       association :arm, :with_protocol
     end
 
+    trait :with_protocols_participant do
+      association :protocols_participant, :with_participant, :with_arm
+    end
+
     factory :appointment_with_procedures, traits: [:with_procedures]
     factory :appointment_without_validations, traits: [:without_validations]
   end
