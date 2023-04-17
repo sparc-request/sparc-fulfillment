@@ -72,6 +72,7 @@ class ReportsController < ApplicationController
       #These are separated into different queries because acitverecord is stalling out when attempting to chain them together with an 'or' method
       @protocols << base_protocols.where(line_items: {service_id: params[:service_ids]})
       @protocols << base_protocols.where(procedures: {service_id: params[:service_ids]})
+      
       @protocols = @protocols.flatten
     else
       @protocols = current_identity.protocols
