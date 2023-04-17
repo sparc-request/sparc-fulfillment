@@ -27,6 +27,7 @@ class ProtocolsParticipant < ApplicationRecord
   belongs_to :arm
 
   has_many :appointments, dependent: :destroy
+
   has_many :procedures, through: :appointments
   has_many :arms, -> { distinct }, through: :appointments
 
@@ -83,6 +84,10 @@ class ProtocolsParticipant < ApplicationRecord
     self.build_appointments
   end
 
+  def can_be_destroyed?
+    procedures.where.not(status: 'unstarted').empty?
+  end
+
   def label
     label = nil
 
@@ -106,20 +111,8 @@ class ProtocolsParticipant < ApplicationRecord
   end
 
   def create_appointments_for_visit_groups visit_groups
-    visit_groups.includes(:arm, :appointments).each do |vg|
-      
-      # To determing custom position...
-      custom_position = 
-        # ...check to see if there are any appointments for this protocol_participant that occupies that position...
-        if vg.arm.appointments.where(protocols_participant: self.id, arm: self.arm, position: vg.position).present?
-          #...if so, replace appointment at that position with this one...
-          Appointment.where(protocols_participant: self.id, arm: self.arm, visit_group: vg.lower_item.id).first.position
-        else
-          #...if not, let the acts_as_list gem do its normal thing.
-          nil
-        end
-
-      appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: custom_position, name: vg.name, arm_id: vg.arm_id)
+    visit_groups.each do |vg|
+      appointments.create(visit_group_id: vg.id, visit_group_position: vg.position, position: nil, name: vg.name, arm_id: vg.arm_id)
     end
   end
 

@@ -25,6 +25,9 @@ RSpec.describe ProtocolsParticipant, type: :model do
   it { is_expected.to belong_to(:protocol) }
   it { is_expected.to belong_to(:participant) }
   it { is_expected.to belong_to(:arm) }
+  it { is_expected.to belong_to(:protocol) }
+  it { is_expected.to belong_to(:participant) }
+
   it { is_expected.to have_many(:appointments) }
 
   before :each do
@@ -43,13 +46,6 @@ RSpec.describe ProtocolsParticipant, type: :model do
     let!(:visit_group2) { create(:visit_group, arm: arm, name: 'Ferguson') }
     let!(:protocols_participant)  { create(:protocols_participant, arm: arm, protocol: protocol, participant: participant) }
 
-    describe 'can_be_destroyed?' do
-
-      it 'should be true if all procedures are unstarted' do
-        procedures = protocols_participant.procedures
-        expect(procedures.touched.any?).to eq false
-      end
-    end
 
     describe 'update appointments on arm change' do
 

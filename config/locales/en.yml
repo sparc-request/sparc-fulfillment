@@ -308,8 +308,8 @@ en:
       fulfilled_at: "Fulfillment Date changed to "
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
-      invoiced: "Invoiced changed to "
-      invoiced_date: "Invoiced date changed to "
+      invoiced: "Invoiced"
+      invoiced_date: "Invoiced date updated to "
     no_components: "Fulfillment Has No Components"
     tooltips:
       invoiced_date:
@@ -350,7 +350,7 @@ en:
       sign_out: "Sign Out"
     footer:
       version: "SPARCFulfillment %{version}"
-      copyright: "&copy; 2011-2021 MUSC Foundation for Research Development"
+      copyright: "&copy; 2011-2023 MUSC Foundation for Research Development"
       github: "GitHub"
       about:
         header: "About"

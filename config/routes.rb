@@ -81,7 +81,6 @@ Rails.application.routes.draw do
     collection do
       put 'toggle_invoiced(/:id)', to: 'fulfillments#toggle_invoiced'
       put 'toggle_credit(/:id)', to: 'fulfillments#toggle_credit'
-      get 'invoiced_date_edit/:id(.:format)', to: 'fulfillments#invoiced_date_edit'
     end
   end
 
@@ -109,7 +108,7 @@ Rails.application.routes.draw do
 
     get 'change_appointment_style'
 
-    resources :procedures, only: [:index, :create, :edit, :invoiced_date_edit, :update, :destroy] do
+    resources :procedures, only: [:index, :create, :edit, :update, :destroy] do
       member do
         put 'change_procedure_position(/:id)', to: 'procedures#change_procedure_position', as: 'change_position'
       end
