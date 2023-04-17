@@ -75,6 +75,7 @@ RSpec.describe ProtocolsParticipant, type: :model do
         create(:visit_group, arm_id: protocols_participant.arm.id, name: "Dirk")
         protocols_participant.arm.reload
         protocols_participant.build_appointments
+        protocols_participant.reload 
         expect(protocols_participant.appointments.size).to eq(3)
         expect(protocols_participant.appointments[2].position).to eq(3)
       end

@@ -31,6 +31,18 @@ FactoryBot.define do
       protocol
     end
 
+    trait :with_notes do
+      note
+    end
+
+    trait :with_arm do
+      arm
+    end
+
+    trait :with_participant do
+      association :participant
+    end
+
     trait :with_appointments do
       after(:create) do | protocols_participant, evaluator|
         protocols_participant.arm.visit_groups.each do |vg|

@@ -35,7 +35,7 @@ FactoryBot.define do
 
     trait :complete do
       association :service, factory: :service
-      association :appointment, :with_arm, :without_validations
+      association :appointment, :with_arm, :with_protocols_participant, :without_validations
 
       status { 'complete' }
       completed_date { Date.today.strftime('%m/%d/%Y') }
