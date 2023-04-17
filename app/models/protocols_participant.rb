@@ -100,7 +100,9 @@ class ProtocolsParticipant < ApplicationRecord
   end
 
   def new_visit_groups
-    @new_visit_groups ||= self.arm.visit_groups.where.not(id: self.appointments.pluck(:visit_group_id))
+    missing_appointments_by_visit_group_ids = self.arm.visit_groups.pluck(:id).difference(self.appointments.where(arm: self.arm).pluck(:visit_group_id))
+
+    @new_visit_groups ||= VisitGroup.where(id: missing_appointments_by_visit_group_ids)
   end
 
   def create_appointments_for_visit_groups visit_groups
