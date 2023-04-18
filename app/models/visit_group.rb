@@ -96,7 +96,7 @@ class VisitGroup < ApplicationRecord
           end
 
           #...then, make sure that all appointments' visit_group_position matches the position attribute for their respective visit groups
-          pp.appointments.each do |appt|
+          pp.appointments.where.not(visit_group: nil).each do |appt|
             appt.update(visit_group_position: appt.visit_group.position)
           end
 
@@ -174,7 +174,7 @@ class VisitGroup < ApplicationRecord
             pp.appointments.where(visit_group: self).update(name: self.name, visit_group_position: self.position)
 
             #...now, make sure that all appointments' visit_group_position matches the position attribute for their respective visit groups
-            pp.appointments.each do |appt|
+            pp.appointments.where.not(visit_group: nil).each do |appt|
               appt.update(visit_group_position: appt.visit_group.position)
             end
 
