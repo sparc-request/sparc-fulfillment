@@ -61,22 +61,18 @@ $("#procedure<%= @procedure.id %>StatusButtons").data("selected", "incomplete")
 $("#procedure<%= @procedure.id %>StatusButtons button").removeClass("active")
 $("#procedure<%= @procedure.id %>StatusButtons .incomplete-btn").addClass("active")
 performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
-$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
 
 <% elsif @procedure.complete? && !@procedure.invoiced? %>
 date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
 
 date_time_picker.datetimepicker('enable')
 performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
-$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
 
 <% end %>
 
 <% if @invoiced_or_credited_changed || (@billing_type_updated && @appointment_style == "grouped") %>
 $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
+
 <% end %>
 
 <% if @billing_type_updated %>
