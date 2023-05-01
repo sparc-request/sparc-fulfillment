@@ -39,15 +39,10 @@ invoiced_date_time_picker = $("#procedure<%= procedure.id%>InvoicedDatePicker")
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
 
-$('#core<%= procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
-
 <% elsif procedure.complete? %>
 date_time_picker.datetimepicker('date', "<%= format_date(procedure.completed_date) %>")
 date_time_picker.datetimepicker('enable')
 
-$('#core<%= procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
 <% end %>
 <% end %>
 
