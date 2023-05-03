@@ -45,8 +45,8 @@ invoiced_date_time_picker.datetimepicker('date', "<%= format_date(@procedure.inv
 
 <% else %>
 $("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
-$('input.invoice_toggle').bootstrapToggle()
-$('input.credit_toggle').bootstrapToggle()
+#$('input.invoice_toggle').bootstrapToggle()
+#$('input.credit_toggle').bootstrapToggle()
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
 date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
 invoiced_date_time_picker = $("#procedure<%= @procedure.id %>InvoicedDatePicker")
@@ -65,8 +65,8 @@ performer_selectpicker.selectpicker('val', "")
 invoiced_toggle.bootstrapToggle('disable')
 invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
 credited_toggle.bootstrapToggle('disable')
-credited_toggle.find('#procedure_invoiced').removeAttr('disabled')
-$('label[for="edit_procedure_<%= @procedure.id %>"].toggle-off').text('No')
+credited_toggle.find('#procedure_credited').removeAttr('disabled')
+$('.toggle-off').text('No')
 
 <% elsif @procedure.incomplete? %>
 $("#modalContainer").modal('hide')
@@ -80,8 +80,8 @@ performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 invoiced_toggle.bootstrapToggle('disable')
 invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
 credited_toggle.bootstrapToggle('disable')
-credited_toggle.find('#procedure_invoiced').removeAttr('disabled')
-$('label[for="edit_procedure_<%= @procedure.id %>"].toggle-off').text('No')
+credited_toggle.find('#procedure_credited').removeAttr('disabled')
+$('.toggle-off').text('No')
 
 <% elsif @procedure.complete? && !@procedure.invoiced? %>
 date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
@@ -89,8 +89,10 @@ date_time_picker.datetimepicker('enable')
 performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
 invoiced_toggle.bootstrapToggle('enable')
+invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
 credited_toggle.bootstrapToggle('enable')
-$('label[for="edit_procedure_<%= @procedure.id %>"].toggle-off').text('No')
+credited_toggle.find('#procedure_credited').removeAttr('disabled')
+$('.toggle-off').text('No')
  <% end %>
 
 <% if (@billing_type_updated && @appointment_style == "grouped") ||  @invoiced_or_credited_changed %>
