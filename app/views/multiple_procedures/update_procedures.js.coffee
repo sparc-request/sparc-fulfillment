@@ -38,9 +38,11 @@ date_time_picker = $("#procedure<%= procedure.id %>CompletedDatePicker")
 <% if procedure.incomplete? %>
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
+
 <% elsif procedure.complete? %>
 date_time_picker.datetimepicker('date', "<%= format_date(procedure.completed_date) %>")
 date_time_picker.datetimepicker('enable')
+
 <% end %>
 <% end %>
 
