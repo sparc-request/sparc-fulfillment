@@ -38,20 +38,36 @@ $("[name='procedure[notes_attributes][0][<%= attr.to_s %>]']").parents('.form-gr
 <% @procedure.reload %>
 Swal.fire("<%= @cost_error_message %>")
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
+invoiced_date_time_picker = $("#procedure<%= @procedure.id %>InvoicedDatePicker")
 date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+invoiced_date_time_picker.datetimepicker('date', "<%= format_date(@procedure.invoiced_date) %>")
 <% end %>
 
 <% else %>
 $("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
-
+$('input.invoice_toggle').bootstrapToggle()
+$('input.credit_toggle').bootstrapToggle()
+#$("#modalContainer").modal('hide')
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
+date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+invoiced_date_time_picker = $("#procedure<%= @procedure.id %>InvoicedDatePicker")
+invoiced_date_time_picker.datetimepicker('date', "<%= format_date(@procedure.invoiced_date) %>")
 performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .selectpicker")
+
+invoiced_toggle = $(".invoiced #edit_procedure_<%= @procedure.id %>")
+credited_toggle = $(".credited #edit_procedure_<%= @procedure.id %>")
 
 <% if @procedure.unstarted? || @procedure.follow_up? %>
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
 $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
 performer_selectpicker.selectpicker('val', "")
+
+invoiced_toggle.bootstrapToggle('disable')
+invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
+credited_toggle.bootstrapToggle('disable')
+credited_toggle.find('#procedure_invoiced').removeAttr('disabled')
+$('label[for="edit_procedure_<%= @procedure.id %>"].toggle-off').text('No')
 
 <% elsif @procedure.incomplete? %>
 $("#modalContainer").modal('hide')
@@ -61,22 +77,25 @@ $("#procedure<%= @procedure.id %>StatusButtons").data("selected", "incomplete")
 $("#procedure<%= @procedure.id %>StatusButtons button").removeClass("active")
 $("#procedure<%= @procedure.id %>StatusButtons .incomplete-btn").addClass("active")
 performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
-$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
+
+invoiced_toggle.bootstrapToggle('disable')
+invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
+credited_toggle.bootstrapToggle('disable')
+credited_toggle.find('#procedure_invoiced').removeAttr('disabled')
+$('label[for="edit_procedure_<%= @procedure.id %>"].toggle-off').text('No')
 
 <% elsif @procedure.complete? && !@procedure.invoiced? %>
 date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
-
 date_time_picker.datetimepicker('enable')
 performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
-$('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
 
-<% end %>
+invoiced_toggle.bootstrapToggle('enable')
+credited_toggle.bootstrapToggle('enable')
+$('label[for="edit_procedure_<%= @procedure.id %>"].toggle-off').text('No')
+ <% end %>
 
-<% if @invoiced_or_credited_changed || (@billing_type_updated && @appointment_style == "grouped") %>
+<% if (@billing_type_updated && @appointment_style == "grouped") ||  @invoiced_or_credited_changed %>
 $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
-$('#core<%= @procedure.core.id %>ProceduresCustomView').bootstrapTable('refresh', silent: true)
 <% end %>
 
 <% if @billing_type_updated %>
