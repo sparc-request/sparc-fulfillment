@@ -45,8 +45,6 @@ invoiced_date_time_picker.datetimepicker('date', "<%= format_date(@procedure.inv
 
 <% else %>
 $("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
-#$('input.invoice_toggle').bootstrapToggle()
-#$('input.credit_toggle').bootstrapToggle()
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
 date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
 invoiced_date_time_picker = $("#procedure<%= @procedure.id %>InvoicedDatePicker")
