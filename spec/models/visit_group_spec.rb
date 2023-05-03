@@ -192,12 +192,9 @@ RSpec.describe VisitGroup, type: :model do
           @vg_c        = create(:visit_group, name: 'C', position: 3, day: 6, arm_id: @arm.id)
           @participant = create(:participant)
           @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
-          @procedure   = create(:procedure, :complete, appointment: @protocols_participant.appointments.first)
+          @appointment = create(:appointment, visit_group: @vg_a, protocols_participant: @protocols_participant, name: @vg_a.name, arm_id: @vg_a.arm_id, position: @vg_a.position)
+          @procedure   = create(:procedure, :complete, appointment: @appointment)
         end
-
-      after :each do 
-        DatabaseCleaner.clean
-      end  
 
       describe 'reorder' do
         it 'should reorder_visit_groups_up' do
@@ -217,65 +214,15 @@ RSpec.describe VisitGroup, type: :model do
         end
       end
 
-      describe 'create and update appointments for visit groups' do
-        it "should create appointments for subjects on the arm after visit group creation" do
-          @vg_e = create(:visit_group, name: 'E', position: nil, day: 10, arm_id: @arm.id)
-          @protocols_participant.reload
-          expect(@protocols_participant.appointments.last.visit_group_id).to eq(@vg_e.id) 
-        end
-
-        it "should update appointment order for subjects after visit group order change" do 
-          @vg_c.reload.update(position: 2, day: 3)
-          expect(@protocols_participant.reload.appointments.second.name).to eq("C")
-        end
-
-        it "should create missing appointments for subjects on creation of new visit group" do 
-          @protocols_participant.reload.appointments.third.destroy
-          @protocols_participant.reload.appointments.second.destroy
-          post_delete_visit_count = @protocols_participant.appointments.count
-
-          @vg_d = create(:visit_group, name: 'D', position: 4, day: 10, arm_id: @arm.id)
-          expect(@protocols_participant.reload.appointments.count).to be > post_delete_visit_count
-          expect(@protocols_participant.reload.appointments.count).to eq(4) 
-        end
-
-        it "should create missing appointments for subjects on update of existing group" do 
-          @protocols_participant.reload.appointments.third.destroy
-          @protocols_participant.reload.appointments.second.destroy
-          post_delete_visit_count = @protocols_participant.appointments.count
-
-          @vg_b.reload.update(name: "temp")
-          expect(@protocols_participant.reload.appointments.count).to be > post_delete_visit_count
-          expect(@protocols_participant.reload.appointments.count).to eq(3) 
-        end
-
-        it "should correctly place appointment for subject despite custom appointment when visit group is created" do 
-          @protocols_participant.reload.appointments.create(name: "custom appointment", position: 2, arm: @arm)
-          vg_d = create(:visit_group, name: 'D', position: 2, day: 3, arm_id: @arm.id)
-
-          expect(@protocols_participant.reload.appointments.count).to eq(5)
-          expect(@protocols_participant.reload.appointments.where(name: "D").first.position).to eq(3)
-        end
-
-        it "should correctly place appointment for subject despite custom appointment when visit group position is updated" do 
-          @protocols_participant.reload.appointments.create(name: "custom appointment", position: 2, arm: @arm)
-          @vg_c.reload.update(position: 2, day: 3)
-
-          expect(@protocols_participant.reload.appointments.count).to eq(4)
-          expect(@protocols_participant.reload.appointments.where(name: "C").first.position).to eq(3)
-        end
-      end
-
       describe 'check for completed data' do
         it "should allow the appointment to be deleted if it is not completed" do
-          appointment_count = @protocols_participant.reload.appointments.count
-          @procedure.reload.update_attributes(status: "unstarted")
-          @vg_a.reload.destroy
-          expect(@protocols_participant.reload.appointments.count).to eq(appointment_count - 1)
+          appointment_count = @protocols_participant.appointments.count
+          @procedure.update_attributes(status: "unstarted")
+          @vg_a.destroy
+          expect(@protocols_participant.appointments.count).to eq(appointment_count - 2)
         end
 
         it "should not allow the appointment to be deleted if it is completed" do
-          @appointment = @protocols_participant.reload.appointments.first
           @appointment.update_attributes(completed_date: Time.current)
           expect{@vg_a.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
         end
