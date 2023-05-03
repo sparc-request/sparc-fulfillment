@@ -69,4 +69,7 @@ Rails.application.configure do
   config.active_job.queue_adapter = :test
 
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
 end
