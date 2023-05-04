@@ -34,7 +34,7 @@ $("#procedure<%= procedure.id %>StatusButtons .<%= procedure.status %>-btn").add
 updateNotesBadge("procedure<%= procedure.id %>", "<%= procedure.notes.count %>")
 $(".performer #edit_procedure_<%= procedure.id %> .selectpicker").selectpicker('val', '<%= procedure.performer_id %>')
 date_time_picker = $("#procedure<%= procedure.id %>CompletedDatePicker")
-invoiced_date_time_picker = $("#procedure<%= procedure.id%>InvoicedDatePicker")
+
 <% if procedure.incomplete? %>
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
