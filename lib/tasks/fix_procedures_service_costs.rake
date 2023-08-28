@@ -41,7 +41,7 @@ namespace :data do
     def get_service_ids
       file = get_file
       service_ids = []
-      continue = prompt("Are you sure you want to import service ids from #{file}? (Yes/No) ")
+      continue = prompt("Are you sure you want to import service ids from #{file}? (Yes/No): ")
 
       if continue == 'Yes'
         input_file = Rails.root.join("tmp", file)
@@ -58,27 +58,27 @@ namespace :data do
     end
 
     CSV.open("tmp/fixed_procedure_and_fulfillment_service_costs.csv", "wb+") do |csv|
-      puts 'Are you correcting procedures/fulfillments based on protocol id, service id, or csv? Please enter "service", "protocol" or "csv"'
+      print 'Are you correcting procedures/fulfillments based on protocol id, service id, or csv? Please enter "service", "protocol" or "csv": '
       type = STDIN.gets.chomp
       if type == "protocol"
-        puts 'Please enter a list of protocol IDs, separated by comma, for example: 5 or 5, 4, 3'
+        print 'Please enter a list of protocol IDs, separated by comma, for example: 5 or 5, 4, 3: '
         items = Protocol.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
       elsif type == "service"
-        puts 'Please enter a list of service IDs, separated by comma, for example: 5, or 3, 4, 5'
+        print 'Please enter a list of service IDs, separated by comma, for example: 5, or 3, 4, 5: '
         items = Service.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
       elsif type == "csv"
         items = Service.where(id: get_service_ids.map(&:to_i))
       end
-      puts "Please enter a start date, dd/mm/yyyy :"
-      start_date = (STDIN.gets.chomp).to_date
-      puts "Please enter an end date, dd/mm/yyyy :"
-      end_date = (STDIN.gets.chomp).to_date
+      print "Please enter a start date, mm/dd/yyyy : "
+      start_date = Date.strptime(STDIN.gets.chomp, "%m/%d/%Y")
+      print "Please enter an end date, mm/dd/yyyy : "
+      end_date = Date.strptime(STDIN.gets.chomp, "%m/%d/%Y")
 
 
       ##Procedures Section
       csv << ["Per Patient Per Visit (Procedures)"]
       csv << ["Protocol/SRID:", "Protocol Funding Source:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
-      puts "Fixing Procedures..."
+      puts "Fixing Procedures from #{start_date.strftime('%m/%d/%Y')} to #{end_date.strftime('%m/%d/%Y')}..."
 
       items.each_with_index do |item, index|
         if item.procedures.count >= 1
