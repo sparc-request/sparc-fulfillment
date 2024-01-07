@@ -121,7 +121,7 @@ class AuditingReport < Report
 
         protocols.each do |protocol|
           protocol.line_items.each do |line_item|
-            next unless line_item.versions.where(event: ["create", "update"], created_at: @start_date..@end_date).any?
+            next unless line_item.versions.where(event: ["create", "update"], created_at: @start_date..@end_date).any? && line_item.service.one_time_fee?
             line_item.versions.where(event: ["create", "update"]).each do |version|
               data = [ protocol.srid ]
               data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
