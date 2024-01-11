@@ -35,7 +35,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_protocol
-    unless current_identity.protocols.include? @protocol
+    unless current_identity.protocols.exists?(@protocol.id) # 0.03ms (97% faster than #include?)
+    #unless current_identity.protocols.include? @protocol # 1.12ms
       flash[:alert] = t(:protocol)[:flash_messages][:unauthorized]
       redirect_to root_path
     end
