@@ -85,7 +85,7 @@ class ProtocolsParticipant < ApplicationRecord
   end
 
   def can_be_destroyed?
-    procedures.where.not(status: 'unstarted').empty?
+    deletable
   end
 
   def label
