@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_protocol
-    unless current_identity.protocols.include? @protocol
+    unless current_identity.protocols.exists?(@protocol.id)
       flash[:alert] = t(:protocol)[:flash_messages][:unauthorized]
       redirect_to root_path
     end
