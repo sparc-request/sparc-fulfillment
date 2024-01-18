@@ -26,6 +26,10 @@ RSpec.describe ArmsController do
     sign_in
     @protocol = create(:protocol)
     @arm = create(:arm, protocol_id: @protocol.id)
+    #@clinical_services = create_list(:service, 3, one_time_fee: false)
+    #@clinical_services.each do |service|
+    #  create(:line_item, service: service, protocol: @protocol)
+    #end
   end
 
   describe "GET #new" do
