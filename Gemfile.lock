@@ -468,6 +468,7 @@ DEPENDENCIES
   axlsx_rails
   babel-transpiler
   bcrypt_pbkdf
+  bundler (= 2.4.22)
   capistrano (~> 3.16)
   capistrano-passenger
   capistrano-rails (~> 1.6)
@@ -539,4 +540,4 @@ DEPENDENCIES
   yajl-ruby
 
 BUNDLED WITH
-   2.3.21
+   2.4.22
