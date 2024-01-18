@@ -25,7 +25,7 @@ class ArmsController < ApplicationController
 
   def new
     @protocol = Protocol.find(params[:protocol_id])
-    @services = @protocol.line_items.includes(:service).where(services: { one_time_fee: false }).map(&:service).uniq
+    @services = @protocol.line_items.map(&:service).uniq
     @arm = Arm.new(protocol: @protocol)
     @schedule_tab = params[:schedule_tab]
   end
