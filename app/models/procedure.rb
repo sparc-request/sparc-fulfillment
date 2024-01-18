@@ -51,6 +51,8 @@ class Procedure < ApplicationRecord
 
   before_update :set_save_dependencies, :set_subsidy_and_funding_source, :set_invoiced_date
 
+  after_save :update_protocols_participant_deletable
+
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
 
@@ -203,6 +205,10 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def update_protocols_participant_deletable
+    protocols_participant.update(deletable: !protocols_participant.procedures.exists?(status: ['follow_up', 'incomplete', 'complete'])) if protocols_participant
+  end
 
   def set_invoiced_date
     write_attribute :invoiced_date, Time.now if self.invoiced? && self.invoiced_changed?
