@@ -82,6 +82,7 @@ feature 'User views the participant tracker page', js: true do
     wait_for_ajax
     first('.dropdown-menu.show span.text', text: @protocol.arms.second.name).click
     wait_for_ajax
+    sleep 2
   end
 
   def then_i_should_see_the_notes_modal

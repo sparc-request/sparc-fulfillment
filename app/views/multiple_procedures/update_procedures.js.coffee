@@ -35,13 +35,31 @@ updateNotesBadge("procedure<%= procedure.id %>", "<%= procedure.notes.count %>")
 $(".performer #edit_procedure_<%= procedure.id %> .selectpicker").selectpicker('val', '<%= procedure.performer_id %>')
 date_time_picker = $("#procedure<%= procedure.id %>CompletedDatePicker")
 
+invoiced_date_time_picker = $("#procedure<%= procedure.id %>InvoicedDatePicker")
+invoiced_date_time_picker.datetimepicker('date', "<%= format_date(procedure.invoiced_date) %>")
+
+invoiced_toggle = $(".invoiced #edit_procedure_<%= procedure.id %>")
+credited_toggle = $(".credited #edit_procedure_<%= procedure.id %>")
+
 <% if procedure.incomplete? %>
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
 
+invoiced_toggle.bootstrapToggle('disable')
+invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
+credited_toggle.bootstrapToggle('disable')
+credited_toggle.find('#procedure_credited').removeAttr('disabled')
+$('.toggle-off').text('No')
+
 <% elsif procedure.complete? %>
 date_time_picker.datetimepicker('date', "<%= format_date(procedure.completed_date) %>")
 date_time_picker.datetimepicker('enable')
+
+invoiced_toggle.bootstrapToggle('enable')
+invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
+credited_toggle.bootstrapToggle('enable')
+credited_toggle.find('#procedure_credited').removeAttr('disabled')
+$('.toggle-off').text('No')
 
 <% end %>
 <% end %>
