@@ -45,6 +45,10 @@ class Report
 
   private
 
+  def format_protocol_id_column(protocol)
+    protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
+  end
+
   def format_date(date)
     if date.present?
       date.strftime("%m/%d/%Y")
