@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -41,7 +41,7 @@ namespace :data do
     def get_service_ids
       file = get_file
       service_ids = []
-      continue = prompt("Are you sure you want to import service ids from #{file}? (Yes/No) ")
+      continue = prompt("Are you sure you want to import service ids from #{file}? (Yes/No): ")
 
       if continue == 'Yes'
         input_file = Rails.root.join("tmp", file)
@@ -58,27 +58,27 @@ namespace :data do
     end
 
     CSV.open("tmp/fixed_procedure_and_fulfillment_service_costs.csv", "wb+") do |csv|
-      puts 'Are you correcting procedures/fulfillments based on protocol id, service id, or csv? Please enter "service", "protocol" or "csv"'
+      print 'Are you correcting procedures/fulfillments based on protocol id, service id, or csv? Please enter "service", "protocol" or "csv": '
       type = STDIN.gets.chomp
       if type == "protocol"
-        puts 'Please enter a list of protocol IDs, separated by comma, for example: 5 or 5, 4, 3'
+        print 'Please enter a list of protocol IDs, separated by comma, for example: 5 or 5, 4, 3: '
         items = Protocol.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
       elsif type == "service"
-        puts 'Please enter a list of service IDs, separated by comma, for example: 5, or 3, 4, 5'
+        print 'Please enter a list of service IDs, separated by comma, for example: 5, or 3, 4, 5: '
         items = Service.where(id: STDIN.gets.chomp.split(",").map(&:to_i))
       elsif type == "csv"
         items = Service.where(id: get_service_ids.map(&:to_i))
       end
-      puts "Please enter a start date, dd/mm/yyyy :"
-      start_date = (STDIN.gets.chomp).to_date
-      puts "Please enter an end date, dd/mm/yyyy :"
-      end_date = (STDIN.gets.chomp).to_date
+      print "Please enter a start date, mm/dd/yyyy : "
+      start_date = Date.strptime(STDIN.gets.chomp, "%m/%d/%Y")
+      print "Please enter an end date, mm/dd/yyyy : "
+      end_date = Date.strptime(STDIN.gets.chomp, "%m/%d/%Y")
 
 
       ##Procedures Section
       csv << ["Per Patient Per Visit (Procedures)"]
-      csv << ["Protocol/SRID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
-      puts "Fixing Procedures..."
+      csv << ["Protocol/SRID:", "Protocol Funding Source:", "Procedure ID:", "Service Name", "Previous Price", "Updated Price", "Patient Name:", "Patient ID (MRN)", "Visit Name:", "Visit Date:", "Service Completion Date:", ]
+      puts "Fixing Procedures from #{start_date.strftime('%m/%d/%Y')} to #{end_date.strftime('%m/%d/%Y')}..."
 
       items.each_with_index do |item, index|
         if item.procedures.count >= 1
@@ -106,13 +106,13 @@ namespace :data do
                 end
 
                 if calculated_amount != current_amount
-                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.protocols_participant.participant.try(:full_name), procedure.protocols_participant.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
+                  csv << [protocol.srid, protocol.funding_source, procedure.id, procedure.service_name, current_amount, calculated_amount, procedure.protocols_participant.participant.try(:full_name), procedure.protocols_participant.participant.try(:mrn), procedure.appointment.try(:name), procedure.appointment.try(:start_date).try(:strftime, "%D"), procedure.completed_date.strftime("%D")]
                   procedure.update_attribute(:service_cost, calculated_amount)
                 end
               else
                 if !procedure.service_cost.nil?
                   ##Procedure has service cost, but isn't complete, this should never happen, the service_cost needs deleted.
-                  csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.protocols_participant.participant.try(:full_name), procedure.protocols_participant.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
+                  csv << [protocol.srid, protocol.funding_source, procedure.id, procedure.service_name, "N/A (Erased)", "N/A (Erased)", procedure.protocols_participant.participant.try(:full_name), procedure.protocols_participant.participant.try(:mrn), procedure.appointment.try(:name), "N/A", "N/A"]
                   procedure.update_attribute(:service_cost, nil)
                 end
               end
@@ -131,7 +131,7 @@ namespace :data do
       csv << []
       csv << []
       csv << ["One Time Fee (Fulfillments)"]
-      csv << ["Protocol/SRID:", "Protocol Funding Source:", "Protocol Potential Funding Source:", "fulfillment ID:", "Service Name", "Previous Price", "Updated Price", "Service Completion Date:", ]
+      csv << ["Protocol/SRID:", "Protocol Funding Source:", "fulfillment ID:", "Service Name", "Previous Price", "Updated Price", "Service Completion Date:", ]
       puts "Fixing One Time Fee Fulfillments..."
 
       if items.map(&:fulfillments).flatten.count >= 1
@@ -153,7 +153,7 @@ namespace :data do
               calculated_amount = fulfillment.line_item.cost(protocol.sparc_funding_source, fulfillment.fulfilled_at)
 
               if calculated_amount != current_amount
-                csv << [protocol.srid, protocol.funding_source, protocol.potential_funding_source, fulfillment.id, fulfillment.service_name, current_amount, calculated_amount, fulfillment.fulfilled_at.strftime("%D")]
+                csv << [protocol.srid, protocol.funding_source, fulfillment.id, fulfillment.service_name, current_amount, calculated_amount, fulfillment.fulfilled_at.strftime("%D")]
                 fulfillment.update_attribute(:service_cost, calculated_amount)
               end
 

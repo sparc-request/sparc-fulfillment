@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -36,7 +36,6 @@ RSpec.describe Participant, type: :model do
     it { is_expected.to validate_presence_of(:race) }
     it { is_expected.to validate_presence_of(:gender) }
     it { is_expected.to validate_presence_of(:address) }
-    it { is_expected.to validate_presence_of(:city) }
     it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to validate_presence_of(:zipcode) }
 
@@ -68,6 +67,14 @@ RSpec.describe Participant, type: :model do
 
       it 'should validate zipcode format to be invalid' do
         expect(build(:participant, zipcode: "1234")).not_to be_valid
+      end
+
+      it 'should validate city presence to be invalid' do 
+        expect(build(:participant, city: "")).not_to be_valid
+      end
+
+      it 'should validate city format to be invalid' do 
+        expect(build(:participant, city: "New York123")).not_to be_valid
       end
     end
   end

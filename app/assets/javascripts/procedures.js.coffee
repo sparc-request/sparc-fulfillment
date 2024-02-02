@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -28,6 +28,9 @@ $ ->
     $(this).find('.group-icon').toggleClass('fa-chevron-right fa-chevron-down')
 
   $(document).on 'hide.datetimepicker', '.procedure-completed-datepicker', ->
+    Rails.fire($(this).parents('form')[0], 'submit')
+
+  $(document).on 'hide.datetimepicker', '.procedure-invoiced-datepicker', ->
     Rails.fire($(this).parents('form')[0], 'submit')
 
   $(document).on('mouseenter', '.appointment-status-buttons button:not(.disabled)', ->

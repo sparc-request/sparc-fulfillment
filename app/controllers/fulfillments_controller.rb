@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -27,7 +27,7 @@ class FulfillmentsController < ApplicationController
     respond_to do |format|
       format.js { render }
       format.json {
-        @fulfillments = @line_item.fulfillments
+        @fulfillments = @line_item.fulfillments.includes(:notes)
 
         render
       }
@@ -75,6 +75,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def toggle_invoiced
+    respond_to :js
     persist_original_attributes_to_track_changes
     @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
     @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
@@ -101,18 +102,22 @@ class FulfillmentsController < ApplicationController
   end
 
   def detect_changes_and_create_notes
-    tracked_fields = [:fulfilled_at, :account_number, :quantity, :performer_id, :invoiced]
+    tracked_fields = [:fulfilled_at, :account_number, :quantity, :performer_id, :invoiced, :invoiced_date]
     tracked_fields.each do |field|
       current_field = @original_attributes[field.to_s]
       new_field = fulfillment_params[field]
       unless new_field.blank?
         unless current_field.blank?
-          current_field = (field == :fulfilled_at ? current_field.to_date.to_s : current_field.to_s)
-          new_field = (field == :fulfilled_at ? Time.strptime(new_field, "%m/%d/%Y").to_date.to_s : new_field.to_s)
+          current_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? current_field.to_date.to_s : current_field.to_s)
+          new_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? new_field.to_s : new_field.to_s)
         end
         if current_field != new_field
-          comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : new_field.to_s)
-          @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
+          unless (fulfillment_params[:invoiced] && field == :invoiced_date)
+            unless field == :invoiced_date && (Date.parse(current_field).strftime("%m/%d/%Y") == new_field)
+              comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : (field == :fulfilled_at || field == :invoiced_date) ? new_field.to_s : (field == :invoiced) ? "" : new_field.to_s)
+              @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
+            end
+          end
         end
       end
     end
@@ -152,7 +157,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def fulfillment_params
-    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :credited, :components)
+    params.require(:fulfillment).permit(:line_item_id, :fulfilled_at, :quantity, :performer_id, :invoiced, :invoiced_date, :credited, :components)
   end
 
   def find_fulfillment

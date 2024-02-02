@@ -52,6 +52,7 @@ en:
         credited: "Credited"
         fulfilled_at: "Fulfillment Date"
         invoiced: "Invoiced"
+        invoiced_date: "Invoiced Date"
         quantity_type: "Qty Type"
       identity:
         ldap_uid: "Login"
@@ -89,6 +90,7 @@ en:
         credited: "Credited"
         followup: "Follow-Up"
         invoiced: "Invoiced"
+        invoiced_date: "Invoiced Date"
         performer: "Performed By"
         status: "Status"
       protocol:
@@ -300,13 +302,18 @@ en:
     fulfillments: "Fulfillments"
     fulfillment_month_year: "Month Year"
     fulfillment_date: "Fulfillment Date"
+    invoiced_date: "Invoiced Date"
     log_notes:
       account_number: "Account Number changed to "
       fulfilled_at: "Fulfillment Date changed to "
       quantity: "Quantity changed to "
       performer_id: "Performed By changed to "
-      invoiced: "Invoiced changed to "
+      invoiced: "Invoiced"
+      invoiced_date: "Invoiced date updated to "
     no_components: "Fulfillment Has No Components"
+    tooltips:
+      invoiced_date:
+        disabled: "Fulfillment has not been invoiced"
     view: "View Fulfillment Buttons"
     klok_description: "Imported via Klok"
 
@@ -343,7 +350,7 @@ en:
       sign_out: "Sign Out"
     footer:
       version: "SPARCFulfillment %{version}"
-      copyright: "&copy; 2011-2021 MUSC Foundation for Research Development"
+      copyright: "&copy; 2011-2023 MUSC Foundation for Research Development"
       github: "GitHub"
       about:
         header: "About"
@@ -385,6 +392,7 @@ en:
     documents: "Documents"
     edit: "Edit Non-clinical Service"
     edit_in_sparc: "Only Account and Contact fields can be edited for non-clinical services. All other editing should be done in SPARCDashboard"
+    edit_clincal_services_in_sparc: "All calendar revisions must be completed in SPARCDashboard."
     flash_messages:
       created: "Non-clinical Service Created"
       deleted: "Non-clinical Service Deleted"
@@ -533,6 +541,8 @@ en:
         incomplete_procedure: "Can only be toggled after the Procedure has been completed."
         warning: "Warning: Once this procedure has been invoiced it cannot be undone"
         disabled: "This procedure has been invoiced and cannot be altered."
+      invoiced_date:
+        disabled: "This procedure has not been invoiced"
       credited:
         incomplete_procedure: "Can only be toggled after the Procedure has been completed."
         warning: "Warning: Once this procedure has been credited it cannot be undone"

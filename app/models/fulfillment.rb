@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -43,10 +43,9 @@ class Fulfillment < ApplicationRecord
   validates :quantity, presence: true
   validates_numericality_of :quantity
   validate :cost_available
-
   after_create :update_line_item_name
   after_destroy :remove_line_item_name
-  before_update :recalculate_cost, :set_subsidy_and_funding_source
+  before_update :recalculate_cost, :set_subsidy_and_funding_source, :set_invoiced_date
 
   scope :fulfilled_in_date_range, ->(start_date, end_date) {
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
@@ -55,11 +54,19 @@ class Fulfillment < ApplicationRecord
     write_attribute(:fulfilled_at, Time.strptime(date_time, "%m/%d/%Y")) if date_time.present?
   end
 
+  def invoiced_date=(date_time)
+    write_attribute(:invoiced_date, Time.strptime(date_time, "%m/%d/%Y")) if date_time.present?
+  end
+
   def total_cost
     quantity * service_cost
   end
 
   private
+
+  def set_invoiced_date
+    write_attribute :invoiced_date, Time.now if self.invoiced? && self.invoiced_changed?
+  end
 
   def recalculate_cost
     if fulfilled_at_changed? && !klok_upload

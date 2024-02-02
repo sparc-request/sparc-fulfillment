@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -18,6 +18,20 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+class KlokPerson < ApplicationRecord
+  self.primary_key = 'resource_id'
+
+  has_many :klok_entries, foreign_key: :resource_id
+  has_many :klok_projects, foreign_key: :resource_id, through: :klok_entries
+
+  def local_identity
+    if name.match(/\([^()]*\)(?![^\[]*])/)
+      ldap_uid = name.split(" ").last.gsub(/[\(\)]*/, '')
+      ldap_uid += "@musc.edu" #### TODO, update Klok so that @musc.edu is added
+      Identity.where(ldap_uid: ldap_uid).first
+    else
+      raise StandardError, "Improper Format"
+    end
+  end
+end
+

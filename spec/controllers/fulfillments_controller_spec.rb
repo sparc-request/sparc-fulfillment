@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -65,8 +65,9 @@ RSpec.describe FulfillmentsController do
   describe "POST #create" do
     it "should create a new fulfillment" do
       attributes = @fulfillment.attributes
-      attributes.delete_if{ |key| ["id", "fulfilled_at", "created_at", "updated_at"].include?(key) }
+      attributes.delete_if{ |key| ["id", "fulfilled_at", "created_at", "updated_at", "invoiced_date"].include?(key) }
       attributes[:fulfilled_at] = Date.today.strftime("%m/%d/%Y")
+      attributes[:invoiced_date] = Date.today.strftime("%m/%d/%Y")
       attributes[:components] = @line_item.components.map{ |c| c.id.to_s }
       expect{
         post :create, params: { fulfillment: attributes }, format: :js
@@ -85,10 +86,11 @@ RSpec.describe FulfillmentsController do
     it "should update a fulfillment" do
       put :update, params: {
         id: @fulfillment.id,
-        fulfillment: attributes_for(:fulfillment, line_item_id: @line_item.id, quantity: 328)
+        fulfillment: attributes_for(:fulfillment, line_item_id: @line_item.id, quantity: 328, invoiced: true, invoiced_date: "09/08/2025")
       }, format: :js
       @fulfillment.reload
       expect(@fulfillment.quantity).to eq 328
+      expect(@fulfillment.invoiced).to eq true
     end
   end
 

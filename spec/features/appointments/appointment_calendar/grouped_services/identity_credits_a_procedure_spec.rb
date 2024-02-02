@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -50,7 +50,7 @@ feature 'Invoice Procedure', js: true do
   context 'Current user is a Non-Billing Manager' do
     scenario 'and should only see view-only credited column' do
       given_i_am_viewing_procedures_as_a_non_billing_manager
-      when_i_start_the_appointment  
+      when_i_start_the_appointment
       then_i_should_see_the_credited_column_as_view_only
     end
   end
@@ -114,12 +114,14 @@ feature 'Invoice Procedure', js: true do
 
   def when_i_update_the_billing_type
     bootstrap_select '#procedure_billing_type', 'T'
+    wait_for_ajax
   end
 
   def when_i_complete_the_procedure
     find('button.complete-btn').click
+    wait_for_ajax
   end
-  
+
   def then_i_should_see_the_credited_column_as_view_only
     expect(page).to have_css('td.credited', count: 1)
   end

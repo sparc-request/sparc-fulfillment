@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -49,6 +49,10 @@ FactoryBot.define do
 
     trait :with_arm do
       association :arm, :with_protocol
+    end
+
+    trait :with_protocols_participant do
+      association :protocols_participant, :with_participant, :with_arm
     end
 
     factory :appointment_with_procedures, traits: [:with_procedures]

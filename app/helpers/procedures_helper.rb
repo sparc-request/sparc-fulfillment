@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -80,12 +80,24 @@ module ProceduresHelper
     if current_identity.billing_manager_protocols.include?(procedure.protocol)
       form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
         content_tag :div, class: 'tooltip-wrapper', title: tooltip, data: { toggle: 'tooltip' } do
-          f.check_box :invoiced, disabled: disabled, onchange: "Rails.fire(this.form, 'submit')", data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select') }
+          f.check_box :invoiced, disabled: disabled, onchange: "Rails.fire(this.form, 'submit')", data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select'), class: 'invoice_toggle' }
         end
       end
     else
       procedure.invoiced? ? t('constants.yes_select') : t('constants.no_select')
     end
+  end
+
+  def procedure_invoiced_date(procedure)
+    if current_identity.billing_manager_protocols.include?(procedure.protocol)
+      render 'invoiced_date.html', procedure: procedure
+    else
+      invoiced_date_read_only(procedure)
+    end
+  end
+
+  def invoiced_date_read_only(procedure)
+    (procedure.invoiced_date? ? format_date(procedure.invoiced_date) : "" )
   end
 
   def procedure_credited_display(procedure)
@@ -106,7 +118,7 @@ module ProceduresHelper
     if current_identity.billing_manager_protocols_allow_credit.include?(procedure.protocol)
       form_for procedure, url: appointment_procedure_path(procedure, appointment_id: procedure.appointment_id), remote: true, method: :put do |f|
         content_tag :div, class: 'tooltip-wrapper', title: tooltip, data: { toggle: 'tooltip' } do
-          f.check_box :credited, disabled: disabled, onchange: "Rails.fire(this.form, 'submit')", data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select') }
+          f.check_box :credited, disabled: disabled, onchange: "Rails.fire(this.form, 'submit')", class: ['btn btn-light', disabled ? 'disabled' : ''], data: { toggle: 'toggle', id: procedure.id, on: t('constants.yes_select'), off: t('constants.no_select') }
         end
       end
     else

@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -27,7 +27,7 @@ class Appointment < ApplicationRecord
 
   has_paper_trail
   acts_as_paranoid
-  acts_as_list scope: [:arm_id, :protocols_participant_id]
+  acts_as_list scope: 'arm_id = #{arm_id} AND protocols_participant_id = #{protocols_participant_id} AND deleted_at IS NULL'
 
   include CustomPositioning #custom methods around positioning, acts_as_list
 

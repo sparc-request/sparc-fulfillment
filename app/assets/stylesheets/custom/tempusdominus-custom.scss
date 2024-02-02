@@ -1,4 +1,4 @@
-// Copyright © 2011-2020 MUSC Foundation for Research Development
+// Copyright © 2011-2023 MUSC Foundation for Research Development
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -20,8 +20,12 @@
 
 .datetimepicker {
   .bootstrap-datetimepicker-widget {
+    top: 100% !important;
+    left: 0;
+    bottom: auto !important;
+    display: none;
     width: initial;
-    z-index: 1039;
+    z-index: 1039 !important;
 
     .datepicker {
       th.prev, th.next, th.dow, td.day {
