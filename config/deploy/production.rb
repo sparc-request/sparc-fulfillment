@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -24,9 +24,9 @@
 # You can define all roles on a single server, or split them:
 
 set :repo_url, 'git@sparc_fulfillment:sparc-request/sparc-fulfillment.git'
-# server 'sparc-fulfillment.musc.edu', user: 'capistrano', roles: %w{app db web}
+server 'sparc-fulfillment.musc.edu', user: 'capistrano', roles: %w{app db web}
 #New production server during transition:
-server 'bmic-sparcff.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
+#server 'bmic-sparcff.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
 
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
@@ -52,7 +52,7 @@ server 'bmic-sparcff.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
 # Feel free to add new variables to customise your setup.
 
 
-set :branch, 'new_production'
+set :branch, 'production'
 set :rails_env, 'production'
 set :rvm_ruby_version, '2.7.5@cwf --create'
 set :passenger_restart_with_touch, true

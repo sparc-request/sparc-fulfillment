@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -111,12 +111,15 @@ RSpec.describe Visit, type: :model do
       it 'should delete procedures' do
         protocol = create(:protocol)
         arm = create(:arm_imported_from_sparc, protocol: protocol)
-        appointment = arm.visit_groups.first.appointments.first
-        visit = arm.visit_groups.first.visits.first
+        protocols_participant = create(:protocols_participant, :with_participant, arm: arm, protocol: protocol)
+        visit_group = create(:visit_group, arm: arm, name: "Visit 1")
+        appointment = create(:appointment, :without_validations, arm: arm, protocols_participant: protocols_participant, visit_group: visit_group)
+        visit = create(:visit, visit_group: visit_group, line_item: arm.line_items.first)
         service = visit.line_item.service
         3.times do
           create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
         end
+        arm.reload #reloading arm from database as some failure to load from database is causing errors
         visit.update_procedures(2, 'research_billing_qty')
         expect(visit.procedures.count).to eq(2)
       end
@@ -138,12 +141,15 @@ RSpec.describe Visit, type: :model do
       it 'should create procedures' do
         protocol = create(:protocol)
         arm = create(:arm_imported_from_sparc, protocol: protocol)
-        appointment = arm.visit_groups.first.appointments.first
-        visit = arm.visit_groups.first.visits.first
+        protocols_participant = create(:protocols_participant, :with_participant, arm: arm, protocol: protocol)
+        visit_group = create(:visit_group, arm: arm, name: "Visit 1")
+        appointment = create(:appointment, :without_validations, arm: arm, protocols_participant: protocols_participant, visit_group: visit_group)
+        visit = create(:visit, visit_group: visit_group, line_item: arm.line_items.first)
         service = visit.line_item.service
         3.times do
           create(:procedure, visit: visit, billing_type: "research_billing_qty", service_id: service.id, appointment_id: appointment.id)
         end
+        arm.reload #reloading arm from database as some failure to load from database is causing errors
         visit.update_procedures(5, 'research_billing_qty')
         expect(visit.procedures.count).to eq(5)
       end

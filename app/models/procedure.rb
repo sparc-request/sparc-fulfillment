@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -49,7 +49,9 @@ class Procedure < ApplicationRecord
   has_one :protocols_participant, through: :appointment
   has_one :visit_group, through: :appointment
 
-  before_update :set_save_dependencies, :set_subsidy_and_funding_source
+  before_update :set_save_dependencies, :set_subsidy_and_funding_source, :set_invoiced_date
+
+  after_save :update_protocols_participant_deletable
 
   validates_inclusion_of :status, in: STATUS_TYPES,
                                   if: Proc.new { |procedure| procedure.status.present? }
@@ -178,6 +180,14 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def invoiced_date=(invoiced_date)
+    if invoiced_date.present?
+      write_attribute(:invoiced_date, Time.strptime(invoiced_date, "%m/%d/%Y"))
+    else
+      write_attribute(:invoiced_date, nil)
+    end
+  end
+
   def service_name
     if unstarted?
       service.present? ? service.name : ''
@@ -195,6 +205,14 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def update_protocols_participant_deletable
+    protocols_participant.update(deletable: !protocols_participant.procedures.exists?(status: ['follow_up', 'incomplete', 'complete'])) if protocols_participant
+  end
+
+  def set_invoiced_date
+    write_attribute :invoiced_date, Time.now if self.invoiced? && self.invoiced_changed?
+  end
 
   def cost_available
     date = completed_date ? completed_date : Date.today

@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -21,7 +21,7 @@
 class ProtocolsParticipant < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
-  
+
   belongs_to :protocol
   belongs_to :participant
   belongs_to :arm
@@ -85,7 +85,7 @@ class ProtocolsParticipant < ApplicationRecord
   end
 
   def can_be_destroyed?
-    procedures.where.not(status: 'unstarted').empty?
+    deletable
   end
 
   def label
@@ -105,7 +105,9 @@ class ProtocolsParticipant < ApplicationRecord
   end
 
   def new_visit_groups
-    @new_visit_groups ||= self.arm.visit_groups.where.not(id: self.appointments.pluck(:visit_group_id))
+    missing_appointments_by_visit_group_ids = self.arm.visit_groups.pluck(:id).difference(self.appointments.where(arm: self.arm).pluck(:visit_group_id))
+
+    @new_visit_groups ||= VisitGroup.where(id: missing_appointments_by_visit_group_ids)
   end
 
   def create_appointments_for_visit_groups visit_groups

@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -35,7 +35,7 @@ FactoryBot.define do
 
     trait :complete do
       association :service, factory: :service
-      association :appointment, :with_arm, :without_validations
+      association :appointment, :with_arm, :with_protocols_participant, :without_validations
 
       status { 'complete' }
       completed_date { Date.today.strftime('%m/%d/%Y') }

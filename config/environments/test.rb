@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -69,4 +69,7 @@ Rails.application.configure do
   config.active_job.queue_adapter = :test
 
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
 end

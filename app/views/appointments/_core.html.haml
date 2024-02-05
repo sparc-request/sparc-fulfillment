@@ -1,4 +1,4 @@
--# Copyright © 2011-2020 MUSC Foundation for Research Development~
+-# Copyright © 2011-2023 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -39,6 +39,8 @@
         = Procedure.human_attribute_name(:performer)
       %th.w-5.invoiced{ data: { field: 'invoiced' } }
         = Procedure.human_attribute_name(:invoiced)
+      %th.w-15.invoiced-date{ data: { field: 'invoiced_date', align: 'center' } }
+        = Procedure.human_attribute_name(:invoiced_date)
       %th.w-5.credited{ data: { field: 'credited' } }
         = Procedure.human_attribute_name(:credited)
       %th.w-5.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }
@@ -65,6 +67,8 @@
         = Procedure.human_attribute_name(:performer)
       %th.w-5.invoiced{ data: { field: 'invoiced' } }
         = Procedure.human_attribute_name(:invoiced)
+      %th.w-15.invoiced-date{ data: { field: 'invoiced_date', align: 'center' } }
+        = Procedure.human_attribute_name(:invoiced_date)
       %th.w-5.credited{ data: { field: 'credited' } }
         = Procedure.human_attribute_name(:credited)
       %th.w-5.notes{ data: { field: 'notes', align: 'center', halign: 'left' } }

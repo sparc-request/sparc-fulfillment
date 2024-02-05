@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -34,12 +34,15 @@ $("#procedure<%= procedure.id %>StatusButtons .<%= procedure.status %>-btn").add
 updateNotesBadge("procedure<%= procedure.id %>", "<%= procedure.notes.count %>")
 $(".performer #edit_procedure_<%= procedure.id %> .selectpicker").selectpicker('val', '<%= procedure.performer_id %>')
 date_time_picker = $("#procedure<%= procedure.id %>CompletedDatePicker")
+
 <% if procedure.incomplete? %>
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
+
 <% elsif procedure.complete? %>
 date_time_picker.datetimepicker('date', "<%= format_date(procedure.completed_date) %>")
 date_time_picker.datetimepicker('enable')
+
 <% end %>
 <% end %>
 

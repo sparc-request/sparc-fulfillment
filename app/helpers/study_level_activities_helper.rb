@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -91,12 +91,28 @@ module StudyLevelActivitiesHelper
     end
   end
 
+  def billing_manager
+    self.current_identity.billing_manager_protocols.include?(fulfillment.protocol)
+  end
+
   def toggle_invoiced(fulfillment)
     if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
       invoice_toggle_button(fulfillment)
     else
       invoice_read_only(fulfillment)
     end
+  end
+
+  def invoiced_date(fulfillment)
+    if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
+      render 'invoiced_date.html', fulfillment: fulfillment
+    else
+      invoiced_date_read_only(fulfillment)
+    end
+  end
+
+  def invoiced_date_read_only(fulfillment)
+    (fulfillment.invoiced_date? ? format_date(fulfillment.invoiced_date) : "" )
   end
 
   def toggle_credited(fulfillment)

@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -38,21 +38,33 @@ $("[name='procedure[notes_attributes][0][<%= attr.to_s %>]']").parents('.form-gr
 <% @procedure.reload %>
 Swal.fire("<%= @cost_error_message %>")
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
+invoiced_date_time_picker = $("#procedure<%= @procedure.id %>InvoicedDatePicker")
 date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+invoiced_date_time_picker.datetimepicker('date', "<%= format_date(@procedure.invoiced_date) %>")
 <% end %>
 
 <% else %>
 $("#core-<%= @procedure.sparc_core_id %>-procedures").bootstrapTable('refresh', silent: true)
-
 date_time_picker = $("#procedure<%= @procedure.id %>CompletedDatePicker")
+date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
+invoiced_date_time_picker = $("#procedure<%= @procedure.id %>InvoicedDatePicker")
+invoiced_date_time_picker.datetimepicker('date', "<%= format_date(@procedure.invoiced_date) %>")
 performer_selectpicker = $(".performer #edit_procedure_<%= @procedure.id %> .selectpicker")
-date_time_picker.datetimepicker('format', 'MM/DD/YYYY')
+
+invoiced_toggle = $(".invoiced #edit_procedure_<%= @procedure.id %>")
+credited_toggle = $(".credited #edit_procedure_<%= @procedure.id %>")
 
 <% if @procedure.unstarted? || @procedure.follow_up? %>
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
 $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
 performer_selectpicker.selectpicker('val', "")
+
+invoiced_toggle.bootstrapToggle('disable')
+invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
+credited_toggle.bootstrapToggle('disable')
+credited_toggle.find('#procedure_credited').removeAttr('disabled')
+$('.toggle-off').text('No')
 
 <% elsif @procedure.incomplete? %>
 $("#modalContainer").modal('hide')
@@ -63,14 +75,25 @@ $("#procedure<%= @procedure.id %>StatusButtons button").removeClass("active")
 $("#procedure<%= @procedure.id %>StatusButtons .incomplete-btn").addClass("active")
 performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
-<% elsif @procedure.complete? %>
+invoiced_toggle.bootstrapToggle('disable')
+invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
+credited_toggle.bootstrapToggle('disable')
+credited_toggle.find('#procedure_credited').removeAttr('disabled')
+$('.toggle-off').text('No')
+
+<% elsif @procedure.complete? && !@procedure.invoiced? %>
 date_time_picker.datetimepicker('date', "<%= format_date(@procedure.completed_date) %>")
 date_time_picker.datetimepicker('enable')
 performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
-<% end %>
+invoiced_toggle.bootstrapToggle('enable')
+invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')
+credited_toggle.bootstrapToggle('enable')
+credited_toggle.find('#procedure_credited').removeAttr('disabled')
+$('.toggle-off').text('No')
+ <% end %>
 
-<% if (@billing_type_updated && @appointment_style == "grouped") || @invoiced_or_credited_changed %>
+<% if (@billing_type_updated && @appointment_style == "grouped") ||  @invoiced_or_credited_changed %>
 $('#core<%= @procedure.core.id %>ProceduresGroupedView').bootstrapTable('refresh', silent: true)
 <% end %>
 

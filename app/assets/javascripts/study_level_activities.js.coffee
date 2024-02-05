@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -25,12 +25,14 @@ $ ->
   $(document).on 'change', 'input.invoice_toggle', ->
     invoiced = $(this).prop('checked')
     fulfillment_id = $(this).data('id')
+    invoiced_date = moment().format('MM/DD/YYYY')
     $.ajax
       type: 'PUT'
       url: "/fulfillments/toggle_invoiced/#{fulfillment_id}"
       data:
         fulfillment:
           invoiced: invoiced
+          invoiced_date: invoiced_date
 
   $(document).on 'change', 'input.credit_toggle', ->
     credited = $(this).prop('checked')
@@ -52,7 +54,6 @@ $ ->
       data: "line_item_id" : line_item_id
 
   # Fulfillment Bindings
-
   $(document).on 'click', '.otf-fulfillment-edit', ->
     fulfillment_id = $(this).data('fulfillment_id')
     $.ajax

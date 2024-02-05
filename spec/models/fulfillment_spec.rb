@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -48,6 +48,18 @@ RSpec.describe Fulfillment, type: :model do
         fulfillment = create(:fulfillment, line_item: line_item)
 
         expect(fulfillment.quantity_type).to eq(line_item.quantity_type)
+      end
+    end
+  end
+
+
+  context 'invoiced flag set to true' do
+    describe 'invoiced_date set' do
+      it 'should have an invoiced date' do
+        line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
+        fulfillment = create(:fulfillment, line_item: line_item)
+
+        expect(fulfillment.invoiced_date).not_to be_nil
       end
     end
   end

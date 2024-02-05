@@ -1,4 +1,4 @@
-# Copyright © 2011-2020 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -40,6 +40,7 @@ class Participant < ApplicationRecord
   validates :first_name, presence: true
 
   validate :middle_initial_format
+  validate :city_presence_and_format
   validate :mrn_format, if: :validate_mrn_true
   validates :mrn, presence: true
   validates_uniqueness_of :mrn
@@ -50,7 +51,6 @@ class Participant < ApplicationRecord
   validates :ethnicity, presence: true
   validates :race, presence: true
   validates :address, presence: true
-  validates :city, presence: true
   validates :state, presence: true
 
   validates :zipcode, presence: true
@@ -137,6 +137,14 @@ class Participant < ApplicationRecord
       if !mrn.scan(/\D/).empty?
         errors.add(:mrn, "must only contain numbers")
       end
+    end
+  end
+
+  def city_presence_and_format
+    if city.blank?
+      errors.add(:city, "can't be blank")
+    elsif not( /\A[a-z\s]+\z/i.match city.to_s)
+      errors.add(:city, "is invalid")
     end
   end
 
