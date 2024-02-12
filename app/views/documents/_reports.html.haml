@@ -36,6 +36,9 @@
       = link_to new_report_path(report_type: 'subsidy_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
         = succeed "Subsidy Report" do
           = icon('fas', 'file-alt mr-2')
+      = link_to new_report_path(report_type: 'funding_source_auditing_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
+        = succeed "Funding Source Auditing Report" do
+          = icon('fas', 'file-alt mr-2')
       - if ENV.fetch('CLINICAL_SERVICES') == 'true'
         = link_to new_report_path(report_type: 'visit_report'), remote: true, class: "btn btn-lg btn-block btn-outline-primary mt-3 text-left" do
           = succeed "Visit Report" do

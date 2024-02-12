@@ -1,0 +1,88 @@
+-# Copyright © 2011-2023 MUSC Foundation for Research Development~
+-# All rights reserved.~
+
+-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+-# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+-# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+-# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+-# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+-# derived from this software without specific prior written permission.~
+
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+-# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+-# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+-# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
+.modal-dialog
+  .modal-content
+    = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
+      .modal-header
+        %h4.modal-title.text-center
+          = t(:reports)[:funding_source_auditing_report]
+        %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} &times;
+      .modal-body
+        #modal_errors
+        = render partial: 'required_fields'
+        .col-md-12.mt-3
+          = hidden_field_tag "report_type", report_type
+          .form-group.row.align-items-center
+            = label_tag "title", t(:documents)[:title], class: "control-label required col-sm-4 mb-0"
+            .col-sm-8
+              = text_field_tag "title", title, class: 'form-control'
+          .form-group.row.align-items-center
+            = label_tag "start_date", t(:reports)[:start_date], class: "control-label required col-sm-4 mb-0"
+            .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
+              = text_field_tag "start_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#start_date", toggle:"datetimepicker" }
+              .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
+                .input-group-text
+                  %span.far.fa-calendar
+          .form-group.row.align-items-center
+            = label_tag "end_date", t(:reports)[:end_date], class: "control-label required col-sm-4 mb-0"
+            .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
+              = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date", toggle:"datetimepicker" }
+              .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
+                .input-group-text
+                  %span.far.fa-calendar
+
+          .form-group.row.align-items-center
+            = label_tag "organizations", t(:reports)[:organization], class: "control-label required col-sm-4 mb-0"
+            .col-sm-8
+              = select_tag 'organizations', grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "selectpicker form-control", id: "organization_select"
+          .form-group.protocols-group.row.align-items-center
+            = label_tag "protocol", t(:reports)[:protocols], class: "control-label required col-sm-4 mb-0"
+            .col-sm-8#protocol_section
+          .form-group#org_based_protocols.d-none
+            = icon('fas', 'cog spin ml-3')
+            -# .background_load
+            -#   %i.fas.fa-cog.fa-spin
+
+          %hr
+          .row
+            .form-group.col-sm-6
+              %label.control-label=t(:reports)[:sort_by]
+              .form-check.ml-3
+                = radio_button_tag "sort_by", t(:reports)[:protocol_id], true, class: "form-check-input"
+                %label.form-check-label=t(:reports)[:protocol_id]
+              .form-check.ml-3
+                = radio_button_tag "sort_by", t(:reports)[:primary_pi], false, class: "form-check-input"
+                %label.form-check-label=t(:reports)[:primary_pi]
+            .form-group.col-sm-6
+              %label.control-label=t(:reports)[:sort_order]
+              .form-check.ml-3
+                = radio_button_tag "sort_order", t(:reports)[:asc], true, class: "form-check-input"
+                %label.form-check-label=t(:reports)[:ascending]
+              .form-check.ml-3
+                = radio_button_tag "sort_order", t(:reports)[:desc], false, class: "form-check-input"
+                %label.form-check-label=t(:reports)[:descending]
+
+      .modal-footer
+        .center-block
+          %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}
+            = t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:reports)[:request_report], class: 'report-request', disabled: true}
