@@ -47,6 +47,10 @@ class MultipleProceduresController < ApplicationController
   end
 
   def reset_procedures
+    @appointment.procedure_groups.each do |procedure_group|
+      procedure_group.update_attributes(start_time: nil, end_time: nil)
+    end
+
     #Status is used by the 'show' re-render
     @statuses = @appointment.appointment_statuses.pluck(:status)
 

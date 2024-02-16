@@ -551,6 +551,12 @@ en:
       disabled_invoiced: "This item cannot be removed because it is invoiced."
       group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
 
+  procedure_groups:
+    start_time: "Set Core Procedure Group Start Time"
+    end_time: "Set Core Procedure Group End Time"
+    flash_messages:
+      updated: "Core Procedure Group Time Updated"
+
   protocols:
     sparc_link: "SPARCDashboard"
     table:

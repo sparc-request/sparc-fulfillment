@@ -18,7 +18,7 @@
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-.btn-group.w-50.service-multiselect-container
+.btn-group.w-100.service-multiselect-container
   - disabled = !appointment.started? || appointment.completed? ? 'disabled' : nil
   .w-60
     = select_tag "core_#{core_id}_multiselect", options_for_select(procedures_groups_for_select(procedures)), disabled: disabled, class: 'core_multiselect selectpicker show-tick w-100', multiple: true, data: { actions_box: true, appointment_id: appointment.id, core_id: core_id }

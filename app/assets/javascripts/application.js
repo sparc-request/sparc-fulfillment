@@ -98,3 +98,4 @@
 //= require fulfillments
 //= require procedures
 //= require notes
+//= require procedure_groups

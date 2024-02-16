@@ -68,6 +68,7 @@ Rails.application.routes.draw do
   resources :custom_appointments, controller: :appointments
   resources :imports
   resources :tasks, only: [:index, :show, :new, :create, :update, :edit]
+  resources :procedure_groups, only: :update
 
   resources :reports, only: [:new, :create] do
     collection do
