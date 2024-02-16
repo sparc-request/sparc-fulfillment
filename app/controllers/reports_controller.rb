@@ -54,7 +54,7 @@ class ReportsController < ApplicationController
     @single_protocol = (params[:report_type] == "project_summary_report")
 
     if params[:org_ids]
-      @protocols = Protocol.where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
+      @protocols = Protocol.includes(:sub_service_request, :sparc_protocol).where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
       @services = Service.where(organization_id: all_child_organizations_with_self(params[:org_ids])).distinct
       @grouped_options_services = InvoiceReportGroupedOptions.new(@services, 'service').collect_grouped_options_services
     else
@@ -67,13 +67,12 @@ class ReportsController < ApplicationController
 
     if params[:service_ids]
       @protocols = []
-      base_protocols = Protocol.includes(:sub_service_request, :line_items, protocols_participants: [appointments: [:procedures]])
 
-      #These are separated into different queries because acitverecord is stalling out when attempting to chain them together with an 'or' method
-      @protocols << base_protocols.where(line_items: {service_id: params[:service_ids]})
-      @protocols << base_protocols.where(procedures: {service_id: params[:service_ids]})
-      
-      @protocols = @protocols.flatten
+      Protocol.includes(:sub_service_request, :sparc_protocol).where(line_items: LineItem.where(service_id: params[:service_ids])).or(Protocol.includes(:sub_service_request, :sparc_protocol).where(procedures: Procedure.where(service_id: params[:service_ids]))).each do |protocol|
+        @protocols << protocol
+      end
+
+      @protocols
     else
       @protocols = current_identity.protocols
     end
