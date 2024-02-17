@@ -1,4 +1,4 @@
-# Copyright © 2011-2023 MUSC Foundation for Research Development~
+# Copyright © 2011-2020 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -18,63 +18,17 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-class Report
-  include ActionView::Helpers::NumberHelper
+task delete_protocols_without_ssr: :environment do
 
-  # Required dependency for ActiveModel::Errors
-  extend ActiveModel::Naming
-  extend ActiveModel::Translation
+  protocols = Protocol.all
 
-  attr_reader :errors
-
-  def initialize(params)
-    @params = params
-    @errors = ActiveModel::Errors.new(self)
-  end
-
-  def valid?
-    self.class::VALIDATES_NUMERICALITY_OF.each{ |validates| errors.add(validates, "must be a number") unless @params[validates].is_a?(Numeric) }
-
-    self.class::VALIDATES_PRESENCE_OF.each do |validates|
-      if @params[validates].blank?
-        errors.add(validates, "must not be blank")
-      end
-    end
-    errors.empty?
-  end
-
-  private
-
-  def format_protocol_id_column(protocol)
-    protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
-  end
-
-  def format_date(date)
-    if date.present?
-      date.strftime("%m/%d/%Y")
-    else
-      ''
-    end
-  end
-
-  def display_cost(cost)
-    if cost
-      dollars = (cost / 100.0) rescue nil
-      dollar, cent = dollars.to_s.split('.')
-      dollars_formatted = "#{dollar}.#{cent[0..1]}".to_f
-
-      number_to_currency(dollars_formatted, seperator: ",", unit: "")
-
-    else
-      "N/A"
-    end
-  end
-
-  def formatted_status(protocol)
-    if protocol.status.present?
-      I18n.t(:sub_service_request)[:statuses][protocol.status.to_sym]
-    else
-      '-'
+  protocols.each do |protocol|
+    begin
+      protocol.srid
+    rescue Exception => e 
+      puts "Due to having no SRID, deleting protocol #{protocol.id}"
+      protocol.destroy
+      next
     end
   end
 end
