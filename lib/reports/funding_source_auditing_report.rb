@@ -1,83 +1,22 @@
+# Copyright © 2011-2024 MUSC Foundation for Research Development~
+# All rights reserved.~
 
-# class FundingSourceAuditingReport < Report
-#   VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocols, :organizations].freeze
-#   VALIDATES_NUMERICALITY_OF = [].freeze
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
 
-#   def generate(document)
-#     @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc
-#     @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
+# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
 
-#     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+# disclaimer in the documentation and/or other materials provided with the distribution.~
 
-#     CSV.open(document.path, "wb") do |csv|
-#       protocols = Protocol.where(organization: @params[:organizations], id: @params[:protocols])
+# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+# derived from this software without specific prior written permission.~
 
-#       if @params[:sort_by] == "Protocol ID"
-#         protocols = protocols.sort_by(&:sparc_id)
-#       else
-#         protocols = protocols.sort_by{ | protocol| protocol.pi.last_name }
-#       end
-#       if @params[:sort_order] == "DESC"
-#         protocols.reverse!
-#       end
-
-#       csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
-#       csv << [""]
-#       csv << [""]
-#       header = ["Protocol ID"]
-#       header << "Request ID"
-#       header << "RMID" if ENV.fetch('RMID_URL'){nil}
-#       header << "Short Title"
-#       header << "Previous Funding Source"
-#       header << "Proposal Funding Status"
-#       header << "Funding Source"
-#       header << "Funding Start Date"
-#       header << "Status"
-#       header << "Primary PI"
-#       header << "Primary PI Affiliation"
-#       header << "Billing/Business Manager(s)"
-#       header << "Core/Program Affected"
-#       header << "Services Affected"
-#       header << "Quantity Completed"
-#       header << "Total Cost"
-#       header << "Invoiced"
-
-#       csv << header
-
-#       audits = Sparc::Audit.where(auditable_type: 'Protocol', action: 'update')
-#                              .where('created_at >= ? AND created_at <= ?', @start_date, @end_date)
-#                              .where('audited_changes LIKE ?', '%funding_source%')
-
-#       audits.each do |audit|
-#         sparc_protocol_id = audit.auditable_id
-#         protocol = Protocol.find_by(sparc_id: sparc_protocol_id)
-#         next if protocol.nil?
-
-#         funding_source_changes = YAML.load(audit.audited_changes)
-#         next unless funding_source_changes["funding_source"]
-#           csv << [
-#             protocol.srid,
-#             protocol.sub_service_request.ssr_id,
-#             protocol.research_master_id,
-#             protocol.short_title,
-#             funding_source_changes["funding_source"][0], # [previous, current]
-#             protocol.sparc_protocol.funding_status,
-#             funding_source_changes["funding_source"][1],
-#             protocol.sparc_protocol.funding_start_date,
-#             protocol.status,
-#             protocol.pi&.full_name,
-#             protocol.pi&.professional_org_lookup("institution"),
-#             protocol.billing_business_managers.map(&:full_name).join(','),
-#             protocol.organization.name,
-#             protocol.line_items.map(&:service).map(&:name).join(','),
-#             protocol.fulfillments.sum(&:quantity),
-#             protocol.fulfillments.sum(&:total_cost),
-#             protocol.fulfillments.map{|f| f.invoiced? ? "Yes" : "No"}.join(',')
-#           ]
-#         end
-#      end
-#   end
-# end
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class FundingSourceAuditingReport < Report
   VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocols, :organizations].freeze
