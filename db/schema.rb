@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2023_04_01_125339) do
 
+
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
     t.string "status"
     t.datetime "created_at"
@@ -317,6 +318,7 @@ ActiveRecord::Schema.define(version: 2023_04_01_125339) do
     t.datetime "updated_at", null: false
     t.string "external_id"
     t.string "recruitment_source"
+    t.boolean "deletable", default: true
     t.index ["arm_id"], name: "index_protocols_participants_on_arm_id"
     t.index ["participant_id"], name: "index_protocols_participants_on_participant_id"
     t.index ["protocol_id", "participant_id"], name: "index_protocols_participants_on_protocol_id_and_participant_id"

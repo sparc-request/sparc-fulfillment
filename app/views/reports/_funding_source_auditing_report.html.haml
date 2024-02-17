@@ -23,7 +23,7 @@
     = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
       .modal-header
         %h4.modal-title.text-center
-          = t(:reports)[:invoice_report]
+          = t(:reports)[:funding_source_auditing_report]
         %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} &times;
       .modal-body
@@ -31,7 +31,6 @@
         = render partial: 'required_fields'
         .col-md-12.mt-3
           = hidden_field_tag "report_type", report_type
-          = hidden_field_tag "include_notes", false
           .form-group.row.align-items-center
             = label_tag "title", t(:documents)[:title], class: "control-label required col-sm-4 mb-0"
             .col-sm-8
@@ -54,55 +53,34 @@
           .form-group.row.align-items-center
             = label_tag "organizations", t(:reports)[:organization], class: "control-label required col-sm-4 mb-0"
             .col-sm-8
-              = select_tag 'organizations',grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "selectpicker form-control", id: "organization_select"
-
-          .form-group.row.align-items-center
-            = label_tag "services", t(:reports)[:service], class: "control-label col-sm-4 mb-0"
-            .col-sm-8#service_section
-              = select_tag 'services', options_for_select(@grouped_options_services), multiple: true, data: {actions_box: true, live_search: true }, class: "selectpicker form-control", id: "service_select"
-
-          .form-group.d-none.row.align-items-center
+              = select_tag 'organizations', grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "selectpicker form-control", id: "organization_select"
+          .form-group.protocols-group.row.align-items-center
             = label_tag "protocol", t(:reports)[:protocols], class: "control-label required col-sm-4 mb-0"
             .col-sm-8#protocol_section
           .form-group#org_based_protocols.d-none
             = icon('fas', 'cog spin ml-3')
+            -# .background_load
+            -#   %i.fas.fa-cog.fa-spin
 
           %hr
-
           .row
             .form-group.col-sm-6
               %label.control-label=t(:reports)[:sort_by]
               .form-check.ml-3
                 = radio_button_tag "sort_by", t(:reports)[:protocol_id], true, class: "form-check-input"
-                %label.form-check-label= t(:reports)[:protocol_id]
-
+                %label.form-check-label=t(:reports)[:protocol_id]
               .form-check.ml-3
                 = radio_button_tag "sort_by", t(:reports)[:primary_pi], false, class: "form-check-input"
-                %label.form-check-label= t(:reports)[:primary_pi]
-
+                %label.form-check-label=t(:reports)[:primary_pi]
             .form-group.col-sm-6
               %label.control-label=t(:reports)[:sort_order]
               .form-check.ml-3
                 = radio_button_tag "sort_order", t(:reports)[:asc], true, class: "form-check-input"
-                %label.form-check-label= t(:reports)[:ascending]
-
+                %label.form-check-label=t(:reports)[:ascending]
               .form-check.ml-3
                 = radio_button_tag "sort_order", t(:reports)[:desc], false, class: "form-check-input"
-                %label.form-check-label= t(:reports)[:descending]
+                %label.form-check-label=t(:reports)[:descending]
 
-          .row
-            %label.col-12.control-label=t(:actions)[:options]
-          .row
-            .form-group.col-sm-6
-              .form-check.ml-3
-                = check_box_tag "include_notes", true, false, class: "form-check-input"
-                %label.form-check-label=t(:reports)[:include_notes]
-              
-            .form-group.col-sm-6
-              .form-check.ml-3
-                = check_box_tag "include_invoiced", true, false, class: "form-check-input"
-                %label.form-check-label=t(:reports)[:include_invoiced]
-                
       .modal-footer
         .center-block
           %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}
