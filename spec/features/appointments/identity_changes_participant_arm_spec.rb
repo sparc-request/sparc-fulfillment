@@ -92,4 +92,3 @@ feature "Change Participant Arm", js: :true do
     expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
   end
 
-end

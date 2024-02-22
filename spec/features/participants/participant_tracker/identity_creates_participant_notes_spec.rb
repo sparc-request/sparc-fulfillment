@@ -99,4 +99,3 @@ feature 'User views the participant tracker page', js: true do
 
     expect(page).to have_content("Arm changed from #{first_arm_name} to #{second_arm_name}")
   end
-end
