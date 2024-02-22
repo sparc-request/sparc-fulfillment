@@ -39,14 +39,15 @@
 #     end
 #   end
 
-#   context 'and changes the participant arm which should create a note' do
-#     scenario 'and sees the note' do
-#       given_i_am_viewing_the_participant_tracker
-#       when_i_change_the_participants_arm
-#       when_i_click_on_the_notes_button
-#       then_i_should_see_the_arm_change_note_in_the_index
-#     end
-#   end
+  # NOTE:  TEMPORARILY COMMENTING OUT DUE TO ISSES WITH TRAVIS
+  # context 'and changes the participant arm which should create a note' do
+  #   scenario 'and sees the note' do
+  #     given_i_am_viewing_the_participant_tracker
+  #     when_i_change_the_participants_arm
+  #     when_i_click_on_the_notes_button
+  #     then_i_should_see_the_arm_change_note_in_the_index
+  #   end
+  # end
 
 #   def given_i_am_viewing_the_participant_tracker
 #     @protocol = create_and_assign_protocol_to_me
@@ -96,6 +97,6 @@
 #     first_arm_name = @original_arm.name
 #     second_arm_name = @protocol.arms.second.name
 
-#     expect(page).to have_content("Arm changed from #{first_arm_name} to #{second_arm_name}")
-#   end
-# end
+    expect(page).to have_content("Arm changed from #{first_arm_name} to #{second_arm_name}")
+  end
+end

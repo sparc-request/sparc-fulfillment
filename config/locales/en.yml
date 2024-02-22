@@ -613,6 +613,7 @@ en:
     include_invoiced: "Include Invoiced"
     invoice_report: "Invoice Report"
     end_date: "End Date"
+    funding_source_auditing_report: "Funding Source Auditing Report"
     gender: "Gender"
     mrn: "MRN"
     organization: "Organization(s)"

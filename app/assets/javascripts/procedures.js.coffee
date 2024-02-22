@@ -19,6 +19,8 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+  $(document).on 'click', '#procedure_invoiced', ->
+    $(this).prop('disabled', true)
 
   $(document).on 'load-success.bs.table', 'table.core', ->
     $('.group-of-one').closest('tr.groupBy').remove()

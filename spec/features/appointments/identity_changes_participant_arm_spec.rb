@@ -20,24 +20,25 @@
 
 # require 'rails_helper'
 
-# feature "Change Participant Arm", js: :true do
-#   context "original arm does NOT have completed procedures" do
-#     scenario "User changes arm on the participant tracker" do
-#       when_i_start_work_on_an_appointment
-#       then_i_change_the_arm_of_the_participant
-#       and_i_visit_the_calendar_again
-#       i_should_only_see_new_appointments
-#     end
-#   end
-#   context "original arm has completed procedures" do
-#     scenario "User changes arm on the participant tracker" do
-#       when_i_start_work_on_an_appointment
-#       and_i_complete_a_procedure
-#       then_i_change_the_arm_of_the_participant
-#       and_i_visit_the_calendar_again
-#       i_should_see_new_and_old_appointments
-#     end
-#   end
+feature "Change Participant Arm", js: :true do
+  # NOTE:  TEMPORARILY COMMENTING OUT DUE TO TRAVIS FAILURES
+  # context "original arm does NOT have completed procedures" do
+  #   scenario "User changes arm on the participant tracker" do
+  #     when_i_start_work_on_an_appointment
+  #     then_i_change_the_arm_of_the_participant
+  #     and_i_visit_the_calendar_again
+  #     i_should_only_see_new_appointments
+  #   end
+  # end
+  context "original arm has completed procedures" do
+    scenario "User changes arm on the participant tracker" do
+      when_i_start_work_on_an_appointment
+      and_i_complete_a_procedure
+      then_i_change_the_arm_of_the_participant
+      and_i_visit_the_calendar_again
+      i_should_see_new_and_old_appointments
+    end
+  end
 
 
 #   def when_i_start_work_on_an_appointment
@@ -91,4 +92,4 @@
 #     expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
 #   end
 
-# end
+end
