@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# require 'rails_helper'
+require 'rails_helper'
 
 feature "Change Participant Arm", js: :true do
   # NOTE:  TEMPORARILY COMMENTING OUT DUE TO TRAVIS FAILURES
@@ -41,55 +41,55 @@ feature "Change Participant Arm", js: :true do
   end
 
 
-#   def when_i_start_work_on_an_appointment
-#     @protocol     = create_and_assign_protocol_to_me
-#     @protocols_participant  = @protocol.protocols_participants.first
-#     @original_arm = @protocols_participant.arm
-#     @second_arm   = @protocol.arms.where.not(id: @original_arm.id).first
-#     @service      = @protocol.organization.inclusive_child_services(:per_participant).first
-#     @original_appointment = @original_arm.visit_groups.first
+   def when_i_start_work_on_an_appointment
+     @protocol     = create_and_assign_protocol_to_me
+     @protocols_participant  = @protocol.protocols_participants.first
+     @original_arm = @protocols_participant.arm
+     @second_arm   = @protocol.arms.where.not(id: @original_arm.id).first
+     @service      = @protocol.organization.inclusive_child_services(:per_participant).first
+     @original_appointment = @original_arm.visit_groups.first
 
-#     @service.update_attributes(name: 'Test Service')
-#     @original_appointment.update_attributes(name: "First Arm Appointment")
+     @service.update_attributes(name: 'Test Service')
+     @original_appointment.update_attributes(name: "First Arm Appointment")
 
-#     given_i_am_viewing_a_visit
+     given_i_am_viewing_a_visit
 
-#     find('a.start-appointment').click
-#     wait_for_ajax
+     find('a.start-appointment').click
+     wait_for_ajax
 
-#     sleep 2
+     sleep 2
 
-#     add_a_procedure(@service)
-#   end
+     add_a_procedure(@service)
+   end
 
-#   def and_i_complete_a_procedure
-#     find('button.complete-btn').click
-#     wait_for_ajax
-#   end
+   def and_i_complete_a_procedure
+     find('button.complete-btn').click
+     wait_for_ajax
+   end
 
-#   def then_i_change_the_arm_of_the_participant
-#     visit protocol_path(@protocol.id)
-#     wait_for_ajax
+   def then_i_change_the_arm_of_the_participant
+     visit protocol_path(@protocol.id)
+     wait_for_ajax
 
-#     click_link 'Participant Tracker'
-#     wait_for_ajax
+     click_link 'Participant Tracker'
+     wait_for_ajax
 
-#     bootstrap_select("#protocols_participant_arm_id", @second_arm.name, "#edit_protocols_participant_#{@protocols_participant.id}" )
-#     wait_for_ajax
-#   end
+     bootstrap_select("#protocols_participant_arm_id", @second_arm.name, "#edit_protocols_participant_#{@protocols_participant.id}" )
+     wait_for_ajax
+   end
 
-#   def and_i_visit_the_calendar_again
-#     given_i_am_viewing_a_visit
-#   end
+   def and_i_visit_the_calendar_again
+     given_i_am_viewing_a_visit
+   end
 
-#   def i_should_see_new_and_old_appointments
-#     expect(page).to have_css("a.appointment-link span", text: @original_appointment.name)
-#     expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
-#   end
+   def i_should_see_new_and_old_appointments
+     expect(page).to have_css("a.appointment-link span", text: @original_appointment.name)
+     expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
+   end
 
-#   def i_should_only_see_new_appointments
-#     expect(page).to_not have_css("a.appointment-link span", text: @original_appointment.name)
-#     expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
-#   end
+   def i_should_only_see_new_appointments
+     expect(page).to_not have_css("a.appointment-link span", text: @original_appointment.name)
+     expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
+   end
 
 end

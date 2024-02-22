@@ -18,26 +18,26 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# require 'rails_helper'
+ require 'rails_helper'
 
-# feature 'User views the participant tracker page', js: true do
+ feature 'User views the participant tracker page', js: true do
 
-#   context 'and then tries to create a particpant note' do
-#     scenario 'and sees the notes modal' do
-#       given_i_am_viewing_the_participant_tracker
-#       when_i_click_on_the_notes_button
-#       then_i_should_see_the_notes_modal
-#     end
+   context 'and then tries to create a particpant note' do
+     scenario 'and sees the notes modal' do
+       given_i_am_viewing_the_participant_tracker
+       when_i_click_on_the_notes_button
+       then_i_should_see_the_notes_modal
+     end
 
-#     context 'and creates a note' do
-#       scenario 'and sees the note in the index' do
-#         given_i_am_viewing_the_participant_tracker
-#         when_i_click_on_the_notes_button
-#         when_i_add_a_comment_and_save
-#         then_i_should_see_the_note_in_the_index
-#       end
-#     end
-#   end
+     context 'and creates a note' do
+       scenario 'and sees the note in the index' do
+         given_i_am_viewing_the_participant_tracker
+         when_i_click_on_the_notes_button
+         when_i_add_a_comment_and_save
+         then_i_should_see_the_note_in_the_index
+       end
+     end
+   end
 
   # NOTE:  TEMPORARILY COMMENTING OUT DUE TO ISSES WITH TRAVIS
   # context 'and changes the participant arm which should create a note' do
@@ -49,53 +49,53 @@
   #   end
   # end
 
-#   def given_i_am_viewing_the_participant_tracker
-#     @protocol = create_and_assign_protocol_to_me
-#     @protocols_participant = @protocol.protocols_participants.last
-#     @original_arm = @protocols_participant.arm
+   def given_i_am_viewing_the_participant_tracker
+     @protocol = create_and_assign_protocol_to_me
+     @protocols_participant = @protocol.protocols_participants.last
+     @original_arm = @protocols_participant.arm
 
-#     visit protocol_path @protocol
-#     wait_for_ajax
+     visit protocol_path @protocol
+     wait_for_ajax
 
-#     click_link 'Participant Tracker'
-#     wait_for_ajax
-#   end
+     click_link 'Participant Tracker'
+     wait_for_ajax
+   end
 
-#   def when_i_click_on_the_notes_button
-#     find("#participant#{@protocols_participant.participant_id}Notes a").click
-#     wait_for_ajax
+   def when_i_click_on_the_notes_button
+     find("#participant#{@protocols_participant.participant_id}Notes a").click
+     wait_for_ajax
 
-#     sleep 2#Travis failure
-#   end
+     sleep 2#Travis failure
+   end
 
-#   def when_i_add_a_comment_and_save
-#     fill_in 'note_comment', with: "Action Jackson"
-#     wait_for_ajax
+   def when_i_add_a_comment_and_save
+     fill_in 'note_comment', with: "Action Jackson"
+     wait_for_ajax
 
-#     sleep 2
+     sleep 2
 
-#     find("input[type='submit']").click
-#     wait_for_ajax
-#   end
+     find("input[type='submit']").click
+     wait_for_ajax
+   end
 
-#   def when_i_change_the_participants_arm
-#     find(".arm #edit_protocols_participant_#{@protocols_participant.id}").click
-#     wait_for_ajax
-#     first('.dropdown-menu.show span.text', text: @protocol.arms.second.name).click
-#     wait_for_ajax
-#   end
+   def when_i_change_the_participants_arm
+     find(".arm #edit_protocols_participant_#{@protocols_participant.id}").click
+     wait_for_ajax
+     first('.dropdown-menu.show span.text', text: @protocol.arms.second.name).click
+     wait_for_ajax
+   end
 
-#   def then_i_should_see_the_notes_modal
-#     expect(page).to have_content('Participant Notes')
-#   end
+   def then_i_should_see_the_notes_modal
+     expect(page).to have_content('Participant Notes')
+   end
 
-#   def then_i_should_see_the_note_in_the_index
-#     expect(page).to have_content('Action Jackson')
-#   end
+   def then_i_should_see_the_note_in_the_index
+     expect(page).to have_content('Action Jackson')
+   end
 
-#   def then_i_should_see_the_arm_change_note_in_the_index
-#     first_arm_name = @original_arm.name
-#     second_arm_name = @protocol.arms.second.name
+   def then_i_should_see_the_arm_change_note_in_the_index
+     first_arm_name = @original_arm.name
+     second_arm_name = @protocol.arms.second.name
 
     expect(page).to have_content("Arm changed from #{first_arm_name} to #{second_arm_name}")
   end
