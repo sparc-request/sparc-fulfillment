@@ -25,7 +25,7 @@
         = header_text
       %button.close{ type: 'button', data: { dismiss: 'modal' }, aria: { label: t('actions.close') } }
         %span{ aria: { hidden: 'true' } } &times;
-    .modal-body.table-responsive
+    .modal-body.table-responsive.fulfillments-list-modal
       #fulfillmentsToolbar
         = link_to new_fulfillment_path(line_item_id: line_item.id), remote: true, class: 'btn btn-success' do
           = succeed t(:fulfillment)[:add_fulfillment] do
@@ -61,9 +61,10 @@
               = Document.model_name.plural.capitalize
             %th.actions{ data: { field: 'actions', align: 'left' } }
               = t(:actions)[:actions]
-      %p.text-center.text-muted.mt-3.mb-0<
+
+    .modal-footer
+      %p.text-center.text-muted.mt-3.mb-0{ style: 'text-align: center; width: 100%' }<
         = icon('fas', 'clock mr-1')
         = t(:fulfillment)[:klok_description]
-    .modal-footer
       %button.btn.btn-secondary{ type: 'button', data: { dismiss: 'modal' } }
         = t('actions.close')

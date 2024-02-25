@@ -1,0 +1,22 @@
+.w-100
+  - disabled = !appointment.started? || appointment.completed? ? 'disabled' : nil
+  .row
+    .col
+      .tooltip-wrapper{ title: t('procedure_groups.start_time'), data: { toggle: disabled ? 'tooltip' : '' } }
+        %label{ for: "startTimeField" } Start Time:
+        = form_for procedure_group, url: procedure_group_path(procedure_group), remote: true, method: :put do |f|
+          .input-group.datetimepicker.time.procedure-group-start-time{ id: "procedureGroup#{procedure_group.id}StartTime", data: { target_input: 'nearest' } }
+            = f.text_field :start_time, class: 'datetimepicker-input form-control', value: format_time(procedure_group.start_time), disabled: disabled, data: { target: "#procedureGroup#{procedure_group.id}StartTime" }
+            .input-group-append
+              %span.input-group-text
+                = icon('far', 'clock')
+
+    .col
+      .tooltip-wrapper{ title: t('procedure_groups.end_time'), data: { toggle: disabled ? 'tooltip' : '' } }
+        %label{ for: "endTimeField" } End Time:
+        = form_for procedure_group, url: procedure_group_path(procedure_group), remote: true, method: :put do |f|
+          .input-group.datetimepicker.time.procedure-group-end-time{ id: "procedureGroup#{procedure_group.id}EndTime", data: { target_input: 'nearest' } }
+            = f.text_field :end_time, class: 'datetimepicker-input form-control', value: format_time(procedure_group.end_time), disabled: disabled, data: { target: "#procedureGroup#{procedure_group.id}EndTime" }
+            .input-group-append
+              %span.input-group-text
+                = icon('far', 'clock')

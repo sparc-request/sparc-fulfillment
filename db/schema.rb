@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_01_125339) do
+ActiveRecord::Schema.define(version: 2024_02_11_125115) do
 
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
@@ -258,6 +258,16 @@ ActiveRecord::Schema.define(version: 2023_04_01_125339) do
     t.index ["mrn"], name: "index_participants_on_mrn"
   end
 
+  create_table "procedure_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.integer "appointment_id"
+    t.integer "sparc_core_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["appointment_id"], name: "fk_rails_e5c5e38225"
+  end
+
   create_table "procedures", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
     t.integer "sparc_id"
     t.integer "appointment_id"
@@ -415,4 +425,5 @@ ActiveRecord::Schema.define(version: 2023_04_01_125339) do
     t.index ["visit_group_id"], name: "index_visits_on_visit_group_id"
   end
 
+  add_foreign_key "procedure_groups", "appointments"
 end

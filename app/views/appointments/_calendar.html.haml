@@ -40,7 +40,8 @@
       = render '/appointments/visit_indications_dropdown', appointment: appointment
   - appointment_procedures = appointment.procedures_grouped_by_core
   - appointment.cores.each do |core|
-    = render '/appointments/core', core: core, appointment: appointment, procedures: appointment_procedures[core.id], appointment_style: appointment_style
+    - procedure_group = appointment.find_or_create_procedure_group(core.id)
+    = render '/appointments/core', core: core, appointment: appointment, procedures: appointment_procedures[core.id], appointment_style: appointment_style, procedure_group: procedure_group
 
 .card.w-100.services
   = form_with url: "/appointments/#{appointment.id}/procedures", local: false do |f|

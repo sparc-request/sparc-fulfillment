@@ -27,7 +27,7 @@ class FulfillmentsController < ApplicationController
     respond_to do |format|
       format.js { render }
       format.json {
-        @fulfillments = @line_item.fulfillments.includes(:notes)
+        @fulfillments = @line_item.fulfillments.includes(:notes).order(fulfilled_at: :desc, created_at: :desc)
 
         render
       }

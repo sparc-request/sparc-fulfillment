@@ -40,6 +40,7 @@ class Appointment < ApplicationRecord
   has_many :appointment_statuses, dependent: :destroy
   has_many :procedures, dependent: :destroy
   has_many :notes, as: :notable
+  has_many :procedure_groups, dependent: :destroy
 
   scope :completed, -> { where('completed_date IS NOT NULL') }
   scope :incompleted, -> { where('appointments.completed_date IS NULL') }
@@ -52,6 +53,10 @@ class Appointment < ApplicationRecord
   validate :completed_date_after_start_date
 
   accepts_nested_attributes_for :notes
+
+  def find_or_create_procedure_group(sparc_core_id)
+    self.procedure_groups.find_or_create_by(sparc_core_id: sparc_core_id)
+  end
 
   def cores
     Organization.where(id: self.procedures.pluck(:sparc_core_id))

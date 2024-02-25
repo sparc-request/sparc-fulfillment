@@ -143,7 +143,7 @@ class Participant < ApplicationRecord
   def city_presence_and_format
     if city.blank?
       errors.add(:city, "can't be blank")
-    elsif not( /\A[a-z\s]+\z/i.match city.to_s)
+    elsif not( /\A[a-z\s.]+\z/i.match city.to_s)
       errors.add(:city, "is invalid")
     end
   end

@@ -140,6 +140,9 @@ class ProceduresController < ApplicationController
                               comment: "Performer changed to #{new_performer.full_name}",
                               kind: 'log')
     elsif change_in_invoiced_status_detected?
+        # Prevent duplicate notes if user spams toggle
+        last_note = @procedure.notes.order(created_at: :desc).first
+        return if last_note && Time.now - last_note.created_at < 5.seconds
         @procedure.notes.create(identity: current_identity,
                                 comment: "Invoiced changed to #{procedure_params[:invoiced] == "1" ? "true" : "false" }",
                                 kind: 'log')

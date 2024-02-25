@@ -19,6 +19,10 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $(document).on 'hide.datetimepicker', '.fulfillment-invoiced-date-datepicker', ->
+  new_invoiced_date = $(this).datetimepicker('date').format('MM/DD/YYYY')
+  initial_invoiced_date = $(this).find('input').data('initial-invoiced-date')
+  if new_invoiced_date == initial_invoiced_date
+    return
   Rails.fire($(this).parents('form')[0], 'submit')
 
 $(document).on 'click', '.otf-fulfillment-delete', ->

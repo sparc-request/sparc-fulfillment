@@ -21,7 +21,12 @@
 .card-header.flex-wrap.border-top.border-bottom-0
   %h3.w-100
     = core.name
-  = render '/multiple_procedures/complete_all_select', appointment: appointment, core_id: core.id, procedures: procedures
+  .row
+    .col-md-6
+      = render '/multiple_procedures/complete_all_select', appointment: appointment, core_id: core.id, procedures: procedures
+    .col-md-6
+      = render '/procedure_groups/form', procedure_group: procedure_group, appointment: appointment, core: core, procedures: procedures
+
 - if appointment_style == 'grouped'
   %table.table-hover.core{ id: "core#{core.id}ProceduresGroupedView", data: { toggle: 'table', group_by: 'true', group_by_field: 'group_label', group_by_toggle: 'true', group_by_formatter: 'proceduresGroupFormatter', group_by_collapsed_groups: 'proceduresCollapsedGroups', url: appointment_procedures_path(appointment_id: appointment.id, core_id: core.id, format: :json) } }
     %thead.bg-light
