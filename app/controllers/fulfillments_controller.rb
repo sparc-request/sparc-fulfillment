@@ -135,14 +135,8 @@ class FulfillmentsController < ApplicationController
   def update_components_and_create_notes(action='update')
     if params[:fulfillment][:components]
       new_components = params[:fulfillment][:components].reject(&:empty?)
-      Rails.logger.info("*"*100+"new_components: #{new_components}")
-      old_components = @original_components ||= []#@fulfillment.components.map(&:component) || @original_components
-      Rails.logger.info("*"*100+"old_components: #{old_components}")
-
-      #old_components = @original_attributes[:components].map(&:component)
-
+      old_components = @original_components ||= []
       to_add = new_components - old_components
-      Rails.logger.info("*"*100+"to_add: #{to_add}")
       to_add.each do |component|
         add = Component.new(component: component, composable_id: @fulfillment.id, composable_type: "Fulfillment")
         if add.valid?
@@ -155,10 +149,8 @@ class FulfillmentsController < ApplicationController
       end
 
       to_remove = old_components - new_components
-      Rails.logger.info("*"*100+"to_remove: #{to_remove}")
       to_remove.each do |component|
         remove = @fulfillment.components.where(component: component).first
-        Rails.logger.info("*"*100+"remove: #{remove}")
         if remove
           remove.destroy
           if action == 'update'
