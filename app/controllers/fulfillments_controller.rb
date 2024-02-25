@@ -118,9 +118,15 @@ class FulfillmentsController < ApplicationController
       unless new_field.blank?
         unless current_field.blank?
           current_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? current_field.to_date.to_s : current_field.to_s)
-          new_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? new_field.to_s : new_field.to_s)
+          new_field = new_field.to_s
         end
-        if current_field != new_field
+        if field == :fulfilled_at
+          if Date.parse(current_field) != Date.strptime(new_field, "%m/%d/%Y")
+            Rails.logger.info("*"*100+"Fulfillment: #{current_field} != #{new_field}")
+            comment = t(:fulfillment)[:log_notes][field] + new_field.to_s
+            @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
+          end
+        elsif current_field != new_field
           unless (fulfillment_params[:invoiced] && field == :invoiced_date)
             unless field == :invoiced_date && (Date.parse(current_field).strftime("%m/%d/%Y") == new_field)
               comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : (field == :fulfilled_at || field == :invoiced_date) ? new_field.to_s : (field == :invoiced) ? "" : new_field.to_s)
