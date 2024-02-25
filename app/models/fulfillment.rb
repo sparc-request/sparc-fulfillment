@@ -44,7 +44,6 @@ class Fulfillment < ApplicationRecord
   validates :quantity, presence: true
   validates_numericality_of :quantity
   validate :cost_available
-
   validate :components_presence_if_required_by_service
 
   after_create :update_line_item_name
