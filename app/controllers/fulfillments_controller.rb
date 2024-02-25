@@ -47,6 +47,7 @@ class FulfillmentsController < ApplicationController
     funding_source = protocol.sparc_funding_source
     fulfilled_at = fulfillment_params[:fulfilled_at]
     @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, funding_source: funding_source, percent_subsidy: protocol.percent_subsidy }))
+    @fulfillment.components_data = params[:fulfillment][:components]
     if @fulfillment.valid?
       @fulfillment.service_cost = @line_item.cost(funding_source, Time.strptime(fulfilled_at, "%m/%d/%Y"))
       @fulfillment.save
@@ -65,8 +66,12 @@ class FulfillmentsController < ApplicationController
   def update
     persist_original_attributes_to_track_changes
     @line_item = @fulfillment.line_item
-    if @fulfillment.update_attributes(fulfillment_params)
+    persist_original_components
+    @fulfillment.assign_attributes(fulfillment_params.except(:components))
+    @fulfillment.components_data = params[:fulfillment][:components]
+    if @fulfillment.valid?
       update_components_and_create_notes('update')
+      @fulfillment.save(validate: false)
       detect_changes_and_create_notes
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
     else
@@ -97,6 +102,10 @@ class FulfillmentsController < ApplicationController
 
   private
 
+  def persist_original_components
+    @original_components = @fulfillment.components.map(&:component)
+  end
+
   def persist_original_attributes_to_track_changes
     @original_attributes = @fulfillment.attributes
   end
@@ -126,9 +135,14 @@ class FulfillmentsController < ApplicationController
   def update_components_and_create_notes(action='update')
     if params[:fulfillment][:components]
       new_components = params[:fulfillment][:components].reject(&:empty?)
-      old_components = @fulfillment.components.map(&:component)
+      Rails.logger.info("*"*100+"new_components: #{new_components}")
+      old_components = @original_components ||= []#@fulfillment.components.map(&:component) || @original_components
+      Rails.logger.info("*"*100+"old_components: #{old_components}")
+
+      #old_components = @original_attributes[:components].map(&:component)
 
       to_add = new_components - old_components
+      Rails.logger.info("*"*100+"to_add: #{to_add}")
       to_add.each do |component|
         add = Component.new(component: component, composable_id: @fulfillment.id, composable_type: "Fulfillment")
         if add.valid?
@@ -141,8 +155,10 @@ class FulfillmentsController < ApplicationController
       end
 
       to_remove = old_components - new_components
+      Rails.logger.info("*"*100+"to_remove: #{to_remove}")
       to_remove.each do |component|
         remove = @fulfillment.components.where(component: component).first
+        Rails.logger.info("*"*100+"remove: #{remove}")
         if remove
           remove.destroy
           if action == 'update'
