@@ -56,11 +56,7 @@ class Fulfillment < ApplicationRecord
   def components_presence_if_required_by_service
     return unless service&.components?
     return unless components_data.blank? || components_data.all?(&:blank?)
-    # if service
-    #   if service.components? && (components_data.blank? || components_data.all?(&:blank?))
     errors.add(:components, "field required for this service")
-    #   end
-    # end
   end
 
   def fulfilled_at=(date_time)
