@@ -21,7 +21,7 @@
 FactoryBot.define do
 
   factory :fulfillment do
-    line_item { nil }
+    line_item
     service { line_item.service }
     fulfilled_at { "09/09/2025" }
     quantity     { 5 }

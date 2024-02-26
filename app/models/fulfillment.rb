@@ -54,9 +54,13 @@ class Fulfillment < ApplicationRecord
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
 
   def components_presence_if_required_by_service
-    if service.components? && (components_data.blank? || components_data.all?(&:blank?))
-      errors.add(:components, "field required for this service")
-    end
+    return unless service&.components?
+    return unless components_data.blank? || components_data.all?(&:blank?)
+    # if service
+    #   if service.components? && (components_data.blank? || components_data.all?(&:blank?))
+    errors.add(:components, "field required for this service")
+    #   end
+    # end
   end
 
   def fulfilled_at=(date_time)
