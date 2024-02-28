@@ -44,7 +44,6 @@ class FundingSourceAuditingReport < Report
       end
     rescue => e
       Rails.logger.error("#" * 50 + "#{e.message}")
-      flash[:alert] = "An error occurred: #{e.message}"
     end
   end
 
