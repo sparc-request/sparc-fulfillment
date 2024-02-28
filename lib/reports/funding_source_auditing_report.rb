@@ -49,6 +49,10 @@ class FundingSourceAuditingReport < Report
 
   private
 
+  def formatted_cost(cost)
+    "$#{cost}"
+  end
+
   def parse_date(date_str)
     Time.strptime(date_str, "%m/%d/%Y").utc
   end
@@ -79,9 +83,8 @@ class FundingSourceAuditingReport < Report
 
 
   def write_csv_header(csv)
-    header = %w[Protocol_ID Request_ID Short_Title Previous_Funding_Source Proposal_Funding_Status Funding_Source Funding_Start_Date Status Primary_PI Primary_PI_Affiliation Billing_Business_Manager(s) Core/Program_Affected Services_Affected Quantity_Completed Total_Cost Invoiced]
-    header.insert(2, 'RMID') if ENV.fetch('RMID_URL'){nil}
-    header.map!(&:humanize)
+    header = ["", "Protocol ID", "Request ID", "Short Title", "Previous Funding Source", "Proposal Funding Status", "Funding Source", "Funding Start Date", "Status", "Primary PI", "Primary PI Affiliation", "Billing Business Manager(s)", "Core/Program Affected", "Services Affected", "Quantity Completed", "Total Cost", "Invoiced"]
+    header.insert(3, 'RMID') if ENV.fetch('RMID_URL'){nil}
     csv << header
   end
 
@@ -102,27 +105,28 @@ class FundingSourceAuditingReport < Report
         next unless funding_source_changes["funding_source"]
 
         csv << [
-          protocol.try(:srid),
+          "",
+          protocol.try(:sparc_protocol).try(:id),
           protocol.try(:sub_service_request).try(:ssr_id),
           ENV['RMID_URL'] ? protocol.try(:research_master_id) : nil,
           protocol.try(:short_title),
-          funding_source_changes["funding_source"].try(:first),
-          protocol.try(:sparc_protocol).try(:funding_status),
-          funding_source_changes["funding_source"].try(:last),
-          protocol.try(:sparc_protocol).try(:funding_start_date),
-          protocol.try(:status),
-          protocol.try(:pi).try(:full_name),
+          funding_source_changes["funding_source"].try(:first).try(:humanize),
+          protocol.try(:sparc_protocol).try(:funding_status).try(:humanize),
+          funding_source_changes["funding_source"].try(:last).try(:humanize),
+          protocol.try(:sparc_protocol).try(:funding_start_date).try(:strftime, "%m/%d/%Y"),
+          protocol.try(:status).try(:humanize),
+          protocol.try(:pi).try(:full_name).try(:humanize),
           protocol.try(:pi).try(:professional_org_lookup, "institution"),
           protocol.try(:billing_business_managers).try(:map, &:full_name).try(:join, ','),
           protocol.try(:organization).try(:name),
           protocol.try(:line_items).try(:map) { |li| li.try(:service).try(:name) }.try(:join, ','),
           protocol.try(:fulfillments).try(:sum, &:quantity),
-          protocol.try(:fulfillments).try(:sum, &:total_cost),
+          formatted_cost(display_cost(protocol.try(:fulfillments).try(:sum, &:total_cost))),
           protocol.try(:fulfillments).try(:map) { |fulfillment| fulfillment.invoiced? ? "Yes" : "No" }.join(',')
         ]
       end
     rescue => e
-      flash[:error] = "An error occurred: #{e.message}"
+      Rails.logger.error("#" * 50 + "#{e.message}")
     end
   end
 end
