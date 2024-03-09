@@ -1,5 +1,5 @@
 .w-100
-  - disabled = !appointment.started? || appointment.completed? ? 'disabled' : nil
+  - disabled = !appointment.started? ? 'disabled' : nil
   .row
     .col
       .tooltip-wrapper{ title: t('procedure_groups.start_time'), data: { toggle: disabled ? 'tooltip' : '' } }
