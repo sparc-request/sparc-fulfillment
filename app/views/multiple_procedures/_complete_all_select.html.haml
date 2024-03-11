@@ -22,7 +22,7 @@
   - disabled = !appointment.started? || appointment.completed? ? 'disabled' : nil
   .w-60
     = select_tag "core_#{core_id}_multiselect", options_for_select(procedures_groups_for_select(procedures)), disabled: disabled, class: 'core_multiselect selectpicker show-tick w-100', multiple: true, data: { actions_box: true, appointment_id: appointment.id, core_id: core_id }
-  %button.btn.btn-default.btn-primary.multiselect.complete-all{ type: 'button', id: "core_#{core_id}_multiselect_complete_all", disabled: disabled, class: "w-20 #{disabled}", data: { status: 'complete' } }
+  %button.btn.btn-default.btn-primary.multiselect.complete-all{ type: 'button', id: "core_#{core_id}_multiselect_complete_all", disabled: disabled, class: "w-30 #{disabled}", data: { status: 'complete' } }
     = t('multiple_procedures_modal.complete_all')
-  %button.btn.btn-default.btn-warning.multiselect.incomplete-all{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all", disabled: disabled, class: "w-20 #{disabled}", data: { status: 'incomplete' } }
+  %button.btn.btn-default.btn-warning.multiselect.incomplete-all{ type: 'button', id: "core_#{core_id}_multiselect_incomplete_all", disabled: disabled, class: "w-30 #{disabled}", data: { status: 'incomplete' } }
     = t('multiple_procedures_modal.incomplete_all')
