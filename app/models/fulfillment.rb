@@ -24,6 +24,7 @@ class Fulfillment < ApplicationRecord
   acts_as_paranoid
 
   attr_accessor :klok_upload
+  attr_accessor :components_data
 
   belongs_to :line_item
   belongs_to :service
@@ -43,12 +44,20 @@ class Fulfillment < ApplicationRecord
   validates :quantity, presence: true
   validates_numericality_of :quantity
   validate :cost_available
+  validate :components_presence_if_required_by_service
+
   after_create :update_line_item_name
   after_destroy :remove_line_item_name
   before_update :recalculate_cost, :set_subsidy_and_funding_source, :set_invoiced_date
 
   scope :fulfilled_in_date_range, ->(start_date, end_date) {
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
+
+  def components_presence_if_required_by_service
+    return unless service&.components?
+    return unless components_data.blank? || components_data.all?(&:blank?)
+    errors.add(:components, "field required for this service")
+  end
 
   def fulfilled_at=(date_time)
     write_attribute(:fulfilled_at, Time.strptime(date_time, "%m/%d/%Y")) if date_time.present?

@@ -24,6 +24,7 @@ RSpec.describe FulfillmentsController do
 
   before :each do
     sign_in
+    @service = create(:service)
     @line_item = create(:line_item, protocol: create(:protocol_imported_from_sparc), service: create(:service))
     @fulfillment = create(:fulfillment, line_item: @line_item)
   end
@@ -86,7 +87,7 @@ RSpec.describe FulfillmentsController do
     it "should update a fulfillment" do
       put :update, params: {
         id: @fulfillment.id,
-        fulfillment: attributes_for(:fulfillment, line_item_id: @line_item.id, quantity: 328, invoiced: true, invoiced_date: "09/08/2025")
+        fulfillment: attributes_for(:fulfillment, line_item_id: @line_item.id, quantity: 328, invoiced: true, invoiced_date: "09/08/2025", service_id: @service.id)
       }, format: :js
       @fulfillment.reload
       expect(@fulfillment.quantity).to eq 328

@@ -66,6 +66,7 @@ feature 'Fulfillments', js: true do
   def when_i_fill_out_the_fulfillment_form
     bootstrap_datepicker '#fulfillment_fulfilled_at', day: '15'
     fill_in "fulfillment_quantity", with: "45"
+    bootstrap_select '#fulfillment_components', "mo"
     click_button "Save"
     wait_for_ajax
   end

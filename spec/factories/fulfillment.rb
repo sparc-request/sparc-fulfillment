@@ -21,12 +21,22 @@
 FactoryBot.define do
 
   factory :fulfillment do
-    line_item { nil }
+    line_item
+    service { line_item.service }
     fulfilled_at { "09/09/2025" }
     quantity     { 5 }
     performer_id { 1 }
     invoiced { true }
     invoiced_date { "09/09/2025" }
+    components_data { ["component, component1"] }
+
+    after(:build) do |fulfillment, evaluator|
+      if fulfillment.line_item.service.components.present?
+        fulfillment.line_item.service.components_list.each do |component|
+          create(:component, composable_id: fulfillment.id, composable_type: "Fulfillment", component: component)
+        end
+      end
+    end
 
     trait :without_validations do
       to_create { |instance| instance.save(validate: false) }

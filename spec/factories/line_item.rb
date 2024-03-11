@@ -22,7 +22,7 @@ FactoryBot.define do
 
   factory :line_item do
     arm { nil }
-    service { nil }
+    service
     protocol { nil }
     name { nil }
     sparc_id
