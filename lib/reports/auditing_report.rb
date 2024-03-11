@@ -36,7 +36,7 @@ class AuditingReport < Report
 
     CSV.open(document.path, "wb") do |csv|
 
-      protocols = Protocol.where(id: @params[:protocols]).includes({procedures: :task}, :line_items)
+      protocols = Protocol.where(id: @params[:protocols]).includes(:pi, :organization, procedures: [:arm, :notes, :task, service: [:organization], appointment: [protocols_participant: [:participant]]], line_items: [:service, :components, :notes, :documents])
 
       if @params[:service_type] == "Clinical Services"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
