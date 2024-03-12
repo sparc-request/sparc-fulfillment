@@ -74,7 +74,13 @@ class ReportsController < ApplicationController
 
       @protocols
     else
-      @protocols = current_identity.protocols
+      # @protocols = current_identity.protocols.load
+      @protocols = []
+      current_identity.protocols.includes(:sparc_protocol).each do |protocol|
+        @protocols << protocol
+      end
+
+      @protocols
     end
   end
 
