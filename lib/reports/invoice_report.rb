@@ -66,9 +66,9 @@ class InvoiceReport < Report
       csv << [""]
 
       if @params[:sort_by] == "Protocol ID"
-        protocols = Protocol.where(id: @params[:protocols]).sort_by(&:sparc_id)
+        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).sort_by(&:sparc_id)
       else
-        protocols = Protocol.where(id: @params[:protocols]).sort_by{ |protocol| protocol.pi.last_name }
+        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).sort_by{ |protocol| protocol.pi.last_name }
       end
 
       if @params[:sort_order] == "DESC"
@@ -79,8 +79,13 @@ class InvoiceReport < Report
         total = 0
         total_with_subsidy = 0
 
-        fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).where(@specific_services)
-        procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date).where(@specific_services)
+        # fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).where(@specific_services)
+
+        fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date}
+
+        # procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date).where(@specific_services)
+
+        procedures = protocol.procedures.select{|procedure| procedure.completed_date != nil && procedure.completed_date >= @start_date && procedure.completed_date <= @end_date && procedure.billing_type == 'research_billing_qty' && (@specific_services.present? ? @specific_services.include?(procedure.service_id) : true)}
 
         if fulfillments.any?
           csv << ["Non-clinical Services"]
@@ -114,7 +119,10 @@ class InvoiceReport < Report
 
           csv << header
 
-          fulfillments.includes(:line_item, service: [:organization]).order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
+          # fulfillments.includes(:line_item, service: [:organization]).order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
+
+          # fulfillments.order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
+          fulfillments.each do |fulfillment|
             if !fulfillment.credited?
               data = []
               data << format_protocol_id_column(protocol)

@@ -47,6 +47,7 @@ class FulfillmentsController < ApplicationController
     funding_source = protocol.sparc_funding_source
     fulfilled_at = fulfillment_params[:fulfilled_at]
     @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, funding_source: funding_source, percent_subsidy: protocol.percent_subsidy }))
+    @fulfillment.components_data = params[:fulfillment][:components]
     if @fulfillment.valid?
       @fulfillment.service_cost = @line_item.cost(funding_source, Time.strptime(fulfilled_at, "%m/%d/%Y"))
       @fulfillment.save
@@ -65,8 +66,12 @@ class FulfillmentsController < ApplicationController
   def update
     persist_original_attributes_to_track_changes
     @line_item = @fulfillment.line_item
-    if @fulfillment.update_attributes(fulfillment_params)
+    persist_original_components
+    @fulfillment.assign_attributes(fulfillment_params.except(:components))
+    @fulfillment.components_data = params[:fulfillment][:components]
+    if @fulfillment.valid?
       update_components_and_create_notes('update')
+      @fulfillment.save(validate: false)
       detect_changes_and_create_notes
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
     else
@@ -97,6 +102,10 @@ class FulfillmentsController < ApplicationController
 
   private
 
+  def persist_original_components
+    @original_components = @fulfillment.components.map(&:component)
+  end
+
   def persist_original_attributes_to_track_changes
     @original_attributes = @fulfillment.attributes
   end
@@ -109,9 +118,15 @@ class FulfillmentsController < ApplicationController
       unless new_field.blank?
         unless current_field.blank?
           current_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? current_field.to_date.to_s : current_field.to_s)
-          new_field = ((field == :fulfilled_at) || (field == :invoiced_date) ? new_field.to_s : new_field.to_s)
+          new_field = new_field.to_s
         end
-        if current_field != new_field
+        if field == :fulfilled_at
+          if Date.parse(current_field) != Date.strptime(new_field, "%m/%d/%Y")
+            Rails.logger.info("*"*100+"Fulfillment: #{current_field} != #{new_field}")
+            comment = t(:fulfillment)[:log_notes][field] + new_field.to_s
+            @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
+          end
+        elsif current_field != new_field
           unless (fulfillment_params[:invoiced] && field == :invoiced_date)
             unless field == :invoiced_date && (Date.parse(current_field).strftime("%m/%d/%Y") == new_field)
               comment = t(:fulfillment)[:log_notes][field] + (field == :performer_id ? Identity.find(new_field).full_name : (field == :fulfilled_at || field == :invoiced_date) ? new_field.to_s : (field == :invoiced) ? "" : new_field.to_s)
@@ -126,8 +141,7 @@ class FulfillmentsController < ApplicationController
   def update_components_and_create_notes(action='update')
     if params[:fulfillment][:components]
       new_components = params[:fulfillment][:components].reject(&:empty?)
-      old_components = @fulfillment.components.map(&:component)
-
+      old_components = @original_components ||= []
       to_add = new_components - old_components
       to_add.each do |component|
         add = Component.new(component: component, composable_id: @fulfillment.id, composable_type: "Fulfillment")

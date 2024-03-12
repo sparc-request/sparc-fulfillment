@@ -552,8 +552,8 @@ en:
       group_invoiced_warning:  "This group of procedures have been invoiced and cannot be altered."
 
   procedure_groups:
-    start_time: "Set Core Procedure Group Start Time"
-    end_time: "Set Core Procedure Group End Time"
+    start_time: "Enter Procedures Start Time"
+    end_time: "Enter Procedures End Time"
     flash_messages:
       updated: "Core Procedure Group Time Updated"
 
