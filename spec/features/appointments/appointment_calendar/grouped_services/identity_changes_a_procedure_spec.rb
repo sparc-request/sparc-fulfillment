@@ -29,6 +29,10 @@ feature 'Identity changes a Service', js: true do
     @protocols_participant  = @protocol.protocols_participants.first
     @appointment  = @protocols_participant.appointments.first
     @services     = @protocol.organization.inclusive_child_services(:per_participant)
+    Rails.logger.info "Protocol: #{@protocol.inspect}"
+    Rails.logger.info "Protocols Participant: #{@protocols_participant.inspect}"
+    Rails.logger.info "Appointment: #{@appointment.inspect}"
+    Rails.logger.info "Services: #{@services.inspect}"
   end
 
   scenario 'and sees it join an existing group' do
@@ -125,7 +129,7 @@ feature 'Identity changes a Service', js: true do
     find('tr.info.groupBy.expanded').click
     bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     wait_for_ajax
-    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'      
+    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     wait_for_ajax
   end
 
