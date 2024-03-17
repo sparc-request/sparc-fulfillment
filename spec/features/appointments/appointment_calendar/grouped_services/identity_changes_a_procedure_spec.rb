@@ -166,9 +166,12 @@ feature 'Identity changes a Service', js: true do
   end
 
   def then_i_should_see_the_procedure_in_the_group
+
     find("tr.info.groupBy.expanded").click
     wait_for_ajax
+    sleep 2
 
+    save_and_open_page
     expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
   end
 
