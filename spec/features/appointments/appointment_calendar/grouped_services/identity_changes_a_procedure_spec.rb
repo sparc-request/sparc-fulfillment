@@ -122,13 +122,11 @@ feature 'Identity changes a Service', js: true do
 
   def when_i_move_all_procedures_out_of_the_group
     wait_for_ajax
-    # find('tr.info.groupBy.expanded').click
-    find('tr.info.groupBy').click
+    find('tr.info.groupBy.expanded', visible: :all).click
     @original_group_id = page.first('tr td.name div')['data-group-id']
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
-    # find('tr.info.groupBy.expanded').click
-    find('tr.info.groupBy').click
+    find('tr.info.groupBy.expanded', visible: :all).click
     bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     wait_for_ajax
     bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
