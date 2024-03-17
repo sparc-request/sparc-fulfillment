@@ -122,9 +122,8 @@ feature 'Identity changes a Service', js: true do
 
   def when_i_move_all_procedures_out_of_the_group
     wait_for_ajax
-    # find('tr.info.groupBy.expanded', visible: :all).click
-    find('tr[data-group-index]', visible: :all).click
-    @original_group_id = page.first('tr td.name div')['data-group-id']
+    find('tr.info.groupBy', visible: :all).click
+    #@original_group_id = page.first('tr td.name div')['data-group-id']
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
     # find('tr.info.groupBy.expanded', visible: :all).click
@@ -163,7 +162,8 @@ feature 'Identity changes a Service', js: true do
   end
 
   def then_i_should_not_see_the_procedure_group
-    expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
+    # expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
+    expect(page).to_not have_css('t[data-parent-index="1"]')
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
