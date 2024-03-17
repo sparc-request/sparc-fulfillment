@@ -59,4 +59,4 @@ jobs:
     #   - bundle exec rspec spec/requests
     # - script:
     #   - bundle exec rspec spec/features
-    - script: bundle exec rspec spec/features/appointments/appointment_calendar/grouped_services/identity_changes_a_procedure_spec.rb:38
+    - script: bundle exec rspec spec/features/appointments/appointment_calendar/grouped_services/identity_changes_a_procedure_spec.rb
