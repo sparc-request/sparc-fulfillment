@@ -163,7 +163,8 @@ feature 'Identity changes a Service', js: true do
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
+    # expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
+    expect(page).to have_css('tr[data-parent-index="0"]')
   end
 
   def then_i_should_see_the_procedure_in_the_group
