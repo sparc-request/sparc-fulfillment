@@ -99,11 +99,19 @@ RSpec.configure do |config|
 
   config.default_sleep_interval = 2
   config.verbose_retry = true
-  config.default_retry_count = 8
+  config.default_retry_count = 2
 
   config.retry_callback = proc do |ex|
     Capybara.reset!
   end
+
+  if config.files_to_run.one?
+    # Use the documentation formatter for detailed output,
+    # unless a formatter has already been configured
+    # (e.g. via a command-line flag).
+    config.default_formatter = 'doc'
+  end
+
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
