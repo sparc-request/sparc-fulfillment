@@ -175,8 +175,9 @@ feature 'Identity changes a Service', js: true do
 
     find("tr.info.groupBy.expanded").click
     wait_for_ajax
-    #expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
-    expect(page).to have_css('tr[data-parent-index="0"]')
+    sleep 2
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
+    # expect(page).to have_css('tr[data-parent-index="0"]')
   end
 
 end
