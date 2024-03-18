@@ -29,7 +29,7 @@ RSpec.describe ProceduresController, type: :controller do
     protocol     = create(:protocol_imported_from_sparc)
     arm          = protocol.arms.first
     participant  = create(:participant)
-    protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant) 
+    protocols_participant = create(:protocols_participant, arm: arm, protocol: protocol, participant: participant)
     @appointment = create(:appointment, name: "Visit Test", arm: arm, protocols_participant: protocols_participant)
   end
 
@@ -96,6 +96,22 @@ RSpec.describe ProceduresController, type: :controller do
 
           it "should update the completed date" do
             expect(@procedure.reload.completed_date.strftime("%m/%d/%Y")).to eq DateTime.current.tomorrow.strftime("%m/%d/%Y")
+          end
+
+          it "should create a note" do
+            expect(@procedure.reload.notes).to be_one
+          end
+        end
+
+        context 'User toggles Invoiced to Yes' do
+          before do
+            @procedure = create(:procedure_complete, appointment: @appointment, service: @service)
+            params    = { appointment_id: @appointment.id, id: @procedure.id, procedure: { invoiced: 'true' }, format: :js }
+            put :update, params: params
+          end
+
+          it "should update the invoiced to true" do
+            expect(@procedure.reload.invoiced).to eq true
           end
 
           it "should create a note" do
