@@ -57,7 +57,7 @@ class FundingSourceAuditingReport < Report
     Protocol.where(id: @params[:protocols])
   end
 
-  def fetch_audits #(protocols)
+  def fetch_audits
     protocol_ids = fetch_protocols.pluck(:sparc_id)
     Sparc::Audit.where(auditable_type: "Protocol", auditable_id: protocol_ids)
                 .where(action: "update")
