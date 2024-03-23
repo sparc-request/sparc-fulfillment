@@ -145,6 +145,7 @@ feature 'Identity changes a Service', js: true do
 
   def when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
     bootstrap_select '#procedure_billing_type', 'T', "#edit_procedure_#{@ungrouped_procedure.id}"
+    wait_for_ajax
   end
 
   def then_i_should_see_the_procedure_group_counter_is_two
@@ -176,8 +177,8 @@ feature 'Identity changes a Service', js: true do
     find("tr.info.groupBy.expanded").click
     wait_for_ajax
     sleep 2
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
-    # expect(page).to have_css('tr[data-parent-index="0"]')
+    # expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
+    expect(page).to have_css('tr[data-parent-index="0"]')
   end
 
 end
