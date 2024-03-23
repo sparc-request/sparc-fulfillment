@@ -62,16 +62,18 @@ module Features
       retries = 0
       begin
         retries ||= 0
-        expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: :all)
-        bootstrap_select = page.find("#{context_selector} select#{class_or_id}", visible: :all).sibling(".dropdown-toggle")
+        expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: false)
+        bootstrap_select = page.first("#{context_selector} select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
       rescue Selenium::WebDriver::Error::StaleElementReferenceError, Capybara::ElementNotFound
         sleep 1
         retry if (retries += 1) < 5
       end
 
       bootstrap_select.click
+      wait_for_ajax
+      sleep 1
       expect(page).to have_selector('.dropdown-menu.show')
-      page.find('.dropdown-menu.show span.text', text: choice).click
+      first('.dropdown-menu.show span.text', text: choice).click
       wait_for_ajax
     end
 
