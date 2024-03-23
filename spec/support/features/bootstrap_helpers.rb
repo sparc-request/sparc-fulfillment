@@ -34,7 +34,7 @@ module Features
         sleep 1
         retry if (retries += 1) < 5
       end
-      
+
       bootstrap_multiselect.click
 
       expect(page).to have_selector('.dropdown-menu.show')
@@ -70,6 +70,8 @@ module Features
       end
 
       bootstrap_select.click
+      wait_for_ajax
+      sleep 1
       expect(page).to have_selector('.dropdown-menu.show')
       first('.dropdown-menu.show span.text', text: choice).click
       wait_for_ajax
