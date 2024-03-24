@@ -29,10 +29,6 @@ feature 'Identity changes a Service', js: true do
     @protocols_participant  = @protocol.protocols_participants.first
     @appointment  = @protocols_participant.appointments.first
     @services     = @protocol.organization.inclusive_child_services(:per_participant)
-    Rails.logger.info "Protocol: #{@protocol.inspect}"
-    Rails.logger.info "Protocols Participant: #{@protocols_participant.inspect}"
-    Rails.logger.info "Appointment: #{@appointment.inspect}"
-    Rails.logger.info "Services: #{@services.inspect}"
   end
 
   scenario 'and sees it join an existing group' do
@@ -122,21 +118,19 @@ feature 'Identity changes a Service', js: true do
 
   def when_i_move_all_procedures_out_of_the_group
     wait_for_ajax
-    find('tr.info.groupBy', visible: :all).click
-    #@original_group_id = page.first('tr td.name div')['data-group-id']
+    find('tr.info.groupBy.expanded').click
+    @original_group_id = page.first('tr td.name div')['data-group-id']
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
-    # find('tr.info.groupBy.expanded', visible: :all).click
-    find('tr[data-group-index]', visible: :all).click
+    find('tr.info.groupBy.expanded').click
     bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     wait_for_ajax
-    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
+    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'      
     wait_for_ajax
   end
 
   def when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
-    find('tr[data-group-index]', visible: :all).click
-    # find('tr.info.groupBy.expanded').click
+    find('tr.info.groupBy.expanded').click
     wait_for_ajax
 
     bootstrap_select '#procedure_billing_type', 'R'
@@ -145,17 +139,14 @@ feature 'Identity changes a Service', js: true do
 
   def when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
     bootstrap_select '#procedure_billing_type', 'T', "#edit_procedure_#{@ungrouped_procedure.id}"
-    wait_for_ajax
   end
 
   def then_i_should_see_the_procedure_group_counter_is_two
-    expect(page).to have_css('tr.expanded.groupBy strong.badge')
-    # expect(page).to have_css('tr.expanded.groupBy strong.badge', text: '2')
+    expect(page).to have_css('tr.expanded.groupBy strong.badge', text: '2')
   end
 
   def then_i_should_see_the_procedure_group_counter_is_four
-    # expect(page).to have_css('tr.collapsed.groupBy strong.badge', text: '4')
-    expect(page).to have_css('tr.collapsed.groupBy strong.badge')
+    expect(page).to have_css('tr.collapsed.groupBy strong.badge', text: '4')
   end
 
   def then_i_should_see_one_procedure_group
@@ -163,22 +154,18 @@ feature 'Identity changes a Service', js: true do
   end
 
   def then_i_should_not_see_the_procedure_group
-    # expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
-    expect(page).to_not have_css('t[data-parent-index="1"]')
+    expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
-    # expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
-    expect(page).to have_css('tr[data-parent-index="0"]')
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
   end
 
   def then_i_should_see_the_procedure_in_the_group
-
     find("tr.info.groupBy.expanded").click
     wait_for_ajax
-    sleep 2
-    # expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
-    expect(page).to have_css('tr[data-parent-index="0"]')
+
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
   end
 
 end
