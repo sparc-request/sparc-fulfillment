@@ -124,7 +124,7 @@ feature 'Identity changes a Service', js: true do
     @original_group_id = page.first('tr td.name div')['data-group-id']
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
-    find('tr.info.groupBy.expanded').click
+    find('tr.info.groupBy').click
     bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     wait_for_ajax
     bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
