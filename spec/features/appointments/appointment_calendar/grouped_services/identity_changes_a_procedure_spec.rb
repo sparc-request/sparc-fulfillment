@@ -117,6 +117,19 @@ feature 'Identity changes a Service', js: true do
     bootstrap_select '#procedure_billing_type', 'T'
   end
 
+  # def when_i_move_all_procedures_out_of_the_group
+  #   wait_for_ajax
+  #   find('tr.info.groupBy.expanded').click
+  #   @original_group_id = page.first('tr td.name div')['data-group-id']
+  #   bootstrap_select '#procedure_billing_type', 'R'
+  #   wait_for_ajax
+  #   find('tr.info.groupBy.expanded').click
+  #   bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
+  #   wait_for_ajax
+  #   bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
+  #   wait_for_ajax
+  # end
+
   def when_i_move_all_procedures_out_of_the_group
     wait_for_ajax
     sleep 1
@@ -124,11 +137,8 @@ feature 'Identity changes a Service', js: true do
     @original_group_id = page.first('tr td.name div')['data-group-id']
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
-    # find('tr.info.groupBy').click
-    # bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
-    # bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
   end
@@ -169,18 +179,13 @@ feature 'Identity changes a Service', js: true do
   def then_i_should_not_see_the_procedure_in_the_group
     # expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
     expect(page).to have_css('tr[data-parent-index="0"]')
-    # !procedures_grouped?
   end
 
   def then_i_should_see_the_procedure_in_the_group
     find("tr.info.groupBy.expanded").click
     wait_for_ajax
 
-    # Features::VisitHelpers#procedures_grouped?
     procedures_grouped?
-
-    # expect(@services.count).to eq(4)
-    # expect(@procedure_research_billing_qty_with_notes.count).to eq(4)
     # expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
   end
 
