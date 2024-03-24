@@ -22,6 +22,7 @@ module Features
 
   module VisitHelpers
 
+    # Check if grouped procedures exist by checking if more than one procedure have same parent index
     def procedures_grouped?
       tr_elements = page.all('.core.table tr')
       indices = tr_elements.map { |tr| tr['data-parent-index'] }

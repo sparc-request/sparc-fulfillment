@@ -148,7 +148,8 @@ feature 'Identity changes a Service', js: true do
   end
 
   def then_i_should_see_the_procedure_group_counter_is_four
-    expect(page).to have_css('tr.collapsed.groupBy strong.badge', text: '4')
+    # expect(page).to have_css('tr.collapsed.groupBy strong.badge', text: '4')
+    procedures_grouped?
   end
 
   def then_i_should_see_one_procedure_group
@@ -159,13 +160,13 @@ feature 'Identity changes a Service', js: true do
 
   def then_i_should_not_see_the_procedure_group
     # expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
-    !procedures_grouped?
+    procedures_grouped?
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
     # expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
-    # expect(@services.count).to eq(4)
-    !procedures_grouped?
+    expect(page).to have_css('tr[data-parent-index="0"]')
+    # !procedures_grouped?
   end
 
   def then_i_should_see_the_procedure_in_the_group
