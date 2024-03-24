@@ -125,9 +125,11 @@ feature 'Identity changes a Service', js: true do
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
     find('tr.info.groupBy').click
-    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
+    # bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
+    bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
-    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
+    # bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
+    bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
   end
 
