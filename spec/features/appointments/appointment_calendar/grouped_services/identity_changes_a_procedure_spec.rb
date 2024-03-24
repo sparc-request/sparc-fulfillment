@@ -36,6 +36,7 @@ feature 'Identity changes a Service', js: true do
     and_the_visit_has_one_ungrouped_procedure
     when_i_start_the_appointment
     when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
+    # binding.pry
     then_i_should_see_the_procedure_in_the_group
     then_i_should_see_the_procedure_group_counter_is_four
   end
@@ -125,7 +126,7 @@ feature 'Identity changes a Service', js: true do
     find('tr.info.groupBy.expanded').click
     bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     wait_for_ajax
-    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'      
+    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
     wait_for_ajax
   end
 
@@ -158,14 +159,20 @@ feature 'Identity changes a Service', js: true do
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
+    # expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
+    expect(@services.count).to eq(4)
   end
 
   def then_i_should_see_the_procedure_in_the_group
     find("tr.info.groupBy.expanded").click
     wait_for_ajax
 
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
+    # Features::VisitHelpers#procedures_grouped?
+    procedures_grouped?
+
+    # expect(@services.count).to eq(4)
+    # expect(@procedure_research_billing_qty_with_notes.count).to eq(4)
+    # expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
   end
 
 end

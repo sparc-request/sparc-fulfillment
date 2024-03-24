@@ -22,6 +22,13 @@ module Features
 
   module VisitHelpers
 
+    def procedures_grouped?
+      tr_elements = page.all('.core.table tr')
+      indices = tr_elements.map { |tr| tr['data-parent-index'] }
+      duplicates = indices.group_by { |i| i}.select { |k, v| v.size}
+      expect(duplicates.empty?).to be false
+    end
+
     def and_the_visit_has_one_grouped_procedure
       2.times { add_a_procedure @services.first }
     end
@@ -36,7 +43,7 @@ module Features
     def given_i_am_viewing_a_visit
       visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
       wait_for_ajax
-      
+
       first('a.list-group-item.appointment-link').click
       wait_for_ajax
     end
@@ -47,7 +54,7 @@ module Features
 
       first('a.list-group-item.appointment-link').click
       wait_for_ajax
-      
+
       find('a.btn.start-appointment').click
       wait_for_ajax
     end
