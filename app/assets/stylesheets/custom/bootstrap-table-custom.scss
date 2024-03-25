@@ -67,7 +67,8 @@
 .bootstrap-table {
   .fixed-table-container {
     .fixed-table-body {
-      overflow: visible;
+      // overflow: auto;
+      overflow: auto;
 
       .fixed-table-loading {
         border-top: 0;
