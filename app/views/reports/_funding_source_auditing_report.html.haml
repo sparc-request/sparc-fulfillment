@@ -23,7 +23,7 @@
     = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
       .modal-header
         %h4.modal-title.text-center
-          = t(:reports)[:funding_source_auditing_report]
+          = t(:reports)[:funding_source_auditing_report][:title]
         %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} &times;
       .modal-body
@@ -36,14 +36,14 @@
             .col-sm-8
               = text_field_tag "title", title, class: 'form-control'
           .form-group.row.align-items-center
-            = label_tag "start_date", t(:reports)[:start_date], class: "control-label required col-sm-4 mb-0"
+            = label_tag "start_date", t(:reports)[:funding_source_auditing_report][:start_date], class: "control-label required col-sm-4 mb-0"
             .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
               = text_field_tag "start_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#start_date", toggle:"datetimepicker" }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
                 .input-group-text
                   %span.far.fa-calendar
           .form-group.row.align-items-center
-            = label_tag "end_date", t(:reports)[:end_date], class: "control-label required col-sm-4 mb-0"
+            = label_tag "end_date", t(:reports)[:funding_source_auditing_report][:end_date], class: "control-label required col-sm-4 mb-0"
             .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
               = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date", toggle:"datetimepicker" }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
