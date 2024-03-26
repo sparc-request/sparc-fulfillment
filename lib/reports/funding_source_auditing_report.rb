@@ -23,7 +23,6 @@ class FundingSourceAuditingReport < Report
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   def generate(document)
-    protocols = fetch_protocols
     audits = fetch_audits
 
     @start_date = parse_date(@params[:start_date])
