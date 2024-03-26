@@ -19,6 +19,20 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 $ ->
+  # Fix parent element clipping datetimepickers in tables
+  # $(document).on 'show.datetimepicker', '.procedure-completed-datepicker, .procedure-invoiced-datepicker', ->
+  #   datepicker = $('.bootstrap-datetimepicker-widget.dropdown-menu')
+  #   datepicker.detach()
+  #   $('body').append(datepicker)
+  #   datepicker.css('position', 'absolute')
+  #   datepicker.css('z-index', '9999')
+
+  #   input = $(this).find('input')
+  #   position = input.offset()
+
+  #   datepicker.css('top', position.top + input.outerHeight())
+  #   datepicker.css('left', position.left)
+
   $(document).on 'click', '#procedure_invoiced', ->
     $(this).prop('disabled', true)
 
