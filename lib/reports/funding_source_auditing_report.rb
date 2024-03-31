@@ -23,7 +23,6 @@ class FundingSourceAuditingReport < Report
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   def generate(document)
-    audits = fetch_audits
 
     @start_date = parse_date(@params[:start_date])
     @end_date   = parse_date(@params[:end_date])
@@ -32,14 +31,15 @@ class FundingSourceAuditingReport < Report
 
     CSV.open(document.path, "wb") do |csv|
 
+      audits = fetch_audits
+
       write_csv_title_and_date_range(csv)
 
       write_csv_header(csv)
 
       write_csv_rows(csv, audits)
     end
-  rescue => e
-    Rails.logger.error("#" * 50 + "#{e.message}")
+
   end
 
   private
@@ -53,7 +53,7 @@ class FundingSourceAuditingReport < Report
   end
 
   def fetch_protocols
-    Protocol.where(id: @params[:protocols])
+    Protocol.includes(:sparc_protocol, :pi, :service_requests, :organization, { :line_items => [ :service ] }, :sub_service_requests, :project_roles, :fulfillments, :procedures).where(id: @params[:protocols])
   end
 
   def fetch_audits
@@ -93,29 +93,39 @@ class FundingSourceAuditingReport < Report
   end
 
   def write_csv_rows(csv, audits)
+    protocol_ids = audits.map(&:auditable_id)
+    protocols = Protocol.includes(:sub_service_requests).where(sparc_id: protocol_ids).index_by(&:sparc_id)
 
     if @params[:sort_by] == "Protocol ID"
       audits = audits.sort_by { |audit| audit.auditable_id }
     else
-      audits = audits.sort_by { |audit| Protocol.find_by(sparc_id: audit.auditable_id).pi.last_name }
+      audits = audits.sort_by { |audit| protocols[audit.auditable_id]&.pi&.last_name }
     end
 
     audits.reverse! if @params[:sort_order] == "DESC"
 
     audits.each do |audit|
-      begin
-        protocol = Protocol.find_by(sparc_id: audit.auditable_id)
-        next if protocol.nil?
-        funding_source_changes = YAML.load(audit.audited_changes)
+      protocol = protocols[audit.auditable_id]
 
-        next unless funding_source_changes["funding_source"]
+      next if protocol.nil?
+
+      funding_source_changes = YAML.load(audit.audited_changes)
+
+      next unless funding_source_changes["funding_source"]
+
+      sub_service_requests = protocol.sub_service_requests.where(in_work_fulfillment: true)
+
+      next if sub_service_requests.empty?
+
+      sub_service_requests.each do |ssr|
+        next unless @params[:organizations].include?(ssr.organization_id.to_s)
 
         csv << [
           "",
           ENV['RMID_URL'] ? protocol.research_master_id : nil,
           protocol.sparc_protocol.id,
-          protocol.sub_service_request&.ssr_id,
-          protocol.status&.humanize,
+          ssr.ssr_id,
+          ssr.protocol.status&.humanize,
           protocol.short_title,
           protocol.sparc_protocol&.funding_status&.humanize,
           protocol.sparc_protocol&.funding_start_date&.strftime("%m/%d/%Y"),
@@ -123,15 +133,17 @@ class FundingSourceAuditingReport < Report
           funding_source_changes.dig("funding_source", -1)&.humanize,
           format_date(audit.created_at),
           protocol.pi&.full_name,
-          protocol.pi&.professional_org_lookup("institution"),
-          protocol.billing_business_managers.map(&:full_name).join(','),
-          protocol.organization.name,
-          protocol.line_items.map { |li| li.service.name }.join(','),
-          protocol.fulfillments.any?(&:invoiced?) ? "Yes" : "No"
+          ssr.protocol.pi&.professional_org_lookup("institution"),
+          protocol.billing_business_managers.map(&:full_name).join(', '),
+          ssr.protocol.organization.name,
+          ssr.protocol.line_items.map { |li| li.service.name }.join(', '),
+          ssr.protocol.fulfillments.any?(&:invoiced?) || ssr.protocol.procedures.any?(&:invoiced?) ? "Yes" : "No"
         ]
-      rescue StandardError => e
-        Rails.logger.error("#" * 50 + "#{e.message}")
       end
+
+    rescue StandardError => e
+      Rails.logger.error("#" * 50 + "#{e.message}")
     end
+
   end
 end
