@@ -39,6 +39,8 @@ class VisitReport < Report
                       "Visit Duration (minutes)",
                       "Type of Visit",
                       "Visit Indications",
+                      "Start Time",
+                      "End Time"
                       ]
   else
     REPORT_COLUMNS = ["Protocol ID (SRID)",
@@ -51,6 +53,8 @@ class VisitReport < Report
                       "Visit Duration (minutes)",
                       "Type of Visit",
                       "Visit Indications",
+                      "Start Time",
+                      "End Time"
                       ]
   end
 
@@ -65,7 +69,7 @@ class VisitReport < Report
       csv << [""]
       csv << REPORT_COLUMNS
 
-      result_set  = Appointment.all.joins(procedures: [{ protocols_participant: :participant}]).
+      result_set  = Appointment.all.joins({ procedures: [{ protocols_participant: :participant}]}, :procedure_groups).
                     where(
                       Appointment.arel_table[:start_date].gteq(from_start_date).and(
                         Appointment.arel_table[:start_date].lteq(to_start_date)).and(
@@ -74,19 +78,22 @@ class VisitReport < Report
                       ProtocolsParticipant.arel_table[:protocol_id], Participant.arel_table[:last_name], Participant.arel_table[:first_name],
                       Appointment.arel_table[:name], Appointment.arel_table[:start_date], Appointment.arel_table[:completed_date],
                       Appointment.arel_table[:visit_group_id], Appointment.arel_table[:type], Appointment.arel_table[:id],
-                      Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents], Participant.arel_table[:id])
+                      Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents], Participant.arel_table[:id], ProcedureGroup.arel_table[:start_time], ProcedureGroup.arel_table[:end_time])
+
 
       sorted_result_set = sort_result_set(result_set)
 
       sorted_result_set.each do |appointment|
         if HAS_RMID
-          csv << [appointment[0], appointment[13], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
+          csv << [appointment[0], appointment[-1], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
                   get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
-                  get_content(appointment), get_statuses(appointment[8])]
+                  get_content(appointment), get_statuses(appointment[8]), format_time(appointment[-3]), format_time(appointment[-2])]
+                  # appointment[0]: protocol_id, appointment[-1]: rmid, appointment[1]: last_name, appointment[2]: first_name, appointment[3]: visit_name,...appointment[-3]: start_time, appointment[-2]: end_time
         else
           csv << [appointment[0], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
                   get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
-                  get_content(appointment), get_statuses(appointment[8])]
+                  get_content(appointment), get_statuses(appointment[8]), format_time(appointment[-2]), format_time(appointment[-1])]
+                  # appointment[0]: protocol_id, appointment[1]: last_name, appointment[2]: first_name, appointment[3]: visit_name,...appointment[-2]: start_time, appointment[-1]: end_time
         end
       end
     end
@@ -94,7 +101,7 @@ class VisitReport < Report
 
   def sort_result_set(result_set)
     sorted_set = filter_result_set(result_set)
-    
+
     sorted_set.sort{ |x, y| x <=> y || 1 }
   end
 
@@ -141,4 +148,3 @@ class VisitReport < Report
     filtered_set
   end
 end
-
