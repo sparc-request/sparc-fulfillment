@@ -47,6 +47,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_arm_imported_from_sparc_no_components do
+      after(:create) do |protocol, evaluator|
+        create(:arm_imported_from_sparc_no_components, protocol: protocol)
+      end
+    end
+
     trait :with_arms do
       after(:create) do |protocol, evaluator|
         create_list(:arm_imported_from_sparc, 3, protocol: protocol)
@@ -91,6 +97,10 @@ FactoryBot.define do
                                                   :without_services]
     factory :protocol_with_pi, traits: [:with_pi]
     factory :protocol_imported_from_sparc, traits: [:with_arms,
+                                                    :with_pi,
+                                                    :with_coordinators,
+                                                    :with_sub_service_request]
+    factory :protocol_imported_from_sparc_no_components, traits: [:with_arm_imported_from_sparc_no_components,
                                                     :with_pi,
                                                     :with_coordinators,
                                                     :with_sub_service_request]

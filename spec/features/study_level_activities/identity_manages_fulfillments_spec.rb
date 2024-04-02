@@ -28,6 +28,13 @@ feature 'Fulfillments', js: true do
       and_i_have_opened_up_fulfillments
       expect(page).to have_content('Fulfillments List')
     end
+
+    it 'should not show components column when the service does not have components' do
+      given_i_have_fulfillments_without_components
+      and_i_have_opened_up_fulfillments
+      expect(page).to have_content('Fulfillments List')
+      expect(page).to have_no_content('Components')
+    end
   end
 
   describe 'fulfillment add' do
@@ -40,6 +47,7 @@ feature 'Fulfillments', js: true do
       when_i_fill_out_the_fulfillment_form
       expect(page).to have_content('45.0')
     end
+
   end
 
   def given_i_have_fulfillments
@@ -50,6 +58,16 @@ feature 'Fulfillments', js: true do
     line_item = create(:line_item, protocol: @protocol, service: service)
                 create(:fulfillment, line_item: line_item)
                 create(:clinical_provider, identity: Identity.first, organization: org)
+  end
+
+  def given_i_have_fulfillments_without_components
+    @protocol = create(:protocol_imported_from_sparc_no_components)
+    @protocol.sparc_protocol.update_attributes(type: 'Study')
+    org = @protocol.sub_service_request.organization
+    service = create(:service_without_components, organization: org)
+    line_item = create(:line_item, protocol: @protocol, service: service)
+    create(:fulfillment, line_item: line_item)
+    create(:clinical_provider, identity: Identity.first, organization: org)
   end
 
   def and_i_have_opened_up_fulfillments

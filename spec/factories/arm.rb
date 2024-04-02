@@ -53,6 +53,16 @@ FactoryBot.define do
       end
     end
 
+    trait :with_line_items_no_components do
+      after(:create) do |arm, evaluator|
+        x = 3
+        x.times do
+          create(:line_item_with_fulfillments, protocol: arm.protocol, service: create(:service_without_components), quantity_requested: 10) # one time fee
+          create(:line_item, protocol: arm.protocol, arm: arm, service: create(:service)) # pppv
+        end
+      end
+    end
+
     trait :with_only_per_patient_line_items do
       after(:create) do |arm, evaluator|
         5.times do
@@ -103,6 +113,7 @@ FactoryBot.define do
     factory :arm_with_line_items, traits: [:with_line_items]
     factory :arm_with_visit_groups, traits: [:with_visit_groups]
     factory :arm_imported_from_sparc, traits: [:with_line_items, :with_visit_groups, :with_visits, :with_protocols_participant]
+    factory :arm_imported_from_sparc_no_components, traits: [:with_line_items_no_components, :with_visit_groups, :with_visits, :with_protocols_participant]
     factory :arm_with_only_per_patient_line_items, traits: [:with_only_per_patient_line_items, :with_visit_groups, :with_visits]
     factory :arm_with_one_visit_group, traits: [:with_one_visit_group]
   end
