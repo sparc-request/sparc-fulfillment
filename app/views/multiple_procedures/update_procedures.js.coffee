@@ -61,6 +61,8 @@ credited_toggle.bootstrapToggle('enable')
 credited_toggle.find('#procedure_credited').removeAttr('disabled')
 $('.toggle-off').text('No')
 
+$('.delete-button[data-procedure="<%= procedure.id %>"]').parent('.tooltip-wrapper').replaceWith("<%= j delete_procedure_button(procedure) %>")
+
 <% end %>
 <% end %>
 
