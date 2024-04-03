@@ -22,17 +22,17 @@ require 'rails_helper'
 
 feature 'Fulfillments', js: true do
 
-  describe 'fulfillments list' do
+  describe 'fulfillments list with components' do
     it 'should list the fulfillments' do
       given_i_have_fulfillments
       and_i_have_opened_up_fulfillments
       expect(page).to have_content('Fulfillments List')
+      expect(page).to have_content('Components')
     end
 
     it 'should not show components column when the service does not have components' do
       given_i_have_fulfillments_without_components
       and_i_have_opened_up_fulfillments
-      expect(page).to have_content('Fulfillments List')
       expect(page).to have_no_content('Components')
     end
   end
