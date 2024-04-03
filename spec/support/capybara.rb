@@ -32,4 +32,4 @@ Capybara.register_driver :firefox_headless do |app|
   Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
 end
 
-Capybara.javascript_driver = :firefox_headless
+Capybara.javascript_driver = :selenium_headless
