@@ -11,7 +11,7 @@ services:
 
 before_install:
   - "export TZ=America/New_York"
-  - nvm install node 14.19.2
+  - nvm install node 21.7.1
 before_script:
   - "export DISPLAY=:99.0"
   # CWF Config
@@ -59,4 +59,4 @@ jobs:
     #   - bundle exec rspec spec/requests
     - script:
       # - bundle exec rspec spec/features
-      - bundle exec rspec spec/features/appointments/appointment_calendar/grouped_services 
+      - bundle exec rspec spec/features/appointments/appointment_calendar/grouped_services

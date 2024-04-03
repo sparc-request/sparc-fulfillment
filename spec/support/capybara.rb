@@ -27,7 +27,6 @@ Capybara.register_driver :firefox_headless do |app|
 
   if ENV['MOZ_HEADLESS']
     options.args << '--headless'
-    options.add_argument('--window-size=1920,1080')
   end
 
   Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
