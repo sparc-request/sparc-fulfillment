@@ -25,6 +25,7 @@ class Document < ApplicationRecord
   belongs_to :documentable, polymorphic: true
 
   validates :title, presence: true
+  validate :contains_commas_or_semicolons?
 
   def path
     [ENV.fetch('DOCUMENTS_FOLDER'), id].join('/')
@@ -48,5 +49,11 @@ class Document < ApplicationRecord
 
   def unique_selector
     "#{documentable_type.downcase}_#{documentable_id}"
+  end
+
+  def contains_commas_or_semicolons?
+    if title =~ /[,;]/
+      errors.add(:title, "cannot contain a semicolon or commas")
+    end
   end
 end

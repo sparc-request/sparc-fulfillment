@@ -18,7 +18,7 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @report.errors})) %>");
+$("#modal_errors").html("<%= escape_javascript(render(partial: 'modal_errors', locals: {errors: @errors})) %>");
 if $("#modal_errors > .alert.alert-danger > p").length == 0
   <% if @reports_params %>
   <% if not @reports_params[:protocols_participant_id].blank? %>
