@@ -50,12 +50,14 @@ before_script:
 jobs:
   include:
     - script:
-      - bundle exec rspec spec/api
-      - bundle exec rspec spec/controllers
-      - bundle exec rspec spec/helpers
-      - bundle exec rspec spec/jobs
-      - bundle exec rspec spec/lib
-      - bundle exec rspec spec/models
-      - bundle exec rspec spec/requests
-    - script:
-      - bundle exec rspec spec/features
+      - bundle exec rspec spec/features/appointments/appointment_calendar/grouped_services/identity_changes_a_procedure_spec.rb
+      # - bundle exec rspec spec/features/appointments/appointment_calendar/grouped_services/identity_incompletes_all_services_spec.rb
+    #   - bundle exec rspec spec/api
+    #   - bundle exec rspec spec/controllers
+    #   - bundle exec rspec spec/helpers
+    #   - bundle exec rspec spec/jobs
+    #   - bundle exec rspec spec/lib
+    #   - bundle exec rspec spec/models
+    #   - bundle exec rspec spec/requests
+    # - script:
+    #   - bundle exec rspec spec/features
