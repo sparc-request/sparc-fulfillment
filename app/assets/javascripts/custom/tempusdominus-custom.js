@@ -23,4 +23,12 @@
     locale: I18n.locale,
     allowInputToggle: true
   });
+
+  // Fix for event show.datetimepicker bug https://github.com/tempusdominus/bootstrap-4/issues/227
+  $.fn.datetimepicker.Constructor.prototype._notifyEvent = function _notifyEvent(e) {
+    if (e.type === $.fn.datetimepicker.Constructor.Event.CHANGE && (e.date.isSame(e.oldDate) || !e.date && !e.oldDate)) {
+      return;
+    }
+    this._element.trigger(e);
+  };
 })(jQuery);
