@@ -204,6 +204,18 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def procedure_group
+    ProcedureGroup.find_by(appointment_id: self.appointment_id, sparc_core_id: self.sparc_core_id)
+  end
+
+  def start_time
+    self.procedure_group&.start_time
+  end
+
+  def end_time
+    self.procedure_group&.end_time
+  end
+
   private
 
   def update_protocols_participant_deletable

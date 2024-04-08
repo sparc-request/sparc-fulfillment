@@ -57,6 +57,12 @@ class Report
     end
   end
 
+  def format_time(time)
+    if time.present?
+      time.strftime("%I:%M %p")
+    end
+  end
+
   def display_cost(cost)
     if cost
       dollars = (cost / 100.0) rescue nil
