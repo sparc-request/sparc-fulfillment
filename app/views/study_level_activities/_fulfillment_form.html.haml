@@ -47,7 +47,7 @@
               = form.label "performer_id", t(:fulfillment)[:performed_by], class: "col-sm-4 control-label mb-0"
               .col-sm-8
                 = form.select "performer_id", options_from_collection_for_select(clinical_providers.map(&:identity), 'id', 'full_name', fulfillment.performer_id || current_identity.id), {include_blank: false}, class: 'form-control selectpicker'
-            - if fulfillment.components
+            - if fulfillment.line_item.service.components.present?
               .form-group.row.align-items-center
                 = form.label "components", t(:fulfillment)[:components]+t(:actions)[:required], class: "col-sm-4 control-label mb-0"
                 .col-sm-8

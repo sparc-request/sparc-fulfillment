@@ -43,7 +43,13 @@ FactoryBot.define do
       components { "eine,meine,mo," }
     end
 
+    trait :without_components do
+      one_time_fee { true }
+      components { "" }
+    end
+
     factory :service_with_one_time_fee, traits: [:with_one_time_fee]
     factory :service_without_pricing_maps, traits: [:without_pricing_maps]
+    factory :service_without_components, traits: [:without_components]
   end
 end
