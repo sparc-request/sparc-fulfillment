@@ -51,6 +51,8 @@ credited_toggle.bootstrapToggle('disable')
 credited_toggle.find('#procedure_credited').removeAttr('disabled')
 $('.toggle-off').text('No')
 
+$('.delete-button[data-procedure="<%= procedure.id %>"]').parent('.tooltip-wrapper').replaceWith("<%= j delete_procedure_button(procedure) %>")
+
 <% elsif procedure.complete? %>
 date_time_picker.datetimepicker('date', "<%= format_date(procedure.completed_date) %>")
 date_time_picker.datetimepicker('enable')
