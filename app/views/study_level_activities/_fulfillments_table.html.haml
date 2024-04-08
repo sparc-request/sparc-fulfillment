@@ -17,7 +17,7 @@
 -# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
 -# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 -# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
-
+- has_components = line_item.service.components.present?
 .modal-dialog.modal-xl{ role: 'document' }
   .modal-content
     .modal-header
@@ -43,8 +43,9 @@
               = Fulfillment.human_attribute_name(:quantity_type)
             %th.performed-by{ data: { field: 'performed_by', align: 'left', sortable: 'true' } }
               = Fulfillment.human_attribute_name(:performed_by)
-            %th.components{ data: { field: 'components', align: 'left' } }
-              = Component.model_name.plural.capitalize
+            - if has_components
+              %th.components{ data: { field: 'components', align: 'left' } }
+                = Component.model_name.plural.capitalize
             %th.invoiced{ data: { field: 'invoiced', align: 'left' } }
               = Fulfillment.human_attribute_name(:invoiced)
             %th.invoiced_export.d-none{ data: { field: 'invoiced_export', switchable: 'false' } }

@@ -36,7 +36,7 @@ class AuditingReport < Report
 
     CSV.open(document.path, "wb") do |csv|
 
-      protocols = Protocol.where(id: @params[:protocols]).includes(:pi, :organization, procedures: [:arm, :notes, :task, service: [:organization], appointment: [protocols_participant: [:participant]]], line_items: [:service, :components, :notes, :documents])
+      protocols = Protocol.where(id: @params[:protocols]).includes(:pi, :organization, procedures: [:arm, :notes, :task, service: [:organization], appointment: [ :procedure_groups, { protocols_participant: [:participant]}]], line_items: [:service, :components, :notes, :documents])
 
       if @params[:service_type] == "Clinical Services"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
@@ -61,6 +61,8 @@ class AuditingReport < Report
         header << "Follow-Up date and comment"
         header << "Cost"
         header << "Notes"
+        header << "Start Time"
+        header << "End Time"
 
         csv << header
 
@@ -88,6 +90,8 @@ class AuditingReport < Report
             data << follow_up_formatter(procedure)
             data << display_cost(procedure.service_cost)
             data << procedure.notes.map(&:comment).join(' | ')
+            data << procedure.start_time.strftime("%I:%M %p") if procedure.start_time
+            data << procedure.end_time.strftime("%I:%M %p") if procedure.end_time
 
             csv << data
           end

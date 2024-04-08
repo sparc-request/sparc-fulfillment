@@ -5,4 +5,6 @@ class ProcedureGroup < ApplicationRecord
   belongs_to :appointment
 
   validates :appointment, presence: true
+  validates :sparc_core_id, uniqueness: { scope: :appointment_id, message: "There should only be one procedure group per Core" }
 end
+
