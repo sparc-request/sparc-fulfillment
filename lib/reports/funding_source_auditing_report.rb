@@ -22,6 +22,8 @@ class FundingSourceAuditingReport < Report
   VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocols, :organizations].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
+  require 'csv'
+
   def generate(document)
 
     @start_date = parse_date(@params[:start_date])
