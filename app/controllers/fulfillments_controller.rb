@@ -71,7 +71,7 @@ class FulfillmentsController < ApplicationController
     @fulfillment.components_data = params[:fulfillment][:components]
     if @fulfillment.valid?
       update_components_and_create_notes('update')
-      @fulfillment.save!(validate: false)
+      @fulfillment.save(validate: false)
       detect_changes_and_create_notes
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
     else
