@@ -167,6 +167,7 @@ class FulfillmentsController < ApplicationController
       end
 
       @fulfillment.reload
+      @fulfillment.assign_attributes(fulfillment_params.except(:components))
     end
   end
 
