@@ -1,5 +1,4 @@
 require 'rails_helper'
-include ProcedureGroupsHelper
 
 RSpec.describe ProcedureGroupsController, type: :controller do
   login_user
