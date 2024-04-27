@@ -6,7 +6,7 @@
         %label{ for: "startTimeField" } Start Time:
         = form_for procedure_group, url: procedure_group_path(procedure_group), remote: true, method: :put do |f|
           .input-group.datetimepicker.time.procedure-group-start-time{ id: "procedureGroup#{procedure_group.id}StartTime", data: { target_input: 'nearest' } }
-            = f.text_field :start_time, class: 'datetimepicker-input form-control', value: format_time(procedure_group.start_time), disabled: disabled, data: { target: "#procedureGroup#{procedure_group.id}StartTime" }
+            = f.text_field :start_time, class: 'datetimepicker-input form-control', value: (procedure_group.start_time.in_time_zone(ENV.fetch('APPLICATION_TIME_ZONE')).strftime("%I:%M %p") if procedure_group.start_time), disabled: disabled, data: { target: "#procedureGroup#{procedure_group.id}StartTime" }
             .input-group-append
               %span.input-group-text
                 = icon('far', 'clock')
@@ -16,7 +16,7 @@
         %label{ for: "endTimeField" } End Time:
         = form_for procedure_group, url: procedure_group_path(procedure_group), remote: true, method: :put do |f|
           .input-group.datetimepicker.time.procedure-group-end-time{ id: "procedureGroup#{procedure_group.id}EndTime", data: { target_input: 'nearest' } }
-            = f.text_field :end_time, class: 'datetimepicker-input form-control', value: format_time(procedure_group.end_time), disabled: disabled, data: { target: "#procedureGroup#{procedure_group.id}EndTime" }
+            = f.text_field :end_time, class: 'datetimepicker-input form-control', value: (procedure_group.end_time.in_time_zone(ENV.fetch('APPLICATION_TIME_ZONE')).strftime("%I:%M %p") if procedure_group.end_time), disabled: disabled, data: { target: "#procedureGroup#{procedure_group.id}EndTime" }
             .input-group-append
               %span.input-group-text
                 = icon('far', 'clock')
