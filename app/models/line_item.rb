@@ -26,11 +26,13 @@ class LineItem < ApplicationRecord
   belongs_to :protocol
   belongs_to :arm
   belongs_to :service
+  belongs_to :sparc_line_item, class_name: 'Sparc::LineItem', foreign_key: :sparc_id
   has_many :fulfillments
   has_many :notes, as: :notable
   has_many :documents, as: :documentable
   has_many :components, as: :composable
   has_many :admin_rates, primary_key: :sparc_id
+
 
   has_many :visit_groups, through: :arm
   ##Commented out, because this isn't a direct connection, and is unintuitive.
