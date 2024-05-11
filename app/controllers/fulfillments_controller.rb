@@ -80,17 +80,23 @@ class FulfillmentsController < ApplicationController
   end
 
   def toggle_invoiced
+    # Will skip normal validations as this is a simple toggle action
+
     respond_to :js
     persist_original_attributes_to_track_changes
-    @fulfillment.update_attributes(invoiced: fulfillment_params[:invoiced])
-    @fulfillment.update_attributes(credited: !fulfillment_params[:invoiced])
+    @fulfillment.assign_attributes(invoiced: fulfillment_params[:invoiced])
+    @fulfillment.assign_attributes(credited: !fulfillment_params[:invoiced])
+    @fulfillment.save(validate: false)
     detect_changes_and_create_notes
   end
 
   def toggle_credit
+    # Will skip normal validations as this is a simple toggle action
+
     persist_original_attributes_to_track_changes
-    @fulfillment.update_attributes(credited: fulfillment_params[:credited])
-    @fulfillment.update_attributes(invoiced: !fulfillment_params[:credited])
+    @fulfillment.assign_attributes(credited: fulfillment_params[:credited])
+    @fulfillment.assign_attributes(invoiced: !fulfillment_params[:credited])
+    @fulfillment.save(validate: false)
     detect_changes_and_create_notes
   end
 
