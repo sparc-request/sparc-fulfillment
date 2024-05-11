@@ -1,4 +1,4 @@
-# Copyright © 2011-2024 MUSC Foundation for Research Development~
+# Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
 
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -19,136 +19,114 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class FundingSourceAuditingReport < Report
-  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocols, :organizations].freeze
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :organizations, :protocols].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
 
+  def format_protocol_id_column(protocol)
+    protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
+  end
+
   def generate(document)
+    start_date = Time.strptime(@params[:start_date], "%m/%d/%Y")
+    end_date = Time.strptime(@params[:end_date], "%m/%d/%Y")
+    @start_date = start_date.utc
+    @end_date = end_date.tomorrow.utc - 1.second
+    formatted_start_date = format_date(start_date)
+    formatted_end_date = format_date(end_date)
 
-    @start_date = parse_date(@params[:start_date])
-    @end_date   = parse_date(@params[:end_date])
-
-    update_document_attributes(document)
-
-    protocols = Protocol.includes(:project_roles).where(id: @params[:protocols])
+    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
+      csv << ["From:", formatted_start_date, "To:", formatted_end_date]
+      csv << [""]
 
-      audits = fetch_audits(protocols)
+      header = [
+        "",
+        "Protocol ID",
+        "Request ID",
+        "Status",
+        "Short Title",
+        "Proposal Funding Status",
+        "Funding Start Date",
+        "Funding Source",
+        "Previous Funding Source",
+        "Funding Source Change Date",
+        "Primary PI",
+        "Primary PI Affiliation",
+        "Billing Business Manager(s)",
+        "Core/Program",
+        "Services",
+        "Invoiced"
+      ]
+      header.insert(1, ENV['RMID_URL'].nil? ? "" : "RMID")
+      csv << header
 
-      write_csv_title_and_date_range(csv)
+      protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, { line_items: [:fulfillments] }, { protocols_participants: { appointments: :procedures } }).where(id: @params[:protocols])
 
-      write_csv_header(csv)
-
-      write_csv_rows(csv, audits, protocols)
-    end
-  end
-
-  private
-
-  def fetch_audits(protocols)
-    protocol_ids = protocols.pluck(:sparc_id)
-    audits = Sparc::Audit
-          .where(auditable_type: "Protocol", auditable_id: protocol_ids)
-          .where(action: "update")
-          .where('audited_changes LIKE ? AND audited_changes NOT LIKE ?', '%funding_source%', '%additional_funding_source%')
-          .includes(auditable: { line_items: { service: :organization } })
-    audits
-  end
-
-  def parse_date(date_str)
-    Time.strptime(date_str, "%m/%d/%Y").utc
-  end
-
-  def update_document_attributes(document)
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
-  end
-
-  def write_csv_title_and_date_range(csv)
-    csv << ["Title:", @params[:title]]
-    csv << ["From:", format_date(@start_date), "To:", format_date(@end_date)]
-    csv << [""]
-  end
-
-  def write_csv_header(csv)
-    header = [
-      "",
-      "Protocol ID",
-      "Request ID",
-      "Status",
-      "Short Title",
-      "Proposal Funding Status",
-      "Funding Start Date",
-      "Funding Source",
-      "Previous Funding Source",
-      "Funding Source Change Date",
-      "Primary PI",
-      "Primary PI Affiliation",
-      "Billing Business Manager(s)",
-      "Core/Program",
-      "Services",
-      "Invoiced"
-    ]
-    header.insert(1, ENV['RMID_URL'].nil? ? "" : "RMID")
-    csv << header
-  end
-
-  def write_csv_rows(csv, audits, protocols)
-    protocol_ids = audits.map(&:auditable_id)
-    protocols = protocols.index_by(&:sparc_id)
-
-    if @params[:sort_by] == "Protocol ID"
-      audits = audits.sort_by { |audit| audit.auditable_id }
-    else
-      audits = audits.sort_by { |audit| protocols[audit.auditable_id]&.pi&.last_name }
-    end
-
-    audits.reverse! if @params[:sort_order] == "DESC"
-
-    grouped_line_items = Hash.new { |hash, key| hash[key] = [] }
-
-    audits.each do |audit|
-      protocol = protocols[audit.auditable_id]
-
-      next if protocol.nil?
-
-      funding_source_changes = YAML.load(audit.audited_changes)
-      next unless funding_source_changes["funding_source"]
-
-      next unless @params[:organizations].include?(protocol.organization.id.to_s)
-
-      line_items = protocol.line_items
-      next if line_items.empty?
-
-      line_items.each do |line_item|
-        organization = line_item.service.organization
-        grouped_line_items[organization] << line_item
+      if @params[:sort_by] == "Protocol ID"
+        protocols = protocols.order(:sparc_id)
+      else
+        protocols = protocols.sort_by{ |protocol| protocol.pi.last_name }
       end
 
-      grouped_line_items.each do |organization, line_items|
-        csv << [
-          "",
-          ENV['RMID_URL'] ? protocol.research_master_id : nil,
-          protocol.sparc_protocol.id,
-          protocol.sub_service_request.ssr_id,
-          formatted_status(protocol),
-          protocol.short_title,
-          protocol.sparc_protocol&.funding_status&.humanize,
-          protocol.sparc_protocol&.funding_start_date&.strftime("%m/%d/%Y"),
-          funding_source_changes.dig("funding_source", -1)&.humanize,
-          funding_source_changes.dig("funding_source", 0)&.humanize,
-          format_date(audit.created_at),
-          protocol.pi&.full_name,
-          protocol.pi&.professional_org_lookup("institution"),
-          protocol.billing_business_managers.map(&:full_name).join(', '),
-          organization.name,
-          line_items.map { |li| li.service.name }.uniq.join(', '),
-          protocol.fulfillments.any?(&:invoiced?) || protocol.procedures.any?(&:invoiced?) ? "Yes" : "No"
-        ]
+      if @params[:sort_order] == "DESC"
+        protocols.reverse!
+      end
+
+      protocols_by_sparc_id = protocols.index_by(&:sparc_id)
+      sparc_protocol_ids = protocols_by_sparc_id.keys
+
+      audits = Sparc::Audit.where(auditable_type: "Protocol", auditable_id: sparc_protocol_ids, created_at: @start_date..@end_date, action: "update").select do |audit|
+        audited_changes = YAML.load(audit.audited_changes)
+        audited_changes.key?('funding_source')
+      end
+
+      audits.each do |audit|
+        protocol = protocols_by_sparc_id[audit.auditable_id]
+        funding_source_changes = YAML.load(audit.audited_changes)
+
+        fulfillment_protocols = protocols.select{|p| p.sparc_id == audit.auditable_id}
+        fulfillment_protocols.each do |fulfillment_protocol|
+          fulfilled_services = []
+          fulfilled_services.concat(fulfillment_protocol.fulfillments)
+          fulfilled_services.concat(fulfillment_protocol.procedures.select{|procedure| procedure.completed_date != nil && procedure.billing_type == 'research_billing_qty'})
+
+          fulfilled_services_grouped_by_org = fulfilled_services.group_by{|item| item.service.organization}
+
+          fulfilled_services_grouped_by_org.each do |org, service_group|
+
+            csv << [
+              "",
+              ENV['RMID_URL'] ? protocol.research_master_id : nil,
+              protocol.sparc_protocol.id,
+              fulfillment_protocol.sub_service_request.ssr_id,
+              formatted_status(protocol),
+              protocol.short_title,
+              protocol.sparc_protocol&.funding_status&.humanize,
+              protocol.sparc_protocol&.funding_start_date&.strftime("%m/%d/%Y"),
+              funding_source_changes.dig("funding_source", -1)&.humanize,
+              funding_source_changes.dig("funding_source", 0)&.humanize,
+              format_date(audit.created_at),
+              protocol.pi&.full_name,
+              protocol.pi&.professional_org_lookup("institution"),
+              protocol.billing_business_managers.map(&:full_name).join(', '),
+              service_group.any? ? org.name : "",
+              service_group.any? ? service_group.map(&:service_name).uniq.join(', ') : "",
+              service_group.any?(&:invoiced) ? "Yes" : service_group.any? ? "No" : ""
+            ]
+          rescue => e
+            Rails.logger.info "#"*20+" An error occured while processing organization #{org.id}: #{e.message}"
+          end
+        rescue => e
+          Rails.logger.info "#"*20+" An error occured while processing fulfillment protocol #{fulfillment_protocol.id}: #{e.message}"
+        end
+      rescue => e
+        Rails.logger.info "#"*20+" An error occured while processing protocol #{protocol.id}: #{e.message}"
       end
     end
-  rescue StandardError => e
-    Rails.logger.error("#" * 50 + "#{e.message}")
+  rescue => e
+    Rails.logger.info "#"*20+" An error occured while generating the Funding Source Auditing Report: #{e.message}"
   end
 end
