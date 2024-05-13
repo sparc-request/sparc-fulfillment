@@ -135,13 +135,22 @@ class AuditingReport < Report
           
           protocol_total_cost = 0
           protocol_total_cost_with_subsidies = 0
+          has_valid_line_item = false
           
           protocol.line_items.each do |line_item|
             next unless line_item.versions.where(event: ["create", "update"], created_at: @start_date..@end_date).any? && line_item.service.one_time_fee?
             line_item.versions.where(event: ["create", "update"]).each do |version|
 
+              has_valid_line_item = true
+
               line_item_total_cost = total_cost(line_item.fulfillments)
-              line_item_subsidy = line_item.sparc_line_item.sub_service_request.subsidies.select{|subsidy| subsidy.status == 'Approved'}.first.percent_subsidy
+              line_item_subsidy = 0
+
+              if line_item.try(:sparc_line_item).try(:sub_service_request).try(:subsidies).present?
+                if line_item.sparc_line_item.sub_service_request.subsidies.select{|subsidy| subsidy.status == 'Approved'}.present?
+                  line_item_subsidy = line_item.sparc_line_item.sub_service_request.subsidies.select{|subsidy| subsidy.status == 'Approved'}.first.percent_subsidy
+                end
+              end
 
               data = [ protocol.srid ]
               data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
@@ -158,7 +167,7 @@ class AuditingReport < Report
               data << line_item.quantity_remaining
 
               data << line_item_total_cost
-              protocol_total_cost += total_cost(line_item.fulfillments)
+              protocol_total_cost += line_item_total_cost
 
               data << "#{line_item_subsidy * 100}%"
               protocol_total_cost_with_subsidies += (line_item_total_cost * (1 - line_item_subsidy))
@@ -174,8 +183,12 @@ class AuditingReport < Report
               csv << data
             end
           end
-          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "Non-clinical Serivces Total:", protocol_total_cost]
-          csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy:", protocol_total_cost_with_subsidies]
+
+          if has_valid_line_item
+            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "Non-Clinical Services Total: ", protocol_total_cost]
+            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy: ", protocol_total_cost_with_subsidies]
+            csv << [""]
+          end
         end
       end
     end
