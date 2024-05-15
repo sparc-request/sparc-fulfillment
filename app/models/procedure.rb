@@ -216,6 +216,14 @@ class Procedure < ApplicationRecord
     self.procedure_group&.end_time
   end
 
+  def admin_rate
+    protocol.sparc_protocol.service_requests
+    .flat_map(&:sub_service_requests)
+    .flat_map(&:line_items)
+    .find { |line_item| line_item.service_id == service.id }
+    &.admin_rates&.first
+  end
+
   private
 
   def update_protocols_participant_deletable

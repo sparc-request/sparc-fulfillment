@@ -71,11 +71,7 @@ class InvoiceReport < Report
         total = 0
         total_with_subsidy = 0
 
-        # fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).where(@specific_services)
-
         fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date}
-
-        # procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date).where(@specific_services)
 
         procedures = protocol.procedures.select{|procedure| procedure.completed_date != nil && procedure.completed_date >= @start_date && procedure.completed_date <= @end_date && procedure.billing_type == 'research_billing_qty' && (@specific_services.present? ? @specific_services.include?(procedure.service_id) : true)}
 
@@ -111,9 +107,6 @@ class InvoiceReport < Report
 
           csv << header
 
-          # fulfillments.includes(:line_item, service: [:organization]).order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
-
-          # fulfillments.order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
           fulfillments.each do |fulfillment|
             if !fulfillment.credited?
               data = []
@@ -199,20 +192,7 @@ class InvoiceReport < Report
                   procedure = service_group.first
 
                   if !procedure.credited?
-
-                    if procedure.visit
-                      admin_rate = procedure.visit.try(:line_item).try(:admin_rates).try(:first)
-                    elsif !procedure.visit
-                      # if procedure does not have a vist_id, search the org_group for a procedure with a visit_id and use that visit to get the admin_rate
-                      admin_rate = nil
-                      org_group.select{ |p| p.visit_id }.each do |p|
-                        admin_rate = p.visit.try(:line_item).try(:admin_rates).try(:first)
-                        break if admin_rate
-                      end
-                    else
-                      admin_rate = nil
-                    end
-
+                    admin_rate = procedure.admin_rate
                     cost = admin_rate ? admin_rate.admin_cost.to_f : procedure.service_cost.to_f
                     data = []
                     data << format_protocol_id_column(protocol)
