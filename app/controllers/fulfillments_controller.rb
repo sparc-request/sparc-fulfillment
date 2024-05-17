@@ -20,14 +20,14 @@
 
 class FulfillmentsController < ApplicationController
 
-  before_action :find_fulfillment, only: [:edit, :update, :toggle_invoiced, :toggle_credit]
+  before_action :find_fulfillment, only: [:edit, :update, :update_invoice_date, :toggle_invoiced, :toggle_credit]
 
   def index
     @line_item = LineItem.find(params[:line_item_id])
     respond_to do |format|
       format.js { render }
       format.json {
-        @fulfillments = @line_item.fulfillments.includes(:notes).order(fulfilled_at: :desc, created_at: :desc)
+        @fulfillments = @line_item.fulfillments.includes(:notes, :components).order(fulfilled_at: :desc, created_at: :desc)
 
         render
       }
@@ -72,6 +72,20 @@ class FulfillmentsController < ApplicationController
     if @fulfillment.valid?
       update_components_and_create_notes('update')
       @fulfillment.save(validate: false)
+      detect_changes_and_create_notes
+      flash[:success] = t(:fulfillment)[:flash_messages][:updated]
+    else
+      @errors = @fulfillment.errors
+    end
+  end
+
+  def update_invoice_date
+    #NOTE: Creating separate action as simple invoice update will not have component data attached
+    
+    persist_original_attributes_to_track_changes
+    @line_item = @fulfillment.line_item
+    @fulfillment.assign_attributes(fulfillment_params.except(:components))
+    if @fulfillment.save(validate: false)
       detect_changes_and_create_notes
       flash[:success] = t(:fulfillment)[:flash_messages][:updated]
     else

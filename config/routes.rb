@@ -82,6 +82,10 @@ Rails.application.routes.draw do
     collection do
       put 'toggle_invoiced(/:id)', to: 'fulfillments#toggle_invoiced'
       put 'toggle_credit(/:id)', to: 'fulfillments#toggle_credit'
+      # put 'update_invoice_date(/:id)', to: 'fulfillments#update_invoice_date'
+    end
+    member do 
+      put :update_invoice_date
     end
   end
 
