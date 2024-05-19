@@ -59,7 +59,8 @@ class Report
 
   def format_time(time)
     if time.present?
-      time.strftime("%I:%M %p")
+      time = Time.at(time) if time.is_a?(Integer)
+      time.in_time_zone("Eastern Time (US & Canada)").strftime("%I:%M %p")
     end
   end
 

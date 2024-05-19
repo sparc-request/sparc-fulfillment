@@ -39,6 +39,10 @@ class Organization < SparcDbBase
             class_name: "Organization",
             foreign_key: :parent_id
 
+  def self.name_for_id(id)
+    find(id).try(:name)
+  end
+
   def label
     self.abbreviation || self.name
   end
