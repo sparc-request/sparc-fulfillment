@@ -35,14 +35,6 @@ class InvoiceReport < Report
     object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
   end
 
-  def display_modified_rate_column(procedure)
-    if procedure.visit
-      procedure.visit.try(:line_item).try(:admin_rates).any? ? "Yes" : "No"
-    else
-      "No"
-    end
-  end
-
   def insert_blank_column_for_notes(totals)
     totals.insert(0,"") if @params[:include_notes] == "true"
     totals
@@ -79,11 +71,7 @@ class InvoiceReport < Report
         total = 0
         total_with_subsidy = 0
 
-        # fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).where(@specific_services)
-
         fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date}
-
-        # procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date).where(@specific_services)
 
         procedures = protocol.procedures.select{|procedure| procedure.completed_date != nil && procedure.completed_date >= @start_date && procedure.completed_date <= @end_date && procedure.billing_type == 'research_billing_qty' && (@specific_services.present? ? @specific_services.include?(procedure.service_id) : true)}
 
@@ -119,9 +107,6 @@ class InvoiceReport < Report
 
           csv << header
 
-          # fulfillments.includes(:line_item, service: [:organization]).order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
-
-          # fulfillments.order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
           fulfillments.each do |fulfillment|
             if !fulfillment.credited?
               data = []
@@ -207,6 +192,8 @@ class InvoiceReport < Report
                   procedure = service_group.first
 
                   if !procedure.credited?
+                    admin_rate = procedure.admin_rate
+                    cost = admin_rate ? admin_rate.admin_cost.to_f : procedure.service_cost.to_f
                     data = []
                     data << format_protocol_id_column(protocol)
                     data << protocol.sub_service_request.ssr_id
@@ -229,8 +216,8 @@ class InvoiceReport < Report
                     data << service_group.size
                     data << procedure.service.current_effective_pricing_map.unit_type
                     data << display_cost(procedure.service_cost)
-                    data << display_cost(service_group.size * procedure.service_cost.to_f)
-                    data << display_modified_rate_column(procedure)
+                    data << display_cost(service_group.size * cost)
+                    data << (admin_rate ? "Yes" : "No")
                     data << display_subsidy_percent(procedure) if procedure.percent_subsidy
                     data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
                     data << format_date(procedure.invoiced_date) if @params[:include_invoiced] == "true" && procedure.invoiced_date
@@ -238,7 +225,7 @@ class InvoiceReport < Report
                     csv << data
 
                     service_cost = service_group.size * procedure.service_cost.to_f
-                    total += service_cost
+                    total += admin_rate ? admin_rate.admin_cost : procedure.service_cost
                     total_with_subsidy += procedure.percent_subsidy ? service_cost * (1 - procedure.percent_subsidy) : service_cost
                   end
                 end
