@@ -26,7 +26,6 @@ class VisitReport < Report
 
   HAS_RMID = ENV.fetch('RMID_URL'){nil}
 
-  # report columns
   if HAS_RMID
     REPORT_COLUMNS = ["Protocol ID (SRID)",
                       "RMID",
@@ -39,8 +38,9 @@ class VisitReport < Report
                       "Visit Duration (minutes)",
                       "Type of Visit",
                       "Visit Indications",
-                      "Start Time",
-                      "End Time"
+                      "Core",
+                      "Core Procedures Start Time",
+                      "Core Proceduers End Time"
                       ]
   else
     REPORT_COLUMNS = ["Protocol ID (SRID)",
@@ -53,8 +53,9 @@ class VisitReport < Report
                       "Visit Duration (minutes)",
                       "Type of Visit",
                       "Visit Indications",
-                      "Start Time",
-                      "End Time"
+                      "Core",
+                      "Core Procedures Start Time",
+                      "Core Procedures End Time"
                       ]
   end
 
@@ -69,31 +70,60 @@ class VisitReport < Report
       csv << [""]
       csv << REPORT_COLUMNS
 
-      result_set  = Appointment.all.joins({ procedures: [{ protocols_participant: :participant}]}, :procedure_groups).
-                    where(
-                      Appointment.arel_table[:start_date].gteq(from_start_date).and(
-                        Appointment.arel_table[:start_date].lteq(to_start_date)).and(
-                        Procedure.arel_table[:status].not_eq("unstarted"))).distinct.
-                    pluck(
-                      ProtocolsParticipant.arel_table[:protocol_id], Participant.arel_table[:last_name], Participant.arel_table[:first_name],
-                      Appointment.arel_table[:name], Appointment.arel_table[:start_date], Appointment.arel_table[:completed_date],
-                      Appointment.arel_table[:visit_group_id], Appointment.arel_table[:type], Appointment.arel_table[:id],
-                      Procedure.arel_table[:status], Procedure.arel_table[:sparc_core_name], Appointment.arel_table[:contents], Participant.arel_table[:id], ProcedureGroup.arel_table[:start_time], ProcedureGroup.arel_table[:end_time])
-
+      result_set = ProcedureGroup.joins(appointment: { procedures: { protocols_participant: :participant }})
+      .where(Appointment.arel_table[:start_date].gteq(from_start_date)
+      .and(Appointment.arel_table[:start_date].lteq(to_start_date))
+      .and(Procedure.arel_table[:status].not_eq("unstarted")))
+      .pluck(
+      ProtocolsParticipant.arel_table[:protocol_id], #0
+      Participant.arel_table[:last_name], #1
+      Participant.arel_table[:first_name], #2
+      Appointment.arel_table[:name], #3
+      Appointment.arel_table[:start_date], #4
+      Appointment.arel_table[:completed_date], #5
+      Appointment.arel_table[:visit_group_id], #6
+      Appointment.arel_table[:type], #7
+      Appointment.arel_table[:id], #8
+      Procedure.arel_table[:status], #9 (-6)
+      ProcedureGroup.arel_table[:sparc_core_id], #10 (-5)
+      Appointment.arel_table[:contents], #11 (-4)
+      Participant.arel_table[:id], #12 (-3)
+      ProcedureGroup.arel_table[:start_time], #13 (-2)
+      ProcedureGroup.arel_table[:end_time]) #14 (-1)
 
       sorted_result_set = sort_result_set(result_set)
 
       sorted_result_set.each do |appointment|
+
         if HAS_RMID
-          csv << [appointment[0], appointment[-1], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
-                  get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
-                  get_content(appointment), get_statuses(appointment[8]), format_time(appointment[-3]), format_time(appointment[-2])]
-                  # appointment[0]: protocol_id, appointment[-1]: rmid, appointment[1]: last_name, appointment[2]: first_name, appointment[3]: visit_name,...appointment[-3]: start_time, appointment[-2]: end_time
+          csv << [
+            appointment[0], appointment[-1],
+            appointment[1], appointment[2],
+            appointment[3],
+            is_custom_visit(appointment),
+            get_date(appointment, true),
+            get_date(appointment, false),
+            get_duration(appointment),
+            get_content(appointment),
+            get_statuses(appointment[8]),
+            get_core_name(appointment[10]),
+            format_time(appointment[-3]),
+            format_time(appointment[-2])
+          ]
         else
-          csv << [appointment[0], appointment[1], appointment[2], appointment[3], is_custom_visit(appointment),
-                  get_date(appointment, true), get_date(appointment, false), get_duration(appointment),
-                  get_content(appointment), get_statuses(appointment[8]), format_time(appointment[-2]), format_time(appointment[-1])]
-                  # appointment[0]: protocol_id, appointment[1]: last_name, appointment[2]: first_name, appointment[3]: visit_name,...appointment[-2]: start_time, appointment[-1]: end_time
+          csv << [
+            appointment[0], appointment[1],
+            appointment[2], appointment[3],
+            is_custom_visit(appointment),
+            get_date(appointment, true),
+            get_date(appointment, false),
+            get_duration(appointment),
+            get_content(appointment),
+            get_statuses(appointment[8]),
+            get_core_name(appointment[10]),
+            format_time(appointment[-2]),
+            format_time(appointment[-1])
+          ]
         end
       end
     end
@@ -107,6 +137,10 @@ class VisitReport < Report
 
   def is_custom_visit(appointment)
     appointment[6].nil? ? "Yes" : "No"
+  end
+
+  def get_core_name(core_id)
+    Organization.name_for_id(core_id)
   end
 
   def get_duration(appointment)
@@ -133,9 +167,21 @@ class VisitReport < Report
   def filter_result_set(result_set)
     used_appointments = []
     filtered_set = []
+
     result_set.each do |appointment|
       protocol = Protocol.find(appointment[0])
-      comparison_array = [appointment[0], appointment[1], appointment[2], appointment[3], get_duration(appointment), appointment[6], appointment[12]]
+      comparison_array = [
+      appointment[0], #protocol_id
+      appointment[1], #last_name
+      appointment[2], #first_name
+      appointment[3], #visit_name
+      get_duration(appointment), #visit_duration
+      appointment[6], #visit_group_id
+      appointment[12],#participant_id
+      appointment[10],#core_name
+      appointment[13],#start_time
+      appointment[14]#end_time
+    ]
       if !used_appointments.include?(comparison_array)
         used_appointments << comparison_array
         srid = protocol.srid

@@ -3,8 +3,22 @@
 
 class ProcedureGroup < ApplicationRecord
   belongs_to :appointment
+  has_one :protocols_participant, through: :appointment
 
   validates :appointment, presence: true
   validates :sparc_core_id, uniqueness: { scope: :appointment_id, message: "There should only be one procedure group per Core" }
-end
 
+  def set_start_time(time)
+    unless time.blank?
+      time_in_zone = DateTime.current.in_time_zone(ENV.fetch('APPLICATION_TIME_ZONE')).change(hour: Time.parse(time).hour, min: Time.parse(time).min)
+      self.start_time = time_in_zone.utc
+    end
+  end
+
+  def set_end_time(time)
+    unless time.blank?
+      time_in_zone = DateTime.current.in_time_zone(ENV.fetch('APPLICATION_TIME_ZONE')).change(hour: Time.parse(time).hour, min: Time.parse(time).min)
+      self.end_time = time_in_zone.utc
+    end
+  end
+end
