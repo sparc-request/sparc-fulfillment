@@ -65,22 +65,22 @@ class FundingSourceAuditingReport < Report
 
       protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, { line_items: [:fulfillments] }, { protocols_participants: { appointments: :procedures } }).where(id: @params[:protocols])
 
-      if @params[:sort_by] == "Protocol ID"
-        protocols = protocols.order(:sparc_id)
-      else
-        protocols = protocols.sort_by{ |protocol| protocol.pi.last_name }
-      end
-
-      if @params[:sort_order] == "DESC"
-        protocols.reverse!
-      end
-
       protocols_by_sparc_id = protocols.index_by(&:sparc_id)
       sparc_protocol_ids = protocols_by_sparc_id.keys
 
       audits = Sparc::Audit.where(auditable_type: "Protocol", auditable_id: sparc_protocol_ids, created_at: @start_date..@end_date, action: "update").select do |audit|
         audited_changes = YAML.load(audit.audited_changes)
         audited_changes.key?('funding_source')
+      end
+
+      if @params[:sort_by] == "Protocol ID"
+        audits = audits.sort_by(&:auditable_id)
+      else
+        audits = audits.sort_by{ |audit| protocols_by_sparc_id[audit.auditable_id].pi.last_name }
+      end
+
+      if @params[:sort_order] == "DESC"
+        audits.reverse!
       end
 
       audits.each do |audit|
