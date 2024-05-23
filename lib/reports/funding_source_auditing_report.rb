@@ -24,10 +24,6 @@ class FundingSourceAuditingReport < Report
 
   require 'csv'
 
-  def format_protocol_id_column(protocol)
-    protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
-  end
-
   def generate(document)
     start_date = Time.strptime(@params[:start_date], "%m/%d/%Y")
     end_date = Time.strptime(@params[:end_date], "%m/%d/%Y")
@@ -38,12 +34,22 @@ class FundingSourceAuditingReport < Report
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
+    @organizations = IdentityOrganizations.new(@params[:identity_id]).fulfillment_organizations_with_protocols
+
+    @sparc_protocol_ids = Protocol.where(id: @params[:protocols]).pluck(:sparc_id)
+
     CSV.open(document.path, "wb") do |csv|
-      csv << ["From:", formatted_start_date, "To:", formatted_end_date]
+      csv << ["Report Parameters:"]
+      csv << ["Funding Source Changed From:", formatted_start_date, "Funding Source Changed To:", formatted_end_date]
+      if @params[:organizations].map(&:to_i).sort == @organizations.map(&:id).sort
+        csv << ["Organizations:", "All Organizations"]
+      else
+        csv << ["Organizations:", @params[:organizations].map{|org_id| Organization.find(org_id).name}.join(', ')]
+      end
+      csv << ["Protocol(s):", @sparc_protocol_ids.join(', ')]
       csv << [""]
 
       header = [
-        "",
         "Protocol ID",
         "Request ID",
         "Status",
@@ -60,10 +66,15 @@ class FundingSourceAuditingReport < Report
         "Services",
         "Invoiced"
       ]
-      header.insert(1, ENV['RMID_URL'].nil? ? "" : "RMID")
+      header.insert(0, ENV['RMID_URL'].nil? ? "" : "RMID")
       csv << header
 
-      protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, { line_items: [:fulfillments] }, { protocols_participants: { appointments: :procedures } }).where(id: @params[:protocols])
+      protocols = Protocol.includes(
+        :sparc_protocol,
+        :pi,
+        :sub_service_request,
+        { line_items: [:fulfillments, { service: :organization }] }
+      ).where(id: @params[:protocols])
 
       protocols_by_sparc_id = protocols.index_by(&:sparc_id)
       sparc_protocol_ids = protocols_by_sparc_id.keys
@@ -90,15 +101,14 @@ class FundingSourceAuditingReport < Report
         fulfillment_protocols = protocols.select{|p| p.sparc_id == audit.auditable_id}
         fulfillment_protocols.each do |fulfillment_protocol|
           fulfilled_services = []
-          fulfilled_services.concat(fulfillment_protocol.fulfillments)
-          fulfilled_services.concat(fulfillment_protocol.procedures.select{|procedure| procedure.completed_date != nil && procedure.billing_type == 'research_billing_qty'})
+          fulfilled_services.concat(fulfillment_protocol.fulfillments.includes(service: :organization))
+          fulfilled_services.concat(fulfillment_protocol.procedures.includes(service: :organization).select{|procedure| procedure.completed_date != nil && procedure.billing_type == 'research_billing_qty'})
 
           fulfilled_services_grouped_by_org = fulfilled_services.group_by{|item| item.service.organization}
 
           fulfilled_services_grouped_by_org.each do |org, service_group|
 
             csv << [
-              "",
               ENV['RMID_URL'] ? protocol.research_master_id : nil,
               protocol.sparc_protocol.id,
               fulfillment_protocol.sub_service_request.ssr_id,
@@ -113,7 +123,7 @@ class FundingSourceAuditingReport < Report
               protocol.pi&.professional_org_lookup("institution"),
               protocol.billing_business_managers.map(&:full_name).join(', '),
               service_group.any? ? org.name : "",
-              service_group.any? ? service_group.map(&:service_name).uniq.join(', ') : "",
+              service_group.any? ? service_group.map{|s| s.service.name }.uniq.join(', ') : "",
               service_group.any?(&:invoiced) ? "Yes" : service_group.any? ? "No" : ""
             ]
           rescue => e
