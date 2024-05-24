@@ -39,14 +39,23 @@ class FundingSourceAuditingReport < Report
     @sparc_protocol_ids = Protocol.where(id: @params[:protocols]).pluck(:sparc_id)
 
     CSV.open(document.path, "wb") do |csv|
+
       csv << ["Report Parameters:"]
+
       csv << ["Funding Source Changed From:", formatted_start_date, "Funding Source Changed To:", formatted_end_date]
+
       if @params[:organizations].map(&:to_i).sort == @organizations.map(&:id).sort
-        csv << ["Organizations:", "All Organizations"]
+        csv << ["Organization(s):", "All Organizations"]
       else
-        csv << ["Organizations:", @params[:organizations].map{|org_id| Organization.find(org_id).name}.join(', ')]
+        csv << ["Organization(s):", @params[:organizations].map{|org_id| Organization.find(org_id).name}.join(', ')]
       end
-      csv << ["Protocol(s):", @sparc_protocol_ids.join(', ')]
+
+      if @params[:all_protocols_selected] == 'true'
+        csv << ["Protocol(s):", "All Protocols"]
+      else
+        csv << ["Protocol(s):", @sparc_protocol_ids.join(', ')]
+      end
+
       csv << [""]
 
       header = [

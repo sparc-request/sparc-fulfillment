@@ -46,7 +46,7 @@ class ReportsController < ApplicationController
     else
       @errors = @document.errors
     end
-    
+
     respond_to do |format|
       format.js
       format.json {
@@ -114,7 +114,7 @@ class ReportsController < ApplicationController
     result = []
     unless org_ids.empty?
       result << org_ids
-      
+
       orgs = Organization.find(org_ids)
       orgs.each do |org|
         result << org.all_child_organizations.pluck(:id)
@@ -126,7 +126,8 @@ class ReportsController < ApplicationController
 
   def reports_params
     params.require(:report_type) # raises error if report_type not present
-    params.permit(:format,
+    params.permit(:all_protocols_selected,
+              :format,
               :utf8,
               :report_type,
               :title,
@@ -148,7 +149,7 @@ class ReportsController < ApplicationController
               :protocol_level,
               :mrns => [],
               :organizations => [],
-              :services => [], 
+              :services => [],
               :protocols => []).merge(identity_id: current_identity.id)
   end
 end
