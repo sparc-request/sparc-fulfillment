@@ -2,8 +2,17 @@ class ProcedureGroupsController < ApplicationController
   before_action :set_procedure_group, only: :update
 
   def update
-    @procedure_group.set_start_time(params[:procedure_group][:start_time]) if params[:procedure_group][:start_time].present?
-    @procedure_group.set_end_time(params[:procedure_group][:end_time]) if params[:procedure_group][:end_time].present?
+    if params[:procedure_group][:start_time].present?
+      @procedure_group.set_start_time(params[:procedure_group][:start_time])
+    else
+      @procedure_group.start_time = nil
+    end
+
+    if params[:procedure_group][:end_time].present?
+      @procedure_group.set_end_time(params[:procedure_group][:end_time])
+    else
+      @procedure_group.end_time = nil
+    end
 
     if @procedure_group.update(procedure_group_params)
       flash[:success] = t('procedure_groups.flash_messages.updated')
