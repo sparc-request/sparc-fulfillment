@@ -53,6 +53,14 @@ class Fulfillment < ApplicationRecord
   scope :fulfilled_in_date_range, ->(start_date, end_date) {
         where("fulfilled_at is not NULL AND fulfilled_at between ? AND ?", start_date, end_date)}
 
+  def admin_rate
+    protocol.sparc_protocol.service_requests
+    .flat_map(&:sub_service_requests)
+    .flat_map(&:line_items)
+    .find { |line_item| line_item.service_id == service.id }
+    &.admin_rates&.first
+  end
+
   def components_presence_if_required_by_service
     return unless service&.components?
     return unless components_data.blank? || components_data.all?(&:blank?)
