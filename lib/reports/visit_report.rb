@@ -40,7 +40,7 @@ class VisitReport < Report
                       "Visit Indications",
                       "Core",
                       "Core Procedures Start Time",
-                      "Core Proceduers End Time"
+                      "Core Procedures End Time"
                       ]
   else
     REPORT_COLUMNS = ["Protocol ID (SRID)",
