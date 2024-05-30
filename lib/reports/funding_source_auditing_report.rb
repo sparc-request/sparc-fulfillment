@@ -36,7 +36,7 @@ class FundingSourceAuditingReport < Report
 
     @organizations = IdentityOrganizations.new(@params[:identity_id]).fulfillment_organizations_with_protocols
 
-    @sparc_protocol_ids = Protocol.where(id: @params[:protocols]).pluck(:sparc_id)
+    @sparc_protocol_ids = Protocol.where(id: @params[:protocols]).pluck(:sparc_id).uniq
 
     CSV.open(document.path, "wb") do |csv|
 
@@ -94,7 +94,7 @@ class FundingSourceAuditingReport < Report
       end
 
       if @params[:sort_by] == "Protocol ID"
-        audits = audits.sort_by(&:auditable_id)
+        audits.sort_by!(&:auditable_id)
       else
         audits = audits.sort_by{ |audit| protocols_by_sparc_id[audit.auditable_id].pi.last_name }
       end
@@ -108,6 +108,10 @@ class FundingSourceAuditingReport < Report
         funding_source_changes = YAML.load(audit.audited_changes)
 
         fulfillment_protocols = protocols.select{|p| p.sparc_id == audit.auditable_id}
+        fulfillment_protocols.sort_by!{|p| p.sub_service_request.ssr_id}
+        if @params[:sort_order] == "DESC"
+          fulfillment_protocols.reverse!
+        end
         fulfillment_protocols.each do |fulfillment_protocol|
           fulfilled_services = []
           fulfilled_services.concat(fulfillment_protocol.fulfillments.includes(service: :organization))
