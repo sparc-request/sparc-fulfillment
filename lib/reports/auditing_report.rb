@@ -84,8 +84,8 @@ class AuditingReport < Report
             data << format_date(procedure.follow_up? ? procedure.handled_date : nil)
             data << added_formatter(procedure)
             data << procedure.sparc_core_name
-            data << procedure_group.start_time&.strftime("%I:%M %p")
-            data << procedure_group.end_time&.strftime("%I:%M %p")
+            data << procedure_group&.start_time&.strftime("%I:%M %p")
+            data << procedure_group&.end_time&.strftime("%I:%M %p")
             data << procedure.service_name
             data << complete_formatter(procedure)
             data << procedure.formatted_billing_type
@@ -103,7 +103,7 @@ class AuditingReport < Report
         csv << [""]
         csv << ["Auditing Report Parameters: "]
         csv << ["Service Type:", @params[:service_type]]
-        
+
         csv << [""]
         csv << [""]
 
