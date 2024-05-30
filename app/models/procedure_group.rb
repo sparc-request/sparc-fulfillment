@@ -9,14 +9,18 @@ class ProcedureGroup < ApplicationRecord
   validates :sparc_core_id, uniqueness: { scope: :appointment_id, message: "There should only be one procedure group per Core" }
 
   def set_start_time(time)
-    unless time.blank?
+    if time.blank?
+      self.start_time = nil
+    else
       time_in_zone = DateTime.current.in_time_zone(ENV.fetch('APPLICATION_TIME_ZONE')).change(hour: Time.parse(time).hour, min: Time.parse(time).min)
       self.start_time = time_in_zone.utc
     end
   end
 
   def set_end_time(time)
-    unless time.blank?
+    if time.blank?
+      self.end_time = nil
+    else
       time_in_zone = DateTime.current.in_time_zone(ENV.fetch('APPLICATION_TIME_ZONE')).change(hour: Time.parse(time).hour, min: Time.parse(time).min)
       self.end_time = time_in_zone.utc
     end
