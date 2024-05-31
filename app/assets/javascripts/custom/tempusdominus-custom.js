@@ -33,24 +33,3 @@ jQuery.fn.datetimepicker.Constructor.prototype._notifyEvent = function _notifyEv
 	}
 	this._element.trigger(e);
 };
-
-// Patch for tempusdominus 5.0.3 this._getLastPickedDate().clone() error https://github.com/tempusdominus/bootstrap-4/issues/275#issuecomment-527204866
-(function($) {
-  var originalSetValue = $.fn.datetimepicker.Constructor.prototype._setValue;
-
-  $.fn.datetimepicker.Constructor.prototype._setValue = function(targetMoment, index) {
-    if (!targetMoment) {
-      if (!this._options.allowMultidate || this._dates.length === 1) {
-        this.unset = true;
-        this._dates = [];
-        this._dates[0] = this.getMoment();
-        this._viewDate = this.getMoment().clone();
-        this._datesFormatted = [];
-      } else {
-        originalSetValue.call(this, targetMoment, index);
-      }
-    } else {
-      originalSetValue.call(this, targetMoment, index);
-    }
-  };
-})(jQuery);
