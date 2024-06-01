@@ -119,8 +119,7 @@ class FundingSourceAuditingReport < Report
 
           fulfilled_services_grouped_by_org = fulfilled_services.group_by{|item| item.service.organization}
 
-          fulfilled_services_grouped_by_org.each do |org, service_group|
-
+          if fulfilled_services_grouped_by_org.empty?
             csv << [
               ENV['RMID_URL'] ? protocol.research_master_id : nil,
               protocol.sparc_protocol.id,
@@ -135,21 +134,38 @@ class FundingSourceAuditingReport < Report
               protocol.pi&.full_name,
               protocol.pi&.professional_org_lookup("institution"),
               protocol.billing_business_managers.map(&:full_name).join(', '),
-              service_group.any? ? org.name : "",
-              service_group.any? ? service_group.map{|s| s.service.name }.uniq.join(', ') : "",
-              service_group.any?(&:invoiced) ? "Yes" : service_group.any? ? "No" : ""
+              fulfillment_protocol.sub_service_request.organization.name,
+              "",
+              ""
             ]
-          rescue => e
-            Rails.logger.info "#"*20+" An error occured while processing organization #{org.id}: #{e.message}"
+          else
+            fulfilled_services_grouped_by_org.each do |org, service_group|
+              csv << [
+                ENV['RMID_URL'] ? protocol.research_master_id : nil,
+                protocol.sparc_protocol.id,
+                fulfillment_protocol.sub_service_request.ssr_id,
+                formatted_status(protocol),
+                protocol.short_title,
+                protocol.sparc_protocol&.funding_status&.humanize,
+                protocol.sparc_protocol&.funding_start_date&.strftime("%m/%d/%Y"),
+                funding_source_changes.dig("funding_source", -1)&.humanize,
+                funding_source_changes.dig("funding_source", 0)&.humanize,
+                format_date(audit.created_at),
+                protocol.pi&.full_name,
+                protocol.pi&.professional_org_lookup("institution"),
+                protocol.billing_business_managers.map(&:full_name).join(', '),
+                service_group.any? ? org.name : "",
+                service_group.any? ? service_group.map{|s| s.service.name }.uniq.join(', ') : "",
+                service_group.any?(&:invoiced) ? "Yes" : service_group.any? ? "No" : ""
+              ]
+            end
           end
         rescue => e
           Rails.logger.info "#"*20+" An error occured while processing fulfillment protocol #{fulfillment_protocol.id}: #{e.message}"
         end
-      rescue => e
-        Rails.logger.info "#"*20+" An error occured while processing protocol #{protocol.id}: #{e.message}"
       end
+    rescue => e
+      Rails.logger.info "#"*20+" An error occured while generating the Funding Source Auditing Report: #{e.message}"
     end
-  rescue => e
-    Rails.logger.info "#"*20+" An error occured while generating the Funding Source Auditing Report: #{e.message}"
   end
 end
