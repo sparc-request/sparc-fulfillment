@@ -145,7 +145,7 @@ class AuditingReport < Report
 
             unit_cost = display_cost(line_item.cost)
             quantity_fulfilled = line_item.fulfillments.sum(:quantity)
-            line_item_total_cost = quantity_fulfilled * (line_item.cost(exclude_admin_rate: true) / 100)
+            line_item_total_cost = quantity_fulfilled * (line_item.cost / 100)
 
             protocol_total_cost += line_item_total_cost
 
