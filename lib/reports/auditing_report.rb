@@ -185,8 +185,8 @@ class AuditingReport < Report
           end
 
           if has_valid_line_item
-            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Non-Clinical Services Total: ", protocol_total_cost]
-            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy: ", protocol_total_cost_with_subsidies]
+            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Non-Clinical Services Total: ", protocol_total_cost.floor(2)]
+            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy: ", protocol_total_cost_with_subsidies.floor(2)]
             csv << [""]
           end
         end
