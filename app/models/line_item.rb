@@ -70,8 +70,8 @@ class LineItem < ApplicationRecord
     end
   end
 
-  def cost(funding_source = protocol.sparc_funding_source, date = Time.current, exclude_admin_rate: false)
-    if admin_rates.any? && exclude_admin_rate == false
+  def cost(funding_source = protocol.sparc_funding_source, date = Time.current)
+    if admin_rates.any?
       admin_rates.last.admin_cost
     else
       service.cost(funding_source, date)
