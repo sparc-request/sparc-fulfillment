@@ -132,7 +132,7 @@ class InvoiceReport < Report
               data << fulfillment.line_item.quantity_type
               data << display_cost(fulfillment.service_cost)
               data << display_cost(fulfillment.total_cost)
-              data << (fulfillment.admin_rate ? "Yes" : "No")
+              data << (fulfillment.service_cost != fulfillment.service.cost.to_i ? "Yes" : "No")
               data << display_subsidy_percent(fulfillment) if fulfillment.percent_subsidy
               data << (fulfillment.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
               data << format_date(fulfillment.invoiced_date) if @params[:include_invoiced] == "true" && fulfillment.invoiced_date
@@ -215,9 +215,9 @@ class InvoiceReport < Report
                     data << format_date(appointment.start_date)
                     data << service_group.size
                     data << procedure.service.current_effective_pricing_map.unit_type
-                    data << display_cost(cost)
-                    data << display_cost(service_group.size * cost)
-                    data << (admin_rate ? "Yes" : "No")
+                    data << display_cost(procedure.service_cost)
+                    data << display_cost(service_group.size * procedure.service_cost.to_f)
+                    data << (procedure.service_cost != procedure.service.cost.to_i ? "Yes" : "No")
                     data << display_subsidy_percent(procedure) if procedure.percent_subsidy
                     data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
                     data << format_date(procedure.invoiced_date) if @params[:include_invoiced] == "true" && procedure.invoiced_date
@@ -225,7 +225,7 @@ class InvoiceReport < Report
                     csv << data
 
                     service_cost = service_group.size * procedure.service_cost.to_f
-                    total += cost * service_group.size
+                    total += service_cost
                     total_with_subsidy += procedure.percent_subsidy ? service_cost * (1 - procedure.percent_subsidy) : service_cost
                   end
                 end

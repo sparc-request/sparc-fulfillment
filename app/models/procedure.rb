@@ -250,6 +250,8 @@ class Procedure < ApplicationRecord
   def new_cost(funding_source, date)
     if visit
       visit.line_item.cost(funding_source, date).to_i
+    elsif admin_rate
+      admin_rate.admin_cost
     else
       service.cost(funding_source, date).to_i
     end
