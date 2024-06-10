@@ -142,7 +142,6 @@ class FulfillmentsController < ApplicationController
         end
         if field == :fulfilled_at
           if Date.parse(current_field) != Date.strptime(new_field, "%m/%d/%Y")
-            Rails.logger.info("*"*100+"Fulfillment: #{current_field} != #{new_field}")
             comment = t(:fulfillment)[:log_notes][field] + new_field.to_s
             @fulfillment.notes.create(kind: 'log', comment: comment, identity: current_identity)
           end

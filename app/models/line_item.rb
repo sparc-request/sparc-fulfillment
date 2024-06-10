@@ -32,6 +32,7 @@ class LineItem < ApplicationRecord
   has_many :documents, as: :documentable
   has_many :components, as: :composable
   has_many :admin_rates, primary_key: :sparc_id
+  has_many :admin_rate_changes, primary_key: :sparc_id
 
 
   has_many :visit_groups, through: :arm
@@ -70,8 +71,8 @@ class LineItem < ApplicationRecord
     end
   end
 
-  def cost(funding_source = protocol.sparc_funding_source, date = Time.current, exclude_admin_rate: false)
-    if admin_rates.any? && exclude_admin_rate == false
+  def cost(funding_source = protocol.sparc_funding_source, date = Time.current)
+    if admin_rates.any? && admin_rates.last.updated_at <= date
       admin_rates.last.admin_cost
     else
       service.cost(funding_source, date)

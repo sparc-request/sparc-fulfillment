@@ -31,6 +31,28 @@ class InvoiceReport < Report
     protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
   end
 
+  def display_pppv_modified_rate_column(procedure)
+    admin_rates = procedure.visit&.line_item&.admin_rates
+    service_cost = procedure.service.cost(procedure.protocol.sparc_funding_source, procedure.completed_date)
+    modified = "No"
+    if admin_rates&.any?
+      modified = "Yes" if admin_rates&.last&.updated_at < procedure.completed_date
+    elsif procedure.admin_rate
+      modified = "Yes" if procedure.admin_rate.created_at < procedure.completed_date && service_cost != procedure.service_cost
+    elsif procedure.had_admin_rate_at_time_of_completion
+      modified = "Yes" if service_cost != procedure.service_cost
+    end
+    modified
+  end
+
+  def display_otf_modified_rate_column(fulfillment)
+    fulfillment.line_item.admin_rates.reload
+    line_item = fulfillment.line_item
+    admin_rate = line_item.admin_rates.last
+    fulfilled_at_from_db = fulfillment.read_attribute(:fulfilled_at)
+    admin_rate && admin_rate.updated_at < fulfilled_at_from_db ? "Yes" : "No"
+  end
+
   def display_subsidy_percent(object)
     object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
   end
@@ -132,7 +154,7 @@ class InvoiceReport < Report
               data << fulfillment.line_item.quantity_type
               data << display_cost(fulfillment.service_cost)
               data << display_cost(fulfillment.total_cost)
-              data << (fulfillment.service_cost != fulfillment.service.cost.to_i ? "Yes" : "No")
+              data << display_otf_modified_rate_column(fulfillment)
               data << display_subsidy_percent(fulfillment) if fulfillment.percent_subsidy
               data << (fulfillment.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
               data << format_date(fulfillment.invoiced_date) if @params[:include_invoiced] == "true" && fulfillment.invoiced_date
@@ -192,8 +214,6 @@ class InvoiceReport < Report
                   procedure = service_group.first
 
                   if !procedure.credited?
-                    admin_rate = procedure.admin_rate
-                    cost = admin_rate ? admin_rate.admin_cost.to_f : procedure.service_cost.to_f
                     data = []
                     data << format_protocol_id_column(protocol)
                     data << protocol.sub_service_request.ssr_id
@@ -217,7 +237,7 @@ class InvoiceReport < Report
                     data << procedure.service.current_effective_pricing_map.unit_type
                     data << display_cost(procedure.service_cost)
                     data << display_cost(service_group.size * procedure.service_cost.to_f)
-                    data << (procedure.service_cost != procedure.service.cost.to_i ? "Yes" : "No")
+                    data << display_pppv_modified_rate_column(procedure)
                     data << display_subsidy_percent(procedure) if procedure.percent_subsidy
                     data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
                     data << format_date(procedure.invoiced_date) if @params[:include_invoiced] == "true" && procedure.invoiced_date

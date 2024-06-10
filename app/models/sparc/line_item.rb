@@ -26,6 +26,7 @@ class Sparc::LineItem < SparcDbBase
   has_many :fulfillments
   has_many :line_items_visits
   has_many :admin_rates
+  has_many :admin_rate_changes
 
   has_many :arms, through: :line_items_visits
 
