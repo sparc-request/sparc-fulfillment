@@ -146,7 +146,7 @@ class AuditingReport < Report
 
             unit_cost = display_cost(line_item.cost)
             quantity_fulfilled = line_item.fulfillments.sum(:quantity)
-            line_item_total_cost = quantity_fulfilled * (line_item.cost(exclude_admin_rate: true) / 100)
+            line_item_total_cost = quantity_fulfilled * (line_item.cost / 100)
 
             protocol_total_cost += line_item_total_cost
 
@@ -186,8 +186,8 @@ class AuditingReport < Report
           end
 
           if has_valid_line_item
-            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Non-Clinical Services Total: ", protocol_total_cost]
-            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy: ", protocol_total_cost_with_subsidies]
+            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Non-Clinical Services Total: ", protocol_total_cost.floor(2)]
+            csv << ["", "", "", "", "", "", "", "", "", "", "", "", "Total Cost after Subsidy: ", protocol_total_cost_with_subsidies.floor(2)]
             csv << [""]
           end
         end
