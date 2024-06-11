@@ -221,7 +221,19 @@ class Procedure < ApplicationRecord
     .flat_map(&:sub_service_requests)
     .flat_map(&:line_items)
     .find { |line_item| line_item.service_id == service.id }
-    &.admin_rates&.first
+    &.admin_rates&.last
+  end
+
+  def old_admin_rates
+    line_item = protocol.sparc_protocol.service_requests
+    .flat_map(&:sub_service_requests)
+    .flat_map(&:line_items)
+    .find { |line_item| line_item.service_id == service.id }
+    line_item&.admin_rate_changes if line_item
+  end
+
+  def had_admin_rate_at_time_of_completion
+    old_admin_rates.any? { |old_admin_rate| old_admin_rate.created_at > completed_date } if old_admin_rates
   end
 
   private
@@ -250,7 +262,7 @@ class Procedure < ApplicationRecord
   def new_cost(funding_source, date)
     if visit
       visit.line_item.cost(funding_source, date).to_i
-    elsif admin_rate
+    elsif admin_rate && admin_rate.created_at <= date
       admin_rate.admin_cost
     else
       service.cost(funding_source, date).to_i
