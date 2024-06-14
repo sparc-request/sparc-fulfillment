@@ -72,11 +72,9 @@ class LineItem < ApplicationRecord
   end
 
   def cost(funding_source = protocol.sparc_funding_source, date = Time.current)
-    if admin_rates.any? && admin_rates.last.updated_at <= date
-      admin_rates.last.admin_cost
-    else
-      service.cost(funding_source, date)
-    end
+    return current_admin_rate(date) if current_admin_rate_applicable?(date)
+    return old_admin_rate(funding_source, date) if admin_rate_changes.any?
+    service.cost(funding_source, date)
   end
 
   def name=(n)
@@ -118,5 +116,23 @@ class LineItem < ApplicationRecord
   end
 
   private
+
+  def current_admin_rate_applicable?(date)
+    admin_rates.any? && admin_rates.last.created_at.to_date <= date.to_date
+  end
+
+  def current_admin_rate(date)
+    admin_rates.last.admin_cost
+  end
+
+  def old_admin_rate(funding_source, date)
+    cost_when_fulfilled = applicable_old_admin_rate(date)
+    return cost_when_fulfilled.admin_cost if cost_when_fulfilled && !cost_when_fulfilled.cost_reset
+    service.cost(funding_source, date)
+  end
+
+  def applicable_old_admin_rate(date)
+    admin_rate_changes.where("DATE(date_of_change) <= ?", date.to_date).order("date_of_change DESC").first
+  end
 
 end
