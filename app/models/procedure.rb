@@ -231,7 +231,7 @@ class Procedure < ApplicationRecord
     .flat_map(&:sub_service_requests)
     .flat_map(&:line_items)
     .find { |line_item| line_item.service_id == service.id }
-    line_item&.admin_rate_changes if line_item
+    line_item&.admin_rate_changes || []
   end
 
   def new_cost(funding_source, date)
