@@ -50,8 +50,53 @@ RSpec.describe Fulfillment, type: :model do
         expect(fulfillment.quantity_type).to eq(line_item.quantity_type)
       end
     end
-  end
 
+    describe '.service_cost' do
+      context 'line item has no current or historical effective admin rates' do
+        it 'should return the service cost' do
+          line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
+          fulfillment = create(:fulfillment, line_item: line_item)
+          fulfillment.fulfilled_at = (Time.now).strftime("%m/%d/%Y")
+          fulfillment.send(:recalculate_cost)
+          expect(fulfillment.service_cost).to eq(line_item.cost)
+        end
+      end
+
+      context 'line item has an effective admin rate' do
+        it 'should return the modified cost of the service' do
+          line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
+          admin_rate = create(:admin_rate, line_item: line_item, admin_cost: 100)
+          fulfillment = create(:fulfillment, fulfilled_at: Time.current.strftime("%m/%d/%Y"), line_item: line_item)
+          fulfillment.fulfilled_at = (Time.now + 1.day).strftime("%m/%d/%Y")
+          fulfillment.send(:recalculate_cost)
+          expect(fulfillment.service_cost).to eq(line_item.cost)
+        end
+      end
+
+      context 'line item has effective old admin rate with no cost_reset flag' do
+        it 'should return the modified cost of the service' do
+          line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
+          old_admin_rate = create(:admin_rate_change, line_item: line_item, admin_cost: 100)
+          fulfillment = create(:fulfillment, fulfilled_at: Time.current.strftime("%m/%d/%Y"), line_item: line_item)
+          fulfillment.fulfilled_at = (Time.now + 1.day).strftime("%m/%d/%Y")
+          fulfillment.send(:recalculate_cost)
+          expect(fulfillment.service_cost).to eq(line_item.cost)
+        end
+      end
+
+      context 'line item has effective old admin rate with cost_reset flag set' do
+        it 'should return service cost' do
+          line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
+          old_admin_rate = create(:admin_rate_change, line_item: line_item, admin_cost: 100, cost_reset: true)
+          # old_admin_rate.update_attributes(cost_reset: true)
+          fulfillment = create(:fulfillment, fulfilled_at: Time.current.strftime("%m/%d/%Y"), line_item: line_item)
+          fulfillment.fulfilled_at = (Time.now + 1.day).strftime("%m/%d/%Y")
+          fulfillment.send(:recalculate_cost)
+          expect(fulfillment.service_cost).to eq(line_item.service.cost)
+        end
+      end
+    end
+  end
 
   context 'invoiced flag set to true' do
     describe 'invoiced_date set' do
