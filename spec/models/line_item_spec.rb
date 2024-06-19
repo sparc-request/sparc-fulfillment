@@ -33,6 +33,9 @@ RSpec.describe LineItem, type: :model do
   it { is_expected.to have_many(:documents) }
   it { is_expected.to have_many(:components) }
 
+  it { is_expected.to have_many(:admin_rates) }
+  it { is_expected.to have_many(:admin_rate_changes) }
+
   context 'validations' do
 
     it { is_expected.to validate_presence_of(:protocol_id) }

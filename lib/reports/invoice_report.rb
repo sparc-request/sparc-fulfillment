@@ -32,25 +32,13 @@ class InvoiceReport < Report
   end
 
   def display_pppv_modified_rate_column(procedure)
-    admin_rates = procedure.visit&.line_item&.admin_rates
-    service_cost = procedure.service.cost(procedure.protocol.sparc_funding_source, procedure.completed_date)
-    modified = "No"
-    if admin_rates&.any?
-      modified = "Yes" if admin_rates&.last&.updated_at < procedure.completed_date
-    elsif procedure.admin_rate
-      modified = "Yes" if procedure.admin_rate.created_at < procedure.completed_date && service_cost != procedure.service_cost
-    elsif procedure.had_admin_rate_at_time_of_completion
-      modified = "Yes" if service_cost != procedure.service_cost
-    end
-    modified
+    modified = procedure.service_cost != procedure.service.cost(procedure.protocol.sparc_funding_source, procedure.completed_date)
+    modified ? "Yes" : "No"
   end
 
   def display_otf_modified_rate_column(fulfillment)
-    fulfillment.line_item.admin_rates.reload
-    line_item = fulfillment.line_item
-    admin_rate = line_item.admin_rates.last
-    fulfilled_at_from_db = fulfillment.read_attribute(:fulfilled_at)
-    admin_rate && admin_rate.updated_at < fulfilled_at_from_db ? "Yes" : "No"
+    modified = fulfillment.service_cost != fulfillment.line_item.service.cost(fulfillment.protocol.sparc_funding_source, fulfillment.fulfilled_at)
+    modified ? "Yes" : "No"
   end
 
   def display_subsidy_percent(object)
