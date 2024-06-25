@@ -118,7 +118,7 @@ class LineItem < ApplicationRecord
   private
 
   def current_admin_rate_applicable?(date)
-    current_admin_rate&.created_at&.to_date <= date.to_date
+    current_admin_rate && current_admin_rate.created_at.to_date <= date.to_date
   end
 
   def current_admin_rate
