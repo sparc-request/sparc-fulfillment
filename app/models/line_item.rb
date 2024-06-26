@@ -72,9 +72,9 @@ class LineItem < ApplicationRecord
   end
 
   def cost(funding_source = protocol.sparc_funding_source, date = Time.current)
-    return current_admin_rate(date) if current_admin_rate_applicable?(date)
-    return old_admin_rate(funding_source, date) if admin_rate_changes.any?
-    service.cost(funding_source, date)
+    return current_admin_rate.admin_cost if current_admin_rate_applicable?(date)
+    return old_admin_rate(funding_source, date) if old_admin_rates.any?
+    service.cost(funding_source, date).to_i
   end
 
   def name=(n)
@@ -118,11 +118,15 @@ class LineItem < ApplicationRecord
   private
 
   def current_admin_rate_applicable?(date)
-    admin_rates.any? && admin_rates.last.created_at.to_date <= date.to_date
+    current_admin_rate && current_admin_rate.created_at.to_date <= date.to_date
   end
 
-  def current_admin_rate(date)
-    admin_rates.last.admin_cost
+  def current_admin_rate
+    protocol.sparc_protocol.service_requests
+    .flat_map(&:sub_service_requests)
+    .flat_map(&:line_items)
+    .find { |line_item| line_item.service_id == service.id }
+    &.admin_rates&.last
   end
 
   def old_admin_rate(funding_source, date)
@@ -131,8 +135,16 @@ class LineItem < ApplicationRecord
     service.cost(funding_source, date)
   end
 
+  def old_admin_rates
+    sparc_line_item = protocol.sparc_protocol.service_requests
+    .flat_map(&:sub_service_requests)
+    .flat_map(&:line_items)
+    .find { |line_item| line_item.service_id == service.id }
+    sparc_line_item&.admin_rate_changes || []
+  end
+
   def applicable_old_admin_rate(date)
-    admin_rate_changes.where("DATE(date_of_change) <= ?", date.to_date).order("date_of_change DESC").first
+    old_admin_rates.where("DATE(date_of_change) <= ?", date.to_date).order("date_of_change DESC").first
   end
 
 end
