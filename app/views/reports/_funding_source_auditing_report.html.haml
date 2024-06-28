@@ -55,6 +55,7 @@
             .col-sm-8
               = select_tag 'organizations', grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "selectpicker form-control", id: "organization_select"
           .form-group.protocols-group.row.align-items-center
+            = hidden_field_tag :all_protocols_selected, '', id: 'all_protocols_selected'
             = label_tag "protocol", t(:reports)[:protocols], class: "control-label required col-sm-4 mb-0"
             .col-sm-8#protocol_section
           .form-group#org_based_protocols.d-none

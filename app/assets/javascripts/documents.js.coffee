@@ -25,7 +25,7 @@ $ ->
       new_document_id = $('span.processing').first().data('id')
       documentInterval = setInterval((->
           getDocumentState(new_document_id, documentInterval)
-          ), 5000)    
+          ), 5000)
 
   getDocumentState = (id, interval) ->
     $.ajax
@@ -89,6 +89,9 @@ $ ->
         url: "reports/update_protocols_dropdown"
         data: { service_ids: service_ids }
 
+  $(document).on 'change', "#protocol_section", ->
+    allSelected = $(this).find('option').length == $(this).find('option:selected').length
+    $('#all_protocols_selected').val(if allSelected then 'true' else 'false')
 
   $(document).on 'change', "#protocol_select", ->
     if $(this).val().length > 0
@@ -108,7 +111,7 @@ $ ->
   if date_downloaded_element.text().length == 0
     add_to_report_notification_count(documentable_type, -1)
 
-    $(table_to_update).bootstrapTable 'updateCell', 
+    $(table_to_update).bootstrapTable 'updateCell',
       index: row_index
       field: 'read_state'
       value: "Read"

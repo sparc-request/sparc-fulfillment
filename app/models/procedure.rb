@@ -218,6 +218,40 @@ class Procedure < ApplicationRecord
 
   private
 
+  def admin_rate
+    protocol.sparc_protocol.service_requests
+    .flat_map(&:sub_service_requests)
+    .flat_map(&:line_items)
+    .find { |line_item| line_item.service_id == service.id }
+    &.admin_rates&.last
+  end
+
+  def old_admin_rates
+    line_item = protocol.sparc_protocol.service_requests
+    .flat_map(&:sub_service_requests)
+    .flat_map(&:line_items)
+    .find { |line_item| line_item.service_id == service.id }
+    line_item&.admin_rate_changes || []
+  end
+
+  def new_cost(funding_source, date)
+    return visit.line_item.cost(funding_source, date).to_i if visit
+    return check_current_admin_rate(date) if admin_rate
+    return check_old_admin_rates(funding_source, date) if old_admin_rates.any?
+    service.cost(funding_source, date)
+  end
+
+  def check_current_admin_rate(date)
+    return admin_rate.admin_cost if admin_rate.created_at.to_date <= date.to_date
+    check_old_admin_rates(funding_source, date)
+  end
+
+  def check_old_admin_rates(funding_source, date)
+    cost_when_completed = old_admin_rates.where("DATE(date_of_change) <= ?", date.to_date).order("date_of_change DESC").first
+    return cost_when_completed.admin_cost if cost_when_completed && !cost_when_completed.cost_reset
+    service.cost(funding_source, date).to_i
+  end
+
   def update_protocols_participant_deletable
     protocols_participant.update(deletable: !protocols_participant.procedures.exists?(status: ['follow_up', 'incomplete', 'complete'])) if protocols_participant
   end
@@ -236,14 +270,6 @@ class Procedure < ApplicationRecord
 
     if cost.nil?
       errors[:service_cost] << "No cost found, ensure that a valid pricing map exists for that date."
-    end
-  end
-
-  def new_cost(funding_source, date)
-    if visit
-      visit.line_item.cost(funding_source, date).to_i
-    else
-      service.cost(funding_source, date).to_i
     end
   end
 

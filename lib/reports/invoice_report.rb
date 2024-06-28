@@ -31,16 +31,18 @@ class InvoiceReport < Report
     protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
   end
 
-  def display_subsidy_percent(object)
-    object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
+  def display_pppv_modified_rate_column(procedure)
+    modified = procedure.service_cost != procedure.service.cost(procedure.protocol.sparc_funding_source, procedure.completed_date)
+    modified ? "Yes" : "No"
   end
 
-  def display_modified_rate_column(procedure)
-    if procedure.visit
-      procedure.visit.try(:line_item).try(:admin_rates).any? ? "Yes" : "No"
-    else
-      "No"
-    end
+  def display_otf_modified_rate_column(fulfillment)
+    modified = fulfillment.service_cost != fulfillment.line_item.service.cost(fulfillment.protocol.sparc_funding_source, fulfillment.fulfilled_at)
+    modified ? "Yes" : "No"
+  end
+
+  def display_subsidy_percent(object)
+    object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
   end
 
   def insert_blank_column_for_notes(totals)
@@ -83,8 +85,6 @@ class InvoiceReport < Report
 
         fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date && (@specific_services.present? ? @specific_services.include?(fulfillment.service_id) : true)}
 
-        # procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date).where(@specific_services)
-
         procedures = protocol.procedures.select{|procedure| procedure.completed_date != nil && procedure.completed_date >= @start_date && procedure.completed_date <= @end_date && procedure.billing_type == 'research_billing_qty' && (@specific_services.present? ? @specific_services.include?(procedure.service_id) : true)}
 
         if fulfillments.any?
@@ -119,9 +119,6 @@ class InvoiceReport < Report
 
           csv << header
 
-          # fulfillments.includes(:line_item, service: [:organization]).order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
-
-          # fulfillments.order("organizations.name, line_items.quantity_type, fulfilled_at").each do |fulfillment|
           fulfillments.each do |fulfillment|
             if !fulfillment.credited?
               data = []
@@ -147,7 +144,7 @@ class InvoiceReport < Report
               data << fulfillment.line_item.quantity_type
               data << display_cost(fulfillment.service_cost)
               data << display_cost(fulfillment.total_cost)
-              data << (fulfillment.line_item.admin_rates.any? ? "Yes" : "No")
+              data << display_otf_modified_rate_column(fulfillment)
               data << display_subsidy_percent(fulfillment) if fulfillment.percent_subsidy
               data << (fulfillment.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
               data << format_date(fulfillment.invoiced_date) if @params[:include_invoiced] == "true" && fulfillment.invoiced_date
@@ -230,7 +227,7 @@ class InvoiceReport < Report
                     data << procedure.service.current_effective_pricing_map.unit_type
                     data << display_cost(procedure.service_cost)
                     data << display_cost(service_group.size * procedure.service_cost.to_f)
-                    data << display_modified_rate_column(procedure)
+                    data << display_pppv_modified_rate_column(procedure)
                     data << display_subsidy_percent(procedure) if procedure.percent_subsidy
                     data << (procedure.invoiced? ? "Yes" : "No") if @params[:include_invoiced] == "true"
                     data << format_date(procedure.invoiced_date) if @params[:include_invoiced] == "true" && procedure.invoiced_date

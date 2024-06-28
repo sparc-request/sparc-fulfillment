@@ -54,6 +54,8 @@ class AuditingReport < Report
         header << "Marked with Follow-Up Date"
         header << "Added?"
         header << "Nexus Core"
+        header << "Core Services Start Time"
+        header << "Core Services End Time"
         header << "Service Name"
         header << "Completed?"
         header << "Billing Type (R/T/O)"
@@ -61,8 +63,6 @@ class AuditingReport < Report
         header << "Follow-Up date and comment"
         header << "Cost"
         header << "Notes"
-        header << "Start Time"
-        header << "End Time"
 
         csv << header
 
@@ -71,6 +71,7 @@ class AuditingReport < Report
             appointment = procedure.appointment
             protocols_participant = appointment.protocols_participant
             participant = protocols_participant.participant
+            procedure_group = procedure.procedure_group
 
             data = [ protocol.srid ]
             data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
@@ -83,6 +84,8 @@ class AuditingReport < Report
             data << format_date(procedure.follow_up? ? procedure.handled_date : nil)
             data << added_formatter(procedure)
             data << procedure.sparc_core_name
+            data << procedure_group&.start_time&.strftime("%I:%M %p")
+            data << procedure_group&.end_time&.strftime("%I:%M %p")
             data << procedure.service_name
             data << complete_formatter(procedure)
             data << procedure.formatted_billing_type
@@ -90,8 +93,6 @@ class AuditingReport < Report
             data << follow_up_formatter(procedure)
             data << display_cost(procedure.service_cost)
             data << procedure.notes.map(&:comment).join(' | ')
-            data << procedure.start_time.strftime("%I:%M %p") if procedure.start_time
-            data << procedure.end_time.strftime("%I:%M %p") if procedure.end_time
 
             csv << data
           end
@@ -102,7 +103,7 @@ class AuditingReport < Report
         csv << [""]
         csv << ["Auditing Report Parameters: "]
         csv << ["Service Type:", @params[:service_type]]
-        
+
         csv << [""]
         csv << [""]
 
@@ -132,11 +133,11 @@ class AuditingReport < Report
         csv << header
 
         protocols.each do |protocol|
-          
+
           protocol_total_cost = 0
           protocol_total_cost_with_subsidies = 0
           has_valid_line_item = false
-          
+
           protocol.line_items.each do |line_item|
             next unless line_item.versions.where(event: ["create", "update"], created_at: @start_date..@end_date).any? && line_item.service.one_time_fee?
 

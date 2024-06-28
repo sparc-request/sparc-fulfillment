@@ -75,21 +75,25 @@ module CWFSPARC
           line_item_hash = sync['line_item']
 
           ##If there are multiple (bad data) line items with the same sparc_id, this will just grab the first one as a fall back.
-          line_item = LineItem.find_by_sparc_id(line_item_hash['sparc_id']) if (action == "update") or (action == "destroy")
+          line_item = LineItem.where(sparc_id: line_item_hash['sparc_id']).first if (action == "update") or (action == "destroy")
 
           if action == 'create'
             protocol_id = Protocol.find_by_sub_service_request_id(line_item_hash['sub_service_request_id']).id
             if LineItem.create(sparc_id: line_item_hash['sparc_id'], quantity_requested: line_item_hash['quantity_requested'], service_id: line_item_hash['service_id'], protocol_id: protocol_id)
               success_message = {result: "success", detail: "created"}
             end
-          elsif action == 'update'
-            if line_item.update_attributes(line_item_hash)
-              success_message = {result: "success", detail: "updated"}
+          elsif line_item
+            if action == 'update'
+              if line_item.update_attributes(line_item_hash)
+                success_message = {result: "success", detail: "updated"}
+              end
+            elsif action == 'destroy'
+              if line_item.destroy
+                success_message = {result: "success", detail: "destroyed"}
+              end
             end
-          elsif action == 'destroy'
-            if line_item.destroy
-              success_message = {result: "success", detail: "destroyed"}
-            end
+          else
+            success_message = {result: "success", detail: "no action needed"}
           end
 
           if success_message
