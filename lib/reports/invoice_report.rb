@@ -57,7 +57,7 @@ class InvoiceReport < Report
     @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
     #This allows us to optionally filter by services
-    @specific_services = @params[:services].present? ? { service: @params[:services] } : {}
+    @specific_services = @params[:services].present? ? @params[:services].map{|service| service.to_i} : []
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
@@ -81,7 +81,7 @@ class InvoiceReport < Report
 
         # fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).where(@specific_services)
 
-        fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date}
+        fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date && (@specific_services.present? ? @specific_services.include?(fulfillment.service_id) : true)}
 
         # procedures = protocol.procedures.completed_r_in_date_range(@start_date, @end_date).where(@specific_services)
 
