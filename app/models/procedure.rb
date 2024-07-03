@@ -234,21 +234,15 @@ class Procedure < ApplicationRecord
     line_item&.admin_rate_changes || []
   end
 
+  def check_old_admin_rates(date)
+    cost_when_completed = old_admin_rates.where("DATE(date_of_change) <= ?", date.to_date).order("date_of_change DESC").first if old_admin_rates.any?
+    cost_when_completed.admin_cost if cost_when_completed && !cost_when_completed.cost_reset
+  end
+
   def new_cost(funding_source, date)
     return visit.line_item.cost(funding_source, date).to_i if visit
-    return check_current_admin_rate(date) if admin_rate
-    return check_old_admin_rates(funding_source, date) if old_admin_rates.any?
-    service.cost(funding_source, date)
-  end
-
-  def check_current_admin_rate(date)
-    return admin_rate.admin_cost if admin_rate.created_at.to_date <= date.to_date
-    check_old_admin_rates(funding_source, date)
-  end
-
-  def check_old_admin_rates(funding_source, date)
-    cost_when_completed = old_admin_rates.where("DATE(date_of_change) <= ?", date.to_date).order("date_of_change DESC").first
-    return cost_when_completed.admin_cost if cost_when_completed && !cost_when_completed.cost_reset
+    return admin_rate.admin_cost if admin_rate && admin_rate.created_at.to_date <= date.to_date
+    return check_old_admin_rates(date) if check_old_admin_rates(date)
     service.cost(funding_source, date).to_i
   end
 
