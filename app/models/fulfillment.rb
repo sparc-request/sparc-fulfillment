@@ -25,6 +25,7 @@ class Fulfillment < ApplicationRecord
 
   attr_accessor :klok_upload
   attr_accessor :components_data
+  attr_accessor :skip_components_validation
 
   belongs_to :line_item
   belongs_to :service
@@ -44,8 +45,7 @@ class Fulfillment < ApplicationRecord
   validates :quantity, presence: true
   validates_numericality_of :quantity
   validate :cost_available
-  validate :components_presence_if_required_by_service
-
+  validate :components_presence_if_required_by_service, unless: :skip_components_validation
   after_create :update_line_item_name
   after_destroy :remove_line_item_name
   before_update :recalculate_cost, :set_subsidy_and_funding_source, :set_invoiced_date
