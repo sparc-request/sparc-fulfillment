@@ -91,6 +91,7 @@ class Import < ApplicationRecord
 
           ### build out components
           fulfillment.components.build(component: entry.klok_project.name) if entry.klok_project.name && fulfillment.components.select{|x| x.component == entry.klok_project.name}.empty?
+          fulfillment.skip_components_validation = true
 
           ### build out notes
           fulfillment.notes.build(comment: entry.comments, identity: local_identity) if entry.comments.present? && fulfillment.notes.select{|x| (x.comment == entry.comments) && (x.identity == local_identity)}.empty?
@@ -113,4 +114,3 @@ class Import < ApplicationRecord
     [log_file, valid]
   end
 end
-
