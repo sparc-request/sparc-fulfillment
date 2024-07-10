@@ -70,10 +70,11 @@ class VisitReport < Report
       csv << [""]
       csv << REPORT_COLUMNS
 
-      result_set = ProcedureGroup.joins(appointment: { procedures: { protocols_participant: :participant }})
+      result_set = Appointment.left_joins(:procedure_groups).joins(procedures: [{ protocols_participant: :participant }])
       .where(Appointment.arel_table[:start_date].gteq(from_start_date)
       .and(Appointment.arel_table[:start_date].lteq(to_start_date))
       .and(Procedure.arel_table[:status].not_eq("unstarted")))
+      .distinct
       .pluck(
       ProtocolsParticipant.arel_table[:protocol_id], #0
       Participant.arel_table[:last_name], #1
@@ -85,7 +86,7 @@ class VisitReport < Report
       Appointment.arel_table[:type], #7
       Appointment.arel_table[:id], #8
       Procedure.arel_table[:status], #9 (-6)
-      ProcedureGroup.arel_table[:sparc_core_id], #10 (-5)
+      Procedure.arel_table[:sparc_core_name], #10 (-5)
       Appointment.arel_table[:contents], #11 (-4)
       Participant.arel_table[:id], #12 (-3)
       ProcedureGroup.arel_table[:start_time], #13 (-2)
@@ -106,7 +107,7 @@ class VisitReport < Report
             get_duration(appointment),
             get_content(appointment),
             get_statuses(appointment[8]),
-            get_core_name(appointment[10]),
+            appointment[10],
             format_time(appointment[-3]),
             format_time(appointment[-2])
           ]
@@ -120,7 +121,7 @@ class VisitReport < Report
             get_duration(appointment),
             get_content(appointment),
             get_statuses(appointment[8]),
-            get_core_name(appointment[10]),
+            appointment[10],
             format_time(appointment[-2]),
             format_time(appointment[-1])
           ]
@@ -137,10 +138,6 @@ class VisitReport < Report
 
   def is_custom_visit(appointment)
     appointment[6].nil? ? "Yes" : "No"
-  end
-
-  def get_core_name(core_id)
-    Organization.name_for_id(core_id)
   end
 
   def get_duration(appointment)
@@ -177,10 +174,7 @@ class VisitReport < Report
       appointment[3], #visit_name
       get_duration(appointment), #visit_duration
       appointment[6], #visit_group_id
-      appointment[12],#participant_id
-      appointment[10],#core_name
-      appointment[13],#start_time
-      appointment[14]#end_time
+      appointment[12] #participant_id
     ]
       if !used_appointments.include?(comparison_array)
         used_appointments << comparison_array
