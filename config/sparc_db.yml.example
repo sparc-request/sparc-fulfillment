@@ -37,3 +37,17 @@ test:
   database: test_sparc_request # for travis-ci, needs to match sparc-request test database name
   username: travis
   password:
+
+# Docker Config Example
+# default: &default
+#   adapter: mysql2
+#   username: <%= ENV['SPARC_DATABASE_USERNAME'] %>
+#   password: <%= ENV['SPARC_DATABASE_PASSWORD'] %>
+#   host: <%= ENV['SPARC_DATABASE_HOST'] %>
+#   encoding: utf8
+#   timeout: 5000
+#   pool: 5
+# 
+# development:
+#   <<: *default
+#   database: <%= ENV['SPARC_DATABASE_NAME'] %>
