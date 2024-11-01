@@ -30,10 +30,10 @@ services:
       DATABASE_NAME: cwf-docker_development
       RAILS_ENV: development
       ##Sparc Info
-      SPARC_DB_HOST: sparc_db # Host for the sparc_db service sparc docker-compose file
-      SPARC_DB_USERNAME: <sparc mysql user>
-      SPARC_DB_PASSWORD: <sparc mysql password>
-      SPARC_DB_NAME: sparc-docker_development
+      SPARC_DATABASE_HOST: sparc_db # Host for the sparc_db service sparc docker-compose file
+      SPARC_DATABASE_USERNAME: <sparc mysql user>
+      SPARC_DATABASE_PASSWORD: <sparc mysql password>
+      SPARC_DATABASE_NAME: sparc-docker_development
     env_file:
       - .env
     networks:
