@@ -26,40 +26,9 @@ class VisitReport < Report
 
   HAS_RMID = ENV.fetch('RMID_URL'){nil}
 
-  if HAS_RMID
-    REPORT_COLUMNS = ["Protocol ID (SRID)",
-                      "RMID",
-                      "Patient Last Name",
-                      "Patient First Name",
-                      "Visit Name",
-                      "Custom Visit",
-                      "Start Date",
-                      "Completed Date",
-                      "Visit Duration (minutes)",
-                      "Type of Visit",
-                      "Visit Indications",
-                      "Core",
-                      "Core Procedures Start Time",
-                      "Core Procedures End Time"
-                      ]
-  else
-    REPORT_COLUMNS = ["Protocol ID (SRID)",
-                      "Patient Last Name",
-                      "Patient First Name",
-                      "Visit Name",
-                      "Custom Visit",
-                      "Start Date",
-                      "Completed Date",
-                      "Visit Duration (minutes)",
-                      "Type of Visit",
-                      "Visit Indications",
-                      "Core",
-                      "Core Procedures Start Time",
-                      "Core Procedures End Time"
-                      ]
-  end
-
   def generate(document)
+    include_core_procudures = @params[:core_procedures_option].present? ? true : false
+
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     from_start_date = @params[:start_date].empty? ? Appointment.order(start_date: :asc).detect{|appointment| appointment.start_date }.start_date : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
@@ -68,7 +37,7 @@ class VisitReport < Report
     CSV.open(document.path, "wb") do |csv|
       csv << ["Visit Start Date From #{@params[:start_date]} To #{@params[:end_date]}"]
       csv << [""]
-      csv << REPORT_COLUMNS
+      csv << report_columns(include_core_procudures)
 
       result_set = ProcedureGroup.joins(appointment: { procedures: { protocols_participant: :participant }})
       .where(Appointment.arel_table[:start_date].gteq(from_start_date)
@@ -96,34 +65,61 @@ class VisitReport < Report
       sorted_result_set.each do |appointment|
 
         if HAS_RMID
-          csv << [
-            appointment[0], appointment[-1],
-            appointment[1], appointment[2],
-            appointment[3],
-            is_custom_visit(appointment),
-            get_date(appointment, true),
-            get_date(appointment, false),
-            get_duration(appointment),
-            get_content(appointment),
-            get_statuses(appointment[8]),
-            get_core_name(appointment[10]),
-            format_time(appointment[-3]),
-            format_time(appointment[-2])
-          ]
+          if include_core_procudures == true
+            csv << [
+              appointment[0], appointment[-1],
+              appointment[1], appointment[2],
+              appointment[3],
+              is_custom_visit(appointment),
+              get_date(appointment, true),
+              get_date(appointment, false),
+              get_duration(appointment),
+              get_content(appointment),
+              get_statuses(appointment[8]),
+              get_core_name(appointment[10]),
+              format_time(appointment[-3]),
+              format_time(appointment[-2])
+            ]
+          else
+            csv << [
+              appointment[0], appointment[-1],
+              appointment[1], appointment[2],
+              appointment[3],
+              is_custom_visit(appointment),
+              get_date(appointment, true),
+              get_date(appointment, false),
+              get_duration(appointment),
+              get_content(appointment),
+              get_statuses(appointment[8])
+            ]
+          end
         else
-          csv << [
-            appointment[0], appointment[1],
-            appointment[2], appointment[3],
-            is_custom_visit(appointment),
-            get_date(appointment, true),
-            get_date(appointment, false),
-            get_duration(appointment),
-            get_content(appointment),
-            get_statuses(appointment[8]),
-            get_core_name(appointment[10]),
-            format_time(appointment[-2]),
-            format_time(appointment[-1])
-          ]
+          if include_core_procudures == true
+            csv << [
+              appointment[0], appointment[1],
+              appointment[2], appointment[3],
+              is_custom_visit(appointment),
+              get_date(appointment, true),
+              get_date(appointment, false),
+              get_duration(appointment),
+              get_content(appointment),
+              get_statuses(appointment[8]),
+              get_core_name(appointment[10]),
+              format_time(appointment[-2]),
+              format_time(appointment[-1])
+            ]
+          else
+            csv << [
+              appointment[0], appointment[1],
+              appointment[2], appointment[3],
+              is_custom_visit(appointment),
+              get_date(appointment, true),
+              get_date(appointment, false),
+              get_duration(appointment),
+              get_content(appointment),
+              get_statuses(appointment[8])
+            ]
+          end
         end
       end
     end
@@ -192,5 +188,71 @@ class VisitReport < Report
     end
 
     filtered_set
+  end
+
+  def report_columns(core_procedures_option)
+    if HAS_RMID
+      if core_procedures_option == true
+        columns = ["Protocol ID (SRID)",
+                          "RMID",
+                          "Patient Last Name",
+                          "Patient First Name",
+                          "Visit Name",
+                          "Custom Visit",
+                          "Start Date",
+                          "Completed Date",
+                          "Visit Duration (minutes)",
+                          "Type of Visit",
+                          "Visit Indications",
+                          "Core",
+                          "Core Procedures Start Time",
+                          "Core Procedures End Time"
+                          ]
+      else
+        columns = ["Protocol ID (SRID)",
+                          "RMID",
+                          "Patient Last Name",
+                          "Patient First Name",
+                          "Visit Name",
+                          "Custom Visit",
+                          "Start Date",
+                          "Completed Date",
+                          "Visit Duration (minutes)",
+                          "Type of Visit",
+                          "Visit Indications"
+                          ]
+      end
+    else
+      if core_procedures_option == true
+        columns = ["Protocol ID (SRID)",
+                          "Patient Last Name",
+                          "Patient First Name",
+                          "Visit Name",
+                          "Custom Visit",
+                          "Start Date",
+                          "Completed Date",
+                          "Visit Duration (minutes)",
+                          "Type of Visit",
+                          "Visit Indications",
+                          "Core",
+                          "Core Procedures Start Time",
+                          "Core Procedures End Time"
+                          ]
+      else
+        columns = ["Protocol ID (SRID)",
+                        "Patient Last Name",
+                        "Patient First Name",
+                        "Visit Name",
+                        "Custom Visit",
+                        "Start Date",
+                        "Completed Date",
+                        "Visit Duration (minutes)",
+                        "Type of Visit",
+                        "Visit Indications"
+                        ]
+      end
+    end
+
+    return columns
   end
 end

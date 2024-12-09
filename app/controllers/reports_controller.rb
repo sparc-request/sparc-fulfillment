@@ -34,6 +34,8 @@ class ReportsController < ApplicationController
 
   def create
     @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
+    
+    reports_params[:core_procedures_option] = reports_params[:core_procedures_option] || false
 
     if @document.valid?
       @report = @report_type.classify.constantize.new(reports_params)
@@ -128,6 +130,7 @@ class ReportsController < ApplicationController
     params.require(:report_type) # raises error if report_type not present
     params.permit(:all_protocols_selected,
               :format,
+              :core_procedures_option,
               :utf8,
               :report_type,
               :title,
