@@ -48,6 +48,11 @@
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
                 .input-group-text
                   %span.far.fa-calendar
+          = "Options"
+          .form-check.ml-3
+            = check_box_tag(:core_procedures_option)
+            %label.form-check-label{for: "core_procedures_option"}
+              = "Include <b>Core Procedures Start/End times</b>".html_safe
       .modal-footer
         .center-block
           %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
