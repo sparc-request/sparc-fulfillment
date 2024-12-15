@@ -24,6 +24,7 @@ class Sparc::Protocol < SparcDbBase
   has_many :service_requests
   has_many :arms
   has_many :project_roles
+  has_many :audits, as: :auditable
 
   def funding_source_based_on_status
     funding_source = case self.funding_status

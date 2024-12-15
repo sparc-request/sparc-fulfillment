@@ -1,128 +1,150 @@
-class FinanceBillingReport < Report
+# Copyright © 2011-2025 MUSC Foundation for Research Development~
+# All rights reserved.~
 
-  # VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :sort_by, :sort_order, :organizations, :protocols].freeze
-  # VALIDATES_NUMERICALITY_OF = [].freeze
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
+
+# 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
+
+# 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following~
+# disclaimer in the documentation and/or other materials provided with the distribution.~
+
+# 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products~
+# derived from this software without specific prior written permission.~
+
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,~
+# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT~
+# SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL~
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS~
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
+# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
+
+class FinanceBillingReport < Report
+  include ReportsSharedMethods
+
+  VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date].freeze
+  VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
 
-  def format_protocol_id_column(protocol)
-    protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
-  end
+  def generate(document)
+    @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc
+    @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
-  def display_pppv_modified_rate_column(procedure)
-    admin_rate = procedure.send(:admin_rate)
-    admin_rate && admin_rate.created_at.to_date <= procedure.completed_date.to_date || procedure.send(:old_admin_rates) && procedure.send(:check_old_admin_rates, procedure.completed_date) ? "Yes" : "No"
-  end
+    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
-  def display_otf_modified_rate_column(fulfillment)
-    line_item = fulfillment.line_item
-    line_item.send(:current_admin_rate) && line_item.send(:current_admin_rate_applicable?, fulfillment.fulfilled_at) || line_item.send(:old_admin_rates) && line_item.send(:applicable_old_admin_rate, fulfillment.fulfilled_at) ? "Yes" : "No"
-  end
-
-  def display_subsidy_percent(object)
-    object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
-  end
-
-  def insert_blank_column_for_notes(totals, include_notes)
-    totals.insert(0, "") if include_notes
-    totals
-  end
-
-  def generate(file_path, params)
-    @start_date = Time.strptime(params[:start_date], "%m/%d/%Y").utc
-    @end_date   = Time.strptime(params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
-    @specific_services = params[:services].present? ? params[:services].map(&:to_i) : []
-
-    # document.update_attributes(content_type: 'text/csv', original_filename: "#{params[:title]}.csv")
-
-    CSV.open(file_path, "wb") do |csv|
-      csv << ["From", format_date(Time.strptime(params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(params[:end_date], "%m/%d/%Y"))]
+    CSV.open(document.path, "wb") do |csv|
+      csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
       csv << [""]
 
       headers = [
-        "Protocol ID",                # 1
-        "Request ID",                 # 2
-        "RMID",                       # 3
-        "Short Title",                # 4
-        "Funding Source",             # 5
-        "Status",                     # 6
-        "Primary PI",                 # 7
-        "Primary PI Affiliation",     # 8
-        "Billing/Business Manager(s)",# 9
-        "Core/Program",               # 10
-        "Service",                    # 11
-        "Service Completion Date",    # 12
-        "Fulfillment Date",           # 13
-        "Performed By",               # 14
-        "Components",                 # 15
-        "Contact",                    # 16
-        "Account #",                  # 17
-        "Patient Name",               # 18
-        "Patient ID",                 # 19
-        "Visit Name",                 # 20
-        "Visit Date",                 # 21
-        "Notes",                      # 22
-        "Quantity Completed",         # 23
-        "Quantity Type",              # 24
-        "Clinical Quantity Type",     # 25
-        "Research Rate",              # 26
-        "Total Cost",                 # 27
-        "Modified Rate",              # 28
-        "Percent Subsidy",            # 29
-        "Invoiced",                   # 30
-        "Invoiced Date"               # 31
+        "RMID",                       # 1
+        "Protocol ID",                # 2
+        "Request ID",                 # 3
+        "Status",                     # 4
+        "Short Title",                # 5
+        "Proposal Funding Status",    # 6
+        "Funding Start Date",         # 7
+        "Funding Source",             # 8
+        "Previous Funding Source",    # 9
+        "Funding Source Change Date", # 10
+        "Primary PI",                 # 11
+        "Primary PI Affiliation",     # 12
+        "Billing/Business Manager(s)",# 13
+        "Core/Program",               # 14
+        "Service Type",               # 15
+        "Service",                    # 16
+        "Performed By",               # 17
+        "Components",                 # 18
+        "Contact",                    # 19
+        "Account #",                  # 20
+        "Patient Name",               # 21
+        "Patient ID",                 # 22
+        "Visit Name",                 # 23
+        "Visit Date",                 # 24
+        "Notes",                      # 25
+        "Fulfilled/Completion Date",  # 26
+        "Period",                     # 27
+        "Fiscal Year",                # 28
+        "Quantity Completed",         # 29
+        "Quantity Type",              # 30
+        "Research Rate",              # 31
+        "Total Cost",                 # 32
+        "Modified Rate",              # 33
+        "Percent Subsidy",            # 34
+        "Invoiced",                   # 35
+        "Invoiced Date"               # 36
       ]
 
       csv << headers
 
       protocols = Protocol.includes(
-        :pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy,
-        fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]],
-        procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]
-      ).where(id: params[:protocols])
+        :pi,
+        { sparc_protocol: [:audits] },
+        :project_roles,
+        :sub_service_request,
+        :subsidy,
+        fulfillments: [
+          :components,
+          :performer,
+          { line_item: [:admin_rates], service: [:organization] }
+        ],
+        procedures: [
+          :visit,
+          { service: [:organization, :pricing_maps], appointment: [:visit_group] }
+        ]
+      ).where(id: @params[:protocols])
 
       protocols.each do |protocol|
-        fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date && (@specific_services.present? ? @specific_services.include?(fulfillment.service_id) : true)}
+        funding_info = get_previous_funding_source(protocol)
+        previous_funding_source = funding_info[:previous_funding_source]
+        funding_source_change_date = funding_info[:change_date]
 
-        procedures = protocol.procedures.select{|procedure| procedure.completed_date != nil && procedure.completed_date >= @start_date && procedure.completed_date <= @end_date && procedure.billing_type == 'research_billing_qty' && (@specific_services.present? ? @specific_services.include?(procedure.service_id) : true)}
+        fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date}
+
+        procedures = protocol.procedures.select { |procedure| procedure.completed_date != nil && procedure.completed_date >= @start_date && procedure.completed_date <= @end_date && procedure.billing_type == 'research_billing_qty' }
 
         fulfillments.each do |fulfillment|
+          fulfillment_completed_date = fulfillment.fulfilled_at
+
           next if fulfillment.credited?
 
           data = []
-          data << format_protocol_id_column(protocol) # 1
-          data << protocol.sub_service_request.ssr_id # 2
-          data << protocol.research_master_id # 3
-          data << protocol.sparc_protocol.short_title # 4
-          data << fulfillment.funding_source # 5
-          data << formatted_status(protocol) # 6
-          data << protocol.pi&.full_name # 7
-          data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"),
-            protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil) # 8
-          data << protocol.billing_business_managers.map(&:full_name).join(',') # 9
-          data << fulfillment.service.organization.name # 10
-          data << fulfillment.service_name # 11
-          data << nil # 12 - Service Completion Date
-          data << format_date(fulfillment.fulfilled_at) # 13
-          data << fulfillment.performer.full_name # 14
-          data << fulfillment.components.map(&:component).join(',') # 15
-          data << fulfillment.line_item.contact_name # 16
-          data << fulfillment.line_item.account_number # 17
-          data << nil # 18 patient name
-          data << nil # 19 patient id
-          data << nil # 20 visit name
-          data << nil # 21 visit date
-          data << fulfillment.notes.map(&:comment).join(' | ') # 22
-          data << fulfillment.quantity # 23
-          data << fulfillment.line_item.quantity_type # 24
-          data << nil # 25 clinical quantity type
-          data << display_cost(fulfillment.service_cost) # 26 research rate
-          data << display_cost(fulfillment.total_cost) # 27 total cost
-          data << display_otf_modified_rate_column(fulfillment) # 28 modified rate
-          data << display_subsidy_percent(fulfillment) # 29 percent subsidy
-          data << (fulfillment.invoiced? ? "Yes" : "No") # 30
-          data << format_date(fulfillment.invoiced_date) # 31
-
+          data << protocol.research_master_id # 1
+          data << format_protocol_id_column(protocol) # 2
+          data << protocol.sub_service_request.ssr_id # 3
+          data << formatted_status(protocol) # 4
+          data << protocol.sparc_protocol.short_title # 5
+          data << protocol.sparc_protocol&.funding_status&.humanize # 6
+          data << protocol.sparc_protocol&.funding_start_date&.strftime("%m/%d/%Y") # 7 - Funding Start Date
+          data << protocol.sparc_protocol.funding_source.humanize # 8 - Funding Source
+          data << previous_funding_source # 9
+          data << funding_source_change_date # 10
+          data << protocol.pi&.full_name # 11
+          data << protocol.pi&.professional_org_lookup("institution") # 12
+          data << protocol.billing_business_managers.map(&:full_name).join(',') # 13
+          data << fulfillment.service.organization.name # 14
+          data << "Non-Clinical Services" # 15
+          data << fulfillment.service_name # 16
+          data << fulfillment.performer.full_name # 17
+          data << fulfillment.components.map(&:component).join(',') # 18
+          data << fulfillment.line_item.contact_name # 19
+          data << fulfillment.line_item.account_number # 20
+          data << nil # 21 patient name
+          data << nil # 22 patient id
+          data << nil # 23 visit name
+          data << nil # 24 visit date
+          data << fulfillment.notes.map(&:comment).join(' | ') # 25
+          data << fulfillment_completed_date.strftime("%m/%d/%Y") # 26
+          data << fiscal_year_month_display(fulfillment_completed_date) # 27 fiscal month
+          data << fiscal_year_display(fulfillment_completed_date) # 28 fiscal year
+          data << fulfillment.quantity # 29
+          data << fulfillment.line_item.quantity_type # 30
+          data << display_cost(fulfillment.service_cost) # 31
+          data << display_cost(fulfillment.total_cost) # 32
+          data << display_otf_modified_rate_column(fulfillment) # 33
+          data << display_subsidy_percent(fulfillment) # 34
+          data << (fulfillment.invoiced? ? "Yes" : "No") # 35
+          data << format_date(fulfillment.invoiced_date) # 36
           csv << data
         end
 
@@ -136,40 +158,46 @@ class FinanceBillingReport < Report
 
               appointment_group.group_by(&:service_name).each do |service_name, service_group|
                 procedure = service_group.first
-                if !procedure.credited?
+                unless procedure.credited?
+                  procedure_completed_date = procedure.completed_date
 
                   data = []
-                  data << format_protocol_id_column(protocol) # 1
-                  data << protocol.sub_service_request.ssr_id # 2
-                  data << protocol.research_master_id # 3
-                  data << protocol.sparc_protocol.short_title # 4
-                  data << procedure.funding_source # 5
-                  data << formatted_status(protocol) # 6
-                  data << protocol.pi&.full_name # 7
-                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil) # 8
-                  data << protocol.billing_business_managers.map(&:full_name).join(',') # 9
-                  data << procedure.service.organization.name # 10
-                  data << procedure.service_name # 11
-                  data << format_date(procedure.completed_date) # 12 service completion date
-                  data << nil # 13 fulfillment date
-                  data << nil # 14 performed by
-                  data << nil # 15 components
-                  data << nil # 16 contact
-                  data << nil # 17 account number
-                  data << participant.full_name # 18 patient name
-                  data << (participant.label || protocols_participant.label) # 19 patient id
-                  data << (appointment.name || procedure.appointment.name) # 20 visit name
-                  data << (format_date(appointment.start_date) || format_date(procedure.appointment.start_date)) # 21 visit date
-                  data << procedure.notes.map(&:comment).join(' | ') # 22
-                  data << service_group.size # 23
-                  data << nil # 24 quantity type
-                  data << procedure.service.current_effective_pricing_map.unit_type # 25 clinical quantity type
-                  data << display_cost(procedure.service_cost) # 26 research rate
-                  data << display_cost(service_group.size * procedure.service_cost.to_f) # 27 total cost
-                  data << display_pppv_modified_rate_column(procedure) # 28 modified rate
-                  data << (procedure.percent_subsidy ? display_subsidy_percent(procedure) : nil) # 29 percent subsidy
-                  data << (procedure.invoiced? ? "Yes" : "No") # 30
-                  data << (procedure.invoiced_date ? format_date(procedure.invoiced_date) : nil)# 31
+                  data << protocol.research_master_id # 1 rmid
+                  data << format_protocol_id_column(protocol) # 2 protocol id
+                  data << protocol.sub_service_request.ssr_id # 3 ssr id
+                  data << formatted_status(protocol) # 4 status
+                  data << protocol.sparc_protocol.short_title # 5 short title
+                  data << protocol.sparc_protocol&.funding_status&.humanize # 6 funding status
+                  data << protocol.sparc_protocol&.funding_start_date&.strftime("%m/%d/%Y") # 7 - Funding Start Date
+                  data << protocol.sparc_protocol.funding_source.humanize
+                  data << previous_funding_source # 9 - Previous Funding Source
+                  data << funding_source_change_date # 10 - Funding Source Change Date
+                  data << protocol.pi&.full_name # 11 primary pi
+                  data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil) # 12 primary pi affiliation
+                  data << protocol.billing_business_managers.map(&:full_name).join(',') # 13 billing/business manager(s)
+                  data << procedure.service.organization.name # 14 core/program
+                  data << "Clinical Services" # 15 service type
+                  data << procedure.service_name # 16 service
+                  data << nil # 17 performed by
+                  data << nil # 18 components
+                  data << nil # 19 contact
+                  data << nil # 20 account number
+                  data << participant.full_name # 21 patient name
+                  data << (participant.label || protocols_participant.label) # 22 patient id
+                  data << (appointment.name || procedure.appointment.name) # 23 visit name
+                  data << (format_date(appointment.start_date) || format_date(procedure.appointment.start_date)) # 24 visit date
+                  data << procedure.notes.map(&:comment).join(' | ') # 25 notes
+                  data << format_date(procedure_completed_date) # 26 completed date
+                  data << fiscal_year_month_display(procedure_completed_date) # 27 period / fiscal month
+                  data << fiscal_year_display(procedure_completed_date) # 28 fiscal year
+                  data << service_group.size # 29 quantity completed
+                  data << nil # 30 quantity type
+                  data << display_cost(procedure.service_cost) # 31 research rate
+                  data << display_cost(service_group.size * procedure.service_cost.to_f) # 32 total cost
+                  data << display_pppv_modified_rate_column(procedure) # 33 modified rate
+                  data << (procedure.percent_subsidy ? display_subsidy_percent(procedure) : nil) # 34 percent subsidy
+                  data << (procedure.invoiced? ? "Yes" : "No") # 35
+                  data << (procedure.invoiced_date ? format_date(procedure.invoiced_date) : nil)# 36
 
                   csv << data
                 end
