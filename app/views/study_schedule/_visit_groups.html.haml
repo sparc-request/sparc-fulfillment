@@ -23,7 +23,7 @@
     .visit_group_names.text-center
       .visit_name_display.text-center
         %span{ id: "visit-name-display-#{visit_group.id}" }
-          = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "form-control visit-group-#{index} visit-name text-center", disabled: (tab == 'consolidated' ? true : false), data: { visit_group_id: visit_group.id }
+          = text_field_tag "visit_group_#{visit_group.id}", visit_group.name, class: "form-control visit-group-#{index} visit-name text-center", disabled: (tab == 'consolidated' ? true : false), data: { visit_group_id: visit_group.id, toggle: 'tooltip', title: visit_group.name }
 
     .d-flex.justify-content-between.visit_group_day_windows.text-center
       %span{ id: "visit-before-display-#{visit_group.id}" }
