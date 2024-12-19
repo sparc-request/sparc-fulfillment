@@ -43,7 +43,7 @@ class Participant < ApplicationRecord
   validate :city_presence_and_format
   validate :mrn_format, if: :validate_mrn_true
   validates :mrn, presence: true
-  validates_uniqueness_of :mrn
+  validates :mrn, uniqueness: { scope: [:first_name, :last_name] }, case_sensitive: false
   validates_length_of :mrn, maximum: 255
 
   validates :date_of_birth, presence: true
