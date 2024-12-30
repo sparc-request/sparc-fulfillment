@@ -31,6 +31,7 @@ RSpec.describe Participant, type: :model do
     it { is_expected.to validate_presence_of(:first_name) }
     it { is_expected.to validate_presence_of(:last_name) }
     it { is_expected.to validate_presence_of(:mrn) }
+    it { is_expected.to validate_uniqueness_of(:mrn).scoped_to([:first_name, :last_name]).case_insensitive }
     it { is_expected.to validate_presence_of(:date_of_birth) }
     it { is_expected.to validate_presence_of(:ethnicity) }
     it { is_expected.to validate_presence_of(:race) }
@@ -69,11 +70,11 @@ RSpec.describe Participant, type: :model do
         expect(build(:participant, zipcode: "1234")).not_to be_valid
       end
 
-      it 'should validate city presence to be invalid' do 
+      it 'should validate city presence to be invalid' do
         expect(build(:participant, city: "")).not_to be_valid
       end
 
-      it 'should validate city format to be invalid' do 
+      it 'should validate city format to be invalid' do
         expect(build(:participant, city: "New York123")).not_to be_valid
       end
     end

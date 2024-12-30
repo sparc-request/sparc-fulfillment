@@ -19,31 +19,12 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class InvoiceReport < Report
+  include ReportsSharedMethods
 
   VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :sort_by, :sort_order, :organizations, :protocols].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
-
-  # A protocol with subsidy, format protocol_id column with an 's'
-  # A protocol without subsidy, format protcol_id column without an 's'
-  def format_protocol_id_column(protocol)
-    protocol.subsidies.any? ? protocol.sparc_id.to_s + 's' : protocol.sparc_id
-  end
-
-  def display_pppv_modified_rate_column(procedure)
-    admin_rate = procedure.send(:admin_rate)
-    admin_rate && admin_rate.created_at.to_date <= procedure.completed_date.to_date || procedure.send(:old_admin_rates) && procedure.send(:check_old_admin_rates, procedure.completed_date) ? "Yes" : "No"
-  end
-
-  def display_otf_modified_rate_column(fulfillment)
-    line_item = fulfillment.line_item
-    line_item.send(:current_admin_rate) && line_item.send(:current_admin_rate_applicable?, fulfillment.fulfilled_at) || line_item.send(:old_admin_rates) && line_item.send(:applicable_old_admin_rate, fulfillment.fulfilled_at) ? "Yes" : "No"
-  end
-
-  def display_subsidy_percent(object)
-    object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
-  end
 
   def insert_blank_column_for_notes(totals)
     totals.insert(0,"") if @params[:include_notes] == "true"

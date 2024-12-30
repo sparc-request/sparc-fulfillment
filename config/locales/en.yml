@@ -619,6 +619,10 @@ en:
     include_invoiced: "Include Invoiced"
     invoice_report: "Invoice Report"
     end_date: "End Date"
+    finance_billing_report:
+      title: "Finance Billing Report"
+      start_date: "Start Date"
+      end_date: "End Date"
     funding_source_auditing_report:
       title: "Funding Source Auditing Report"
       start_date: "Funding Source Change Date From"
