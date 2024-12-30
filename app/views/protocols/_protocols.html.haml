@@ -29,6 +29,8 @@
       %tr
         %th.srid{ data: { field: 'srid', align: 'left', sortable: 'true' } }
           = Protocol.human_attribute_name(:srid)
+        %th.merged-protocol-ids{ data: { field: 'merged_protocol_ids', align: 'left' } }
+          = "Merged Protocol ID(s)"
         %th.rmid{ data: { field: 'rmid', align: 'left', sortable: 'true', visible: Sparc::Setting.get_value('research_master_enabled').to_s } }
           = Protocol.human_attribute_name(:rmid)
         %th.status{ data: { field: 'status', align: 'left', sortable: 'true' } }

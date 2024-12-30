@@ -36,7 +36,7 @@ class ProtocolsController < ApplicationController
       format.json {
         @protocols  = current_identity.protocols_full.search(params[:search]).with_status(params[:status])
         @total      = @protocols.count
-        @protocols  = @protocols.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0).eager_load(:pi)
+        @protocols  = @protocols.sorted(params[:sort], params[:order]).limit(params[:limit]).offset(params[:offset] || 0).eager_load(:pi).includes(sparc_protocol: :protocol_merges)
       }
       format.js
       format.csv {
