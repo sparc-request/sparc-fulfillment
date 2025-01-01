@@ -48,8 +48,8 @@ module ReportsSharedMethods
   end
 
   def fiscal_year_display(completed_date, fiscal_start_month = 7)
-    fiscal_year = completed_date.month >= fiscal_start_month ? completed_date.year : completed_date.year - 1
-    sprintf("%04d", fiscal_year)
+    fiscal_year = completed_date.month >= fiscal_start_month ? completed_date.year + 1 : completed_date.year
+    sprintf("FY%02d", fiscal_year % 100)
   end
 
   def get_previous_funding_source(protocol)
