@@ -41,12 +41,14 @@ test:
 # Docker Config Example
 # default: &default
 #   adapter: mysql2
-#   username: <%= ENV['SPARC_DATABASE_USERNAME'] %>
-#   password: <%= ENV['SPARC_DATABASE_PASSWORD'] %>
-#   host: <%= ENV['SPARC_DATABASE_HOST'] %>
+#   username: <%= ENV['DATABASE_USERNAME'] %>
+#   password: <%= ENV['DATABASE_PASSWORD'] %>
+#   host: <%= ENV['DATABASE_HOST'] %>
 #   encoding: utf8
 #   timeout: 5000
 #   pool: 5
+#   variables:
+#    sql_mode: TRADITIONAL
 # 
 # development:
 #   <<: *default
