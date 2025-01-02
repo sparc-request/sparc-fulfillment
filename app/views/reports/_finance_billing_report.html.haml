@@ -1,4 +1,4 @@
--# Copyright © 2011-2023 MUSC Foundation for Research Development~
+-# Copyright © 2011-2025 MUSC Foundation for Research Development~
 -# All rights reserved.~
 
 -# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
@@ -23,7 +23,7 @@
     = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
       .modal-header
         %h4.modal-title.text-center
-          = t(:reports)[:visit_report]
+          = t(:reports)[:finance_billing_report][:title]
         %button.close{"aria-label" => t(:actions)[:close], "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} &times;
       .modal-body
@@ -32,28 +32,39 @@
         .col-md-12.mt-3
           = hidden_field_tag "report_type", report_type
           .form-group.row.align-items-center
-            =label_tag "title", t(:documents)[:title], class: "control-label required col-sm-4 mb-0"
-            .col-sm-8= text_field_tag "title", title, class: "form-control"
+            = label_tag "title", t(:documents)[:title], class: "control-label required col-sm-4 mb-0"
+            .col-sm-8
+              = text_field_tag "title", title, class: 'form-control', id: 'title'
           .form-group.row.align-items-center
-            = label_tag "start_date", t(:reports)[:visit_start_date_from], class: "control-label col-sm-4 mb-0"
+            = label_tag "start_date", t(:reports)[:finance_billing_report][:start_date], class: "control-label required col-sm-4 mb-0"
             .input-group.datetimepicker.date.col-sm-8{ id: 'start_date', data: {target_input: 'nearest' }}
               = text_field_tag "start_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#start_date", toggle:"datetimepicker" }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#start_date' }}
                 .input-group-text
                   %span.far.fa-calendar
           .form-group.row.align-items-center
-            = label_tag "end_date", t(:reports)[:visit_start_date_to], class: "control-label col-sm-4 mb-0"
+            = label_tag "end_date", t(:reports)[:finance_billing_report][:end_date], class: "control-label required col-sm-4 mb-0"
             .input-group.datetimepicker.date.col-sm-8{ id: 'end_date', data: {target_input: 'nearest'}}
               = text_field_tag "end_date", nil, class: "form-control datetimepicker-input", readonly: true, data: { target:"#end_date", toggle:"datetimepicker" }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#end_date' }}
                 .input-group-text
                   %span.far.fa-calendar
-          = "Options"
-          .form-check.ml-3
-            = check_box_tag(:core_procedures_option)
-            %label.form-check-label{for: "core_procedures_option"}
-              = "Include <b>Core Procedures Start/End times</b>".html_safe
+
+          .form-group.row.align-items-center
+            = label_tag "organizations", t(:reports)[:organization], class: "control-label required col-sm-4 mb-0"
+            .col-sm-8
+              = select_tag 'organizations', grouped_options_for_select(@grouped_options), multiple: true, data: { actions_box: true, live_search: true }, class: "selectpicker form-control", id: "organization_select"
+
+          .form-group.protocols-group.row.align-items-center
+            = hidden_field_tag :all_protocols_selected, '', id: 'all_protocols_selected'
+            = label_tag "protocol", t(:reports)[:protocols], class: "control-label required col-sm-4 mb-0"
+            .col-sm-8#protocol_section
+
+          .form-group#org_based_protocols.d-none
+            = icon('fas', 'cog spin ml-3')
+
       .modal-footer
         .center-block
-          %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}= t(:actions)[:close]
-          %input.btn.btn-primary{type: 'submit', value: t(:reports)[:request_report], class: 'report-request'}
+          %button.btn.btn-secondary{type: 'button', data: {dismiss: 'modal'}}
+            = t(:actions)[:close]
+          %input.btn.btn-primary{type: 'submit', value: t(:reports)[:request_report], class: 'report-request', disabled: false}
