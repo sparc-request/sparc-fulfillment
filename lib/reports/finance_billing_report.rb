@@ -120,10 +120,10 @@ class FinanceBillingReport < Report
           data << previous_funding_source # 9
           data << funding_source_change_date # 10
           data << protocol.pi&.full_name # 11
-          data << protocol.pi&.professional_org_lookup("institution") # 12
+          data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil) # 12
           data << protocol.billing_business_managers.map(&:full_name).join(',') # 13
           data << fulfillment.service.organization.name # 14
-          data << "Non-Clinical Services" # 15
+          data << "Non-Clinical Service" # 15
           data << fulfillment.service_name # 16
           data << fulfillment.performer.full_name # 17
           data << fulfillment.components.map(&:component).join(',') # 18
@@ -176,7 +176,7 @@ class FinanceBillingReport < Report
                   data << (protocol.pi ? [protocol.pi.professional_org_lookup("institution"), protocol.pi.professional_org_lookup("college"), protocol.pi.professional_org_lookup("department"), protocol.pi.professional_org_lookup("division")].compact.join("/") : nil) # 12 primary pi affiliation
                   data << protocol.billing_business_managers.map(&:full_name).join(',') # 13 billing/business manager(s)
                   data << procedure.service.organization.name # 14 core/program
-                  data << "Clinical Services" # 15 service type
+                  data << "Clinical Service" # 15 service type
                   data << procedure.service_name # 16 service
                   data << nil # 17 performed by
                   data << nil # 18 components
@@ -191,7 +191,7 @@ class FinanceBillingReport < Report
                   data << fiscal_year_month_display(procedure_completed_date) # 27 period / fiscal month
                   data << fiscal_year_display(procedure_completed_date) # 28 fiscal year
                   data << service_group.size # 29 quantity completed
-                  data << nil # 30 quantity type
+                  data << procedure.service.current_effective_pricing_map.unit_type # 30 clinical quantity type
                   data << display_cost(procedure.service_cost) # 31 research rate
                   data << display_cost(service_group.size * procedure.service_cost.to_f) # 32 total cost
                   data << display_pppv_modified_rate_column(procedure) # 33 modified rate
