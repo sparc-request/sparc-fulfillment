@@ -31,7 +31,6 @@ RSpec.describe Participant, type: :model do
     it { is_expected.to validate_presence_of(:first_name) }
     it { is_expected.to validate_presence_of(:last_name) }
     it { is_expected.to validate_presence_of(:mrn) }
-    it { is_expected.to validate_uniqueness_of(:mrn).scoped_to([:first_name, :last_name]).case_insensitive }
     it { is_expected.to validate_presence_of(:date_of_birth) }
     it { is_expected.to validate_presence_of(:ethnicity) }
     it { is_expected.to validate_presence_of(:race) }
@@ -41,6 +40,13 @@ RSpec.describe Participant, type: :model do
     it { is_expected.to validate_presence_of(:zipcode) }
 
     context 'custom validations' do
+
+      it 'shows a custom message when mrn/first/last combo already exist' do 
+        participant = create(:participant, mrn: 12345)
+        duplicate_participant = build(:participant, mrn: participant.mrn)
+        expect(duplicate_participant).not_to be_valid
+        expect(duplicate_participant).errors.full_messages).to include("MRN already entered for same")
+      end
 
       it 'should create with no errors' do
         expect(@participant).to be_valid
