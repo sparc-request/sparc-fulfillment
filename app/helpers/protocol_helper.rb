@@ -131,4 +131,14 @@ module ProtocolHelper
 
     line_items
   end
+
+  def display_merges(protocol)
+    merges = Sparc::ProtocolMerge.where(master_protocol_id: protocol.sparc_id)
+    protocol_ids = []
+    merges.each do |merge|
+      protocol_ids << merge.merged_protocol_id
+    end
+    content_tag(:div, protocol_ids.join(" "))
+  end
+
 end

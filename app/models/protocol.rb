@@ -57,6 +57,8 @@ class Protocol < ApplicationRecord
   has_many :procedures,             through: :appointments
   has_many :fulfillments,           through: :line_items
 
+  has_many :protocol_merges, through: :sparc_protocol, source: :protocol_merges
+
   before_save :set_documents_count
 
   delegate  :irb_approval_date,
