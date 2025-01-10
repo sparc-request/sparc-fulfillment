@@ -42,8 +42,13 @@ RSpec.describe Participant, type: :model do
     context 'custom validations' do
 
       it 'shows a custom message when mrn/first/last combo already exist' do 
-        participant = create(:participant, mrn: 12345)
-        duplicate_participant = build(:participant, mrn: participant.mrn)
+        participant = create(:participant)
+        duplicate_participant = build(
+          :participant, 
+          mrn: participant.mrn,
+          first_name: participant.first_name,
+          last_name: participant.last_name
+          )
         expect(duplicate_participant).not_to be_valid
         expect(duplicate_participant).errors.full_messages).to include("MRN already entered for same")
       end
