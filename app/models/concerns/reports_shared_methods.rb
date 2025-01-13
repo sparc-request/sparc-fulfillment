@@ -28,13 +28,25 @@ module ReportsSharedMethods
   end
 
   def display_pppv_modified_rate_column(procedure)
+    has_admin_rate = false
     admin_rate = procedure.send(:admin_rate)
-    admin_rate && admin_rate.created_at.to_date <= procedure.completed_date.to_date || procedure.send(:old_admin_rates) && procedure.send(:check_old_admin_rates, procedure.completed_date) ? "Yes" : "No"
+    if admin_rate && admin_rate.created_at.to_date <= procedure.completed_date.to_date
+      has_admin_rate = true
+    elsif procedure.send(:old_admin_rates) && procedure.send(:check_old_admin_rates, procedure.completed_date)
+      has_admin_rate = true
+    else
+      has_admin_rate = false
+    end
+    has_admin_rate && (procedure.service.cost(procedure.funding_source, procedure.completed_date).to_i != procedure.service_cost && procedure.service.cost(nil, procedure.completed_date).to_i != procedure.service_cost) ? "Yes" : "No"
   end
 
   def display_otf_modified_rate_column(fulfillment)
     line_item = fulfillment.line_item
-    line_item.send(:current_admin_rate) && line_item.send(:current_admin_rate_applicable?, fulfillment.fulfilled_at) || line_item.send(:old_admin_rates) && line_item.send(:applicable_old_admin_rate, fulfillment.fulfilled_at) ? "Yes" : "No"
+    has_admin_rate = false
+    if line_item.send(:current_admin_rate) && line_item.send(:current_admin_rate_applicable?, fulfillment.fulfilled_at) || line_item.send(:old_admin_rates) && line_item.send(:applicable_old_admin_rate, fulfillment.fulfilled_at)
+      has_admin_rate = true
+    end
+    has_admin_rate && (line_item.service.cost(line_item.protocol.sparc_funding_source, fulfillment.fulfilled_at).to_i != fulfillment.service_cost && line_item.service.cost(nil, fulfillment.fulfilled_at).to_i != fulfillment.service_cost) ? "Yes" : "No"
   end
 
   def display_subsidy_percent(object)
@@ -44,12 +56,12 @@ module ReportsSharedMethods
   def fiscal_year_month_display(completed_date, fiscal_start_month = 7)
     month_number = ((completed_date.month - fiscal_start_month) % 12) + 1
     abbreviated_month = completed_date.strftime("%b")
-    sprintf("%02d-%s", month_number, abbreviated_month)
+    sprintf("'%02d-%s", month_number, abbreviated_month)
   end
 
   def fiscal_year_display(completed_date, fiscal_start_month = 7)
-    fiscal_year = completed_date.month >= fiscal_start_month ? completed_date.year : completed_date.year - 1
-    sprintf("%04d", fiscal_year)
+    fiscal_year = completed_date.month >= fiscal_start_month ? completed_date.year + 1 : completed_date.year
+    sprintf("FY%02d", fiscal_year % 100)
   end
 
   def get_previous_funding_source(protocol)
