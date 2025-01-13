@@ -1,0 +1,25 @@
+services:
+  cwf_web:
+    build: .
+    command: bundle exec rails s -b '0.0.0.0' -p 4000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_HOST: sparc_db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root_password
+      DATABASE_NAME: cwf-docker_development
+      RAILS_ENV: development
+      ## Sparc Info
+      SPARC_DATABASE_NAME: sparc-docker_development
+    env_file:
+      - .env
+    networks:
+      - sparc_network
+
+networks:
+  sparc_network:
+    external: true

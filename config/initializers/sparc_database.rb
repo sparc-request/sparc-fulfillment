@@ -18,4 +18,12 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-SPARC_DB = YAML.load_file(File.join(Rails.root, "config", "sparc_db.yml"))[Rails.env.to_s]
+require 'erb'
+require 'yaml'
+
+sparc_db_path = File.join(Rails.root, "config", "sparc_db.yml")
+
+# Use ERB to process the file first, then load the YAML
+SPARC_DB = YAML.load(ERB.new(File.read(sparc_db_path)).result)[Rails.env.to_s]
+
+# SPARC_DB = YAML.load_file(File.join(Rails.root, "config", "sparc_db.yml"))[Rails.env.to_s]
