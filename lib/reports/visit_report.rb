@@ -146,7 +146,7 @@ class VisitReport < Report
   end
 
   def sort_result_set(result_set)
-    sorted_set = filter_result_set(result_set)
+    sorted_set = add_srid_and_rmid(result_set)
 
     sorted_set.sort{ |x, y| x <=> y || 1 }
   end
@@ -155,8 +155,8 @@ class VisitReport < Report
     appointment[6].nil? ? "Yes" : "No"
   end
 
-  def get_core_name(core_id)
-    Organization.name_for_id(core_id)
+  def core_name(core_id)
+    Organization.find(core_id).name
   end
 
   def get_duration(appointment)
@@ -180,12 +180,12 @@ class VisitReport < Report
     (appt_status.blank? ? "" : appt_status.status)
   end
 
-  def filter_result_set(result_set)
-    used_appointments = []
-    filtered_set = []
+  def add_srid_and_rmid(result_set)
+    updated_set = []
 
     result_set.each do |appointment|
       protocol = Protocol.find(appointment[0])
+
       comparison_array = [
       appointment[0], #protocol_id
       appointment[1], #last_name
@@ -207,7 +207,7 @@ class VisitReport < Report
       end
     end
 
-    filtered_set
+    updated_set
   end
 
   def report_columns(core_procedures_option)
