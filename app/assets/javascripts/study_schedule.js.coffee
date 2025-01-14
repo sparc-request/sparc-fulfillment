@@ -36,6 +36,8 @@ $ ->
       type: 'GET'
       url:  '/study_schedule/change_page'
       data: data
+      success: (response) ->
+        initializeTooltips()
 
   $(document).on 'change', '.visit_dropdown.selectpicker', ->
     page_selected = $(this).find('option:selected').attr('page')
