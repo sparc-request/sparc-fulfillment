@@ -52,7 +52,7 @@ RSpec.describe ProceduresController, type: :controller do
       expect(assigns(:procedures)).to include(@unstarted_available)
     end
 
-    it 'inlcudes procedures that are complete and have an unavailable service' do
+    it 'includes procedures that are complete and have an unavailable service' do
       expect(assigns(:procedures)).to include(@complete_unavailable)
     end
   end
