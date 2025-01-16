@@ -47,6 +47,7 @@ $ ->
     # Early out when selecting a visit that is already shown
     if page_selected == current_page
       $(this).selectpicker('val', page_selected)
+      initializeTooltips()
       return
 
     data =
@@ -57,6 +58,8 @@ $ ->
       type: 'GET'
       url:  '/study_schedule/change_page'
       data: data
+      success: (response) ->
+        initializeTooltips()
 
   $(document).on 'click', '#studyScheduleTabs a.nav-link', ->
     protocol_id = $(this).data('protocol')
@@ -78,6 +81,8 @@ $ ->
       type: 'GET'
       url:  '/study_schedule/change_tab'
       data: data
+      success: (response) ->
+        initializeTooltips()
 
   $(document).on 'change', '.visit-quantity', ->
     checkbox = $(this)
@@ -132,6 +137,8 @@ $ ->
       type: 'PUT'
       url:  "/visit_groups/#{visit_group_id}"
       data: data
+      success: (response) ->
+        initializeTooltips()
 
   $(document).on 'click', '.check-row', ->
     if confirm("This will reset custom values for this row, do you wish to continue?")
