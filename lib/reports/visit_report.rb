@@ -181,6 +181,7 @@ class VisitReport < Report
   end
 
   def add_srid_and_rmid(result_set)
+    used_appointments = []
     updated_set = []
 
     result_set.each do |appointment|
