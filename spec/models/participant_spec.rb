@@ -31,7 +31,7 @@ RSpec.describe Participant, type: :model do
     it { is_expected.to validate_presence_of(:first_name) }
     it { is_expected.to validate_presence_of(:last_name) }
     it { is_expected.to validate_presence_of(:mrn) }
-    it { is_expected.to validate_uniqueness_of(:mrn).scoped_to([:first_name, :last_name]).case_insensitive }
+    it { is_expected.to validate_uniqueness_of(:mrn).scoped_to([:first_name, :last_name]).case_insensitive.with_message("already entered for same First Name/Last Name combination") }
     it { is_expected.to validate_presence_of(:date_of_birth) }
     it { is_expected.to validate_presence_of(:ethnicity) }
     it { is_expected.to validate_presence_of(:race) }
@@ -40,8 +40,8 @@ RSpec.describe Participant, type: :model do
     it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to validate_presence_of(:zipcode) }
 
-    context 'custom validations' do
 
+    context 'custom validations' do
       it 'should create with no errors' do
         expect(@participant).to be_valid
       end

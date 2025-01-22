@@ -39,28 +39,46 @@ class VisitReport < Report
       csv << [""]
       csv << report_columns(include_core_procudures)
 
-      result_set = ProcedureGroup.joins(appointment: { procedures: { protocols_participant: :participant }})
-      .where(Appointment.arel_table[:start_date].gteq(from_start_date)
-      .and(Appointment.arel_table[:start_date].lteq(to_start_date))
-      .and(Procedure.arel_table[:status].not_eq("unstarted")))
-      .distinct
-      .group(ProcedureGroup.arel_table[:id])
-      .pluck(
-      ProtocolsParticipant.arel_table[:protocol_id], #0
-      Participant.arel_table[:last_name], #1
-      Participant.arel_table[:first_name], #2
-      Appointment.arel_table[:name], #3
-      Appointment.arel_table[:start_date], #4
-      Appointment.arel_table[:completed_date], #5
-      Appointment.arel_table[:visit_group_id], #6
-      Appointment.arel_table[:type], #7
-      Appointment.arel_table[:id], #8
-      Procedure.arel_table[:status], #9 (-6)
-      ProcedureGroup.arel_table[:sparc_core_id], #10 (-5)
-      Appointment.arel_table[:contents], #11 (-4)
-      Participant.arel_table[:id], #12 (-3)
-      ProcedureGroup.arel_table[:start_time], #13 (-2)
-      ProcedureGroup.arel_table[:end_time]) #14 (-1)
+      unless include_core_procudures
+        result_set = ProcedureGroup.joins(appointment: { procedures: { protocols_participant: :participant }})
+        .where(Appointment.arel_table[:start_date].gteq(from_start_date)
+        .and(Appointment.arel_table[:start_date].lteq(to_start_date))
+        .and(Procedure.arel_table[:status].not_eq("unstarted")))
+        .pluck(
+        ProtocolsParticipant.arel_table[:protocol_id], #0
+        Participant.arel_table[:last_name], #1
+        Participant.arel_table[:first_name], #2
+        Appointment.arel_table[:name], #3
+        Appointment.arel_table[:start_date], #4
+        Appointment.arel_table[:completed_date], #5
+        Appointment.arel_table[:visit_group_id], #6
+        Appointment.arel_table[:type], #7
+        Appointment.arel_table[:id], #8
+        Procedure.arel_table[:status], #9 (-6)
+        Appointment.arel_table[:contents], #11 (-4)
+        Participant.arel_table[:id]) #12 (-3)
+      else
+        result_set = Appointment.joins(procedures: { protocols_participant: :participant })
+        .where(Appointment.arel_table[:start_date].gteq(from_start_date)
+        .and(Appointment.arel_table[:start_date].lteq(to_start_date))
+        .and(Procedure.arel_table[:status].not_eq("unstarted")))
+        .pluck(
+        ProtocolsParticipant.arel_table[:protocol_id], #0
+        Participant.arel_table[:last_name], #1
+        Participant.arel_table[:first_name], #2
+        Appointment.arel_table[:name], #3
+        Appointment.arel_table[:start_date], #4
+        Appointment.arel_table[:completed_date], #5
+        Appointment.arel_table[:visit_group_id], #6
+        Appointment.arel_table[:type], #7
+        Appointment.arel_table[:id], #8
+        Procedure.arel_table[:status], #9 (-6)
+        ProcedureGroup.arel_table[:sparc_core_id], #10 (-5)
+        Appointment.arel_table[:contents], #11 (-4)
+        Participant.arel_table[:id], #12 (-3)
+        ProcedureGroup.arel_table[:start_time], #13 (-2)
+        ProcedureGroup.arel_table[:end_time]) #14 (-1)
+      end
 
       sorted_result_set = sort_result_set(result_set)
 
@@ -128,7 +146,7 @@ class VisitReport < Report
   end
 
   def sort_result_set(result_set)
-    sorted_set = add_srid_and_rmid(result_set)
+    sorted_set = filter_result_set(result_set)
 
     sorted_set.sort{ |x, y| x <=> y || 1 }
   end
@@ -137,8 +155,8 @@ class VisitReport < Report
     appointment[6].nil? ? "Yes" : "No"
   end
 
-  def core_name(core_id)
-    Organization.find(core_id).name
+  def get_core_name(core_id)
+    Organization.name_for_id(core_id)
   end
 
   def get_duration(appointment)
@@ -162,18 +180,34 @@ class VisitReport < Report
     (appt_status.blank? ? "" : appt_status.status)
   end
 
-  def add_srid_and_rmid(result_set)
-    updated_set = []
+  def filter_result_set(result_set)
+    used_appointments = []
+    filtered_set = []
 
     result_set.each do |appointment|
       protocol = Protocol.find(appointment[0])
-      srid = protocol.srid
-      appointment[0] = srid
-      appointment << protocol.research_master_id
-      updated_set << appointment
+      comparison_array = [
+      appointment[0], #protocol_id
+      appointment[1], #last_name
+      appointment[2], #first_name
+      appointment[3], #visit_name
+      get_duration(appointment), #visit_duration
+      appointment[6], #visit_group_id
+      appointment[12],#participant_id
+      appointment[10],#core_name
+      appointment[13],#start_time
+      appointment[14] #end_time
+    ]
+      if !used_appointments.include?(comparison_array)
+        used_appointments << comparison_array
+        srid = protocol.srid
+        appointment[0] = srid
+        appointment << protocol.research_master_id
+        filtered_set << appointment
+      end
     end
 
-    updated_set
+    filtered_set
   end
 
   def report_columns(core_procedures_option)
