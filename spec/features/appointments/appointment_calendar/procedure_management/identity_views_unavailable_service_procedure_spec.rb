@@ -26,13 +26,23 @@ feature 'User views procedure which has an unavailable service', js: true do
 		given_i_am_viewing_the_appointment_calendar
 		when_i_add_a_procedure
 		when_i_change_the_service_to_inactive
+    when_the_procedure_is_not_unstarted
 		when_i_open_the_appointment_calendar_with_the_bad_procedure
 		then_i_should_see_the_inactive_tag
 	end
 
+  scenario 'and procedure is unstarted' do
+    given_i_am_viewing_the_appointment_calendar
+    when_i_add_a_procedure
+    when_i_change_the_service_to_inactive
+    when_i_open_the_appointment_calendar_with_the_bad_procedure
+    then_i_should_not_see_the_procedure
+  end
+
 	def given_i_am_viewing_the_appointment_calendar
 		@protocol 		= create_and_assign_protocol_to_me
 		@protocols_participant = @protocol.protocols_participants.first
+    @appointment  = @protocols_participant.appointments.first
 		@services     = @protocol.organization.inclusive_child_services(:per_participant)
 
 		visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
@@ -51,6 +61,11 @@ feature 'User views procedure which has an unavailable service', js: true do
 		@service.update_attributes(is_available: false)
 	end
 
+  def when_the_procedure_is_not_unstarted
+    @procedure = @appointment.procedures.first
+    @procedure.update_attributes(status: 'complete')
+  end
+
 	def when_i_open_the_appointment_calendar_with_the_bad_procedure
 		visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
 		wait_for_ajax
@@ -59,4 +74,8 @@ feature 'User views procedure which has an unavailable service', js: true do
 	def then_i_should_see_the_inactive_tag
 		expect(page).to have_text("(Inactive)")
 	end
+
+  def then_i_should_not_see_the_procedure
+    expect(page).not_to have_text("(Inactive)")
+  end
 end
