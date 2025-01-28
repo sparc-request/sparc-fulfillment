@@ -54,3 +54,48 @@ $(document).on 'click', '.fulfillment_notes',  ->
         type: 'GET'
         url: '/notes.js'
         data: data
+
+# User column display preferences for fulfillments table modal
+saveColumnPreference = (column, visible) ->
+  columns = {}
+  columns[column] = visible
+
+  $.ajax
+    url: '/fulfillments/save_column_preferences'
+    type: 'POST'
+    contentType: 'application/json'
+    data: JSON.stringify({ columns: columns })
+    error: (xhr, status, error) ->
+      console.error 'Error saving column preference:', error
+
+loadColumnPreferences = ->
+  $.ajax
+    url: '/fulfillments/load_column_preferences'
+    type: 'GET'
+    dataType: 'json'
+    success: (data) ->
+      for column, visible of data
+        if visible
+          $('#fulfillments-table').bootstrapTable('showColumn', column)
+        else
+          $('#fulfillments-table').bootstrapTable('hideColumn', column)
+          $("input[type='checkbox'][data-field='#{column}']").prop 'checked', false
+    error: (xhr, status, error) ->
+      console.error 'Error loading column preferences:', error
+
+$ ->
+  $('#fulfillments-table').bootstrapTable()
+
+  $(document).on 'shown.bs.modal', '#modalContainer:has(#fulfillments-table)', ->
+    loadColumnPreferences()
+
+  $(document).on 'change', '.keep-open.btn-group .dropdown-menu input[type="checkbox"][data-field]', (e) ->
+    column = $(e.target).data('field')
+    visible = $(e.target).is(':checked')
+
+    if visible
+      $('#fulfillments-table').bootstrapTable('showColumn', column)
+    else
+      $('#fulfillments-table').bootstrapTable('hideColumn', column)
+
+    saveColumnPreference(column, visible)

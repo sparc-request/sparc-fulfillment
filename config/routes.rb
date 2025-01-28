@@ -84,8 +84,12 @@ Rails.application.routes.draw do
       put 'toggle_credit(/:id)', to: 'fulfillments#toggle_credit'
       # put 'update_invoice_date(/:id)', to: 'fulfillments#update_invoice_date'
     end
-    member do 
+    member do
       put :update_invoice_date
+    end
+    collection do
+      post :save_column_preferences
+      get :load_column_preferences
     end
   end
 

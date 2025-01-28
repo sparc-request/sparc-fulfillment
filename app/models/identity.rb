@@ -32,8 +32,18 @@ class Identity < SparcDbBase
   has_many :clinical_providers
   has_many :super_users
   has_many :patient_registrars
+  has_many :column_preferences, dependent: :destroy
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
+
+  def column_preferences_hash
+    preferences = column_preferences.hidden
+    preferences.pluck(:column_name, :visible).to_h
+  end
+
+  def column_hidden?(column_name)
+    column_preferences_hash[column_name] == false
+  end
 
   def self.arel_full_name
     Identity.arel_table[:first_name].concat(Arel::Nodes.build_quoted(' ')).concat(Identity.arel_table[:last_name])
