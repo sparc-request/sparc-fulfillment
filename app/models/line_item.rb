@@ -72,9 +72,14 @@ class LineItem < ApplicationRecord
   end
 
   def cost(funding_source = protocol.sparc_funding_source, date = Time.current)
-    return current_admin_rate.admin_cost if current_admin_rate_applicable?(date)
-    return applicable_old_admin_rate(date) if applicable_old_admin_rate(date)
-    service.cost(funding_source, date).to_i
+    if current_admin_rate_applicable?(date)
+      [current_admin_rate.admin_cost, true]
+    elsif applicable_old_admin_rate(date)
+      [applicable_old_admin_rate(date), true]
+    else
+      [service.cost(funding_source, date), false]
+
+    end
   end
 
   def name=(n)

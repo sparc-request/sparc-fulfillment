@@ -58,7 +58,10 @@ RSpec.describe Fulfillment, type: :model do
           fulfillment = create(:fulfillment, line_item: line_item)
           fulfillment.fulfilled_at = (Time.now).strftime("%m/%d/%Y")
           fulfillment.send(:recalculate_cost)
-          expect(fulfillment.service_cost).to eq(line_item.cost)
+
+          cost, modified = line_item.cost
+          expect(fulfillment.service_cost).to eq(cost)
+          expect(fulfillment.modified_rate).to eq(modified)
         end
       end
 
@@ -69,7 +72,10 @@ RSpec.describe Fulfillment, type: :model do
           fulfillment = create(:fulfillment, fulfilled_at: Time.current.strftime("%m/%d/%Y"), line_item: line_item)
           fulfillment.fulfilled_at = (Time.now + 1.day).strftime("%m/%d/%Y")
           fulfillment.send(:recalculate_cost)
-          expect(fulfillment.service_cost).to eq(line_item.cost)
+
+          cost, modified = line_item.cost
+          expect(fulfillment.service_cost).to eq(cost)
+          expect(fulfillment.modified_rate).to eq(modified)
         end
       end
 
@@ -80,7 +86,10 @@ RSpec.describe Fulfillment, type: :model do
           fulfillment = create(:fulfillment, fulfilled_at: Time.current.strftime("%m/%d/%Y"), line_item: line_item)
           fulfillment.fulfilled_at = (Time.now + 1.day).strftime("%m/%d/%Y")
           fulfillment.send(:recalculate_cost)
-          expect(fulfillment.service_cost).to eq(line_item.cost)
+
+          cost, modified = line_item.cost
+          expect(fulfillment.service_cost).to eq(cost)
+          expect(fulfillment.modified_rate).to eq(modified)
         end
       end
 

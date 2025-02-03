@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_11_125115) do
+ActiveRecord::Schema.define(version: 2025_01_30_170835) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
     t.string "status"
@@ -54,6 +54,16 @@ ActiveRecord::Schema.define(version: 2024_02_11_125115) do
     t.index ["deleted_at"], name: "index_arms_on_deleted_at"
     t.index ["protocol_id"], name: "index_arms_on_protocol_id"
     t.index ["sparc_id"], name: "index_arms_on_sparc_id"
+  end
+
+  create_table "column_preferences", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.bigint "identity_id", null: false
+    t.string "column_name", null: false
+    t.boolean "visible", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["identity_id", "column_name"], name: "index_column_preferences_on_identity_id_and_column_name", unique: true
+    t.index ["identity_id"], name: "index_column_preferences_on_identity_id"
   end
 
   create_table "components", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
@@ -118,6 +128,7 @@ ActiveRecord::Schema.define(version: 2024_02_11_125115) do
     t.datetime "invoiced_date"
     t.boolean "credited"
     t.float "percent_subsidy"
+    t.boolean "modified_rate", default: false, null: false
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id"
     t.index ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id"
     t.index ["line_item_id"], name: "index_fulfillments_on_line_item_id"
@@ -290,6 +301,7 @@ ActiveRecord::Schema.define(version: 2024_02_11_125115) do
     t.boolean "credited"
     t.float "percent_subsidy"
     t.integer "position"
+    t.boolean "modified_rate", default: false, null: false
     t.index ["appointment_id"], name: "index_procedures_on_appointment_id"
     t.index ["completed_date"], name: "index_procedures_on_completed_date"
     t.index ["service_id"], name: "index_procedures_on_service_id"

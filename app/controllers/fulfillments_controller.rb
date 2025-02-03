@@ -49,7 +49,9 @@ class FulfillmentsController < ApplicationController
     @fulfillment = Fulfillment.new(fulfillment_params.merge!({ creator: current_identity, service: service, service_name: service.name, funding_source: funding_source, percent_subsidy: protocol.percent_subsidy }))
     @fulfillment.components_data = params[:fulfillment][:components]
     if @fulfillment.valid?
-      @fulfillment.service_cost = @line_item.cost(funding_source, Time.strptime(fulfilled_at, "%m/%d/%Y"))
+      cost, modified = @line_item.cost(funding_source, Time.strptime(fulfilled_at, "%m/%d/%Y"))
+      @fulfillment.service_cost = cost
+      @fulfillment.modified_rate = modified
       @fulfillment.save
       update_components_and_create_notes('create')
       flash[:success] = t(:fulfillment)[:flash_messages][:created]

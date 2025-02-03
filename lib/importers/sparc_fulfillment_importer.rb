@@ -298,9 +298,12 @@ class SparcFulfillmentImporter
           fulfillment_procedure.status = 'complete'
           fulfillment_procedure.completed_date = sparc_procedure_completed_date.strftime("%m/%d/%Y")
           if fulfillment_line_item.present?
-            fulfillment_procedure.service_cost = fulfillment_line_item.cost(fulfillment_procedure.protocol.sparc_funding_source, sparc_procedure_completed_date)
+            cost, modified = fulfillment_line_item.cost(fulfillment_procedure.protocol.sparc_funding_source, sparc_procedure_completed_date)
+            fulfillment_procedure.service_cost = cost
+            fulfillment_procedure.modified_rate = modified
           else
             fulfillment_procedure.service_cost = fulfillment_service.cost(fulfillment_procedure.protocol.sparc_funding_source, sparc_procedure_completed_date)
+            fulfillment_procedure.modified_rate = false
           end
           fulfillment_procedure.performer_id = sparc_procedure_completed_by
         end

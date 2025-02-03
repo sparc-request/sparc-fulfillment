@@ -141,7 +141,7 @@ class FinanceBillingReport < Report
           data << fulfillment.line_item.quantity_type # 30
           data << display_cost(fulfillment.service_cost) # 31
           data << display_cost(fulfillment.total_cost) # 32
-          data << display_otf_modified_rate_column(fulfillment) # 33
+          data << fulfillment.modified_rate ? "Yes" : "No" # 33
           data << display_subsidy_percent(fulfillment) # 34
           data << (fulfillment.invoiced? ? "Yes" : "No") # 35
           data << format_date(fulfillment.invoiced_date) # 36
@@ -194,7 +194,7 @@ class FinanceBillingReport < Report
                   data << procedure.service.current_effective_pricing_map.unit_type # 30 clinical quantity type
                   data << display_cost(procedure.service_cost) # 31 research rate
                   data << display_cost(service_group.size * procedure.service_cost.to_f) # 32 total cost
-                  data << display_pppv_modified_rate_column(procedure) # 33 modified rate
+                  data << procedure.modified_rate ? "Yes" : "No" # 33
                   data << (procedure.percent_subsidy ? display_subsidy_percent(procedure) : nil) # 34 percent subsidy
                   data << (procedure.invoiced? ? "Yes" : "No") # 35
                   data << (procedure.invoiced_date ? format_date(procedure.invoiced_date) : nil)# 36

@@ -240,10 +240,16 @@ class Procedure < ApplicationRecord
   end
 
   def new_cost(funding_source, date)
-    return visit.line_item.cost(funding_source, date).to_i if visit
-    return admin_rate.admin_cost if admin_rate && admin_rate.created_at.to_date <= date.to_date
-    return check_old_admin_rates(date) if check_old_admin_rates(date)
-    service.cost(funding_source, date).to_i
+    if admin_rate && admin_rate.created_at.to_date <= date.to_date
+      self.modified_rate = true
+      admin_rate.admin_cost
+    elsif check_old_admin_rates(date)
+      self.modified_rate = true
+      check_old_admin_rates(date)
+    else
+      self.modified_rate = false
+      service.cost(funding_source, date).to_i
+    end
   end
 
   def update_protocols_participant_deletable
