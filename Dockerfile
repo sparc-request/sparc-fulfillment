@@ -25,8 +25,8 @@ COPY . .
 # Precompile assets
 RUN RAILS_ENV=development bundle exec rake assets:precompile
 
-# Expose port 4000 to the outside world
-EXPOSE 4000
+# Expose port 3001 to the outside world
+EXPOSE 3001
 
 # Start the Rails server
 CMD ["rails", "server", "-b", "0.0.0.0"]
