@@ -29,6 +29,11 @@ class ProceduresController < ApplicationController
     respond_to :json
 
     @procedures     = @appointment.procedures.eager_load(:notes, :task).preload(:service, :protocol).where(sparc_core_id: params[:core_id]).order(:position)
+
+    @procedures = @procedures.reject do |procedure|
+      procedure.unstarted? && procedure.service && !procedure.service.is_available?
+    end
+
     @performable_by = @appointment.performable_by
   end
 

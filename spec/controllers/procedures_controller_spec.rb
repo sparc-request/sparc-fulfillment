@@ -33,6 +33,30 @@ RSpec.describe ProceduresController, type: :controller do
     @appointment = create(:appointment, name: "Visit Test", arm: arm, protocols_participant: protocols_participant)
   end
 
+  describe 'GET #index' do
+    before do
+      @available_service = create(:service, is_available: true)
+      @unavailable_service = create(:service, is_available: false)
+      @unstarted_unavailable = create(:procedure, appointment: @appointment, service: @unavailable_service, status: 'unstarted')
+      @unstarted_available = create(:procedure, appointment: @appointment, service: @available_service, status: 'unstarted')
+      @complete_unavailable = create(:procedure, appointment: @appointment, service: @unavailable_service, status: 'complete')
+
+      get :index, params: { appointment_id: @appointment.id }, format: :json
+    end
+
+    it 'should not include procedures that are unstarted and have an unavailable service' do
+      expect(assigns(:procedures)).to_not include(@unstarted_unavailable)
+    end
+
+    it 'includes procedures that are unstarted and have a service that is available' do
+      expect(assigns(:procedures)).to include(@unstarted_available)
+    end
+
+    it 'includes procedures that are complete and have an unavailable service' do
+      expect(assigns(:procedures)).to include(@complete_unavailable)
+    end
+  end
+
   describe 'PUT #update' do
 
     context 'with Notable change' do
