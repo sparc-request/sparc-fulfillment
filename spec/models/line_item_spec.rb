@@ -89,7 +89,8 @@ RSpec.describe LineItem, type: :model do
         service   = create(:service)
         line_item = create(:line_item, service: service, protocol: create(:protocol))
 
-        expect(line_item.cost).to eq(500.0)
+        cost, modified = line_item.cost
+        expect(cost).to eq(500.0)
       end
     end
 

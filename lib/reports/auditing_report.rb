@@ -144,9 +144,10 @@ class AuditingReport < Report
             has_valid_line_item = true
             line_item_subsidy = 0
 
-            unit_cost = display_cost(line_item.cost)
+            cost, _modified = line_item.cost
+            unit_cost = display_cost(cost)
             quantity_fulfilled = line_item.fulfillments.sum(:quantity)
-            line_item_total_cost = quantity_fulfilled * (line_item.cost / 100)
+            line_item_total_cost = quantity_fulfilled * (cost / 100)
 
             protocol_total_cost += line_item_total_cost
 

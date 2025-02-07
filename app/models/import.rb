@@ -85,9 +85,23 @@ class Import < ApplicationRecord
           line_item = LineItem.where(protocol: local_protocol, service: service).first_or_create(quantity_requested: 1, quantity_type: 'Hour')
           fulfillment = Fulfillment.where(klok_entry_id: entry.entry_id, line_item: line_item).first_or_initialize
 
-          fulfillment.assign_attributes(fulfilled_at: entry.date.strftime('%m/%d/%Y').to_s, quantity: entry.decimal_duration, creator_id: local_identity.id, performer_id: local_identity.id,
-                                        service: service, service_name: service.name, service_cost: line_item.cost(local_protocol.sparc_funding_source, entry.start_time_stamp), funding_source: local_protocol.sparc_funding_source,
-                                        percent_subsidy: local_protocol.percent_subsidy)
+          fulfillment.assign_attributes(
+            fulfilled_at: entry.date.strftime('%m/%d/%Y').to_s,
+            quantity: entry.decimal_duration,
+            creator_id: local_identity.id,
+            performer_id: local_identity.id,
+            service: service,
+            service_name: service.name,
+            # service_cost: line_item.cost(local_protocol.sparc_funding_source, entry.start_time_stamp),
+            funding_source: local_protocol.sparc_funding_source,
+            percent_subsidy: local_protocol.percent_subsidy
+          )
+
+          cost, modified = line_item.cost(local_protocol.sparc_funding_source, entry.start_time_stamp)
+          fulfillment.assign_attributes(
+            service_cost: cost,
+            modified_rate: modified
+          )
 
           ### build out components
           fulfillment.components.build(component: entry.klok_project.name) if entry.klok_project.name && fulfillment.components.select{|x| x.component == entry.klok_project.name}.empty?

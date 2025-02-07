@@ -79,7 +79,9 @@ class Fulfillment < ApplicationRecord
 
   def recalculate_cost
     if fulfilled_at_changed? && !klok_upload
-      write_attribute(:service_cost, line_item.cost(protocol.sparc_funding_source, fulfilled_at).to_i)
+      cost, modified = line_item.cost(protocol.funding_source, fulfilled_at)
+      write_attribute(:service_cost, cost)
+      write_attribute(:modified_rate, modified)
     end
   end
 
