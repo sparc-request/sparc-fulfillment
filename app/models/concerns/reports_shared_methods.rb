@@ -87,12 +87,6 @@ module ReportsSharedMethods
     object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
   end
 
-  def fiscal_year_month_display(completed_date, fiscal_start_month = 7)
-    month_number = ((completed_date.month - fiscal_start_month) % 12) + 1
-    abbreviated_month = completed_date.strftime("%b")
-    sprintf("'%02d-%s", month_number, abbreviated_month)
-  end
-
   def fiscal_year_display(completed_date, fiscal_start_month = 7)
     fiscal_year = completed_date.month >= fiscal_start_month ? completed_date.year + 1 : completed_date.year
     sprintf("FY%02d", fiscal_year % 100)
