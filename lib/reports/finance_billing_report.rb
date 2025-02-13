@@ -63,7 +63,6 @@ class FinanceBillingReport < Report
         "Visit Date",                 # 24
         "Notes",                      # 25
         "Fulfilled/Completion Date",  # 26
-        "Period",                     # 27
         "Fiscal Year",                # 28
         "Quantity Completed",         # 29
         "Quantity Type",              # 30
@@ -135,7 +134,6 @@ class FinanceBillingReport < Report
           data << nil # 24 visit date
           data << fulfillment.notes.map(&:comment).join(' | ') # 25
           data << fulfillment_completed_date.strftime("%m/%d/%Y") # 26
-          data << fiscal_year_month_display(fulfillment_completed_date) # 27 fiscal month
           data << fiscal_year_display(fulfillment_completed_date) # 28 fiscal year
           data << fulfillment.quantity # 29
           data << fulfillment.line_item.quantity_type # 30
@@ -188,7 +186,6 @@ class FinanceBillingReport < Report
                   data << (format_date(appointment.start_date) || format_date(procedure.appointment.start_date)) # 24 visit date
                   data << procedure.notes.map(&:comment).join(' | ') # 25 notes
                   data << format_date(procedure_completed_date) # 26 completed date
-                  data << fiscal_year_month_display(procedure_completed_date) # 27 period / fiscal month
                   data << fiscal_year_display(procedure_completed_date) # 28 fiscal year
                   data << service_group.size # 29 quantity completed
                   data << procedure.service.current_effective_pricing_map.unit_type # 30 clinical quantity type
