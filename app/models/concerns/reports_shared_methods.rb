@@ -32,17 +32,18 @@ module ReportsSharedMethods
     admin_rate = procedure.send(:admin_rate)
     if admin_rate && admin_rate.created_at.to_date <= procedure.completed_date.to_date
       has_admin_rate = true
-    elsif latest_old_rate_not_reset = procedure.send(:old_admin_rates)
-      .where(cost_reset: false)
-      .where("DATE(date_of_change) <= ?", procedure.completed_date)
-      .order(date_of_change: :desc).first
-      if procedure.service_cost == latest_old_rate_not_reset.admin_cost
-        has_admin_rate = true
-      else
-        has_admin_rate = false
-      end
+
     else
-      has_admin_rate = false
+      old_rates = procedure.send(:old_admin_rates)
+      if old_rates.present?
+        latest_old_rate_not_reset = old_rates
+          .where(cost_reset: false)
+          .where("DATE(date_of_change) <= ?", procedure.completed_date)
+          .order(date_of_change: :desc).first
+        if latest_old_rate_not_reset && procedure.service_cost == latest_old_rate_not_reset.admin_cost
+          has_admin_rate = true
+        end
+      end
     end
 
     reg_rate_with_funding = procedure.service.cost(procedure.funding_source, procedure.completed_date).to_i
@@ -59,17 +60,18 @@ module ReportsSharedMethods
     has_admin_rate = false
     if line_item.send(:current_admin_rate) && line_item.send(:current_admin_rate_applicable?, fulfillment.fulfilled_at)
       has_admin_rate = true
-    elsif latest_old_rate_not_reset = fulfillment.line_item.send(:old_admin_rates)
+
+    else
+      old_rates = line_item.send(:old_admin_rates)
+      if old_rates.present?
+        latest_old_rate_not_reset = old_rates
         .where(cost_reset: false)
         .where("DATE(date_of_change) <= ?", fulfillment.fulfilled_at)
         .order(date_of_change: :desc).first
-      if fulfillment.service_cost == latest_old_rate_not_reset.admin_cost
-        has_admin_rate = true
-      else
-        has_admin_rate = false
+        if latest_old_rate_not_reset && fulfillment.service_cost == latest_old_rate_not_reset.admin_cost
+          has_admin_rate = true
+        end
       end
-    else
-      has_admin_rate = false
     end
 
     reg_rate_with_funding = line_item.service.cost(line_item.protocol.sparc_funding_source, fulfillment.fulfilled_at).to_i
