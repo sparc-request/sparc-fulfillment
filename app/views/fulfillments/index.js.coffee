@@ -23,3 +23,8 @@ $("#modalContainer").
   modal('show')
 
 $(document).trigger('ajax:complete') # rails-ujs element replacement bug fix
+
+$('#fulfillments-table').addClass('hidden')
+$('#fulfillments-table').on 'load-success.bs.table', ->
+  window.loadColumnPreferences()
+  .then -> $('#fulfillments-table').removeClass('hidden')
