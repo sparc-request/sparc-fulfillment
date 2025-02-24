@@ -68,7 +68,7 @@ saveColumnPreference = (column, visible) ->
     error: (xhr, status, error) ->
       console.error 'Error saving column preference:', error
 
-loadColumnPreferences = ->
+window.loadColumnPreferences = ->
   $.ajax
     url: '/fulfillments/load_column_preferences'
     type: 'GET'
