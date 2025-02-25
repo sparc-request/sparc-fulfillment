@@ -37,7 +37,7 @@ namespace :data do
     end
 
     data = []
-    item_count = 0
+    item_count = 1 #Item count starts at 1 to account for the fact that the first row will be headers
     failed_item_count = 0
     successful_item_count = 0
 
@@ -54,17 +54,24 @@ namespace :data do
 
         ssr = SubServiceRequest.where(protocol_id: ids[0], ssr_id: ids[1]).first
         
-        matched_sparc_line_item = nil
+        matched_sparc_line_item = []
         sparc_line_items = Sparc::LineItem.where(sub_service_request: ssr.id)
         sparc_line_items.each do |sparc_line_item|
           if sparc_line_item.service.name == item[:service_name]
-            matched_sparc_line_item = sparc_line_item
+            matched_sparc_line_item << sparc_line_item
           end
         end
 
         unless matched_sparc_line_item.present?
           failed_item_count += 1
-          puts " - For Item #{item_count} on the spreadsheet, we were unable to find a Sparc Line Item that matches the information provided.  As such, no further action can be taken with this item."
+          puts " - Row #{item_count}: failed due to being unable to find a Sparc Line Item"
+
+          next
+        end
+
+        unless matched_sparc_line_item.count == 1
+          failed_item_count += 1
+          puts " - Row #{item_count}: failed due to multiple potential Sparc Line Items"
 
           next
         end
@@ -73,7 +80,7 @@ namespace :data do
 
         unless line_item.present?
           failed_item_count += 1
-          puts " - For Item #{item_count} on the spreadsheet, we were unable to find a Fulfillment Line Item that matches the information provided.  As such, no further action can be taken with this item."
+          puts " - Row #{item_count}: failed due to being unable to find a Fulfillment Line Item"
 
           next
         end
@@ -102,25 +109,25 @@ namespace :data do
               successful_item_count += 1
             else
               failed_item_count += 1
-              puts " - For Item #{item_count} on the spreadsheet, we found #{potential_identities.count} people with the same name as the person listed in the 'Completed By' column and cannot distinguish which person should be used.  As such, no further action can be taken with this item."
+              puts " - Row #{item_count}: failed due to finding #{potential_identities.count} people with the same name as the person listed in the 'Completed By' column"
 
               next
             end
           else
             failed_item_count += 1
-            puts " - For Item #{item_count} on the spreadsheet, we are unable to find a person with that name.  As such, no further action can be taken with this item."
+            puts " - Row #{item_count}:  failed due to finding no person with the name provided in 'Completed By' column"
 
             next
           end 
         else
           failed_item_count += 1
-          puts " - Item #{item_count} on the spreadsheet does not have a 'Completed By' associated with it.  As such, no further action can be taken with this item."
+          puts " - Row #{item_count}: failed due to 'Completed By' column being blank"
 
           next
         end
       else
         failed_item_count += 1
-        puts " - Item #{item_count} on the spreadsheet does not have a Sparc Service Request ID.  As such, no further action can be taken with this item."
+        puts " - Row #{item_count}: failed due to not having a Sparc Service Request ID."
 
         next
       end
