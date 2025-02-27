@@ -122,16 +122,21 @@ namespace :data do
               fulfillment = line_item.fulfillments.new(fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), performer: potential_identities.first, service_id: matched_sparc_line_item.first.service.id, service_name: matched_sparc_line_item.first.service.name, service_cost: line_item.cost(funding_source, fulfillment_date), funding_source: funding_source, quantity: fulfillment_time)
 
               if item[:fulfillment_component].present?
-                fulfillment.components.new(component: item[:fulfillment_component])
+                fulfillment.components_data = [item[:fulfillment_component]]
               end
 
               if item[:fulfillment_notes].present?
                 fulfillment.notes.new(comment: item[:fulfillment_notes], identity: potential_identities.first)
               end
 
-              fulfillment.save
+              if fulfillment.save
+                successful_item_count += 1
+              else
+                failed_item_count += 1
+                puts " - Row #{item_count}: has all necessary data but failed to save.  Have developer check server log."
 
-              successful_item_count += 1
+                next
+              end
             else
               failed_item_count += 1
               puts " - Row #{item_count}: failed due to finding #{potential_identities.count} people with the same name as the person listed in the 'Completed By' column"
@@ -158,6 +163,10 @@ namespace :data do
       end
     end
 
-    puts "**All Tasks Complete**  Successfully created #{successful_item_count} records.  A total of #{failed_item_count} were unusable.  Please review the failure notes above and send a revised CSV to enter in the data."  
+    if failed_item_count == 0
+      puts "**All Tasks Complete**  Successfully created #{successful_item_count} records."
+    else
+      puts "**All Tasks Complete**  Successfully created #{successful_item_count} records.  A total of #{failed_item_count} were unusable.  Please review the failure notes above and send a revised CSV to enter in the data." 
+    end 
   end
 end
