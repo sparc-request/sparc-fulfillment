@@ -53,6 +53,13 @@ namespace :data do
         ids[0] = ids[0].to_i 
 
         ssr = SubServiceRequest.where(protocol_id: ids[0], ssr_id: ids[1]).first
+
+        unless ssr.present?
+          failed_item_count += 1
+          puts " - Row #{item_count}: failed due to being unable to find a sub service request based on the Sparc Service Request ID"
+
+          next
+        end
         
         matched_sparc_line_item = []
         sparc_line_items = Sparc::LineItem.where(sub_service_request: ssr.id)
@@ -76,7 +83,7 @@ namespace :data do
           next
         end
 
-        line_item = LineItem.find_by(sparc_id: matched_sparc_line_item)
+        line_item = LineItem.find_by(sparc_id: matched_sparc_line_item.first)
 
         unless line_item.present?
           failed_item_count += 1
@@ -94,17 +101,35 @@ namespace :data do
           if potential_identities.present?
             if potential_identities.count == 1
               funding_source = line_item.protocol.sparc_funding_source
-              fulfillment_time = DateTime.strptime("#{item[:date_fulfilled]} #{item[:end_time]}", '%m/%d/%y %I:%M %p')
 
-              fulfillment = line_item.fulfillments.create(fulfilled_at: fulfillment_time, performer_id: potential_identities.first, service_id: matched_sparc_line_item.service.id, service_name: matched_sparc_line_item.service.name, service_cost: line_item.cost(funding_source, fulfillment_time), funding_source: funding_source)
+              unless item[:date_fulfilled].present?
+                failed_item_count += 1
+                puts " - Row #{item_count}: failed due to not having Date Fulfilled filled out"
+
+                next
+              end
+
+              unless item[:start_time].present? && item[:end_time].present?
+                failed_item_count += 1
+                puts " - Row #{item_count}: failed due to missing either the Start Time or End time"
+
+                next
+              end
+
+              fulfillment_date = DateTime.strptime("#{item[:date_fulfilled]}", '%m/%d/%y')
+              fulfillment_time = Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p')
+
+              fulfillment = line_item.fulfillments.new(fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), performer: potential_identities.first, service_id: matched_sparc_line_item.first.service.id, service_name: matched_sparc_line_item.first.service.name, service_cost: line_item.cost(funding_source, fulfillment_date), funding_source: funding_source, quantity: fulfillment_time)
 
               if item[:fulfillment_component].present?
-                fulfillment.components.create(component: item[:fulfillment_component])
+                fulfillment.components.new(component: item[:fulfillment_component])
               end
 
               if item[:fulfillment_notes].present?
-                fulfillment.notes.create(comment: item[:fulfillment_notes], identity: potential_identities.first)
+                fulfillment.notes.new(comment: item[:fulfillment_notes], identity: potential_identities.first)
               end
+
+              fulfillment.save
 
               successful_item_count += 1
             else
