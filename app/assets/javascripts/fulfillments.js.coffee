@@ -79,7 +79,7 @@ window.loadColumnPreferences = ->
           $('#fulfillments-table').bootstrapTable('showColumn', column)
         else
           $('#fulfillments-table').bootstrapTable('hideColumn', column)
-          $("input[type='checkbox'][data-field='#{column}']").prop 'checked', false
+          $("#fulfillments-table input[type='checkbox'][data-field='#{column}']").prop 'checked', false
     error: (xhr, status, error) ->
       console.error 'Error loading column preferences:', error
 
@@ -89,7 +89,7 @@ $ ->
   $(document).on 'shown.bs.modal', '#modalContainer:has(#fulfillments-table)', ->
     loadColumnPreferences()
 
-  $(document).on 'change', '.keep-open.btn-group .dropdown-menu input[type="checkbox"][data-field]', (e) ->
+  $(document).on 'change', '.fulfillments-list-modal .keep-open.btn-group .dropdown-menu input[type="checkbox"][data-field]', (e) ->
     column = $(e.target).data('field')
     visible = $(e.target).is(':checked')
 
