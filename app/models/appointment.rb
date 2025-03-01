@@ -75,7 +75,8 @@ class Appointment < ApplicationRecord
   end
 
   def can_finish?
-    !start_date.blank? && !procedures.untouched.any?
+    return false if start_date.blank?
+    !Procedure.filter_unavailable_services(procedures).any?(&:unstarted?)
   end
 
   def has_completed_procedures?
