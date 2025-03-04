@@ -49,6 +49,21 @@ RSpec.describe Procedure, type: :model do
       @appointment          = create(:appointment, arm: arm, protocols_participant: protocols_participant, name: "Super Arm", protocol: protocol)
     end
 
+    describe '.filter_unavailable_services' do
+      let!(:active_service) { create(:service, is_available: true) }
+      let!(:inactive_service) { create(:service, is_available: false) }
+      let!(:unstarted_proc_active_service) { create(:procedure, status: 'unstarted', service: active_service) }
+      let!(:unstarted_proc_inactive_service) { create(:procedure, status: 'unstarted', service: inactive_service) }
+      let!(:incomplete_proc_inactive_service) { create(:procedure, status: 'incomplete', service: inactive_service) }
+      let!(:all_procedures) do
+        [unstarted_proc_active_service, unstarted_proc_inactive_service, incomplete_proc_inactive_service]
+      end
+      it 'shows only procedures with active services' do
+        filtered_procedures = Procedure.filter_unavailable_services(all_procedures)
+        expect(filtered_procedures).to eq([unstarted_proc_active_service, incomplete_proc_inactive_service])
+      end
+    end
+
     describe 'service_name' do
 
       before(:each) do
