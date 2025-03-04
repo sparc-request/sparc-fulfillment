@@ -159,8 +159,8 @@ namespace :data do
     failed_items.close
     successful_items.close
 
-    failed_items_count = CSV.read(Rails.root.join("tmp/klok_failed.csv")).count
-    successful_items_count = CSV.read(Rails.root.join("tmp/klok_successful.csv")).count
+    failed_items_count = CSV.read(Rails.root.join("tmp/klok_failed.csv"), headers: true).count
+    successful_items_count = CSV.read(Rails.root.join("tmp/klok_successful.csv"), headers: true).count
 
     if failed_items_count == 0
       puts "**All Tasks Complete**  Successfully created #{successful_items_count} records."
