@@ -171,7 +171,8 @@ module ProceduresHelper
   end
 
   def procedures_groups_for_select(procedures)
-    procedures.map{ |p| [{ data: { content: procedure_group_label(p) } }, p.group_id]}.uniq
+    active_service_procedures = Procedure.filter_unavailable_services(procedures)
+    active_service_procedures.map{ |p| [{ data: { content: procedure_group_label(p) } }, p.group_id]}.uniq
   end
 
   def procedure_group_label(procedure, strong=false)

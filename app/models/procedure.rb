@@ -71,6 +71,12 @@ class Procedure < ApplicationRecord
   scope :completed_r_in_date_range, ->(start_date, end_date) {
         where("procedures.completed_date is not NULL AND procedures.completed_date between ? AND ? AND billing_type = ?", start_date, end_date, "research_billing_qty")}
 
+  def self.filter_unavailable_services(procedures)
+    procedures.reject do |procedure|
+      procedure.unstarted? && procedure.service && !procedure.service.is_available?
+    end
+  end
+
   def self.billing_display
     [["R", "research_billing_qty"],
      ["T", "insurance_billing_qty"],

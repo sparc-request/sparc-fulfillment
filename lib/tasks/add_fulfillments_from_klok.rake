@@ -116,13 +116,22 @@ namespace :data do
                 next
               end
 
-              fulfillment_date = DateTime.strptime("#{item[:date_fulfilled]}", '%m/%d/%y')
-              fulfillment_time = Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p')
+              fulfillment_date = DateTime.strptime("#{item[:date_fulfilled]}", '%m/%d/%Y')
+              fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
 
-              fulfillment = line_item.fulfillments.new(fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), performer: potential_identities.first, service_id: matched_sparc_line_item.first.service.id, service_name: matched_sparc_line_item.first.service.name, service_cost: line_item.cost(funding_source, fulfillment_date), funding_source: funding_source, quantity: fulfillment_time)
+              fulfillment = line_item.fulfillments.new(
+                fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), 
+                performer: potential_identities.first, 
+                service_id: matched_sparc_line_item.first.service.id, 
+                service_name: matched_sparc_line_item.first.service.name, 
+                service_cost: line_item.cost(funding_source, fulfillment_date), 
+                funding_source: funding_source, 
+                quantity: fulfillment_time
+              )
 
               if item[:fulfillment_component].present?
                 fulfillment.components_data = [item[:fulfillment_component]]
+                fulfillment.components.new(component: fulfillment.components_data.first)
               end
 
               if item[:fulfillment_notes].present?
