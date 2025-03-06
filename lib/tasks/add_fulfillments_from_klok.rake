@@ -116,7 +116,7 @@ namespace :data do
                 next
               end
 
-              fulfillment_date = DateTime.strptime("#{item[:date_fulfilled]}", '%m/%d/%y')
+              fulfillment_date = DateTime.strptime("#{item[:date_fulfilled]}", '%m/%d/%Y')
               fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
 
               fulfillment = line_item.fulfillments.new(
