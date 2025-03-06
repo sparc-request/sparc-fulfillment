@@ -49,7 +49,7 @@ namespace :data do
       item_count += 1
       if item[:sparc_service_request_id].present?
         # This entire code block is intended to track down the specific fulfillment line item for the data given in the spreadsheet
-        ids = item[:sparc_service_request_id].split('-', 2)
+        ids = item[:sparc_service_request_id].split('-', 2).map{|str| str.strip}
         ids[0] = ids[0].to_i 
 
         ssr = SubServiceRequest.where(protocol_id: ids[0], ssr_id: ids[1]).first
@@ -116,9 +116,10 @@ namespace :data do
                 next
               end
 
-              fulfillment_date = DateTime.strptime("#{item[:date_fulfilled]}", '%m/%d/%y')
+              fulfillment_date = DateTime.strptime(item[:date_fulfilled], '%m/%d/%Y')
               fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
 
+              
               fulfillment = line_item.fulfillments.new(
                 fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), 
                 performer: potential_identities.first, 
