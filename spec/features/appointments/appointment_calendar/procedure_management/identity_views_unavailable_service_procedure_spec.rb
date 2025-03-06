@@ -100,7 +100,7 @@ feature 'User views procedure which has an unavailable service', js: true do
 
 	def when_i_change_the_service_to_inactive
     service_to_update = @inactive_service || @service
-		service_to_update.update_attributes(is_available: false)
+		service_to_update.update(is_available: false)
 	end
 
   def when_the_procedure_is_not_unstarted
