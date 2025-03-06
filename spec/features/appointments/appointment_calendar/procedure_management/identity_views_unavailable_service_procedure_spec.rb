@@ -77,7 +77,7 @@ feature 'User views procedure which has an unavailable service', js: true do
   end
 
   def when_i_make_the_procedure_incomplete
-    @inactive_procedure.update_attributes(status: 'incomplete')
+    @inactive_procedure.update(status: 'incomplete')
   end
 
 	def given_i_am_viewing_the_appointment_calendar
