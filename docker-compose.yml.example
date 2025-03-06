@@ -1,12 +1,12 @@
 services:
   cwf_web:
     build: .
-    command: bundle exec rails s -b '0.0.0.0' -p 4000
+    command: bundle exec rails s -b '0.0.0.0' -p 3001
     volumes:
       - .:/app
       - /app/node_modules
     ports:
-      - "4000:4000"
+      - "3001:3001"
     environment:
       DATABASE_HOST: sparc_db
       DATABASE_USERNAME: root

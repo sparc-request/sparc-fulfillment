@@ -22,6 +22,32 @@ class FulfillmentsController < ApplicationController
 
   before_action :find_fulfillment, only: [:edit, :update, :update_invoice_date, :toggle_invoiced, :toggle_credit]
 
+  def save_column_preferences
+    return render json: { error: "No column preferences provided" }, status: :bad_request unless params[:columns].present?
+    params[:columns].each do |column_name, visible|
+      visible = ActiveModel::Type::Boolean.new.cast(visible)
+
+      if visible
+        # The default is to show the column, so we only want to keep records for columns that are hidden
+        current_identity.column_preferences.find_by(column_name: column_name)&.destroy
+      else
+        preference = current_identity.column_preferences.find_or_initialize_by(column_name: column_name)
+        unless preference.update(visible: false)
+          render json: { error: "Failed to update preference for #{column_name}" }, status: :unprocessable_entity and return
+        end
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
+  end
+
+  def load_column_preferences
+    preferences = current_identity.column_preferences_hash
+    render json: preferences
+  end
+
   def index
     @line_item = LineItem.find(params[:line_item_id])
     respond_to do |format|

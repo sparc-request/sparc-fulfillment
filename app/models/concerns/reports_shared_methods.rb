@@ -32,31 +32,61 @@ module ReportsSharedMethods
     admin_rate = procedure.send(:admin_rate)
     if admin_rate && admin_rate.created_at.to_date <= procedure.completed_date.to_date
       has_admin_rate = true
-    elsif procedure.send(:old_admin_rates) && procedure.send(:check_old_admin_rates, procedure.completed_date)
-      has_admin_rate = true
+
     else
-      has_admin_rate = false
+      old_rates = procedure.send(:old_admin_rates)
+      if old_rates.present?
+        latest_old_rate_not_reset = old_rates
+          .where(cost_reset: false)
+          .where("DATE(date_of_change) <= ?", procedure.completed_date)
+          .order(date_of_change: :desc).first
+        if latest_old_rate_not_reset && procedure.service_cost == latest_old_rate_not_reset.admin_cost
+          has_admin_rate = true
+        end
+      end
     end
-    has_admin_rate && (procedure.service.cost(procedure.funding_source, procedure.completed_date).to_i != procedure.service_cost && procedure.service.cost(nil, procedure.completed_date).to_i != procedure.service_cost) ? "Yes" : "No"
+
+    reg_rate_with_funding = procedure.service.cost(procedure.funding_source, procedure.completed_date).to_i
+    reg_rate_without_funding = procedure.service.cost(nil, procedure.completed_date).to_i
+    if has_admin_rate && (reg_rate_with_funding != procedure.service_cost && reg_rate_without_funding != procedure.service_cost)
+      "Yes"
+    else
+      "No"
+    end
   end
 
   def display_otf_modified_rate_column(fulfillment)
     line_item = fulfillment.line_item
     has_admin_rate = false
-    if line_item.send(:current_admin_rate) && line_item.send(:current_admin_rate_applicable?, fulfillment.fulfilled_at) || line_item.send(:old_admin_rates) && line_item.send(:applicable_old_admin_rate, fulfillment.fulfilled_at)
+    if line_item.send(:current_admin_rate) && line_item.send(:current_admin_rate_applicable?, fulfillment.fulfilled_at)
       has_admin_rate = true
+
+    else
+      old_rates = line_item.send(:old_admin_rates)
+      if old_rates.present?
+        latest_old_rate_not_reset = old_rates
+        .where(cost_reset: false)
+        .where("DATE(date_of_change) <= ?", fulfillment.fulfilled_at)
+        .order(date_of_change: :desc).first
+        if latest_old_rate_not_reset && fulfillment.service_cost == latest_old_rate_not_reset.admin_cost
+          has_admin_rate = true
+        end
+      end
     end
-    has_admin_rate && (line_item.service.cost(line_item.protocol.sparc_funding_source, fulfillment.fulfilled_at).to_i != fulfillment.service_cost && line_item.service.cost(nil, fulfillment.fulfilled_at).to_i != fulfillment.service_cost) ? "Yes" : "No"
+
+    reg_rate_with_funding = line_item.service.cost(line_item.protocol.sparc_funding_source, fulfillment.fulfilled_at).to_i
+    reg_rate_without_funding = line_item.service.cost(nil, fulfillment.fulfilled_at).to_i
+    if has_admin_rate && (reg_rate_with_funding != fulfillment.service_cost && reg_rate_without_funding != fulfillment.service_cost)
+      "Yes"
+    elsif has_admin_rate && (reg_rate_with_funding == fulfillment.service_cost || reg_rate_without_funding == fulfillment.service_cost)
+      "No"
+    else
+      "No"
+    end
   end
 
   def display_subsidy_percent(object)
     object.percent_subsidy.nil? ? "N/A" : "#{object.percent_subsidy * 100}%"
-  end
-
-  def fiscal_year_month_display(completed_date, fiscal_start_month = 7)
-    month_number = ((completed_date.month - fiscal_start_month) % 12) + 1
-    abbreviated_month = completed_date.strftime("%b")
-    sprintf("'%02d-%s", month_number, abbreviated_month)
   end
 
   def fiscal_year_display(completed_date, fiscal_start_month = 7)
