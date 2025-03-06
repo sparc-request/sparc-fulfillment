@@ -39,6 +39,47 @@ feature 'User views procedure which has an unavailable service', js: true do
     then_i_should_not_see_the_procedure
   end
 
+  scenario 'and core with only unstarted unavailable services is hidden' do
+    given_i_am_viewing_the_appointment_calendar
+    when_i_add_a_procedure_to_a_new_core
+    when_i_change_the_service_to_inactive
+    when_i_open_the_appointment_calendar_with_the_bad_procedure
+    then_i_should_not_see_the_procedure
+    then_i_should_not_see_the_core
+
+    when_i_make_the_procedure_incomplete
+    when_i_open_the_appointment_calendar_with_the_bad_procedure
+    then_i_should_see_the_procedure
+    then_i_should_see_the_core
+  end
+
+  def when_i_add_a_procedure_to_a_new_core
+    @inactive_core = create(:organization, type: 'Core', name: 'Test Core')
+    @inactive_service = create(:service, organization: @inactive_core)
+    @inactive_procedure = create(
+      :procedure,
+      appointment: @appointment,
+      service: @inactive_service,
+      service_name: @inactive_service.name,
+      sparc_core_id: @inactive_core.id,
+      sparc_core_name: @inactive_core.name,
+      status: 'unstarted'
+    )
+    @appointment.reload
+  end
+
+  def then_i_should_not_see_the_core
+    expect(page).not_to have_content(@inactive_core.name)
+  end
+
+  def then_i_should_see_the_core
+    expect(page).to have_content(@inactive_core.name)
+  end
+
+  def when_i_make_the_procedure_incomplete
+    @inactive_procedure.update(status: 'incomplete')
+  end
+
 	def given_i_am_viewing_the_appointment_calendar
 		@protocol 		= create_and_assign_protocol_to_me
 		@protocols_participant = @protocol.protocols_participants.first
@@ -58,7 +99,8 @@ feature 'User views procedure which has an unavailable service', js: true do
 	end
 
 	def when_i_change_the_service_to_inactive
-		@service.update_attributes(is_available: false)
+    service_to_update = @inactive_service || @service
+		service_to_update.update(is_available: false)
 	end
 
   def when_the_procedure_is_not_unstarted
@@ -77,5 +119,9 @@ feature 'User views procedure which has an unavailable service', js: true do
 
   def then_i_should_not_see_the_procedure
     expect(page).not_to have_text("(Inactive)")
+  end
+
+  def then_i_should_see_the_procedure
+    expect(page).to have_text("(Inactive)")
   end
 end
