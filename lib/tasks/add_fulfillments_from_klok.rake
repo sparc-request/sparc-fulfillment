@@ -64,7 +64,7 @@ namespace :data do
         matched_sparc_line_item = []
         sparc_line_items = Sparc::LineItem.where(sub_service_request: ssr.id)
         sparc_line_items.each do |sparc_line_item|
-          if sparc_line_item.service.name == item[:service_name]
+          if sparc_line_item.service.name.strip == item[:service_name]
             matched_sparc_line_item << sparc_line_item
           end
         end
