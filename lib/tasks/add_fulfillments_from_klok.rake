@@ -119,7 +119,16 @@ namespace :data do
               fulfillment_date = DateTime.strptime(item[:date_fulfilled], '%m/%d/%Y')
               fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
 
-              
+              begin
+                service_cost = line_item.cost(funding_source, fulfillment_date)
+              rescue StandardError => e
+                failed_item_count += 1
+                puts " - Row #{item_count}: failed due to being unable to find a pricing map for the given service and date."
+
+                next
+              end
+
+
               fulfillment = line_item.fulfillments.new(
                 fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), 
                 performer: potential_identities.first, 

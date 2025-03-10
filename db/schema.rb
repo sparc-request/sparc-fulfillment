@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_11_125115) do
+ActiveRecord::Schema.define(version: 2025_01_20_180110) do
 
   create_table "appointment_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
     t.string "status"
@@ -54,6 +54,16 @@ ActiveRecord::Schema.define(version: 2024_02_11_125115) do
     t.index ["deleted_at"], name: "index_arms_on_deleted_at"
     t.index ["protocol_id"], name: "index_arms_on_protocol_id"
     t.index ["sparc_id"], name: "index_arms_on_sparc_id"
+  end
+
+  create_table "column_preferences", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.bigint "identity_id", null: false
+    t.string "column_name", null: false
+    t.boolean "visible", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["identity_id", "column_name"], name: "index_column_preferences_on_identity_id_and_column_name", unique: true
+    t.index ["identity_id"], name: "index_column_preferences_on_identity_id"
   end
 
   create_table "components", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
@@ -257,7 +267,7 @@ ActiveRecord::Schema.define(version: 2024_02_11_125115) do
     t.index ["mrn"], name: "index_participants_on_mrn"
   end
 
-  create_table "procedure_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+  create_table "procedure_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
     t.integer "appointment_id"
     t.integer "sparc_core_id"
     t.datetime "start_time"
