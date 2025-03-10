@@ -62,62 +62,62 @@ class VisitReport < Report
 
       sorted_result_set = sort_result_set(result_set, include_core_procudures)
 
-      sorted_result_set.each do |appointment|
+      sorted_result_set.each do |procedure_group_row|
 
         if HAS_RMID
           if include_core_procudures == true
             csv << [
-              appointment[0], appointment[-1],
-              appointment[1], appointment[2],
-              appointment[3],
-              is_custom_visit(appointment),
-              get_date(appointment, true),
-              get_date(appointment, false),
-              get_duration(appointment),
-              get_content(appointment),
-              get_statuses(appointment[8]),
-              get_core_name(appointment[10]),
-              format_time(appointment[-3]),
-              format_time(appointment[-2])
+              procedure_group_row[0], procedure_group_row[-1],
+              procedure_group_row[1], procedure_group_row[2],
+              procedure_group_row[3],
+              is_custom_visit(procedure_group_row),
+              get_date(procedure_group_row, true),
+              get_date(procedure_group_row, false),
+              get_duration(procedure_group_row),
+              get_content(procedure_group_row),
+              get_statuses(procedure_group_row[8]),
+              get_core_name(procedure_group_row[10]),
+              format_time(procedure_group_row[-3]),
+              format_time(procedure_group_row[-2])
             ]
           else
             csv << [
-              appointment[0], appointment[-1],
-              appointment[1], appointment[2],
-              appointment[3],
-              is_custom_visit(appointment),
-              get_date(appointment, true),
-              get_date(appointment, false),
-              get_duration(appointment),
-              get_content(appointment),
-              get_statuses(appointment[8])
+              procedure_group_row[0], procedure_group_row[-1],
+              procedure_group_row[1], procedure_group_row[2],
+              procedure_group_row[3],
+              is_custom_visit(procedure_group_row),
+              get_date(procedure_group_row, true),
+              get_date(procedure_group_row, false),
+              get_duration(procedure_group_row),
+              get_content(procedure_group_row),
+              get_statuses(procedure_group_row[8])
             ]
           end
         else
           if include_core_procudures == true
             csv << [
-              appointment[0], appointment[1],
-              appointment[2], appointment[3],
-              is_custom_visit(appointment),
-              get_date(appointment, true),
-              get_date(appointment, false),
-              get_duration(appointment),
-              get_content(appointment),
-              get_statuses(appointment[8]),
-              get_core_name(appointment[10]),
-              format_time(appointment[-2]),
-              format_time(appointment[-1])
+              procedure_group_row[0], procedure_group_row[1],
+              procedure_group_row[2], procedure_group_row[3],
+              is_custom_visit(procedure_group_row),
+              get_date(procedure_group_row, true),
+              get_date(procedure_group_row, false),
+              get_duration(procedure_group_row),
+              get_content(procedure_group_row),
+              get_statuses(procedure_group_row[8]),
+              get_core_name(procedure_group_row[10]),
+              format_time(procedure_group_row[-2]),
+              format_time(procedure_group_row[-1])
             ]
           else
             csv << [
-              appointment[0], appointment[1],
-              appointment[2], appointment[3],
-              is_custom_visit(appointment),
-              get_date(appointment, true),
-              get_date(appointment, false),
-              get_duration(appointment),
-              get_content(appointment),
-              get_statuses(appointment[8])
+              procedure_group_row[0], procedure_group_row[1],
+              procedure_group_row[2], procedure_group_row[3],
+              is_custom_visit(procedure_group_row),
+              get_date(procedure_group_row, true),
+              get_date(procedure_group_row, false),
+              get_duration(procedure_group_row),
+              get_content(procedure_group_row),
+              get_statuses(procedure_group_row[8])
             ]
           end
         end
@@ -131,28 +131,28 @@ class VisitReport < Report
     sorted_set.sort{ |x, y| x <=> y || 1 }
   end
 
-  def is_custom_visit(appointment)
-    appointment[6].nil? ? "Yes" : "No"
+  def is_custom_visit(procedure_group_row)
+    procedure_group_row[6].nil? ? "Yes" : "No"
   end
 
   def get_core_name(core_id)
     Organization.name_for_id(core_id)
   end
 
-  def get_duration(appointment)
-    appointment[5].nil? ? "N/A" : ((appointment[5] - appointment[4])/60).round
+  def get_duration(procedure_group_row)
+    procedure_group_row[5].nil? ? "N/A" : ((procedure_group_row[5] - procedure_group_row[4])/60).round
   end
 
-  def get_date(appointment, start)
+  def get_date(procedure_group_row, start)
     if start == true
-      return appointment[4].nil? ? "N/A" : format_date(appointment[4])
+      return procedure_group_row[4].nil? ? "N/A" : format_date(procedure_group_row[4])
     else
-      return appointment[5].nil? ? "N/A" : format_date(appointment[5])
+      return procedure_group_row[5].nil? ? "N/A" : format_date(procedure_group_row[5])
     end
   end
 
-  def get_content(appointment)
-    appointment[11].nil? ? nil : appointment[11]
+  def get_content(procedure_group_row)
+    procedure_group_row[11].nil? ? nil : procedure_group_row[11]
   end
 
   def get_statuses(appointment_id)
@@ -164,51 +164,52 @@ class VisitReport < Report
     used_appointments = []
     filtered_set = []
 
-    if core_procedures_option == true
-      result_set.each do |appointment|
-        protocol = Protocol.find(appointment[0])
+    result_set.each do |procedure_group_row|
+      appointment_id = procedure_group_row[8]
+      core_id = procedure_group_row[10]
+      appointment_record = Appointment.find(appointment_id)
+      group_procedures = appointment_record.procedures.select { |p| p.sparc_core_id == core_id }
+      next if Procedure.filter_unavailable_services(group_procedures).empty?
+      if core_procedures_option == true
+        protocol = Protocol.find(procedure_group_row[0])
         comparison_array = [
-          appointment[0], #protocol_id
-          appointment[1], #last_name
-          appointment[2], #first_name
-          appointment[3], #visit_name
-          get_duration(appointment), #visit_duration
-          appointment[6], #visit_group_id
-          appointment[12],#participant_id
-          appointment[10],#core_name
-          appointment[13],#start_time
-          appointment[14] #end_time
+          procedure_group_row[0], #protocol_id
+          procedure_group_row[1], #last_name
+          procedure_group_row[2], #first_name
+          procedure_group_row[3], #visit_name
+          get_duration(procedure_group_row), #visit_duration
+          procedure_group_row[6], #visit_group_id
+          procedure_group_row[12],#participant_id
+          procedure_group_row[10],#core_name
+          procedure_group_row[13],#start_time
+          procedure_group_row[14] #end_time
         ]
-
 
         if !used_appointments.include?(comparison_array)
           used_appointments << comparison_array
           srid = protocol.srid
-          appointment[0] = srid
-          appointment << protocol.research_master_id
-          filtered_set << appointment
+          procedure_group_row[0] = srid
+          procedure_group_row << protocol.research_master_id
+          filtered_set << procedure_group_row
         end
-      end
-    else
-      result_set.each do |appointment|
-        protocol = Protocol.find(appointment[0])
+      else
+        protocol = Protocol.find(procedure_group_row[0])
         comparison_array = [
-          appointment[0], #protocol_id
-          appointment[1], #last_name
-          appointment[2], #first_name
-          appointment[3], #visit_name
-          get_duration(appointment), #visit_duration
-          appointment[6], #visit_group_id
-          appointment[12] #participant_id
+          procedure_group_row[0], #protocol_id
+          procedure_group_row[1], #last_name
+          procedure_group_row[2], #first_name
+          procedure_group_row[3], #visit_name
+          get_duration(procedure_group_row), #visit_duration
+          procedure_group_row[6], #visit_group_id
+          procedure_group_row[12] #participant_id
         ]
-
 
         if !used_appointments.include?(comparison_array)
           used_appointments << comparison_array
           srid = protocol.srid
-          appointment[0] = srid
-          appointment << protocol.research_master_id
-          filtered_set << appointment
+          procedure_group_row[0] = srid
+          procedure_group_row << protocol.research_master_id
+          filtered_set << procedure_group_row
         end
       end
     end
