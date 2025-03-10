@@ -64,7 +64,7 @@ namespace :data do
         matched_sparc_line_item = []
         sparc_line_items = Sparc::LineItem.where(sub_service_request: ssr.id)
         sparc_line_items.each do |sparc_line_item|
-          if sparc_line_item.service.name.strip == item[:service_name]
+          if sparc_line_item.service.name.strip == item[:service_name].strip
             matched_sparc_line_item << sparc_line_item
           end
         end
@@ -95,7 +95,7 @@ namespace :data do
         # Having found the line item, we now begin the process of creating the fulfillment entry.
         if item[:completed_by].present?
 
-          split_name = item[:completed_by].split(" ", 2)
+          split_name = item[:completed_by].split(" ", 2).map{|str| str.strip}
           potential_identities = Identity.where(first_name: split_name[0], last_name: split_name[1])
 
           if potential_identities.present?
