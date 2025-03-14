@@ -72,8 +72,13 @@ class Procedure < ApplicationRecord
         where("procedures.completed_date is not NULL AND procedures.completed_date between ? AND ? AND billing_type = ?", start_date, end_date, "research_billing_qty")}
 
   def self.filter_unavailable_services(procedures)
+    exempt_service_ids = Sparc::Setting.get_value('exempt_inactive_services') || []
+
     procedures.reject do |procedure|
-      procedure.unstarted? && procedure.service && !procedure.service.is_available?
+      procedure.unstarted? &&
+      procedure.service &&
+      !procedure.service.is_available? &&
+      !exempt_service_ids.include?(procedure.service_id)
     end
   end
 
