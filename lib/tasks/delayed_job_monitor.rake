@@ -20,22 +20,23 @@
 
 require 'open3'
 require 'slack-notifier'
+require 'microsoft_teams_incoming_webhook_ruby'
 require 'dotenv/tasks'
 
-task delayed_job_monitor: :environment do
-  # https://hooks.slack.com/services/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
-  delayed_job_webhook = ENV.fetch("DELAYED_JOB_WEBHOOK", nil)
+# INITIAL CONFIG: In .env file, assign appropriate URL to receive webhook POST requests
+  # (Slack) DJ_SLACK_WEBHOOK=""
+  # (MS Teams) DJ_TEAMS_WEBHOOK=""
 
-  if delayed_job_webhook.present?
-    notifier = Slack::Notifier.new(delayed_job_webhook)
-  end
+task delayed_job_monitor: :environment do
+  dj_slack_webhook = ENV.fetch("DJ_SLACK_WEBHOOK", nil)
+  dj_teams_webhook = ENV.fetch("DJ_TEAMS_WEBHOOK", nil)
 
   stdout, stderr, status = Open3.capture3("RAILS_ENV=#{Rails.env} bundle exec bin/delayed_job status")
   prev_status = stderr
 
   if stderr =~ /delayed_job: no instances running/
     message = ""
-    if delayed_job_webhook.present?
+    if dj_slack_webhook.present? || dj_teams_webhook.present?
       message += "```[SPARCFulfillment][#{Rails.env}]\n"
       message += prev_status.split("\n").last + "\n" # makes sure we only get the last message and not the warnings, this may go away on production
 
@@ -45,9 +46,23 @@ task delayed_job_monitor: :environment do
     stdout, stderr, status = Open3.capture3("RAILS_ENV=#{Rails.env} bundle exec bin/delayed_job start")
     curr_status = stdout
 
-    if delayed_job_webhook.present?
+    if dj_slack_webhook.present? || dj_teams_webhook.present?
       message += curr_status + "```"
-      notifier.ping(message)
+    end
+
+    if dj_slack_webhook.present?
+      slack_notifier = Slack::Notifier.new(dj_slack_webhook)
+      
+      slack_notifier.ping(message)
+    end
+
+    if dj_teams_webhook.present?
+      teams_message = MicrosoftTeamsIncomingWebhookRuby::Message.new do |tm|
+        tm.url = dj_teams_webhook
+        tm.text = message
+      end
+
+      teams_message.send
     end
   end
 end

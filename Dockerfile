@@ -16,6 +16,10 @@ WORKDIR /app
 # Copy the Gemfile and Gemfile.lock
 COPY Gemfile* ./
 
+# Ruby image comes with specific version of bundler installed - ensure version of bundler matches "BUNDLED_WITH" in Gemfile.lock
+ENV BUNDLER_VERSION='2.4.22'
+RUN gem install bundler --no-document -v '2.4.22'
+
 # Install the necessary gems
 RUN bundle install
 
