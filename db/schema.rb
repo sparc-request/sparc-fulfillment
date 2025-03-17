@@ -267,7 +267,7 @@ ActiveRecord::Schema.define(version: 2025_01_20_180110) do
     t.index ["mrn"], name: "index_participants_on_mrn"
   end
 
-  create_table "procedure_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+  create_table "procedure_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin", force: :cascade do |t|
     t.integer "appointment_id"
     t.integer "sparc_core_id"
     t.datetime "start_time"

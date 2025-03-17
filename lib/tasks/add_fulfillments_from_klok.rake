@@ -49,7 +49,7 @@ namespace :data do
       item_count += 1
       if item[:sparc_service_request_id].present?
         # This entire code block is intended to track down the specific fulfillment line item for the data given in the spreadsheet
-        ids = item[:sparc_service_request_id].split('-', 2)
+        ids = item[:sparc_service_request_id].split('-', 2).map{|str| str.strip}
         ids[0] = ids[0].to_i 
 
         ssr = SubServiceRequest.where(protocol_id: ids[0], ssr_id: ids[1]).first
@@ -64,7 +64,7 @@ namespace :data do
         matched_sparc_line_item = []
         sparc_line_items = Sparc::LineItem.where(sub_service_request: ssr.id)
         sparc_line_items.each do |sparc_line_item|
-          if sparc_line_item.service.name == item[:service_name]
+          if sparc_line_item.service.name.strip == item[:service_name].strip
             matched_sparc_line_item << sparc_line_item
           end
         end
@@ -95,7 +95,7 @@ namespace :data do
         # Having found the line item, we now begin the process of creating the fulfillment entry.
         if item[:completed_by].present?
 
-          split_name = item[:completed_by].split(" ", 2)
+          split_name = item[:completed_by].split(" ", 2).map{|str| str.strip}
           potential_identities = Identity.where(first_name: split_name[0], last_name: split_name[1])
 
           if potential_identities.present?
@@ -116,8 +116,18 @@ namespace :data do
                 next
               end
 
-              fulfillment_date = DateTime.strptime("#{item[:date_fulfilled]}", '%m/%d/%Y')
+              fulfillment_date = DateTime.strptime(item[:date_fulfilled], '%m/%d/%Y')
               fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
+
+              begin
+                service_cost = line_item.cost(funding_source, fulfillment_date)
+              rescue StandardError => e
+                failed_item_count += 1
+                puts " - Row #{item_count}: failed due to being unable to find a pricing map for the given service and date."
+
+                next
+              end
+
 
               fulfillment = line_item.fulfillments.new(
                 fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), 
