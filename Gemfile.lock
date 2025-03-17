@@ -234,6 +234,7 @@ GEM
       mimemagic (~> 0.3.2)
     matrix (0.4.2)
     method_source (1.0.0)
+    microsoft_teams_incoming_webhook_ruby (1.0.2)
     mime-types (3.2.2)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2019.0331)
@@ -497,6 +498,7 @@ DEPENDENCIES
   jbuilder (~> 2.11)
   launchy
   letter_opener
+  microsoft_teams_incoming_webhook_ruby
   mysql2 (= 0.5.6)
   net-ldap
   omniauth
