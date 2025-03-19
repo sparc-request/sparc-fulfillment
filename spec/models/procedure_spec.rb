@@ -52,15 +52,80 @@ RSpec.describe Procedure, type: :model do
     describe '.filter_unavailable_services' do
       let!(:active_service) { create(:service, is_available: true) }
       let!(:inactive_service) { create(:service, is_available: false) }
+      let!(:exempt_inactive_service) { create(:service, is_available: false) }
       let!(:unstarted_proc_active_service) { create(:procedure, status: 'unstarted', service: active_service) }
       let!(:unstarted_proc_inactive_service) { create(:procedure, status: 'unstarted', service: inactive_service) }
+      let!(:unstarted_proc_exempt_service) { create(:procedure, status: 'unstarted', service: exempt_inactive_service) }
       let!(:incomplete_proc_inactive_service) { create(:procedure, status: 'incomplete', service: inactive_service) }
       let!(:all_procedures) do
-        [unstarted_proc_active_service, unstarted_proc_inactive_service, incomplete_proc_inactive_service]
+        [unstarted_proc_active_service, unstarted_proc_inactive_service, incomplete_proc_inactive_service, unstarted_proc_exempt_service]
       end
-      it 'shows only procedures with active services' do
-        filtered_procedures = Procedure.filter_unavailable_services(all_procedures)
-        expect(filtered_procedures).to eq([unstarted_proc_active_service, incomplete_proc_inactive_service])
+
+      context 'with no exempt services' do
+        before do
+          allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([])
+        end
+
+        it 'shows only procedures with active services or non-unstarted procedures with inactive services' do
+          filtered_procedures = Procedure.filter_unavailable_services(all_procedures)
+          expect(filtered_procedures).to eq([unstarted_proc_active_service, incomplete_proc_inactive_service])
+        end
+      end
+
+      context 'with exempt services' do
+        before do
+          allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([exempt_inactive_service.id])
+        end
+
+        it 'shows procedures with active services, non-unstarted procedures with inactive services or procedures with inactive services that are exempt' do
+          filtered_procedures = Procedure.filter_unavailable_services(all_procedures)
+          expect(filtered_procedures).to match_array([unstarted_proc_active_service, unstarted_proc_exempt_service, incomplete_proc_inactive_service])
+        end
+      end
+    end
+
+
+    describe '.filter_unavailable_services' do
+      let!(:active_service) { create(:service, is_available: true) }
+      let!(:inactive_service) { create(:service, is_available: false) }
+      let!(:exempt_inactive_service) { create(:service, is_available: false) }
+      let!(:unstarted_proc_active_service) { create(:procedure, status: 'unstarted', service: active_service) }
+      let!(:unstarted_proc_inactive_service) { create(:procedure, status: 'unstarted', service: inactive_service) }
+      let!(:unstarted_proc_exempt_service) { create(:procedure, status: 'unstarted', service: exempt_inactive_service) }
+      let!(:incomplete_proc_inactive_service) { create(:procedure, status: 'incomplete', service: inactive_service) }
+      let!(:all_procedures) do
+        [
+          unstarted_proc_active_service,
+          unstarted_proc_inactive_service,
+          unstarted_proc_exempt_service,
+          incomplete_proc_inactive_service
+        ]
+      end
+
+      context 'with no exempt services' do
+        before do
+          allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([])
+        end
+
+        it 'shows only procedures with active services or non-unstarted status' do
+          filtered_procedures = Procedure.filter_unavailable_services(all_procedures)
+          expect(filtered_procedures).to eq([unstarted_proc_active_service, incomplete_proc_inactive_service])
+        end
+      end
+
+      context 'with exempt services' do
+        before do
+          allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([exempt_inactive_service.id])
+        end
+
+        it 'shows procedures with active services, non-unstarted status, or exempt service IDs' do
+          filtered_procedures = Procedure.filter_unavailable_services(all_procedures)
+          expect(filtered_procedures).to match_array([
+            unstarted_proc_active_service,
+            unstarted_proc_exempt_service,
+            incomplete_proc_inactive_service
+          ])
+        end
       end
     end
 
