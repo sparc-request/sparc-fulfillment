@@ -7,7 +7,7 @@ task add_exempt_inactive_services_setting: :environment do
       value: '[]',
       data_type: 'json',
       friendly_name: 'Exempt Inactive Services',
-      description: 'List of service IDs that are inactive (is_available = false) but should still be viewable in the application'
+      description: 'List of service IDs that are inactive (is_available = false) but should still be viewable in the Fulfillment application participant's visit calendar and visit report'
       )
     puts "Setting created"
   else
