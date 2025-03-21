@@ -37,7 +37,7 @@ task delayed_job_monitor: :environment do
   if stderr =~ /delayed_job: no instances running/
     message = ""
     if dj_slack_webhook.present? || dj_teams_webhook.present?
-      message += "```[SPARCFulfillment][#{Rails.env}]\n"
+      message += "```\n[SPARCFulfillment][#{Rails.env}]\n"
       message += prev_status.split("\n").last + "\n" # makes sure we only get the last message and not the warnings, this may go away on production
 
       message += "delayed_job: attempting restart\n"
