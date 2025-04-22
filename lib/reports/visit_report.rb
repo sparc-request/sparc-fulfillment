@@ -28,6 +28,7 @@ class VisitReport < Report
 
   def generate(document)
     include_core_procudures = @params[:core_procedures_option].present? ? true : false
+    permitted_protocols = @params[:permissions]
 
     document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
@@ -39,7 +40,8 @@ class VisitReport < Report
       csv << [""]
       csv << report_columns(include_core_procudures)
 
-      result_set = ProcedureGroup.joins(appointment: { procedures: { protocols_participant: :participant }})
+      result_set = ProcedureGroup.joins(appointment: { procedures: { protocols_participant: [:participant, :protocol] }})
+        .where(Protocol.arel_table[:id].in(permitted_protocols)) #filters results according to current user's allowable protocols
         .where(Appointment.arel_table[:start_date].gteq(from_start_date)
         .and(Appointment.arel_table[:start_date].lteq(to_start_date))
         .and(Procedure.arel_table[:status].not_eq("unstarted")))
