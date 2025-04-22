@@ -43,7 +43,10 @@ class ReportsController < ApplicationController
       if @report.valid?
         @reports_params = reports_params
         @documentable.documents.push @document
-        ReportJob.perform_later(@document, reports_params.to_h)
+
+        params_to_send = reports_params.to_h
+        params_to_send[:permissions] = IdentityOrganizations.new(current_identity.id).authorized_protocols.ids
+        ReportJob.perform_later(@document, params_to_send)
       end
     else
       @errors = @document.errors
