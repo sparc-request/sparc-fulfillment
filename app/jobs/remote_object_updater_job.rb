@@ -28,7 +28,7 @@ class RemoteObjectUpdaterJob < ActiveJob::Base
     remote_object         = RemoteObjectFetcher.fetch(notification.callback_url)
     normalized_attributes = RemoteObjectNormalizer.new(object_class, remote_object[object_class.downcase]).normalize!
 
-    local_object_siblings(local_object).each { |object| object.update_attributes normalized_attributes }
+    local_object_siblings(local_object).each { |object| object.update normalized_attributes }
   end
 
   private

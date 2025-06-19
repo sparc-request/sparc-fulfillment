@@ -62,7 +62,7 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     organization_provider = create(:organization_provider)
     organization_program = create(:organization_program, parent: organization_provider)
     organization = sub_service_request.organization
-    organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update(parent: organization_program, name: "Core")
     create(:clinical_provider, identity: identity, organization: organization)
     create(:project_role_pi, identity: identity, protocol: protocol)
     protocol

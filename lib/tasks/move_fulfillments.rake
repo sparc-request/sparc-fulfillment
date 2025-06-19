@@ -31,7 +31,7 @@ task move_fulfillments: :environment do
     puts "Moving fulfillment #{fulfillment.id}"
     puts "from line item with an id of #{dup_line_item.id}"
     puts "to line item with an id of #{line_item.id}"
-    fulfillment.update_attributes(line_item_id: line_item.id)
+    fulfillment.update(line_item_id: line_item.id)
   end
 
   dup_protocol.destroy

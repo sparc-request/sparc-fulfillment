@@ -36,11 +36,11 @@ namespace :data do
       protocols_with_subsidy.each do |protocol|
         protocol.procedures.complete.where(percent_subsidy: nil).each do |procedure|
           procedures_missing_subsidies << procedure
-          procedure.update_attributes(percent_subsidy: protocol.percent_subsidy)
+          procedure.update(percent_subsidy: protocol.percent_subsidy)
         end
         protocol.fulfillments.where(percent_subsidy: nil).each do |fulfillment|
           fulfillments_missing_subsidies << fulfillment
-          fulfillment.update_attributes(percent_subsidy: protocol.percent_subsidy)
+          fulfillment.update(percent_subsidy: protocol.percent_subsidy)
         end
 
         bar1.increment!
@@ -54,7 +54,7 @@ namespace :data do
 
       Procedure.complete.where(funding_source: nil).each do |procedure|
         procedures_missing_funding_source << procedure
-        procedure.update_attributes(funding_source: procedure.protocol.sparc_funding_source)
+        procedure.update(funding_source: procedure.protocol.sparc_funding_source)
         bar2.increment!
       end
 
@@ -67,7 +67,7 @@ namespace :data do
       Fulfillment.includes(:protocol).where(funding_source: nil).find_each do |fulfillment|
         protocol = fulfillment.protocol
         if protocol
-          fulfillment.update_attributes(funding_source: protocol.sparc_funding_source)
+          fulfillment.update(funding_source: protocol.sparc_funding_source)
         else
           @errors << ["Fulfillment: #{fulfillment.id}", "Has No Protocol"]
         end

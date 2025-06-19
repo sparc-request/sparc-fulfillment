@@ -27,7 +27,7 @@ namespace :data do
     invoiced_fulfillments.find_each do |fulfillment|
       begin
         date = fulfillment.notes.last.updated_at
-        fulfillment.update_attributes invoiced_date: date
+        fulfillment.update invoiced_date: date
 
         bar.increment! rescue nil
 
@@ -45,7 +45,7 @@ namespace :data do
     invoiced_procedures.find_each do |procedure|
       begin
         date = procedure.notes.last.updated_at
-        procedure.update_attributes invoiced_date: date
+        procedure.update invoiced_date: date
         bar.increment! rescue nil
       rescue => exception
         puts "Error with #{procedure.inspect}, Message: #{exception.message}"

@@ -32,10 +32,10 @@ feature "Identity views Protocols by status", js: true do
   def given_i_am_a_fulfillment_provider_for_a_protocol
     2.times { create_and_assign_protocol_to_me }
 
-    Protocol.first.sub_service_request.update_attributes(status: "complete")
-    Protocol.first.sparc_protocol.update_attributes(short_title: "Slappy")
-    Protocol.last.sub_service_request.update_attributes(status: "draft")
-    Protocol.last.sparc_protocol.update_attributes(short_title: "Swanson")
+    Protocol.first.sub_service_request.update(status: "complete")
+    Protocol.first.sparc_protocol.update(short_title: "Slappy")
+    Protocol.last.sub_service_request.update(status: "draft")
+    Protocol.last.sparc_protocol.update(short_title: "Swanson")
   end
 
   def when_i_visit_the_protocols_page

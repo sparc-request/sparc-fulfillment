@@ -34,7 +34,7 @@ namespace :data do
 
       vg = VisitGroup.find row['id']
 
-      vg.update_attributes position: row['position'], day: row['day']
+      vg.update position: row['position'], day: row['day']
 
     end
   end

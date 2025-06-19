@@ -52,7 +52,7 @@ feature 'Fulfillments', js: true do
 
   def given_i_have_fulfillments
     @protocol = create(:protocol_imported_from_sparc)
-    @protocol.sparc_protocol.update_attributes(type: 'Study')
+    @protocol.sparc_protocol.update(type: 'Study')
     org       = @protocol.sub_service_request.organization
     service   = create(:service_with_one_time_fee, organization: org)
     line_item = create(:line_item, protocol: @protocol, service: service)
@@ -62,7 +62,7 @@ feature 'Fulfillments', js: true do
 
   def given_i_have_fulfillments_without_components
     @protocol = create(:protocol_imported_from_sparc_no_components)
-    @protocol.sparc_protocol.update_attributes(type: 'Study')
+    @protocol.sparc_protocol.update(type: 'Study')
     org = @protocol.sub_service_request.organization
     service = create(:service_without_components, organization: org)
     line_item = create(:line_item, protocol: @protocol, service: service)

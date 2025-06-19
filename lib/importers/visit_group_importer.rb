@@ -34,7 +34,7 @@ class VisitGroupImporter
       local_visit_group         = VisitGroup.create(sparc_id: remote_visit_group['sparc_id'])
       attributes                = normalized_attributes.merge!({ arm: @local_arm })
 
-      local_visit_group.update_attributes attributes
+      local_visit_group.update attributes
 
       VisitImporter.new(local_visit_group, remote_visit_group, @remote_sub_service_request).create
     end

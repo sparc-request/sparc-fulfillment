@@ -25,7 +25,7 @@ class FixFulfillmentsFromEditedLineItems < ActiveRecord::Migration[5.0]
       #Double check is OTF, just in case (shouldn't ever happen)
       if line_item.service.one_time_fee
         #Remove name (this is now done automatically going forward)
-        line_item.update_attributes(name: nil)
+        line_item.update(name: nil)
       end
     end
 

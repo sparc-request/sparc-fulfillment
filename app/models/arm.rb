@@ -46,7 +46,7 @@ class Arm < ApplicationRecord
       errors.add(:arm, "'#{name}' has completed procedures and cannot be deleted")
       return false
     else
-      update_attributes(marked_for_deletion: true)
+      update(marked_for_deletion: true)
       DelayedDestroyJob.perform_later self
       return true
     end

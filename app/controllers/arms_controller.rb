@@ -49,7 +49,7 @@ class ArmsController < ApplicationController
 
   def update
     @arm = Arm.find(params[:id])
-    if @arm.update_attributes(arm_params)
+    if @arm.update(arm_params)
       flash[:success] = t(:arm)[:flash_messages][:updated]
     else
       @errors = @arm.errors

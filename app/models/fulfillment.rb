@@ -101,7 +101,7 @@ class Fulfillment < ApplicationRecord
   def remove_line_item_name
     # service.decrement(:line_items_count)
     if line_item.one_time_fee && line_item.fulfillments.size == 0
-      line_item.update_attributes(name: nil)
+      line_item.update(name: nil)
     end
   end
 

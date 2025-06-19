@@ -31,7 +31,7 @@ namespace :data do
         procedure = Procedure.find row['procedure id']
         old_service_id = procedure.service_id
         old_service_name = procedure.service_name
-        if procedure.update_attributes(service_id: row['new service id'], service_name: row['new service name'])
+        if procedure.update(service_id: row['new service id'], service_name: row['new service name'])
           csv << ['Success', procedure.id, old_service_id, procedure.service_id, old_service_name, procedure.service_name]
         else
           csv << ['Failed', procedure.id]

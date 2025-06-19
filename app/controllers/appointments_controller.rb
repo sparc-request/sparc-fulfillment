@@ -62,7 +62,7 @@ class AppointmentsController < ApplicationController
   def update
     @field = params[:field]
 
-    @appointment.update_attributes(appointment_params)
+    @appointment.update(appointment_params)
 
     if(!@appointment.valid?)
       @errors = @appointment.errors
@@ -86,7 +86,7 @@ class AppointmentsController < ApplicationController
   end
 
   def change_visit_type
-    @appointment.update_attributes(appointment_type_params)
+    @appointment.update(appointment_type_params)
   end
 
   def change_appointment_style

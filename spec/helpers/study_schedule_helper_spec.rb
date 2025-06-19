@@ -34,8 +34,8 @@ RSpec.describe StudyScheduleHelper do
       
       #true
       visits.each do |visit|
-        visit.update_attributes(research_billing_qty: 1)
-        visit.update_attributes(insurance_billing_qty: 1)
+        visit.update(research_billing_qty: 1)
+        visit.update(insurance_billing_qty: 1)
       end
 
       expect(helper.set_check(visit_group)).to eq(false)

@@ -78,7 +78,7 @@ class ProceduresController < ApplicationController
   def update
     respond_to :js
 
-    unless @procedure.update_attributes(procedure_params)
+    unless @procedure.update(procedure_params)
       @errors = @procedure.errors
     end
 

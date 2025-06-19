@@ -28,7 +28,7 @@ class DelayedDestroyJob < ActiveJob::Base
       id = object.id
 
       object.destroy
-      Arm.unscoped.only_deleted.find(id).update_attributes(marked_for_deletion: false)
+      Arm.unscoped.only_deleted.find(id).update(marked_for_deletion: false)
     else
       object.destroy
     end

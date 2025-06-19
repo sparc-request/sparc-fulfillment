@@ -27,7 +27,7 @@ RSpec.describe StudyLevelActivitiesHelper do
 
       protocol = create(:protocol)
       sparc_protocol = protocol.sparc_protocol
-      sparc_protocol.update_attributes(type: 'Study')
+      sparc_protocol.update(type: 'Study')
 
       is_study = helper.is_protocol_type_study? (protocol)
 
@@ -38,7 +38,7 @@ RSpec.describe StudyLevelActivitiesHelper do
 
       protocol = create(:protocol)
       sparc_protocol = protocol.sparc_protocol
-      sparc_protocol.update_attributes(type: 'Project')
+      sparc_protocol.update(type: 'Project')
 
       is_study = helper.is_protocol_type_study? (protocol)
 
