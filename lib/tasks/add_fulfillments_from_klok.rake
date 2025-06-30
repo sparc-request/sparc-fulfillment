@@ -28,12 +28,12 @@ namespace :data do
     file_path = STDIN.gets.strip
 
     # The header conversion lambda converts the capitalized and spaced names of the headers into lowercase and separated by underscores
-    parsed_csv = CSV.read(file_path, headers: true, converters: :all, :header_converters => lambda { |h| h.downcase.gsub(' ', '_')})
+    parsed_csv = CSV.read(file_path, headers: true, encoding: 'iso-8859-1', converters: :all, :header_converters => lambda { |h| h.downcase.gsub(' ', '_')})
     
     while !parsed_csv
       puts "Unrecognized input"
       puts "Please enter the full file path to the csv file you wish to import below"
-      parsed_csv = CSV.read(file_path, headers: true, converters: :all, :header_converters => lambda { |h| h.downcase.gsub(' ', '_')})
+      parsed_csv = CSV.read(file_path, headers: true, encoding: 'iso-8859-1', converters: :all, :header_converters => lambda { |h| h.downcase.gsub(' ', '_')})
     end
 
     data = []
