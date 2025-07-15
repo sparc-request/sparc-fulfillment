@@ -51,6 +51,8 @@ fulfill.sql
 public/system/*
 
 docker-compose.yml
+Dockerfile
+webapp.conf
 
 /node_modules
 .vscode/*

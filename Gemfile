@@ -9,7 +9,7 @@ gem 'axlsx', git: 'https://github.com/randym/axlsx', branch: 'master'
 gem 'axlsx_rails'
 gem 'babel-transpiler'
 gem 'bcrypt_pbkdf'
-gem 'bundler', '2.4.22'
+gem 'bundler'
 gem 'coffee-rails'
 gem 'daemons'
 gem 'delayed_job_active_record'
@@ -64,7 +64,7 @@ end
 
 group :development, :test, :testing do
   gem "factory_bot_rails"
-  gem 'faker', '~> 2.20.0'
+  gem 'faker'
   gem 'pry'
 end
 

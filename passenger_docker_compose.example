@@ -1,0 +1,20 @@
+services:
+  cwf_web:
+    build: .
+    command: /sbin/my_init
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3443:443"
+    environment:
+      DATABASE_HOST: db_host
+      DATABASE_USERNAME: db_username
+      DATABASE_PASSWORD: db_password
+      DATABASE_NAME: db_name
+      RAILS_ENV: production
+      ##Sparc Info
+      SPARC_DATABASE_NAME: sparc_db_name
+    env_file:
+      - .env
+    network_mode: host
