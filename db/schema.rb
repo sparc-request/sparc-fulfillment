@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_07_16_001614) do
+ActiveRecord::Schema.define(version: 2025_07_16_015133) do
 
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
@@ -178,14 +178,6 @@ ActiveRecord::Schema.define(version: 2025_07_16_001614) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title"
-    t.string "file_file_name"
-    t.string "file_content_type"
-    t.integer "file_file_size"
-    t.datetime "file_updated_at"
-    t.string "xml_file_file_name"
-    t.string "xml_file_content_type"
-    t.integer "xml_file_file_size"
-    t.datetime "xml_file_updated_at"
   end
 
   create_table "klok_entries", id: false, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
