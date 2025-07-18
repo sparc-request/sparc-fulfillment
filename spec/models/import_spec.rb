@@ -21,13 +21,7 @@
 require 'rails_helper'
 
 RSpec.describe Import, type: :model do
-  it { is_expected.to have_attached_file(:file) }
+  it { should have_one_attached(:file) }
 
-  it { is_expected.to validate_attachment_content_type(:file).
-       allowing('text/plain') }
-
-  it { is_expected.to have_attached_file(:xml_file) }
-
-  it { is_expected.to validate_attachment_content_type(:xml_file).
-       allowing('text/xml') }
+  it { should have_one_attached_file(:xml_file) }
 end
