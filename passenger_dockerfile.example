@@ -1,4 +1,4 @@
-FROM phusion/passenger-ruby33
+FROM phusion/passenger-ruby27
 
 ENV HOME=/root
 
