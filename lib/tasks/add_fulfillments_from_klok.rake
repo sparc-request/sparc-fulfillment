@@ -116,7 +116,23 @@ namespace :data do
                 next
               end
 
-              fulfillment_date = DateTime.strptime(item[:date_fulfilled], '%m/%d/%Y')
+              #NOTE:  This section was added because the csv files sent had a tendency to flip between year formats.  The following code gets the checks for which format is correct for parsing the given date_time and utilizes that for the remainder of the code.
+              potential_fulfillment_date_1 = DateTime.strptime(item[:date_fulfilled], '%m/%d/%Y')
+              potential_fulfillment_date_2 = DateTime.strptime(item[:date_fulfilled], '%m/%d/%y')
+              fulfillment_date = ""
+
+              if potential_fulfillment_date_1.year.between?(2000,2099)
+                fulfillment_date = potential_fulfillment_date_1
+              elsif potential_fulfillment_date_2.year.between?(2000,2099)
+                fulfillment_date = potential_fulfillment_date_2
+              else
+                failed_item_count += 1
+                puts " - Row #{item_count}: failed due to inability to compose a valid fulfillment date"
+
+                next
+              end
+
+
               fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
 
               begin
