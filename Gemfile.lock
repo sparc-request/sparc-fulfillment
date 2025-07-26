@@ -177,7 +177,7 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faker (3.5.2)
+    faker (2.20.0)
       i18n (>= 1.8.11, < 2)
     ffi (1.15.5)
     font-awesome-sass (5.15.1)
@@ -489,7 +489,7 @@ DEPENDENCIES
   ed25519
   execjs
   factory_bot_rails
-  faker
+  faker (~> 2.20.0)
   font-awesome-sass
   foreman
   gon
