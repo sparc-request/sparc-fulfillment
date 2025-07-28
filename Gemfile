@@ -85,7 +85,7 @@ group :test do
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'rspec-activejob', '~> 0.6.1'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 6.0'
   gem 'rspec-collection_matchers'
   gem 'shoulda-callback-matchers'
   gem 'shoulda-matchers', "~> 5.1.0", require: false
