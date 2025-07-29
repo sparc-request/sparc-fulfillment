@@ -87,7 +87,7 @@ class Fulfillment < ApplicationRecord
     date = fulfilled_at ? fulfilled_at : Date.today
     cost = line_item.try(:cost, funding_source, date) rescue nil
     if cost.nil?
-      errors[:base] << "No cost found, ensure that a valid pricing map exists for that date."
+      errors.add(:base, "No cost found, ensure that a valid pricing map exists for that date.")
     end
   end
 

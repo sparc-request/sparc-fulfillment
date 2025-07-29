@@ -274,7 +274,7 @@ class Procedure < ApplicationRecord
     end
 
     if cost.nil?
-      errors[:service_cost] << "No cost found, ensure that a valid pricing map exists for that date."
+      errors.add(:service_cost, "No cost found, ensure that a valid pricing map exists for that date.")
     end
   end
 

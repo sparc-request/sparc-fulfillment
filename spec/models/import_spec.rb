@@ -21,7 +21,29 @@
 require 'rails_helper'
 
 RSpec.describe Import, type: :model do
-  it { should have_one_attached(:file) }
+  describe 'Active Storage attachments' do
+    let(:import) { create(:import) }
 
-  it { should have_one_attached_file(:xml_file) }
+    it 'has an attached file and xml_file' do
+      expect(import.file).to be_attached
+      expect(import.xml_file).to be_attached
+    end
+
+    it 'has the correct filenames' do
+      expect(import.file.filename.to_s).to eq('test_file.txt')
+      expect(import.xml_file.filename.to_s).to eq('test_xml_file.xml')
+    end
+
+    it 'has the correct content_types' do
+      expect(import.file.content_type).to eq('text/plain')
+      expect(import.xml_file.content_type).to eq('text/xml')
+    end
+
+    it 'can be purged' do
+      import.file.purge
+      expect(import.file).not_to be_attached
+      import.xml_file.purge
+      expect(import.xml_file).not_to be_attached
+    end
+  end
 end
