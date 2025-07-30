@@ -63,7 +63,7 @@ module Features
       begin
         retries ||= 0
         expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: false)
-        bootstrap_select = page.first("#{context_selector} select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
+        bootstrap_select = first("#{context_selector} select#{class_or_id}", visible: false).sibling(".dropdown-toggle")
       rescue Selenium::WebDriver::Error::StaleElementReferenceError, Capybara::ElementNotFound
         sleep 1
         retry if (retries += 1) < 5
