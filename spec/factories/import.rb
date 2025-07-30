@@ -20,20 +20,15 @@
 
 FactoryBot.define do
   factory :import do
-    file { nil }
-    xml_file { nil }
-    title { 'string' }
-    after(:build) do |import|
-      import.file.attach(
-        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_file.txt')),
-        filename: 'test_file.txt',
-        content_type: 'text/plain'
-      )
-      import.xml_file.attached(
-        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_xml_file.xml')),
-        filename: 'test_xml_file.xml',
-        content_type: 'text/xml'
-      )
+    trait :with_file do
+      file { Rack::Test::UploadedFile.new('spec/fixtures/files/test_file.txt', 'text/plain') }
+    end
+    trait :with_xml_file do
+      xml_file { Rack::Test::UploadedFile.new('spec/fixtures/files/test_xml_file.txt', 'text/xml') }
+    end
+    trait :with_file_and_xml_file do
+      with_file
+      with_xml_file
     end
   end
 end
