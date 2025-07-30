@@ -24,7 +24,7 @@ FactoryBot.define do
       file { Rack::Test::UploadedFile.new('spec/fixtures/files/test_file.txt', 'text/plain') }
     end
     trait :with_xml_file do
-      xml_file { Rack::Test::UploadedFile.new('spec/fixtures/files/test_xml_file.txt', 'text/xml') }
+      xml_file { Rack::Test::UploadedFile.new('spec/fixtures/files/test_xml_file.xml', 'text/xml') }
     end
     trait :with_file_and_xml_file do
       with_file
