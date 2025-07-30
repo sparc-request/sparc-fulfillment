@@ -25,12 +25,12 @@ FactoryBot.define do
     title { 'string' }
     after(:build) do |import|
       import.file.attach(
-        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_file.txt'))
+        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_file.txt')),
         filename: 'test_file.txt',
         content_type: 'text/plain'
       )
       import.xml_file.attached(
-        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_xml_file.xml'))
+        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_xml_file.xml')),
         filename: 'test_xml_file.xml',
         content_type: 'text/xml'
       )
