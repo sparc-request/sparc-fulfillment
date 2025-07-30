@@ -104,7 +104,7 @@ feature 'Identity adds a Procedure', js: true do
   def then_i_should_see_the_group_counter_is_correct
     group_id = @first_procedure.group_id
 
-    expect(page).to have_css("tr.hidden", count: 3, visible: false)
+    expect(page).to have_css("tr.hidden", count: 3, visible: :all)
   end
 
   def and_select_a_procedure_from_multiselect
@@ -137,7 +137,7 @@ feature 'Identity adds a Procedure', js: true do
     
     group_id = @first_procedure.group_id
 
-    expect(page).to have_css("tr.hidden", count: 2, visible: false)
+    expect(page).to have_css("tr.hidden", count: 2, visible: :all)
   end
 
   def then_i_should_see_three_procedures_in_the_group
@@ -146,7 +146,7 @@ feature 'Identity adds a Procedure', js: true do
 
     group_id = @first_procedure.group_id
 
-    expect(page).to have_css("tr.hidden", count: 3, visible: false)
+    expect(page).to have_css("tr.hidden", count: 3, visible: :all)
   end
 
   def then_i_should_see_a_core

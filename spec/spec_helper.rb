@@ -40,7 +40,6 @@ require 'shoulda-matchers'
 require 'simplecov'
 require 'rspec/active_job'
 require 'rspec/rails'
-require 'paperclip/matchers'
 require 'rspec/retry'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |file| require file }
