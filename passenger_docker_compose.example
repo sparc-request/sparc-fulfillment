@@ -6,7 +6,7 @@ services:
       - .:/app
       - /app/node_modules
     ports:
-      - "3443:443"
+      - "8081:80"
     environment:
       DATABASE_HOST: db_host
       DATABASE_USERNAME: db_username
@@ -17,4 +17,3 @@ services:
       SPARC_DATABASE_NAME: sparc_db_name
     env_file:
       - .env
-    network_mode: host
