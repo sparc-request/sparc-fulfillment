@@ -28,7 +28,7 @@ class StudyScheduleReport < Report
   def generate(document)
     @protocol = Protocol.find(@params[:documentable_id])
 
-    document.update_attributes(content_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    document.update(content_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                                original_filename: "#{@params[:title]}.xlsx")
 
     p                     = Axlsx::Package.new

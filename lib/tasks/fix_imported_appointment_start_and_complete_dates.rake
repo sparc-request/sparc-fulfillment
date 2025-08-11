@@ -28,7 +28,7 @@ namespace :data do
     appointments.each do |appointment|
       bar.increment! rescue nil
       procedure = appointment.procedures.order("completed_date DESC").first # set start and complete to earliest procedure date
-      appointment.update_attributes(start_date: procedure.completed_date, completed_date: procedure.completed_date)
+      appointment.update(start_date: procedure.completed_date, completed_date: procedure.completed_date)
     end
   end
 end

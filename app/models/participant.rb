@@ -45,8 +45,9 @@ class Participant < ApplicationRecord
   validates :mrn, presence: true
   validates :mrn, uniqueness: {
     scope: [:first_name, :last_name],
-    message: "already entered for same First Name/Last Name combination"
-  }, case_sensitive: false
+    message: "already entered for same First Name/Last Name combination",
+    case_sensitive: false
+  }
   validates_length_of :mrn, maximum: 255
 
   validates :date_of_birth, presence: true

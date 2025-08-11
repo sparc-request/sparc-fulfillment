@@ -89,7 +89,7 @@ feature 'Custom appointment', js: true do
 
   def when_i_select_the_appointment
     @service = @protocol.organization.inclusive_child_services(:per_participant).first
-    @service.update_attributes(name: 'Test Service')
+    @service.update(name: 'Test Service')
     find("a.appointment-link span", text: "Test Visit").click
     wait_for_ajax
   end

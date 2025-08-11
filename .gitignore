@@ -49,6 +49,7 @@ config/klok_db.yml
 fulfill.sql
 
 public/system/*
+storage/
 
 docker-compose.yml
 Dockerfile

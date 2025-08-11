@@ -36,7 +36,7 @@ class ArmImporter
         local_arm                     = Arm.create(sparc_id: remote_arm['sparc_id'])
         attributes                    = normalized_attributes.merge!({ protocol: @local_protocol })
 
-        local_arm.update_attributes attributes
+        local_arm.update attributes
 
         LineItemImporter.new(local_arm, local_arm.protocol, @remote_sub_service_request['sub_service_request']).create
         VisitGroupImporter.new(local_arm, remote_arm, @remote_sub_service_request['sub_service_request']).create

@@ -42,7 +42,7 @@ class InvoiceReport < Report
     #This allows us to optionally filter by services
     @specific_services = @params[:services].present? ? @params[:services].map{|service| service.to_i} : []
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
       csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]

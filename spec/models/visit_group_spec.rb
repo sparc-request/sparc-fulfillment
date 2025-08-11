@@ -269,14 +269,14 @@ RSpec.describe VisitGroup, type: :model do
       describe 'check for completed data' do
         it "should allow the appointment to be deleted if it is not completed" do
           appointment_count = @protocols_participant.reload.appointments.count
-          @procedure.reload.update_attributes(status: "unstarted")
+          @procedure.reload.update(status: "unstarted")
           @vg_a.reload.destroy
           expect(@protocols_participant.reload.appointments.count).to eq(appointment_count - 1)
         end
 
         it "should not allow the appointment to be deleted if it is completed" do
           @appointment = @protocols_participant.reload.appointments.first
-          @appointment.update_attributes(completed_date: Time.current)
+          @appointment.update(completed_date: Time.current)
           expect{@vg_a.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
         end
 

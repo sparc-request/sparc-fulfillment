@@ -68,7 +68,7 @@ class TasksController < ApplicationController
       @task.save
       if task_params[:assignable_type] == "Procedure"
         @procedure = Procedure.find(task_params[:assignable_id])
-        @procedure.update_attributes(status: "follow_up") if @procedure.unstarted?
+        @procedure.update(status: "follow_up") if @procedure.unstarted?
       end
       create_note
       flash[:success] = t(:task)[:flash_messages][:created]
@@ -81,7 +81,7 @@ class TasksController < ApplicationController
 
   def update
     respond_to :js
-    if @task.update_attributes(task_params)
+    if @task.update(task_params)
       flash[:success] = t(:task)[:flash_messages][:updated]
     else
       @errors = @task.errors

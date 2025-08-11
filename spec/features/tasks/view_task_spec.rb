@@ -26,7 +26,7 @@ feature "Identity views Task", js: true do
     protocol = create(:protocol_imported_from_sparc)
     @core = Organization.where(type: "Core").first
     @program = create(:organization_program)
-    @core.update_attributes(parent_id: @program.id)
+    @core.update(parent_id: @program.id)
     ClinicalProvider.create(organization: protocol.sub_service_request.organization, identity: @assignee)
   end
 

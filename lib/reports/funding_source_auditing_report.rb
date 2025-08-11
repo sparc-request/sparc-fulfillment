@@ -32,7 +32,7 @@ class FundingSourceAuditingReport < Report
     formatted_start_date = format_date(start_date)
     formatted_end_date = format_date(end_date)
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     @organizations = IdentityOrganizations.new(@params[:identity_id]).fulfillment_organizations_with_protocols
 

@@ -60,7 +60,7 @@ class LineItem < ApplicationRecord
   end
 
   def set_name
-    update_attributes(name: service.name)
+    update(name: service.name)
   end
 
   def name

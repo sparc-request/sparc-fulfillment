@@ -37,7 +37,7 @@ RSpec.describe DocumentsController, type: :controller do
       end
 
       it 'should render with status: :success' do
-        expect(response).to be_success
+        expect(response).to have_http_status(:success)
       end
 
       it 'should persist a Document object to database' do

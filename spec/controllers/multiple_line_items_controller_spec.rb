@@ -32,7 +32,7 @@ RSpec.describe MultipleLineItemsController, type: :controller do
     @protocol             = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-    organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update(parent: organization_program, name: "Core")
     create(:clinical_provider, identity: identity, organization: organization)
     create(:project_role_pi, identity: identity, protocol: @protocol)
   end

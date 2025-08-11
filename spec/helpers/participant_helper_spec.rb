@@ -31,10 +31,10 @@ RSpec.describe ParticipantHelper do
       good_phone = "123-123-1234"
       bad_phone  = "5555555555"
 
-      participant.update_attributes(phone: good_phone)
+      participant.update(phone: good_phone)
       expect(helper.phoneNumberFormatter(participant)).to eq(good_phone)
 
-      participant.update_attributes(phone: bad_phone)
+      participant.update(phone: bad_phone)
       expect(helper.phoneNumberFormatter(participant)).to eq("555-555-5555")
     end
   end

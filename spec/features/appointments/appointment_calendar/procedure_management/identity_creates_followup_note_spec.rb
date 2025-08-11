@@ -160,6 +160,6 @@ feature 'Followup note', js: true do
   end
 
   def then_i_should_see_a_helpful_message
-    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: false)
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: :all)
   end
 end

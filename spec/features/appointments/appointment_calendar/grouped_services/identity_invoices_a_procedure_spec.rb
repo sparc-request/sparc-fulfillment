@@ -58,7 +58,7 @@ feature 'Invoice Procedure', js: true do
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
-    organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update(parent: organization_program, name: "Core")
     create(:clinical_provider, identity: @logged_in_identity, organization: organization)
     create(:project_role_pi, identity: @logged_in_identity, protocol: @protocol)
     create(:super_user, identity: @logged_in_identity, organization: organization_provider, billing_manager: true)
