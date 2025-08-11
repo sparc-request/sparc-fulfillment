@@ -38,7 +38,7 @@
 #           if proc
 #             if hp.service_id != proc.service_id
 #               csv << [proc.id, proc.service_id, hp.service_id, proc.service_name, hp.service_name]
-#               proc.update_attributes(service_id: hp.service_id, service_name: hp.service_name)
+#               proc.update(service_id: hp.service_id, service_name: hp.service_name)
 #             end
 #           end
 #         end

@@ -87,7 +87,7 @@ class Fulfillment < ApplicationRecord
     date = fulfilled_at ? fulfilled_at : Date.today
     cost = line_item.try(:cost, funding_source, date) rescue nil
     if cost.nil?
-      errors[:base] << "No cost found, ensure that a valid pricing map exists for that date."
+      errors.add(:base, "No cost found, ensure that a valid pricing map exists for that date.")
     end
   end
 
@@ -101,7 +101,7 @@ class Fulfillment < ApplicationRecord
   def remove_line_item_name
     # service.decrement(:line_items_count)
     if line_item.one_time_fee && line_item.fulfillments.size == 0
-      line_item.update_attributes(name: nil)
+      line_item.update(name: nil)
     end
   end
 

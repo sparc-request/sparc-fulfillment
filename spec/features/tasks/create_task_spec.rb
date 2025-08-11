@@ -70,7 +70,7 @@ feature "create Task", js: true do
   end
 
   def when_i_click_on_the_all_tasks_button
-    find("#allTasksToggle", visible: false).find(:xpath, "..").click
+    find("#allTasksToggle", visible: :all).find(:xpath, "..").click
     wait_for_ajax
   end
 

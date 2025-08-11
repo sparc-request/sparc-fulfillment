@@ -41,7 +41,7 @@ task :fix_procedure_data => :environment do
       old_procedures.each do |procedure|
         if service_names.include?(procedure.service_name)
           core_name = Organization.find(core_id).name
-          procedure.update_attributes(sparc_core_name: core_name, sparc_core_id: core_id)
+          procedure.update(sparc_core_name: core_name, sparc_core_id: core_id)
         end
       end
     end

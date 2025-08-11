@@ -23,7 +23,7 @@ class AddReportTypeToDocuments < ActiveRecord::Migration[4.2]
     add_column :documents, :report_type, :string
 
     Document.find_each do |d|
-      d.update_attributes(report_type: d.title.titleize.delete(" ").underscore) unless d.title.blank?
+      d.update(report_type: d.title.titleize.delete(" ").underscore) unless d.title.blank?
     end
   end
 

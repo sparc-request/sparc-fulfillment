@@ -27,7 +27,7 @@ module DataHelpers
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
-    organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update(parent: organization_program, name: "Core")
     create(:clinical_provider, identity: identity, organization: organization)
     create(:project_role_pi, identity: identity, protocol: protocol)
 
@@ -41,7 +41,7 @@ module DataHelpers
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
-    organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update(parent: organization_program, name: "Core")
     create(:clinical_provider, identity: identity, organization: organization)
     create(:project_role_pi, identity: identity, protocol: protocol)
 
@@ -56,7 +56,7 @@ module DataHelpers
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
-    organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update(parent: organization_program, name: "Core")
     create(:clinical_provider, identity: identity, organization: organization)
     create(:project_role_pi, identity: identity, protocol: protocol)
 
@@ -70,7 +70,7 @@ module DataHelpers
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
     organization          = sub_service_request.organization
-    organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update(parent: organization_program, name: "Core")
     create(:clinical_provider, identity: identity, organization: organization)
     create(:project_role_pi, identity: identity, protocol: protocol)
 
@@ -83,7 +83,7 @@ module DataHelpers
     organization          = protocol.organization
     organization_provider = create(:organization_provider, name: "Provider")
     organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-    organization.update_attributes(parent: organization_program, name: "Core")
+    organization.update(parent: organization_program, name: "Core")
     create(:clinical_provider, identity: identity, organization: organization)
 
     protocol

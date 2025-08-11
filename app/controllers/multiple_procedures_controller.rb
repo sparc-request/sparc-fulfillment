@@ -41,21 +41,21 @@ class MultipleProceduresController < ApplicationController
       status = params[:status]
       create_note_before_update
       @procedures.each do |procedure|
-        procedure.update_attributes(status: status, performer_id: params[:performer_id], completed_date: params[:completed_date])
+        procedure.update(status: status, performer_id: params[:performer_id], completed_date: params[:completed_date])
       end
     end
   end
 
   def reset_procedures
     @appointment.procedure_groups.each do |procedure_group|
-      procedure_group.update_attributes(start_time: nil, end_time: nil)
+      procedure_group.update(start_time: nil, end_time: nil)
     end
 
     #Status is used by the 'show' re-render
     @statuses = @appointment.appointment_statuses.pluck(:status)
 
     #Reset parent appointment
-    @appointment.update_attributes(start_date: nil, completed_date: nil)
+    @appointment.update(start_date: nil, completed_date: nil)
 
     #Reset all procedures under appointment so they can be destroyed
     @appointment.procedures.each{|procedure| procedure.reset}

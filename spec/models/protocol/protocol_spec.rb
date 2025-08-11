@@ -93,7 +93,7 @@ RSpec.describe Protocol, type: :model do
         
         protocol = create(:protocol)
         sparc_protocol = protocol.sparc_protocol
-        sparc_protocol.update_attributes(type: 'Study')
+        sparc_protocol.update(type: 'Study')
 
         expect(protocol.protocol_type).to eq Sparc::Protocol.where(id: protocol.sparc_id).first.type
       end
@@ -102,7 +102,7 @@ RSpec.describe Protocol, type: :model do
         
         protocol = create(:protocol)
         sparc_protocol = protocol.sparc_protocol
-        sparc_protocol.update_attributes(type: 'Project')
+        sparc_protocol.update(type: 'Project')
 
         expect(protocol.protocol_type).to eq Sparc::Protocol.where(id: protocol.sparc_id).first.type
       end
@@ -122,7 +122,7 @@ RSpec.describe Protocol, type: :model do
       it 'should return the research master id of the protocol' do
         protocol = create(:protocol)
         sparc_protocol = protocol.sparc_protocol
-        sparc_protocol.update_attributes(research_master_id: 1)
+        sparc_protocol.update(research_master_id: 1)
 
         expect(protocol.research_master_id).to eq Sparc::Protocol.where(id: protocol.sparc_id).first.research_master_id
       end
@@ -136,7 +136,7 @@ RSpec.describe Protocol, type: :model do
       let!(:sub_service_request) { create(:sub_service_request, service_request: service_request, status: 'ctrc_approved') }
 
       before :each do
-        protocol.update_attributes(sub_service_request: sub_service_request)
+        protocol.update(sub_service_request: sub_service_request)
       end
 
       context 'status' do
@@ -149,7 +149,7 @@ RSpec.describe Protocol, type: :model do
       context 'owner' do
 
         it 'should get the correct owner from the sub service request' do
-          sub_service_request.update_attributes(owner_id: user.id)
+          sub_service_request.update(owner_id: user.id)
           expect(protocol.owner).to eq(sub_service_request.owner)
         end
       end
@@ -157,7 +157,7 @@ RSpec.describe Protocol, type: :model do
       context 'service requester' do
 
         it 'should get the correct requester from the sub service request' do
-          sub_service_request.update_attributes(service_requester_id: user.id)
+          sub_service_request.update(service_requester_id: user.id)
           expect(protocol.service_requester.id).to eq(sub_service_request.service_requester_id)
         end
       end

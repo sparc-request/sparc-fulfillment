@@ -66,7 +66,7 @@ class ProtocolsParticipantsController < ApplicationController
   def update
     respond_to :js
     @protocols_participant.current_identity = current_identity
-    if @protocols_participant.update_attributes(protocols_participant_params)
+    if @protocols_participant.update(protocols_participant_params)
       @appointment = @protocols_participant.appointments.where(arm_id: @protocols_participant.arm_id).first
       flash[:success] = t('protocols_participants.flash.updated')
     end

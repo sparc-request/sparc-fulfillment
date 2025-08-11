@@ -105,7 +105,7 @@ feature 'User views procedure which has an unavailable service', js: true do
 
   def when_the_procedure_is_not_unstarted
     @procedure = @appointment.procedures.first
-    @procedure.update_attributes(status: 'complete')
+    @procedure.update(status: 'complete')
   end
 
 	def when_i_open_the_appointment_calendar_with_the_bad_procedure

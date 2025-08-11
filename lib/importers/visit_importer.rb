@@ -43,7 +43,7 @@ class VisitImporter
       local_visit             = Visit.create(sparc_id: remote_visit['sparc_id'])
       visit_attributes        = normalized_attributes.merge!({ visit_group: @local_visit_group, line_item: local_line_item })
 
-      local_visit.update_attributes visit_attributes
+      local_visit.update visit_attributes
     end
   end
 

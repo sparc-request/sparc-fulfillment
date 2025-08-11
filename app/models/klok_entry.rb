@@ -58,69 +58,69 @@ class KlokEntry < ApplicationRecord
 
   def duplicate
     unless self.enabled?
-      self.errors[:base] << 'duplicate entry'
+      self.errors.add(:base, 'duplicate entry')
     end
   end
 
   def klok_project_present
     unless self.klok_project.present?
-      self.errors[:base] << 'klok project not present'
+      self.errors.add(:base, 'klok project not present')
     end
   end
 
   def klok_project_ssr_id
     unless self.klok_project.ssr_id
-      self.errors[:base] << 'doesnt have SSR ID'
+      self.errors.add(:base, 'doesnt have SSR ID')
     end
   end
 
   def klok_project_ssr_id_regex_error
     unless ( /\d\d\d\d-\d\d\d\d/ === self.klok_project.ssr_id )
-      self.errors[:base] << 'improper format - correct format is 1234-0001'
+      self.errors.add(:base, 'improper format - correct format is 1234-0001')
     end
   end
 
   def local_project_error
     unless self.local_protocol.present?
-      self.errors[:base] << 'no local project present'
+      self.errors.add(:base, 'no local project present')
     end
   end
 
   def service_id_not_ssr_id
     unless ( /\A\d+\z/ === self.klok_project.code )
-      self.errors[:base] << 'must have service id, not ssr id'
+      self.errors.add(:base, 'must have service id, not ssr id')
     end
   end
 
   def service_error
     unless self.service.present?
-      self.errors[:base] << 'no service present'
+      self.errors.add(:base, 'no service present')
     end
   end
 
   def service_not_available_to_protocol_error
     if self.local_protocol && self.service
       unless self.local_protocol_includes_service(self.service)
-        self.errors[:base] << 'service not available to protocol'
+        self.errors.add(:base, 'service not available to protocol')
       end
     end
   end
 
   def klok_person_error
     unless self.klok_person.present?
-      self.errors[:base] << 'no klok person present'
+      self.errors.add(:base, 'no klok person present')
     end
   end
 
   def local_identity_error
     unless self.local_identity.present?
-      self.errors[:base] << 'no local identity present'
+      self.errors.add(:base, 'no local identity present')
     end
   end
 
   def duration_error
     unless self.duration >= 0
-      self.errors[:base] << 'fulfilled quantity value can not be negative'
+      self.errors.add(:base, 'fulfilled quantity value can not be negative')
     end
   end
 

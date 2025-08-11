@@ -97,4 +97,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_mailer.default_url_options = { :host => 'cwf-s.obis.musc.edu' }
+
+  # Active Storage config
+  config.active_storage.service = :local
 end

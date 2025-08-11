@@ -20,10 +20,12 @@
 
 require 'csv'
 class Import < ApplicationRecord
-  has_attached_file :file
-  validates_attachment :file, content_type: { content_type: 'text/plain' }
-  has_attached_file :xml_file
+  has_one_attached :file, dependent: :purge
+  has_one_attached :xml_file, dependent: :purge
 
+  def uploaded_file_path(file)
+    ActiveStorage::Blob.service.path_for(file.key)
+  end
 
   def generate(file, proof_report)
     log_file = Rails.root.join('tmp', "klok_import_#{Time.now.strftime('%m%d%Y')}.csv")
@@ -35,7 +37,7 @@ class Import < ApplicationRecord
         KlokProject.destroy_all
         KlokPerson.destroy_all
 
-        d = File.read(file.path)
+        d = File.read(uploaded_file_path(file))
 
         h = Hash.from_xml(d)
 

@@ -178,8 +178,8 @@ class Procedure < ApplicationRecord
     self.reload
 
     #Reset Status
-    self.update_attributes(status: "unstarted")
-    self.update_attributes(service_cost: nil)
+    self.update(status: "unstarted")
+    self.update(service_cost: nil)
     self.reload
   end
 
@@ -274,7 +274,7 @@ class Procedure < ApplicationRecord
     end
 
     if cost.nil?
-      errors[:service_cost] << "No cost found, ensure that a valid pricing map exists for that date."
+      errors.add(:service_cost, "No cost found, ensure that a valid pricing map exists for that date.")
     end
   end
 

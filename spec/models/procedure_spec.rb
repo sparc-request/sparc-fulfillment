@@ -137,14 +137,14 @@ RSpec.describe Procedure, type: :model do
 
       it "should be equal to the service's name when the procedure is unstarted" do
         name = @service.name + '_'
-        @service.update_attributes(name: @service.name + '_')
+        @service.update(name: @service.name + '_')
         expect(@procedure.service_name).to eq(name)
       end
 
       it "should be equal to the service's name at the time the procedure status changes from unstarted" do
         name = @service.name
-        @procedure.update_attributes(status: 'complete')
-        @service.update_attributes(name: @service.name + '_')
+        @procedure.update(status: 'complete')
+        @service.update(name: @service.name + '_')
         expect(@procedure.service_name).to eq(name)
       end
     end
@@ -185,7 +185,7 @@ RSpec.describe Procedure, type: :model do
           to_status = 'complete'
           @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
             procedure = create(:procedure, from_status.to_sym)
-            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment)
+            procedure.update(service_id: @service.id, status: to_status, appointment: @appointment)
             procedure # may not be necessary
           end
         end
@@ -209,7 +209,7 @@ RSpec.describe Procedure, type: :model do
           to_status = 'incomplete'
           @procedures = (Procedure::STATUS_TYPES - [to_status]).map do |from_status|
             procedure = create(:procedure, from_status.to_sym)
-            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment)
+            procedure.update(service_id: @service.id, status: to_status, appointment: @appointment)
             procedure # may not be necessary
           end
         end
@@ -234,7 +234,7 @@ RSpec.describe Procedure, type: :model do
           from_statuses = Procedure::STATUS_TYPES - to_statuses
           @procedures = from_statuses.product(to_statuses).map do |from_status, to_status|
             procedure = create(:procedure, from_status.to_sym)
-            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment)
+            procedure.update(service_id: @service.id, status: to_status, appointment: @appointment)
             procedure
           end
         end
@@ -256,7 +256,7 @@ RSpec.describe Procedure, type: :model do
 
           @procedures = from_statuses.product(to_statuses).map do |from_status, to_status|
             procedure = create(:procedure, from_status.to_sym, :with_task)
-            procedure.update_attributes(service_id: @service.id, status: to_status, appointment: @appointment)
+            procedure.update(service_id: @service.id, status: to_status, appointment: @appointment)
             procedure
           end
         end

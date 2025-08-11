@@ -71,7 +71,7 @@ class ParticipantsController < ApplicationController
   end
 
   def update
-    if @participant.update_attributes(participant_params)
+    if @participant.update(participant_params)
       flash[:success] = t(:participant)[:flash_messages][:updated]
     else
       @errors = @participant.errors

@@ -49,8 +49,8 @@ feature "Change Participant Arm", js: :true do
     @service      = @protocol.organization.inclusive_child_services(:per_participant).first
     @original_appointment = @original_arm.visit_groups.first
 
-    @service.update_attributes(name: 'Test Service')
-    @original_appointment.update_attributes(name: "First Arm Appointment")
+    @service.update(name: 'Test Service')
+    @original_appointment.update(name: "First Arm Appointment")
 
     given_i_am_viewing_a_visit
 

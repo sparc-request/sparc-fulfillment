@@ -23,5 +23,5 @@ class AppointmentStatus < ApplicationRecord
 
   belongs_to :appointment
 
-  validates_uniqueness_of :status, scope: :appointment_id
+  validates_uniqueness_of :status, scope: :appointment_id, case_sensitive: true
 end

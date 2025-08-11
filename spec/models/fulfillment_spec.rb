@@ -88,7 +88,7 @@ RSpec.describe Fulfillment, type: :model do
         it 'should return service cost' do
           line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
           old_admin_rate = create(:admin_rate_change, line_item: line_item, admin_cost: 100, cost_reset: true)
-          # old_admin_rate.update_attributes(cost_reset: true)
+          # old_admin_rate.update(cost_reset: true)
           fulfillment = create(:fulfillment, fulfilled_at: Time.current.strftime("%m/%d/%Y"), line_item: line_item)
           fulfillment.fulfilled_at = (Time.now + 1.day).strftime("%m/%d/%Y")
           fulfillment.send(:recalculate_cost)
@@ -125,7 +125,7 @@ RSpec.describe Fulfillment, type: :model do
         name      = service.name
         line_item = create(:line_item, service: service, protocol: create(:protocol))
         create(:fulfillment, line_item: line_item)
-        service.update_attributes(name: service.name + '_')
+        service.update(name: service.name + '_')
         create(:fulfillment, line_item: line_item)
         expect(line_item.read_attribute(:name)).to eq(name)
       end

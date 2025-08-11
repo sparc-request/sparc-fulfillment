@@ -56,7 +56,7 @@ feature 'Identity manages Doucuments', js: true do
   def given_i_am_viewing_the_study_level_activities_tab
     protocol = create_and_assign_protocol_to_me
     sparc_protocol = protocol.sparc_protocol
-    sparc_protocol.update_attributes(type: 'Study')
+    sparc_protocol.update(type: 'Study')
     visit protocol_path(protocol.id)
     wait_for_ajax
     click_link "Non-clinical Services"

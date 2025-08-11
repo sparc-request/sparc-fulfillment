@@ -21,13 +21,13 @@
 require 'rails_helper'
 
 RSpec.describe Import, type: :model do
-  it { is_expected.to have_attached_file(:file) }
+  include ActionDispatch::TestProcess::FixtureFile
 
-  it { is_expected.to validate_attachment_content_type(:file).
-       allowing('text/plain') }
-
-  it { is_expected.to have_attached_file(:xml_file) }
-
-  it { is_expected.to validate_attachment_content_type(:xml_file).
-       allowing('text/xml') }
+  describe 'Active Storage attachments' do
+    it 'has an attached file and xml_file' do
+      import = create(:import, :with_file_and_xml_file)
+      expect(import.file).to be_attached
+      expect(import.xml_file).to be_attached
+    end
+  end
 end

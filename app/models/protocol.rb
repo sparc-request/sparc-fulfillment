@@ -205,6 +205,6 @@ class Protocol < ApplicationRecord
   private
 
   def set_documents_count
-    update_attributes(unaccessed_documents_count: 0) if self.unaccessed_documents_count < 0
+    update(unaccessed_documents_count: 0) if self.unaccessed_documents_count < 0
   end
 end

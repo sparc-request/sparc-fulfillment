@@ -35,8 +35,8 @@ namespace :data do
           line_item = procedure.visit.line_item
 
           if procedure.service_id != line_item.service_id
-            line_item.update_attributes(service_id: procedure.service_id)
-            procedure.update_attributes(visit_id: nil)
+            line_item.update(service_id: procedure.service_id)
+            procedure.update(visit_id: nil)
             unlinked_procedures << procedure
             corrected_line_items << line_item
           end
@@ -50,7 +50,7 @@ namespace :data do
           line_item = procedure.visit.line_item
 
           if procedure.service_id != line_item.service_id
-            line_item.update_attributes(service_id: procedure.service_id)
+            line_item.update(service_id: procedure.service_id)
             corrected_line_items << line_item
           end
         end
