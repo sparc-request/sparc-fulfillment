@@ -78,7 +78,15 @@ class ReportsController < ApplicationController
     if params[:service_ids]
       @protocols = []
 
-      Protocol.includes(:sub_service_request, :sparc_protocol).where(line_items: LineItem.where(service_id: params[:service_ids])).or(Protocol.includes(:sub_service_request, :sparc_protocol).where(procedures: Procedure.where(service_id: params[:service_ids]))).each do |protocol|
+      # Protocol.includes(:sub_service_request, :sparc_protocol).where(line_items: LineItem.where(service_id: params[:service_ids])).or(Protocol.includes(:sub_service_request, :sparc_protocol).where(procedures: Procedure.where(service_id: params[:service_ids]))).each do |protocol|
+      #   @protocols << protocol
+      # end
+
+      Protocol.includes(:sub_service_request, :sparc_protocol).where(line_items: LineItem.where(service_id: params[:service_ids])).each do |protocol|
+        @protocols << protocol
+      end
+
+      Protocol.includes(:sub_service_request, :sparc_protocol).joins(appointments: :procedures).where(procedures: Procedure.where(service_id: params[:service_ids])).each do |protocol|
         @protocols << protocol
       end
 

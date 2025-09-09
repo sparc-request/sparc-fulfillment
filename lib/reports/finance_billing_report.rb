@@ -93,7 +93,7 @@ class FinanceBillingReport < Report
         ]
       ).where(id: @params[:protocols])
 
-      protocols.each do |protocol|
+      protocols&.each do |protocol|
         funding_info = get_previous_funding_source(protocol)
         previous_funding_source = funding_info[:previous_funding_source]
         funding_source_change_date = funding_info[:change_date]
