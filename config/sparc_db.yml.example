@@ -32,11 +32,24 @@ development:
   password:
 
 # configured for travis-ci
+# test:
+#  <<: *default
+#  database: test_sparc_request # for travis-ci, needs to match sparc-request test database name
+#  username: travis
+#  password:
+
+# configured for github actions ci
 test:
-  <<: *default
-  database: test_sparc_request # for travis-ci, needs to match sparc-request test database name
-  username: travis
-  password:
+  adapter: mysql2
+  encoding: utf8
+  database: <%= ENV.fetch('DATABASE_NAME', 'test_sparc_request') %>
+  username: <%= ENV.fetch('DATABASE_USERNAME', 'root') %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DATABASE_HOST'] || '127.0.0.1' %>
+  pool: 5
+  timeout: 5000
+  variables:
+    sql_mode: TRADITIONAL
 
 # Docker Config Example
 # default: &default
