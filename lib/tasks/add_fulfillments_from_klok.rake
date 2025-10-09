@@ -133,8 +133,6 @@ namespace :data do
 
             fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
 
-            binding.pry
-
             begin
               service_cost = line_item.cost(funding_source, fulfillment_date)
             rescue StandardError => e
@@ -147,7 +145,7 @@ namespace :data do
 
             fulfillment = line_item.fulfillments.new(
               fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), 
-              performer: potential_identities.first, 
+              performer: identity, 
               service_id: matched_sparc_line_item.first.service.id, 
               service_name: matched_sparc_line_item.first.service.name, 
               service_cost: line_item.cost(funding_source, fulfillment_date), 
@@ -161,7 +159,7 @@ namespace :data do
             end
 
             if item[:fulfillment_notes].present?
-              fulfillment.notes.new(comment: item[:fulfillment_notes], identity: potential_identities.first)
+              fulfillment.notes.new(comment: item[:fulfillment_notes], identity: identity)
             end
 
             if fulfillment.save
