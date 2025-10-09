@@ -95,7 +95,7 @@ namespace :data do
         # Having found the line item, we now begin the process of creating the fulfillment entry.
         if item[:completed_by].present?
 
-          identity = Identity.where(ldap_uid: item[:completed_by])
+          identity = Identity.where(ldap_uid: item[:completed_by]).first
 
           if identity.present?
             funding_source = line_item.protocol.sparc_funding_source
