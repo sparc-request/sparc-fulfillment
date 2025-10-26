@@ -59,3 +59,4 @@ DJ_SLACK_WEBHOOK="https://hooks.slack.com/services/T03ALDSB7/BG5S03D8B/5pYjtYFcm
 DJ_TEAMS_WEBHOOK="https://musc.webhook.office.com/webhookb2/0caf77be-579e-4a3d-970f-0c84df9b862b@5c4a59c9-6d6b-4de0-88c0-53acd566bf83/IncomingWebhook/b64af7a3ca314f8b8a569f1a823d74d0/a178123f-3467-460f-87e9-aa976b6bed33/V2wPbbJqnM-8D25GkkmrGj4j82sKbvO9llljNntoAliq81"
 DEFAULT_HOME_COLUMNS=srid,rmid,status,short_title,pi,coordinators,irb_approval_date,irb_expiration_date,organizations
 CLINICAL_SERVICES=true
+DJ_WORKERS=4
