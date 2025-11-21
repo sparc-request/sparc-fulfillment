@@ -78,7 +78,7 @@ class Procedure < ApplicationRecord
       procedure.unstarted? &&
       procedure.service &&
       !procedure.service.is_available? &&
-      !exempt_service_ids.include?(procedure.service_id)
+      !exempt_service_ids.include?(procedure.service_id.to_s)
     end
   end
 
