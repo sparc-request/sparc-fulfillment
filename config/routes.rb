@@ -72,8 +72,8 @@ Rails.application.routes.draw do
 
   resources :reports, only: [:new, :create] do
     collection do
-      get 'update_services_protocols_dropdown'
-      get 'update_protocols_dropdown'
+      post 'update_services_protocols_dropdown'
+      post 'update_protocols_dropdown'
       get 'reset_services_dropdown'
     end
   end

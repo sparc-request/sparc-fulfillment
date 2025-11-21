@@ -49,9 +49,9 @@ class InvoiceReport < Report
       csv << [""]
 
       if @params[:sort_by] == "Protocol ID"
-        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols])&.sort_by(&:sparc_id)
+        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).order(:sparc_id) #changing from .sort_by to .order seems to fix some kind of delegation nil error? bad data
       else
-        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols])&.sort_by{ |protocol| protocol.pi.last_name }
+        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).order{ |protocol| protocol.pi.last_name }
       end
 
       if @params[:sort_order] == "DESC"

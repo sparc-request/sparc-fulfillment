@@ -33,18 +33,19 @@ class ReportsController < ApplicationController
   end
 
   def create
-    @document = Document.new(title: reports_params[:title].humanize, report_type: @report_type)
+    parsed_reports_params = parse_json_params(reports_params)
+    @document = Document.new(title: parsed_reports_params[:title].humanize, report_type: @report_type)
     
-    reports_params[:core_procedures_option] = reports_params[:core_procedures_option] || false
+    parsed_reports_params[:core_procedures_option] = parsed_reports_params[:core_procedures_option] || false
 
     if @document.valid?
-      @report = @report_type.classify.constantize.new(reports_params)
+      @report = @report_type.classify.constantize.new(parsed_reports_params)
       @errors = @report.errors
       if @report.valid?
-        @reports_params = reports_params
+        @reports_params = parsed_reports_params
         @documentable.documents.push @document
 
-        params_to_send = reports_params.to_h
+        params_to_send = parsed_reports_params.to_h
         params_to_send[:permissions] = IdentityOrganizations.new(current_identity.id).authorized_protocols.ids
         ReportJob.perform_later(@document, params_to_send)
       end
@@ -64,8 +65,9 @@ class ReportsController < ApplicationController
     @single_protocol = (params[:report_type] == "project_summary_report")
 
     if params[:org_ids]
-      @protocols = Protocol.includes(:sub_service_request, :sparc_protocol).where(sub_service_request: SubServiceRequest.where(organization_id: params[:org_ids])).distinct
-      @services = Service.where(organization_id: all_child_organizations_with_self(params[:org_ids])).distinct
+      @org_ids = JSON.parse(params[:org_ids])
+      @protocols = Protocol.includes(:sub_service_request, :sparc_protocol).where(sub_service_request: SubServiceRequest.where(organization_id: @org_ids)).distinct
+      @services = Service.where(organization_id: all_child_organizations_with_self(@org_ids)).distinct
       @grouped_options_services = InvoiceReportGroupedOptions.new(@services, 'service').collect_grouped_options_services
     else
       @protocols = current_identity.protocols
@@ -76,23 +78,20 @@ class ReportsController < ApplicationController
     @single_protocol = (params[:report_type] == "project_summary_report")
 
     if params[:service_ids]
+      @service_ids = JSON.parse(params[:service_ids])
       @protocols = []
 
-      # Protocol.includes(:sub_service_request, :sparc_protocol).where(line_items: LineItem.where(service_id: params[:service_ids])).or(Protocol.includes(:sub_service_request, :sparc_protocol).where(procedures: Procedure.where(service_id: params[:service_ids]))).each do |protocol|
-      #   @protocols << protocol
-      # end
-
-      Protocol.includes(:sub_service_request, :sparc_protocol).where(line_items: LineItem.where(service_id: params[:service_ids])).each do |protocol|
+      Protocol.includes(:sub_service_request, :sparc_protocol).where(line_items: LineItem.where(service_id: @service_ids)).distinct.each do |protocol|
         @protocols << protocol
       end
-
-      Protocol.includes(:sub_service_request, :sparc_protocol).joins(appointments: :procedures).where(procedures: Procedure.where(service_id: params[:service_ids])).each do |protocol|
+      
+      Protocol.includes(:sub_service_request, :sparc_protocol).joins(:procedures).where(procedures: Procedure.where(service_id: @service_ids)).distinct.each do |protocol|
         @protocols << protocol
       end
 
       @protocols
+
     else
-      # @protocols = current_identity.protocols.load
       @protocols = []
       current_identity.protocols.includes(:sparc_protocol).each do |protocol|
         @protocols << protocol
@@ -137,6 +136,26 @@ class ReportsController < ApplicationController
     result.flatten
   end
 
+  def parse_json_params(params)
+    parsed_params = params
+    json_param_keys = [:services, :protocols]
+
+    json_param_keys.each do |key|
+      if parsed_params[key].is_a?(String)
+        begin
+          parsed_value = JSON.parse(params[key])
+          parsed_params[key] = parsed_value
+        rescue JSON::ParserError => e
+          # Handle invalid JSON string here, e.g., log the error or return a bad request status
+          Rails.logger.error "Failed to parse JSON for param '#{key}': #{params[key]} - #{e.message}"
+          render json: { error: "Invalid JSON in '#{key}' parameter" }, status: :bad_request and return
+        end
+      end
+    end
+
+    parsed_params
+  end
+
   def reports_params
     params.require(:report_type) # raises error if report_type not present
     params.permit(:all_protocols_selected,
@@ -161,9 +180,11 @@ class ReportsController < ApplicationController
               :documentable_id,
               :documentable_type,
               :protocol_level,
+              :services,
+              :protocols,
               :mrns => [],
-              :organizations => [],
-              :services => [],
-              :protocols => []).merge(identity_id: current_identity.id)
+              :organizations => []).merge(identity_id: current_identity.id)
+              # :services => [],
+              # :protocols => [])
   end
 end

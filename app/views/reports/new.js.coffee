@@ -36,7 +36,7 @@ $('#end_date').datetimepicker
 
 if $("#protocol_section.background_load").length
   $.ajax
-    type: 'GET'
+    type: 'POST'
     url: "reports/update_protocols_dropdown"
     data: { report_type: "<%= escape_javascript(@report_type) %>"}
 
