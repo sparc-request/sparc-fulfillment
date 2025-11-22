@@ -138,7 +138,7 @@ class ReportsController < ApplicationController
 
   def parse_json_params(params)
     parsed_params = params
-    json_param_keys = [:services, :protocols]
+    json_param_keys = [:services, :protocols, :mrns]
 
     json_param_keys.each do |key|
       if parsed_params[key].is_a?(String)
@@ -182,9 +182,10 @@ class ReportsController < ApplicationController
               :protocol_level,
               :services,
               :protocols,
-              :mrns => [],
+              :mrns,
               :organizations => []).merge(identity_id: current_identity.id)
               # :services => [],
-              # :protocols => [])
+              # :protocols => []),
+              # :mrns => [],
   end
 end

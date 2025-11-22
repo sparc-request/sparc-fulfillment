@@ -129,6 +129,75 @@ $ ->
     serviceSelectTag.replaceWith(serviceJsonTag)
 
     protocolSelectTag.replaceWith(protocolJsonTag)
+    
+  $(document).on 'ajax:before', "#auditing_report", (event) ->
+
+    protocolSelectTag = $("#protocol_select")
+    protocolIds = protocolSelectTag.val()
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+    
+    protocolSelectTag.replaceWith(protocolJsonTag)
+
+  $(document).on 'ajax:before', "#funding_source_auditing_report", (event) ->
+
+    protocolSelectTag = $("#protocol_select")
+    protocolIds = protocolSelectTag.val()
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+    
+    protocolSelectTag.replaceWith(protocolJsonTag)
+
+  $(document).on 'ajax:before', "#finance_billing_report", (event) ->
+
+    protocolSelectTag = $("#protocol_select")
+    protocolIds = protocolSelectTag.val()
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+    
+    protocolSelectTag.replaceWith(protocolJsonTag)
+
+  $(document).on 'ajax:before', "#participant_report", (event) ->
+
+    mrnSelectTag = $("#mrn_select")
+    protocolSelectTag = $("#protocol_select")
+
+    mrnIds = mrnSelectTag.val()
+    protocolIds = protocolSelectTag.val()
+
+    mrnIdsJson = JSON.stringify(mrnIds)
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    mrnJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'mrns'
+      value: mrnIdsJson
+    )
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+
+    mrnSelectTag.replaceWith(mrnJsonTag)
+
+    protocolSelectTag.replaceWith(protocolJsonTag)
 
 (exports ? this).update_view_on_download_new_report = (element, table_to_update, documentable_type) ->
   row_index = element.parents().eq(1).attr("data-index")
