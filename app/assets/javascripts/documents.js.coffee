@@ -59,8 +59,8 @@ $ ->
         url: "/documents/#{document_id}.js"
 
   $(document).on 'change', "#organization_select", ->
-    org_ids = $(this).val()
-    if org_ids.length == 0
+    orgIds = $(this).val()
+    if orgIds.length == 0
       # Hide protocols dropdown if an Organization has not been selected
       $('#protocol_section').closest('.form-group').addClass("d-none")
       $('#org_based_protocols').addClass('d-none')
@@ -74,20 +74,20 @@ $ ->
       $('#protocol_section').empty()
       $('#protocol_section').closest('.form-group').removeClass("d-none")
       $.ajax
-        type: 'GET'
+        type: 'POST'
         url: "reports/update_services_protocols_dropdown"
-        data: { org_ids: org_ids }
+        data: { org_ids: JSON.stringify(orgIds) }
 
   $(document).on 'change', "#service_select", ->
-    service_ids = $(this).val()
-    if service_ids.length > 0
+    serviceIds = $(this).val()
+    if serviceIds.length > 0
       $('#org_based_protocols').removeClass('d-none')
       $('#protocol_section').empty()
       $('#protocol_section').closest('.form-group').removeClass("d-none")
       $.ajax
-        type: 'GET'
+        type: 'POST'
         url: "reports/update_protocols_dropdown"
-        data: { service_ids: service_ids }
+        data: { service_ids: JSON.stringify(serviceIds) }
 
   $(document).on 'change', "#protocol_section", ->
     allSelected = $(this).find('option').length == $(this).find('option:selected').length
@@ -102,6 +102,102 @@ $ ->
   if $("body.documents-index").length > 0
     $(document).on 'click', 'a.attached_file', ->
       update_view_on_download_new_report $(this), 'table.documents', 'Identity'
+  
+  $(document).on 'ajax:before', "#invoice_report", (event) ->
+
+    serviceSelectTag = $("#service_select")
+    protocolSelectTag = $("#protocol_select")
+
+    serviceIds = serviceSelectTag.val()
+    protocolIds = protocolSelectTag.val()
+
+    serviceIdsJson = JSON.stringify(serviceIds)
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    serviceJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'services'
+      value: serviceIdsJson
+    )
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+
+    serviceSelectTag.replaceWith(serviceJsonTag)
+
+    protocolSelectTag.replaceWith(protocolJsonTag)
+    
+  $(document).on 'ajax:before', "#auditing_report", (event) ->
+
+    protocolSelectTag = $("#protocol_select")
+    protocolIds = protocolSelectTag.val()
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+    
+    protocolSelectTag.replaceWith(protocolJsonTag)
+
+  $(document).on 'ajax:before', "#funding_source_auditing_report", (event) ->
+
+    protocolSelectTag = $("#protocol_select")
+    protocolIds = protocolSelectTag.val()
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+    
+    protocolSelectTag.replaceWith(protocolJsonTag)
+
+  $(document).on 'ajax:before', "#finance_billing_report", (event) ->
+
+    protocolSelectTag = $("#protocol_select")
+    protocolIds = protocolSelectTag.val()
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+    
+    protocolSelectTag.replaceWith(protocolJsonTag)
+
+  $(document).on 'ajax:before', "#participant_report", (event) ->
+
+    mrnSelectTag = $("#mrn_select")
+    protocolSelectTag = $("#protocol_select")
+
+    mrnIds = mrnSelectTag.val()
+    protocolIds = protocolSelectTag.val()
+
+    mrnIdsJson = JSON.stringify(mrnIds)
+    protocolIdsJson = JSON.stringify(protocolIds)
+
+    mrnJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'mrns'
+      value: mrnIdsJson
+    )
+
+    protocolJsonTag = $('<input>').attr(
+      type: 'hidden'
+      name: 'protocols'
+      value: protocolIdsJson
+    )
+
+    mrnSelectTag.replaceWith(mrnJsonTag)
+
+    protocolSelectTag.replaceWith(protocolJsonTag)
 
 (exports ? this).update_view_on_download_new_report = (element, table_to_update, documentable_type) ->
   row_index = element.parents().eq(1).attr("data-index")
