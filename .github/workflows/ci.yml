@@ -41,7 +41,7 @@ jobs:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: ''
       DATABASE_NAME: cwf_test
-      SPARC_DATABASE_NAME: sparc_test
+      SPARC_DATABASE_NAME: test_sparc_request
       USE_EPIC: "true"
       EPIC_TEST_MODE: "true"
 
