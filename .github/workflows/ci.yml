@@ -42,6 +42,7 @@ jobs:
       DATABASE_PASSWORD: ''
       DATABASE_NAME: cwf_test
       SPARC_DATABASE_NAME: test_sparc_request
+      CWF_DATABASE_NAME: cwf_test
       USE_EPIC: "true"
       EPIC_TEST_MODE: "true"
 
@@ -74,7 +75,6 @@ jobs:
           sudo apt-get install -y xvfb mysql-client libcurl4-openssl-dev
           Xvfb :99 -screen 0 1024x768x24 &
 
-      # Setup sparc-request DB first (Dependency)
       - name: Set up ruby for sparc-request
         uses: ruby/setup-ruby@v1
         with:
@@ -89,7 +89,7 @@ jobs:
       - name: Setup sparc-request database
         working-directory: ./sparc-request
         env:
-          DATABASE_NAME: ${{ env.SPARC_DATABASE_NAME }}
+          DATABASE_NAME: test_sparc_request
         run: |
           cp config/database.yml.example config/database.yml
           cp config/fulfillment_db.yml.example config/fulfillment_db.yml
@@ -107,6 +107,7 @@ jobs:
         working-directory: ./sparc-fulfillment
         run: |
           mkdir -p tmp
+          mkdir -p public/system/documents
           cp config/database.yml.example config/database.yml
           cp config/sparc_db.yml.example config/sparc_db.yml
           cp config/klok_db.yml.example config/klok_db.yml
