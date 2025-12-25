@@ -117,7 +117,7 @@ jobs:
           echo "========= sparc_db.yml ========"
           cat config/sparc_db.yml
           echo "=========== Env Vars ======="
-          echo "DATABASE_NAME=$DATABASE_NAME""
+          echo "DATABASE_NAME=$DATABASE_NAME"
           echo "SPARC_DATABASE_NAME=$SPARC_DATABASE_NAME"
           bundle exec rake db:migrate
 

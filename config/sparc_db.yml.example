@@ -42,7 +42,7 @@ development:
 test:
   adapter: mysql2
   encoding: utf8
-  database: <%= ENV.fetch('DATABASE_NAME', 'test_sparc_request') %>
+  database: <%= ENV.fetch('SPARC_DATABASE_NAME', 'test_sparc_request') %>
   username: <%= ENV.fetch('DATABASE_USERNAME', 'root') %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
   host: <%= ENV['DATABASE_HOST'] || '127.0.0.1' %>
@@ -62,7 +62,7 @@ test:
 #   pool: 5
 #   variables:
 #    sql_mode: TRADITIONAL
-# 
+#
 # development:
 #   <<: *default
 #   database: <%= ENV['SPARC_DATABASE_NAME'] %>
