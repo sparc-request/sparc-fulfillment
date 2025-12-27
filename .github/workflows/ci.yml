@@ -112,14 +112,8 @@ jobs:
           cp config/sparc_db.yml.example config/sparc_db.yml
           cp config/klok_db.yml.example config/klok_db.yml
           cp dotenv.example .env
-          echo "===== database.yml ========"
-          cat config/database.yml
-          echo "========= sparc_db.yml ========"
-          cat config/sparc_db.yml
-          echo "=========== Env Vars ======="
-          echo "DATABASE_NAME=$DATABASE_NAME"
-          echo "SPARC_DATABASE_NAME=$SPARC_DATABASE_NAME"
           bundle exec rake db:migrate
+          bundle exec rake db:test:prepare
 
       - name: Install Node dependencies and precompile assets
         working-directory: ./sparc-fulfillment
