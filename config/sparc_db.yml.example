@@ -24,6 +24,8 @@ default: &default
   port: 3306
   timeout: 5000
   pool: 5
+  variables:
+    sql_mode: TRADITIONAL
 
 development:
   <<: *default

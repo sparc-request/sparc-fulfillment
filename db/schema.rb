@@ -156,6 +156,7 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.datetime "invoiced_date"
     t.boolean "credited"
     t.float "percent_subsidy"
+    t.boolean "modified_rate", default: false, null: false
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id"
     t.index ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id"
     t.index ["line_item_id"], name: "index_fulfillments_on_line_item_id"
@@ -287,7 +288,7 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.index ["mrn"], name: "index_participants_on_mrn"
   end
 
-  create_table "procedure_groups", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
+  create_table "procedure_groups", charset: "utf8mb3", force: :cascade do |t|
     t.integer "appointment_id"
     t.integer "sparc_core_id"
     t.datetime "start_time"
@@ -320,6 +321,7 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.boolean "credited"
     t.float "percent_subsidy"
     t.integer "position"
+    t.boolean "modified_rate", default: false, null: false
     t.index ["appointment_id"], name: "index_procedures_on_appointment_id"
     t.index ["completed_date"], name: "index_procedures_on_completed_date"
     t.index ["service_id"], name: "index_procedures_on_service_id"

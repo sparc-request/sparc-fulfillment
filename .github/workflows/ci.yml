@@ -83,8 +83,8 @@ jobs:
 
       - name: Create databases
         run: |
-          mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database $DATABASE_NAME;"
-          mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database $SPARC_DATABASE_NAME;"
+          mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database cwf_test;"
+          mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database test_sparc_request;"
 
       - name: Setup sparc-request database
         working-directory: ./sparc-request
@@ -124,5 +124,8 @@ jobs:
 
       - name: Run RSpec tests
         working-directory: ./sparc-fulfillment
+        env:
+          DATABASE_NAME: cwf_test
+          SPARC_DATABASE_NAME: test_sparc_request
         run: |
           bundle exec rspec ${{ matrix.rspec_files }}
