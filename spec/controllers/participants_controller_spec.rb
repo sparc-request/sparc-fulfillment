@@ -78,19 +78,22 @@ RSpec.describe ParticipantsController do
 
   describe "POST #create" do
     it "should create a new participant" do
-      attributes = @participant.attributes
-      bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
-      attributes.delete_if {|key| bad_attributes.include?(key)}
-      attributes[:date_of_birth] = "09/10/2015"
-      attributes[:mrn] = "888"
-      #Troubleshooting Travis Failure
-      test = Participant.new(attributes)
-      test.valid?
-      puts '#' * 50
-      puts test.errors.messages.inspect
-      puts '#' * 50
-      test = nil
-      ##End Travis Testing
+      attributes = {
+        first_name: Faker::Name.first_name,
+        last_name: Faker::Name.last_name,
+        middle_initial: 'A',
+        mrn: '88888888',
+        date_of_birth: '09/10/2015',
+        gender: 'Male',
+        ethnicity: 'Not Hispanic or Latino',
+        race: 'White',
+        address: '123 Test St',
+        city: 'Test City',
+        state: 'SC',
+        zipcode: '12345',
+        phone: '123-456-7890'
+      }
+
       expect{
         post :create, params: { participant: attributes }, format: :js
       }.to change(Participant, :count).by(1)

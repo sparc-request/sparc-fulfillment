@@ -176,7 +176,7 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def then_i_should_see_an_error_about_last_arm
     sleep 2
-    expect(find(".modal-body")).to have_content "Cannot remove the last arm of this protocol"
+    expect(page).to have_content "Cannot remove the last Arm"
   end
 
   def then_i_should_see_an_error_about_completed_procedures

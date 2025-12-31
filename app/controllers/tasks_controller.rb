@@ -40,7 +40,8 @@ class TasksController < ApplicationController
   end
 
   def show
-    @partial = ["show", @task.assignable_type.downcase, "task"].join("_")
+    assignable_type = @task.assignable_type.present? ? @task.assignable_type.downcase : "identity"
+    @partial = ["show", assignable_type, "task"].join("_")
     respond_to do |format|
       format.html
       format.js

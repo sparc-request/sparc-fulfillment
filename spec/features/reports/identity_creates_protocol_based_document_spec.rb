@@ -96,14 +96,18 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     when 'study_schedule_report'
       click_button "Export"
       wait_for_ajax
-
-      @document_id = first('.study-schedule-report')['data-url'].split('documentable_id=')[1].split('&')[0]
+      # Wait for document to be created and completed
+      sleep 2
+      @document = Document.last
+      @document_id = @document.id
     when 'participant_report'
       click_link 'Participant Tracker'
       find('.participant-report').click
       wait_for_ajax
-
-      @document_id = first('.participant-report')['data-url'].split('documentable_id=')[1].split('&')[0]
+      # Wait for document to be created and completed
+      sleep 2
+      @document = Document.last
+      @document_id = @document.id
     end
   end
 

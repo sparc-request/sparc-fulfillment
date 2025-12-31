@@ -74,7 +74,7 @@ RSpec.describe Procedure, type: :model do
 
       context 'with exempt services' do
         before do
-          allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([exempt_inactive_service.id])
+          allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([exempt_inactive_service.id.to_s])
         end
 
         it 'shows procedures with active services, non-unstarted procedures with inactive services or procedures with inactive services that are exempt' do
@@ -115,7 +115,7 @@ RSpec.describe Procedure, type: :model do
 
       context 'with exempt services' do
         before do
-          allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([exempt_inactive_service.id])
+          allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([exempt_inactive_service.id.to_s])
         end
 
         it 'shows procedures with active services, non-unstarted status, or exempt service IDs' do

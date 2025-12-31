@@ -36,11 +36,14 @@ RSpec.describe ServiceImporterJob, type: :job do
   describe '#perform', sparc_api: :get_service_components_1, enqueue: false do
 
     it 'should update line_items components if serviceComponents are changed' do
-      line_item = create(:line_item, service: create(:service_with_one_time_fee), protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
+      # Create a service with sparc_id 1 to match VCR cassette which returns sparc_id: 1
+      service = create(:service_with_one_time_fee)
+      line_item = create(:line_item, service_id: 1, service: service, protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
 
       callback_url = "http://#{ENV['SPARC_API_HOST']}/api/v1/services/1.json"
       ServiceImporterJob.perform_later(1, callback_url, 'update')
 
+      line_item.reload
       expect(line_item.components.map(&:component)).to eq ['a','b','c','o']
     end
   end

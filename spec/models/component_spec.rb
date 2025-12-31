@@ -31,7 +31,7 @@ RSpec.describe Component, type: :model do
       it 'should be scoped to position' do
         groups = []
         # create them with positions 3,2,1
-        (3..1).each do |p|
+        3.downto(1).each do |p|
           c = create(:component, position: p)
           groups << c
         end

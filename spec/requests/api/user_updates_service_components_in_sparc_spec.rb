@@ -25,9 +25,12 @@ RSpec.describe 'User updates Service Components in SPARC', type: :request, enque
   describe 'full lifecycle' do
 
     it 'should update the Protocol', sparc_api: :get_service_components_1 do
-      line_item = create(:line_item, sparc_id: 1, service: create(:service_with_one_time_fee), protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
+      # Create a line_item with service_id 1 to match VCR cassette which returns sparc_id: 1
+      service = create(:service_with_one_time_fee)
+      line_item = create(:line_item, sparc_id: 1, service_id: 1, service: service, protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
       user_updates_service_components_in_sparc
 
+      line_item.reload
       expect(line_item.components.map(&:component)).to eq ['a','b','c','o']
     end
   end

@@ -99,9 +99,10 @@ feature 'Identity edits document title', js: true, enqueue: false do
     # close organization dropdown, so it's not covering protocol dropdown
     find('.modal-title').click
 
-    #Actually choose protocol
+    #Actually choose protocol - use partial match since srid format may vary
     find('button[data-id="protocol_select"]').click
-    find(".dropdown-menu.show .dropdown-item", text: @protocol.short_title_with_sparc_id.truncate(50)).click
+    # Find dropdown item containing the sparc_id
+    find(".dropdown-menu.show .dropdown-item", text: /#{@protocol.sparc_id}/).click
 
     # close protocol dropdown, so it's not covering 'Request Report' button
     find('.modal-title').click
