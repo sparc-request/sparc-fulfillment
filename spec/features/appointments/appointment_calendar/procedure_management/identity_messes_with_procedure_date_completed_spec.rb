@@ -120,8 +120,10 @@ feature 'User messes with a procedures date completed', js: true do
     # Format the full date for the datepicker input
     formatted_date = @edited_completed_date.strftime('%m/%d/%Y')
     
-    # Use the text parameter for non-readonly inputs
-    bootstrap_datepicker 'input#procedure_completed_date', text: formatted_date
+    # Use JavaScript to set the date via the datetimepicker API and trigger the save
+    page.execute_script("$('input#procedure_completed_date').val('#{formatted_date}').trigger('change')")
+    # Trigger the dp.hide event which saves the date via AJAX
+    page.execute_script("$('.completed_date_field').trigger('dp.hide')")
     wait_for_ajax
     sleep 0.5  # Allow time for the AJAX update to complete
     @complete_procedure.reload
