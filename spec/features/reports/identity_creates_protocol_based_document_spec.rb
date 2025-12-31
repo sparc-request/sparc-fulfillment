@@ -92,25 +92,20 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   end
 
   def when_i_create_a_document_of_type(type)
-    document_count_before = Document.count
     case type
     when 'study_schedule_report'
       click_button "Export"
       wait_for_ajax
-      # Wait for the document to be created and completed
-      Timeout.timeout(30) do
-        sleep 0.5 until Document.count > document_count_before && Document.last.state == 'Completed'
-      end
+      # Wait for the icon to change to download (indicates document is ready)
+      expect(page).to have_css('.fa-file-download', wait: 30)
       @document = Document.last
       @document_id = @document.id
     when 'participant_report'
       click_link 'Participant Tracker'
       find('.participant-report').click
       wait_for_ajax
-      # Wait for the document to be created and completed
-      Timeout.timeout(30) do
-        sleep 0.5 until Document.count > document_count_before && Document.last.state == 'Completed'
-      end
+      # Wait for the icon to change to download (indicates document is ready)
+      expect(page).to have_css('.fa-file-download', wait: 30)
       @document = Document.last
       @document_id = @document.id
     end

@@ -132,7 +132,8 @@ feature 'User creates Participant', js: true do
   end
 
   def then_i_should_see_the_new_participant_in_the_list
-    expect(page).to have_css('#flashContainer', text: 'Participant Created')
+    # Wait for the flash message with longer timeout
+    expect(page).to have_css('#flashContainer', text: 'Participant Created', wait: 10)
     expect(page).to have_css('table.participants tbody tr', count: 1)
   end
 

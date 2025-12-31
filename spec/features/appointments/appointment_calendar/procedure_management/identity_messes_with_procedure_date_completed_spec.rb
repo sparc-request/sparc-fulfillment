@@ -117,13 +117,12 @@ feature 'User messes with a procedures date completed', js: true do
     @new_day               = pick_new_date(existing_day)
     @edited_completed_date = Time.now.change(day: @new_day)
 
-    # Format the full date for the datepicker input
-    formatted_date = @edited_completed_date.strftime('%m/%d/%Y')
-    
-    # Use JavaScript to set the date via the datetimepicker API and trigger the save
-    page.execute_script("$('input#procedure_completed_date').val('#{formatted_date}').trigger('change')")
-    # Trigger the dp.hide event which saves the date via AJAX
-    page.execute_script("$('.completed_date_field').trigger('dp.hide')")
+    # Click on the datepicker to open the calendar
+    find('input#procedure_completed_date').click
+    # Wait for datepicker to be visible
+    expect(page).to have_css('.bootstrap-datetimepicker-widget', visible: true)
+    # Click on the day - use :not(.old):not(.new) to avoid days from adjacent months
+    find(".bootstrap-datetimepicker-widget .day:not(.old):not(.new)", text: /^#{@new_day}$/, match: :first).click
     wait_for_ajax
     sleep 0.5  # Allow time for the AJAX update to complete
     @complete_procedure.reload
