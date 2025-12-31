@@ -96,16 +96,16 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     when 'study_schedule_report'
       click_button "Export"
       wait_for_ajax
-      # Wait for document to be created and completed
-      sleep 2
+      # Wait for the button to show success state (document completed)
+      expect(page).to have_css('button.study-schedule-report.btn-success', wait: 30)
       @document = Document.last
       @document_id = @document.id
     when 'participant_report'
       click_link 'Participant Tracker'
       find('.participant-report').click
       wait_for_ajax
-      # Wait for document to be created and completed
-      sleep 2
+      # Wait for the button to show success state (document completed)
+      expect(page).to have_css('button.participant-report.btn-success', wait: 30)
       @document = Document.last
       @document_id = @document.id
     end

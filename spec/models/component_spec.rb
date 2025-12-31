@@ -35,8 +35,8 @@ RSpec.describe Component, type: :model do
           c = create(:component, position: p)
           groups << c
         end
-        # expect them to return from query in position-order 1,2,3
-        sorted_groups = Component.all
+        # Query only the components we created, sorted by position
+        sorted_groups = Component.where(id: groups.map(&:id))
         expect(groups.first).to eq(sorted_groups.last)
         expect(groups.second).to eq(sorted_groups.second)
         expect(groups.third).to eq(sorted_groups.first)

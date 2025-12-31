@@ -117,8 +117,13 @@ feature 'User messes with a procedures date completed', js: true do
     @new_day               = pick_new_date(existing_day)
     @edited_completed_date = Time.now.change(day: @new_day)
 
-    bootstrap_datepicker 'input#procedure_completed_date', day: "#{@new_day}"
+    # Format the full date for the datepicker input
+    formatted_date = @edited_completed_date.strftime('%m/%d/%Y')
+    
+    # Use the text parameter for non-readonly inputs
+    bootstrap_datepicker 'input#procedure_completed_date', text: formatted_date
     wait_for_ajax
+    sleep 0.5  # Allow time for the AJAX update to complete
     @complete_procedure.reload
   end
 

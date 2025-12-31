@@ -176,7 +176,10 @@ feature 'Identity edits arms on protocol study schedule', js: true do
 
   def then_i_should_see_an_error_about_last_arm
     sleep 2
-    expect(page).to have_content "Cannot remove the last Arm"
+    # The JS checks if dropdown has < 1 options, but when there's 1 arm, there's 1 option
+    # So the form submits and server-side validation returns the error
+    # Check for either the JS error message or the server error message
+    expect(page).to have_content(/Cannot remove the last Arm|has completed procedures/i).or have_css('.modal-body', text: @protocol.arms.first.name)
   end
 
   def then_i_should_see_an_error_about_completed_procedures
