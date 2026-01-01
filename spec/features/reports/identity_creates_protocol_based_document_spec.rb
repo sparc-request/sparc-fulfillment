@@ -129,8 +129,10 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
   def then_i_should_see_the_document
     find('#reportsTabLink').click
     wait_for_ajax
-
-    expect(page).to have_css("a#file_#{@document_id}")
+    # Wait for Bootstrap Table to finish loading data
+    expect(page).to have_css('table.protocol_reports tbody tr', wait: 15)
+    # Now check for the specific document link
+    expect(page).to have_css("a#file_#{@document_id}", wait: 15)
   end
 
   def then_i_should_see_the_options_dropdown
