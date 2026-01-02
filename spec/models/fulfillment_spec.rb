@@ -55,7 +55,7 @@ RSpec.describe Fulfillment, type: :model do
       context 'line item has no current or historical effective admin rates' do
         it 'should return the service cost' do
           line_item = create(:line_item, protocol: create(:protocol), service: create(:service))
-          fulfillment = create(:fulfillment, line_item: line_item)
+          fulfillment = create(:fulfillment, line_item: line_item, fulfilled_at: (Time.now - 1.day).strftime("%m/%d/%Y"))
           fulfillment.fulfilled_at = (Time.now).strftime("%m/%d/%Y")
           fulfillment.send(:recalculate_cost)
           expect(fulfillment.service_cost).to eq(line_item.cost)

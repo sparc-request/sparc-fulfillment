@@ -76,7 +76,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, sparc_api: :get_service_components_1) do
-    VCR.insert_cassette('reusable/sparc_api/get_service_components_1')
+    VCR.insert_cassette('reusable/sparc_api/get_service_components_1', match_requests_on: [:method, :path, :query])
   end
 
   config.before(:each, sparc_api: :unavailable) do
