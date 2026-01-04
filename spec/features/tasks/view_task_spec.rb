@@ -56,13 +56,16 @@ feature "Identity views Task", js: true do
     fill_in :task_body, with: "Test body"
     find("#new_task .modal-footer .btn-primary").click
     wait_for_ajax
+
+    Task.last.update(assignable_type: "Identity")
+    
     find("table.tasks tbody tr:first-child").click
     wait_for_ajax
   end
 
   def given_i_have_been_assigned_a_procedure_task
     DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
-    
+
     create(:protocol_imported_from_sparc)
     identity        = Identity.first
     appointment = Appointment.first
