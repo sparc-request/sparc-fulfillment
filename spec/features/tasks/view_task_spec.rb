@@ -48,17 +48,19 @@ feature "Identity views Task", js: true do
   end
 
   def when_i_view_a_identity_task_assigned_to_myself
-    assignee = Identity.first
+    find(".add-task").click
+    wait_for_ajax
 
-    find("a.btn.btn-success").click
     bootstrap_select '#task_assignee_id', @assignee.full_name
     bootstrap_datepicker '.datetimepicker-input', day: '15'
     fill_in :task_body, with: "Test body"
+
     find("#new_task .modal-footer .btn-primary").click
     wait_for_ajax
 
-    Task.last.update(assignable_type: "Identity")
-    
+    task = Task.where(body: "Test body").last
+    task.update_columns(assignable_type: "Identity", assignable_id: @assignee.id)
+
     find("table.tasks tbody tr:first-child").click
     wait_for_ajax
   end

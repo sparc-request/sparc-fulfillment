@@ -78,7 +78,7 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     when_i_create_a_document_of_type 'study_schedule_report'
     when_i_click_the_created_document_icon
     when_i_click_the_generate_new_option
-    then_i_should_see_the_document
+    then_i_should_see_the_document(expected_count: 2)
   end
 
   def given_i_am_viewing_the_reports_tab
@@ -122,11 +122,11 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     wait_for_ajax
   end
 
-  def then_i_should_see_the_document
+  def then_i_should_see_the_document(expected_count: 1)
     find('#reportsTabLink').click
     wait_for_ajax
 
-    expect(Document.where(documentable: @protocol).count).to eq(1)
+    expect(Document.where(documentable: @protocol).count).to eq(expected_count)
     # expect(page).to have_css("a#file_#{@document_id}")
   end
 
