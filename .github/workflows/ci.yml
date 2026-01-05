@@ -72,20 +72,14 @@ jobs:
           sudo apt-get install -y xvfb mysql-client libcurl4-openssl-dev
           Xvfb :99 -screen 0 1024x768x24 &
 
+      - name: Create databases
+        run: mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database cwf_test; create database test_sparc_request;"
+
       - name: Set up ruby for sparc-request
         uses: ruby/setup-ruby@v1
         with:
           working-directory: ./sparc-request
           bundler-cache: true
-
-      - name: Set up ruby for sparc-fulfillment
-        uses: ruby/setup-ruby@v1
-        with:
-          working-directory: ./sparc-fulfillment
-          bundler-cache: true
-
-      - name: Create databases
-        run: mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database cwf_test; create database test_sparc_request;"
 
       - name: Setup sparc-request database
         working-directory: ./sparc-request
@@ -96,6 +90,12 @@ jobs:
           cp config/fulfillment_db.yml.example config/fulfillment_db.yml
           cp dotenv.example .env
           bundle exec rake db:migrate db:test:prepare
+
+      - name: Set up ruby for sparc-fulfillment
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: ./sparc-fulfillment
+          bundler-cache: true
 
       - name: Set up sparc-fulfillment database
         working-directory: ./sparc-fulfillment
