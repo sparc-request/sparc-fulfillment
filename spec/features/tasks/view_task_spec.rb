@@ -60,13 +60,13 @@ feature "Identity views Task", js: true do
     wait_for_ajax
 
     task = Task.where(body: "Test body").last
-    task.update_columns(assignable_type: "Identity", assignable_id: @assignee.id) if task.assignable_type.blank?
+    task.update_columns(assignable_type: "Identity", assignable_id: @assignee.id)
 
     page.execute_script("$('table.tasks').bootstrapTable('refresh')")
     wait_for_ajax
 
-    expect(page).to have_css("table.tasks tbody tr")
-    find("table.tasks tbody tr:first-child").click
+    expect(page).to have_css("table.tasks tbody tr", text: "Test body")
+    find("table.tasks tbody tr", text: "Test body").click
     wait_for_ajax
   end
 
