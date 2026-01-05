@@ -74,7 +74,6 @@ RSpec.describe Procedure, type: :model do
 
       context 'with exempt services' do
         before do
-          # allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([exempt_inactive_service.id])
           allow(Sparc::Setting).to receive(:get_value).with('exempt_inactive_services').and_return([exempt_inactive_service.id.to_s])
         end
 

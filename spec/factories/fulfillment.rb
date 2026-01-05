@@ -45,3 +45,4 @@ FactoryBot.define do
     factory :fulfillment_without_validations, traits: [:without_validations]
   end
 end
+

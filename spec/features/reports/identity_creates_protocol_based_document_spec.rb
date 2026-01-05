@@ -127,7 +127,6 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     wait_for_ajax
 
     expect(Document.where(documentable: @protocol).count).to eq(expected_count)
-    # expect(page).to have_css("a#file_#{@document_id}")
   end
 
   def then_i_should_see_the_options_dropdown

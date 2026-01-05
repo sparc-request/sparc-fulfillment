@@ -48,7 +48,6 @@ feature "Identity views Task", js: true do
   end
 
   def when_i_view_a_identity_task_assigned_to_myself
-    # find(".add-task").click
     click_link "Create New Task"
     wait_for_ajax
 

@@ -133,7 +133,6 @@ feature 'User creates Participant', js: true do
 
   def then_i_should_see_the_new_participant_in_the_list
     expect(Participant.count).to eq(1)
-    # expect(page).to have_css('#flashContainer', text: 'Participant Created')
     expect(page).to have_css('table.participants tbody tr', count: 1)
   end
 

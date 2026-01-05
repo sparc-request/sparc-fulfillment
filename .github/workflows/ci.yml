@@ -2,11 +2,9 @@ name: cwf ci
 
 on:
   push:
-    branches:
-      - "v*"
+    branches: ["v*"]
   pull_request:
-    branches:
-      - "v*"
+    branches: ["v*"]
 
 jobs:
   test:
@@ -26,11 +24,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: ''
         ports:
           - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     env:
       RAILS_ENV: test
@@ -42,15 +36,16 @@ jobs:
       DATABASE_PASSWORD: ''
       DATABASE_NAME: cwf_test
       SPARC_DATABASE_NAME: test_sparc_request
-      CWF_DATABASE_NAME: cwf_test
       USE_EPIC: "true"
       EPIC_TEST_MODE: "true"
 
     steps:
+      # Clone cwf and sparc repos into subdirectlories in the runner
       - name: Checkout sparc-fulfillment
-        uses: actions/checkout@v4
+      # `actions/checkout@v4` does this - "git clone + cd into path + git checkout the PR branch or specified ref"
+        uses: actions/checkout@v4 # checks out the PR branch
         with:
-          path: sparc-fulfillment
+          path: sparc-fulfillment # put the checked out code into this subdirectory
 
       - name: Checkout sparc-request
         uses: actions/checkout@v4
@@ -63,6 +58,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 14.19.2
+          cache: yarn
+          cache-dependency-path: sparc-fulfillment/yarn.lock
 
       - name: Install firefox
         uses: browser-actions/setup-firefox@latest
@@ -81,10 +78,14 @@ jobs:
           working-directory: ./sparc-request
           bundler-cache: true
 
+      - name: Set up ruby for sparc-fulfillment
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: ./sparc-fulfillment
+          bundler-cache: true
+
       - name: Create databases
-        run: |
-          mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database cwf_test;"
-          mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database test_sparc_request;"
+        run: mysql -h $DATABASE_HOST -u $DATABASE_USERNAME -e "create database cwf_test; create database test_sparc_request;"
 
       - name: Setup sparc-request database
         working-directory: ./sparc-request
@@ -94,38 +95,24 @@ jobs:
           cp config/database.yml.example config/database.yml
           cp config/fulfillment_db.yml.example config/fulfillment_db.yml
           cp dotenv.example .env
-          bundle exec rake db:migrate
-          bundle exec rake db:test:prepare
-
-      - name: Set up ruby for sparc-fulfillment
-        uses: ruby/setup-ruby@v1
-        with:
-          working-directory: ./sparc-fulfillment
-          bundler-cache: true
+          bundle exec rake db:migrate db:test:prepare
 
       - name: Set up sparc-fulfillment database
         working-directory: ./sparc-fulfillment
         run: |
-          mkdir -p tmp
-          mkdir -p public/system/documents
+          mkdir -p tmp public/system/documents
           cp config/database.yml.example config/database.yml
           cp config/sparc_db.yml.example config/sparc_db.yml
           cp config/klok_db.yml.example config/klok_db.yml
           cp dotenv.example .env
-          bundle exec rake db:migrate
-          bundle exec rake db:test:prepare
+          bundle exec rake db:migrate db:test:prepare
 
       - name: Install Node dependencies and precompile assets
         working-directory: ./sparc-fulfillment
         run: |
-          npm install -g yarn
           yarn install
           bundle exec rake assets:precompile
 
       - name: Run RSpec tests
         working-directory: ./sparc-fulfillment
-        env:
-          DATABASE_NAME: cwf_test
-          SPARC_DATABASE_NAME: test_sparc_request
-        run: |
-          bundle exec rspec ${{ matrix.rspec_files }}
+        run: bundle exec rspec ${{ matrix.rspec_files }}
