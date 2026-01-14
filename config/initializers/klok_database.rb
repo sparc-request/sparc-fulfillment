@@ -19,7 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 KLOK_DB =
-  if File.exists?(File.join(Rails.root, 'config', 'klok_db.yml'))
+  if File.exist?(File.join(Rails.root, 'config', 'klok_db.yml'))
     YAML.load_file(File.join(Rails.root, "config", "klok_db.yml"))["klok"]
   else
     nil

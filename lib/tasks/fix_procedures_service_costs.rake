@@ -31,7 +31,7 @@ namespace :data do
       puts "No import file specified or the file specified does not exist in tmp" if error
       file = prompt "Please specify the file name to import from tmp (must be a CSV): "
 
-      while file.blank? or not File.exists?(Rails.root.join("tmp", file))
+      while file.blank? or not File.exist?(Rails.root.join("tmp", file))
         file = get_file(true)
       end
 

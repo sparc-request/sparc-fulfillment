@@ -258,7 +258,7 @@ class Procedure < ApplicationRecord
   end
 
   def update_protocols_participant_deletable
-    protocols_participant.update(deletable: !protocols_participant.procedures.exists?(status: ['follow_up', 'incomplete', 'complete'])) if protocols_participant
+    protocols_participant.update(deletable: !protocols_participant.procedures.exist?(status: ['follow_up', 'incomplete', 'complete'])) if protocols_participant
   end
 
   def set_invoiced_date

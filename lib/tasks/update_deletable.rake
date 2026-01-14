@@ -6,7 +6,7 @@ namespace :update_deletable do
 
     ProtocolsParticipant.find_each do |pp|
       begin
-        if pp.update!(deletable: !pp.procedures.exists?(status: ['follow_up', 'incomplete', 'complete']))
+        if pp.update!(deletable: !pp.procedures.exist?(status: ['follow_up', 'incomplete', 'complete']))
           updated_records += 1
         end
       rescue => e
