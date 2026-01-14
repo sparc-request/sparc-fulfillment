@@ -20,7 +20,7 @@
 
 KLOK_DB =
   if File.exist?(File.join(Rails.root, 'config', 'klok_db.yml'))
-    YAML.load_file(File.join(Rails.root, "config", "klok_db.yml"))["klok"]
+    YAML.load_file(File.join(Rails.root, "config", "klok_db.yml"), aliases: true)["klok"]
   else
     nil
   end
