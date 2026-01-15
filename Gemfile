@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'activerecord-import'
-gem 'activerecord-session_store'
+gem 'activerecord-session_store', '~>2.1.0'
 gem 'acts_as_list'
 gem 'addressable'
 gem 'autoprefixer-rails', '7.2.2'
