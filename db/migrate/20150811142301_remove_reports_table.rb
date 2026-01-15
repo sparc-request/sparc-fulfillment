@@ -20,6 +20,6 @@
 
 class RemoveReportsTable < ActiveRecord::Migration[4.2]
   def change
-    drop_table :reports if ActiveRecord::Base.connection.table_exist? 'reports'
+    drop_table :reports if ActiveRecord::Base.connection.table_exists? 'reports'
   end
 end
