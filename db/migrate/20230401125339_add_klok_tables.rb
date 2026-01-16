@@ -1,6 +1,6 @@
 class AddKlokTables < ActiveRecord::Migration[5.2]
   def change
-    create_table :klok_entries, { id: false } do |t|
+    create_table :klok_entries, id: false do |t|
       t.timestamp :created_at
       t.integer :project_id, null: false
       t.integer :resource_id
@@ -19,14 +19,14 @@ class AddKlokTables < ActiveRecord::Migration[5.2]
       t.boolean :enabled, default: 0
     end
 
-    create_table :klok_people, { id: false } do |t|
+    create_table :klok_people, id: false do |t|
       t.primary_key :resource_id
       t.string :name
       t.string :username
       t.timestamp :created_at
     end
 
-    create_table :klok_projects, { id: false } do |t|
+    create_table :klok_projects, id: false do |t|
       t.string :contact_email
       t.primary_key :project_id
       t.integer :path

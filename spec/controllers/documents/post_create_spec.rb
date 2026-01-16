@@ -45,7 +45,7 @@ RSpec.describe DocumentsController, type: :controller do
       end
 
       it 'should persist a file to the filesystem' do
-        expect(File.exists?(assigns(:document).path)).to be
+        expect(File.exist?(assigns(:document).path)).to be
       end
     end
 

@@ -19,13 +19,10 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class AddAttachmentFileToImports < ActiveRecord::Migration[4.2]
-  def self.up
-    change_table :imports do |t|
-      t.attachment :file
-    end
-  end
-
-  def self.down
-    remove_attachment :imports, :file
+  def change
+    add_column :imports, :file_file_name, :string
+    add_column :imports, :file_file_size, :integer
+    add_column :imports, :file_content_type, :string
+    add_column :imports, :file_updated_at, :datetime
   end
 end
