@@ -130,12 +130,12 @@ module ApplicationHelper
 
   def admin_service_tag
     content_tag(:small, class: 'text-danger ml-1') do
-      content_tag(:em, '(admin service)')
+      content_tag(:em, '(Admin Service)')
     end
   end
 
   def service_name_display(service, strong=false)
     element = strong ? :strong : :span
-    content_tag(element, service.name) + (service.is_administrative? ? admin_service_tag : '') + (service.is_available ? "" : content_tag(element, " (Inactive)", class: 'inactive-service'))
+    content_tag(element, service.name) + (service.is_available ? "" : content_tag(:small, " (Inactive)", style: 'font-weight: normal;',class: 'inactive-service')) + (service.is_administrative? ? admin_service_tag : '')
   end
 end
