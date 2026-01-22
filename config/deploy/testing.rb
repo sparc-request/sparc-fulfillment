@@ -24,7 +24,7 @@
 # You can define all roles on a single server, or split them:
 
 set :repo_url, 'git@sparc_fulfillment:sparc-request/sparc-fulfillment.git'
-# set :delayed_job_workers, 1
+set :delayed_job_workers, 2
 # server 'bmic-sparc-dev.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 server 'bmic-sparc-d.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
 
