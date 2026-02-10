@@ -26,6 +26,9 @@ RUN bundle install
 # Copy the rest of the application code
 COPY . .
 
+# Install Node.js dependencies using Yarn
+RUN yarn install
+
 # Precompile assets
 RUN RAILS_ENV=development bundle exec rake assets:precompile
 
