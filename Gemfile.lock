@@ -167,7 +167,12 @@ GEM
     crass (1.0.6)
     daemons (1.4.1)
     dalli (3.2.1)
-    database_cleaner (1.8.5)
+    database_cleaner (2.1.0)
+      database_cleaner-active_record (>= 2, < 3)
+    database_cleaner-active_record (2.2.2)
+      activerecord (>= 5.a)
+      database_cleaner-core (~> 2.0)
+    database_cleaner-core (2.0.1)
     date (3.5.1)
     delayed_job (4.2.0)
       activesupport (>= 3.0, < 9.0)
@@ -573,7 +578,8 @@ DEPENDENCIES
   coffee-rails
   daemons
   dalli
-  database_cleaner
+  database_cleaner (~> 2.1)
+  database_cleaner-active_record (~> 2.2)
   delayed_job_active_record
   devise (~> 4.9)
   dotenv-rails
