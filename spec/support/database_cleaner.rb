@@ -26,7 +26,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
     MODELS.each do |model|
-      DatabaseCleaner[:active_record, model: model].clean_with(:truncation)
+      DatabaseCleaner[:active_record, db: model].clean_with(:truncation)
     end
   end
 
