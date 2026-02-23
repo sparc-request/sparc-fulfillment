@@ -50,12 +50,12 @@ feature 'Identity views protocols', js: true do
   end
 
   def given_i_am_a_fulfillment_provider_for_a_protocol
-    DatabaseCleaner[:active_record, model: Protocol].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Protocol].clean_with(:truncation)
     @protocol = create_and_assign_protocol_to_me
   end
 
   def given_i_am_not_a_fulfillment_provider_for_a_protocol
-    DatabaseCleaner[:active_record, model: Protocol].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Protocol].clean_with(:truncation)
     organization            = create(:organization)
     sub_service_request     = create(:sub_service_request, organization: organization)
     @unauthorized_protocol  = create(:protocol, sub_service_request: sub_service_request)

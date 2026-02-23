@@ -27,7 +27,7 @@ RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
     context 'success' do
 
       before do
-        DatabaseCleaner[:active_record, model: Notification].clean_with(:truncation)
+        DatabaseCleaner[:active_record, db: Notification].clean_with(:truncation)
         sparc_sends_notification_post
       end
 

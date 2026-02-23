@@ -43,13 +43,13 @@ feature "Task notifications", js: true do
   end
 
   def given_i_have_no_tasks
-    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
   end
 
   def given_i_have_one_task
     assignee = Identity.first
     assignor = create(:identity)
-    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
     create(:task, identity: assignor, assignee: assignee)
   end
 

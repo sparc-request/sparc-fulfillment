@@ -73,7 +73,7 @@ feature "View Tasks", js: true do
   end
 
   def given_other_tasks_have_been_assigned_to_a_different_identity
-    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
     given_i_have_incomplete_tasks
 
     other_user = create(:identity)
@@ -92,7 +92,7 @@ feature "View Tasks", js: true do
   end
 
   def given_i_have_no_tasks
-    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
   end
 
   def when_i_view_complete_tasks

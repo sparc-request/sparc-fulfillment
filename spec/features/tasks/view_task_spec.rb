@@ -70,7 +70,7 @@ feature "Identity views Task", js: true do
   end
 
   def given_i_have_been_assigned_a_procedure_task
-    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
 
     create(:protocol_imported_from_sparc)
     identity        = Identity.first

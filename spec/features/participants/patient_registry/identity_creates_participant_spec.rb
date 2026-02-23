@@ -66,7 +66,7 @@ feature 'User creates Participant', js: true do
   end
 
   def given_i_am_viewing_the_patient_registry
-    DatabaseCleaner[:active_record, model: Participant].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Participant].clean_with(:truncation)
     create(:patient_registrar, identity: @logged_in_identity, organization: create(:organization))
     visit participants_path
     wait_for_ajax

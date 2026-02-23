@@ -25,7 +25,7 @@ require 'rails_helper'
 feature 'Identity creates a protocol-based Document', js: true, enqueue: false do
 
   before :each do
-    DatabaseCleaner[:active_record, model: Document].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Document].clean_with(:truncation)
     given_i_am_viewing_the_reports_tab
   end
 

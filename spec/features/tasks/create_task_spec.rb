@@ -22,7 +22,7 @@ require "rails_helper"
 
 feature "create Task", js: true do
   before :each do
-    DatabaseCleaner[:active_record, model: Task].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
     @assignee = Identity.first
     @second_assignee = create(:identity)
     protocol = create(:protocol_imported_from_sparc)

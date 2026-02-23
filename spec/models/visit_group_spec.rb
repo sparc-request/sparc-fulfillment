@@ -166,7 +166,7 @@ RSpec.describe VisitGroup, type: :model do
     describe 'default_scope' do
 
       it 'should be scoped to position' do
-        DatabaseCleaner[:active_record, model: VisitGroup].clean_with(:truncation)
+        DatabaseCleaner[:active_record, db: VisitGroup].clean_with(:truncation)
         groups = []
         # create them with positions 3,2,1
         (3..1).each do |p|

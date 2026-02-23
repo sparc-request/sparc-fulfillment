@@ -42,7 +42,7 @@ feature 'User deletes Participant', js: true do
   end
 
   def given_i_have_a_participant
-    DatabaseCleaner[:active_record, model: Participant].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Participant].clean_with(:truncation)
     @protocol = create_and_assign_protocol_to_me
     @participant = Participant.last
   end

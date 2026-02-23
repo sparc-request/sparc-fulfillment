@@ -23,7 +23,7 @@ require 'rails_helper'
 feature 'Identity incompletes all Services', js: true do
 
   before :each do
-    DatabaseCleaner[:active_record, model: Procedure].clean_with(:truncation)
+    DatabaseCleaner[:active_record, db: Procedure].clean_with(:truncation)
     @protocol     = create(:protocol_imported_from_sparc)
     org           = @protocol.sub_service_request.organization
                     create(:clinical_provider, identity: @logged_in_identity, organization: org)
