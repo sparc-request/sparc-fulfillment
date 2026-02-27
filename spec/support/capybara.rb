@@ -23,10 +23,10 @@ require 'selenium/webdriver'
 Capybara.default_max_wait_time = 5
 
 Capybara.register_driver :firefox_headless do |app|
-  options = ::Selenium::WebDriver::Firefox::Options.new
+  options = Selenium::WebDriver::Firefox::Options.new
 
   if ENV['MOZ_HEADLESS']
-    options.args << '--headless'
+    options.add_argument('--headless')
   end
 
   Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)

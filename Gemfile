@@ -92,7 +92,7 @@ group :test do
   gem 'shoulda-matchers', "~> 5.1.0", require: false
   gem 'timecop'
   gem 'vcr', '~> 6.0.0'
-  gem 'webdrivers' # will need to transition fully to selenium-webdriver 4.11+ and drop webdrivers for rails 8
+  gem 'selenium-webdriver'
   gem 'webmock', '~> 3.14.0'
   gem 'rspec-retry'
 end
