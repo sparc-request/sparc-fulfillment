@@ -35,7 +35,6 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'webdrivers'
 require 'shoulda-matchers'
 require 'simplecov'
 require 'rspec/active_job'
