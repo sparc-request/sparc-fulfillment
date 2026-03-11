@@ -61,6 +61,7 @@ group :deploy do
   gem 'capistrano-rails', '~> 1.6'
   gem 'capistrano-passenger'
   gem 'capistrano3-delayed-job', '~> 1.7'
+  gem 'capistrano-yarn'
 end
 
 
