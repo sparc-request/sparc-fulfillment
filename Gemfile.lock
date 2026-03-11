@@ -323,7 +323,7 @@ GEM
     net-ssh (7.3.0)
     netrc (0.11.0)
     nio4r (2.7.5)
-    nokogiri (1.19.1)
+    nokogiri (1.15.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     omniauth (2.0.4)
@@ -596,6 +596,7 @@ DEPENDENCIES
   microsoft_teams_incoming_webhook_ruby
   mysql2 (= 0.5.6)
   net-ldap
+  nokogiri (= 1.15.7)
   omniauth
   omniauth-rails_csrf_protection
   omniauth-shibboleth
