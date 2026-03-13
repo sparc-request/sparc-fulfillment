@@ -57,9 +57,18 @@ feature 'User tries to reset appointment', js: true do
   def when_i_start_the_appointment
     find('a.btn.start-appointment').click
     wait_for_ajax
+
+    expect(page).to have_no_css('a.btn.start-appointment', wait: 10)
+    
+    if page.has_link?(@visit_group&.name)
+      first('a', text: @visit_group.name).click 
+      wait_for_ajax
+    end
   end
 
   def when_i_resolve_all_procedures
+    expect(page).to have_no_content('Loading...', wait: 15)
+    
     page.all('label.btn.complete.status').each do |btn|
       btn.click
       wait_for_ajax
@@ -72,14 +81,18 @@ feature 'User tries to reset appointment', js: true do
   end
 
   def when_i_click_the_reset_button
-    find("a.btn.reset-appointment").click
+    find("a.btn.reset-appointment", wait: 10).click
     wait_for_ajax
 
+    expect(page).to have_selector('button.swal2-confirm', visible: true, wait: 10)
     find('button.swal2-confirm').click
+    
+    expect(page).to have_no_selector('.swal2-container', wait: 10)
     wait_for_ajax
   end
 
   def then_i_should_see_a_reset_appointment
-    expect(page).to have_css('a.start-appointment', visible: true)
+    expect(page).to have_no_content('Loading...', wait: 15)
+    expect(page).to have_css('a.start-appointment', visible: true, wait: 10)
   end
 end
