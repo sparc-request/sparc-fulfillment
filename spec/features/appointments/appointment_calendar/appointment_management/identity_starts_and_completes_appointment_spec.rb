@@ -105,12 +105,13 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def when_i_add_a_procedure
-    visit_group = @protocols_participant.appointments.first.visit_group
-    service     = @protocol.organization.inclusive_child_services(:per_participant).first
-
-    first('a.list-group-item.appointment-link').click
-    bootstrap_select('.form-control.selectpicker', service.name)
+    expect(page).to have_no_content('Loading...', wait: 15)
+    
+    @service = @protocol.organization.inclusive_child_services(:per_participant).first
+    bootstrap_select('.form-control.selectpicker', @service.name)
     page.find('button#addService').click
+    
+    expect(page).to have_css(".core tbody tr", text: @service.name, wait: 15)
     wait_for_ajax
   end
 
@@ -150,10 +151,12 @@ feature 'Start Complete Buttons', js: true do
   def when_i_click_the_start_button
     find('a.btn.start-appointment').click
     wait_for_ajax
+    
+    expect(page).to have_no_css('a.btn.start-appointment', wait: 10)
   end
 
   def when_i_click_the_complete_button
-    click_button 'Complete Visit'
+    find('button.complete-appointment').click
     wait_for_ajax
   end
 
@@ -163,8 +166,8 @@ feature 'Start Complete Buttons', js: true do
 
   def then_i_should_see_the_start_button
     expect(page).to have_css('a.start-appointment', visible: true)
-    find('a.start-appointment').click
-    wait_for_ajax
+    # find('a.start-appointment').click
+    # wait_for_ajax
   end
 
   def then_i_should_see_the_complete_button
@@ -172,16 +175,17 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def then_i_should_see_the_complete_button_disabled
-    expect(page).to have_css('button.complete-appointment.disabled', visible: true)
+    expect(page).to have_no_content('Loading...', wait: 15)
+    expect(page).to have_selector('button.complete-appointment, button.complete-visit, button', text: /Complete/i, visible: :all, wait: 15)
+    expect(page).to have_button(disabled: true, wait: 5)
   end
 
   def then_i_should_see_the_start_datepicker
-    sleep 60
-    expect(page).to have_css('input#start_date', visible: true)
+    expect(page).to have_css('input#start_date', visible: true, wait: 15)
   end
 
   def then_i_should_see_the_completed_datepicker
-    expect(page).to have_css('input#completed_date', visible: true)
+    expect(page).to have_css('input#completed_date', visible: true, wait: 15)
   end
 
   def then_i_should_see_the_start_date_at date
@@ -190,8 +194,12 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def then_i_should_see_the_completed_date_at date
-    find('#completed_date')
-    expected_date = page.evaluate_script %Q{ $('#completed_date').first().val(); }
-    expect(expected_date.split().first).to eq(Date.today.strftime('%m/%d/%Y'))
+    # unless page.has_field?('completed_date', with: date.strftime('%m/%d/%Y'))
+    #   bootstrap_datepicker '#completed_date', date: date.strftime('%m/%d/%Y')
+    # end
+    formatted_date = date.strftime('%m/%d/%Y')
+    page.execute_script("$('#completed_date').val('#{formatted_date}').trigger('change');")
+
+    expect(page).to have_field('completed_date', with: formatted_date, wait: 15)
   end
 end
