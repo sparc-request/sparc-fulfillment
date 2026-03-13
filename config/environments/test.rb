@@ -77,4 +77,7 @@ Rails.application.configure do
   # Active Storage config
   config.active_storage.service = :test
   # config.active_job.queue_adapter = :inline
+
+  # config.logger = ActiveSupport::Logger.new(STDOUT)
+  config.hosts << "cwf_web"
 end

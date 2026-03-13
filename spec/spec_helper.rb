@@ -40,6 +40,7 @@ require 'simplecov'
 require 'rspec/active_job'
 require 'rspec/rails'
 require 'rspec/retry'
+require 'capybara/rspec'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |file| require file }
 

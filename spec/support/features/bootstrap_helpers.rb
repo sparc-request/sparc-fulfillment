@@ -61,18 +61,35 @@ module Features
     def bootstrap_select(class_or_id, choice, context_selector = '')
       retries = 0
       begin
-        retries ||= 0
-        expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: :all)
-        bootstrap_select = first("#{context_selector} select#{class_or_id}", visible: :all).sibling(".dropdown-toggle")
+        # 1. Wait for the select and the toggle button to be ready
+        expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: :all, wait: 10)
+        
+        # Grab the hidden select and the visible toggle
+        hidden_select = first("#{context_selector} select#{class_or_id}", visible: :all)
+        toggle_button = hidden_select.sibling(".dropdown-toggle")
+        
+        # 2. Click the toggle to open the menu
+        toggle_button.click
+        
+        # 3. Wait for the menu to appear and click the choice
+        expect(page).to have_selector('.dropdown-menu.show', wait: 5)
+        first('.dropdown-menu.show span.text', text: choice, wait: 5).click
+        
+        # 4. THE MAGIC: Force the hidden select to recognize the choice and trigger Rails events
+        # This ensures "Add Service" buttons see the data immediately.
+        page.execute_script(%Q{
+          var $select = $("#{context_selector} select#{class_or_id}");
+          var val = $select.find('option').filter(function() {
+            return $(this).text().trim() === "#{choice}";
+          }).val();
+          $select.val(val).trigger('change');
+        })
+
+        wait_for_ajax
       rescue Selenium::WebDriver::Error::StaleElementReferenceError, Capybara::ElementNotFound
         sleep 1
         retry if (retries += 1) < 5
       end
-
-      bootstrap_select.click
-      expect(page).to have_selector('.dropdown-menu.show')
-      first('.dropdown-menu.show span.text', text: choice).click
-      wait_for_ajax
     end
 
     def bootstrap_selected?(element, choice)
@@ -86,17 +103,17 @@ module Features
         first("#{element}").click
 
         if args[:year]
-          expect(page).to have_selector('.year', exact_text: args[:year])
+          expect(page).to have_selector('.year', exact_text: args[:year], visible: :all, wait: 5)
           first('.year', exact_text: args[:year]).click
         end
 
         if args[:month]
-          expect(page).to have_selector('.month', exact_text: args[:month])
+          expect(page).to have_selector('.month', exact_text: args[:month], visible: :all, wait: 5)
           first('.month', exact_text: args[:month]).click
         end
 
         if args[:day]
-          expect(page).to have_selector('.day', exact_text: args[:day])
+          expect(page).to have_selector('.day', exact_text: args[:day], visible: :all, wait: 5)
           first('.day', exact_text: args[:day]).click
         end
       else

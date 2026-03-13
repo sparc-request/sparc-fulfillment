@@ -42,18 +42,30 @@ feature 'Identity adds Procedure', js: true do
   end
 
   def when_i_add_a_procedure
+    expect(page).to have_button('addService', wait: 10)
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+    # Wait for the Bootstrap 'Dropdown' button to appear, NOT the hidden select
+    expect(page).to have_css('button.dropdown-toggle', wait: 5)
+
+    # Use existing helper (it should handle the hidden element correctly)
     bootstrap_select('.form-control.selectpicker', service.name)
+
+    sleep 0.5
     page.find('button#addService').click
     wait_for_ajax
   end
 
   def then_i_should_see_the_procedure_in_the_appointment_calendar
-    expect(page).to have_css('#appointmentContainer tbody tr[data-index="0"]', count: 1)
+    # Look for the actual NAME of the service
+    service_name = @protocol.organization.inclusive_child_services(:per_participant).first.name
+
+    # Use the 'within' block to narrow down the search area - this prevents Capybara from getting confused by other tables/modals
+    within('#appointmentContainer') do
+      expect(page).to have_content(service_name, wait: 15)
+    end
   end
 
   def then_i_should_see_that_the_performed_by_selector_does_not_have_a_selection

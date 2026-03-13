@@ -26,11 +26,12 @@ module Features
 
     def refresh_bootstrap_table(table, url=nil)
       if url.present?
-        page.execute_script "$('#{ table }').bootstrapTable('refresh', {url: '#{url}', silent: 'true' })"
+        page.execute_script "$('#{ table }').bootstrapTable('refresh', {url: '#{url}', silent: false })"
       else
-        sleep(2)
-        page.execute_script "$('#{ table }').bootstrapTable('refresh', { silent: 'true' })"
+        # sleep(2)
+        page.execute_script "$('#{ table }').bootstrapTable('refresh', { silent: false })"
       end
+      wait_for_ajax
     end
   end
 end

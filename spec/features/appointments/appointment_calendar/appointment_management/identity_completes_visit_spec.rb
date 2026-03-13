@@ -97,6 +97,11 @@ feature 'Complete Visit', js: true do
   end
 
   def when_i_add_a_procedure
+    if page.has_button?('Start Visit')
+      click_button 'Start Visit'
+      wait_for_ajax
+    end
+
     bootstrap_select('.form-control.selectpicker', @service.name)
     page.find('button#addService').click
     wait_for_ajax
@@ -115,31 +120,52 @@ feature 'Complete Visit', js: true do
   def when_i_begin_the_appointment
     find('a.btn.start-appointment').click
     wait_for_ajax
+
+    expect(page).to have_no_css('a.btn.start-appointment', wait: 10)
+
+    first('a.list-group-item, a.visit-group-link', text: @visit_group.name).click
+    wait_for_ajax
   end
 
   def when_i_complete_the_procedure
-    find("button.btn-sq.complete-btn").click
+    find("button.btn-sq.complete-btn", wait: 15).click
     wait_for_ajax
   end
 
   def when_i_incomplete_the_procedure
     find("button.btn-sq.incomplete-btn").click
+    wait_for_ajax
+    
+    expect(page).to have_selector('#procedure_notes_attributes_0_reason', visible: :all, wait: 10)
     bootstrap_select '#procedure_notes_attributes_0_reason', 'Assessment missed'
+    
     click_button 'Submit'
     wait_for_ajax
+
+    expect(page).to have_no_selector('.modal-header', text: 'New Procedure Note', wait: 30)
   end
 
   def when_i_add_a_follow_up_date
-    find("td.followup").click
+    within(page.find("tr", text: @service.name)) do
+      find("i.fa-calendar-alt, i.fa-calendar", wait: 10).click
+    end
     wait_for_ajax
+
+    expect(page).to have_selector('#modalContainer.show', wait: 25)
+
+    expect(page).to have_css(".input-group-append, .input-group-addon, .datepicker", visible: :all, wait: 20)
+    
     bootstrap_select '#task_assignee_id', @logged_in_identity.full_name
     bootstrap_datepicker '#task_due_at', day: '10'
     fill_in 'task_notes_comment', with: 'Test comment'
     click_button 'Submit'
+ 
+    expect(page).to have_no_selector('.modal-backdrop', wait: 20)
     wait_for_ajax
   end
 
   def then_i_should_be_able_to_complete_visit
+    expect(page).to have_no_selector('#modalContainer.show', wait: 10)
     expect(page).not_to have_css("button.complete_visit.disabled")
     find("button.complete-appointment").click
     wait_for_ajax

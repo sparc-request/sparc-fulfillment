@@ -90,7 +90,7 @@ module ProceduresHelper
 
   def procedure_invoiced_date(procedure)
     if current_identity.billing_manager_protocols.include?(procedure.protocol)
-      render 'invoiced_date.html', procedure: procedure
+      render(partial: 'procedures/invoiced_date', formats: [:html], locals: { procedure: procedure })
     else
       invoiced_date_read_only(procedure)
     end

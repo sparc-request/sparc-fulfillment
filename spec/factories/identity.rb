@@ -38,5 +38,6 @@ FactoryBot.define do
     end
 
     factory :identity_with_counter, traits: [:with_counter]
+    initialize_with { Identity.find_or_initialize_by(ldap_uid: ldap_uid) }
   end
 end

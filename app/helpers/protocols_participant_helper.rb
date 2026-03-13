@@ -86,7 +86,9 @@ module ProtocolsParticipantHelper
     if opts[:readonly]
       external_id
     else
-      popover = render('external_id_form.html', protocols_participant: protocols_participant)
+      # THE RAILS 7 FIX: Explicitly tell it to use the :html format
+      popover = render(partial: 'protocols_participants/external_id_form', formats: [:html], locals: { protocols_participant: protocols_participant })
+      # popover = render('external_id_form.html', protocols_participant: protocols_participant)
       link_to external_id, 'javascript:void(0)', data: { toggle: 'popover', content: popover, html: 'true', placement: 'top', trigger: 'manual' }
     end
   end
