@@ -78,13 +78,12 @@ module Features
         # 4. THE MAGIC: Force the hidden select to recognize the choice and trigger Rails events
         # This ensures "Add Service" buttons see the data immediately.
         page.execute_script(%Q{
-          var $select = $("#{context_selector} select#{class_or_id}");
+          var $select = $("#{context_selector} select#{class_or_id.gsub('"', '\"')}");
           var val = $select.find('option').filter(function() {
-            return $(this).text().trim() === "#{choice}";
+            return $(this).text().trim() === "#{choice.gsub('"', '\"')}";
           }).val();
           $select.val(val).trigger('change');
         })
-
         wait_for_ajax
       rescue Selenium::WebDriver::Error::StaleElementReferenceError, Capybara::ElementNotFound
         sleep 1
