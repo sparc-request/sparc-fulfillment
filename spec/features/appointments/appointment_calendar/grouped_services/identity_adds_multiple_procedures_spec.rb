@@ -72,7 +72,8 @@ feature 'Identity adds multiple Procedures', js: true do
     find("tr.info.groupBy.expanded").click
     wait_for_ajax
 
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
+    expect(page).to have_selector('tr[data-parent-index="0"]', count: 4, visible: :all, wait: 10)
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 4, visible: :all)
   end
 
   def then_i_should_see_two_grouped_procedures
