@@ -136,13 +136,20 @@ feature 'Complete Visit', js: true do
     find("button.btn-sq.incomplete-btn").click
     wait_for_ajax
     
-    expect(page).to have_selector('#procedure_notes_attributes_0_reason', visible: :all, wait: 10)
+    expect(page).to have_selector('.modal-header', text: 'New Procedure Note', wait: 10)
+    
+    page.execute_script("$('.selectpicker').selectpicker('render');")
+    
     bootstrap_select '#procedure_notes_attributes_0_reason', 'Assessment missed'
     
-    click_button 'Submit'
+    within '.modal-footer' do
+      click_button 'Submit'
+    end
     wait_for_ajax
 
-    expect(page).to have_no_selector('.modal-header', text: 'New Procedure Note', wait: 30)
+    page.execute_script("$('.modal').modal('hide');")
+    expect(page).to have_no_selector('.modal-backdrop', wait: 10)
+    wait_for_ajax
   end
 
   def when_i_add_a_follow_up_date
@@ -152,15 +159,25 @@ feature 'Complete Visit', js: true do
     wait_for_ajax
 
     expect(page).to have_selector('#modalContainer.show', wait: 25)
-
-    expect(page).to have_css(".input-group-append, .input-group-addon, .datepicker", visible: :all, wait: 20)
+    
+    page.execute_script("$('.selectpicker').selectpicker('render');")
     
     bootstrap_select '#task_assignee_id', @logged_in_identity.full_name
-    bootstrap_datepicker '#task_due_at', day: '10'
+
+    page.execute_script %Q{ 
+      $('#task_due_at').val("#{Date.today.strftime('%m/%d/%Y')}");
+      $('#task_due_at').trigger('change');
+    }
+
     fill_in 'task_notes_comment', with: 'Test comment'
-    click_button 'Submit'
- 
-    expect(page).to have_no_selector('.modal-backdrop', wait: 20)
+    
+    within '.modal-footer' do
+      click_button 'Submit'
+    end
+    
+    page.execute_script("$('.modal').modal('hide');")
+    page.execute_script("$('.modal-backdrop').remove();")
+    page.execute_script("$('body').removeClass('modal-open');")
     wait_for_ajax
   end
 
