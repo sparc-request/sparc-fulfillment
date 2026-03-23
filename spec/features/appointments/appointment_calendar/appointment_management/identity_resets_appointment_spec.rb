@@ -40,14 +40,6 @@ feature 'User tries to reset appointment', js: true do
     @appointment  = @visit_group.appointments.where(id: protocols_participant.id).first
     line_item_1   = arm.line_items[0]
 
-    #Add services for the visit group
-    # visit protocol_path(@protocol.id)
-    # wait_for_ajax
-    # find("#line_item_#{line_item_1.id} .check_row").click()
-    # accept_confirm
-    # wait_for_ajax
-
-    #Select the visit
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: @protocol)
     wait_for_ajax
     first('a.list-group-item.appointment-link').click

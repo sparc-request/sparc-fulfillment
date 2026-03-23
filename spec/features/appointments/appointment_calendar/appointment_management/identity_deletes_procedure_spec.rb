@@ -72,9 +72,6 @@ feature 'Delete Procedure', js: true do
   end
 
   def when_i_delete_the_first_procedure
-    # accept_confirm do
-    #   first('a.btn.btn-danger.delete-button').click
-    # end
     expect(page).to have_no_content('Loading...', wait: 15)
 
     expect(page).to have_css('a.btn-danger', wait: 10)

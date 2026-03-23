@@ -34,23 +34,19 @@ feature 'Identity uncompletes an appointment', js: true do
   def given_i_have_added_a_procedure_to_an_appointment
     protocol    = create_and_assign_protocol_to_me
     @protocols_participant = protocol.protocols_participants.first
-    # Anchor: Save the visit group so we can find it after refreshes
     @visit_group = @protocols_participant.appointments.first.visit_group
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
 
-    # THE AMBIGUITY FIX:
-    # Use 'first' to bypass the Ambiguous error and click the navigation link
     first('a', text: @visit_group.name, wait: 10).click
     wait_for_ajax
     
     bootstrap_select '[name="service_id"]', service.name
     fill_in 'service_quantity', with: 1
     find('button#addService').click
-    
-    # Wait for the row to appear in the table
+
     expect(page).to have_css(".core tbody tr", text: service.name, wait: 15)
     wait_for_ajax
   end
@@ -59,10 +55,8 @@ feature 'Identity uncompletes an appointment', js: true do
     find('a.start-appointment').click
     wait_for_ajax
     
-    # BASE CAMP ANCHOR: Ensure the 'Start' state is settled
     expect(page).to have_no_css('a.start-appointment', wait: 10)
     
-    # Re-select the visit if the 'Start' click reset the view
     if page.has_link?(@visit_group.name)
       first('a', text: @visit_group.name).click
       wait_for_ajax
@@ -70,7 +64,6 @@ feature 'Identity uncompletes an appointment', js: true do
   end
 
   def when_i_complete_the_procedure
-    # Wait for the 'Loading' spinner from the 'Start' click to vanish
     expect(page).to have_no_content('Loading...', wait: 15)
     find('button.complete-btn').click
     wait_for_ajax
@@ -82,14 +75,12 @@ feature 'Identity uncompletes an appointment', js: true do
   end
 
   def when_i_uncomplete_the_appointment
-    # 'Resetting' or 'Unstarting' usually triggers a JSON refresh
     find('button.unstarted-btn').click
     wait_for_ajax
     expect(page).to have_no_content('Loading...', wait: 15)
   end
 
   def then_i_should_see_the_appointment_is_uncomplete
-    # Confirm the state has fully reverted
     expect(page).to have_css('button.complete-appointment', visible: true, wait: 15)
   end
 end

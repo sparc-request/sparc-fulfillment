@@ -166,8 +166,6 @@ feature 'Start Complete Buttons', js: true do
 
   def then_i_should_see_the_start_button
     expect(page).to have_css('a.start-appointment', visible: true)
-    # find('a.start-appointment').click
-    # wait_for_ajax
   end
 
   def then_i_should_see_the_complete_button
@@ -194,9 +192,6 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def then_i_should_see_the_completed_date_at date
-    # unless page.has_field?('completed_date', with: date.strftime('%m/%d/%Y'))
-    #   bootstrap_datepicker '#completed_date', date: date.strftime('%m/%d/%Y')
-    # end
     formatted_date = date.strftime('%m/%d/%Y')
     page.execute_script("$('#completed_date').val('#{formatted_date}').trigger('change');")
 
