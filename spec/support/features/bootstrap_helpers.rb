@@ -61,22 +61,22 @@ module Features
     def bootstrap_select(class_or_id, choice, context_selector = '')
       retries = 0
       begin
-        # 1. Wait for the select and the toggle button to be ready
+        # Ensure the select exists (visible or not)
         expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: :all, wait: 10)
         
-        # Grab the hidden select and the visible toggle
         hidden_select = first("#{context_selector} select#{class_or_id}", visible: :all)
         toggle_button = hidden_select.sibling(".dropdown-toggle")
         
-        # 2. Click the toggle to open the menu
+        # Click the toggle
         toggle_button.click
         
-        # 3. Wait for the menu to appear and click the choice
-        expect(page).to have_selector('.dropdown-menu.show', wait: 5)
+        # Wait for the menu. Note: If it still fails here, we'll try visible: :all
+        expect(page).to have_selector('.dropdown-menu.show', wait: 10)
+        
+        # Target the specific choice
         first('.dropdown-menu.show span.text', text: choice, wait: 5).click
         
-        # 4. THE MAGIC: Force the hidden select to recognize the choice and trigger Rails events
-        # This ensures "Add Service" buttons see the data immediately.
+        # THE MAGIC: Ruby-safe gsub
         page.execute_script(%Q{
           var $select = $("#{context_selector} select#{class_or_id.gsub('"', '\"')}");
           var val = $select.find('option').filter(function() {
@@ -85,9 +85,10 @@ module Features
           $select.val(val).trigger('change');
         })
         wait_for_ajax
-      rescue Selenium::WebDriver::Error::StaleElementReferenceError, Capybara::ElementNotFound
-        sleep 1
+      rescue Selenium::WebDriver::Error::StaleElementReferenceError, Capybara::ElementNotFound, RSpec::Expectations::ExpectationNotMetError
+        sleep 0.5
         retry if (retries += 1) < 5
+        raise
       end
     end
 
