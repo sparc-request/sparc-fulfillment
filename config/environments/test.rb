@@ -79,5 +79,5 @@ Rails.application.configure do
   # config.active_job.queue_adapter = :inline
 
   # config.logger = ActiveSupport::Logger.new(STDOUT)
-  config.hosts << "cwf_web"
+  config.hosts.clear
 end
