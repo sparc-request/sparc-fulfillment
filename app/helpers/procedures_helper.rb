@@ -90,7 +90,7 @@ module ProceduresHelper
 
   def procedure_invoiced_date(procedure)
     if current_identity.billing_manager_protocols.include?(procedure.protocol)
-      render(partial: 'procedures/invoiced_date', formats: [:html], locals: { procedure: procedure })
+      render partial: 'procedures/invoiced_date', formats: [:html], locals: { procedure: procedure }
     else
       invoiced_date_read_only(procedure)
     end
@@ -149,7 +149,7 @@ module ProceduresHelper
   end
 
   def move_procedure_dropdown(procedure)
-    render('procedures/move_procedure_dropdown.html.haml', procedure: procedure)
+    render partial: 'procedures/move_procedure_dropdown', formats: [:html], locals: { procedure: procedure }
   end
 
   def delete_procedure_button(procedure)
