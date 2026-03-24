@@ -34,7 +34,7 @@ class ParticipantReport < Report
 
     @gender = @params[:gender] unless @params[:gender] == 'Both' || @params[:gender] == ''
     @mrns = @params[:mrns]
-    @protocols = @params[:protocols]
+    @protocols = @params[:protocols] || []
     @protocol_level = @params[:protocol_level]
 
     document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
