@@ -73,12 +73,4 @@ feature 'User creates an appointment note', js: true do
   def then_i_should_see_the_created_note
     expect(page).to have_css('div.note-body p', text: 'I\'m a note. Fear me.')
   end
-
-  # def then_i_should_see_a_notice_that_there_are_no_notes
-  #   expect(page).to have_css('div.alert-warning', text: 'This Participant doesn\'t have any notes.')
-  # end
-
-  # def then_i_should_see_the_note
-  #   expect(page).to have_css('.note-body', text: "I'm a note. Fear me.")
-  # end
 end

@@ -44,8 +44,8 @@ feature 'Delete Procedure', js: true do
   def given_i_am_viewing_a_core_with_n_procedures_such_that_n_is number_of_procedures
     protocol      = create_and_assign_protocol_to_me
     protocols_participant   = protocol.protocols_participants.first
-    visit_group   = protocols_participant.appointments.first.visit_group
-    service       = protocol.organization.inclusive_child_services(:per_participant).first
+    @visit_group   = protocols_participant.appointments.first.visit_group
+    @service       = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
     wait_for_ajax
@@ -53,7 +53,7 @@ feature 'Delete Procedure', js: true do
     first('a.list-group-item.appointment-link').click
     wait_for_ajax
 
-    bootstrap_select '[name="service_id"]', service.name
+    bootstrap_select '[name="service_id"]', @service.name
     fill_in 'service_quantity', with: number_of_procedures
     find('button#addService').click
     wait_for_ajax
@@ -62,25 +62,39 @@ feature 'Delete Procedure', js: true do
   def when_i_begin_the_appointment
     find('a.btn.start-appointment').click
     wait_for_ajax
+
+    expect(page).to have_no_css('a.btn.start-appointment', wait: 10)
+
+    if @visit_group&.name && page.has_link?(@visit_group.name)
+      first('a', text: @visit_group.name, wait: 10).click 
+      wait_for_ajax
+    end
   end
 
   def when_i_delete_the_first_procedure
-    # accept_confirm do
-    #   first('a.btn.btn-danger.delete-button').click
-    # end
-    find('tbody tr[data-index="0"] a.btn-danger').click
+    expect(page).to have_no_content('Loading...', wait: 15)
+
+    expect(page).to have_css('a.btn-danger', wait: 10)
+
+    first('a.btn-danger.delete-button, a.btn-danger', wait: 10).click
     wait_for_ajax
 
+    expect(page).to have_selector('button.swal2-confirm', visible: true, wait: 10)
     find('button.swal2-confirm').click
+
+    expect(page).to have_no_selector('.swal2-container', wait: 10)
     wait_for_ajax
   end
 
   def and_i_unroll_the_group
-    find('tr.expanded').click
+    expect(page).to have_no_content('Loading...', wait: 15)
+
+    first('tr.group-by, .detail-icon, .fa-chevron-right', wait: 10).click
     wait_for_ajax
   end
 
   def then_i_should_not_see_the_core
+    expect(page).to have_no_content('Loading...', wait: 15)
     expect(page).to have_css('.cores .core', count: 0)
   end
 

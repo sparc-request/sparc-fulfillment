@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_07_16_015133) do
-
+ActiveRecord::Schema[7.2].define(version: 2025_07_16_015133) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -30,7 +29,7 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -42,9 +41,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
 
   create_table "appointment_statuses", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.string "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.integer "appointment_id"
   end
 
@@ -54,11 +53,11 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "visit_group_position"
     t.integer "position"
     t.string "name"
-    t.datetime "start_date"
-    t.datetime "completed_date"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "start_date", precision: nil
+    t.datetime "completed_date", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "contents"
     t.string "type", default: "Appointment"
     t.integer "arm_id"
@@ -75,9 +74,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.string "name"
     t.integer "visit_count"
     t.integer "subject_count"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.boolean "marked_for_deletion", default: false
     t.index ["deleted_at"], name: "index_arms_on_deleted_at"
     t.index ["protocol_id"], name: "index_arms_on_protocol_id"
@@ -88,8 +87,8 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.bigint "identity_id", null: false
     t.string "column_name", null: false
     t.boolean "visible", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["identity_id", "column_name"], name: "index_column_preferences_on_identity_id_and_column_name", unique: true
     t.index ["identity_id"], name: "index_column_preferences_on_identity_id"
   end
@@ -100,9 +99,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "composable_id"
     t.string "composable_type"
     t.boolean "selected", default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.index ["composable_id", "composable_type"], name: "index_components_on_composable_id_and_composable_type"
   end
 
@@ -111,25 +110,25 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "attempts", default: 0, null: false
     t.text "handler", size: :long, null: false
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "documents", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.integer "documentable_id"
     t.string "documentable_type"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "title"
     t.string "state", default: "Processing"
-    t.datetime "last_accessed_at"
+    t.datetime "last_accessed_at", precision: nil
     t.string "original_filename"
     t.string "content_type"
     t.string "report_type"
@@ -140,12 +139,12 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
   create_table "fulfillments", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.integer "sparc_id"
     t.integer "line_item_id"
-    t.datetime "fulfilled_at"
+    t.datetime "fulfilled_at", precision: nil
     t.decimal "quantity", precision: 10, scale: 2
     t.string "funding_source"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.integer "creator_id"
     t.integer "performer_id"
     t.integer "service_id"
@@ -153,10 +152,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "service_cost"
     t.integer "klok_entry_id"
     t.boolean "invoiced"
-    t.datetime "invoiced_date"
+    t.datetime "invoiced_date", precision: nil
     t.boolean "credited"
     t.float "percent_subsidy"
-    t.boolean "modified_rate", default: false, null: false
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id"
     t.index ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id"
     t.index ["line_item_id"], name: "index_fulfillments_on_line_item_id"
@@ -168,16 +166,16 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
   create_table "identity_counters", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.integer "identity_id"
     t.integer "tasks_count", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "unaccessed_documents_count", default: 0
     t.index ["identity_id"], name: "index_identity_counters_on_identity_id"
   end
 
   create_table "imports", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.string "file"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "title"
   end
 
@@ -224,13 +222,13 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "sparc_id"
     t.integer "arm_id"
     t.integer "service_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.integer "subject_count", default: 0
     t.decimal "quantity_requested", precision: 10, scale: 2, default: "0.0"
     t.string "quantity_type"
-    t.datetime "started_at"
+    t.datetime "started_at", precision: nil
     t.integer "protocol_id"
     t.string "name"
     t.string "account_number"
@@ -244,9 +242,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
   create_table "notes", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.integer "identity_id"
     t.text "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "notable_id"
     t.string "notable_type"
     t.string "reason"
@@ -259,8 +257,8 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "sparc_id"
     t.string "action"
     t.string "callback_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "kind"
     t.index ["sparc_id"], name: "index_notifications_on_sparc_id"
   end
@@ -275,9 +273,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.string "race"
     t.string "address"
     t.string "phone"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "total_cost"
     t.string "city"
     t.string "state"
@@ -288,13 +286,13 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.index ["mrn"], name: "index_participants_on_mrn"
   end
 
-  create_table "procedure_groups", charset: "utf8mb3", force: :cascade do |t|
+  create_table "procedure_groups", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.integer "appointment_id"
     t.integer "sparc_core_id"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["appointment_id"], name: "fk_rails_e5c5e38225"
   end
 
@@ -305,23 +303,22 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "service_cost"
     t.integer "service_id"
     t.string "status", default: "unstarted"
-    t.datetime "completed_date"
+    t.datetime "completed_date", precision: nil
     t.string "billing_type"
     t.integer "sparc_core_id"
     t.string "sparc_core_name"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "visit_id"
     t.integer "performer_id"
-    t.datetime "incompleted_date"
+    t.datetime "incompleted_date", precision: nil
     t.boolean "invoiced"
-    t.datetime "invoiced_date"
+    t.datetime "invoiced_date", precision: nil
     t.string "funding_source"
     t.boolean "credited"
     t.float "percent_subsidy"
     t.integer "position"
-    t.boolean "modified_rate", default: false, null: false
     t.index ["appointment_id"], name: "index_procedures_on_appointment_id"
     t.index ["completed_date"], name: "index_procedures_on_completed_date"
     t.index ["service_id"], name: "index_procedures_on_service_id"
@@ -333,13 +330,13 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "sparc_id"
     t.string "sponsor_name"
     t.string "udak_project_number"
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.datetime "recruitment_start_date"
-    t.datetime "recruitment_end_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
+    t.datetime "start_date", precision: nil
+    t.datetime "end_date", precision: nil
+    t.datetime "recruitment_start_date", precision: nil
+    t.datetime "recruitment_end_date", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.integer "study_cost"
     t.integer "sub_service_request_id"
     t.integer "unaccessed_documents_count", default: 0
@@ -354,9 +351,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.bigint "arm_id"
     t.integer "sparc_id"
     t.string "status"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "external_id"
     t.string "recruitment_source"
     t.boolean "deletable", default: true
@@ -369,8 +366,8 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
   create_table "sessions", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
@@ -378,9 +375,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
   create_table "tasks", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.date "due_at"
     t.boolean "complete", default: false
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "identity_id"
     t.integer "assignee_id"
     t.string "assignable_type"
@@ -395,15 +392,15 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "first_name"
     t.string "last_name"
     t.string "time_zone", default: "Eastern Time (US & Canada)"
@@ -418,7 +415,7 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.string "event", null: false
     t.string "whodunnit"
     t.text "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.text "object_changes"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
@@ -431,9 +428,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "day"
     t.integer "window_before", default: 0
     t.integer "window_after", default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.index ["arm_id"], name: "index_visit_groups_on_arm_id"
     t.index ["deleted_at"], name: "index_visit_groups_on_deleted_at"
     t.index ["position"], name: "index_visit_groups_on_position"
@@ -447,9 +444,9 @@ ActiveRecord::Schema.define(version: 2025_07_16_015133) do
     t.integer "research_billing_qty"
     t.integer "insurance_billing_qty"
     t.integer "effort_billing_qty"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.index ["deleted_at"], name: "index_visits_on_deleted_at"
     t.index ["line_item_id"], name: "index_visits_on_line_item_id"
     t.index ["sparc_id"], name: "index_visits_on_sparc_id"

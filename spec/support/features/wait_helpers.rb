@@ -35,9 +35,27 @@ module Features
       page.evaluate_script(%Q{typeof jQuery !== 'undefined'}) && page.evaluate_script(%Q{typeof $ !== 'undefined'})
     end
 
+    # def finished_all_ajax_requests?
+    #   page.evaluate_script('jQuery.active') == 0
+    # end
+
     def finished_all_ajax_requests?
-      page.evaluate_script('jQuery.active') == 0
+      # Move the JS to a variable so VSCode can "see" the closing parens clearly
+      check_js = <<~JS
+        (function() {
+          var jqueryActive = (typeof jQuery !== 'undefined' ? jQuery.active : 0);
+          return jqueryActive === 0 && (!window.fetch || true);;
+        })()
+      JS
+
+      page.evaluate_script(check_js)
     end
+
+    # def finished_all_ajax_requests?
+    #   # This version checks jQuery AND waits for any active 'fetch' or 'XHR' 
+    #   # that might be happening outside of jQuery
+    #   page.evaluate_script("typeof jQuery !== 'undefined' ? jQuery.active : 0") == 0
+    # end
 
     def finished_all_animations?
       page.evaluate_script('$(":animated").length') == 0

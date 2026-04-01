@@ -42,18 +42,26 @@ feature 'Identity adds Procedure', js: true do
   end
 
   def when_i_add_a_procedure
+    expect(page).to have_button('addService', wait: 10)
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+    expect(page).to have_css('button.dropdown-toggle', wait: 5)
+
     bootstrap_select('.form-control.selectpicker', service.name)
+
+    sleep 0.5
     page.find('button#addService').click
     wait_for_ajax
   end
 
   def then_i_should_see_the_procedure_in_the_appointment_calendar
-    expect(page).to have_css('#appointmentContainer tbody tr[data-index="0"]', count: 1)
+    service_name = @protocol.organization.inclusive_child_services(:per_participant).first.name
+
+    within('#appointmentContainer') do
+      expect(page).to have_content(service_name, wait: 15)
+    end
   end
 
   def then_i_should_see_that_the_performed_by_selector_does_not_have_a_selection

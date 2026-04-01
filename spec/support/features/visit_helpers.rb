@@ -41,14 +41,23 @@ module Features
       wait_for_ajax
     end
 
-    def given_i_am_viewing_a_started_visit
-      visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-      wait_for_ajax
+    # def given_i_am_viewing_a_started_visit
+    #   visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    #   wait_for_ajax
 
-      first('a.list-group-item.appointment-link').click
-      wait_for_ajax
+    #   first('a.list-group-item.appointment-link').click
+    #   wait_for_ajax
       
-      find('a.btn.start-appointment').click
+    #   find('a.btn.start-appointment').click
+    #   wait_for_ajax
+    # end
+
+    def given_i_am_viewing_a_started_visit
+      given_i_am_viewing_a_visit # Uses your existing navigation logic
+      
+      # Try finding the button by class or text, and wait 10s for the JS to render it
+      start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, wait: 10)
+      start_btn.click
       wait_for_ajax
     end
   end
