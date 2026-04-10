@@ -105,7 +105,7 @@ module StudyLevelActivitiesHelper
 
   def invoiced_date(fulfillment)
     if current_identity.billing_manager_protocols.include?(fulfillment.protocol)
-      render 'invoiced_date.html', fulfillment: fulfillment
+      render partial: 'invoiced_date', formats: [:html], locals: { fulfillment: fulfillment }
     else
       invoiced_date_read_only(fulfillment)
     end
