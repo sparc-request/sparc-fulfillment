@@ -162,6 +162,7 @@ class ReportsController < ApplicationController
               :format,
               :core_procedures_option,
               :utf8,
+              :authenticity_token,
               :report_type,
               :title,
               :start_date,
