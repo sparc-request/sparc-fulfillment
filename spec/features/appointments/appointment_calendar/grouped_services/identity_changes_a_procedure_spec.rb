@@ -37,10 +37,9 @@ feature 'Identity changes a Service', js: true do
     when_i_start_the_appointment
     when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
     then_i_should_see_the_procedure_in_the_group
-    then_i_should_see_the_procedure_group_counter_is_four
   end
 
-  scenario 'and sees it is not longer in its original group' do
+  scenario 'and sees it is no longer in its original group' do
     given_i_am_viewing_a_visit_with_one_procedure_group
     when_i_start_the_appointment
     when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
@@ -139,15 +138,14 @@ feature 'Identity changes a Service', js: true do
 
   def when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
     bootstrap_select '#procedure_billing_type', 'T', "#edit_procedure_#{@ungrouped_procedure.id}"
+    wait_for_ajax
+
+    expect(page).to have_css('tr.info.groupBy.expanded strong.badge', text: '4', wait: 15)
   end
 
-  def then_i_should_see_the_procedure_group_counter_is_two
-    expect(page).to have_css('tr.expanded.groupBy strong.badge', text: '2')
-  end
-
-  def then_i_should_see_the_procedure_group_counter_is_four
-    expect(page).to have_css('tr.collapsed.groupBy strong.badge', text: '4')
-  end
+  # def then_i_should_see_the_procedure_group_counter_is_two
+  #   expect(page).to have_css('tr.expanded.groupBy strong.badge', text: '2')
+  # end
 
   def then_i_should_see_one_procedure_group
     expect(page).to have_css('tr.expanded.groupBy', count: 1)

@@ -61,22 +61,17 @@ module Features
     def bootstrap_select(class_or_id, choice, context_selector = '')
       retries = 0
       begin
-        # Ensure the select exists (visible or not)
         expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: :all, wait: 10)
         
         hidden_select = first("#{context_selector} select#{class_or_id}", visible: :all)
         toggle_button = hidden_select.sibling(".dropdown-toggle")
         
-        # Click the toggle
         toggle_button.click
         
-        # Wait for the menu. Note: If it still fails here, we'll try visible: :all
         expect(page).to have_selector('.dropdown-menu.show', wait: 10)
         
-        # Target the specific choice
         first('.dropdown-menu.show span.text', text: choice, wait: 5).click
         
-        # THE MAGIC: Ruby-safe gsub
         page.execute_script(%Q{
           var $select = $("#{context_selector} select#{class_or_id.gsub('"', '\"')}");
           var val = $select.find('option').filter(function() {
