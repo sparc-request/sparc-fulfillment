@@ -129,11 +129,20 @@ feature 'Identity changes a Service', js: true do
   end
 
   def when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
+    save_screenshot('before_procedure_group_expand.png')
     find('tr.info.groupBy.expanded').click
     wait_for_ajax
 
+    expect(page).to have_css('tr.info.groupBy.collapsed', wait: 15)
+    save_screenshot('after_procedure_group_expand.png')
+
     bootstrap_select '#procedure_billing_type', 'R'
     wait_for_ajax
+    save_screenshot('after_changing_procedure.png')
+
+    sleep 15
+    save_screenshot('has_procedure_change_triggered_refresh.png')
+    
   end
 
   def when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
@@ -156,6 +165,10 @@ feature 'Identity changes a Service', js: true do
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
+    save_screenshot('is_procedure_still_in_group.png')
+    find("tr.info.groupBy.expanded").click
+    wait_for_ajax
+    
     expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
   end
 

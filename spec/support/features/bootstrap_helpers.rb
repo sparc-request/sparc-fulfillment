@@ -73,7 +73,7 @@ module Features
         first('.dropdown-menu.show span.text', text: choice, wait: 5).click
         
         page.execute_script(%Q{
-          var $select = $("#{context_selector} select#{class_or_id.gsub('"', '\"')}");
+          var $select = $("#{context_selector} select#{class_or_id.gsub('"', '\"')}").first();
           var val = $select.find('option').filter(function() {
             return $(this).text().trim() === "#{choice.gsub('"', '\"')}";
           }).val();
