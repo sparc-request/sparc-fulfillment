@@ -26,39 +26,64 @@ module Features
 
     def wait_for_ajax
       Timeout.timeout(Capybara.default_max_wait_time) do
-        loop until jquery_defined?
-        loop until finished_all_ajax_requests? && finished_all_animations?
+        loop until finished_all_network_requests?
       end
+    rescue Timeout::Error
+      raise "AJAX/Fetch requests did not complete within #{Capybara.default_max_wait_time} seconds."
     end
 
-    def jquery_defined?
-      page.evaluate_script(%Q{typeof jQuery !== 'undefined'}) && page.evaluate_script(%Q{typeof $ !== 'undefined'})
-    end
-
-    # def finished_all_ajax_requests?
-    #   page.evaluate_script('jQuery.active') == 0
-    # end
-
-    def finished_all_ajax_requests?
-      # Move the JS to a variable so VSCode can "see" the closing parens clearly
-      check_js = <<~JS
+    def finished_all_network_requests?
+      page.evaluate_script(<<~JS)
         (function() {
+          // 1. Check legacy jQuery
           var jqueryActive = (typeof jQuery !== 'undefined' ? jQuery.active : 0);
-          return jqueryActive === 0 && (!window.fetch || true);;
+          
+          // 2. Check modern Rails Turbo (if Turbo is actively making a request)
+          var turboActive = false;
+          if (typeof document !== 'undefined' && document.documentElement) {
+            turboActive = document.documentElement.hasAttribute('data-turbo-preview');
+          }
+          
+          return jqueryActive === 0 && !turboActive;
         })()
       JS
-
-      page.evaluate_script(check_js)
     end
 
-    # def finished_all_ajax_requests?
-    #   # This version checks jQuery AND waits for any active 'fetch' or 'XHR' 
-    #   # that might be happening outside of jQuery
-    #   page.evaluate_script("typeof jQuery !== 'undefined' ? jQuery.active : 0") == 0
-    # end
+#     def wait_for_ajax
+#       Timeout.timeout(Capybara.default_max_wait_time) do
+#         loop until jquery_defined?
+#         loop until finished_all_ajax_requests? && finished_all_animations?
+#       end
+#     end
 
-    def finished_all_animations?
-      page.evaluate_script('$(":animated").length') == 0
-    end
+#     def jquery_defined?
+#       page.evaluate_script(%Q{typeof jQuery !== 'undefined'}) && page.evaluate_script(%Q{typeof $ !== 'undefined'})
+#     end
+
+#     def finished_all_ajax_requests?
+#       page.evaluate_script('jQuery.active') == 0
+#     end
+
+#     def finished_all_ajax_requests?
+#       # Move the JS to a variable so VSCode can "see" the closing parens clearly
+#       check_js = <<~JS
+#         (function() {
+#           var jqueryActive = (typeof jQuery !== 'undefined' ? jQuery.active : 0);
+#           return jqueryActive === 0 && (!window.fetch || true);;
+#         })()
+#       JS
+
+#       page.evaluate_script(check_js)
+#     end
+
+#     # def finished_all_ajax_requests?
+#     #   # This version checks jQuery AND waits for any active 'fetch' or 'XHR' 
+#     #   # that might be happening outside of jQuery
+#     #   page.evaluate_script("typeof jQuery !== 'undefined' ? jQuery.active : 0") == 0
+#     # end
+
+#     def finished_all_animations?
+#       page.evaluate_script('$(":animated").length') == 0
+#     end
   end
 end

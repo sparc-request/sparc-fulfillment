@@ -107,4 +107,17 @@ RSpec.configure do |config|
     Capybara.default_driver = :firefox_headless
     Capybara.javascript_driver = :firefox_headless
   end
+
+  config.after(:each, type: :feature) do
+    begin
+      errors = page.driver.browser.logs.get(:browser)
+      if errors.present?
+        puts "JavaScript Errors in #{+example.location}:"
+        errors.each { |e| puts e.message }
+      end
+    rescue NoMethodError, StandardError
+      # Selenium 4 Remote Drivers throw NoMethodError here. 
+      # Catch it and silently move on.
+    end
+  end
 end

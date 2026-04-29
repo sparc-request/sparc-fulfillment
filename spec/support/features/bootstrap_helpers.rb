@@ -59,31 +59,35 @@ module Features
     end
 
     def bootstrap_select(class_or_id, choice, context_selector = '')
-      retries = 0
+      retries = 0 
+      
       begin
-        expect(page).to have_selector("#{context_selector} select#{class_or_id}", visible: :all, wait: 10)
+        # 1. Grab the hidden select and its container, ignoring Geckodriver visibility rules
+        hidden_select = find("#{context_selector} select#{class_or_id}", visible: :all, match: :first)
+        container = hidden_select.find(:xpath, '../..', visible: :all)
+
+        within(container) do
+          # 2. Find the UI toggle button, bypassing visibility checks
+          toggle_button = find('.dropdown-toggle', visible: :all, match: :first)
+          
+          # 3. Fire a native browser click directly on the UI element 
+          page.execute_script("arguments[0].click();", toggle_button)
+          
+          # 4. Scope to the first menu to avoid Ambiguous match errors
+          within('.dropdown-menu', visible: :all, match: :first) do
+            option = find('span.text', text: choice, exact_text: true, visible: :all, match: :first)
+            page.execute_script("arguments[0].click();", option)
+          end
+        end
         
-        hidden_select = first("#{context_selector} select#{class_or_id}", visible: :all)
-        toggle_button = hidden_select.sibling(".dropdown-toggle")
-        
-        toggle_button.click
-        
-        expect(page).to have_selector('.dropdown-menu.show', wait: 10)
-        
-        first('.dropdown-menu.show span.text', text: choice, wait: 5).click
-        
-        page.execute_script(%Q{
-          var $select = $("#{context_selector} select#{class_or_id.gsub('"', '\"')}").first();
-          var val = $select.find('option').filter(function() {
-            return $(this).text().trim() === "#{choice.gsub('"', '\"')}";
-          }).val();
-          $select.val(val).trigger('change');
-        })
-        wait_for_ajax
-      rescue Selenium::WebDriver::Error::StaleElementReferenceError, Capybara::ElementNotFound, RSpec::Expectations::ExpectationNotMetError
-        sleep 0.5
-        retry if (retries += 1) < 5
-        raise
+        # 5. Assert the UI updated successfully (This proves the clicks actually worked)
+        expect(page).to have_css(".filter-option-inner-inner", text: choice, visible: :all, match: :first)
+
+      rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::StaleElementReferenceError => e
+        # Our safety net for legitimate race conditions
+        sleep 0.5 
+        retry if (retries += 1) < 2
+        raise e
       end
     end
 

@@ -80,4 +80,6 @@ Rails.application.configure do
 
   # config.logger = ActiveSupport::Logger.new(STDOUT)
   config.hosts.clear
+
+  config.assets.compile = false
 end
