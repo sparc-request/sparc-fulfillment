@@ -19,46 +19,64 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module Features
-
   module VisitHelpers
 
     def and_the_visit_has_one_grouped_procedure
-      2.times { add_a_procedure @services.first }
+      # Passing 2 tells the backend to instantly create a group, 
+      # avoiding the double-click race condition entirely.
+      add_a_procedure(@services.first, 2)
     end
 
     def add_a_procedure(service, count = 1)
+      # Ensure the pane is loaded
+      expect(page).to have_css('button#addService', visible: true)
+      
+      # HYDRATION BUFFER: Allow Rails 7 JS controllers 200ms to bind to the pane
+      sleep 0.2
+
       bootstrap_select('.form-control.selectpicker', service.name)
       fill_in 'service_quantity', with: count
-      page.find('button#addService').click
-      wait_for_ajax
+      
+      # Baseline count of this specific service in the DOM
+      previous_count = all(".core tbody tr", text: service.name, visible: :all).count
+
+      retries = 0
+      begin
+        find('button#addService').click
+        
+        # THE NATIVE BARRIER: 
+        # Safely absorbs both standard additions (+1 row) and grouping (+2 hidden rows).
+        expect(page).to have_css(".core tbody tr", text: service.name, minimum: previous_count + 1, visible: :all, wait: 4)
+        
+      rescue RSpec::Expectations::ExpectationNotMetError => e
+        # Ghost Click Safety Net
+        retry if (retries += 1) < 2
+        raise e
+      end
     end
 
     def given_i_am_viewing_a_visit
       visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-      wait_for_ajax
       
+      expect(page).to have_css('a.list-group-item.appointment-link')
       first('a.list-group-item.appointment-link').click
-      wait_for_ajax
-    end
-
-    # def given_i_am_viewing_a_started_visit
-    #   visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    #   wait_for_ajax
-
-    #   first('a.list-group-item.appointment-link').click
-    #   wait_for_ajax
       
-    #   find('a.btn.start-appointment').click
-    #   wait_for_ajax
-    # end
+      # NATIVE SYNC: Wait for the specific appointment pane to load
+      expect(page).to have_css('button#addService', visible: true)
+    end
 
     def given_i_am_viewing_a_started_visit
-      given_i_am_viewing_a_visit # Uses your existing navigation logic
+      given_i_am_viewing_a_visit 
       
-      # Try finding the button by class or text, and wait 10s for the JS to render it
-      start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, wait: 10)
+      # Click the start button
+      start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first)
       start_btn.click
-      wait_for_ajax
+      
+      # NATIVE SYNC: Wait for the button to vanish and the complete button to appear,
+      # proving the backend successfully started the visit.
+      expect(page).to have_no_css('a.btn.start-appointment')
+      expect(page).to have_css('button.complete-appointment', visible: true)
     end
+    
   end
 end

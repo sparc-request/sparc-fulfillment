@@ -41,50 +41,55 @@ feature 'User tries to reset appointment', js: true do
     line_item_1   = arm.line_items[0]
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
+    
+    expect(page).to have_css('a.list-group-item.appointment-link')
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+    
+    expect(page).to have_css('button#addService', visible: true)
   end
 
   def when_i_start_the_appointment
     find('a.btn.start-appointment').click
-    wait_for_ajax
-
-    expect(page).to have_no_css('a.btn.start-appointment', wait: 10)
+    
+    expect(page).to have_no_css('a.btn.start-appointment')
     
     if page.has_link?(@visit_group&.name)
       first('a', text: @visit_group.name).click 
-      wait_for_ajax
     end
+
+    expect(page).to have_css('button.complete-appointment')
   end
 
   def when_i_resolve_all_procedures
-    expect(page).to have_no_content('Loading...', wait: 15)
+    sleep 0.2 
     
-    page.all('label.btn.complete.status').each do |btn|
+    buttons = page.all('label.btn.complete.status', visible: :all)
+    
+    buttons.each_with_index do |btn, index|
       btn.click
-      wait_for_ajax
+      
+      expect(page).to have_css("label.btn.complete.status.active", count: index + 1, wait: 3)
     end
+
+    expect(page).to_not have_css("button.complete-appointment.disabled")
   end
 
   def when_i_complete_the_visit
     find("button.complete-appointment").click
-    wait_for_ajax
+    
+    expect(page).to have_css("a.btn.reset-appointment", visible: true)
   end
 
   def when_i_click_the_reset_button
-    find("a.btn.reset-appointment", wait: 10).click
-    wait_for_ajax
+    find("a.btn.reset-appointment").click
 
-    expect(page).to have_selector('button.swal2-confirm', visible: true, wait: 10)
+    expect(page).to have_css('button.swal2-confirm')
     find('button.swal2-confirm').click
     
-    expect(page).to have_no_selector('.swal2-container', wait: 10)
-    wait_for_ajax
+    expect(page).to have_no_css('.swal2-container')
   end
 
   def then_i_should_see_a_reset_appointment
-    expect(page).to have_no_content('Loading...', wait: 15)
-    expect(page).to have_css('a.start-appointment', visible: true, wait: 10)
+    expect(page).to have_css('a.start-appointment', visible: true)
   end
 end

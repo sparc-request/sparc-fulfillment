@@ -49,22 +49,18 @@ feature 'Delete Procedure', js: true do
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
 
-    # Native sync for pane load
     expect(page).to have_css('a.list-group-item.appointment-link')
     first('a.list-group-item.appointment-link').click
 
-    # Verify the specific appointment pane opened before proceeding
     expect(page).to have_content(@visit_group.name)
     expect(page).to have_css('button#addService')
 
     bootstrap_select '[name="service_id"]', @service.name
     fill_in 'service_quantity', with: number_of_procedures
     
-    # The Ghost Click Barrier for adding the service
     retries = 0
     begin
       find('button#addService').click
-      # Wait up to 3 seconds for the network request to append the row
       expect(page).to have_css("tr", text: @service.name, wait: 3)
     rescue RSpec::Expectations::ExpectationNotMetError => e
       retry if (retries += 1) < 3
@@ -79,41 +75,30 @@ feature 'Delete Procedure', js: true do
     if @visit_group&.name && page.has_link?(@visit_group.name)
       first('a', text: @visit_group.name).click 
       
-      # NATIVE SYNC: We MUST wait for the "started" appointment pane to fully load 
-      # before we try to look for delete buttons or group chevrons.
       expect(page).to have_css("button.complete-appointment")
     end
   end
 
   def when_i_delete_the_first_procedure
-    # Match: :first is safer here in case multiple delete buttons exist.
-    # Capybara natively waits for it to appear.
     find('a.btn-danger', match: :first).click
 
-    # NATIVE SYNC: SweetAlert2 Modals
-    # Wait for the modal to animate in
     expect(page).to have_css('button.swal2-confirm')
     find('button.swal2-confirm').click
 
-    # Wait for the modal to fully animate out and the DOM to settle
     expect(page).to have_no_css('.swal2-container')
   end
 
   def and_i_unroll_the_group
-    # Click the group chevron
     first('tr.group-by, .detail-icon, .fa-chevron-right').click
     
-    # NATIVE SYNC: Wait for the nested row(s) to physically appear in the DOM
     expect(page).to have_css('tr[data-parent-index="0"]')
   end
 
   def then_i_should_not_see_the_core
-    # Capybara natively waits up to default_max_wait_time for this to become true
     expect(page).to have_no_css('.cores .core')
   end
 
   def then_i_should_not_see_the_first_procedure
-    # We started with 2, deleted 1, so we expect exactly 1 child row remaining
     expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
   end
 end

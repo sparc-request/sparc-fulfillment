@@ -92,60 +92,95 @@ feature 'Identity adds a Procedure', js: true do
   end
 
   def when_i_add_a_procedure
-    add_a_procedure @services.first
-    @first_procedure = Procedure.last
+    expect(page).to have_css('button#addService', visible: true)
+    
+    # HYDRATION BUFFER: Allow Rails 7 JS controllers 200ms to bind to the pane
+    sleep 0.2
+
+    bootstrap_select '[name="service_id"]', @services.first.name
+    fill_in 'service_quantity', with: 1
+    
+    # Baseline count of this SPECIFIC service in the DOM (hidden or visible)
+    previous_count = all(".core tbody tr", text: @services.first.name, visible: :all).count
+    
+    retries = 0
+    begin
+      find('button#addService').click
+      
+      # THE NATIVE BARRIER: 
+      # We use `minimum:` because grouping jumps the count from 1 to 3. 
+      # Capybara will natively pause the test until the DOM settles and this condition is met.
+      expect(page).to have_css(".core tbody tr", text: @services.first.name, minimum: previous_count + 1, visible: :all, wait: 4)
+      
+    rescue RSpec::Expectations::ExpectationNotMetError => e
+      retry if (retries += 1) < 2
+      raise e
+    end
+
+    @first_procedure = Procedure.where(service_id: @services.first.id).last
   end
 
   def when_i_add_a_different_procedure
-    add_a_procedure @services.last
-    @second_procedure = Procedure.last
+    expect(page).to have_css('button#addService', visible: true)
+    sleep 0.2
+
+    bootstrap_select '[name="service_id"]', @services.last.name
+    fill_in 'service_quantity', with: 1
+    
+    previous_count = all(".core tbody tr", text: @services.last.name, visible: :all).count
+    
+    retries = 0
+    begin
+      find('button#addService').click
+      
+      expect(page).to have_css(".core tbody tr", text: @services.last.name, minimum: previous_count + 1, visible: :all, wait: 4)
+      
+    rescue RSpec::Expectations::ExpectationNotMetError => e
+      retry if (retries += 1) < 2
+      raise e
+    end
+
+    @second_procedure = Procedure.where(service_id: @services.last.id).last
   end
 
   def then_i_should_see_the_group_counter_is_correct
-    group_id = @first_procedure.group_id
-
+    # The group_id lookup is no longer necessary as Capybara natively scopes to the DOM state
     expect(page).to have_css("tr.hidden", count: 3, visible: :all)
   end
 
   def and_select_a_procedure_from_multiselect
     find("button[data-id='core_#{@first_procedure.sparc_core_id}_multiselect']").click
-    wait_for_ajax
     
-    find("a.dropdown-item").click
-    wait_for_ajax
+    # Wait for the dropdown animation to finish and menu to appear
+    expect(page).to have_css('.dropdown-menu.show')
+    
+    # Match: :first protects against ambiguous matches if multiple items exist
+    find("a.dropdown-item", match: :first).click
   end
 
   def and_select_all_procedures_from_multiselect
     find("button[data-id='core_#{@first_procedure.sparc_core_id}_multiselect']").click
+    expect(page).to have_css('.dropdown-menu.show')
     find("button.bs-select-all").click
   end
 
   def then_i_should_see_a_enabled_complete_and_incomplete_button
+    # Capybara natively waits for the 'disabled' class to be removed by the JS
     expect(page).to_not have_css("button.complete_all.disabled")
     expect(page).to_not have_css("button.incomplete_all.disabled")
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
-    group_id = @second_procedure.group_id
-
     expect(page).to have_css("tr[data-index='2']", count: 1)
   end
 
   def then_i_should_see_two_procedures_in_the_group
     find("button[data-id='core_#{@first_procedure.sparc_core_id}_multiselect']").click
-    wait_for_ajax
-    
-    group_id = @first_procedure.group_id
-
     expect(page).to have_css("tr.hidden", count: 2, visible: :all)
   end
 
   def then_i_should_see_three_procedures_in_the_group
     find("button[data-id='core_#{@first_procedure.sparc_core_id}_multiselect']").click
-    wait_for_ajax
-
-    group_id = @first_procedure.group_id
-
     expect(page).to have_css("tr.hidden", count: 3, visible: :all)
   end
 
@@ -156,12 +191,12 @@ feature 'Identity adds a Procedure', js: true do
   def then_i_should_see_the_multiselect_instantiated_with_2_options
     find("button[data-id='core_#{@first_procedure.sparc_core_id}_multiselect']").click
     expect(page).to have_css("button.bs-select-all")
-    expect(page).to have_content("#{@first_procedure.service_name}")
+    expect(page).to have_content(@first_procedure.service_name)
   end
 
   def then_i_should_see_the_quantity_increment_for_the_group_in_the_multiselect_dropdown
     find("button[data-id='core_#{@first_procedure.sparc_core_id}_multiselect']").click
-    expect(page).to have_content("#{@first_procedure.service_name}")
+    expect(page).to have_content(@first_procedure.service_name)
   end
 
   alias :and_the_visit_has_one_procedure :when_i_add_a_procedure

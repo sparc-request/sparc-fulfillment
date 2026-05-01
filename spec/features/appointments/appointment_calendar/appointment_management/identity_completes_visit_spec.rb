@@ -94,9 +94,6 @@ feature 'Complete Visit', js: true do
     expect(page).to have_css('a.list-group-item.appointment-link')
     first('a.list-group-item.appointment-link').click
     
-    # NATIVE SYNC: Wait for the AJAX pane to finish loading.
-    # The 'addService' button might already be visible from a previous state, 
-    # so we assert the page contains the specific Visit Group's name to prove the new data arrived.
     expect(page).to have_content(@visit_group.name)
     expect(page).to have_css('button#addService')
   end
@@ -104,17 +101,13 @@ feature 'Complete Visit', js: true do
   def when_i_add_a_procedure
     bootstrap_select('.form-control.selectpicker', @service.name)
     
-    # The Ghost Click Barrier
     retries = 0
     begin
       find('button#addService').click
       
-      # Wait up to 3 seconds for the network request to append the row
       expect(page).to have_css("tr", text: @service.name, wait: 3)
       
     rescue RSpec::Expectations::ExpectationNotMetError => e
-      # If the row never appears, the JS event listener missed our click. 
-      # The DOM has settled by now, so we click it again.
       retry if (retries += 1) < 3
       raise e
     end
@@ -127,7 +120,6 @@ feature 'Complete Visit', js: true do
     accept_confirm do
       find("tr[data-id='#{@procedure.id}'] button.delete").click
     end
-    # Native sync: Wait for the row to vanish from the DOM
     expect(page).to have_no_css("tr[data-id='#{@procedure.id}']")
   end
 
@@ -136,38 +128,31 @@ feature 'Complete Visit', js: true do
     expect(page).to have_no_css('a.btn.start-appointment')
 
     first('a.list-group-item, a.visit-group-link', text: @visit_group.name).click
-    # Wait for the view to switch to the active appointment
     expect(page).to have_css("button.complete-appointment") 
   end
 
   def when_i_complete_the_procedure
     find("button.btn-sq.complete-btn").click
-    # Native sync: Wait for the UI to flip to the incomplete button state
     expect(page).to have_css("button.btn-sq.incomplete-btn")
   end
 
   def when_i_incomplete_the_procedure
     find("button.btn-sq.incomplete-btn").click
     
-    # Wait for the modal to fully appear in the DOM
     expect(page).to have_selector('.modal-header', text: 'New Procedure Note')
     
     bootstrap_select '#procedure_notes_attributes_0_reason', 'Assessment missed'
     
-    # Ghost Click Barrier for Modal Submission
     retries = 0
     begin
       within '.modal-footer' do
         click_button 'Submit'
       end
       
-      # Wait up to 4 seconds for the backend to process and the modal to vanish
       expect(page).to have_no_selector('.modal-backdrop', wait: 4)
       expect(page).to have_no_selector('.modal', wait: 4)
       
     rescue RSpec::Expectations::ExpectationNotMetError => e
-      # If the modal is still open, we likely clicked mid-animation. 
-      # The modal is stationary now, so click again.
       retry if (retries += 1) < 2
       raise e
     end
@@ -182,8 +167,6 @@ feature 'Complete Visit', js: true do
     
     bootstrap_select '#task_assignee_id', @logged_in_identity.full_name
 
-    # RESTORED JS INJECTION: Datepickers aggressively block standard typing.
-    # This guarantees the form receives the value so validation passes.
     page.execute_script %Q{ 
       $('#task_due_at').val("#{Date.today.strftime('%m/%d/%Y')}");
       $('#task_due_at').trigger('change');
@@ -191,7 +174,6 @@ feature 'Complete Visit', js: true do
 
     fill_in 'task_notes_comment', with: 'Test comment'
     
-    # Ghost Click Barrier for Modal Submission
     retries = 0
     begin
       within '.modal-footer' do
@@ -208,12 +190,10 @@ feature 'Complete Visit', js: true do
   end
 
   def then_i_should_be_able_to_complete_visit
-    # We already verified the modal closed in the previous step, so we just check the button.
     expect(page).not_to have_css("button.complete_visit.disabled")
     
     find("button.complete-appointment").click
     
-    # completed date input should be visible after clicking Complete Visit
     expect(page).not_to have_css('div.completed_date_input.hidden')
   end
 

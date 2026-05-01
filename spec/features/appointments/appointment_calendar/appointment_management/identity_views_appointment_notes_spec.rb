@@ -26,7 +26,6 @@ feature 'User creates an appointment note', js: true do
     scenario 'and sees a notification that there are no notes' do
       given_i_am_viewing_an_appointment
       when_i_view_the_notes_list
-      # then_i_should_see_a_notice_that_there_are_no_notes
       then_i_should_see_current_notes
     end
   end
@@ -35,7 +34,6 @@ feature 'User creates an appointment note', js: true do
     given_i_am_viewing_an_appointment
     when_i_create_a_note
     then_i_should_see_the_created_note
-    # then_i_should_see_the_note
   end
 
   def given_i_am_viewing_an_appointment
