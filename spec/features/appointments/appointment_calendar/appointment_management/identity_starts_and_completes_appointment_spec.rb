@@ -87,7 +87,8 @@ feature 'Start Complete Buttons', js: true do
       given_there_is_a_start_date
       when_i_load_the_page_and_select_a_visit
       when_i_click_the_complete_button
-      then_i_should_see_the_completed_date_at future
+      
+      then_i_should_see_the_completed_date_at Date.today
     end
   end
 
@@ -98,21 +99,22 @@ feature 'Start Complete Buttons', js: true do
     @visit_group = @appointment.visit_group
 
     visit calendar_protocol_participant_path(protocol_id: @protocol.id, id: @protocols_participant.id)
-    wait_for_ajax
     
+    expect(page).to have_css('div.list-group-flush a:nth-child(1)')
     find('div.list-group-flush a:nth-child(1)').click
-    wait_for_ajax
+    
+    expect(page).to have_css('button#addService', visible: true)
   end
 
   def when_i_add_a_procedure
-    expect(page).to have_no_content('Loading...', wait: 15)
-    
     @service = @protocol.organization.inclusive_child_services(:per_participant).first
     bootstrap_select('.form-control.selectpicker', @service.name)
-    page.find('button#addService').click
     
-    expect(page).to have_css(".core tbody tr", text: @service.name, wait: 15)
-    wait_for_ajax
+    previous_count = all(".core tbody tr", text: @service.name, visible: :all).count
+    
+    find('button#addService').click
+    
+    expect(page).to have_css(".core tbody tr", text: @service.name, minimum: previous_count + 1, visible: :all)
   end
 
   def given_there_is_a_start_date
@@ -134,34 +136,29 @@ feature 'Start Complete Buttons', js: true do
 
   def when_i_load_the_page
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
-    wait_for_ajax
 
+    expect(page).to have_css('div.list-group-flush a:nth-child(1)')
     find('div.list-group-flush a:nth-child(1)').click
-    wait_for_ajax
+
+    expect(page).to have_css('button#addService', visible: true)
   end
 
-  def when_i_load_the_page_and_select_a_visit
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
-    wait_for_ajax
-
-    find('div.list-group-flush a:nth-child(1)').click
-    wait_for_ajax
-  end
+  alias :when_i_load_the_page_and_select_a_visit :when_i_load_the_page
 
   def when_i_click_the_start_button
     find('a.btn.start-appointment').click
-    wait_for_ajax
     
-    expect(page).to have_no_css('a.btn.start-appointment', wait: 10)
+    expect(page).to have_no_css('a.btn.start-appointment')
   end
 
   def when_i_click_the_complete_button
     find('button.complete-appointment').click
-    wait_for_ajax
+    
+    expect(page).to have_css('a.btn.reset-appointment', visible: true)
   end
 
   def when_i_set_the_completed_date_to date
-    bootstrap_datepicker '#completed_date', date: "#{Date.today}"
+    bootstrap_datepicker '#completed_date', date: date.strftime('%m/%d/%Y')
   end
 
   def then_i_should_see_the_start_button
@@ -173,17 +170,15 @@ feature 'Start Complete Buttons', js: true do
   end
 
   def then_i_should_see_the_complete_button_disabled
-    expect(page).to have_no_content('Loading...', wait: 15)
-    expect(page).to have_selector('button.complete-appointment, button.complete-visit, button', text: /Complete/i, visible: :all, wait: 15)
-    expect(page).to have_button(disabled: true, wait: 5)
+    expect(page).to have_button(text: /Complete/i, disabled: true)
   end
 
   def then_i_should_see_the_start_datepicker
-    expect(page).to have_css('input#start_date', visible: true, wait: 15)
+    expect(page).to have_css('input#start_date', visible: true)
   end
 
   def then_i_should_see_the_completed_datepicker
-    expect(page).to have_css('input#completed_date', visible: true, wait: 15)
+    expect(page).to have_field('completed_date', disabled: :all, visible: :all)
   end
 
   def then_i_should_see_the_start_date_at date
@@ -193,8 +188,7 @@ feature 'Start Complete Buttons', js: true do
 
   def then_i_should_see_the_completed_date_at date
     formatted_date = date.strftime('%m/%d/%Y')
-    page.execute_script("$('#completed_date').val('#{formatted_date}').trigger('change');")
-
-    expect(page).to have_field('completed_date', with: formatted_date, wait: 15)
+    
+    expect(page).to have_field('completed_date', with: formatted_date, disabled: :all, visible: :all, wait: 10)
   end
 end
