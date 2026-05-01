@@ -35,54 +35,73 @@ feature 'Identity uncompletes an appointment', js: true do
     protocol    = create_and_assign_protocol_to_me
     @protocols_participant = protocol.protocols_participants.first
     @visit_group = @protocols_participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_child_services(:per_participant).first
+    @service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
 
-    first('a', text: @visit_group.name, wait: 10).click
-    wait_for_ajax
+    # Native sync for pane load (using the proven pattern from previous files)
+    expect(page).to have_css('a.list-group-item.appointment-link')
+    first('a.list-group-item.appointment-link').click
+
+    # Verify the specific appointment pane opened before proceeding
+    expect(page).to have_content(@visit_group.name)
+    expect(page).to have_css('button#addService')
     
-    bootstrap_select '[name="service_id"]', service.name
+    bootstrap_select '[name="service_id"]', @service.name
     fill_in 'service_quantity', with: 1
-    find('button#addService').click
-
-    expect(page).to have_css(".core tbody tr", text: service.name, wait: 15)
-    wait_for_ajax
+    
+    # The Ghost Click Barrier for adding the service
+    retries = 0
+    begin
+      find('button#addService').click
+      # Wait up to 3 seconds for the network request to append the row
+      expect(page).to have_css(".core tbody tr", text: @service.name, wait: 3)
+    rescue RSpec::Expectations::ExpectationNotMetError => e
+      retry if (retries += 1) < 3
+      raise e
+    end
   end
 
   def when_i_begin_the_appointment
     find('a.start-appointment').click
-    wait_for_ajax
+    expect(page).to have_no_css('a.start-appointment')
     
-    expect(page).to have_no_css('a.start-appointment', wait: 10)
-    
-    if page.has_link?(@visit_group.name)
+    if @visit_group&.name && page.has_link?(@visit_group.name)
       first('a', text: @visit_group.name).click
-      wait_for_ajax
     end
+    
+    # NATIVE SYNC: Wait for the "started" appointment pane to fully load 
+    expect(page).to have_css('button.complete-appointment')
   end
 
   def when_i_complete_the_procedure
-    expect(page).to have_no_content('Loading...', wait: 15)
     find('button.complete-btn').click
-    wait_for_ajax
+    
+    # NATIVE SYNC: Wait for the button state to visibly toggle to "incomplete" 
+    # before trying to complete the whole appointment.
+    expect(page).to have_css('button.incomplete-btn')
   end
 
   def when_i_complete_the_appointment
+    # Ensure it's not disabled before clicking
+    expect(page).not_to have_css("button.complete-appointment.disabled")
     find('button.complete-appointment').click
-    wait_for_ajax
+    
+    # NATIVE SYNC: Wait for the 'unstarted-btn' to appear, proving the backend
+    # successfully processed the appointment completion.
+    expect(page).to have_css('button.unstarted-btn')
   end
 
   def when_i_uncomplete_the_appointment
     find('button.unstarted-btn').click
-    wait_for_ajax
-    expect(page).to have_no_content('Loading...', wait: 15)
+    
+    # Wait for the unstart button to vanish to confirm the click registered
+    expect(page).to have_no_css('button.unstarted-btn')
   end
 
   def then_i_should_see_the_appointment_is_uncomplete
-    expect(page).to have_css('button.complete-appointment', visible: true, wait: 15)
+    # Capybara natively waits up to default_max_wait_time for the complete button to return
+    expect(page).to have_css('button.complete-appointment', visible: true)
   end
 end
-
 

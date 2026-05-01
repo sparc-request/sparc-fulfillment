@@ -42,12 +42,12 @@ feature 'Identity adds Procedure', js: true do
   end
 
   def when_i_add_a_procedure
-    expect(page).to have_button('addService', wait: 10)
+    expect(page).to have_button('addService')
     visit_group = @protocols_participant.appointments.first.visit_group
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
     first('a.list-group-item.appointment-link').click
-    expect(page).to have_css('button.dropdown-toggle', wait: 5)
+    expect(page).to have_css('button.dropdown-toggle')
 
     bootstrap_select('.form-control.selectpicker', service.name)
 
@@ -60,7 +60,7 @@ feature 'Identity adds Procedure', js: true do
     service_name = @protocol.organization.inclusive_child_services(:per_participant).first.name
 
     within('#appointmentContainer') do
-      expect(page).to have_content(service_name, wait: 15)
+      expect(page).to have_content(service_name)
     end
   end
 
