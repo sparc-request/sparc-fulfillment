@@ -99,7 +99,8 @@ module Features
       e = page.find(element)
 
       if e['readonly']
-        first("#{element}").click
+        # NATIVE FIX: Use the exact node we just waited for, letting Capybara auto-retry if it stales
+        e.click
 
         if args[:year]
           expect(page).to have_selector('.year', exact_text: args[:year], visible: :all, wait: 5)

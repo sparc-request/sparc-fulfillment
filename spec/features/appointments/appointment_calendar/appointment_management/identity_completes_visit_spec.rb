@@ -164,6 +164,8 @@ feature 'Complete Visit', js: true do
     end
 
     expect(page).to have_selector('#modalContainer.show')
+
+    expect(page).to have_css('.dropdown-toggle', visible: :all, wait: 10)
     
     bootstrap_select '#task_assignee_id', @logged_in_identity.full_name
 
