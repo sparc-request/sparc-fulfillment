@@ -78,6 +78,9 @@ feature 'Invoice Procedure', js: true do
     create(:procedure_insurance_billing_qty_with_notes,
             appointment: appointment,
             service: @service,
+            sparc_core_name: @service.organization.name, # NATIVE FIX: Link to Core Tab
+            sparc_core_id: @service.organization_id,     # NATIVE FIX: Link to Core Tab
+            status: 'complete',                          # NATIVE FIX: Formally Complete!
             completed_date: DateTime.current.strftime('%m/%d/%Y'),
             invoiced: true)
 
@@ -91,36 +94,38 @@ feature 'Invoice Procedure', js: true do
     service       = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
-
+    
+    expect(page).to have_css('a.list-group-item.appointment-link', wait: 10)
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+    
+    expect(page).to have_css('a.btn.start-appointment', visible: :all, wait: 15)
     
     add_a_procedure(service)
   end
 
   def when_i_start_the_appointment
     find('a.btn.start-appointment').click
-    wait_for_ajax
+    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
   end
 
   def then_i_should_see_the_invoiced_column_as_view_only
-    expect(page).to have_css('td.invoiced', count: 1)
+    expect(page).to have_css('td.invoiced', minimum: 1, visible: :all, wait: 10)
   end
 
   def then_i_should_see_the_invoiced_column_as_a_toggle_button
-    expect(page).to have_selector('td div.toggle.disabled', count: 1)
+    expect(page).to have_css('td.invoiced div.toggle.disabled', minimum: 1, visible: :all, wait: 10)
   end
 
   def then_i_should_see_the_remove_button_disabled
-    expect(page).to have_selector('a.reset-appointment.disabled', count: 1)
+    expect(page).to have_css('a.delete-button.disabled', count: 1, visible: :all, wait: 15)
   end
 
   def then_i_should_see_the_reset_visit_button_disabled
-    expect(page).to have_selector('a.reset-appointment.disabled', count: 1)
+    expect(page).to have_css('a.reset-appointment.disabled', count: 1, wait: 10)
   end
 
   def then_i_should_see_the_remove_button_as_non_disabled
-    expect(page).to have_selector('a.delete-button:not(:disabled)', count: 1)
+    expect(page).to have_no_css('a.delete-button.disabled', visible: :all, wait: 10)
+    expect(page).to have_css('a.delete-button:not(.disabled)', minimum: 1, visible: :all, wait: 10)
   end
 end

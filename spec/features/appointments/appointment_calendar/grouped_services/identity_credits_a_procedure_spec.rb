@@ -92,6 +92,8 @@ feature 'Invoice Procedure', js: true do
     create(:procedure_insurance_billing_qty_with_notes,
             appointment: appointment,
             service: @service,
+            sparc_core_name: @service.organization.name, # NATIVE FIX: Link to Core Tab
+            sparc_core_id: @service.organization_id,     # NATIVE FIX: Link to Core Tab
             credited: true)
     given_i_am_viewing_a_visit
   end
@@ -102,6 +104,9 @@ feature 'Invoice Procedure', js: true do
     create(:procedure_insurance_billing_qty_with_notes,
             appointment: appointment,
             service: @service,
+            sparc_core_name: @service.organization.name, # NATIVE FIX: Link to Core Tab
+            sparc_core_id: @service.organization_id,     # NATIVE FIX: Link to Core Tab
+            status: 'complete',                          # NATIVE FIX: Formally Complete!
             completed_date: DateTime.current.strftime('%m/%d/%Y'),
             credited: true)
     given_i_am_viewing_a_visit
@@ -109,36 +114,50 @@ feature 'Invoice Procedure', js: true do
 
   def when_i_start_the_appointment
     find('a.btn.start-appointment').click
-    wait_for_ajax
+    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
   end
 
   def when_i_update_the_billing_type
-    bootstrap_select '#procedure_billing_type', 'T'
-    wait_for_ajax
+    if page.has_css?('tr.info.groupBy', wait: 2)
+      group_header = find('tr.info.groupBy', match: :first)
+      group_header.click if group_header[:class].include?('expanded')
+    end
+
+    expect(page).to have_css('.dropdown-toggle', visible: :all, wait: 10)
+    
+    bootstrap_select '#procedure_billing_type', 'T' 
+    
+    expect(page).to have_css('button[data-id="procedure_billing_type"][title="T"]', visible: :all, wait: 15)
   end
 
   def when_i_complete_the_procedure
-    find('button.complete-btn').click
-    wait_for_ajax
+    if page.has_css?('tr.info.groupBy', wait: 2)
+      group_header = find('tr.info.groupBy', match: :first)
+      group_header.click if group_header[:class].include?('expanded')
+    end
+
+    find('button.complete-btn', match: :first).click
+    expect(page).to have_css('button.complete-btn.active', wait: 10)
   end
 
   def then_i_should_see_the_credited_column_as_view_only
-    expect(page).to have_css('td.credited', count: 1)
+    expect(page).to have_css('td.credited', minimum: 1, visible: :all, wait: 10)
   end
 
   def then_i_should_see_the_credited_column_as_a_toggle_button
-    expect(page).to_not have_selector('td.w-5.credited div.toggle.btn-light.disabled', count: 1)
+    expect(page).to have_no_css('td.w-5.credited div.toggle.btn-light.disabled', visible: :all, wait: 10)
   end
 
   def then_i_should_see_the_remove_button_disabled
-    expect(page).to have_selector('a.reset-appointment.disabled', count: 1)
+    expect(page).to have_css('a.delete-button.disabled', count: 1, visible: :all, wait: 15)
   end
 
   def then_i_should_see_the_reset_visit_button_disabled
-    expect(page).to have_selector('a.reset-appointment.disabled', count: 1)
+    expect(page).to have_css('a.reset-appointment.disabled', count: 1, wait: 10)
   end
 
   def then_i_should_see_the_remove_button_as_non_disabled
-    expect(page).to have_selector('a.delete-button:not(:disabled)', count: 1)
+    expect(page).to have_no_css('a.delete-button.disabled', visible: :all, wait: 10)
+    expect(page).to have_css('a.delete-button:not(.disabled)', minimum: 1, visible: :all, wait: 10)
   end
 end

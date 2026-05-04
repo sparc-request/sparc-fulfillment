@@ -63,30 +63,24 @@ feature 'Identity completes all Services', js: true do
   def and_i_select_the_procedure_in_the_core_dropdown
     find('.core_multiselect').click
     
-    # NATIVE SYNC: Wait for dropdown to open
     expect(page).to have_css('.dropdown-menu.inner.show', wait: 10)
     
-    # Click the second option in the list (index 1)
     all('ul.dropdown-menu.inner.show li a[role="option"]')[1].click
     
-    # Close dropdown so it doesn't intercept other clicks on the page
     find('body').click
     expect(page).to have_no_css('.dropdown-menu.inner.show', wait: 5)
   end
 
   def and_i_click_complete_all
     find('button.complete-all').click
-    # NATIVE SYNC: Wait for the modal to fully render
     expect(page).to have_css('.modal-dialog', visible: true, wait: 10)
   end
 
   def then_i_should_see_all_selected_procedures_completed
-    # SAFELY REVEAL: Expanded means hidden, collapsed means visible
     group_header = find('tr.info.groupBy', match: :first)
     group_header.click if group_header[:class].include?('expanded')
     expect(page).to have_css('tr.info.groupBy.collapsed', wait: 10)
 
-    # NATIVE SYNC: Wait for the exact number of active checkmarks
     expect(page).to have_css('button.complete-btn.active', count: 2, wait: 10)
   end
 
@@ -95,29 +89,22 @@ feature 'Identity completes all Services', js: true do
   end
 
   def with_a_default_completed_date_of_current_date
-    # NATIVE SYNC: Grab value natively instead of evaluating raw JS
     input_val = find('.modal-dialog .datetimepicker-input', visible: :all).value
     expect(input_val).to eq(DateTime.current.strftime('%m/%d/%Y'))
   end
 
   def when_i_fill_in_performed_by
-    # Wait for the Bootstrap select inside the modal to hydrate
     expect(page).to have_css('.modal-dialog .dropdown-toggle', visible: :all, wait: 10)
     
-    # Pass the actual generated DB name
     bootstrap_select('[name="performer_id"]', Identity.first.full_name)
     
-    # NATIVE SYNC FIX: Ensure the dropdown has fully closed before moving on! 
-    # Otherwise the fading menu swallows the Submit click in the next step.
     expect(page).to have_no_css('.dropdown-menu.show', wait: 5)
   end
 
   def when_i_save_the_modal
-    # CLICK-SWALLOW PROTECTION: Just in case the modal animation is stubborn
     retries = 0
     begin
       find('input[value="Submit"]').click
-      # NATIVE SYNC: Wait for modal to disappear, confirming submission and AJAX execution
       expect(page).to have_no_css('.modal-dialog', wait: 10)
     rescue RSpec::Expectations::ExpectationNotMetError => e
       retry if (retries += 1) < 2
@@ -131,18 +118,15 @@ feature 'Identity completes all Services', js: true do
     expect(page).to have_css('button.bs-select-all', visible: :all, wait: 10)
     find('button.bs-select-all').click
     
-    # Close dropdown and wait for it to vanish
     find('body').click
     expect(page).to have_no_css('.dropdown-menu.inner.show', wait: 5)
   end
 
   def then_i_should_see_all_procedures_completed
-    # SAFELY REVEAL
     group_header = find('tr.info.groupBy', match: :first)
     group_header.click if group_header[:class].include?('expanded')
     expect(page).to have_css('tr.info.groupBy.collapsed', wait: 10)
     
-    # NATIVE SYNC: Wait for exactly 3 active complete buttons
     expect(page).to have_css('button.complete-btn.active', count: 3, wait: 10)
     
     # Confirm DB updates
