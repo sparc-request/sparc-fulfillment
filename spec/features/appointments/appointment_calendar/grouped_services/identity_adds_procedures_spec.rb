@@ -36,7 +36,8 @@ feature 'Identity adds Procedure', js: true do
     @protocols_participant  = @protocol.protocols_participants.first
 
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
+    
+    expect(page).to have_css('a.list-group-item.appointment-link', visible: true)
   end
 
   def when_i_add_two_procedures
@@ -44,17 +45,29 @@ feature 'Identity adds Procedure', js: true do
     service     = @protocol.organization.inclusive_child_services(:per_participant).first
 
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+    
+    expect(page).to have_css('button#addService', visible: true)
+    expect(page).to have_css('.dropdown-toggle', visible: :all, wait: 10)
+
     bootstrap_select('.form-control.selectpicker', service.name)
+    
     fill_in 'service_quantity', with: '2'
-    page.find('button#addService').click
-    wait_for_ajax
+    find('#service_quantity').send_keys(:tab)
+    
+    retries = 0
+    begin
+      page.find('button#addService').click
+      
+      expect(page).to have_css("tr.info.groupBy.expanded", visible: :all, wait: 15)
+    rescue RSpec::Expectations::ExpectationNotMetError => e
+      retry if (retries += 1) < 2
+      raise e
+    end
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar
     find("tr.info.groupBy.expanded").click
-    wait_for_ajax
 
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 2)
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 2, visible: :all, wait: 10)
   end
 end

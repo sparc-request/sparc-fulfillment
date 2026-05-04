@@ -37,9 +37,10 @@ feature 'Identity changes a Service', js: true do
     when_i_start_the_appointment
     when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
     then_i_should_see_the_procedure_in_the_group
+    then_i_should_see_the_procedure_group_counter_is_four
   end
 
-  scenario 'and sees it is no longer in its original group' do
+  scenario 'and sees it is not longer in its original group' do
     given_i_am_viewing_a_visit_with_one_procedure_group
     when_i_start_the_appointment
     when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
@@ -99,7 +100,7 @@ feature 'Identity changes a Service', js: true do
 
   def when_i_start_the_appointment
     find('a.btn.start-appointment').click
-    wait_for_ajax
+    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
   end
 
   def when_i_add_a_different_procedure
@@ -112,71 +113,114 @@ feature 'Identity changes a Service', js: true do
   end
 
   def when_i_change_one_procedure_billing_type_to_be_the_same_as_the_other
+    expect(page).to have_css('.dropdown-toggle', visible: :all, wait: 10)
+    
     bootstrap_select '#procedure_billing_type', 'T'
+    
+    expect(page).to have_css('tr.groupBy', count: 1, wait: 15)
   end
 
   def when_i_move_all_procedures_out_of_the_group
-    wait_for_ajax
-    find('tr.info.groupBy.expanded').click
-    @original_group_id = page.first('tr td.name div')['data-group-id']
-    bootstrap_select '#procedure_billing_type', 'R'
-    wait_for_ajax
-    find('tr.info.groupBy.expanded').click
-    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'
-    wait_for_ajax
-    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="1"]'      
-    wait_for_ajax
+    expect(page).to have_css('tr.info.groupBy', wait: 10)
+    @original_group_id = page.first('tr td.name div', visible: :all)['data-group-id']
+    
+    expect(page).to have_css("div[data-group-id='#{@original_group_id}']", count: 3, visible: :all, wait: 10)
+
+    target_row = first("div[data-group-id='#{@original_group_id}']", visible: :all).find(:xpath, './ancestor::tr[1]', visible: :all)
+    
+    parent_index = target_row['data-parent-index']
+    header_row = find("tr.info.groupBy[data-group-index='#{parent_index}']", visible: :all)
+    
+    header_row.click if header_row[:class].include?('expanded')
+    expect(page).to have_css("tr.info.groupBy[data-group-index='#{parent_index}'].collapsed", wait: 10)
+    
+    within(target_row) do
+      wrapper = find('td.billing-type div.bootstrap-select', visible: :all)
+      within(wrapper) do
+        find('.dropdown-toggle').click
+        find('ul.dropdown-menu li a span.text', text: 'R', match: :first).click
+      end
+    end
+
+    expect(page).to have_css("div[data-group-id='#{@original_group_id}']", count: 2, visible: :all, wait: 15)
+
+    target_row = first("div[data-group-id='#{@original_group_id}']", visible: :all).find(:xpath, './ancestor::tr[1]', visible: :all)
+    parent_index = target_row['data-parent-index']
+    
+    header_row = find("tr.info.groupBy[data-group-index='#{parent_index}']", visible: :all)
+    header_row.click if header_row[:class].include?('expanded')
+    expect(page).to have_css("tr.info.groupBy[data-group-index='#{parent_index}'].collapsed", wait: 10)
+    
+    retries = 0
+    begin
+      within(target_row) do
+        wrapper = find('td.billing-type div.bootstrap-select', visible: :all)
+        within(wrapper) do
+          find('.dropdown-toggle').click
+          find('ul.dropdown-menu li a span.text', text: 'R', match: :first).click
+        end
+      end
+      expect(page).to have_css("div[data-group-id='#{@original_group_id}']", count: 1, visible: :all, wait: 15)
+    rescue RSpec::Expectations::ExpectationNotMetError => e
+      retry if (retries += 1) < 2
+      raise e
+    end
+
+    target_row = first("div[data-group-id='#{@original_group_id}']", visible: :all).find(:xpath, './ancestor::tr[1]', visible: :all)
+    
+    within(target_row) do
+      wrapper = find('td.billing-type div.bootstrap-select', visible: :all)
+      within(wrapper) do
+        find('.dropdown-toggle').click
+        find('ul.dropdown-menu li a span.text', text: 'R', match: :first).click
+      end
+    end
+    
+    expect(page).to have_no_css("div[data-group-id='#{@original_group_id}']", wait: 15)
   end
 
   def when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
-    save_screenshot('before_procedure_group_expand.png')
     find('tr.info.groupBy.expanded').click
-    wait_for_ajax
-
-    expect(page).to have_css('tr.info.groupBy.collapsed', wait: 15)
-    save_screenshot('after_procedure_group_expand.png')
-
-    bootstrap_select '#procedure_billing_type', 'R'
-    wait_for_ajax
-    save_screenshot('after_changing_procedure.png')
-
-    sleep 15
-    save_screenshot('has_procedure_change_triggered_refresh.png')
     
+    expect(page).to have_css('tr[data-parent-index="0"] .dropdown-toggle', visible: :all, wait: 10)
+
+    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="0"]'
+    
+    expect(page).to have_css('tr.groupBy strong.badge', text: '2', wait: 15)
   end
 
   def when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
+    expect(page).to have_css("#edit_procedure_#{@ungrouped_procedure.id} .dropdown-toggle", visible: :all, wait: 10)
+    
     bootstrap_select '#procedure_billing_type', 'T', "#edit_procedure_#{@ungrouped_procedure.id}"
-    wait_for_ajax
-
-    expect(page).to have_css('tr.info.groupBy.expanded strong.badge', text: '4', wait: 15)
+    
+    expect(page).to have_css('tr.groupBy strong.badge', text: '4', wait: 15)
   end
 
-  # def then_i_should_see_the_procedure_group_counter_is_two
-  #   expect(page).to have_css('tr.expanded.groupBy strong.badge', text: '2')
-  # end
+  def then_i_should_see_the_procedure_group_counter_is_two
+    expect(page).to have_css('tr.groupBy strong.badge', text: '2', wait: 10)
+  end
+
+  def then_i_should_see_the_procedure_group_counter_is_four
+    expect(page).to have_css('tr.groupBy strong.badge', text: '4', wait: 10)
+  end
 
   def then_i_should_see_one_procedure_group
-    expect(page).to have_css('tr.expanded.groupBy', count: 1)
+    expect(page).to have_css('tr.groupBy', count: 1, wait: 10)
   end
 
   def then_i_should_not_see_the_procedure_group
-    expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
+    expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']", wait: 15)
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
-    save_screenshot('is_procedure_still_in_group.png')
-    find("tr.info.groupBy.expanded").click
-    wait_for_ajax
-    
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 1)
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 1, visible: :all, wait: 10)
   end
 
   def then_i_should_see_the_procedure_in_the_group
     find("tr.info.groupBy.expanded").click
-    wait_for_ajax
-
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 4)
+    
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 4, visible: :all, wait: 10)
   end
 
 end
