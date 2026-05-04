@@ -116,18 +116,37 @@ feature 'Identity incompletes all Services', js: true do
 
   def and_i_click_incomplete_all_and_give_a_reason
     find('button.incomplete-all').click
-    wait_for_ajax
-    bootstrap_select '[name="performer_id"]', "Sally"
+    
+    # NATIVE SYNC: Wait for the modal to fully render
+    expect(page).to have_css('.modal-dialog', visible: true, wait: 10)
+    
+    # DYNAMIC DATA FIX: Pass the actual generated DB name instead of hardcoded "Sally"
+    bootstrap_select '[name="performer_id"]', Identity.first.full_name
+    
     reason = Procedure::NOTABLE_REASONS.first
     bootstrap_select '[name="reason"]', reason
     fill_in 'comment', with: 'Test comment'
-    find('input[value="Submit"]').click
-    wait_for_ajax
+    
+    # DROPDOWN BARRIER: Ensure the fading menu doesn't swallow our Submit click
+    expect(page).to have_no_css('.dropdown-menu.show', wait: 5)
+    
+    # CLICK-SWALLOW PROTECTION
+    retries = 0
+    begin
+      find('input[value="Submit"]').click
+      # NATIVE SYNC: Wait for modal to disappear, confirming submission and AJAX execution
+      expect(page).to have_no_css('.modal-dialog', wait: 10)
+    rescue RSpec::Expectations::ExpectationNotMetError => e
+      retry if (retries += 1) < 2
+      raise e
+    end
   end
 
   def and_i_unroll_accordion
-    find("tr.info.groupBy.expanded").click
-    wait_for_ajax
+    # SAFELY REVEAL: Expanded means hidden, collapsed means visible
+    group_header = find('tr.info.groupBy', match: :first)
+    group_header.click if group_header[:class].include?('expanded')
+    expect(page).to have_css('tr.info.groupBy.collapsed', wait: 10)
   end
 
   def then_the_selected_procedures_should_be_incompleted
