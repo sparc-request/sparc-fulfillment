@@ -62,7 +62,6 @@ feature 'Identity removes a Procedure', js: true do
 
   def when_i_start_the_appointment
     find('a.btn.start-appointment').click
-    # NATIVE SYNC: Wait for the reset button to appear to confirm the appointment has started
     expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
   end
 
@@ -75,39 +74,31 @@ feature 'Identity removes a Procedure', js: true do
   end
 
   def when_i_remove_the_first_procedure(expected_remaining:)
-    # SAFELY REVEAL: Expanded means hidden, collapsed means visible
     group_header = first('tr.info.groupBy')
     group_header.click if group_header && group_header[:class].include?('expanded')
     expect(page).to have_css('tr.info.groupBy.collapsed', wait: 10)
 
     first('a.delete-button').click
     
-    # NATIVE SYNC: Wait for SweetAlert modal to fully render, click, and wait for it to vanish
     expect(page).to have_css('.swal2-container', wait: 10)
     find('button.swal2-confirm').click
     expect(page).to have_no_css('.swal2-container', wait: 10)
 
-    # DATA SYNC: Wait for the AJAX to eradicate the row from the DOM entirely
     expect(page).to have_css('a.delete-button', count: expected_remaining, visible: :all, wait: 15)
   end
 
   def then_i_should_no_longer_see_that_procedure
-    # Safely reveal if the AJAX reload happened to snap the group closed again
     group_header = first('tr.info.groupBy')
     group_header.click if group_header && group_header[:class].include?('expanded')
     
-    # NATIVE SYNC: Confirm exactly 2 procedure rows remain inside the group
     expect(page).to have_css('tr[data-parent-index="0"]', count: 2, visible: :all, wait: 10)
   end
 
   def then_i_should_see_the_group_counter_decrement_by_1
-    # Check the bold counter text, completely ignoring the brittle visual state of the accordion
     expect(page).to have_css("tr.info.groupBy p strong", text: '2', wait: 10)
   end
 
   def then_i_should_no_longer_see_the_group
-    # When a group drops to 1, the grouping logic dissolves into a singleton. 
-    # NATIVE SYNC: Wait for the entire header concept to vanish!
     expect(page).to have_no_css('tr.info.groupBy', wait: 15)
   end
 end
