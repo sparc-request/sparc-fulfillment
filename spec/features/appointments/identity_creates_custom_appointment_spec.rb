@@ -69,57 +69,91 @@ feature 'Custom appointment', js: true do
     end
 
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
+    
+    expect(page).to have_css('#new_appointment_button', visible: true, wait: 5)
   end
 
   def when_i_click_create_custom_appointment
     find('#new_appointment_button').click
+    
+    expect(page).to have_css('.modal', visible: true, wait: 5)
   end
 
   def when_i_fill_in_the_form
-    fill_in 'custom_visit_name', with: 'Test Visit'
-    bootstrap_select "#custom_visit_position", "Add as last"
-    bootstrap_select "#custom_visit_reason", "Assessment not performed"
+    within('.modal') do
+      fill_in 'custom_visit_name', with: 'Test Visit'
+      
+      position_container = find("#custom_visit_position", visible: :all).find(:xpath, '..')
+      position_container.find('button.dropdown-toggle').click
+      
+      pos_span = position_container.find('span.text', text: "Add as last", exact_text: true, match: :first, visible: :all)
+      page.execute_script("arguments[0].click();", pos_span)
+      expect(page).to have_css(".filter-option-inner-inner", text: "Add as last", visible: :all, wait: 5)
+
+      reason_container = find("#custom_visit_reason", visible: :all).find(:xpath, '..')
+      reason_container.find('button.dropdown-toggle').click
+      
+      reason_span = reason_container.find('span.text', text: "Assessment not performed", exact_text: true, match: :first, visible: :all)
+      page.execute_script("arguments[0].click();", reason_span)
+      expect(page).to have_css(".filter-option-inner-inner", text: "Assessment not performed", visible: :all, wait: 5)
+    end
   end
 
   def when_i_click_add_appointment
-    click_button 'Submit'
-    wait_for_ajax
+    within('.modal') do
+      submit_btn = find_button('Submit', visible: :all)
+      page.execute_script("arguments[0].click();", submit_btn)
+    end
+    
+    expect(page).to have_no_css('.modal', visible: true, wait: 10)
   end
 
   def when_i_select_the_appointment
     @service = @protocol.organization.inclusive_child_services(:per_participant).first
     @service.update(name: 'Test Service')
+    
+    expect(page).to have_css("a.appointment-link span", text: "Test Visit", wait: 10)
     find("a.appointment-link span", text: "Test Visit").click
-    wait_for_ajax
+    
+    expect(page).to have_css('#add_procedure_dropdown', visible: :all, wait: 5)
   end
 
   def when_i_add_a_procedure
-    bootstrap_select '#add_procedure_dropdown', 'Test Service'
+    add_service_container = find('#add_procedure_dropdown', visible: :all).find(:xpath, '..')
+    add_service_container.find('button.dropdown-toggle').click
+    
+    service_span = add_service_container.find('span.text', text: 'Test Service', exact_text: true, match: :first, visible: :all)
+    page.execute_script("arguments[0].click();", service_span)
+    
+    expect(page).to have_css(".filter-option-inner-inner", text: 'Test Service', visible: :all, wait: 5)
+
     fill_in 'service_quantity', with: 1
     find('button#addService').click
-    wait_for_ajax
+    
+    expect(page).to have_css('a.start-appointment', visible: true, wait: 10)
   end
 
   def when_i_complete_the_procedure
     find('a.start-appointment').click
-    wait_for_ajax
+    expect(page).to have_no_css('a.start-appointment', wait: 5)
+    
     find('button.complete-btn').click
-    wait_for_ajax
+    expect(page).to have_css('button.complete-btn.active', wait: 5)
 
     find('button.complete-appointment').click
-    wait_for_ajax
+    
+    expect(page).to have_no_css('button.complete-appointment', wait: 10)
   end
 
   def then_i_should_see_the_create_custom_visit_modal
-    expect(page).to have_css(".modal-title", text: "Custom Visit")
+    expect(page).to have_css(".modal-title", text: "Custom Visit", wait: 5)
   end
 
   def then_i_should_see_the_newly_created_appointment
-    expect(page).to have_css("a.appointment-link span", text: "Test Visit")
+    expect(page).to have_css("a.appointment-link span", text: "Test Visit", wait: 10)
   end
 
   def then_it_should_appear_on_the_dashboard
-    expect(page).to have_content('Test Visit')
+    expect(page).to have_content('Test Visit', wait: 5)
   end
 end

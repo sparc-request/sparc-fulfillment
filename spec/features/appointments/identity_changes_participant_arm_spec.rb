@@ -21,15 +21,15 @@
 require 'rails_helper'
 
 feature "Change Participant Arm", js: :true do
-  # NOTE:  TEMPORARILY COMMENTING OUT DUE TO TRAVIS FAILURES
-  # context "original arm does NOT have completed procedures" do
-  #   scenario "User changes arm on the participant tracker" do
-  #     when_i_start_work_on_an_appointment
-  #     then_i_change_the_arm_of_the_participant
-  #     and_i_visit_the_calendar_again
-  #     i_should_only_see_new_appointments
-  #   end
-  # end
+  context "original arm does NOT have completed procedures" do
+    scenario "User changes arm on the participant tracker" do
+      when_i_start_work_on_an_appointment
+      then_i_change_the_arm_of_the_participant
+      and_i_visit_the_calendar_again
+      i_should_only_see_new_appointments
+    end
+  end
+  
   context "original arm has completed procedures" do
     scenario "User changes arm on the participant tracker" do
       when_i_start_work_on_an_appointment
@@ -39,7 +39,6 @@ feature "Change Participant Arm", js: :true do
       i_should_see_new_and_old_appointments
     end
   end
-
 
   def when_i_start_work_on_an_appointment
     @protocol     = create_and_assign_protocol_to_me
@@ -55,31 +54,45 @@ feature "Change Participant Arm", js: :true do
     given_i_am_viewing_a_visit
 
     find('a.start-appointment').click
-    wait_for_ajax
-
-    sleep 2
+    
+    expect(page).to have_no_css('a.start-appointment', wait: 5)
+    expect(page).to have_css('button#addService', visible: true, wait: 5)
 
     add_a_procedure(@service)
   end
 
   def and_i_complete_a_procedure
     find('button.complete-btn').click
-    wait_for_ajax
+    
+    expect(page).to have_css('button.complete-btn.active', wait: 5)
   end
 
   def then_i_change_the_arm_of_the_participant
     visit protocol_path(@protocol.id)
-    wait_for_ajax
-
+    
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-    wait_for_ajax
 
-    bootstrap_select("#protocols_participant_arm_id", @second_arm.name, "#edit_protocols_participant_#{@protocols_participant.id}" )
-    wait_for_ajax
+    form_selector = "#edit_protocols_participant_#{@protocols_participant.id}"
+    
+    hidden_select = find("#{form_selector} select#protocols_participant_arm_id", visible: :all, wait: 10)
+    select_container = hidden_select.find(:xpath, '..')
+    
+    select_container.find('button.dropdown-toggle').click
+    
+    target_span = select_container.find('span.text', text: @second_arm.name, exact_text: true, match: :first, visible: :all)
+    page.execute_script("arguments[0].click();", target_span)
+    
+    start_time = Time.now
+    while @protocols_participant.reload.arm_id != @second_arm.id && (Time.now - start_time) < 5
+      sleep 0.1
+    end
   end
 
   def and_i_visit_the_calendar_again
-    given_i_am_viewing_a_visit
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
+    
+    expect(page).to have_css("a.appointment-link", visible: true, wait: 5)
   end
 
   def i_should_see_new_and_old_appointments
@@ -88,7 +101,7 @@ feature "Change Participant Arm", js: :true do
   end
 
   def i_should_only_see_new_appointments
-    expect(page).to_not have_css("a.appointment-link span", text: @original_appointment.name)
     expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
+    expect(page).to_not have_css("a.appointment-link span", text: @original_appointment.name)
   end
 end
