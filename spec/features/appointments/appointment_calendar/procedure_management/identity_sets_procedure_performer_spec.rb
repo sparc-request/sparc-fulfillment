@@ -53,14 +53,15 @@ feature 'User sets Procedure performer', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
 
+    expect(page).to have_css('a.list-group-item.appointment-link', visible: true)
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
 
     add_a_procedure(service)
 
     @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
+    
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons", visible: true)
   end
 
   def given_i_have_completed_a_procedure
@@ -74,43 +75,63 @@ feature 'User sets Procedure performer', js: true do
   end
 
   def when_i_complete_the_procedure
-    find('a.start-appointment').click
-    wait_for_ajax
-    find('button.complete-btn').click
-    wait_for_ajax
+    if page.has_css?('a.start-appointment', wait: 1)
+      find('a.start-appointment').click
+      expect(page).to have_no_css('a.start-appointment', wait: 5)
+    end
+
+    within("div#procedure#{@procedure.id}StatusButtons") do
+      find('button.complete-btn').click
+      
+      expect(page).to have_css('button.complete-btn.active', wait: 5)
+    end
   end
 
   def when_i_uncomplete_the_procedure
-    find('button.unstarted-btn').click
-    wait_for_ajax
+    within("div#procedure#{@procedure.id}StatusButtons") do
+      find('button.unstarted-btn').click
+      
+      expect(page).to have_css('button.unstarted-btn.active', wait: 5)
+    end
   end
 
   def when_i_un_incomplete_the_procedure
-    find('button.unstarted-btn').click
-    wait_for_ajax
+    when_i_uncomplete_the_procedure
   end
 
   def when_i_incomplete_the_procedure
-    find('a.start-appointment').click
-    wait_for_ajax
+    if page.has_css?('a.start-appointment', wait: 1)
+      find('a.start-appointment').click
+      expect(page).to have_no_css('a.start-appointment', wait: 5)
+    end
 
-    find('button.incomplete-btn').click
-    wait_for_ajax
+    find("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn").click
+    
+    expect(page).to have_css('.modal', visible: true, wait: 5)
 
     reason = Procedure::NOTABLE_REASONS.first
-    bootstrap_select '#procedure_notes_attributes_0_reason', reason
-    fill_in 'Comment', with: 'Test comment'
-    wait_for_ajax
+    
+    within('.modal') do
+      find("button[data-id='procedure_notes_attributes_0_reason']").click
+      find('span.text', text: reason, exact_text: true, match: :first, visible: true).click
+      
+      expect(page).to have_css(".filter-option-inner-inner", text: reason, visible: true, wait: 5)
+      
+      fill_in 'Comment', with: 'Test comment'
+      
+      submit_btn = find('input[type="submit"]')
+      page.execute_script("arguments[0].click();", submit_btn)
+    end
 
-    find('input[type="submit"]').click
-
+    expect(page).to have_no_css('.modal', visible: true, wait: 10)
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn.active", wait: 5)
   end
 
   def then_i_should_see_that_i_am_the_procedure_performer
-    expect(page).to have_css("#core#{@procedure.sparc_core_id}ProceduresGroupedView td.performer div.filter-option", text: @logged_in_identity.full_name)
+    expect(page).to have_css("#core#{@procedure.sparc_core_id}ProceduresGroupedView td.performer div.filter-option", text: @logged_in_identity.full_name, wait: 5)
   end
 
   def then_i_should_see_that_the_performer_has_not_been_set
-    expect(page).to_not have_css("#core#{@procedure.sparc_core_id}ProceduresGroupedView td.performer div.filter-option", text: @logged_in_identity.full_name)
+    expect(page).to_not have_css("#core#{@procedure.sparc_core_id}ProceduresGroupedView td.performer div.filter-option", text: @logged_in_identity.full_name, wait: 5)
   end
 end

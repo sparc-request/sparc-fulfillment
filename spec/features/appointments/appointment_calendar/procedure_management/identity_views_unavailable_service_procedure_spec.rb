@@ -80,48 +80,57 @@ feature 'User views procedure which has an unavailable service', js: true do
     @inactive_procedure.update(status: 'incomplete')
   end
 
-	def given_i_am_viewing_the_appointment_calendar
-		@protocol 		= create_and_assign_protocol_to_me
-		@protocols_participant = @protocol.protocols_participants.first
+  def given_i_am_viewing_the_appointment_calendar
+    @protocol     = create_and_assign_protocol_to_me
+    @protocols_participant = @protocol.protocols_participants.first
     @appointment  = @protocols_participant.appointments.first
-		@services     = @protocol.organization.inclusive_child_services(:per_participant)
+    @services     = @protocol.organization.inclusive_child_services(:per_participant)
 
-		visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-		wait_for_ajax
-	end
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    
+    expect(page).to have_css('button#addService', visible: true, wait: 5)
+  end
 
-	def when_i_add_a_procedure
-		@service = @services.first
-		bootstrap_select '[name="service_id"', @service.name
+  def when_i_add_a_procedure
+    @service = @services.first
+    
+    select_container = find('[name="service_id"]', visible: :all).find(:xpath, '..')
+    select_container.find('button.dropdown-toggle').click
+    select_container.find('span.text', text: @service.name, exact_text: true, match: :first, visible: true).click
+    
+    expect(page).to have_css(".filter-option-inner-inner", text: @service.name, visible: true, wait: 5)
+
     fill_in 'service_quantity', with: 1
     find('button#addService').click
-    wait_for_ajax
-	end
+    
+    expect(page).to have_text(@service.name, wait: 5)
+  end
 
-	def when_i_change_the_service_to_inactive
+  def when_i_change_the_service_to_inactive
     service_to_update = @inactive_service || @service
-		service_to_update.update(is_available: false)
-	end
+    service_to_update.update(is_available: false)
+  end
 
   def when_the_procedure_is_not_unstarted
     @procedure = @appointment.procedures.first
     @procedure.update(status: 'complete')
   end
 
-	def when_i_open_the_appointment_calendar_with_the_bad_procedure
-		visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-		wait_for_ajax
-	end
+  def when_i_open_the_appointment_calendar_with_the_bad_procedure
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    
+    expect(page).to have_css('button#addService', visible: true, wait: 5)
+  end
 
-	def then_i_should_see_the_inactive_tag
-		expect(page).to have_text("(Inactive)")
-	end
+  def then_i_should_see_the_inactive_tag
+    expect(page).to have_text("(Inactive)", wait: 5)
+  end
 
-  def then_i_should_not_see_the_procedure
+  def then_i_should_not_see_the_procedure 
     expect(page).not_to have_text("(Inactive)")
   end
 
   def then_i_should_see_the_procedure
-    expect(page).to have_text("(Inactive)")
+    expect(page).to have_text("(Inactive)", wait: 5)
   end
 end
