@@ -37,22 +37,40 @@ feature 'Removing a Status', js: true do
     visit_group   = @appointment.visit_group
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
-
+    
+    expect(page).to have_css('a.list-group-item.appointment-link', visible: true, wait: 5)
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+
+    expect(page).to have_css('#statuses', visible: :all, wait: 5)
   end
 
   def when_i_deselect_an_appointment_status
-    # For fun of course
-    bootstrap_select '#statuses', "Skipped Visit"
-    find('body').native.send_keys(:escape)
-    bootstrap_select '#statuses', "Skipped Visit"
-    wait_for_ajax
+    select_container = find('#statuses', visible: :all).find(:xpath, '..')
+    
+    select_container.find('button.dropdown-toggle').click
+    select_container.find('span.text', text: "Skipped Visit", exact_text: true, match: :first, visible: true).click
+    
+    expect(page).to have_css(".filter-option-inner-inner", text: "Skipped Visit", visible: true, wait: 5)
+
+    start_time = Time.now
+    while @appointment.appointment_statuses.reload.size == 0 && (Time.now - start_time) < 5
+      sleep 0.1
+    end
+
+    select_container = find('#statuses', visible: :all).find(:xpath, '..')
+
+    target_span = select_container.find('span.text', text: "Skipped Visit", exact_text: true, match: :first, visible: :all)
+    page.execute_script("arguments[0].click();", target_span)
+    
+    expect(page).to_not have_css(".filter-option-inner-inner", text: "Skipped Visit", visible: true, wait: 5)
   end
 
   def then_the_appointment_status_should_be_destroyed_for_that_appointment
-    wait_for_ajax
+    start_time = Time.now
+    while @appointment.appointment_statuses.reload.size > 0 && (Time.now - start_time) < 5
+      sleep 0.1
+    end
+
     expect(@appointment.appointment_statuses.size).to eq(0)
   end
 end
