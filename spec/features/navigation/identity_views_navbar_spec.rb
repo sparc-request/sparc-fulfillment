@@ -59,15 +59,20 @@ feature 'Identity views nav bar', js: true do
     @protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(@protocol.id)
-    wait_for_ajax
+    
+    # Page Load Sync Point
+    expect(page).to have_css('.nav-tabs', visible: true, wait: 5)
   end
 
   def given_i_am_on_the_participant_page
     click_link 'Participant Tracker'
-    wait_for_ajax
-    # page.find('table.participants tbody tr:first-child td.calendar a').click
-    find('tbody tr[data-index="0"] a.btn-primary').click
-    wait_for_ajax
+    
+    btn_selector = 'tbody tr[data-index="0"] a.btn-primary'
+    expect(page).to have_css(btn_selector, visible: true, wait: 5)
+    
+    find(btn_selector).click
+    
+    expect(page).to have_no_css(btn_selector, wait: 5)
   end
 
   def given_there_are_two_protocols
@@ -75,71 +80,67 @@ feature 'Identity views nav bar', js: true do
   end
 
   def when_i_click_the_home_button
-    # click_link 'Home'
     find('#siteNav .nav-link', text: 'Home').click
-    wait_for_ajax
   end
 
   def when_i_click_the_browser_back_button
     visit protocol_path(@protocol.id)
-    wait_for_ajax
+    
+    expect(page).to have_css('.nav-tabs', visible: true, wait: 5)
   end
 
   def when_i_view_the_first_participants_in_protocol_tracker
     protocol = Protocol.first
 
     visit protocol_path(protocol.id)
-    wait_for_ajax
+    
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-    wait_for_ajax
+    
+    expect(page).to have_css('tbody tr[data-index="0"] a.btn-primary', visible: true, wait: 5)
   end
 
   def when_i_visit_the_home_page
     visit root_path
-    wait_for_ajax
+    
+    expect(page).to have_css('table#protocols', visible: true, wait: 5)
   end
 
   def when_i_view_the_second_protocol
     protocol = Protocol.second
 
     visit protocol_path(protocol.id)
-    wait_for_ajax
   end
 
   def when_i_sign_out
-    # accept_confirm do
-      # click_link 'sign-out-link'
-    # end
     find('#siteNav #navbarUtilities').click
+    
+    expect(page).to have_css('a.text-danger', visible: true, wait: 5)
     find('a.text-danger').click
-    wait_for_ajax
   end
 
   def when_i_click_the_all_reports_link
-    # click_link 'All Reports'
     click_link 'Reports'
-    wait_for_ajax
   end
 
   def then_i_should_be_on_the_home_page
-    # expect(page.body).to have_css('table.protocols')
-    expect(page).to have_css('table#protocols')
+    expect(page).to have_css('table#protocols', wait: 5)
   end
 
   def then_i_should_see_the_participant_tracker_tab_is_active
-    expect(page.body).to have_css('.nav-tabs a.active#participantTrackerTabLink')
+    expect(page).to have_css('.nav-tabs a.active#participantTrackerTabLink', wait: 5)
   end
 
   def then_the_study_schedule_tab_should_be_active
-    expect(page.body).to have_css('.nav-tabs a.active#studyScheduleTabLink')
+    expect(page).to have_css('.nav-tabs a.active#studyScheduleTabLink', wait: 5)
   end
 
   def then_i_should_be_signed_out
-    page.has_css?('body.devise-sessions-new')
+    expect(page).to have_css('body.devise-sessions-new', wait: 5)
   end
 
   def then_i_should_be_on_the_reports_page
-    page.has_css?('body.reports-index')
+    expect(page).to have_current_path(/documents/i, ignore_query: true, wait: 5)
   end
 
   alias :given_i_am_on_the_home_page :when_i_visit_the_home_page
