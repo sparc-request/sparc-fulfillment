@@ -24,7 +24,6 @@ feature 'Incomplete Procedure', js: true do
 
   context 'User starts an appointment' do
     context 'and marks a procedure as incomplete once' do
-
       scenario 'and sees a single incomplete note' do
         given_i_am_viewing_an_appointment_with_a_procedure
         when_i_begin_the_appointment
@@ -90,7 +89,6 @@ feature 'Incomplete Procedure', js: true do
         when_i_view_the_notes_list
         then_i_should_see_one_status_incomplete_note
         then_i_should_see_that_the_procedure_status_has_been_reset
-        then_i_should_see_that_the_procedure_performed_by_has_been_reset
       end
     end
   end
@@ -112,65 +110,97 @@ feature 'Incomplete Procedure', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
 
+    expect(page).to have_css('a.list-group-item.appointment-link')
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
     
     add_a_procedure(service)
 
     @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons", visible: true)
   end
 
   def given_i_am_viewing_a_procedure_marked_as_complete
     given_i_am_viewing_an_appointment_with_a_procedure
     when_i_begin_the_appointment
     find("div#procedure#{@procedure.id}StatusButtons button.complete-btn").click
-    wait_for_ajax
+    
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons button.complete-btn.active")
   end
 
   def when_i_begin_the_appointment
     find('a.start-appointment').click
-    wait_for_ajax
+    
+    expect(page).to have_no_css('a.start-appointment', wait: 5)
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons button", visible: true)
   end
 
   def when_i_complete_the_procedure
     find("div#procedure#{@procedure.id}StatusButtons button.complete-btn").click
-    wait_for_ajax
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons button.complete-btn.active")
   end
 
   def when_i_incomplete_the_procedure
     when_i_click_the_incomplete_button
     when_i_provide_a_reason
     when_i_save_the_incomplete
+    
+    expect(page).to have_no_css('.modal', visible: true, wait: 5)
+    expect(page).to have_no_css('.modal-backdrop', visible: true, wait: 5)
+    
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn.active", wait: 5)
   end
 
   def when_i_unstart_the_procedure
-    find("div#procedure#{@procedure.id}StatusButtons button.unstarted-btn").click
-    wait_for_ajax
+    within("td.performer") do
+      expect(page).to have_select(selected: "#{@logged_in_identity.first_name} #{@logged_in_identity.last_name}", visible: :all, wait: 10)
+    end
+
+    within("div#procedure#{@procedure.id}StatusButtons") do
+      find("button.unstarted-btn").click
+      expect(page).to have_css("button.unstarted-btn.active", wait: 5)
+    end
+
+    within("td.performer") do
+      expect(page).to_not have_select(selected: "#{@logged_in_identity.first_name} #{@logged_in_identity.last_name}", visible: :all, wait: 15)
+    end
   end
 
   def when_i_click_the_incomplete_button
     find("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn").click
-    wait_for_ajax
+    
+    expect(page).to have_css('.modal', visible: true, wait: 5)
   end
 
   def when_i_provide_a_reason
     reason = Procedure::NOTABLE_REASONS.first
-    bootstrap_select '#procedure_notes_attributes_0_reason', reason
-    fill_in 'Comment', with: 'Test comment'
+    
+    within('.modal') do
+      find("button[data-id='procedure_notes_attributes_0_reason']").click
+      
+      find('span.text', text: reason, exact_text: true, match: :first, visible: true).click
+      
+      expect(page).to have_css(".filter-option-inner-inner", text: reason, visible: true)
+      fill_in 'Comment', with: 'Test comment'
+    end
   end
 
   def when_i_save_the_incomplete
-    sleep 1
-    find('input[type="submit"]').click
-    wait_for_ajax
+    expect(page).to have_field('Comment', visible: true)
+
+    submit_btn = find('.modal input[type="submit"]')
+    submit_btn.hover
+    submit_btn.click
   end
 
   def when_i_cancel_the_incomplete
-    sleep 1
-    find("button.btn-secondary").click
-    wait_for_ajax
+    expect(page).to have_field('Comment', visible: true)
+    
+    close_btn = find('.modal button', text: 'Close', visible: true)
+    close_btn.hover
+    close_btn.click
+    
+    expect(page).to have_no_css('.modal', visible: true, wait: 5)
   end
 
   def then_i_should_see_that_i_am_the_procedure_performer
@@ -179,28 +209,34 @@ feature 'Incomplete Procedure', js: true do
 
   def when_i_view_the_notes_list
     find("div#procedure#{@procedure.id}Notes a.btn").click
+    expect(page).to have_css('.modal', visible: true)
   end
 
   def when_i_close_the_notes_list
-    first(".modal button.close").click
+    within('.modal') do
+      find("button.close").click
+    end
+    expect(page).to have_no_css('.modal', visible: true)
   end
 
   def when_i_try_to_incomplete_the_procedure
     find("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn").click
-    wait_for_ajax
   end
 
   def then_i_should_see_one_complete_note
-    expect(page).to have_css('.note-body p', text: 'Status set to complete', count: 1)
+    within('.modal') do
+      expect(page).to have_css('.note-body p', text: 'Status set to complete', count: 1)
+    end
   end
 
   def then_i_should_see_one_incomplete_note
-    expect(page).to have_css('.note-body p', text: 'Status set to incomplete', count: 1)
+    within('.modal') do
+      expect(page).to have_css('.note-body p', text: 'Status set to incomplete', count: 1)
+    end
   end
 
   def then_i_should_see_errors
-    sleep 1
-    expect(page).to have_css('small.form-text.form-error', text: "Can't be blank")
+    expect(page).to have_css('.modal .form-error', text: "Can't be blank", visible: true, wait: 5)
   end
   
   def then_i_should_see_one_complete_note_and_one_incomplete_note
@@ -209,19 +245,19 @@ feature 'Incomplete Procedure', js: true do
   end
 
   def then_i_should_see_two_incomplete_notes_and_one_complete_note
-    expect(page).to have_css('.note-body p', text: 'Status set to incomplete', count: 2)
+    within('.modal') do
+      expect(page).to have_css('.note-body p', text: 'Status set to incomplete', count: 2)
+    end
   end
 
   def then_i_should_see_one_status_incomplete_note
-    expect(page).to have_css('.note-body p', text: 'Status set to incomplete', count: 1)
+    within('.modal') do
+      expect(page).to have_css('.note-body p', text: 'Status set to incomplete', count: 1)
+    end
   end
 
   def then_i_should_see_that_the_procedure_status_has_been_reset
     expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons .unstarted-btn.active")
-  end
-
-  def then_i_should_see_that_the_procedure_performed_by_has_been_reset
-    expect(page).to_not have_css("td.performer button.btn[title='#{@logged_in_identity.first_name} #{@logged_in_identity.last_name}']")
   end
 
   def then_i_should_see_a_helpful_message

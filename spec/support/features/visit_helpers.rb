@@ -22,13 +22,10 @@ module Features
   module VisitHelpers
 
     def and_the_visit_has_one_grouped_procedure
-      # Passing 2 tells the backend to instantly create a group, 
-      # avoiding the double-click race condition entirely.
       add_a_procedure(@services.first, 2)
     end
 
     def add_a_procedure(service, count = 1)
-      # Ensure the pane is loaded
       expect(page).to have_css('button#addService', visible: true)
       
       # HYDRATION BUFFER: Allow Rails 7 JS controllers 200ms to bind to the pane
@@ -37,19 +34,15 @@ module Features
       bootstrap_select('.form-control.selectpicker', service.name)
       fill_in 'service_quantity', with: count
       
-      # Baseline count of this specific service in the DOM
       previous_count = all(".core tbody tr", text: service.name, visible: :all).count
 
       retries = 0
       begin
         find('button#addService').click
         
-        # THE NATIVE BARRIER: 
-        # Safely absorbs both standard additions (+1 row) and grouping (+2 hidden rows).
         expect(page).to have_css(".core tbody tr", text: service.name, minimum: previous_count + 1, visible: :all, wait: 4)
         
       rescue RSpec::Expectations::ExpectationNotMetError => e
-        # Ghost Click Safety Net
         retry if (retries += 1) < 2
         raise e
       end
@@ -61,19 +54,15 @@ module Features
       expect(page).to have_css('a.list-group-item.appointment-link')
       first('a.list-group-item.appointment-link').click
       
-      # NATIVE SYNC: Wait for the specific appointment pane to load
       expect(page).to have_css('button#addService', visible: true)
     end
 
     def given_i_am_viewing_a_started_visit
       given_i_am_viewing_a_visit 
       
-      # Click the start button
       start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first)
       start_btn.click
       
-      # NATIVE SYNC: Wait for the button to vanish and the complete button to appear,
-      # proving the backend successfully started the visit.
       expect(page).to have_no_css('a.btn.start-appointment')
       expect(page).to have_css('button.complete-appointment', visible: true)
     end
