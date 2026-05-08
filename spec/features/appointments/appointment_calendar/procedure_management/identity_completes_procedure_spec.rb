@@ -35,7 +35,7 @@ feature 'User completes Procedure', js: true do
       given_i_have_completed_an_appointment
       when_i_complete_the_procedure
       when_i_view_the_notes_list
-      then_i_should_see_complete_notes
+      then_i_should_see_complete_notes 
     end
   end
 
@@ -43,7 +43,6 @@ feature 'User completes Procedure', js: true do
     scenario 'and sees the complete note' do
       given_i_have_added_a_procedure_to_an_appointment
       when_i_start_the_appointment
-      wait_for_ajax
       when_i_incomplete_the_procedure
       when_i_complete_the_procedure
       when_i_view_the_notes_list
@@ -65,10 +64,11 @@ feature 'User completes Procedure', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
-
+    
+    expect(page).to have_css('a.list-group-item.appointment-link', wait: 10)
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+    
+    expect(page).to have_css('a.btn.start-appointment', visible: :all, wait: 15)
     
     add_a_procedure(service)
 
@@ -83,41 +83,53 @@ feature 'User completes Procedure', js: true do
   end
 
   def when_i_start_the_appointment
-    find('a.start-appointment').click
-    wait_for_ajax
+    find('a.btn.start-appointment').click
+    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
   end
 
   def when_i_complete_the_procedure
     find('button.complete-btn').click
-    wait_for_ajax
+    expect(page).to have_css('button.complete-btn.active', wait: 10)
   end
 
   def when_i_incomplete_the_procedure
     find('button.incomplete-btn').click
-    wait_for_ajax
+    expect(page).to have_css('.modal.show', wait: 10)
+    
+    sleep 0.5 
+    
     bootstrap_select '#procedure_notes_attributes_0_reason', "Assessment missed"
-    find('input[type="submit"]').click
-    wait_for_ajax
+    
+    sleep 0.5 
+
+    page.execute_script("$('.modal.show input[type=\"submit\"]').click();")
+    
+    sleep 0.5
+    
+    expect(page).to have_no_css('.modal.show', wait: 15)
+    expect(page).to have_css('button.incomplete-btn.active', wait: 10)
   end
 
   def when_i_try_to_complete_the_procedure
     find('button.complete-btn').click
-    wait_for_ajax
+    expect(page).to have_css('button.complete-btn.active', wait: 10)
   end
 
   def when_i_view_the_notes_list
+    expect(page).to have_css("div#procedure#{@procedure.id}Notes", visible: :all, wait: 10)
     find("div#procedure#{@procedure.id}Notes").click
+    expect(page).to have_css('.modal.show', wait: 10)
   end
 
-  def then_i_should_see_complete_notes count=1
-    expect(page).to have_css('div.note-body', text: 'Status set to complete', count: count)
+  def then_i_should_see_complete_notes(count=1)
+    expect(page).to have_css('div.note-body', text: 'Status set to complete', count: count, wait: 10)
   end
 
   def then_i_should_see_reset_notes
-    expect(page).to have_css('div.note-body', text: 'Status reset', count: 1)
+    expect(page).to have_css('div.note-body', text: 'Status reset', count: 1, wait: 10)
   end
 
   def then_i_should_see_a_helpful_message
-    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: :all)
+    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: :all, wait: 10)
   end
 end

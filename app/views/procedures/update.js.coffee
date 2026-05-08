@@ -58,7 +58,9 @@ credited_toggle = $(".credited #edit_procedure_<%= @procedure.id %>")
 date_time_picker.datetimepicker('date', null)
 date_time_picker.datetimepicker('disable')
 $(".procedure[data-id='<%= @procedure.id %>']").find(".status label.active").removeClass("active")
-performer_selectpicker.selectpicker('val', "")
+
+# BUG FIX: Stop explicitly wiping the dropdown value! Let the DB state dictate the UI state.
+performer_selectpicker.selectpicker('val', '<%= @procedure.performer_id %>')
 
 invoiced_toggle.bootstrapToggle('disable')
 invoiced_toggle.find('#procedure_invoiced').removeAttr('disabled')

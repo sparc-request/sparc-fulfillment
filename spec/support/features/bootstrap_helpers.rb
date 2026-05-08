@@ -46,14 +46,6 @@ module Features
         end
       end
 
-      #This caused problems,
-      #because it ACTUALLY clicks on the center of the page,
-      #and if that happens to be something to actually click on...
-
-      # find('body').click # Click away
-
-      ##
-
       find('body').native.send_keys(:escape)
       wait_for_ajax
     end
@@ -62,25 +54,20 @@ module Features
       retries = 0 
       
       begin
-        # 1. Grab the hidden select and its container, ignoring Geckodriver visibility rules
         hidden_select = find("#{context_selector} select#{class_or_id}", visible: :all, match: :first)
         container = hidden_select.find(:xpath, '../..', visible: :all)
 
         within(container) do
-          # 2. Find the UI toggle button, bypassing visibility checks
           toggle_button = find('.dropdown-toggle', visible: :all, match: :first)
           
-          # 3. Fire a native browser click directly on the UI element 
           page.execute_script("arguments[0].click();", toggle_button)
           
-          # 4. Scope to the first menu to avoid Ambiguous match errors
           within('.dropdown-menu', visible: :all, match: :first) do
             option = find('span.text', text: choice, exact_text: true, visible: :all, match: :first)
             page.execute_script("arguments[0].click();", option)
           end
         end
         
-        # 5. Assert the UI updated successfully (This proves the clicks actually worked)
         expect(page).to have_css(".filter-option-inner-inner", text: choice, visible: :all, match: :first)
 
       rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::StaleElementReferenceError => e
@@ -99,7 +86,6 @@ module Features
       e = page.find(element)
 
       if e['readonly']
-        # NATIVE FIX: Use the exact node we just waited for, letting Capybara auto-retry if it stales
         e.click
 
         if args[:year]

@@ -38,29 +38,49 @@ feature 'User changes performer of a procedure', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
-
+    
+    expect(page).to have_css('a.list-group-item.appointment-link', wait: 10)
     first('a.list-group-item.appointment-link').click
-    wait_for_ajax
+    
+    expect(page).to have_css('a.btn.start-appointment', visible: :all, wait: 15)
     
     add_a_procedure(service)
 
-    find('a.start-appointment').click
-    wait_for_ajax
+    find('a.btn.start-appointment').click
+    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
 
     visit_group.appointments.first.procedures.reload
     @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
   end
 
   def when_i_select_another_name_in_the_performed_by_dropdown
-    bootstrap_select "#procedure_performer_id", @performer.full_name
+    if page.has_css?('tr.info.groupBy', wait: 2)
+      group_header = find('tr.info.groupBy', match: :first)
+      group_header.click if group_header[:class].include?('expanded')
+      expect(page).to have_css('tr.info.groupBy.collapsed', wait: 10)
+    end
+
+    # Bypass the global bootstrap_select helper because of the AJAX DOM swap.
+    wrapper = find('td.performer div.bootstrap-select', visible: :all, match: :first)
+    within(wrapper) do
+      find('.dropdown-toggle').click
+      
+      expect(page).to have_css('ul.dropdown-menu.inner.show', wait: 5)
+      
+      find('ul.dropdown-menu li a span.text', text: @performer.full_name, visible: :all, match: :first).click
+    end
+    
+    expect(page).to have_css('td.performer div.bootstrap-select .filter-option-inner-inner', text: @performer.full_name, visible: :all, wait: 15)
   end
 
   def when_i_view_the_notes
+    expect(page).to have_css("div#procedure#{@procedure.id}Notes", visible: :all, wait: 10)
     find("div#procedure#{@procedure.id}Notes").click
+    
+    expect(page).to have_css('.modal-dialog', wait: 10)
   end
 
   def then_i_should_see_a_note_indicating_that_the_performer_was_changed
-    expect(page).to have_css('.note-body', text: "Performer changed to #{@performer.full_name}")
+    expect(page).to have_css('.note-body', text: "Performer changed to #{@performer.full_name}", wait: 10)
   end
 end

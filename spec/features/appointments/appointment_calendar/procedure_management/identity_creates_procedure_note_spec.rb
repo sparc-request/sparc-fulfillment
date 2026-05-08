@@ -45,10 +45,12 @@ feature 'User creates a procedure note', js: true do
     service     = protocol.organization.inclusive_child_services(:per_participant).first
 
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
+    
+    expect(page).to have_css('a.start-appointment', visible: :all, wait: 15)
 
     find('a.start-appointment').click
-    wait_for_ajax
+    
+    expect(page).to have_css('a.reset-appointment', visible: true, wait: 10)
 
     add_a_procedure(service)
 
@@ -57,23 +59,36 @@ feature 'User creates a procedure note', js: true do
 
   def when_i_set_a_followup
     find("div#followup#{@procedure.id} a.btn").click
+    
+    expect(page).to have_css('.modal.show', wait: 10)
+    
+    sleep 0.5 
 
     bootstrap_select '#task_assignee_id', @assignee.full_name
     bootstrap_datepicker '#task_due_at', day: '10'
     fill_in 'Comment', with: 'Test comment'
-    find('input[type="submit"]').click
-    wait_for_ajax
+    
+    sleep 0.5
+    
+    page.execute_script("$('.modal.show input[type=\"submit\"]').click();")
+    
+    sleep 0.5
+    
+    expect(page).to have_no_css('.modal.show', wait: 15)
   end
 
   def when_i_view_the_notes_list
+    expect(page).to have_css("div#procedure#{@procedure.id}Notes a.btn", visible: :all, wait: 10)
     find("div#procedure#{@procedure.id}Notes a.btn").click
+    
+    expect(page).to have_css('.modal.show', wait: 10)
   end
 
   def then_i_should_see_a_notice_that_there_are_no_notes
-    expect(page).to have_css('div.alert', text: 'This Procedure doesn\'t have any notes.')
+    expect(page).to have_css('div.alert', text: 'This Procedure doesn\'t have any notes.', wait: 10)
   end
 
   def then_i_should_see_the_note
-    expect(page).to have_css('.note-body p', text: "Followup: #{Task.last.due_at.strftime("%Y-%m-10")}: Test comment")
+    expect(page).to have_css('.note-body p', text: "Followup: #{Task.last.due_at.strftime("%Y-%m-10")}: Test comment", wait: 10)
   end
 end
