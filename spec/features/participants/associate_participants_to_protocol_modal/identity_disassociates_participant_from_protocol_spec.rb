@@ -35,30 +35,44 @@ feature 'User disassociates Participant to Protocol', js: true do
     create(:patient_registrar, identity: Identity.first, organization: create(:organization))
 
     visit protocol_path(@protocol.id)
-    wait_for_ajax
-
+    
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-    wait_for_ajax
 
+    expect(page).to have_link('Search Patient Registry', visible: true, wait: 5)
     click_link 'Search Patient Registry'
-    wait_for_ajax
+
+    expect(page).to have_css('.modal', visible: true, wait: 5)
   end
 
   def i_should_see_associated_participants
-    expect(all('.associate a.remove-participant').count).to eq(@protocol.protocols_participants.count)
+    expected_count = @protocol.protocols_participants.count
+    expect(page).to have_css('.associate a.remove-participant', count: expected_count, wait: 5)
   end
 
   def when_i_click_to_disassociate_a_participant
-    all('.associate a.remove-participant').first.click
-    wait_for_ajax
+    @initial_remove_count = all('.associate a.remove-participant').count
+    
+    first('.associate a.remove-participant').click
+    
+    expect(page).to have_css('.associate a.remove-participant', count: @initial_remove_count - 1, wait: 10)
   end
 
   def then_i_should_see_the_participant_removed_from_list
-    expect(page).to have_css('#flashContainer', text: 'Participant was removed from this request!')
-    wait_for_ajax
-    click_button 'Close'
-    wait_for_ajax
+    expect(page).to have_css('#flashContainer', text: 'Participant was removed from this request!', wait: 5)
+    
+    within('.modal') do
+      find('button', text: 'Close', exact_text: true, visible: :all).click
+    end
 
-    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2)
+    expect(page).to have_no_css('.modal', wait: 10)
+    expect(page).to have_no_css('.modal-backdrop', wait: 10)
+
+    visit protocol_path(@protocol.id)
+    
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    click_link 'Participant Tracker'
+
+    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2, wait: 10)
   end
 end
