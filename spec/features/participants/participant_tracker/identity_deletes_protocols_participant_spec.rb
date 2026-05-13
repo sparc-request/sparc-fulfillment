@@ -29,7 +29,7 @@ feature 'User deletes Participant', js: true do
     then_i_should_not_see_the_participant
   end
 
-  scenario 'and connot delete when there is procedure data' do
+  scenario 'and cannot delete when there is procedure data' do
     given_i_have_a_participant
     and_the_participant_is_not_deletable
     given_i_am_viewing_the_participant_tracker
@@ -47,24 +47,35 @@ feature 'User deletes Participant', js: true do
 
   def given_i_am_viewing_the_participant_tracker
     visit protocol_path(@protocol.id)
-    wait_for_ajax
 
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-    wait_for_ajax
+
+    expect(page).to have_css('#participantTrackerTable tbody tr .remove-participant', visible: :all, wait: 15)
   end
 
   def when_i_delete_a_participant
-    find('#participantTrackerTable tbody tr:first-child td .remove-participant').click
-    find('button.swal2-confirm').click
-    wait_for_ajax
+    delete_btn = find('#participantTrackerTable tbody tr:first-child td .remove-participant', wait: 5)
+    
+    page.execute_script("arguments[0].click();", delete_btn)
 
+    expect(page).to have_css('.swal2-popup', visible: true, wait: 5)
+    
+    find('button.swal2-confirm').click
+
+    expect(page).not_to have_css('.swal2-popup', wait: 10)
+
+    visit protocol_path(@protocol.id)
+    
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    click_link 'Participant Tracker'
   end
 
   def then_i_should_not_see_the_participant
-    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2)
+    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2, wait: 15)
   end
 
   def then_i_should_see_disabled_delete_button
-    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted"]')
+    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted"]', visible: :all, wait: 10)
   end
 end

@@ -29,22 +29,28 @@ feature 'User views Participant details', js: true do
   end
 
   def given_i_am_viewing_the_participant_tracker
-    protocol    = create_and_assign_protocol_to_me
+    protocol = create_and_assign_protocol_to_me
 
     visit protocol_path(protocol.id)
-    wait_for_ajax
 
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-    wait_for_ajax
+
+    expect(page).to have_css('#participantTrackerTable tbody tr:first-child td.actions a.participant-details', visible: true, wait: 15)
   end
 
   def when_i_click_the_participant_details_icon
     @first_name = find('#participantTrackerTable tbody tr:first-child td.first-name').text
-    @last_name = find('#participantTrackerTable tbody tr:first-child td.last-name').text
-    page.find('#participantTrackerTable tbody tr:first-child td.actions a.participant-details').click
+    @last_name  = find('#participantTrackerTable tbody tr:first-child td.last-name').text
+    
+    details_btn = find('#participantTrackerTable tbody tr:first-child td.actions a.participant-details')
+    
+    details_btn.click
+
+    expect(page).to have_css('.modal-dialog', visible: true, wait: 10)
   end
 
   def then_i_should_see_the_participant_details
-    expect(page).to have_css('.modal-title', text: @first_name + ' ' + @last_name)
+    expect(page).to have_css('.modal-title', text: "#{@first_name} #{@last_name}", wait: 5)
   end
 end

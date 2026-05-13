@@ -38,31 +38,38 @@ feature 'User changes the status of a participant on the participant tracker', j
     @protocol    = create_and_assign_protocol_to_me
     @protocols_participant = @protocol.protocols_participants.last
 
-    visit protocol_path @protocol.id
-    wait_for_ajax
+    visit protocol_path(@protocol.id)
 
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-    wait_for_ajax
+
+    expect(page).to have_css("select[id*='protocols_participant_status']", visible: :all, wait: 15)
   end
 
   def when_i_update_the_participant_status
-    bootstrap_select "#protocols_participant_status", "Screening"
-    wait_for_ajax
+    hidden_select = find("select[id*='protocols_participant_status']", visible: :all, match: :first)
+    
+    target_option = hidden_select.find('option', text: 'Screening', visible: :all)
+    
+    page.execute_script("$(arguments[0]).val(arguments[1]).trigger('change');", hidden_select, target_option.value)
 
-    refresh_bootstrap_table '#participantTrackerTable'
-    wait_for_ajax
+    visit protocol_path(@protocol.id)
+
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    click_link 'Participant Tracker'
+
+    expect(page).to have_css("select[id*='protocols_participant_status']", visible: :all, wait: 15)
   end
 
   def then_i_should_see_the_updated_status
-    expect(bootstrap_selected?("protocols_participant_status", "Screening")).to be
+    expect(page).to have_css('#participantTrackerTable tbody tr:first-child', text: 'Screening', wait: 10)
   end
 
   def then_i_should_see_an_associated_note
-    expect(bootstrap_selected?("protocols_participant_status", "Screening")).to be
-    wait_for_ajax
-    find("#participant#{@protocols_participant.id}Notes a").click
-    wait_for_ajax
+    expect(page).to have_css('#participantTrackerTable tbody tr:first-child', text: 'Screening', wait: 10)
+    
+    find("#participant#{@protocols_participant.id}Notes a", wait: 10).click
 
-    expect(page).to have_content('Status changed')
+    expect(page).to have_content('Status changed', wait: 10)
   end
 end

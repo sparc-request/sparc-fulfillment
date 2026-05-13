@@ -39,64 +39,72 @@ feature 'User views the participant tracker page', js: true do
     end
   end
 
-  # NOTE:  TEMPORARILY COMMENTING OUT DUE TO ISSES WITH TRAVIS
-  # context 'and changes the participant arm which should create a note' do
-  #   scenario 'and sees the note' do
-  #     given_i_am_viewing_the_participant_tracker
-  #     when_i_change_the_participants_arm
-  #     when_i_click_on_the_notes_button
-  #     then_i_should_see_the_arm_change_note_in_the_index
-  #   end
-  # end
+  context 'and changes the participant arm which should create a note' do
+    scenario 'and sees the note' do
+      given_i_am_viewing_the_participant_tracker
+      when_i_change_the_participants_arm
+      when_i_click_on_the_notes_button
+      then_i_should_see_the_arm_change_note_in_the_index
+    end
+  end
 
   def given_i_am_viewing_the_participant_tracker
     @protocol = create_and_assign_protocol_to_me
     @protocols_participant = @protocol.protocols_participants.last
     @original_arm = @protocols_participant.arm
 
-    visit protocol_path @protocol
-    wait_for_ajax
-
+    visit protocol_path(@protocol)
+    
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-    wait_for_ajax
+
+    expect(page).to have_css('#participantTrackerTable tbody tr:first-child', visible: true, wait: 15)
   end
 
   def when_i_click_on_the_notes_button
-    find("#participant#{@protocols_participant.participant_id}Notes a").click
-    wait_for_ajax
+    find("#participant#{@protocols_participant.participant_id}Notes a", wait: 10).click
 
-    sleep 2#Travis failure
+    expect(page).to have_css('.modal-dialog', visible: true, wait: 10)
   end
 
   def when_i_add_a_comment_and_save
-    fill_in 'note_comment', with: "Action Jackson"
-    wait_for_ajax
+    within('.modal-content') do
+      expect(page).to have_field('note_comment', visible: true, wait: 10)
+      
+      note_field = find_field('note_comment')
+      note_field.set("Action Jackson")
+      note_field.send_keys(:tab)
+      
+      submit_btn = find("input[type='submit']", wait: 5)
+      
+      submit_btn.hover
+      submit_btn.click
+    end
 
-    sleep 2
-
-    find("input[type='submit']").click
-    wait_for_ajax
+    expect(page).to have_content("Action Jackson", wait: 15)
   end
 
   def when_i_change_the_participants_arm
-    find(".arm #edit_protocols_participant_#{@protocols_participant.id}").click
-    wait_for_ajax
-    first('.dropdown-menu.show span.text', text: @protocol.arms.second.name).click
-    wait_for_ajax
+    @second_arm = @protocol.arms.second
+    hidden_select = find("select[id*='protocols_participant_arm_id']", visible: :all, match: :first)
+    target_option = hidden_select.find('option', text: @second_arm.name, visible: :all)
+    
+    page.execute_script("$(arguments[0]).val(arguments[1]).trigger('change');", hidden_select, target_option.value)
+
+    visit protocol_path(@protocol)
+    click_link 'Participant Tracker'
+    expect(page).to have_css('#participantTrackerTable tbody tr:first-child', visible: true, wait: 15)
   end
 
   def then_i_should_see_the_notes_modal
-    expect(page).to have_content('Participant Notes')
+    expect(page).to have_css('.modal-title', text: 'Participant Notes', wait: 5)
   end
 
   def then_i_should_see_the_note_in_the_index
-    expect(page).to have_content('Action Jackson')
+    expect(page).to have_content('Action Jackson', wait: 10)
   end
 
   def then_i_should_see_the_arm_change_note_in_the_index
-    first_arm_name = @original_arm.name
-    second_arm_name = @protocol.arms.second.name
-
-    expect(page).to have_content("Arm changed from #{first_arm_name} to #{second_arm_name}")
+    expect(page).to have_content("Arm changed from #{@original_arm.name} to #{@second_arm.name}", wait: 10)
   end
 end

@@ -29,22 +29,29 @@ feature 'User changes Participant Arm', js: true do
   end
 
   def given_i_am_viewing_the_participant_tracker
-    protocol    = create_and_assign_protocol_to_me
-    @second_arm  = protocol.arms.second
+    @protocol    = create_and_assign_protocol_to_me
+    @second_arm  = @protocol.arms.second
 
-    visit protocol_path(protocol.id)
-    wait_for_ajax
-
+    visit protocol_path(@protocol.id)
+    
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-    wait_for_ajax
+
+    expect(page).to have_css('#participantTrackerTable tbody tr:first-child td.arm button.dropdown-toggle', visible: true, wait: 15)
   end
 
   def when_i_change_a_participants_arm
-    bootstrap_select "#protocols_participant_arm_id", @second_arm.name
-    wait_for_ajax
+    Capybara.using_wait_time(15) do
+      bootstrap_select "#protocols_participant_arm_id", @second_arm.name
+    end
   end
 
   def then_i_should_see_the_arm_is_updated
-    expect(page).to have_css('#participantTrackerTable tbody tr:first-child td.arm', text: @second_arm.name)
+    visit protocol_path(@protocol.id)
+    
+    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    click_link 'Participant Tracker'
+
+    expect(page).to have_css('#participantTrackerTable tbody tr:first-child td.arm', text: @second_arm.name, wait: 10)
   end
 end
