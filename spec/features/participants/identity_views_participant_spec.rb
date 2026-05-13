@@ -66,16 +66,16 @@ feature 'User views Participant', js: true do
 
   def when_i_try_to_view_a_participants_calendar
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    wait_for_ajax
   end
 
   def then_i_should_be_redirected_to_the_home_page
-    expect(current_path).to eq root_path # gets redirected back to index
+    expect(page).to have_current_path(root_path, wait: 5)
   end
 
   def then_i_should_see_the_participant_calendar
-    expect(page).to have_css('#participantDetailsTable')
-    expect(page).to have_css('#appointmentsList')
+    expect(page).to have_css('#participantDetailsTable', wait: 5)
+    expect(page).to have_css('#appointmentsList', wait: 5)
+    
     expect(page).to have_content(@protocols_participant.participant.full_name)
     expect(page).to have_content(@protocols_participant.participant.mrn) unless @protocols_participant.participant.mrn.blank?
     expect(page).to have_content(@protocols_participant.external_id) unless @protocols_participant.external_id.blank?
@@ -84,8 +84,9 @@ feature 'User views Participant', js: true do
   end
 
   def then_i_should_see_an_ordered_list_of_visits
-    @appointments.sort_by { |appointment| appointment.completed_date }.reverse.each_with_index do |appointment|
-      expect(page).to have_css("div#appointmentsList a[data-appointment-id='#{appointment.id}']", text: appointment.name)
+    @appointments.sort_by { |appointment| appointment.completed_date }.reverse.each_with_index do |appointment, index|
+      wait_time = index == 0 ? 5 : 0
+      expect(page).to have_css("div#appointmentsList a[data-appointment-id='#{appointment.id}']", text: appointment.name, wait: wait_time)
     end
   end
 end

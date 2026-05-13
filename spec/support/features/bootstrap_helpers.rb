@@ -83,29 +83,38 @@ module Features
     end
 
     def bootstrap_datepicker(element, args={})
-      e = page.find(element)
+      e = page.find(element, wait: 5)
 
-      if e['readonly']
+      if e['readonly'] || e['readonly'] == 'readonly'
+        # HOVER LOCK: The input is likely inside a modal or recently rendered div. Wait for movement to stop and JS listeners to attach before clicking.
+        e.hover
         e.click
 
+        # SYNC POINT: Guarantee the widget spawned. If the click was swallowed by an animation, this catches it immediately instead of failing later. 
+        expect(page).to have_css('.datepicker, .bootstrap-datetimepicker-widget', wait: 5)
+
         if args[:year]
-          expect(page).to have_selector('.year', exact_text: args[:year], visible: :all, wait: 5)
-          first('.year', exact_text: args[:year]).click
+          # Removed "visible: :all". Capybara should naturally wait until the calendar view transitions and the element becomes visible.
+          year_opt = find('.year', exact_text: args[:year].to_s, wait: 5)
+          year_opt.hover
+          year_opt.click
         end
 
         if args[:month]
-          expect(page).to have_selector('.month', exact_text: args[:month], visible: :all, wait: 5)
-          first('.month', exact_text: args[:month]).click
+          month_opt = find('.month', exact_text: args[:month].to_s, wait: 5)
+          month_opt.hover
+          month_opt.click
         end
 
         if args[:day]
-          expect(page).to have_selector('.day', exact_text: args[:day], visible: :all, wait: 5)
-          first('.day', exact_text: args[:day]).click
+          day_opt = find('.day', exact_text: args[:day].to_s, wait: 5)
+          day_opt.hover
+          day_opt.click
         end
       else
-        page.execute_script "$('#{element}').focus()"
-        page.execute_script "$('#{element}').focus()" unless page.has_css?('bootstrap-datetimepicker-widget')
-        e.send_keys(:delete)
+        # Bypassing pure JS injection. Standard DOM events should fire NATIVELY so custom jQuery listeners don't get ignored during the input sequence.
+        e.hover
+        e.click
         e.set(args[:text])
       end
     end

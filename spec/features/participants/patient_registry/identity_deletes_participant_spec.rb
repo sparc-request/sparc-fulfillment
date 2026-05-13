@@ -42,7 +42,6 @@ feature 'User deletes Participant', js: true do
   end
 
   def given_i_have_a_participant
-    DatabaseCleaner[:active_record, db: Participant].clean_with(:truncation)
     @protocol = create_and_assign_protocol_to_me
     @participant = Participant.last
   end
@@ -59,21 +58,25 @@ feature 'User deletes Participant', js: true do
   def given_i_am_viewing_the_patient_registry
     create(:patient_registrar, identity: Identity.first, organization: create(:organization))
     visit participants_path
-    wait_for_ajax
+    
+    expect(page).to have_css('table.participants tbody tr', wait: 5)
   end
 
   def when_i_delete_a_participant
     accept_confirm do
-      page.find('table.participants tbody tr:first-child td.actions a.remove').click
+      delete_btn = page.find('table.participants tbody tr:first-child td.actions a.remove', wait: 5)
+      delete_btn.hover
+      delete_btn.click
     end
   end
 
   def then_i_should_not_see_the_participant
-    expect(page).to have_css('#flashes_container', text: 'Participant Removed')
-    expect(page).to have_css('table.participants tbody tr', count: 2)
+    expect(page).to have_css('#flashes_container', text: 'Participant Removed', wait: 5)
+    
+    expect(page).to have_css('table.participants tbody tr', count: 2, wait: 5)
   end
 
   def then_i_should_see_disabled_delete_button
-    expect(page).to have_css('a[data-original-title="Participants with procedure data cannot be deleted."]')
+    expect(page).to have_css('a[data-original-title="Participants with procedure data cannot be deleted."]', wait: 5)
   end
 end

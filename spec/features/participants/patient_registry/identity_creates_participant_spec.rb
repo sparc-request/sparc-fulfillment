@@ -66,11 +66,10 @@ feature 'User creates Participant', js: true do
   end
 
   def given_i_am_viewing_the_patient_registry
-    DatabaseCleaner[:active_record, db: Participant].clean_with(:truncation)
     create(:patient_registrar, identity: @logged_in_identity, organization: create(:organization))
     visit participants_path
-    wait_for_ajax
-    wait_for_ajax
+    
+    expect(page).to have_css('.new-participant', wait: 5)
   end
 
   def if_validate_mrn_is_false
@@ -84,12 +83,12 @@ feature 'User creates Participant', js: true do
   def when_i_create_a_new_participant_with_non_numerical_mrn
     find('.new-participant').click
 
+    expect(page).to have_field('Last Name', wait: 5)
+
     fill_in 'Last Name', with: "Potter"
     fill_in 'First Name', with: "Harry"
     fill_in 'MRN', with: "1234abc"
-    wait_for_ajax
 
-    sleep 1
     bootstrap_datepicker '#participant_date_of_birth', year: Date.current.year, month: 'Mar', day: '15'
     bootstrap_select '#participant_gender', "Male"
     bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
@@ -99,22 +98,21 @@ feature 'User creates Participant', js: true do
     fill_in 'City', with: "London"
     bootstrap_select '#participant_state', "South Carolina"
     fill_in 'Zip Code', with: "11111"
-    wait_for_ajax
 
-    click_button 'Save Participant'
-    wait_for_ajax
-
+    save_btn = find_button('Save Participant', wait: 5)
+    save_btn.hover
+    save_btn.click
   end
 
   def when_i_create_a_new_participant_with_numerical_mrn
     find('.new-participant').click
 
+    expect(page).to have_field('Last Name', wait: 5)
+
     fill_in 'Last Name', with: "Potter"
     fill_in 'First Name', with: "Harry"
     fill_in 'MRN', with: "1234"
-    wait_for_ajax
 
-    sleep 1
     bootstrap_datepicker '#participant_date_of_birth', year: Date.current.year, month: 'Mar', day: '15'
     bootstrap_select '#participant_gender', "Male"
     bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
@@ -124,20 +122,19 @@ feature 'User creates Participant', js: true do
     fill_in 'City', with: "London"
     bootstrap_select '#participant_state', "South Carolina"
     fill_in 'Zip Code', with: "11111"
-    wait_for_ajax
 
-    click_button 'Save Participant'
-    wait_for_ajax
-
+    save_btn = find_button('Save Participant', wait: 5)
+    save_btn.hover
+    save_btn.click
   end
 
   def then_i_should_see_the_new_participant_in_the_list
+    expect(page).to have_css('table.participants tbody tr', count: 1, wait: 5)
     expect(Participant.count).to eq(1)
-    expect(page).to have_css('table.participants tbody tr', count: 1)
   end
 
   def then_i_should_see_an_error_message
-    expect(page).to have_css('#modal_errors', text: 'MRN must only contain numbers')
+    expect(page).to have_css('#modal_errors', text: 'MRN must only contain numbers', wait: 5)
   end
 
 end

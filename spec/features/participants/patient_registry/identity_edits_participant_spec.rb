@@ -32,32 +32,33 @@ feature 'User edits Participant', js: true do
     create(:patient_registrar, identity: Identity.first, organization: create(:organization))
     create_and_assign_protocol_to_me
     visit participants_path
-    wait_for_ajax
+    
+    expect(page).to have_css('table.participants tbody tr', wait: 5)
   end
 
   def when_i_update_a_participants_details
-    participant_id = page.find('table.participants tbody tr:first-child td.actions a.edit')["participant_id"]
-    page.find('table.participants tbody tr:first-child td.actions a.edit').click
+    edit_btn = page.find('table.participants tbody tr:first-child td.actions a.edit', wait: 5)
+    participant_id = edit_btn["participant_id"]
+    edit_btn.hover
+    edit_btn.click
+
+    expect(page).to have_field('First Name', wait: 5)
     fill_in 'First Name', with: 'STARLORD'
-    wait_for_ajax
-    wait_for_ajax
 
     @date_of_birth_year = Participant.find(participant_id).date_of_birth.strftime("%Y")
-    sleep 1
+    
     bootstrap_datepicker '#participant_date_of_birth', year: @date_of_birth_year, month: 'Mar', day: '15'
 
-    wait_for_ajax
-    find("input[value='Save Participant']").click
-    wait_for_ajax
-
+    save_btn = find("input[value='Save Participant']", wait: 5)
+    save_btn.hover
+    save_btn.click
   end
 
   def then_i_should_see_the_updated_details
-    expect(page).to have_css('#flashes_container', text: 'Participant Updated')
-    wait_for_ajax
+    expect(page).to have_css('#flashes_container', text: 'Participant Updated', wait: 5)
 
-    expect(page).to have_css('table.participants tbody tr td.first_name', text: 'STARLORD')
-    date = Date.new(@date_of_birth_year.to_i, 3, 15).strftime("%m/%d/%Y");
-    expect(page).to have_css('table.participants tbody tr td.date_of_birth', text: date)
+    expect(page).to have_css('table.participants tbody tr td.first_name', text: 'STARLORD', wait: 5)
+    date = Date.new(@date_of_birth_year.to_i, 3, 15).strftime("%m/%d/%Y")
+    expect(page).to have_css('table.participants tbody tr td.date_of_birth', text: date, wait: 5)
   end
 end
