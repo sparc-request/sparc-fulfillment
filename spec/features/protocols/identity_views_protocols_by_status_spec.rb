@@ -40,16 +40,17 @@ feature "Identity views Protocols by status", js: true do
 
   def when_i_visit_the_protocols_page
     visit protocols_path
-    wait_for_ajax
+    
+    expect(page).to have_css('#protocol_status_filter', visible: :all, wait: 5)
   end
 
   def and_i_filter_protocols_by_complete_status
     bootstrap_select('#protocol_status_filter', 'Complete')
-    wait_for_ajax
   end
 
   def then_i_should_only_see_protocols_in_the_complete_status
-    expect(page.body).to have_css("table#protocols", text: "Slappy")
-    expect(page.body).to_not have_css("table#protocols", text: "Swanson")
+    expect(page).to have_no_css("table#protocols", text: "Swanson", wait: 5)
+
+    expect(page).to have_css("table#protocols", text: "Slappy", wait: 5)
   end
 end

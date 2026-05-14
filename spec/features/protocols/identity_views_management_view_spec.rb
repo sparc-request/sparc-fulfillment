@@ -32,14 +32,17 @@ feature 'Identity views management view', js: true do
     create_and_assign_protocol_to_me
 
     visit protocols_path
-    wait_for_ajax
+    
+    expect(page).to have_css('.management', wait: 5)
   end
 
   def when_i_select_the_management_view
-    find('.management').click
+    management_toggle = find('.management', wait: 5)
+    management_toggle.hover
+    management_toggle.click
   end
 
   def then_i_should_see_the_management_view
-    expect(page.body).to have_css('.management.active', count: 1)
+    expect(page).to have_css('.management.active', count: 1, wait: 5)
   end
 end

@@ -32,14 +32,17 @@ feature 'Identity views financial view', js: true do
     create_and_assign_protocol_to_me
 
     visit protocols_path
-    wait_for_ajax
+    
+    expect(page).to have_css('.financial', wait: 5)
   end
 
   def when_i_select_the_financial_view
-    find('.financial').click
+    financial_toggle = find('.financial', wait: 5)
+    financial_toggle.hover
+    financial_toggle.click
   end
 
   def then_i_should_see_the_financial_view
-    expect(page.body).to have_css('.financial.active', count: 1)
+    expect(page).to have_css('.financial.active', count: 1, wait: 5)
   end
 end

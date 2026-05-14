@@ -24,33 +24,37 @@ feature 'Identity views Report tab', js: true, enqueue: false do
   scenario 'and sees a list of Protocol reports' do
     protocol = create_data
     visit protocol_path(protocol)
-    wait_for_ajax
 
-    click_button "Export"
-    wait_for_ajax
+    export_btn = find_button("Export", wait: 5)
+    
+    export_btn.hover
+    export_btn.click
 
-    find('#reportsTabLink').click
-    wait_for_ajax
+    reports_tab = find('#reportsTabLink', wait: 5)
+    reports_tab.hover
+    reports_tab.click
 
-    expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
+    expect(page).to have_css('table.protocol_reports tbody td.title', count: 1, wait: 5)
   end
 
   scenario 'and sees a list of Participant reports' do
     protocol = create_data
     protocols_participant = protocol.protocols_participants.first
     visit protocol_path(protocol)
-    wait_for_ajax
 
-    click_link 'Participant Tracker'
-    wait_for_ajax
+    tracker_tab = find_link('Participant Tracker', wait: 5)
+    tracker_tab.hover
+    tracker_tab.click
 
-    find('.participant-report').click
-    wait_for_ajax
+    report_btn = find('.participant-report', wait: 5)
+    report_btn.hover
+    report_btn.click
 
-    find('#reportsTabLink').click
-    wait_for_ajax
+    reports_tab = find('#reportsTabLink', wait: 5)
+    reports_tab.hover
+    reports_tab.click
 
-    expect(page).to have_css 'table.protocol_reports tbody td.title', count: 1
+    expect(page).to have_css('table.protocol_reports tbody td.title', count: 1, wait: 5)
   end
 
   private
@@ -68,4 +72,3 @@ feature 'Identity views Report tab', js: true, enqueue: false do
     protocol
   end
 end
-

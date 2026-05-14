@@ -34,17 +34,21 @@ feature 'Identity views additional columns', js: true do
 
   def as_a_user_who_visits_the_protocols_index_page
     visit protocols_path
-    wait_for_ajax
+    
+    expect(page).to have_css('.keep-open', wait: 5)
   end
 
   def when_i_select_organizations_from_the_dropdown
-    find('.keep-open').click
-    wait_for_ajax
-    find("input[data-field='organizations']").click
+    dropdown_toggle = find('.keep-open', wait: 5)
+    dropdown_toggle.hover
+    dropdown_toggle.click
+
+    org_checkbox = find("input[data-field='organizations']", wait: 5)
+    org_checkbox.hover
+    org_checkbox.click
   end
 
   def i_should_see_the_organizations_column
-    wait_for_ajax
-    expect(page).to have_content('Provider/Program/Core')
+    expect(page).to have_content('Provider/Program/Core', wait: 5)
   end
 end

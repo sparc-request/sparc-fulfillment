@@ -44,11 +44,13 @@ feature "Identity views protocol", js: true do
 
   def when_i_visit_the_protocol_page
     visit protocol_path(@protocol.id)
-    wait_for_ajax
+    
+    expect(page).to have_css('body', wait: 5) # Baseline wait
+    expect(page).to have_current_path(protocol_path(@protocol.id), wait: 5) 
   end
 
   def then_i_should_see_a_correctly_formatted_irb_expiration_date
-    expect(page).to have_css(".irb-expiration", text: /\d\d\/\d\d\/\d\d/)
+    expect(page).to have_css(".irb-expiration", text: /\d\d\/\d\d\/\d\d/, wait: 5)
   end
 
   def then_i_should_not_see_service_related_elements
