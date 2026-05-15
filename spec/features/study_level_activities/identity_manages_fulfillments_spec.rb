@@ -26,13 +26,16 @@ feature 'Fulfillments', js: true do
     it 'should list the fulfillments' do
       given_i_have_fulfillments
       and_i_have_opened_up_fulfillments
-      expect(page).to have_content('Fulfillments List')
-      expect(page).to have_content('Components')
+      
+      expect(page).to have_content('Fulfillments List', wait: 5)
+      expect(page).to have_content('Components', wait: 5)
     end
 
     it 'should not show components column when the service does not have components' do
       given_i_have_fulfillments_without_components
       and_i_have_opened_up_fulfillments
+      
+      expect(page).to have_content('Fulfillments List', wait: 5)
       expect(page).to have_no_content('Components')
     end
   end
@@ -41,11 +44,16 @@ feature 'Fulfillments', js: true do
     it 'should be able to add a fulfillment' do
       given_i_have_fulfillments
       and_i_have_opened_up_fulfillments
-      click_link "Add Fulfillment"
-      wait_for_ajax
-      sleep 1
+      
+      add_btn = find('a', text: 'Add Fulfillment', wait: 5)
+      add_btn.hover
+      add_btn.click
+      
+      expect(page).to have_css('#fulfillment_fulfilled_at', wait: 5)
+      
       when_i_fill_out_the_fulfillment_form
-      expect(page).to have_content('45.0')
+      
+      expect(page).to have_content('45.0', wait: 5)
     end
 
   end
@@ -72,20 +80,25 @@ feature 'Fulfillments', js: true do
 
   def and_i_have_opened_up_fulfillments
     visit protocol_path(@protocol.id)
-    wait_for_ajax
-    click_link "Non-clinical Services"
-    wait_for_ajax
-    sleep 1
-    first('.fulfillments a').click
-    wait_for_ajax
-    sleep 1
+    
+    tab_link = find('a', text: 'Non-clinical Services', wait: 5)
+    tab_link.hover
+    tab_link.click
+    
+    expect(page).to have_css('.fulfillments a', wait: 5)
+    
+    fulfill_link = first('.fulfillments a', wait: 5)
+    fulfill_link.hover
+    fulfill_link.click
   end
 
   def when_i_fill_out_the_fulfillment_form
     bootstrap_datepicker '#fulfillment_fulfilled_at', day: '15'
     fill_in "fulfillment_quantity", with: "45"
     bootstrap_select '#fulfillment_components', "mo"
-    click_button "Save"
-    wait_for_ajax
+    
+    save_btn = find_button("Save", wait: 5)
+    save_btn.hover
+    save_btn.click
   end
 end

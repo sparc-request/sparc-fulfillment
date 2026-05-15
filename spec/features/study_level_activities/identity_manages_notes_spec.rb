@@ -23,23 +23,25 @@ require 'rails_helper'
 feature 'Notes', js: true do
 
   describe 'managing line item notes' do
-
     it 'should be able to create a line item note' do
       given_i_am_viewing_the_study_level_activities_tab
       count = @line_item.notes.count
+      
       when_i_open_up_a_new_line_item_note
       then_i_fill_out_and_save_the_note
+      
       expect(@line_item.notes.count).to eq(count + 1)
     end
   end
 
   describe 'managing fulfillment notes' do
-
     it 'should be able to create a fulfillment note' do
       given_i_am_viewing_the_study_level_activities_tab
       count = @fulfillment.notes.count
+      
       when_i_open_up_a_new_fulfillment_note
       then_i_fill_out_and_save_the_note
+      
       expect(@fulfillment.notes.count).to eq(count + 1)
     end
   end
@@ -48,38 +50,52 @@ feature 'Notes', js: true do
     protocol = create_and_assign_protocol_to_me
     sparc_protocol = protocol.sparc_protocol
     @line_item = protocol.line_items.first
-    @fulfillment=  @line_item.fulfillments.first
+    @fulfillment = @line_item.fulfillments.first
     sparc_protocol.update(type: 'Study')
     visit protocol_path(protocol.id)
-    wait_for_ajax
-    click_link "Non-clinical Services"
-    wait_for_ajax
+    
+    tab_link = find('a', text: 'Non-clinical Services', wait: 5)
+    tab_link.hover
+    tab_link.click
+    
+    expect(page).to have_css('.notes a', wait: 5)
   end
 
   def when_i_open_up_a_new_line_item_note
-    first('.notes a').click
-    wait_for_ajax
+    notes_link = first('.notes a', wait: 5)
+    notes_link.hover
+    notes_link.click
+    
+    expect(page).to have_css('#note_comment', wait: 5)
   end
 
   def when_i_open_up_a_new_fulfillment_note
-    first('.fulfillments a').click
-    wait_for_ajax
-    sleep 2
+    fulfillments_link = first('.fulfillments a', wait: 5)
+    fulfillments_link.hover
+    fulfillments_link.click
+    
+    expect(page).to have_css('#fulfillments-table .fulfillment_notes', wait: 5)
 
-    first("#fulfillments-table .fulfillment_notes").click
-    wait_for_ajax
+    fulfillment_notes_btn = first("#fulfillments-table .fulfillment_notes", wait: 5)
+    fulfillment_notes_btn.hover
+    fulfillment_notes_btn.click
+    
+    expect(page).to have_css('#note_comment', wait: 5)
   end
 
   def then_i_fill_out_and_save_the_note
     fill_in 'note_comment', with: "Test Comment"
-    wait_for_ajax
-    sleep 2
 
-    find('#modalContainer input.btn.btn-primary').click
-    wait_for_ajax
+    save_btn = find('#modalContainer input.btn.btn-primary', wait: 5)
+    save_btn.hover
+    save_btn.click
 
-    find('#modalContainer .btn-secondary').click
-    wait_for_ajax
+    expect(page).to have_content("Test Comment", wait: 5)
+
+    close_btn = find('#modalContainer .btn-secondary', wait: 5)
+    close_btn.hover
+    close_btn.click
+
+    expect(page).to_not have_css('#note_comment', wait: 5)
   end
-
 end

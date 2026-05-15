@@ -20,7 +20,7 @@
 
 require 'rails_helper'
 
-feature 'Identity manages Doucuments', js: true do
+feature 'Identity manages Documents', js: true do
 
   context 'User views line item documents' do
     scenario 'and sees the line item documents list' do
@@ -58,53 +58,58 @@ feature 'Identity manages Doucuments', js: true do
     sparc_protocol = protocol.sparc_protocol
     sparc_protocol.update(type: 'Study')
     visit protocol_path(protocol.id)
-    wait_for_ajax
-    click_link "Non-clinical Services"
-    wait_for_ajax
+    
+    tab_link = find('a', text: 'Non-clinical Services', wait: 5)
+    tab_link.hover
+    tab_link.click
+    
+    expect(page).to have_css('.documents a', wait: 5)
   end
 
   def when_i_click_on_line_item_documents_icon
-    first('.documents a').click
-    wait_for_ajax
-    sleep 2
+    doc_link = first('.documents a', wait: 5)
+    doc_link.hover
+    doc_link.click
+    
+    expect(page).to have_css('.modal-title', text: 'Line Item Documents', wait: 5)
   end
 
   def when_i_have_a_document_to_upload
     @filename = Rails.root.join('db', 'fixtures', 'test_document.txt')
   end
 
-  def when_i_open_up_a_fulfillment
-    first('.otf_fulfillments.list').click
-    wait_for_ajax
-    click_button 'List'
-    wait_for_ajax
-  end
-
   def when_i_click_on_the_add_document_button
-    find('.document.new').click
-    wait_for_ajax
+    new_doc_btn = find('.document.new', wait: 5)
+    new_doc_btn.hover
+    new_doc_btn.click
+    
+    expect(page).to have_css("input[type='file']", visible: :all, wait: 5)
   end
 
   def when_i_upload_a_document
-    attach_file(find("input[type='file']")[:id], @filename)
-    click_button "Save"
+    attach_file(find("input[type='file']", visible: :all)[:id], @filename, make_visible: true)
+    
+    save_btn = find_button('Save', wait: 5)
+    save_btn.hover
+    save_btn.click
   end
 
   def then_i_should_see_the_line_item_documents_list
-    expect(page).to have_selector('.modal-title', text: 'Line Item Documents')
+    expect(page).to have_selector('.modal-title', text: 'Line Item Documents', wait: 5)
   end
 
   def then_i_should_see_the_document
-    expect(page).to have_content('test_document.txt')
+    expect(page).to have_content('test_document.txt', wait: 5)
   end
 
   def when_i_click_the_delete_icon
-    first('.delete a').click
-    wait_for_ajax
+    delete_icon = first('.delete a', wait: 5)
+    delete_icon.hover
+    delete_icon.click
   end
 
   def then_i_should_not_see_the_document
-    expect(page).to_not have_css(".comment a")
-    expect(page).to have_text("This line item has no documents")
+    expect(page).to have_text("This line item has no documents", wait: 5)
+    expect(page).to_not have_content('test_document.txt')
   end
 end
