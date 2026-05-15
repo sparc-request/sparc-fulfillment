@@ -52,11 +52,13 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
     @arm       = create(:arm_with_visit_groups, protocol: @protocol)
     @line_item = create(:line_item, arm: @arm, service: @services.first, protocol: @protocol)
 
-    visit protocol_path @protocol
-    wait_for_ajax
+    visit protocol_path(@protocol)
 
-    find('#studyScheduleTabLink').click
-    wait_for_ajax
+    schedule_tab = find('#studyScheduleTabLink', wait: 5)
+    schedule_tab.hover
+    schedule_tab.click
+    
+    expect(page).to have_css("#add_service_button", wait: 5)
   end
 
   def given_an_arm_has_services
@@ -65,24 +67,24 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
     end
   end
 
-  def given_a_service_has_completed_procedures
-    protocols_participant  = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @arm)
-    procedure    = create(:procedure_complete, service: @services.first, appointment: protocols_participant.appointments.first, arm: @arm, status: "complete", completed_date: "10/09/2010")
-  end
-
   def when_i_click_the_add_services_button
-    find("#add_service_button").click
-    wait_for_ajax
+    add_btn = find("#add_service_button", wait: 5)
+    add_btn.hover
+    add_btn.click
+    
+    expect(page).to have_css("h4.modal-title", wait: 5)
   end
 
   def when_i_click_the_remove_services_button
-    find("#remove_service_button").click
-    wait_for_ajax
+    remove_btn = find("#remove_service_button", wait: 5)
+    remove_btn.hover
+    remove_btn.click
+    
+    expect(page).to have_css("h4.modal-title", wait: 5)
   end
 
   def when_i_fill_in_the_form
     bootstrap_select "#add_service_id", "#{@services.last.name}"
-
     bootstrap_select "#add_service_arm_ids_and_pages_", @arm.name
     find("h4.modal-title").click # click out of bootstrap multiple select
   end
@@ -93,22 +95,26 @@ feature 'Identity edits services for a particular protocol', js: true, enqueue: 
   end
 
   def when_i_click_the_add_submit_button
-    find('input[type="submit"]').click
-    wait_for_ajax
+    submit_btn = find('input[type="submit"]', wait: 5)
+    submit_btn.hover
+    submit_btn.click
+    
+    expect(page).to_not have_css("h4.modal-title", wait: 5)
   end
 
   def when_i_click_the_remove_submit_button
-    find('input[type="submit"]').click
-    wait_for_ajax
+    submit_btn = find('input[type="submit"]', wait: 5)
+    submit_btn.hover
+    submit_btn.click
+    
+    expect(page).to_not have_css("h4.modal-title", wait: 5)
   end
 
   def then_i_should_see_it_on_that_arm
-    arm = find(".arm-#{@arm.id}-container")
-    expect(arm).to have_content "#{@services.last.name}"
+    expect(page).to have_css(".arm-#{@arm.id}-container", text: "#{@services.last.name}", wait: 5)
   end
 
   def then_i_should_not_see_it_on_that_arm
-    arm = find(".arm-#{@arm.id}-container")
-    expect(arm).not_to have_content "#{@services.first.name}"
+    expect(page).to have_no_css(".arm-#{@arm.id}-container", text: "#{@services.first.name}", wait: 5)
   end
 end

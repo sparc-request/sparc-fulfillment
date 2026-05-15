@@ -96,37 +96,37 @@ RSpec.describe 'Study Schedule', js: true do
     end
   end
 
-  # context 'User clicks the check all button for a row' do
-  #   scenario 'and sees all visits for the line item are checked' do
-  #     given_i_am_viewing_a_protocol
-  #     when_i_click_a_check_all_row_box
-  #     then_i_should_see_the_row_checked_in_the_tab 'template'
-  #   end
-  # end
+  context 'User clicks the check all button for a row' do
+    scenario 'and sees all visits for the line item are checked' do
+      given_i_am_viewing_a_protocol
+      when_i_click_a_check_all_row_box
+      then_i_should_see_the_row_checked_in_the_tab 'template'
+    end
+  end
 
-  # context 'User clicks the uncheck all button for a row' do
-  #   scenario 'and sees all visits for the line item are unchecked' do
-  #     given_i_am_viewing_a_protocol
-  #     when_i_click_an_uncheck_all_row_box
-  #     then_i_should_see_the_row_unchecked_in_the_tab 'template'
-  #   end
-  # end
+  context 'User clicks the uncheck all button for a row' do
+    scenario 'and sees all visits for the line item are unchecked' do
+      given_i_am_viewing_a_protocol
+      when_i_click_an_uncheck_all_row_box
+      then_i_should_see_the_row_unchecked_in_the_tab 'template'
+    end
+  end
 
-  # context 'User clicks the check all button for a column' do
-  #   scenario 'and sees all visits for the visit group are checked' do
-  #     given_i_am_viewing_a_protocol
-  #     when_i_click_a_check_all_column_box
-  #     then_i_should_see_the_column_checked_in_the_tab 'template'
-  #   end
-  # end
+  context 'User clicks the check all button for a column' do
+    scenario 'and sees all visits for the visit group are checked' do
+      given_i_am_viewing_a_protocol
+      when_i_click_a_check_all_column_box
+      then_i_should_see_the_column_checked_in_the_tab 'template'
+    end
+  end
 
-  # context 'User clicks the uncheck all button for a column' do
-  #   scenario 'and sees all visits for the visit group are unchecked' do
-  #     given_i_am_viewing_a_protocol
-  #     when_i_click_an_uncheck_all_column_box
-  #     then_i_should_see_the_column_unchecked_in_the_tab 'template'
-  #   end
-  # end
+  context 'User clicks the uncheck all button for a column' do
+    scenario 'and sees all visits for the visit group are unchecked' do
+      given_i_am_viewing_a_protocol
+      when_i_click_an_uncheck_all_column_box
+      then_i_should_see_the_column_unchecked_in_the_tab 'template'
+    end
+  end
 
   context 'User views the quantity/billing tab' do
     context 'and sets a quantity to blank' do
@@ -135,6 +135,11 @@ RSpec.describe 'Study Schedule', js: true do
         given_i_am_viewing_the_quantity_billing_tab
         when_i_click_the_visit_modal
         when_i_set_the_research_billing_quantity_to '6'
+        
+        # The valid value of '6' closes the modal, so anchor to the close and physically reopen it like a user would
+        expect(page).to_not have_css('.modal-content', wait: 5)
+        when_i_click_the_visit_modal
+        
         when_i_set_the_research_billing_quantity_to ''
         then_i_should_see_not_a_number_error_message
       end
@@ -146,6 +151,11 @@ RSpec.describe 'Study Schedule', js: true do
         given_i_am_viewing_the_quantity_billing_tab
         when_i_click_the_visit_modal
         when_i_set_the_research_billing_quantity_to '6'
+        
+        # Reopen the closed modal
+        expect(page).to_not have_css('.modal-content', wait: 5)
+        when_i_click_the_visit_modal
+        
         when_i_set_the_research_billing_quantity_to '-1'
         then_i_should_see_greater_than_error_message
       end
@@ -186,170 +196,206 @@ RSpec.describe 'Study Schedule', js: true do
     @line_item      = @arm.line_items.first
     @visit_group    = @arm.visit_groups.first
     @visit          = @line_item.visits.first
+    
     visit protocol_path(@protocol.id)
-    wait_for_ajax
 
-    find('#studyScheduleTabLink').click
-    wait_for_ajax
+    schedule_tab = find('#studyScheduleTabLink', wait: 5)
+    schedule_tab.hover
+    schedule_tab.click
+    
+    expect(page).to have_css(".study-schedule-container .arm-#{@arm.id}-container", wait: 5)
+    sleep 1 
   end
 
   def given_i_am_viewing_the_quantity_billing_tab
-    click_link 'Quantity/Billing Tab'
-    wait_for_ajax
+    tab = find('a', text: 'Quantity/Billing Tab', wait: 5)
+    tab.hover
+    tab.click
+    expect(page).to have_css(".r-label", wait: 5)
   end
 
   def when_i_select_a_new_tab
-    click_link "Quantity/Billing Tab"
-    wait_for_ajax
+    tab = find('a', text: 'Quantity/Billing Tab', wait: 5)
+    tab.hover
+    tab.click
+    expect(page).to have_css(".r-label", wait: 5)
   end
 
   def when_i_refresh_the_page
     visit protocol_path(@protocol.id)
-    wait_for_ajax
+    expect(page).to have_css('#studyScheduleTabLink', wait: 5)
   end
 
   def when_i_fill_in_a_visit_group_name_with name
+    input_field = find("input#visit_group_#{@visit_group.id}", wait: 5)
+    input_field.hover
+    input_field.click
     fill_in "visit_group_#{@visit_group.id}", with: name
-    wait_for_ajax
 
-    first('.study-schedule-table .service-name').click
-    wait_for_ajax
+    inert_header = find('th', text: 'Service', match: :first, wait: 5)
+    inert_header.hover
+    inert_header.click
+
+    sleep 1
   end
 
   def when_i_view_the_first_page_of_the_calendar
     while find("#arrow-left-#{@arm.id}")[:page].to_i > 0
-      when_i_click_the_previous_page_button #Press previous page until at page 1
+      when_i_click_the_previous_page_button
     end
   end
 
   def when_i_view_the_last_page_of_the_calendar
     while @arm.visit_groups.count - (find("#arrow-right-#{@arm.id}")[:page].to_i - 1) * Visit.per_page > 0
-      when_i_click_the_next_page_button #Press next page until at final page
+      when_i_click_the_next_page_button
     end
   end
 
   def when_i_click_the_next_page_button
     @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1
-    find("#arrow-right-#{@arm.id}").click
-    wait_for_ajax
+    btn = find("#arrow-right-#{@arm.id}", wait: 5)
+    btn.hover
+    btn.click
+    
+    expect(page).to have_css("#arrow-left-#{@arm.id}[page='#{@page}']", wait: 5)
   end
 
   def when_i_click_the_previous_page_button
     @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1
-    find("#arrow-left-#{@arm.id}").click()
-    wait_for_ajax
+    btn = find("#arrow-left-#{@arm.id}", wait: 5)
+    btn.hover
+    btn.click
+
+    expect(page).to have_css("#arrow-left-#{@arm.id}[page='#{@page-2}']", wait: 5)
   end
 
   def when_i_select_a_visit_group_from_the_dropdown
     @page = find("#arrow-left-#{@arm.id}")[:page].to_i + 1
     data_id = "visits_select_for_#{@arm.id}"
-    find("button[data-id = #{data_id}]").click()
-    all("a.dropdown-item")[9].click
-    wait_for_ajax
+    
+    dropdown = find("button[data-id='#{data_id}']", wait: 5)
+    dropdown.hover
+    dropdown.click
+    
+    item = all("a.dropdown-item", wait: 5)[9]
+    item.hover
+    item.click
   end
 
   def when_i_click_a_check_all_row_box
-    find("#line_item_#{@line_item.id} .check-row").click
-    sleep 2
-    accept_confirm
-    sleep 2
-    wait_for_ajax
+    row_box = find("#line_item_#{@line_item.id} .check-row", wait: 5)
+    row_box.hover
+    accept_confirm do
+      row_box.click
+    end
   end
 
   def when_i_click_an_uncheck_all_row_box
-    when_i_click_a_check_all_row_box #Check
-    sleep 1
-    when_i_click_a_check_all_row_box #Uncheck
+    when_i_click_a_check_all_row_box # Check
+    expect(page).to have_css("#line_item_#{@line_item.id} input[type=checkbox]:checked", count: Visit.per_page, wait: 5)
+    when_i_click_a_check_all_row_box # Uncheck
   end
 
   def when_i_click_a_check_all_column_box
-    find("button[data-visit-group-id='#{@visit_group.id}']").click
-    sleep 2
-    accept_confirm
-    sleep 2
-    wait_for_ajax
+    col_box = find("button[data-visit-group-id='#{@visit_group.id}']", wait: 5)
+    col_box.hover
+    accept_confirm do
+      col_box.click
+    end
   end
 
   def when_i_click_an_uncheck_all_column_box
-    when_i_click_a_check_all_column_box #Check
-    when_i_click_a_check_all_column_box #Uncheck
+    when_i_click_a_check_all_column_box # Check
+    expect(page).to have_css("input[type=checkbox]:checked", count: @arm.line_items.count, wait: 5)
+    when_i_click_a_check_all_column_box # Uncheck
   end
 
   def when_i_click_the_visit_modal
-    first("#visit#{@visit.id} a").click()
-    wait_for_ajax
+    visit_link = first("#visit#{@visit.id} a", wait: 5)
+    visit_link.hover
+    visit_link.click
+    
+    expect(page).to have_content("Edit Billing Quantities", wait: 5)
   end
 
   def when_i_set_the_research_billing_quantity_to value
-    fill_in "visit_research_billing_qty", :with => value
-    wait_for_ajax
-    find("input[type='submit']").click
-    wait_for_ajax
+    # Scope Lock: We know the modal is actively open now
+    within('.modal-content', wait: 5) do
+      qty_input = find_field("visit_research_billing_qty", wait: 5)
+      qty_input.hover
+      fill_in "visit_research_billing_qty", with: value
+      
+      submit_btn = find("input[type='submit']", wait: 5)
+      submit_btn.hover
+      submit_btn.click
+    end
   end
 
   def when_i_click_the_edit_line_item_button
-    sleep 2#Troubleshooting Travis Failure
-    first(".change-line-item-service").click
-    wait_for_ajax
-
+    btn = find(".change-line-item-service", match: :first, wait: 5)
+    btn.hover
+    btn.click
+    expect(page).to have_content("Change Service", wait: 5)
   end
 
   def when_i_set_the_service_to service
     bootstrap_select "#line_item_service_id", service.name
-    wait_for_ajax
   end
 
   def when_i_submit_the_service_changes
-    find("input[type='submit']").click
-    wait_for_ajax
+    submit_btn = find("input[type='submit']", wait: 5)
+    submit_btn.hover
+    submit_btn.click
+    
+    expect(page).to_not have_content("Change Service", wait: 5)
   end
 
   def then_i_should_see_the_study_schedule_and_its_components
-    expect(page).to have_css(".study-schedule-container .arm-#{@arm.id}-container")
-    expect(page).to have_css("#visit-name-display-#{@visit_group.id}")
-    expect(page).to have_css("#line_item_#{@line_item.id}")
-    expect(page).to have_css("#visit_check_#{@visit.id}")
+    expect(page).to have_css(".study-schedule-container .arm-#{@arm.id}-container", wait: 5)
+    expect(page).to have_css("#visit-name-display-#{@visit_group.id}", wait: 5)
+    expect(page).to have_css("#line_item_#{@line_item.id}", wait: 5)
+    expect(page).to have_css("#visit_check_#{@visit.id}", wait: 5)
   end
 
   def then_i_should_see_the_tab
-    expect(page).to have_css(".r-label")
-    expect(page).to have_css(".t-label")
+    expect(page).to have_css(".r-label", wait: 5)
+    expect(page).to have_css(".t-label", wait: 5)
   end
 
   def then_i_should_see_the_same_tab
-    expect(page).to have_css(".r-label")
-    expect(page).to have_css(".t-label")
+    expect(page).to have_css(".r-label", wait: 5)
+    expect(page).to have_css(".t-label", wait: 5)
   end
 
   def then_it_should_throw_error_message_and_see_that_the_name_is_still name
-    expect(page).to have_content("Visit Name can't be blank")
-    expect(find_field("visit_group_#{@visit_group.id}").value).to eq(name)
+    expect(page).to have_content("Visit Name can't be blank", wait: 5)
+    expect(page).to have_field("visit_group_#{@visit_group.id}", with: name, wait: 5)
   end
 
   def then_i_should_see_the_previous_page_button_is_disabled
-    expect(page).to have_css("#arrow-left-#{@arm.id}.disabled")
+    expect(page).to have_css("#arrow-left-#{@arm.id}.disabled", wait: 5)
   end
 
   def then_i_should_see_the_next_page_button_is_disabled
-    expect(page).to have_css("#arrow-right-#{@arm.id}.disabled")
+    expect(page).to have_css("#arrow-right-#{@arm.id}.disabled", wait: 5)
   end
 
   def then_i_should_see_the_next_page
-    expect(find("#arrow-left-#{@arm.id}")[:page].to_i).to eq(@page)
+    expect(page).to have_css("#arrow-left-#{@arm.id}[page='#{@page}']", wait: 5)
   end
 
   def then_i_should_see_the_previous_page
-    expect(find("#arrow-left-#{@arm.id}")[:page].to_i).to eq(@page-2)
+    expect(page).to have_css("#arrow-left-#{@arm.id}[page='#{@page-2}']", wait: 5)
   end
 
   def then_i_should_see_the_page_change
-    expect(find("#arrow-left-#{@arm.id}")[:page].to_i).to eq(@page)
+    expect(page).to have_css("#arrow-left-#{@arm.id}[page='#{@page}']", wait: 5)
   end
 
   def then_i_should_see_the_row_checked_in_the_tab tab_name
     case tab_name
       when 'template'
-        expect(all("#line_item_#{@line_item.id} input[type=checkbox]:checked").count).to eq(Visit.per_page)
+        expect(page).to have_css("#line_item_#{@line_item.id} input[type=checkbox]:checked", count: Visit.per_page, wait: 5)
       when 'quantity/billing'
         all("#line_item_#{@line_item.id} .research").each do |quantity|
           expect(quantity.value).to eq('1')
@@ -360,7 +406,7 @@ RSpec.describe 'Study Schedule', js: true do
   def then_i_should_see_the_row_unchecked_in_the_tab tab_name
     case tab_name
       when 'template'
-        expect(all("#line_item_#{@line_item.id} input[type=checkbox]:checked").count).to eq(0)
+        expect(page).to have_no_css("#line_item_#{@line_item.id} input[type=checkbox]:checked", wait: 5)
       when 'quantity/billing'
         all('.research').each do |quantity|
           expect(quantity.value).to eq('0')
@@ -371,40 +417,40 @@ RSpec.describe 'Study Schedule', js: true do
   def then_i_should_see_the_column_checked_in_the_tab tab_name
     case tab_name
       when 'template'
-        expect(all('input[type=checkbox]:checked').count).to eq(@arm.line_items.count)
+        expect(page).to have_css("input[type=checkbox]:checked", count: @arm.line_items.count, wait: 5)
       when 'quantity/billing'
-        expect(find("#visits_#{@visit.id}_research_billing_qty").value).to eq('1')
-        expect(find("#visits_#{@visit.id}_insurance_billing_qty").value).to eq('0')
+        expect(page).to have_field("visits_#{@visit.id}_research_billing_qty", with: '1', wait: 5)
+        expect(page).to have_field("visits_#{@visit.id}_insurance_billing_qty", with: '0', wait: 5)
     end
   end
 
   def then_i_should_see_the_column_unchecked_in_the_tab tab_name
     case tab_name
       when 'template'
-        expect(all('input[type=checkbox]:checked').count).to eq(0)
+        expect(page).to have_no_css("input[type=checkbox]:checked", wait: 5)
       when 'quantity/billing'
-        expect(find("#visits_#{@visit.id}_research_billing_qty").value).to eq('0')
-        expect(find("#visits_#{@visit.id}_insurance_billing_qty").value).to eq('0')
+        expect(page).to have_field("visits_#{@visit.id}_research_billing_qty", with: '0', wait: 5)
+        expect(page).to have_field("visits_#{@visit.id}_insurance_billing_qty", with: '0', wait: 5)
     end
   end
 
   def then_i_should_see_not_a_number_error_message
-    expect(page).to have_content("Is not a number")
+    expect(page).to have_content("Is not a number", wait: 5)
   end
 
   def then_i_should_see_greater_than_error_message
-    expect(page).to have_content("Must be greater than or equal to 0")
+    expect(page).to have_content("Must be greater than or equal to 0", wait: 5)
   end
 
   def then_i_should_see_the_edit_line_item_modal
-    expect(page).to have_content("Change Service")
+    expect(page).to have_content("Change Service", wait: 5)
   end
 
   def then_i_should_see_the_correct_service
-    expect(find("button.dropdown-toggle[data-id='line_item_service_id']")["title"]).to eq(@line_item.service.name)
+    expect(page).to have_css("button.dropdown-toggle[data-id='line_item_service_id'][title='#{@line_item.service.name}']", wait: 5)
   end
 
   def then_i_should_see_the_updated_service
-    expect(page).to have_css(".line_item_service_name", text: @service.name)
+    expect(page).to have_css(".line_item_service_name", text: @service.name, wait: 5)
   end
 end

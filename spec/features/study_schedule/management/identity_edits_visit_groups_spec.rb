@@ -49,7 +49,6 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       @original_visit_group_1.save
       @original_visit_group_2.save
 
-
       when_i_click_the_add_visit_group_button
       when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: @arm.visit_groups.second.day-1)
       when_i_click_the_add_submit_button
@@ -62,10 +61,7 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
       given_i_am_viewing_an_arm_with_multiple_visit_groups
       when_i_click_the_edit_visit_group_button
       when_i_set_the_name_to 'VG 2'
-      wait_for_ajax
       when_i_set_the_day_to 2
-      wait_for_ajax
-      sleep 2
       when_i_click_the_save_submit_button
       then_i_should_see_the_updated_visit_group
     end
@@ -109,11 +105,13 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     @arm      = create(:arm_with_visit_groups, visit_count: 2, protocol: @protocol, subject_count: 3)
     @visit_groups = @arm.visit_groups
 
-    visit protocol_path @protocol
-    wait_for_ajax
+    visit protocol_path(@protocol)
 
-    find('#studyScheduleTabLink').click
-    wait_for_ajax
+    schedule_tab = find('#studyScheduleTabLink', wait: 5)
+    schedule_tab.hover
+    schedule_tab.click
+
+    expect(page).to have_css('#add_visit_group_button', wait: 5)
   end
 
   def given_i_am_viewing_an_arm_with_one_visit_group
@@ -123,26 +121,34 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     end
     @arm      = create(:arm_with_one_visit_group, visit_count: 1, protocol: @protocol, subject_count: 3)
 
-    visit protocol_path @protocol
-    wait_for_ajax
+    visit protocol_path(@protocol)
 
-    find('#studyScheduleTabLink').click
-    wait_for_ajax
+    schedule_tab = find('#studyScheduleTabLink', wait: 5)
+    schedule_tab.hover
+    schedule_tab.click
+
+    expect(page).to have_css('#add_visit_group_button', wait: 5)
   end
 
   def when_i_click_the_add_visit_group_button
-    find("#add_visit_group_button").click
-    wait_for_ajax
+    btn = find("#add_visit_group_button", wait: 5)
+    btn.hover
+    btn.click
+    expect(page).to have_css("h4.modal-title", wait: 5)
   end
 
   def when_i_click_the_edit_visit_group_button
-    find("#edit_visit_group_button").click
-    wait_for_ajax
+    btn = find("#edit_visit_group_button", wait: 5)
+    btn.hover
+    btn.click
+    expect(page).to have_css("h4.modal-title", wait: 5)
   end
 
   def when_i_click_the_remove_visit_group_button
-    find("#remove_visit_group_button").click
-    wait_for_ajax
+    btn = find("#remove_visit_group_button", wait: 5)
+    btn.hover
+    btn.click
+    expect(page).to have_css("h4.modal-title", wait: 5)
   end
 
   def when_i_fill_in_the_form(opts = {})
@@ -150,36 +156,45 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
     fill_in "visit_group_name", with: opts[:name] || "VG"
     fill_in "visit_group_day", with: opts[:day] || "13"
     bootstrap_select "#visit_group_position", opts[:position] || "Add as last"
-    wait_for_ajax
-
   end
 
   def when_i_set_the_name_to name
     fill_in "visit_group_name", with: name
-    wait_for_ajax
   end
 
   def when_i_set_the_day_to day
     fill_in "visit_group_day", with: day
-    wait_for_ajax
   end
 
   def when_i_click_the_add_submit_button
-    find('input[type="submit"]').click
-    wait_for_ajax
+    btn = find('input[type="submit"]', wait: 5)
+    btn.hover
+    btn.click
+    
+    expect(page).to_not have_css("h4.modal-title", wait: 5)
   end
 
   def when_i_click_the_remove_submit_button
-    sleep 5
     @visit_group_id_to_be_deleted = @visit_groups.first.id
-    find('#removeVisitGroupButton').click
-    find('button.swal2-confirm').click
-    wait_for_ajax
+    
+    btn = find('#removeVisitGroupButton', wait: 5)
+    btn.hover
+    btn.click
+    
+    confirm_btn = find('button.swal2-confirm', wait: 5)
+    confirm_btn.hover
+    confirm_btn.click
+    
+    expect(page).to_not have_css("h4.modal-title", wait: 5)
+    expect(page).to_not have_css(".swal2-container", wait: 5)
   end
 
   def when_i_click_the_save_submit_button
-    find('input[type="submit"]').click
-    wait_for_ajax
+    btn = find('input[type="submit"]', wait: 5)
+    btn.hover
+    btn.click
+    
+    expect(page).to_not have_css("h4.modal-title", wait: 5)
   end
 
   def when_i_set_the_position_to position_identifier
@@ -187,45 +202,56 @@ feature 'Identity edits visit groups for a particular protocol', js: true do
   end
 
   def when_i_enter_the_name name
-    fill_in "visit_group_#{@arm.visit_groups.first.id}", with: name
-    wait_for_ajax
-
-    first(".study-schedule-table").click
-    wait_for_ajax
+    vg_id = @arm.visit_groups.first.id
+    input_field = find("#visit_group_#{vg_id}", wait: 5)
+    
+    input_field.hover
+    input_field.click
+    
+    fill_in "visit_group_#{vg_id}", with: name
+    
+    # Click the absolute root of the document to cleanly trigger the blur event.
+    find('body').click
   end
 
   def then_i_should_see_the_visit_group
-    expect(page).to have_css("input[value='VG']")
+    # Use have_field instead of strictly matching value attribute strings
+    expect(page).to have_field(with: 'VG', wait: 5)
   end
 
   def then_i_should_see_the_updated_visit_group
     vg_id = @arm.visit_groups.first.id
-    expect(find("#visit_group_#{vg_id}").value).to eq("VG 2")
+    expect(page).to have_field("visit_group_#{vg_id}", with: "VG 2", wait: 5)
   end
 
   def then_i_should_not_see_the_visit_group
-    expect(page).to have_no_selector(".visit-name", id: "visit_group_#{@visit_group_id_to_be_deleted}")
+    expect(page).to have_no_selector(".visit-name", id: "visit_group_#{@visit_group_id_to_be_deleted}", wait: 5)
   end
 
   def then_i_should_see_the_position_is position
-    wait_for_ajax
-    @new_visit_group = @arm.visit_groups.find_by_name("VG")
+    expect(page).to have_field(with: 'VG', wait: 5)
+    
+    @new_visit_group = @arm.visit_groups.find_by(name: "VG")
 
     within(".visit_groups_for_#{@arm.id}") do
-      expect(page.all(".visit_group_box")[0].find("input").value).to eq(@original_visit_group_1.name)
-      expect(page.all(".visit_group_box")[1].find("input").value).to eq(@new_visit_group.name)
-      expect(page.all(".visit_group_box")[2].find("input").value).to eq(@original_visit_group_2.name)
+      boxes = all(".visit_group_box")
+      expect(boxes[0]).to have_field(with: @original_visit_group_1.name)
+      expect(boxes[1]).to have_field(with: @new_visit_group.name)
+      expect(boxes[2]).to have_field(with: @original_visit_group_2.name)
     end
   end
 
   def then_i_should_see_the_name name
-    expect(find("#visit_group_#{@arm.visit_groups.first.id}").value).to eq(name)
+    expect(page).to have_field("visit_group_#{@arm.visit_groups.first.id}", with: name, wait: 5)
   end
 
   def then_i_should_see_the_original_name
-    visit protocol_path @protocol #reload the page
-    wait_for_ajax
+    expect(page).to have_content("Visit Name can't be blank", wait: 5)
 
-    expect(find("#visit_group_#{@arm.visit_groups.first.id}").value).to eq(@original_name)
+    visit protocol_path(@protocol) #reload the page
+
+    expect(page).to have_css('#studyScheduleTabLink', wait: 5)
+
+    expect(page).to have_field("visit_group_#{@arm.visit_groups.first.id}", with: @original_name, wait: 5)
   end
 end

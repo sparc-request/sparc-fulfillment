@@ -33,19 +33,25 @@ feature 'Identity adds service to completed visit', js: :true do
       protocols_participant  = create(:protocols_participant_with_appointments, protocol: protocol, arm: protocol.arms.first, participant: create(:participant))
       procedure    = create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: protocol.arms.first, status: "complete", completed_date: Date.today.strftime('%m/%d/%Y'), service: services.first)
 
-      visit protocol_path protocol
-      wait_for_ajax
+      visit protocol_path(protocol)
 
-      find('#studyScheduleTabLink').click
-      wait_for_ajax
+      schedule_tab = find('#studyScheduleTabLink', wait: 5)
+      schedule_tab.hover
+      schedule_tab.click
+
+      expect(page).to have_css("#line_item_#{line_item.id}", wait: 5)
 
       visit_id = VisitGroup.first.id
       procedure_count = Procedure.all.count
 
-      find("#line_item_#{line_item.id} .check-row").click
-      accept_confirm
-      wait_for_ajax
+      check_row = find("#line_item_#{line_item.id} .check-row", wait: 5)
+      check_row.hover
+      
+      accept_confirm do
+        check_row.click
+      end
 
+      expect(page).to have_no_css("#line_item_#{line_item.id} .check-row input:checked", visible: :all, wait: 5)
 
       expect(Procedure.all.count).to eq(procedure_count)
     end

@@ -73,48 +73,61 @@ feature 'Identity edits arms on protocol study schedule', js: true do
     end
   end
 
-
   def given_i_am_viewing_a_protocol_with_one_arm
     @protocol = create_and_assign_protocol_to_me
     first_arm = @protocol.arms.first
     @protocol.arms.where.not(id: first_arm.id).destroy_all
 
-    visit protocol_path @protocol
-    wait_for_ajax
+    visit protocol_path(@protocol)
 
-    find('#studyScheduleTabLink').click
-    wait_for_ajax
+    schedule_tab = find('#studyScheduleTabLink', wait: 5)
+    schedule_tab.hover
+    schedule_tab.click
+
+    expect(page).to have_css('#studyScheduleTab', wait: 5)
   end
 
   def given_i_am_viewing_a_protocol_with_multiple_arms
     @protocol = create_and_assign_protocol_to_me
     arm       = create(:arm, protocol: @protocol)
 
-    visit protocol_path @protocol
-    wait_for_ajax
+    visit protocol_path(@protocol)
 
-    find('#studyScheduleTabLink').click
-    wait_for_ajax
+    schedule_tab = find('#studyScheduleTabLink', wait: 5)
+    schedule_tab.hover
+    schedule_tab.click
+
+    expect(page).to have_css('#studyScheduleTab', wait: 5)
   end
-
 
   def given_there_is_an_arm_with_completed_procedures
     @arm_with_procedures = @protocol.arms.first
     protocols_participant  = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @arm_with_procedures, participant: create(:participant))
     procedure    = create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @arm_with_procedures, status: "complete", completed_date: Date.today.strftime('%m/%d/%Y'), service: create(:service))
 
-    visit protocol_path @protocol
-    wait_for_ajax
+    visit protocol_path(@protocol)
+
+    schedule_tab = find('#studyScheduleTabLink', wait: 5)
+    schedule_tab.hover
+    schedule_tab.click
+
+    expect(page).to have_css('#studyScheduleTab', wait: 5)
   end
 
   def when_i_click_the_add_arm_button
-    find('div#manage_arms .btn-success').click
-    wait_for_ajax
+    add_btn = find('div#manage_arms .btn-success', wait: 5)
+    add_btn.hover
+    add_btn.click
+    
+    expect(page).to have_css('input[type="submit"]', wait: 5)
   end
 
   def when_i_click_the_remove_arm_button
-    find('div#manage_arms .btn-danger').click
-    wait_for_ajax
+    remove_btn = find('div#manage_arms .btn-danger', wait: 5)
+    remove_btn.hover
+    remove_btn.click
+    
+    expect(page).to have_css('#removeArmButton', wait: 5)
   end
 
   def and_i_select_the_first_arm
@@ -123,46 +136,47 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def when_i_click_the_edit_arm_button
-    find('div#manage_arms .btn-warning').click
-    wait_for_ajax
+    edit_btn = find('div#manage_arms .btn-warning', wait: 5)
+    edit_btn.hover
+    edit_btn.click
+    
+    expect(page).to have_css('input[type="submit"]', wait: 5)
   end
 
   def when_i_fill_in_the_form
     fill_in 'Arm Name', with: 'arm name'
-    wait_for_ajax
     fill_in 'Subject Count', with: 1
-    wait_for_ajax
     fill_in 'Visit Count', with: 3
-    wait_for_ajax
   end
 
   def when_i_set_the_name_to name
     fill_in 'Arm Name', with: name
-    wait_for_ajax
   end
 
   def when_i_set_the_subject_count_to count
     fill_in 'Subject Count', with: count
-    wait_for_ajax
   end
 
   def when_i_click_the_add_submit_button
-    wait_for_ajax
-    sleep 5 #Travis Failure
-    find('input[type="submit"]').click
-    wait_for_ajax
+    submit_btn = find('input[type="submit"]', wait: 5)
+    submit_btn.hover
+    submit_btn.click
   end
 
   def when_i_click_the_remove_submit_button
-    find('#removeArmButton').click
-    find('button.swal2-confirm').click
-    wait_for_ajax
+    remove_btn = find('#removeArmButton', wait: 5)
+    remove_btn.hover
+    remove_btn.click
+
+    confirm_btn = find('button.swal2-confirm', wait: 5)
+    confirm_btn.hover
+    confirm_btn.click
   end
 
   def when_i_click_the_save_submit_button
-    sleep 5
-    find('input[type="submit"]').click
-    wait_for_ajax
+    submit_btn = find('input[type="submit"]', wait: 5)
+    submit_btn.hover
+    submit_btn.click
   end
 
   def when_i_select_the_arm_with_completed_procedures
@@ -170,25 +184,26 @@ feature 'Identity edits arms on protocol study schedule', js: true do
   end
 
   def then_i_should_see_the_new_arm
-    sleep 2
-    expect(find("#studyScheduleTab")).to have_content "arm name"
+    expect(page).to have_css("#studyScheduleTab", text: "arm name", wait: 5)
   end
 
   def then_i_should_see_an_error_about_last_arm
-    sleep 2
-    expect(page).to have_content(@protocol.arms.first.name)
+    expect(page).to have_content(@protocol.arms.first.name, wait: 5)
   end
 
   def then_i_should_see_an_error_about_completed_procedures
-    sleep 2
-    expect(find(".modal-body")).to have_content "has completed procedures and cannot be deleted"
+    expect(page).to have_content("has completed procedures and cannot be deleted", wait: 5)
   end
 
   def then_i_should_see_the_updated_arm
-    expect(find("#studyScheduleTab")).to have_content "other arm name"
+    expect(page).to have_css("#studyScheduleTab", text: "other arm name", wait: 5)
   end
 
   def then_i_should_not_see_the_arm
-    expect(find("#studyScheduleTab")).not_to have_content @deleted_arm_name #The (former) first arm is gone
+    expect(page).to_not have_css('.swal2-container', wait: 5)
+    
+    expect(page).to_not have_css('#removeArmButton', wait: 5)
+    
+    expect(find("#studyScheduleTab")).not_to have_content(@deleted_arm_name)
   end
 end
