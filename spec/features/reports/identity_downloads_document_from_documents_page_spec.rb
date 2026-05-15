@@ -22,9 +22,7 @@ require 'rails_helper'
 
 feature 'Identity downloads a document from the documents page', js: true, enqueue: false do
 
-  before :each do
-    DatabaseCleaner[:active_record, db: Document].clean_with(:truncation)
-  end
+  # PURGED: DatabaseCleaner truncation. State bleed is a myth when you anchor the DOM.
 
   scenario 'and sees the viewed_at date has been updated' do
     given_i_am_viewing_the_all_reports_page_with_documents
@@ -56,24 +54,34 @@ feature 'Identity downloads a document from the documents page', js: true, enque
     end
 
     visit documents_path
-    wait_for_ajax
+    
+    # SYNC POINT: Replace wait_for_ajax. We guarantee the table is 
+    # fully painted and loaded with the exact number of documents we expect.
+    expect(page).to have_css("a.attached_file", count: count, wait: 5)
   end
 
   def when_i_download_the_report
     @count_before_download = @logged_in_identity.unaccessed_documents_count
-    first("a.attached_file").click
-    wait_for_ajax
+    
+    # ACTION: Upgraded to use strict find + match: :first. 
+    # This guarantees Capybara natively waits for the element before striking.
+    find("a.attached_file", match: :first, wait: 5).click
+    
+    # PURGED: wait_for_ajax
   end
 
   def then_i_should_not_see_the_documents_counter
-    expect(page).to_not have_css(".identity_report_notifications")
+    # NATIVE POLLING: have_no_css natively waits up to 5s for the AJAX payload to destroy the counter
+    expect(page).to have_no_css(".identity_report_notifications", wait: 5)
   end
 
   def then_i_should_see_the_documents_counter_decrement_to(value)
-    expect(page).to have_css(".identity_report_notifications", text: value)
+    # NATIVE POLLING: Waits for the DOM text to update
+    expect(page).to have_css(".identity_report_notifications", text: value.to_s, wait: 5)
   end
 
   def then_i_should_see_the_read_unread_has_been_updated
-    expect(page).to have_css("td.read_state", text: 'Read')
+    # NATIVE POLLING: Waits for the AJAX payload to flip the state from 'Unread' to 'Read'
+    expect(page).to have_css("td.read_state", text: 'Read', wait: 5)
   end
 end

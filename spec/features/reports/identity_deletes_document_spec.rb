@@ -89,8 +89,9 @@ feature 'Identity deletes a document', js: true, enqueue: false do
     end
 
     visit documents_path
-    wait_for_ajax
-
+    
+    # SYNC POINT: Anchor to the table loading instead of an arbitrary AJAX wait
+    expect(page).to have_css('table', wait: 5)
   end
 
   def given_i_am_viewing_the_reports_tab_with_documents(count, state="Completed")
@@ -101,33 +102,43 @@ feature 'Identity deletes a document', js: true, enqueue: false do
     end
 
     visit protocol_path @protocol
-    wait_for_ajax
-
-    # click_link 'Reports'
-    find('#reportsTabLink').click
-    wait_for_ajax
+    
+    # SYNC POINT & ACTION: Ensure tab is present, click it, and wait for active state
+    reports_tab = find('#reportsTabLink', wait: 5)
+    reports_tab.click
+    expect(page).to have_css('#reportsTabLink.active', wait: 5)
+    
+    # SYNC POINT: Ensure the contents of the tab have loaded
+    expect(page).to have_css('table', wait: 5)
   end
 
   def when_i_click_the_delete_icon
     @count_before_delete = @logged_in_identity.unaccessed_documents_count
-    first("a.remove-document").click
-    accept_confirm
-    wait_for_ajax
+    
+    # THE BOOTLEG SHIELD: Stripped the wait parameter to satisfy 
+    # the custom page_helpers.rb override, but kept the block structure.
+    accept_confirm do
+      first("a.remove-document", wait: 5).click
+    end
   end
 
   def then_i_should_see_the_delete_icon_is_greyed_out
-    expect(page).to_not have_css(".actions .remove-document")
+    # Use have_no_css for native Capybara polling on negative assertions
+    expect(page).to have_no_css(".actions .remove-document", wait: 5)
   end
 
   def then_i_should_not_see_the_document
-    expect(page).to_not have_css("a.attached_file")
+    # Native polling to watch the DOM element get destroyed by the delete action
+    expect(page).to have_no_css("a.attached_file", wait: 5)
   end
 
   def then_i_should_see_the_identity_docs_counter_was_decremented
-    expect(page).to have_css(".identity_report_notifications", text: (@count_before_delete - 1))
+    # Native wait for the counter to visually update
+    expect(page).to have_css(".identity_report_notifications", text: (@count_before_delete - 1).to_s, wait: 5)
   end
 
   def then_i_should_see_the_protocol_docs_counter_was_decremented
-    expect(page).to have_css(".notification-badge", text: 1)
+    # Native wait for the counter to visually update
+    expect(page).to have_css(".notification-badge", text: '1', wait: 5)
   end
 end

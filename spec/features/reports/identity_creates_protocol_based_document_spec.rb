@@ -85,64 +85,65 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
     @protocol = create_and_assign_protocol_to_me
 
     visit protocol_path @protocol
-    wait_for_ajax
-
+    
+    expect(page).to have_css('#reportsTabLink', wait: 5)
     find('#reportsTabLink').click
-    wait_for_ajax
+    
+    expect(page).to have_css('#reportsTabLink.active', wait: 5)
   end
 
   def when_i_create_a_document_of_type(type)
     case type
     when 'study_schedule_report'
       click_button "Export"
-      wait_for_ajax
+      
+      expect(page).to have_selector('ul.dropdown-menu .download-report', visible: :all, wait: 20)
 
-      @document_id = first('.study-schedule-report')['data-url'].split('documentable_id=')[1].split('&')[0]
     when 'participant_report'
       click_link 'Participant Tracker'
+      expect(page).to have_css('.participant-report', wait: 5)
       find('.participant-report').click
-      wait_for_ajax
-
-      @document_id = first('.participant-report')['data-url'].split('documentable_id=')[1].split('&')[0]
+      
+      expect(page).to have_selector('ul.dropdown-menu .download-report', visible: :all, wait: 20)
     end
   end
 
   def when_i_click_the_created_document_icon
-    find(".fa-file-download").click
-    wait_for_ajax
+    first(".fa-file-download").click
   end
 
   def when_i_click_the_download_option
-    find("ul.dropdown-menu .download-report").click
-    wait_for_ajax
+    find("ul.dropdown-menu .download-report", wait: 5).click
   end
 
   def when_i_click_the_generate_new_option
-    find("ul.dropdown-menu .regenerate-report").click
-    wait_for_ajax
+    find("ul.dropdown-menu .regenerate-report", wait: 5).click
   end
 
   def then_i_should_see_the_document(expected_count: 1)
     find('#reportsTabLink').click
-    wait_for_ajax
+    expect(page).to have_css('#reportsTabLink.active', wait: 5)
 
+    Timeout.timeout(5) do
+      sleep 0.25 until Document.where(documentable: @protocol).count == expected_count
+    end
     expect(Document.where(documentable: @protocol).count).to eq(expected_count)
   end
 
   def then_i_should_see_the_options_dropdown
-    expect(page).to have_selector("ul.dropdown-menu", visible: true)
+    expect(page).to have_selector("ul.dropdown-menu", visible: true, wait: 5)
   end
 
   def then_i_should_see_the_button_is_defaulted
-    expect(page).to have_css("button.study-schedule-report.btn-success")
+    expect(page).to have_css("button.study-schedule-report.btn-success", wait: 5)
     expect(page).not_to have_css("button.study-schedule-report.btn-secondary")
   end
 
   def then_i_should_not_see_the_documents_counter
-    expect(page).to_not have_css(".notification-badge")
+    expect(page).to have_no_css(".notification-badge", wait: 2)
   end
 
   def then_i_should_see_the_counter_increment_to(value)
-    expect(page).to have_css(".notification-badge", text: value)
+    expect(page).to have_css(".notification-badge", text: value.to_s, wait: 15)
   end
 end

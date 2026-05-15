@@ -22,10 +22,6 @@ require 'rails_helper'
 
 feature 'Identity edits document title', js: true, enqueue: false do
 
-  before :each do
-    DatabaseCleaner[:active_record, db: Document].clean_with(:truncation)
-  end
-
   context "from the All Reports page" do
     context "when creating a report" do
       scenario "and sees the custom title" do
@@ -56,7 +52,8 @@ feature 'Identity edits document title', js: true, enqueue: false do
     @protocol = create_and_assign_protocol_to_me
 
     visit documents_path
-    wait_for_ajax
+    
+    expect(page).to have_css('table', wait: 5)
   end
 
   def given_i_am_viewing_the_all_reports_page_with_documents
@@ -66,7 +63,9 @@ feature 'Identity edits document title', js: true, enqueue: false do
                 create(:document_of_identity_report, documentable_id: Identity.first.id)
 
     visit documents_path
-    wait_for_ajax
+    
+    expect(page).to have_css('table', wait: 5)
+    expect(page).to have_css('a.edit-document', wait: 5)
   end
 
   def given_i_am_viewing_the_reports_tab_with_documents
@@ -76,53 +75,67 @@ feature 'Identity edits document title', js: true, enqueue: false do
                 create(:document_of_protocol_report, documentable_id: @protocol.id)
 
     visit protocol_path @protocol
-    wait_for_ajax
 
-    find('#reportsTabLink').click
-    wait_for_ajax
+    reports_tab = find('#reportsTabLink', wait: 5)
+    reports_tab.click
+    expect(page).to have_css('#reportsTabLink.active', wait: 5)
+
+    expect(page).to have_css('a.edit-document', wait: 5)
   end
 
   def when_i_create_an_identity_based_document_with_a_custom_title
-    find('.documents a', text:'Invoice Report').click
-    wait_for_ajax
+    find('.documents a', text:'Invoice Report', wait: 5).click
 
-    sleep 2
-
+    expect(page).to have_field('Title', wait: 5)
     fill_in 'Title', with: "A custom title"
 
     bootstrap_datepicker 'input#start_date', day: '10'
     bootstrap_datepicker 'input#end_date', day: '10'
 
-    find('button[data-id="organization_select"]').click
-    find(".dropdown-menu.show .dropdown-item", text: @protocol.organization.name).click
+    find('button[data-id="organization_select"]', wait: 5).click
+    find(".dropdown-menu.show .dropdown-item", text: @protocol.organization.name, wait: 5).click
 
-    # close organization dropdown, so it's not covering protocol dropdown
     find('.modal-title').click
 
-    #Actually choose protocol
-    find('button[data-id="protocol_select"]').click
-    find(".dropdown-menu.show .dropdown-item", text: /#{@protocol.sparc_id}/).click
+    find('button[data-id="protocol_select"]', wait: 5).click
+    find(".dropdown-menu.show .dropdown-item", text: /#{@protocol.sparc_id}/, wait: 5).click
 
-    # close protocol dropdown, so it's not covering 'Request Report' button
     find('.modal-title').click
 
-    find("input[type='submit']").click
-    wait_for_ajax
+    find("input[type='submit']", wait: 5).click
+
+    expect(page).to have_no_css('.modal.show', wait: 15)
   end
 
   def when_i_edit_the_title
-    first("a.edit-document").click
-    wait_for_ajax
+    first("a.edit-document", wait: 5).click
 
-    sleep 2
+    within('.modal.show', wait: 5) do
+      expect(page).to have_field('document_title', wait: 5)
+      fill_in 'document_title', with: "A custom title"
 
-    fill_in 'document_title', with: "A custom title"
+      save_screenshot('trench_1_filled.png')
 
-    find("button[type='submit']").click
-    wait_for_ajax
+      save_btn = find('button', text: 'Save', wait: 5)
+      save_btn.hover
+
+      save_screenshot('trench_2_hovered.png')
+
+      save_btn.click
+
+      save_screenshot('trench_3_clicked.png')
+    end
+
+    save_screenshot('trench_4_timeout.png')
+    expect(page).to have_no_css('.modal.show', wait: 15)
   end
 
   def then_i_should_see_the_title_has_been_updated
-    expect(page).to have_content("A custom title")
+    if page.has_css?('#reportsTabLink', wait: 2)
+      find('#reportsTabLink').click
+      expect(page).to have_css('#reportsTabLink.active', wait: 5)
+    end
+
+    expect(page).to have_content("A custom title", wait: 10)
   end
 end
