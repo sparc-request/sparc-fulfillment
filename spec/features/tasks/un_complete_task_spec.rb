@@ -34,23 +34,36 @@ feature "un-completing a Task", js: true do
     create_list(:task, 2, identity: assignor, assignee: assignee)
 
     visit tasks_path
-    wait_for_ajax
+    
+    expect(page).to have_css("table.tasks tbody tr", count: 2, wait: 5)
 
-    first('input.complete').click
-    wait_for_ajax
-    expect(page).to have_css("table.tasks tbody tr", count: 1)
+    complete_btn = first('input.complete', wait: 5)
+    complete_btn.hover
+    complete_btn.click
+    
+    expect(page).to have_css("table.tasks tbody tr", count: 1, wait: 5)
   end
 
   def when_i_set_the_task_to_incomplete
-    find("label.toggle-off", text: 'Incomplete').click
-    wait_for_ajax
-    first('input.complete').click
-    wait_for_ajax
+    toggle_off = find("label.toggle-off", text: 'Incomplete', wait: 5)
+    toggle_off.hover
+    toggle_off.click
+    
+    expect(page).to have_no_content("No matching records found", wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 1, wait: 5)
+    
+    uncomplete_btn = first('input.complete', wait: 5)
+    uncomplete_btn.hover
+    uncomplete_btn.click
+    
+    expect(page).to have_content("No matching records found", wait: 5)
   end
 
   def then_i_should_see_that_the_task_is_incomplete
-    find("label.toggle-on", text: 'Complete').click
-    wait_for_ajax
-    expect(page).to have_css("table.tasks tbody tr", count: 2)
+    toggle_on = find("label.toggle-on", text: 'Complete', wait: 5)
+    toggle_on.hover
+    toggle_on.click
+    
+    expect(page).to have_css("table.tasks tbody tr", count: 2, wait: 5)
   end
 end

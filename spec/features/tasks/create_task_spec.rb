@@ -41,50 +41,70 @@ feature "create Task", js: true do
   scenario 'Identity creates a new Task for another Identity' do
     given_i_am_viewing_the_tasks_page
     when_i_create_a_task_assigned_to_another_identity
-    wait_for_ajax
     when_i_click_on_the_all_tasks_button
     then_i_should_see_the_task_is_assigned_to_the_identity
   end
 
   def given_i_am_viewing_the_tasks_page
     visit tasks_path
-    wait_for_ajax
+
+    expect(page).to have_css("a.btn.btn-success", wait: 5)
   end
 
   def when_i_create_a_task_assigned_to_myself
-    find("a.btn.btn-success").click
+    new_task_btn = find("a.btn.btn-success", wait: 5)
+    new_task_btn.hover
+    new_task_btn.click
+    
+    expect(page).to have_css('#new_task', wait: 5)
+
     bootstrap_select '#task_assignee_id', @assignee.full_name
     bootstrap_datepicker '.datetimepicker-input', day: '15'
     fill_in :task_body, with: "Test body"
-    find("#new_task .modal-footer .btn-primary").click
-    wait_for_ajax
+    
+    save_btn = find("#new_task .modal-footer .btn-primary", wait: 5)
+    save_btn.hover
+    save_btn.click
+    
+    # CRITICAL SYNC POINT: Anchor Capybara until the modal completely fades out. This prevents the second task creation from colliding with the first!
+    expect(page).to_not have_css('#new_task', wait: 5)
   end
 
   def when_i_create_a_task_assigned_to_another_identity
-    find("a.btn.btn-success").click
+    new_task_btn = find("a.btn.btn-success", wait: 5)
+    new_task_btn.hover
+    new_task_btn.click
+    
+    expect(page).to have_css('#new_task', wait: 5)
+
     bootstrap_select '#task_assignee_id', @second_assignee.full_name
     bootstrap_datepicker '.datetimepicker-input', day: '15'
     fill_in :task_body, with: "Test body"
-    find("#new_task .modal-footer .btn-primary").click
-    wait_for_ajax
+    
+    save_btn = find("#new_task .modal-footer .btn-primary", wait: 5)
+    save_btn.hover
+    save_btn.click
+    
+    expect(page).to_not have_css('#new_task', wait: 5)
   end
 
   def when_i_click_on_the_all_tasks_button
-    find("#allTasksToggle", visible: :all).find(:xpath, "..").click
-    wait_for_ajax
+    toggle_parent = find("#allTasksToggle", visible: :all, wait: 5).find(:xpath, "..")
+    toggle_parent.hover
+    toggle_parent.click
   end
 
   def then_i_should_see_the_task_is_assigned_to_me
-    expect(page).to have_css("table.tasks tbody tr", count: 1)
-    expect(page).to have_css("span.badge", text: 1)
+    expect(page).to have_css("table.tasks tbody tr", count: 1, wait: 5)
+    expect(page).to have_css("span.badge", text: 1, wait: 5)
   end
 
   def then_i_should_see_two_tasks_are_assigned_to_me
-    expect(page).to have_css("table.tasks tbody tr", count: 2)
-    expect(page).to have_css("span.badge", text: 2)
+    expect(page).to have_css("table.tasks tbody tr", count: 2, wait: 5)
+    expect(page).to have_css("span.badge", text: 2, wait: 5)
   end
 
   def then_i_should_see_the_task_is_assigned_to_the_identity
-    expect(page).to have_css("table.tasks tbody td:nth-child(2)", count: 1, text: @second_assignee.full_name)
+    expect(page).to have_css("table.tasks tbody td:nth-child(2)", count: 1, text: @second_assignee.full_name, wait: 5)
   end
 end

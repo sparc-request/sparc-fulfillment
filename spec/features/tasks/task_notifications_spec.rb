@@ -22,6 +22,10 @@ require "rails_helper"
 
 feature "Task notifications", js: true do
 
+  before :each do
+    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
+  end
+
   scenario "Identity sees that they have no Tasks" do
     given_i_have_no_tasks
     when_i_visit_the_task_page
@@ -43,35 +47,37 @@ feature "Task notifications", js: true do
   end
 
   def given_i_have_no_tasks
-    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
+    # Handled globally by the before :each block
   end
 
   def given_i_have_one_task
     assignee = Identity.first
     assignor = create(:identity)
-    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
     create(:task, identity: assignor, assignee: assignee)
   end
 
   def when_i_visit_the_task_page
     visit tasks_path
-    wait_for_ajax
+    
+    expect(page).to have_css("body.tasks-index", wait: 5)
   end
 
   def when_i_click_on_the_task_notification
-    first("input[type='checkbox']").set(true)
+    # Hover Lock: Force Capybara to physically track the checkbox
+    checkbox = first("input[type='checkbox']", wait: 5)
+    checkbox.hover
+    checkbox.click
   end
 
   def then_i_should_be_on_the_tasks_page
-    expect(page).to have_css("body.tasks-index")
+    expect(page).to have_css("body.tasks-index", wait: 5)
   end
 
   def then_i_should_see_that_i_have_no_tasks
-    expect(page).to have_no_css(".notification-badge")
+    expect(page).to have_no_css(".notification-badge", wait: 5)
   end
 
   def then_i_should_see_that_i_have_one_task
-    expect(page).to have_css(".notification-badge", text: "1")
+    expect(page).to have_css(".notification-badge", text: "1", wait: 5)
   end
-
 end

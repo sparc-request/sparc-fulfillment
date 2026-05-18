@@ -34,23 +34,28 @@ feature "rescheduling a Task", js: true do
     @task = Task.first
 
     visit tasks_path
-    wait_for_ajax
+    
+    expect(page).to have_css('a.reschedule-task', count: 2, wait: 5)
   end
 
   def when_i_reschedule_the_task
-    page.all('a.reschedule-task').last.click
-    wait_for_ajax
+    reschedule_btn = all('a.reschedule-task', wait: 5).last
+    reschedule_btn.hover
+    reschedule_btn.click
 
-    sleep 2
+    expect(page).to have_css('.datetimepicker-input', wait: 5)
 
     bootstrap_datepicker '.datetimepicker-input', day: '15'
-    click_button "Submit"
+    
+    submit_btn = find_button("Submit", wait: 5)
+    submit_btn.hover
+    submit_btn.click
 
-    wait_for_ajax
+    expect(page).to_not have_button("Submit", wait: 5)
   end
 
   def then_i_should_see_the_task_has_been_rescheduled
-    expect(page).to have_css("tr td", text: "/09/")
-    expect(page).to have_css("tr td", text: "/15/")
+    expect(page).to have_css("tr td", text: "/09/", wait: 5)
+    expect(page).to have_css("tr td", text: "/15/", wait: 5)
   end
 end

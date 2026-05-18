@@ -22,6 +22,8 @@ require "rails_helper"
 
 feature "Identity views Task", js: true do
   before :each do
+    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
+    
     @assignee = Identity.first
     protocol = create(:protocol_imported_from_sparc)
     @core = Organization.where(type: "Core").first
@@ -44,36 +46,44 @@ feature "Identity views Task", js: true do
 
   def given_i_am_on_the_tasks_page
     visit tasks_path
-    wait_for_ajax
+
+    expect(page).to have_css("table.tasks", wait: 5)
   end
 
   def when_i_view_a_identity_task_assigned_to_myself
-    click_link "Create New Task"
-    wait_for_ajax
+    new_task_btn = find_link("Create New Task", wait: 5)
+    new_task_btn.hover
+    new_task_btn.click
+
+    expect(page).to have_css('#new_task', wait: 5)
 
     bootstrap_select '#task_assignee_id', @assignee.full_name
     bootstrap_datepicker '.datetimepicker-input', day: '15'
     fill_in :task_body, with: "Test body"
 
-    find("#new_task .modal-footer .btn-primary").click
-    wait_for_ajax
+    submit_btn = find("#new_task .modal-footer .btn-primary", wait: 5)
+    submit_btn.hover
+    submit_btn.click
+
+    expect(page).to_not have_css('#new_task', wait: 5)
 
     task = Task.where(body: "Test body").last
     task.update_columns(assignable_type: "Identity", assignable_id: @assignee.id)
 
     page.execute_script("$('table.tasks').bootstrapTable('refresh')")
-    wait_for_ajax
 
-    expect(page).to have_css("table.tasks tbody tr", text: "Test body")
-    find("table.tasks tbody tr", text: "Test body").click
-    wait_for_ajax
+    # Sync Point & Geckodriver Fix: Wait for the new row, then physically target its first cell
+    target_row = find("table.tasks tbody tr", text: "Test body", wait: 5)
+    target_cell = target_row.first("td")
+    target_cell.hover
+    target_cell.click
+
+    expect(page).to have_css(".modal div", text: "Created by", wait: 5)
   end
 
   def given_i_have_been_assigned_a_procedure_task
-    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
-
     create(:protocol_imported_from_sparc)
-    identity        = Identity.first
+    identity    = Identity.first
     appointment = Appointment.first
     visit       = Visit.first
     procedure   = create(:procedure, appointment: appointment, visit: visit, sparc_core_id: @core.id)
@@ -83,24 +93,29 @@ feature "Identity views Task", js: true do
 
   def when_i_view_the_procedure_task_assigned_to_myself
     given_i_am_on_the_tasks_page
-    first("table.tasks tbody tr:first-child td").click
+    
+    target_cell = first("table.tasks tbody tr:first-child td", wait: 5)
+    target_cell.hover
+    target_cell.click
+    
+    expect(page).to have_css(".modal div", text: "Created by", wait: 5)
   end
 
   def then_i_should_see_the_identity_task_details
-    expect(page).to have_css(".modal div", text: "Created by")
-    expect(page).to have_css(".modal div", text: "Assigned to")
-    expect(page).to have_css(".modal div", text: "Type")
-    expect(page).to have_css(".modal div", text: "Task")
-    expect(page).to have_css(".modal div", text: "Due At")
-    expect(page).to have_css(".modal div", text: "Completed")
+    expect(page).to have_css(".modal div", text: "Created by", wait: 5)
+    expect(page).to have_css(".modal div", text: "Assigned to", wait: 5)
+    expect(page).to have_css(".modal div", text: "Type", wait: 5)
+    expect(page).to have_css(".modal div", text: "Task", wait: 5)
+    expect(page).to have_css(".modal div", text: "Due At", wait: 5)
+    expect(page).to have_css(".modal div", text: "Completed", wait: 5)
   end
 
   def then_i_should_see_the_procedure_task_details
     then_i_should_see_the_identity_task_details
 
-    expect(page).to have_css(".modal div", text: "Participant Name")
-    expect(page).to have_css(".modal div", text: "Protocol")
-    expect(page).to have_css(".modal div", text: "Visit")
-    expect(page).to have_css(".modal div", text: "Arm")
+    expect(page).to have_css(".modal div", text: "Participant Name", wait: 5)
+    expect(page).to have_css(".modal div", text: "Protocol", wait: 5)
+    expect(page).to have_css(".modal div", text: "Visit", wait: 5)
+    expect(page).to have_css(".modal div", text: "Arm", wait: 5)
   end
 end
