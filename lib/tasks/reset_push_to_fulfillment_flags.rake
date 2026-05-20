@@ -4,7 +4,7 @@ namespace :data do
 
         require 'csv'
 
-        csv_path = 'tmp/svc_req_pushed_input.csv' # Note to self: update this when we find out where it wants to live. tmp?
+        csv_path = 'tmp/svc_req_pushed_input.csv'
 
         if csv_path.blank? || !File.exist?(csv_path)
             puts "ERROR: Not a valid csv path or file not found."
