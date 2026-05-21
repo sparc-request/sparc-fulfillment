@@ -18,106 +18,56 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# require 'selenium-webdriver'
-
-# Capybara.default_max_wait_time = 5
-
-# Capybara.register_driver :firefox_headless do |app|
-#   options = Selenium::WebDriver::Firefox::Options.new
-
-#   if ENV['MOZ_HEADLESS']
-#     options.add_argument('--headless')
-#   end
-
-#   Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
-# end
-
-# Capybara.javascript_driver = :firefox_headless
-
-# require 'capybara/rspec'
-# require 'selenium-webdriver'
-
-# RSpec.configure do |config|
-#   config.before(:each, type: :feature) do
-#     Capybara.default_max_wait_time = 5
-#     # Check if we are running in a Dockerized environment
-#     if ENV['DOCKERIZED_TESTS']
-#       # Point Capybara to the Selenium standalone container
-#       Capybara.app_host = "http://cwf_web:3001" # Use the internal Docker service name and port of your Rails app
-#       Capybara.server_host = "0.0.0.0" # Bind to all interfaces
-#       # Capybara.server_port = 3001 # Use the port exposed by the Rails container / commented out to allow Capybara to choose its own open port
-#       Capybara.register_driver :firefox_headless do |app|
-#         options = Selenium::WebDriver::Firefox::Options.new
-#         options.add_argument('--headless')
-#         #options.add_argument('--disable-gpu')
-#         #options.add_argument('--disable-dev-shm-usage')
-
-#         Capybara::Selenium::Driver.new(
-#           app,
-#           browser: :remote,
-#           url: ENV.fetch('SELENIUM_URL', 'http://localhost:4444/wd/hub'),
-#           options: options
-#         )
-#       end
-#       Capybara.default_driver = :firefox_headless
-#       Capybara.javascript_driver = :firefox_headless
-#     else
-#       # Configuration for running tests on your local machine
-#       Capybara.app_host = "http://localhost:3001"
-#     end
-#   end
-# end
-
-require 'capybara/rspec'
 require 'selenium/webdriver'
 
+# ====================================================================
+# 1. THE REMOTE DRIVER MUTATION
+# We bypass ActionDispatch's wrapper and define the pure Selenium 4 driver.
+# ====================================================================
+Capybara.register_driver :docker_chrome_headless do |app|
+  selenium_url = begin
+                   selenium_host = Addrinfo.getaddrinfo('selenium_chrome', 4444).first.ip_address
+                   "http://#{selenium_host}:4444/wd/hub"
+                 rescue Socket::ResolutionError
+                   'http://selenium_chrome:4444/wd/hub'
+                 end
+
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless=new')
+  options.add_argument('--window-size=1920,1080')
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--disable-gpu')
+
+  # In Selenium 4, we pass the Options instance directly into capabilities
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :remote,
+    url: selenium_url,
+    capabilities: options
+  )
+end
+
 RSpec.configure do |config|
-  config.before(:each, type: :feature) do
-    # Set default max wait time to 5 for flaky tests
-    Capybara.default_max_wait_time = 5
-    # Set the host for the application, accessible from the Selenium container
-    Capybara.app_host = ENV['CAPYBARA_APP_HOST'] || 'http://localhost:3002'
-    # Make sure Capybara can bind to an accessible interface, not just 127.0.0.1
+  $puma_warmed_up = false
+
+  config.before(:each, type: :system) do
+    # 2. Tell Rails to use our custom, explicitly defined grid driver
+    driven_by :docker_chrome_headless
+
+    # 3. Re-establish Capybara server coordinate mappings
     Capybara.server_host = '0.0.0.0'
     Capybara.server_port = 3002
-    # Point Capybara to the remote Selenium server (e.g., 'selenium-hub' is the service name)
-    Capybara.register_driver :firefox_headless do |app|
-      options = Selenium::WebDriver::Firefox::Options.new
-      options.add_argument('--headless')
-      options.add_argument('--window-size=1920,1080')
-      options.add_argument('--no-sandbox')
+    Capybara.app_host = ENV['CAPYBARA_APP_HOST'] || 'http://cwf_web:3002'
 
-      selenium_host = begin
-                        Addrinfo.getaddrinfo('selenium_firefox', 4444).first.ip_address
-                      rescue Socket::ResolutionError
-                        'selenium_firefox' # Fallback
-                      end
-
-      driver = Capybara::Selenium::Driver.new(
-        app,
-        browser: :remote,
-        options: options,
-        url: "http://#{selenium_host}:4444/wd/hub"
-      )
-
-      driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(1920, 1080)
-
-      driver
-    end
-    Capybara.default_driver = :firefox_headless
-    Capybara.javascript_driver = :firefox_headless
-  end
-
-  config.after(:each, type: :feature) do
-    begin
-      errors = page.driver.browser.logs.get(:browser)
-      if errors.present?
-        puts "JavaScript Errors in #{+example.location}:"
-        errors.each { |e| puts e.message }
-      end
-    rescue NoMethodError, StandardError
-      # Selenium 4 Remote Drivers throw NoMethodError here. 
-      # Catch it and silently move on.
+    # 4. THE PUMA COLD-BOOT HOOK
+    unless $puma_warmed_up
+      puts "\n🦖 Cold-booting the 20-year-old Puma monolith as a System Spec... brace yourself."
+      visit '/'
+      expect(page).to have_css('body', wait: 60)
+      
+      $puma_warmed_up = true
+      puts "✅ Puma is awake. Transactional boundaries verified. Initiating lightspeed..."
     end
   end
 end

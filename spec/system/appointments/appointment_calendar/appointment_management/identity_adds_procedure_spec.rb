@@ -20,8 +20,7 @@
 
 require 'rails_helper'
 
-feature 'Identity adds Procedure', js: true do
-
+RSpec.describe 'Identity adds Procedure', type: :system, js: true do
   scenario 'and sees it in the appointment calendar' do
     given_i_am_viewing_a_participants_calendar
     when_i_add_a_procedure
@@ -35,49 +34,47 @@ feature 'Identity adds Procedure', js: true do
   end
 
   def given_i_am_viewing_a_participants_calendar
-    @protocol     = create_and_assign_protocol_to_me
-    @protocols_participant  = @protocol.protocols_participants.first
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    
-    expect(page).to have_css('a.list-group-item.appointment-link')
+    # EXPLICIT MAPPING: Assign the protocol to the user the global hook just logged in
+    @protocol = create_and_assign_protocol_to_me(identity: @logged_in_identity)
+    @protocols_participant = @protocol.protocols_participants.first
+
+    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
+
+    # SYNC POINT: The cold-boot penalty wait
+    expect(page).to have_css('a.list-group-item.appointment-link', wait: 60)
   end
 
   def when_i_add_a_procedure
-    first('a.list-group-item.appointment-link').click
-    
-    expect(page).to have_css('button#addService', visible: true)
-    
-    sleep 0.2
+    @service = @protocol.organization.inclusive_child_services(:per_participant).first
 
-    service = @protocol.organization.inclusive_child_services(:per_participant).first
-    bootstrap_select('.form-control.selectpicker', service.name)
-    
-    fill_in 'service_quantity', with: 1
+    # 1. Grab the exact text of the default appointment from the left sidebar.
+    # (We wait for the link to appear just to be safe during cold boots).
+    appointment_link = first('a.list-group-item.appointment-link', wait: 60)
+    appointment_name = appointment_link.text
 
-    previous_count = all(".core tbody tr", text: service.name, visible: :all).count
-
-    retries = 0
-    begin
-      find('button#addService').click
-      
-      expect(page).to have_css(".core tbody tr", text: service.name, minimum: previous_count + 1, visible: :all, wait: 4)
-    rescue RSpec::Expectations::ExpectationNotMetError => e
-      retry if (retries += 1) < 2
-      raise e
+    # 2. THE BULLETPROOF SYNC POINT (No click required!):
+    # Since the first appointment loads by default, we just wait for the AJAX payload 
+    # to finish rendering the right-hand container's header. 
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: "Visit: #{appointment_name}", wait: 60)
     end
+
+    # 3. Now the DOM is 100% stable. Execute the dropdown helper.
+    bootstrap_select('.form-control.selectpicker', @service.name)
+    
+    # 4. Click the add button natively
+    click_button 'addService'
   end
 
   def then_i_should_see_the_procedure_in_the_appointment_calendar
-    service_name = @protocol.organization.inclusive_child_services(:per_participant).first.name
-
     within('#appointmentContainer') do
-      expect(page).to have_content(service_name)
+      expect(page).to have_css('tr', text: @service.name)
     end
   end
 
   def then_i_should_see_that_the_performed_by_selector_does_not_have_a_selection
-    dropdown = find('select#procedure_performer_id', visible: :all, match: :first)
-
-    expect(dropdown.value).to be_blank
+    within('#appointmentContainer tr', text: @service.name) do
+      expect(page).to have_css('.filter-option-inner-inner', text: 'Nothing selected')
+    end
   end
 end

@@ -18,18 +18,19 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
+require 'fileutils'
+
 RSpec.configure do |config|
+  # Use a safe fallback so Docker doesn't explode if the ENV isn't set
+  doc_path = ENV.fetch('DOCUMENTS_FOLDER', Rails.root.join('tmp', 'test_documents'))
 
   config.before(:suite) do
-    FileUtils.mkdir_p(ENV.fetch('DOCUMENTS_FOLDER')) unless File.exist?(ENV.fetch('DOCUMENTS_FOLDER'))
+    FileUtils.mkdir_p(doc_path)
   end
 
   config.after(:suite) do
-
-    Dir.entries(ENV.fetch('DOCUMENTS_FOLDER')).each do |file|
-      unless File.directory?(file)
-        File.delete File.join(ENV.fetch('DOCUMENTS_FOLDER'), file)
-      end
-    end
+    # rm_rf safely annihilates everything inside the folder, including sub-folders, 
+    # without deleting the parent folder itself.
+    FileUtils.rm_rf(Dir.glob("#{doc_path}/*"))
   end
 end

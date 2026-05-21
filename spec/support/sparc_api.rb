@@ -20,8 +20,11 @@
 
 module SparcHelper
   def sparc_sends_notification_post(params=valid_params)
-    http_login(ENV['CWF_API_USERNAME'], ENV['CWF_API_PASSWORD'])
-    post '/v1/notifications.json', params: params , headers: @env
+    # Generate the proper Basic Auth headers using your native helper
+    auth_headers = http_login_headers(ENV['CWF_API_USERNAME'], ENV['CWF_API_PASSWORD'])
+    
+    # Pass the headers explicitly to the post request
+    post '/v1/notifications.json', params: params, headers: auth_headers
   end
 
   def load_protocol_1_json

@@ -18,20 +18,18 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-RSpec.configure do |config|
+# This automatically disables PaperTrail for all RSpec tests by default, 
+# unless a test is specifically tagged with `versioning: true`.
+require 'paper_trail/frameworks/rspec'
 
+RSpec.configure do |config|
+  # We still loop through this explicit list to guarantee these specific, 
+  # highly-active models NEVER generate audit trails, even if a developer 
+  # tags a test with `versioning: true`.
   config.before(:suite) do
-    PaperTrail.request.disable_model(Appointment)
-    PaperTrail.request.disable_model(Arm)
-    PaperTrail.request.disable_model(Component)
-    PaperTrail.request.disable_model(Fulfillment)
-    PaperTrail.request.disable_model(LineItem)
-    PaperTrail.request.disable_model(Note)
-    PaperTrail.request.disable_model(Participant)
-    PaperTrail.request.disable_model(Procedure)
-    PaperTrail.request.disable_model(Protocol)
-    PaperTrail.request.disable_model(Task)
-    PaperTrail.request.disable_model(Visit)
-    PaperTrail.request.disable_model(VisitGroup)
+    [
+      Appointment, Arm, Component, Fulfillment, LineItem, 
+      Note, Participant, Procedure, Protocol, Task, Visit, VisitGroup
+    ].each { |model| PaperTrail.request.disable_model(model) }
   end
 end

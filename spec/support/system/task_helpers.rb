@@ -18,20 +18,24 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-module Features
-  module BootstrapTableHelpers
-    def search_bootstrap_table(query)
-      page.find('.search input').set(query)
+module System
+  module TaskHelpers
+    def create_tasks(count=1, protocol:)
+      count.times { create(:task, protocol_id: protocol.id) }
     end
 
-    def refresh_bootstrap_table(table, url=nil)
-      if url.present?
-        page.execute_script "$('#{ table }').bootstrapTable('refresh', {url: '#{url}', silent: false })"
-      else
-        # sleep(2)
-        page.execute_script "$('#{ table }').bootstrapTable('refresh', { silent: false })"
-      end
-      wait_for_ajax
+    def user_fills_in_new_task_form(task:, assignee:)
+      select 'Study-level Task', from: 'Task Type'
+      fill_in 'Patient Name', with: task.participant_name
+      fill_in 'Protocol', with: task.protocol_id
+      fill_in 'Visit', with: task.visit_name
+      fill_in 'Arm', with: task.arm_name
+      fill_in 'Task/Service', with: task.task
+      
+      select assignee.full_name, from: 'Assignment'
+      
+      # THE T-REX UPGRADE: Use our native helper!
+      bootstrap_datepicker('#task_due_date', text: task.due_date.strftime('%m/%d/%Y'))
     end
   end
 end

@@ -19,9 +19,17 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 RSpec.configure do |config|
-	
-	config.after(:each, debug_response: true) do
-		Rails.logger.debug "Request params: #{request.params}"
-		Rails.logger.debug "Response:\n#{response.body}"
-	end
+  config.after(:each, debug_response: true) do
+    puts "\n--- DEBUG RESPONSE ---"
+    puts "Request params: #{request.params.inspect}"
+    puts "Response Body:"
+    
+    # Try to pretty-print JSON if possible, otherwise print raw body
+    begin
+      puts JSON.pretty_generate(JSON.parse(response.body))
+    rescue JSON::ParserError
+      puts response.body
+    end
+    puts "----------------------\n"
+  end
 end

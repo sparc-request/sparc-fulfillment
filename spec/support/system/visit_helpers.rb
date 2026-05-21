@@ -18,54 +18,50 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-module Features
+module System
   module VisitHelpers
-
-    def and_the_visit_has_one_grouped_procedure
-      add_a_procedure(@services.first, 2)
+    def and_the_visit_has_one_grouped_procedure(service)
+      add_a_procedure(service, 2)
     end
 
     def add_a_procedure(service, count = 1)
-      expect(page).to have_css('button#addService', visible: true)
+      # Wait for Bootstrap select wrapper
+      expect(page).to have_css('.bootstrap-select select.form-control.selectpicker', visible: :hidden)
       
-      # HYDRATION BUFFER: Allow Rails 7 JS controllers 200ms to bind to the pane
-      sleep 0.2
-
       bootstrap_select('.form-control.selectpicker', service.name)
       fill_in 'service_quantity', with: count
       
-      previous_count = all(".core tbody tr", text: service.name, visible: :all).count
+      previous_count = all("tr", text: service.name, visible: :all).count
 
-      retries = 0
-      begin
-        find('button#addService').click
+      # Ensure button is active, then click
+      expect(page).to have_button('addService', disabled: false)
+      click_button 'addService'
         
-        expect(page).to have_css(".core tbody tr", text: service.name, minimum: previous_count + 1, visible: :all, wait: 4)
-        
-      rescue RSpec::Expectations::ExpectationNotMetError => e
-        retry if (retries += 1) < 2
-        raise e
-      end
+      # Native Capybara polling — no rescue/retry block!
+      expect(page).to have_css("tr", text: service.name, minimum: previous_count + 1)
     end
 
-    def given_i_am_viewing_a_visit
-      visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+    def given_i_am_viewing_a_visit(participant:, protocol:)
+      visit calendar_protocol_participant_path(id: participant.id, protocol_id: protocol.id)
       
+      expect(page).to have_css('#appointmentContainer', visible: :all)
       expect(page).to have_css('a.list-group-item.appointment-link')
+      
       first('a.list-group-item.appointment-link').click
       
-      expect(page).to have_css('button#addService', visible: true)
+      expect(page).to have_button('addService', disabled: :all)
     end
 
-    def given_i_am_viewing_a_started_visit
-      given_i_am_viewing_a_visit 
+    def given_i_am_viewing_a_started_visit(participant:, protocol:)
+      given_i_am_viewing_a_visit(participant: participant, protocol: protocol)
       
+      # Explicit scoping
       start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first)
       start_btn.click
       
+      # SYNC POINT
       expect(page).to have_no_css('a.btn.start-appointment')
-      expect(page).to have_css('button.complete-appointment', visible: true)
+      expect(page).to have_css('button.complete-appointment', visible: :all)
     end
-    
   end
 end

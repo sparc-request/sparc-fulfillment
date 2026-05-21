@@ -18,15 +18,12 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-module ControllerHelpers
-  def sign_in(identity = create(:identity))
-    allow(request.env['warden']).to receive(:authenticate!).and_return(identity)
-    allow(controller).to receive(:current_identity).and_return(identity)
-  end
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
 end
 
-RSpec.configure do |config|
-  config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include Devise::Test::ControllerHelpers, type: :view
-  config.include ControllerHelpers, type: :controller
+# We keep this global! Multiple factories rely on this to 
+# seamlessly generate fake external API IDs.
+FactoryBot.define do
+  sequence(:sparc_id)
 end

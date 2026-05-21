@@ -18,11 +18,26 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-module Features
-  module PageHelpers
-    def accept_confirm(&block)
-      block.call if block_given?
-      page.driver.browser.switch_to.alert.accept
+module System
+  module BootstrapTableHelpers
+    def search_bootstrap_table(query)
+      # SYNC POINT: Ensure the input exists, clear it, set it, and blur to trigger search
+      find('.search input').click
+      fill_in(class: 'search input', with: query)
+      find('body').click(x: 0, y: 0) # blur to trigger any change listeners
+      
+      # NOTE: Do NOT use wait_for_ajax here. 
+      # The test calling this method MUST immediately do:
+      # expect(page).to have_css('table tbody tr', text: 'My Query')
+    end
+
+    def refresh_bootstrap_table(table_selector)
+      # Real users refresh tables by clicking a refresh button. 
+      # If your table has a native refresh button, click it natively:
+      within(table_selector) do
+        find('button[name="refresh"]').click
+      end
+      # Again, the calling test must expect() the new row to appear.
     end
   end
 end

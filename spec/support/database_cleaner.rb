@@ -21,34 +21,27 @@
 require 'database_cleaner/active_record'
 
 RSpec.configure do |config|
-  # MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
-  # # FEATURE_TEST_MODELS = [Identity]
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
 
-  # # Clean data before running the suite
-  # config.before(:suite) do
-  #   DatabaseCleaner.clean_with(:truncation)
-  #   MODELS.each do |model|
-  #     DatabaseCleaner[:active_record, db: model].clean_with(:truncation)
-  #   end
-  # end
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
 
-  # config.before(:each, type: :feature) do
-  #   FEATURE_TEST_MODELS.each do |model|
-  #     DatabaseCleaner[:active_record, db: model].strategy = :truncation
-  #     DatabaseCleaner[:active_record, db: model].start
-  #   end
-  # end
+  config.before(:each, type: :feature) do
+    DatabaseCleaner.strategy = :truncation
+  end
 
-  # Clean data post-test
-  # config.append_after(:each, type: :feature) do
-  #   FEATURE_TEST_MODELS.each do |model|
-  #     DatabaseCleaner[:active_record, db: model].clean
-  #   end
-  # end
+  config.before(:each, type: :system) do
+    DatabaseCleaner.strategy = :truncation
+  end
 
-  config.before(:suite) { DatabaseCleaner.clean_with(:truncation) }
-  config.before(:each) { DatabaseCleaner.strategy = :transaction }
-  config.before(:each, type: :feature) { DatabaseCleaner.strategy = :truncation }
-  config.before(:each) { DatabaseCleaner.start }
-  config.after(:each) { DatabaseCleaner.clean }
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
 end
