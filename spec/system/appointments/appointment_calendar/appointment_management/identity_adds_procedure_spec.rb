@@ -41,7 +41,7 @@ RSpec.describe 'Identity adds Procedure', type: :system, js: true do
     visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
 
     # SYNC POINT: The cold-boot penalty wait
-    expect(page).to have_css('a.list-group-item.appointment-link', wait: 60)
+    expect(page).to have_css('a.list-group-item.appointment-link')
   end
 
   def when_i_add_a_procedure
@@ -49,14 +49,14 @@ RSpec.describe 'Identity adds Procedure', type: :system, js: true do
 
     # 1. Grab the exact text of the default appointment from the left sidebar.
     # (We wait for the link to appear just to be safe during cold boots).
-    appointment_link = first('a.list-group-item.appointment-link', wait: 60)
+    appointment_link = first('a.list-group-item.appointment-link')
     appointment_name = appointment_link.text
 
     # 2. THE BULLETPROOF SYNC POINT (No click required!):
     # Since the first appointment loads by default, we just wait for the AJAX payload 
     # to finish rendering the right-hand container's header. 
     within('#appointmentContainer') do
-      expect(page).to have_css('h3', text: "Visit: #{appointment_name}", wait: 60)
+      expect(page).to have_css('h3', text: "Visit: #{appointment_name}")
     end
 
     # 3. Now the DOM is 100% stable. Execute the dropdown helper.

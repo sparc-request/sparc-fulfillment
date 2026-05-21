@@ -27,7 +27,7 @@ module CustomAuthHelpers
     if respond_to?(:visit)
       visit '/'
       
-      if page.has_css?('#outsideUserLogin', wait: 2)
+      if page.has_css?('#outsideUserLogin', wait: 15)
         find('#outsideUserLogin').click
       end
 

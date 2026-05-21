@@ -20,10 +20,6 @@
 
 require 'selenium/webdriver'
 
-# ====================================================================
-# 1. THE REMOTE DRIVER MUTATION
-# We bypass ActionDispatch's wrapper and define the pure Selenium 4 driver.
-# ====================================================================
 Capybara.register_driver :docker_chrome_headless do |app|
   selenium_url = begin
                    selenium_host = Addrinfo.getaddrinfo('selenium_chrome', 4444).first.ip_address
@@ -39,35 +35,18 @@ Capybara.register_driver :docker_chrome_headless do |app|
   options.add_argument('--disable-dev-shm-usage')
   options.add_argument('--disable-gpu')
 
-  # In Selenium 4, we pass the Options instance directly into capabilities
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :remote,
-    url: selenium_url,
-    capabilities: options
-  )
+  Capybara::Selenium::Driver.new(app, browser: :remote, url: selenium_url, capabilities: options)
 end
 
 RSpec.configure do |config|
-  $puma_warmed_up = false
-
   config.before(:each, type: :system) do
-    # 2. Tell Rails to use our custom, explicitly defined grid driver
     driven_by :docker_chrome_headless
-
-    # 3. Re-establish Capybara server coordinate mappings
     Capybara.server_host = '0.0.0.0'
     Capybara.server_port = 3002
     Capybara.app_host = ENV['CAPYBARA_APP_HOST'] || 'http://cwf_web:3002'
-
-    # 4. THE PUMA COLD-BOOT HOOK
-    unless $puma_warmed_up
-      puts "\n🦖 Cold-booting the 20-year-old Puma monolith as a System Spec... brace yourself."
-      visit '/'
-      expect(page).to have_css('body', wait: 60)
-      
-      $puma_warmed_up = true
-      puts "✅ Puma is awake. Transactional boundaries verified. Initiating lightspeed..."
-    end
+    
+    # We leave the default at 5 seconds for the suite, 
+    # ensuring fast failures if something is genuinely broken.
+    Capybara.default_max_wait_time = 5 
   end
 end

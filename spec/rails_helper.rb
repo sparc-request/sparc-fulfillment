@@ -56,12 +56,6 @@ RSpec.configure do |config|
 
   config.infer_spec_type_from_file_location!
 
-  config.before(:suite) do
-    # Force asset precompilation before the server spins up
-    puts "Precompiling assets for feature specs..."
-    system("bundle exec rails assets:precompile", out: File::NULL, err: File::NULL)
-  end
-
   config.include ApiAuthenticationHelper
   config.include SparcHelper
   config.include DataHelpers
