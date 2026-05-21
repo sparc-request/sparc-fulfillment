@@ -29,8 +29,7 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    # rm_rf safely annihilates everything inside the folder, including sub-folders, 
-    # without deleting the parent folder itself.
+    # rm_rf safely annihilates everything inside the folder, including sub-folders (without deleting the parent folder itself).
     FileUtils.rm_rf(Dir.glob("#{doc_path}/*"))
   end
 end

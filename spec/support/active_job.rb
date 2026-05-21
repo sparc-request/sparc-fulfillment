@@ -22,8 +22,7 @@ RSpec.configure do |config|
   # Native Rails test helpers handle queue clearing automatically between tests
   config.include ActiveJob::TestHelper
 
-  # If you ever need to execute jobs inline for a specific test, 
-  # tag it with `:inline_jobs` and use this clean hook:
+  # If you ever need to execute jobs inline for a specific test, tag it with `:inline_jobs` and use this clean hook:
   config.around(:each, :inline_jobs) do |example|
     perform_enqueued_jobs do
       example.run

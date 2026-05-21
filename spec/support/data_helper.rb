@@ -19,8 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module DataHelpers
-  # Pass identity as an explicit keyword argument, but default to the magical variable 
-  # or create a new one if it's missing. This guarantees it works anywhere.
+  # Pass identity as an explicit keyword argument, but default to the magical variable (or create a new one if it's missing). This guarantees it works anywhere.
   def create_and_assign_protocol_with_a_single_service(identity: @logged_in_identity || create(:identity))
     sub_service_request   = create(:sub_service_request_with_organization)
     protocol              = create(:protocol_with_single_service, sub_service_request: sub_service_request)
@@ -35,8 +34,7 @@ module DataHelpers
     protocol
   end
 
-  # ... apply the same `(identity: @logged_in_identity || create(:identity))` 
-  # argument signature to the rest of the methods!
+  # Applying the same `(identity: @logged_in_identity || create(:identity))` argument signature to the rest of the methods
 
   def create_and_assign_protocol_with_duplicate_services(identity: @logged_in_identity || create(:identity))
     sub_service_request   = create(:sub_service_request_with_organization)

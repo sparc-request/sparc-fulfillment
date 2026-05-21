@@ -18,14 +18,11 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-# This automatically disables PaperTrail for all RSpec tests by default, 
-# unless a test is specifically tagged with `versioning: true`.
+# This automatically disables PaperTrail for all RSpec tests by default, unless a test is specifically tagged with `versioning: true`.
 require 'paper_trail/frameworks/rspec'
 
 RSpec.configure do |config|
-  # We still loop through this explicit list to guarantee these specific, 
-  # highly-active models NEVER generate audit trails, even if a developer 
-  # tags a test with `versioning: true`.
+  # Still loop through this explicit list to guarantee these specific, highly-active models NEVER generate audit trails (even if a test is tagged with `versioning: true`).
   config.before(:suite) do
     [
       Appointment, Arm, Component, Fulfillment, LineItem, 

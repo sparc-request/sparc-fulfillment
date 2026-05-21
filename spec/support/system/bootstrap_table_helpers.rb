@@ -21,7 +21,7 @@
 module System
   module BootstrapTableHelpers
     def search_bootstrap_table(query)
-      # SYNC POINT: Ensure the input exists, clear it, set it, and blur to trigger search
+      # Ensure the input exists, clear it, set it, and blur to trigger search
       find('.search input').click
       fill_in(class: 'search input', with: query)
       find('body').click(x: 0, y: 0) # blur to trigger any change listeners
@@ -32,8 +32,7 @@ module System
     end
 
     def refresh_bootstrap_table(table_selector)
-      # Real users refresh tables by clicking a refresh button. 
-      # If your table has a native refresh button, click it natively:
+      # Real users refresh tables by clicking a refresh button. If the table has a native refresh button, click it natively:
       within(table_selector) do
         find('button[name="refresh"]').click
       end

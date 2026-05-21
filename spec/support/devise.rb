@@ -20,7 +20,7 @@
 
 module CustomAuthHelpers
   def auto_login_identity(identity = nil)
-    # 1. Never trust Identity.first. Always guarantee a known password.
+    # Never trust Identity.first. Always guarantee a known password.
     identity ||= create(:identity, password: 'password', password_confirmation: 'password')
     @logged_in_identity = identity
     
@@ -35,8 +35,7 @@ module CustomAuthHelpers
       fill_in 'identity_password', with: identity.password || 'password'
       click_button 'Sign In'
 
-      # 2. POSITIVE SYNC POINT: Wait for the user profile to appear in the navbar
-      # This guarantees we don't proceed until the session is fully established.
+      # Wait for the user profile to appear in the navbar. This guarantees we don't proceed until the session is fully established.
       expect(page).to have_css('.nav-item.profile', wait: 15)
     else
       sign_in(identity)

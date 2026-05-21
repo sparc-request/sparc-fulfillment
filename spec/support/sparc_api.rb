@@ -20,7 +20,7 @@
 
 module SparcHelper
   def sparc_sends_notification_post(params=valid_params)
-    # Generate the proper Basic Auth headers using your native helper
+    # Generate the proper Basic Auth headers using the existing defined helper
     auth_headers = http_login_headers(ENV['CWF_API_USERNAME'], ENV['CWF_API_PASSWORD'])
     
     # Pass the headers explicitly to the post request

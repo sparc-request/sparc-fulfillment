@@ -22,8 +22,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 end
 
-# We keep this global! Multiple factories rely on this to 
-# seamlessly generate fake external API IDs.
+# Keep this global - multiple factories rely on this to seamlessly generate fake external API IDs.
 FactoryBot.define do
   sequence(:sparc_id)
 end

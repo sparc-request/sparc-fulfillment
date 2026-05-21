@@ -34,7 +34,7 @@ module System
       
       select assignee.full_name, from: 'Assignment'
       
-      # THE T-REX UPGRADE: Use our native helper!
+      # Use the helper defined already
       bootstrap_datepicker('#task_due_date', text: task.due_date.strftime('%m/%d/%Y'))
     end
   end

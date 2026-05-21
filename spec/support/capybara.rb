@@ -45,8 +45,7 @@ RSpec.configure do |config|
     Capybara.server_port = 3002
     Capybara.app_host = ENV['CAPYBARA_APP_HOST'] || 'http://cwf_web:3002'
     
-    # We leave the default at 5 seconds for the suite, 
-    # ensuring fast failures if something is genuinely broken.
+    # Leave the default at 5 seconds for the suite, ensuring fast failures if something is genuinely broken.
     Capybara.default_max_wait_time = 5 
   end
 end

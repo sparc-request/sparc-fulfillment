@@ -37,7 +37,7 @@ module System
       expect(page).to have_button('addService', disabled: false)
       click_button 'addService'
         
-      # Native Capybara polling — no rescue/retry block!
+      # Native Capybara polling — no rescue/retry block
       expect(page).to have_css("tr", text: service.name, minimum: previous_count + 1)
     end
 
@@ -59,7 +59,7 @@ module System
       start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first)
       start_btn.click
       
-      # SYNC POINT
+      # Sync point
       expect(page).to have_no_css('a.btn.start-appointment')
       expect(page).to have_css('button.complete-appointment', visible: :all)
     end
