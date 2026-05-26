@@ -21,6 +21,10 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity adds Procedure', type: :system, js: true do
+  let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:service) { protocol.organization.inclusive_child_services(:per_participant).first }
+
   scenario 'and sees it in the appointment calendar' do
     given_i_am_viewing_a_participants_calendar
     when_i_add_a_procedure
@@ -34,41 +38,32 @@ RSpec.describe 'Identity adds Procedure', type: :system, js: true do
   end
 
   def given_i_am_viewing_a_participants_calendar
-    @protocol = create_and_assign_protocol_to_me(identity: @logged_in_identity)
-    @protocols_participant = @protocol.protocols_participants.first
-
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol.id)
 
     expect(page).to have_css('a.list-group-item.appointment-link')
   end
 
   def when_i_add_a_procedure
-    @service = @protocol.organization.inclusive_child_services(:per_participant).first
-
-    # Grab the exact text of the default appointment from the left sidebar and wait for the link to appear (just to be safe during cold boots).
     appointment_link = first('a.list-group-item.appointment-link')
     appointment_name = appointment_link.text
 
-    # Since the first appointment loads by default, just wait for the AJAX payload to finish rendering the right-hand container's header. 
     within('#appointmentContainer') do
       expect(page).to have_css('h3', text: "Visit: #{appointment_name}")
     end
 
-    # Now the DOM is 100% stable. Execute the dropdown helper.
-    bootstrap_select('.form-control.selectpicker', @service.name)
+    bootstrap_select('.form-control.selectpicker', service.name)
     
-    # Click the add button natively
-    click_button 'addService'
+    click_button 'Add Service'
   end
 
   def then_i_should_see_the_procedure_in_the_appointment_calendar
     within('#appointmentContainer') do
-      expect(page).to have_css('tr', text: @service.name)
+      expect(page).to have_css('tr', text: service.name)
     end
   end
 
   def then_i_should_see_that_the_performed_by_selector_does_not_have_a_selection
-    within('#appointmentContainer tr', text: @service.name) do
+    within('#appointmentContainer tr', text: service.name) do
       expect(page).to have_css('.filter-option-inner-inner', text: 'Nothing selected')
     end
   end
