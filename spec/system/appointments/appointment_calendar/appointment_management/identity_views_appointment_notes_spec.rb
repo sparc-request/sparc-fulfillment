@@ -20,55 +20,71 @@
 
 require 'rails_helper'
 
-feature 'User creates an appointment note', js: true do
+RSpec.describe 'User creates an appointment note', type: :system, js: true do
+  let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:visit_group) { protocols_participant.appointments.first.visit_group }
 
   context 'and views the Notes List before create' do
-    scenario 'and sees a notification that there are no notes' do
+    # Updated the scenario description to match what it is ACTUALLY testing
+    scenario 'and sees the automatically generated audit notes' do
       given_i_am_viewing_an_appointment
       when_i_view_the_notes_list
       then_i_should_see_current_notes
     end
   end
 
-  scenario 'and sees a note' do
+  scenario 'and sees a newly created note' do
     given_i_am_viewing_an_appointment
     when_i_create_a_note
     then_i_should_see_the_created_note
   end
 
   def given_i_am_viewing_an_appointment
-    protocol      = create_and_assign_protocol_to_me
-    @protocols_participant  = protocol.protocols_participants.first
-    @visit_group  = @protocols_participant.appointments.first.visit_group
-    @identity     = create(:identity)
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol.id)
 
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
-    wait_for_ajax
+    # Use match: :first to dodge duplicate sidebar elements safely
+    find('a.list-group-item.appointment-link', text: visit_group.name, match: :first).click
 
-    find('div.list-group-flush a:nth-child(1)').click
-    wait_for_ajax
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
+    end
   end
 
   def when_i_view_the_notes_list
-    find("div#participant#{@protocols_participant.id}Notes a.btn").click
-    wait_for_ajax
+    # Targeting the specific notes area based on the old ID, but keeping it flexible.
+    within("div#participant#{protocols_participant.id}Notes") do
+      find('a.btn').click
+    end
+    
+    expect(page).to have_css('.note-body')
   end
 
   def when_i_create_a_note
     when_i_view_the_notes_list
-    wait_for_ajax
+    
+    # 1. Wait for the textarea
+    expect(page).to have_field('note_comment')
     fill_in 'note_comment', with: "I'm a note. Fear me."
-    sleep 1
-    find('input.btn[type="submit"]').click
-    wait_for_ajax
+    
+    # 2. Trigger the blur event to ensure the JS debouncer registers the text
+    find('textarea#note_comment').send_keys(:tab)
+    
+    # 3. Targeted Click: Use the specific input class to ensure the right element is hit, use 'find' with 'match: :first' to handle the fact that Capybara sees the disabled-with version
+    find('input[type="submit"][value="Leave Note"]', match: :first).click
+    
+    # 4. Synchronize: Wait for the note to actually appear in the list
+    expect(page).to have_css('div.note-body p', text: "I'm a note. Fear me.", wait: 10)
   end
 
   def then_i_should_see_current_notes
-    expect(page).to have_css('div.note-body p', text: 'Status changed from N/A')
-    expect(page).to have_css('div.note-body p', text: 'Current Arm changed from N/A')
+    # Capybara will natively poll until these elements appear or timeout
+    expect(page).to have_css('div.note-body p', text: /Status changed from N\/A/i)
+    expect(page).to have_css('div.note-body p', text: /Current Arm changed from N\/A/i)
   end
 
   def then_i_should_see_the_created_note
-    expect(page).to have_css('div.note-body p', text: 'I\'m a note. Fear me.')
+    # Validate exact input rendered to the DOM natively
+    expect(page).to have_css('div.note-body p', text: "I'm a note. Fear me.")
   end
 end

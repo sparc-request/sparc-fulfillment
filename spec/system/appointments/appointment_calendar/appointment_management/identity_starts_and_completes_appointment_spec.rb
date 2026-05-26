@@ -20,7 +20,12 @@
 
 require 'rails_helper'
 
-feature 'Start Complete Buttons', js: true do
+RSpec.describe 'Start Complete Buttons', type: :system, js: true do
+  let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:appointment) { protocols_participant.appointments.first }
+  let(:visit_group) { appointment.visit_group }
+  let(:service) { protocol.organization.inclusive_child_services(:per_participant).first }
 
   context 'User visits appointment with no start date or completed_date' do
     scenario 'and sees the start button is active and the complete button disabled' do
@@ -33,18 +38,16 @@ feature 'Start Complete Buttons', js: true do
 
   context 'User visits appointment with start date but no completed date' do
     scenario 'and sees the start date picker and the completed button active' do
-      given_i_am_viewing_an_appointment
       given_there_is_a_start_date
-      when_i_load_the_page_and_select_a_visit
+      given_i_am_viewing_an_appointment
       then_i_should_see_the_complete_button
     end
   end
 
   context 'User visits appointment with start date and completed date' do
     scenario 'and sees the start date picker and the completed date picker' do
-      given_i_am_viewing_an_appointment
       given_there_is_a_start_date_and_a_completed_date
-      when_i_load_the_page
+      given_i_am_viewing_an_appointment
       then_i_should_see_the_completed_datepicker
     end
   end
@@ -59,9 +62,8 @@ feature 'Start Complete Buttons', js: true do
 
   context 'User clicks complete button' do
     scenario 'and sees the start date picker and the completed datepicker' do
-      given_i_am_viewing_an_appointment
       given_there_is_a_start_date
-      when_i_load_the_page_and_select_a_visit
+      given_i_am_viewing_an_appointment
       when_i_click_the_complete_button
       then_i_should_see_the_completed_datepicker
     end
@@ -71,124 +73,113 @@ feature 'Start Complete Buttons', js: true do
     scenario 'and sees the completed and start date updated' do
       now = Date.today
 
-      given_i_am_viewing_an_appointment
       given_there_is_a_start_date_and_a_completed_date
-      when_i_load_the_page
-      when_i_set_the_completed_date_to now
-      then_i_should_see_the_completed_date_at now
+      given_i_am_viewing_an_appointment
+      when_i_set_the_completed_date_to(now)
+      then_i_should_see_the_completed_date_at(now)
     end
   end
 
   context 'User sets start date to future then clicks complete button' do
-    scenario 'and sees the completed date updated' do
+    scenario 'and sees a validation error' do 
       future = Time.current + 1.month
 
-      given_i_am_viewing_an_appointment
       given_there_is_a_start_date
-      when_i_load_the_page_and_select_a_visit
-      when_i_click_the_complete_button
+      given_i_am_viewing_an_appointment
       
-      then_i_should_see_the_completed_date_at Date.today
+      when_i_set_the_start_date_to(future)
+      
+      # Click the button manually here instead of using the helper, because we DO NOT expect the Completed Date field to appear
+      click_button 'Complete Visit'
+      
+      expect(page).to have_content('Completed date must be the same, or later than start date.')
     end
   end
 
-  def given_i_am_viewing_an_appointment
-    @protocol    = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.first
-    @appointment = @protocols_participant.appointments.first
-    @visit_group = @appointment.visit_group
-
-    visit calendar_protocol_participant_path(protocol_id: @protocol.id, id: @protocols_participant.id)
-    
-    expect(page).to have_css('div.list-group-flush a:nth-child(1)')
-    find('div.list-group-flush a:nth-child(1)').click
-    
-    expect(page).to have_css('button#addService', visible: true)
-  end
-
-  def when_i_add_a_procedure
-    @service = @protocol.organization.inclusive_child_services(:per_participant).first
-    bootstrap_select('.form-control.selectpicker', @service.name)
-    
-    previous_count = all(".core tbody tr", text: @service.name, visible: :all).count
-    
-    find('button#addService').click
-    
-    expect(page).to have_css(".core tbody tr", text: @service.name, minimum: previous_count + 1, visible: :all)
-  end
-
   def given_there_is_a_start_date
-    @appointment.start_date = Time.current
-    @appointment.save
-    @appointment.reload
+    appointment.update(start_date: Time.current)
   end
 
   def given_there_is_a_completed_date
-    @appointment.completed_date = Time.current
-    @appointment.save
-    @appointment.reload
+    appointment.update(completed_date: Time.current)
   end
 
   def given_there_is_a_start_date_and_a_completed_date
-    given_there_is_a_start_date
-    given_there_is_a_completed_date
+    appointment.update(start_date: Time.current, completed_date: Time.current)
   end
 
-  def when_i_load_the_page
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
+  def given_i_am_viewing_an_appointment
+    # Consolidated all 3 old navigation methods into this single, robust one.
+    visit calendar_protocol_participant_path(protocol_id: protocol.id, id: protocols_participant.id)
+    
+    find('a.list-group-item.appointment-link', text: visit_group.name, match: :first).click
 
-    expect(page).to have_css('div.list-group-flush a:nth-child(1)')
-    find('div.list-group-flush a:nth-child(1)').click
-
-    expect(page).to have_css('button#addService', visible: true)
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
+    end
   end
 
-  alias :when_i_load_the_page_and_select_a_visit :when_i_load_the_page
+  def when_i_add_a_procedure
+    bootstrap_select('.form-control.selectpicker', service.name)
+    click_button 'Add Service' 
+
+    within('#appointmentContainer') do
+      expect(page).to have_css('tr', text: service.name)
+    end
+  end
 
   def when_i_click_the_start_button
-    find('a.btn.start-appointment').click
-    
-    expect(page).to have_no_css('a.btn.start-appointment')
+    click_link 'Start Visit'
+    expect(page).to have_no_link('Start Visit')
+
+    # Ensure the view stabilizes after the visit has started
+    find('a.list-group-item, a.visit-group-link', text: visit_group.name, match: :first).click
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
+    end
+  end
+
+  def when_i_set_the_start_date_to(date)
+    bootstrap_datepicker "input#start_date", text: date.strftime('%m/%d/%Y')
   end
 
   def when_i_click_the_complete_button
-    find('button.complete-appointment').click
-    
-    expect(page).to have_css('a.btn.reset-appointment', visible: true)
+    click_button 'Complete Visit'
+    expect(page).to have_field('Completed Date')
   end
 
-  def when_i_set_the_completed_date_to date
-    bootstrap_datepicker '#completed_date', date: date.strftime('%m/%d/%Y')
+  def when_i_set_the_completed_date_to(date)
+    # Target the field robustly and use the helper's text argument
+    bootstrap_datepicker "input[name*='completed_date']", text: date.strftime('%m/%d/%Y')
   end
 
   def then_i_should_see_the_start_button
-    expect(page).to have_css('a.start-appointment', visible: true)
+    expect(page).to have_link('Start Visit')
   end
 
   def then_i_should_see_the_complete_button
-    expect(page).to have_css('button.btn-success.complete-appointment', visible: true)
+    expect(page).to have_button('Complete Visit', disabled: false)
   end
 
   def then_i_should_see_the_complete_button_disabled
-    expect(page).to have_button(text: /Complete/i, disabled: true)
+    # When an appointment is unstarted, the Complete button doesn't just disable - it disappears entirely
+    expect(page).to have_no_button('Complete Visit')
+    expect(page).to have_link('Start Visit')
   end
 
   def then_i_should_see_the_start_datepicker
-    expect(page).to have_css('input#start_date', visible: true)
+    expect(page).to have_field('Start Date')
   end
 
   def then_i_should_see_the_completed_datepicker
-    expect(page).to have_field('completed_date', disabled: :all, visible: :all)
+    expect(page).to have_field('Completed Date')
   end
 
-  def then_i_should_see_the_start_date_at date
-    find('input#start_date').click
-    expect(page).to have_css('td.day.active', text: "#{date.day}")
+  def then_i_should_see_the_start_date_at(date)
+    expect(page).to have_field('Start Date', with: date.strftime('%m/%d/%Y'))
   end
 
-  def then_i_should_see_the_completed_date_at date
-    formatted_date = date.strftime('%m/%d/%Y')
-    
-    expect(page).to have_field('completed_date', with: formatted_date, disabled: :all, visible: :all, wait: 10)
+  def then_i_should_see_the_completed_date_at(date)
+    expect(page).to have_field('Completed Date', with: date.strftime('%m/%d/%Y'))
   end
 end

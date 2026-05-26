@@ -20,7 +20,10 @@
 
 require 'rails_helper'
 
-feature 'User tries to reset appointment', js: true do
+RSpec.describe 'User tries to reset appointment', type: :system, js: true do
+  let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:visit_group) { protocol.arms.first.visit_groups.first }
 
   scenario 'and sees the appointment reset' do
     given_i_am_viewing_a_participants_calendar_with_procedures
@@ -32,64 +35,55 @@ feature 'User tries to reset appointment', js: true do
   end
 
   def given_i_am_viewing_a_participants_calendar_with_procedures
-    @protocol     = create_and_assign_protocol_to_me
-    protocols_participant  = @protocol.protocols_participants.first
-    arm           = @protocol.arms.first
-    @participant  = Participant.first
-    @visit_group  = arm.visit_groups.first
-    @appointment  = @visit_group.appointments.where(id: protocols_participant.id).first
-    line_item_1   = arm.line_items[0]
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: @protocol)
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol.id)
     
-    expect(page).to have_css('a.list-group-item.appointment-link')
-    first('a.list-group-item.appointment-link').click
+    # Use match: :first to dodge duplicate sidebar elements
+    find('a.list-group-item.appointment-link', text: visit_group.name, match: :first).click
     
-    expect(page).to have_css('button#addService', visible: true)
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
+    end
   end
 
   def when_i_start_the_appointment
-    find('a.btn.start-appointment').click
-    
-    expect(page).to have_no_css('a.btn.start-appointment')
-    
-    if page.has_link?(@visit_group&.name)
-      first('a', text: @visit_group.name).click 
-    end
+    click_link 'Start Visit'
+    expect(page).to have_no_link('Start Visit')
 
-    expect(page).to have_css('button.complete-appointment')
+    find('a.list-group-item, a.visit-group-link', text: visit_group.name, match: :first).click
+    
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
+    end
   end
 
   def when_i_resolve_all_procedures
-    sleep 0.2 
-    
-    buttons = page.all('label.btn.complete.status', visible: :all)
-    
-    buttons.each_with_index do |btn, index|
-      btn.click
+    within('#appointmentContainer') do
+      button_count = all('.complete-btn, label.complete.status').count
       
-      expect(page).to have_css("label.btn.complete.status.active", count: index + 1, wait: 3)
+      button_count.times do |index|
+        all('.complete-btn, label.complete.status')[index].click
+      end
     end
-
-    expect(page).to_not have_css("button.complete-appointment.disabled")
   end
 
   def when_i_complete_the_visit
-    find("button.complete-appointment").click
+    expect(page).to have_button('Complete Visit', disabled: false) 
+    click_button 'Complete Visit'
     
-    expect(page).to have_css("a.btn.reset-appointment", visible: true)
+    expect(page).to have_field('Completed Date')
   end
 
   def when_i_click_the_reset_button
-    find("a.btn.reset-appointment").click
+    click_link 'Reset Visit' 
 
-    expect(page).to have_css('button.swal2-confirm')
-    find('button.swal2-confirm').click
+    within('.swal2-container') do
+      find('button.swal2-confirm').click
+    end
     
     expect(page).to have_no_css('.swal2-container')
   end
 
   def then_i_should_see_a_reset_appointment
-    expect(page).to have_css('a.start-appointment', visible: true)
+    expect(page).to have_link('Start Visit')
   end
 end

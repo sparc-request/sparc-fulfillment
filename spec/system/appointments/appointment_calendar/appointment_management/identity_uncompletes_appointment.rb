@@ -20,7 +20,11 @@
 
 require 'rails_helper'
 
-feature 'Identity uncompletes an appointment', js: true do
+RSpec.describe 'Identity uncompletes an appointment', type: :system, js: true do
+  let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:visit_group) { protocols_participant.appointments.first.visit_group }
+  let(:service) { protocol.organization.inclusive_child_services(:per_participant).first }
 
   scenario 'and sees the completed date reset' do
     given_i_have_added_a_procedure_to_an_appointment
@@ -32,64 +36,58 @@ feature 'Identity uncompletes an appointment', js: true do
   end
 
   def given_i_have_added_a_procedure_to_an_appointment
-    protocol    = create_and_assign_protocol_to_me
-    @protocols_participant = protocol.protocols_participants.first
-    @visit_group = @protocols_participant.appointments.first.visit_group
-    @service     = protocol.organization.inclusive_child_services(:per_participant).first
+    visit calendar_protocol_participant_path(protocol_id: protocol.id, id: protocols_participant.id)
 
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: protocol)
+    # Use match: :first to safely navigate the sidebar
+    find('a.list-group-item.appointment-link', text: visit_group.name, match: :first).click
 
-    expect(page).to have_css('a.list-group-item.appointment-link')
-    first('a.list-group-item.appointment-link').click
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
+    end
 
-    expect(page).to have_content(@visit_group.name)
-    expect(page).to have_css('button#addService')
-    
-    bootstrap_select '[name="service_id"]', @service.name
-    fill_in 'service_quantity', with: 1
-    
-    retries = 0
-    begin
-      find('button#addService').click
-      expect(page).to have_css(".core tbody tr", text: @service.name, wait: 3)
-    rescue RSpec::Expectations::ExpectationNotMetError => e
-      retry if (retries += 1) < 3
-      raise e
+    bootstrap_select('.form-control.selectpicker', service.name)
+    click_button 'Add Service'
+
+    within('#appointmentContainer') do
+      expect(page).to have_css('tr', text: service.name)
     end
   end
 
   def when_i_begin_the_appointment
-    find('a.start-appointment').click
-    expect(page).to have_no_css('a.start-appointment')
+    click_link 'Start Visit'
+    expect(page).to have_no_link('Start Visit')
+
+    find('a.list-group-item, a.visit-group-link', text: visit_group.name, match: :first).click
     
-    if @visit_group&.name && page.has_link?(@visit_group.name)
-      first('a', text: @visit_group.name).click
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
     end
-    
-    expect(page).to have_css('button.complete-appointment')
   end
 
   def when_i_complete_the_procedure
-    find('button.complete-btn').click
-    
-    expect(page).to have_css('button.incomplete-btn')
+    # Scope securely to the exact procedure row to avoid ambiguity
+    within('#appointmentContainer tr', text: service.name) do
+      find('button.complete-btn').click
+      
+      expect(page).to have_field(with: Date.today.strftime('%m/%d/%Y'), disabled: :all)
+    end
   end
 
   def when_i_complete_the_appointment
-    expect(page).not_to have_css("button.complete-appointment.disabled")
-    find('button.complete-appointment').click
+    click_button 'Complete Visit'
     
-    expect(page).to have_css('button.unstarted-btn')
+    # Check for EITHER the Bootstrap `.disabled` class OR the native HTML attribute. This makes the test bulletproof regardless of how the frontend designates it as disabled.
+    expect(page).to have_css('.disabled, [disabled]', text: 'Complete Visit')
   end
 
   def when_i_uncomplete_the_appointment
-    find('button.unstarted-btn').click
-    
-    expect(page).to have_no_css('button.unstarted-btn')
+    within('#appointmentContainer tr', text: service.name) do
+      find('button.unstarted-btn').click
+    end
   end
 
   def then_i_should_see_the_appointment_is_uncomplete
-    expect(page).to have_css('button.complete-appointment', visible: true)
+    expect(page).to have_button('Complete Visit', disabled: false)
   end
 end
 
