@@ -23,6 +23,7 @@ require 'rails_helper'
 RSpec.describe 'Identity adds Procedure', type: :system, js: true do
   let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
   let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:visit_group) { protocols_participant.appointments.first.visit_group }
   let(:service) { protocol.organization.inclusive_child_services(:per_participant).first }
 
   scenario 'and sees it in the appointment calendar' do
@@ -44,11 +45,8 @@ RSpec.describe 'Identity adds Procedure', type: :system, js: true do
   end
 
   def when_i_add_a_procedure
-    appointment_link = first('a.list-group-item.appointment-link')
-    appointment_name = appointment_link.text
-
     within('#appointmentContainer') do
-      expect(page).to have_css('h3', text: "Visit: #{appointment_name}")
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
     end
 
     bootstrap_select('.form-control.selectpicker', service.name)

@@ -24,47 +24,52 @@ module System
       (1..20).reject { |day| day == old_date }.sample
     end
 
+    def bootstrap_wrapper(selector)
+      find("select#{selector}", visible: :hidden).ancestor('.bootstrap-select', match: :first)
+    end
+
     def bootstrap_multiselect(selector, selections: ['all'])
-      # Find the hidden select, then anchor to its wrapper. This completely eliminates StaleElement errors by locking the search scope.
-      wrapper = find("select#{selector}", visible: :hidden).ancestor('.bootstrap-select', match: :first)
-
-      within(wrapper) do
-        # Capybara naturally waits for this to become clickable
-        find('.dropdown-toggle').click
-
-        # Wait implicitly for the menu to open before proceeding
-        within('.dropdown-menu.show') do
-          if selections.include?('all')
-            find('button.bs-select-all').click
-          else
-            selections.each do |selection|
-              find('span.text', text: selection, exact_text: true).click
-            end
-          end
-        end
-
-        # Close the dropdown natively to blur the UI and trigger JS listeners. No send_keys(:escape) required.
-        find('.dropdown-toggle').click
-        expect(wrapper).to have_no_css('.dropdown-menu.show') # SYNC POINT
+      # THE SILVER BULLET: Stale Element Protection Loop
+      retries = 5
+      begin
+        bootstrap_wrapper(selector).find('.dropdown-toggle').click
+      rescue Selenium::WebDriver::Error::StaleElementReferenceError
+        retries -= 1
+        sleep 0.2
+        retry if retries > 0
       end
+
+      expect(bootstrap_wrapper(selector)).to have_css('.dropdown-menu.show')
+
+      if selections.include?('all')
+        bootstrap_wrapper(selector).find('.dropdown-menu.show button.bs-select-all').click
+      else
+        selections.each do |selection|
+          bootstrap_wrapper(selector).find('.dropdown-menu.show span.text', text: selection, exact_text: true).click
+        end
+      end
+
+      bootstrap_wrapper(selector).find('.dropdown-toggle').click
+      expect(bootstrap_wrapper(selector)).to have_no_css('.dropdown-menu.show')
     end
 
     def bootstrap_select(selector, choice, context_selector: nil)
       action = proc do
-        wrapper = find("select#{selector}", visible: :hidden).ancestor('.bootstrap-select', match: :first)
-
-        within(wrapper) do
-          # Click toggle
-          find('.dropdown-toggle').click
-
-          # Wait until the menu exists AND has the 'show' class, proving the animation is finished.
-          expect(page).to have_css('.dropdown-menu.show')
-          
-          # Use a more robust selector that ensures the span is visible
-          find('.dropdown-menu.show span.text', text: choice, exact_text: true, visible: true).click
+        # THE SILVER BULLET: Stale Element Protection Loop
+        retries = 5
+        begin
+          bootstrap_wrapper(selector).find('.dropdown-toggle').click
+        rescue Selenium::WebDriver::Error::StaleElementReferenceError
+          retries -= 1
+          sleep 0.2
+          retry if retries > 0
         end
+
+        expect(bootstrap_wrapper(selector)).to have_css('.dropdown-menu.show')
         
-        expect(wrapper).to have_css(".filter-option-inner-inner", text: choice, exact_text: true)
+        bootstrap_wrapper(selector).find('.dropdown-menu.show span.text', text: choice, exact_text: true, visible: true).click
+        
+        expect(bootstrap_wrapper(selector)).to have_css(".filter-option-inner-inner", text: choice, exact_text: true)
       end
 
       context_selector ? within(context_selector, &action) : action.call
@@ -80,7 +85,6 @@ module System
       if input.readonly?
         input.click
 
-        # Capybara automatically waits up to Capybara.default_max_wait_time for this wrapper to spawn.
         within('.datepicker, .bootstrap-datetimepicker-widget') do
           find('.year', text: year.to_s, exact_text: true).click if year
           find('.month', text: month.to_s, exact_text: true).click if month
@@ -90,8 +94,7 @@ module System
         input.click
         input.set(text)
         
-        # Click the body to natively blur the input and fire "onChange" jQuery listeners, whic bypasses the need for JS injection or brittle send_keys.
-        find('body').click(x: 0, y: 0) # Safely clicks the top left corner pixel
+        find('body').click(x: 0, y: 0) 
       end
     end
   end

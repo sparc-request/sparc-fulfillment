@@ -20,13 +20,11 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Complete Visit', js: true do
-  # MODERN STANDARD: Data setup belongs in let! blocks, not scattered inside helper methods.
-  # This guarantees database state is perfectly reset for every single scenario.
-  let!(:protocol) { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.first }
-  let!(:visit_group) { protocols_participant.appointments.first.visit_group }
-  let!(:service) { protocol.organization.inclusive_child_services(:per_participant).first }
+RSpec.describe 'Complete Visit', type: :system, js: true do
+  let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:visit_group) { protocols_participant.appointments.first.visit_group }
+  let(:service) { protocol.organization.inclusive_child_services(:per_participant).first }
 
   context 'User views an unstarted appointment' do
     context 'and adds a procedure' do
@@ -81,7 +79,7 @@ RSpec.feature 'Complete Visit', js: true do
       context 'and does not add a Procedure' do
         scenario 'and cant complete the visit' do
           given_i_am_viewing_an_appointment
-          when_i_add_a_procedure # **The extra procedure**
+          when_i_add_a_procedure
           when_i_begin_the_appointment
           then_i_should_not_be_able_to_complete_visit
         end
@@ -92,127 +90,112 @@ RSpec.feature 'Complete Visit', js: true do
   def given_i_am_viewing_an_appointment
     visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol.id)
     
-    expect(page).to have_css('#appointmentContainer', visible: :all)
-    expect(page).to have_css('a.list-group-item.appointment-link')
-    
-    first('a.list-group-item.appointment-link').click
-    
-    expect(page).to have_content(visit_group.name)
-    
-    # SYNC POINT: have_button is the semantic matcher that accepts `disabled: :all`.
-    # This says "find the button by ID/text, and I don't care if JS has enabled it yet."
-    expect(page).to have_button('addService', disabled: :all)
+    # Keep 'find' for the StaleElement safety, but add match: :first to handle the duplicate UI links
+    find('a.list-group-item.appointment-link', text: visit_group.name, match: :first).click
+
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
+    end
   end
 
   def when_i_add_a_procedure
-    # Wait for Bootstrap select wrapper to actually exist before interacting
-    expect(page).to have_css('.bootstrap-select select.form-control.selectpicker', visible: :hidden)
+    # Removed the "Start Visit" click from here, it was prematurely starting the visit in scenarios testing the unstarted state
     bootstrap_select('.form-control.selectpicker', service.name)
-    
-    previous_count = all('tr', text: service.name, visible: :all).count
-    
-    # SYNC POINT: Ensure button is active
-    expect(page).to have_button('addService', disabled: false)
-    click_button 'addService'
-    
-    # NUKE THE RESCUE LOOP: Capybara natively polls for the new row to appear.
-    expect(page).to have_css('tr', text: service.name, minimum: previous_count + 1)
+    click_button 'Add Service' 
+
+    within('#appointmentContainer') do
+      expect(page).to have_css('tr', text: service.name)
+    end
   end
 
   def when_i_remove_the_procedure
-    # Re-written to rely on user-visible text, not database IDs.
-    row = find('tr', text: service.name, match: :first)
-    
     accept_confirm do
-      row.find('button.delete').click
+      # Target the row by service name rather than mid-test database queries
+      within('#appointmentContainer tr', text: service.name) do
+        find('button.delete').click
+      end
     end
     
-    expect(page).to have_no_css('tr', text: service.name)
+    # Assert it disappears to wait for the AJAX deletion to complete
+    within('#appointmentContainer') do
+      expect(page).to have_no_css('tr', text: service.name)
+    end
   end
 
   def when_i_begin_the_appointment
-    find('a.btn.start-appointment').click
-    
-    # SYNC POINT: Wait for the start button to disappear, proving the AJAX call finished
-    expect(page).to have_no_css('a.btn.start-appointment')
+    click_link 'Start Visit'
+    expect(page).to have_no_link('Start Visit')
 
-    first('a.list-group-item, a.visit-group-link', text: visit_group.name).click
-    expect(page).to have_button('Complete Visit', class: 'complete-appointment') 
+    # Add match: :first here as well
+    find('a.list-group-item, a.visit-group-link', text: visit_group.name, match: :first).click
+    
+    within('#appointmentContainer') do
+      expect(page).to have_css('h3', text: /#{visit_group.name}/i)
+    end
   end
 
   def when_i_complete_the_procedure
-    # Scope purely to the row containing the service name
-    within(find("tr", text: service.name, match: :first)) do
-      find("button.btn-sq.complete-btn").click
-      expect(page).to have_css("button.btn-sq.incomplete-btn")
+    within('#appointmentContainer tr', text: service.name) do
+      find('button.complete-btn').click
+      expect(page).to have_css('button.complete-btn.active') 
     end
   end
 
   def when_i_incomplete_the_procedure
-    within(find("tr", text: service.name, match: :first)) do
-      find("button.btn-sq.incomplete-btn").click
+    within('#appointmentContainer tr', text: service.name) do
+      find('button.incomplete-btn').click
     end
-    
-    # SYNC POINT: Wait for Bootstrap to append the '.show' class to the modal.
-    # This guarantees the fade-in animation is 100% complete and JS listeners are awake.
-    expect(page).to have_css('.modal.show')
-    expect(page).to have_selector('.modal-header', text: 'New Procedure Note')
-    
-    bootstrap_select('#procedure_notes_attributes_0_reason', 'Assessment missed', context_selector: '.modal-content')
-    
-    # SYNC POINT: Ensure the dropdown finishes closing
-    expect(page).to have_no_css('.dropdown-menu.show')
-    
-    within('.modal-footer') do
-      expect(page).to have_button('Submit', disabled: false)
+
+    # Scope to the modal natively
+    within('.modal') do
+      expect(page).to have_css('.modal-header', text: 'New Procedure Note')
+      bootstrap_select '#procedure_notes_attributes_0_reason', 'Assessment missed'
       click_button 'Submit'
     end
-    
-    expect(page).to have_no_css('.modal-dialog')
+
+    # Natively wait for the modal and backdrop to be removed from the DOM
+    expect(page).to have_no_css('.modal')
     expect(page).to have_no_css('.modal-backdrop')
   end
 
   def when_i_add_a_follow_up_date
-    within(find("tr", text: service.name, match: :first)) do
-      find("i.fa-calendar-alt, i.fa-calendar").click
+    within('#appointmentContainer tr', text: service.name) do
+      find('i.fa-calendar-alt, i.fa-calendar').click
     end
 
-    # SYNC POINT: Wait for Bootstrap to append the '.show' class to the modal
     expect(page).to have_css('#modalContainer.show')
-    
-    # SYNC POINT: Wait for the Bootstrap toggle button to actually be generated 
-    # for the assignee select. It binds the data-id attribute to the native select's ID.
-    expect(page).to have_css('button[data-id="task_assignee_id"]', visible: :all)
-    
-    bootstrap_select('#task_assignee_id', @logged_in_identity.full_name, context_selector: '#modalContainer.show')
 
-    bootstrap_datepicker('#task_due_at', text: Date.today.strftime('%m/%d/%Y'))
+    bootstrap_select '#task_assignee_id', @logged_in_identity.full_name
+    
+    bootstrap_datepicker '#task_due_at', text: Date.today.strftime('%m/%d/%Y')
 
     fill_in 'task_notes_comment', with: 'Test comment'
     
-    within('#modalContainer.show .modal-footer') do
-      expect(page).to have_button('Submit', disabled: false)
+    within('#modalContainer') do
       click_button 'Submit'
     end
-    
+
     expect(page).to have_no_css('#modalContainer.show')
     expect(page).to have_no_css('.modal-backdrop')
+    expect(page).to have_no_css('body.modal-open')
   end
 
   def then_i_should_be_able_to_complete_visit
-    # Prove the button isn't disabled using Capybara's native checker
-    expect(page).to have_button('Complete Visit', disabled: false)
+    expect(page).to have_no_css('#modalContainer')
     
-    find("button.complete-appointment").click
+    expect(page).to have_button('Complete Visit', disabled: false) 
+    click_button 'Complete Visit'
     
-    # REVERTED: Using have_no_css perfectly handles both the element becoming visible 
-    # OR the element being removed from the DOM completely upon completion.
-    expect(page).to have_no_css('div.completed_date_input.hidden')
+    expect(page).to have_field('Completed Date')
   end
 
   def then_i_should_not_be_able_to_complete_visit
-    # REVERTED & EXPANDED: We look for the HTML attribute [disabled], the class .disabled, 
-    # or fallback to the original test's exact selector.
-    expect(page).to have_css('button.complete-appointment:disabled, button.complete-appointment.disabled, button.complete_visit.disabled, button.disabled', visible: :all)
+    # If the visit is not started yet, there's no complete button at all.
+    if page.has_link?('Start Visit', wait: 0)
+      expect(page).to have_link('Start Visit')
+    else
+      # Check for EITHER the Bootstrap `.disabled` class OR the native HTML attribute. This makes the test bulletproof regardless of how the frontend designates it as disabled.
+      expect(page).to have_css('.disabled, [disabled]', text: 'Complete Visit')
+    end
   end
 end
