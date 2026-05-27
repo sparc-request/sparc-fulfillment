@@ -63,17 +63,13 @@ RSpec.describe 'User creates an appointment note', type: :system, js: true do
   def when_i_create_a_note
     when_i_view_the_notes_list
     
-    # 1. Wait for the textarea
     expect(page).to have_field('note_comment')
     fill_in 'note_comment', with: "I'm a note. Fear me."
     
-    # 2. Trigger the blur event to ensure the JS debouncer registers the text
-    find('textarea#note_comment').send_keys(:tab)
+    find('.modal-header').click
     
-    # 3. Targeted Click: Use the specific input class to ensure the right element is hit, use 'find' with 'match: :first' to handle the fact that Capybara sees the disabled-with version
     find('input[type="submit"][value="Leave Note"]', match: :first).click
     
-    # 4. Synchronize: Wait for the note to actually appear in the list
     expect(page).to have_css('div.note-body p', text: "I'm a note. Fear me.", wait: 10)
   end
 
