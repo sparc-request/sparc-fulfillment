@@ -25,20 +25,22 @@ module System
     end
 
     def bootstrap_wrapper(selector)
+      # Evaluates fresh every time. No node traps.
       find("select#{selector}", visible: :hidden).ancestor('.bootstrap-select', match: :first)
     end
 
     def bootstrap_multiselect(selector, selections: ['all'])
-      # THE SILVER BULLET: Stale Element Protection Loop
+      # Playbook IV: Rescue Loop for Complex Chains (No Sleeps!)
       retries = 5
       begin
         bootstrap_wrapper(selector).find('.dropdown-toggle').click
       rescue Selenium::WebDriver::Error::StaleElementReferenceError
         retries -= 1
-        sleep 0.2
         retry if retries > 0
+        raise "StaleElementReferenceError exhausted 5 retries targeting #{selector}"
       end
 
+      # Playbook V: Wait for Animations natively
       expect(bootstrap_wrapper(selector)).to have_css('.dropdown-menu.show')
 
       if selections.include?('all')
@@ -50,25 +52,28 @@ module System
       end
 
       bootstrap_wrapper(selector).find('.dropdown-toggle').click
+      
+      # Sync point: natively wait for the menu to completely close
       expect(bootstrap_wrapper(selector)).to have_no_css('.dropdown-menu.show')
     end
 
     def bootstrap_select(selector, choice, context_selector: nil)
       action = proc do
-        # THE SILVER BULLET: Stale Element Protection Loop
+        # Playbook IV: Rescue Loop (No Sleeps!)
         retries = 5
         begin
           bootstrap_wrapper(selector).find('.dropdown-toggle').click
         rescue Selenium::WebDriver::Error::StaleElementReferenceError
           retries -= 1
-          sleep 0.2
           retry if retries > 0
+          raise "StaleElementReferenceError exhausted 5 retries targeting #{selector}"
         end
 
         expect(bootstrap_wrapper(selector)).to have_css('.dropdown-menu.show')
         
         bootstrap_wrapper(selector).find('.dropdown-menu.show span.text', text: choice, exact_text: true, visible: true).click
         
+        # Polling validation: Ensure the choice actually registered in the UI
         expect(bootstrap_wrapper(selector)).to have_css(".filter-option-inner-inner", text: choice, exact_text: true)
       end
 
@@ -94,6 +99,7 @@ module System
         input.click
         input.set(text)
         
+        # Playbook IV: Native Blur Event
         find('body').click(x: 0, y: 0) 
       end
     end

@@ -21,10 +21,13 @@
 module System
   module BootstrapTableHelpers
     def search_bootstrap_table(query)
-      # Ensure the input exists, clear it, set it, and blur to trigger search
-      find('.search input').click
-      fill_in(class: 'search input', with: query)
-      find('body').click(x: 0, y: 0) # blur to trigger any change listeners
+      # Native finding and setting to avoid brittle class-based fill_in definitions
+      search_input = find('.search input')
+      search_input.click
+      search_input.set(query)
+      
+      # Playbook IV: Native Blur Event
+      find('body').click(x: 0, y: 0) 
       
       # NOTE: Do NOT use wait_for_ajax here. 
       # The test calling this method MUST immediately do:
@@ -32,11 +35,9 @@ module System
     end
 
     def refresh_bootstrap_table(table_selector)
-      # Real users refresh tables by clicking a refresh button. If the table has a native refresh button, click it natively:
       within(table_selector) do
         find('button[name="refresh"]').click
       end
-      # Again, the calling test must expect() the new row to appear.
     end
   end
 end

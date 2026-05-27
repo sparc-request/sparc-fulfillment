@@ -21,12 +21,14 @@
 require 'rails_helper'
 
 RSpec.describe 'User creates an appointment note', type: :system, js: true do
-  let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
-  let(:protocols_participant) { protocol.protocols_participants.first }
-  let(:visit_group) { protocols_participant.appointments.first.visit_group }
+  
+  # I. RSpec Foundation & State Management
+  # Upgraded to let! to explicitly lock state before the scenarios boot
+  let!(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:visit_group) { protocols_participant.appointments.first.visit_group }
 
   context 'and views the Notes List before create' do
-    # Updated the scenario description to match what it is ACTUALLY testing
     scenario 'and sees the automatically generated audit notes' do
       given_i_am_viewing_an_appointment
       when_i_view_the_notes_list
@@ -52,35 +54,47 @@ RSpec.describe 'User creates an appointment note', type: :system, js: true do
   end
 
   def when_i_view_the_notes_list
-    # Targeting the specific notes area based on the old ID, but keeping it flexible.
     within("div#participant#{protocols_participant.id}Notes") do
       find('a.btn').click
     end
     
-    expect(page).to have_css('.note-body')
+    # V. Wait for Animations
+    # Force Capybara to wait for Bootstrap to finish fading the modal in
+    expect(page).to have_css('.modal-dialog', visible: true)
+    expect(page).to have_css('.note-body', visible: true)
   end
 
   def when_i_create_a_note
     when_i_view_the_notes_list
     
-    expect(page).to have_field('note_comment')
-    fill_in 'note_comment', with: "I'm a note. Fear me."
+    # III. Strict Scoping
+    # Blind Capybara to the rest of the massive DOM so it can't click the wrong button
+    within('.modal-content') do
+      expect(page).to have_field('note_comment')
+      fill_in 'note_comment', with: "I'm a note. Fear me."
+      
+      # IV. Native Blur Event (Safely scoped to the modal)
+      find('.modal-header').click
+      
+      # II. User-Centric Selectors (replaces the hacky CSS attribute search)
+      click_button 'Leave Note'
+    end
     
-    find('.modal-header').click
-    
-    find('input[type="submit"][value="Leave Note"]', match: :first).click
-    
-    expect(page).to have_css('div.note-body p', text: "I'm a note. Fear me.", wait: 10)
+    expect(page).to have_css('div.note-body p', text: "I'm a note. Fear me.")
   end
 
   def then_i_should_see_current_notes
-    # Capybara will natively poll until these elements appear or timeout
-    expect(page).to have_css('div.note-body p', text: /Status changed from N\/A/i)
-    expect(page).to have_css('div.note-body p', text: /Current Arm changed from N\/A/i)
+    within('.modal-content') do
+      # Capybara will natively poll until these elements appear or timeout
+      expect(page).to have_css('div.note-body p', text: /Status changed from N\/A/i)
+      expect(page).to have_css('div.note-body p', text: /Current Arm changed from N\/A/i)
+    end
   end
 
   def then_i_should_see_the_created_note
-    # Validate exact input rendered to the DOM natively
-    expect(page).to have_css('div.note-body p', text: "I'm a note. Fear me.")
+    within('.modal-content') do
+      # Validate exact input rendered to the DOM natively
+      expect(page).to have_css('div.note-body p', text: "I'm a note. Fear me.")
+    end
   end
 end

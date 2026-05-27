@@ -20,25 +20,28 @@
 
 module System
   module VisitHelpers
-    def and_the_visit_has_one_grouped_procedure(service)
-      add_a_procedure(service, 2)
+    
+    # Enforce keyword arguments for explicit state requirements
+    def and_the_visit_has_one_grouped_procedure(service:)
+      add_a_procedure(service: service, count: 2)
     end
 
-    def add_a_procedure(service, count = 1)
-      # Wait for Bootstrap select wrapper
-      expect(page).to have_css('.bootstrap-select select.form-control.selectpicker', visible: :hidden)
-      
-      bootstrap_select('.form-control.selectpicker', service.name)
-      fill_in 'service_quantity', with: count
-      
-      previous_count = all("tr", text: service.name, visible: :all).count
-
-      # Ensure button is active, then click
-      expect(page).to have_button('addService', disabled: false)
-      click_button 'addService'
+    def add_a_procedure(service:, count: 1)
+      # Strict Scoping to prevent false positives across the massive DOM
+      within('#appointmentContainer') do
+        expect(page).to have_css('.bootstrap-select select.form-control.selectpicker', visible: :hidden)
         
-      # Native Capybara polling — no rescue/retry block
-      expect(page).to have_css("tr", text: service.name, minimum: previous_count + 1)
+        bootstrap_select('.form-control.selectpicker', service.name)
+        fill_in 'service_quantity', with: count
+        
+        previous_count = all("tr", text: service.name, visible: :all).count
+
+        expect(page).to have_button('addService', disabled: false)
+        click_button 'addService'
+          
+        # Native Capybara polling anticipating hidden group variants
+        expect(page).to have_css("tr", text: service.name, minimum: previous_count + 1, visible: :all)
+      end
     end
 
     def given_i_am_viewing_a_visit(participant:, protocol:)
@@ -55,11 +58,9 @@ module System
     def given_i_am_viewing_a_started_visit(participant:, protocol:)
       given_i_am_viewing_a_visit(participant: participant, protocol: protocol)
       
-      # Explicit scoping
       start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first)
       start_btn.click
       
-      # Sync point
       expect(page).to have_no_css('a.btn.start-appointment')
       expect(page).to have_css('button.complete-appointment', visible: :all)
     end
