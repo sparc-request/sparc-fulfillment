@@ -20,54 +20,31 @@
 
 require 'rails_helper'
 
-feature 'Identity adds Procedure', js: true do
+RSpec.describe 'Identity adds Procedure', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:appointment)           { protocols_participant.appointments.first }
+  let!(:services)              { protocol.organization.inclusive_child_services(:per_participant) }
+
+  let(:first_service) { services.first }
 
   context 'User adds two procedures' do
     scenario 'and sees them in the appointment calendar' do
-      given_i_am_viewing_a_participants_calendar
-      given_i_am_viewing_a_visit
+      # Completely eliminated the redundant local setup methods, upgraded global helper handles the visit and scoping perfectly.
+      given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+      
       when_i_add_two_procedures
       then_i_should_see_two_procedures_in_the_appointment_calendar
     end
   end
 
-  def given_i_am_viewing_a_participants_calendar
-    @protocol     = create_and_assign_protocol_to_me
-    @protocols_participant  = @protocol.protocols_participants.first
-
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    
-    expect(page).to have_css('a.list-group-item.appointment-link', visible: true)
-  end
-
   def when_i_add_two_procedures
-    visit_group = @protocols_participant.appointments.first.visit_group
-    service     = @protocol.organization.inclusive_child_services(:per_participant).first
-
-    first('a.list-group-item.appointment-link').click
-    
-    expect(page).to have_css('button#addService', visible: true)
-    expect(page).to have_css('.dropdown-toggle', visible: :all, wait: 10)
-
-    bootstrap_select('.form-control.selectpicker', service.name)
-    
-    fill_in 'service_quantity', with: '2'
-    find('#service_quantity').send_keys(:tab)
-    
-    retries = 0
-    begin
-      page.find('button#addService').click
-      
-      expect(page).to have_css("tr.info.groupBy.expanded", visible: :all, wait: 15)
-    rescue RSpec::Expectations::ExpectationNotMetError => e
-      retry if (retries += 1) < 2
-      raise e
-    end
+    # Replaced messy inline DOM targeting and wait_for_ajax calls with stabilized global helper.
+    add_a_procedure(service: first_service, count: 2)
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar
-    find("tr.info.groupBy.expanded").click
-
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 2, visible: :all, wait: 10)
+    # Added visible: :all to account for Bootstrap grouping hiding the individual rows.
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 2, visible: :all)
   end
 end

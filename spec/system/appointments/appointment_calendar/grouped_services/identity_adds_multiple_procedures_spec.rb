@@ -20,62 +20,72 @@
 
 require 'rails_helper'
 
-feature 'Identity adds multiple Procedures', js: true do
+RSpec.describe 'Identity adds multiple Procedures', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:appointment)           { protocols_participant.appointments.first }
+  let!(:services)              { protocol.organization.inclusive_child_services(:per_participant) }
 
-  before :each do
-    @protocol    = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.first
-    @appointment = @protocols_participant.appointments.first
-    @services    = @protocol.organization.inclusive_child_services(:per_participant)
-  end
+  let(:first_service)  { services.first }
+  let(:second_service) { services.last }
 
   scenario 'which are not part of an existing group' do
-    given_i_am_viewing_a_visit
-    and_the_visit_has_one_grouped_procedure
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+    and_the_visit_has_one_grouped_procedure(service: first_service)
     when_i_add_two_different_procedures
     then_i_should_see_two_grouped_procedures
   end
 
   scenario 'which are part of an existing Service group' do
-    given_i_am_viewing_a_visit
-    and_the_visit_has_one_grouped_procedure
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+    and_the_visit_has_one_grouped_procedure(service: first_service)
     when_i_add_two_similar_procedures
     then_i_should_see_one_group_with_four_procedures
   end
 
   scenario 'and sees the multiselect dropdown instantiated with Select All option and Service option' do
-    given_i_am_viewing_a_started_visit
+    given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
     when_i_add_5_procedures
     then_i_should_see_the_multiselect_instantiated_with_2_options
   end
 
   def when_i_add_two_similar_procedures
-    add_a_procedure @services.first, 2
+    add_a_procedure(service: first_service, count: 2)
   end
 
   def when_i_add_two_different_procedures
-    add_a_procedure @services.last, 2
+    add_a_procedure(service: second_service, count: 2)
   end
 
   def when_i_add_5_procedures
-    add_a_procedure @services.first, 5
-    @example_procedure = Procedure.last
+    add_a_procedure(service: first_service, count: 5)
+  end
+
+  # Safely sync with the UI before querying the DB to prevent sparc_core_id nil errors
+  def first_procedure_record
+    expect(page).to have_content(first_service.name)
+    Procedure.where(service_id: first_service.id).last
   end
 
   def then_i_should_see_the_multiselect_instantiated_with_2_options
-    find("button[data-id='core_#{@example_procedure.sparc_core_id}_multiselect']").click
+    # Sync Point: Wait for the DOM to natively group the elements first
+    expect(page).to have_css("tr.hidden", count: 5, visible: :all)
+
+    find("button[data-id='core_#{first_procedure_record.sparc_core_id}_multiselect']").click
     
-    expect(page).to have_css("button.bs-select-all", wait: 10)
-    expect(page).to have_content("#{@example_procedure.service_name}")
+    # Wait for animations natively
+    expect(page).to have_css('.dropdown-menu.show')
+
+    expect(page).to have_css("button.bs-select-all")
+    expect(page).to have_content(first_service.name)
   end
 
   def then_i_should_see_one_group_with_four_procedures
-    find("tr.info.groupBy.expanded").click
-
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 4, visible: :all, wait: 10)
+    # Capybara natively scans for the DOM elements regardless of toggle state.
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 4, visible: :all)
   end
 
   def then_i_should_see_two_grouped_procedures
-    expect(page).to have_css("tr.info.groupBy.expanded", count: 2, wait: 10)
+    expect(page).to have_css("tr.info.groupBy.expanded", count: 2)
   end
 end

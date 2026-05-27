@@ -20,16 +20,17 @@
 
 require 'rails_helper'
 
-feature 'Identity changes a Service', js: true do
+RSpec.describe 'Identity changes a Service', type: :system, js: true do
+  let!(:protocol)              { create(:protocol_imported_from_sparc) }
+  let!(:org)                   { protocol.sub_service_request.organization }
+  let!(:provider)              { create(:clinical_provider, identity: @logged_in_identity, organization: org) }
+  
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:appointment)           { protocols_participant.appointments.first }
+  let!(:services)              { protocol.organization.inclusive_child_services(:per_participant) }
 
-  before :each do
-    @protocol     = create(:protocol_imported_from_sparc)
-    org           = @protocol.sub_service_request.organization
-                    create(:clinical_provider, identity: Identity.first, organization: org)
-    @protocols_participant  = @protocol.protocols_participants.first
-    @appointment  = @protocols_participant.appointments.first
-    @services     = @protocol.organization.inclusive_child_services(:per_participant)
-  end
+  let(:first_service) { services.first }
+  let(:second_service) { services.last }
 
   scenario 'and sees it join an existing group' do
     given_i_am_viewing_a_visit_with_one_procedure_group
@@ -43,7 +44,7 @@ feature 'Identity changes a Service', js: true do
   scenario 'and sees it is not longer in its original group' do
     given_i_am_viewing_a_visit_with_one_procedure_group
     when_i_start_the_appointment
-    when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
+    when_i_change_a_grouped_procedure_to_not_match_the_group
     then_i_should_not_see_the_procedure_in_the_group
   end
 
@@ -64,163 +65,137 @@ feature 'Identity changes a Service', js: true do
   scenario 'and sees the Service counter of the original group has been decremented' do
     given_i_am_viewing_a_visit_with_one_procedure_group
     when_i_start_the_appointment
-    when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
+    when_i_change_a_grouped_procedure_to_not_match_the_group
     then_i_should_see_the_procedure_group_counter_is_two
+  end
+
+  def given_i_am_viewing_a_visit(participant:, protocol:)
+    visit calendar_protocol_participant_path(id: participant.id, protocol_id: protocol.id)
+    
+    expect(page).to have_css('#appointmentContainer', visible: :all)
+    expect(page).to have_css('a.list-group-item.appointment-link')
+    
+    retries = 3
+    begin
+      first('a.list-group-item.appointment-link').click
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      retries -= 1
+      retry if retries > 0
+    end
+    
+    expect(page).to have_button('addService', disabled: :all)
   end
 
   def given_i_am_viewing_a_visit_with_two_procedures_with_different_billing_types
     create(:procedure_insurance_billing_qty_with_notes,
-            appointment: @appointment,
-            service: @services.first,
-            sparc_core_name: @services.first.organization.name,
-            sparc_core_id: @services.first.organization_id)
+            appointment: appointment,
+            service: first_service,
+            sparc_core_name: first_service.organization.name,
+            sparc_core_id: first_service.organization_id)
 
     create(:procedure_research_billing_qty_with_notes,
-            appointment: @appointment,
-            service: @services.first,
-            sparc_core_name: @services.first.organization.name,
-            sparc_core_id: @services.first.organization_id)
+            appointment: appointment,
+            service: first_service,
+            sparc_core_name: first_service.organization.name,
+            sparc_core_id: first_service.organization_id)
 
-    given_i_am_viewing_a_visit
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
   end
 
   def given_i_am_viewing_a_visit_with_one_procedure_group
     create_list(:procedure_insurance_billing_qty_with_notes, 3,
-                appointment: @appointment,
-                service: @services.first,
-                sparc_core_name: @services.first.organization.name,
-                sparc_core_id: @services.first.organization_id)
+                appointment: appointment,
+                service: first_service,
+                sparc_core_name: first_service.organization.name,
+                sparc_core_id: first_service.organization_id)
 
-    given_i_am_viewing_a_visit
-  end
-
-  def when_i_add_a_procedure
-    add_a_procedure @services.first
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
   end
 
   def when_i_start_the_appointment
-    find('a.btn.start-appointment').click
-    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
-  end
-
-  def when_i_add_a_different_procedure
-    add_a_procedure @services.last
+    start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first)
+    start_btn.click
+    
+    expect(page).to have_no_css('a.btn.start-appointment')
+    expect(page).to have_css('button.complete-appointment', visible: :all)
   end
 
   def and_the_visit_has_one_ungrouped_procedure
-    add_a_procedure @services.first
-    @ungrouped_procedure = Procedure.last
+    add_a_procedure(service: first_service)
+  end
+
+  def ungrouped_procedure_record
+    expect(page).to have_css("tr", text: first_service.name, minimum: 4, visible: :all)
+    Procedure.order(:id).last
   end
 
   def when_i_change_one_procedure_billing_type_to_be_the_same_as_the_other
-    expect(page).to have_css('.dropdown-toggle', visible: :all, wait: 10)
-    
-    bootstrap_select '#procedure_billing_type', 'T'
-    
-    expect(page).to have_css('tr.groupBy', count: 1, wait: 15)
+    row = first("button[title='R']").ancestor('tr')
+    bootstrap_select('#procedure_billing_type', 'T', context_selector: row)
   end
 
   def when_i_move_all_procedures_out_of_the_group
-    expect(page).to have_css('tr.info.groupBy', wait: 10)
-    @original_group_id = page.first('tr td.name div', visible: :all)['data-group-id']
+    @original_group_id = first('tr td.name div', visible: :all)['data-group-id']
     
-    expect(page).to have_css("div[data-group-id='#{@original_group_id}']", count: 3, visible: :all, wait: 10)
+    3.times do |i|
+      # Click ANY closed groups to ensure rows are visible, and cleanly wait for the animation
+      # Also... there is inverse logic here within the application... the 'expanded' class is applied when the accordion is closed and vice versa
+      all('tr.groupBy.expanded').each { |closed_group| closed_group.click }
+      expect(page).to have_no_css('tr.groupBy.expanded')
 
-    target_row = first("div[data-group-id='#{@original_group_id}']", visible: :all).find(:xpath, './ancestor::tr[1]', visible: :all)
-    
-    parent_index = target_row['data-parent-index']
-    header_row = find("tr.info.groupBy[data-group-index='#{parent_index}']", visible: :all)
-    
-    header_row.click if header_row[:class].include?('expanded')
-    expect(page).to have_css("tr.info.groupBy[data-group-index='#{parent_index}'].collapsed", wait: 10)
-    
-    within(target_row) do
-      wrapper = find('td.billing-type div.bootstrap-select', visible: :all)
-      within(wrapper) do
-        find('.dropdown-toggle').click
-        find('ul.dropdown-menu li a span.text', text: 'R', match: :first).click
+      # Target by the visible 'T' title safely, dodging dynamic group IDs entirely
+      row = first("button[title='T']", visible: true).ancestor('tr')
+      bootstrap_select('#procedure_billing_type', 'R', context_selector: row)
+      
+      # Crucial Sync: natively wait for the total count of 'T' items to decrement
+      if i < 2
+        expect(page).to have_css("button[title='T']", count: 2 - i, visible: :all)
+      else
+        expect(page).to have_no_css("button[title='T']", visible: :all)
       end
     end
-
-    expect(page).to have_css("div[data-group-id='#{@original_group_id}']", count: 2, visible: :all, wait: 15)
-
-    target_row = first("div[data-group-id='#{@original_group_id}']", visible: :all).find(:xpath, './ancestor::tr[1]', visible: :all)
-    parent_index = target_row['data-parent-index']
-    
-    header_row = find("tr.info.groupBy[data-group-index='#{parent_index}']", visible: :all)
-    header_row.click if header_row[:class].include?('expanded')
-    expect(page).to have_css("tr.info.groupBy[data-group-index='#{parent_index}'].collapsed", wait: 10)
-    
-    retries = 0
-    begin
-      within(target_row) do
-        wrapper = find('td.billing-type div.bootstrap-select', visible: :all)
-        within(wrapper) do
-          find('.dropdown-toggle').click
-          find('ul.dropdown-menu li a span.text', text: 'R', match: :first).click
-        end
-      end
-      expect(page).to have_css("div[data-group-id='#{@original_group_id}']", count: 1, visible: :all, wait: 15)
-    rescue RSpec::Expectations::ExpectationNotMetError => e
-      retry if (retries += 1) < 2
-      raise e
-    end
-
-    target_row = first("div[data-group-id='#{@original_group_id}']", visible: :all).find(:xpath, './ancestor::tr[1]', visible: :all)
-    
-    within(target_row) do
-      wrapper = find('td.billing-type div.bootstrap-select', visible: :all)
-      within(wrapper) do
-        find('.dropdown-toggle').click
-        find('ul.dropdown-menu li a span.text', text: 'R', match: :first).click
-      end
-    end
-    
-    expect(page).to have_no_css("div[data-group-id='#{@original_group_id}']", wait: 15)
   end
 
-  def when_i_change_the_ungrouped_procedure_to_not_match_the_grouped_procedures
-    find('tr.info.groupBy.expanded').click
-    
-    expect(page).to have_css('tr[data-parent-index="0"] .dropdown-toggle', visible: :all, wait: 10)
+  def when_i_change_a_grouped_procedure_to_not_match_the_group
+    all('tr.groupBy.expanded').each { |closed_group| closed_group.click }
+    expect(page).to have_no_css('tr.groupBy.expanded')
 
-    bootstrap_select '#procedure_billing_type', 'R', 'tr[data-parent-index="0"]'
+    # Use the visible 'T' title to safely target a grouped row, dodging internal indices entirely
+    row = first("button[title='T']", visible: true).ancestor('tr')
+    bootstrap_select('#procedure_billing_type', 'R', context_selector: row)
     
-    expect(page).to have_css('tr.groupBy strong.badge', text: '2', wait: 15)
+    # Natively wait for the badge to recalculate
+    expect(page).to have_css('tr.groupBy strong.badge', text: '2')
   end
 
   def when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
-    expect(page).to have_css("#edit_procedure_#{@ungrouped_procedure.id} .dropdown-toggle", visible: :all, wait: 10)
-    
-    bootstrap_select '#procedure_billing_type', 'T', "#edit_procedure_#{@ungrouped_procedure.id}"
-    
-    expect(page).to have_css('tr.groupBy strong.badge', text: '4', wait: 15)
+    row = first("form#edit_procedure_#{ungrouped_procedure_record.id}").ancestor('tr')
+    bootstrap_select('#procedure_billing_type', 'T', context_selector: row)
   end
 
   def then_i_should_see_the_procedure_group_counter_is_two
-    expect(page).to have_css('tr.groupBy strong.badge', text: '2', wait: 10)
+    expect(page).to have_css('tr.groupBy strong.badge', text: '2')
   end
 
   def then_i_should_see_the_procedure_group_counter_is_four
-    expect(page).to have_css('tr.groupBy strong.badge', text: '4', wait: 10)
+    expect(page).to have_css('tr.groupBy strong.badge', text: '4')
   end
 
   def then_i_should_see_one_procedure_group
-    expect(page).to have_css('tr.groupBy', count: 1, wait: 10)
+    expect(page).to have_css('tr.expanded.groupBy', count: 1)
   end
 
   def then_i_should_not_see_the_procedure_group
-    expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']", wait: 15)
+    expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
   end
 
   def then_i_should_not_see_the_procedure_in_the_group
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 1, visible: :all, wait: 10)
+    # Asserting exactly 1 'R' (the ungrouped item) and exactly 2 'T' (the remaining group)
+    expect(page).to have_css('tr.groupBy strong.badge', text: '2')
+    expect(page).to have_css("button[title='R']", count: 1)
   end
 
   def then_i_should_see_the_procedure_in_the_group
-    find("tr.info.groupBy.expanded").click
-    
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 4, visible: :all, wait: 10)
+    expect(page).to have_css('tr.groupBy strong.badge', text: '4')
   end
-
 end
