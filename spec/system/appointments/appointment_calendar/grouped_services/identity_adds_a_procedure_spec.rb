@@ -21,8 +21,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity adds a Procedure', type: :system, js: true do
-  
-  # I. RSpec Foundation & State Management
   let!(:protocol)              { create_and_assign_protocol_to_me }
   let!(:protocols_participant) { protocol.protocols_participants.first }
   let!(:appointment)           { protocols_participant.appointments.first }
@@ -101,7 +99,6 @@ RSpec.describe 'Identity adds a Procedure', type: :system, js: true do
     add_a_procedure(service: second_service)
   end
 
-  # IV. The Race Condition Playbook
   def first_procedure_record
     expect(page).to have_content(first_service.name)
     Procedure.where(service_id: first_service.id).last
@@ -119,10 +116,8 @@ RSpec.describe 'Identity adds a Procedure', type: :system, js: true do
   def and_select_a_procedure_from_multiselect
     find("button[data-id='core_#{first_procedure_record.sparc_core_id}_multiselect']").click
     
-    # V. Eradicating Anti-Patterns (Wait for Animations)
     expect(page).to have_css('.dropdown-menu.show') 
     
-    # III. Bulletproof Targeting (Avoid Stale Elements when mutating)
     find("a.dropdown-item", match: :first).click
   end
 

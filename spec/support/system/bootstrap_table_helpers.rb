@@ -26,7 +26,6 @@ module System
       search_input.click
       search_input.set(query)
       
-      # Playbook IV: Native Blur Event
       find('body').click(x: 0, y: 0) 
       
       # NOTE: Do NOT use wait_for_ajax here. 

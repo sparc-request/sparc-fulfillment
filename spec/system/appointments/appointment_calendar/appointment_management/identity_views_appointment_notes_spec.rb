@@ -22,8 +22,6 @@ require 'rails_helper'
 
 RSpec.describe 'User creates an appointment note', type: :system, js: true do
   
-  # I. RSpec Foundation & State Management
-  # Upgraded to let! to explicitly lock state before the scenarios boot
   let!(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
   let!(:protocols_participant) { protocol.protocols_participants.first }
   let!(:visit_group) { protocols_participant.appointments.first.visit_group }
@@ -58,7 +56,6 @@ RSpec.describe 'User creates an appointment note', type: :system, js: true do
       find('a.btn').click
     end
     
-    # V. Wait for Animations
     # Force Capybara to wait for Bootstrap to finish fading the modal in
     expect(page).to have_css('.modal-dialog', visible: true)
     expect(page).to have_css('.note-body', visible: true)
@@ -67,16 +64,13 @@ RSpec.describe 'User creates an appointment note', type: :system, js: true do
   def when_i_create_a_note
     when_i_view_the_notes_list
     
-    # III. Strict Scoping
     # Blind Capybara to the rest of the massive DOM so it can't click the wrong button
     within('.modal-content') do
       expect(page).to have_field('note_comment')
       fill_in 'note_comment', with: "I'm a note. Fear me."
       
-      # IV. Native Blur Event (Safely scoped to the modal)
       find('.modal-header').click
       
-      # II. User-Centric Selectors (replaces the hacky CSS attribute search)
       click_button 'Leave Note'
     end
     

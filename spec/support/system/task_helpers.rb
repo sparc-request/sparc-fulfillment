@@ -20,13 +20,11 @@
 
 module System
   module TaskHelpers
-    # Explicit keyword arguments maintained!
     def create_tasks(count=1, protocol:)
       count.times { create(:task, protocol_id: protocol.id) }
     end
 
     def user_fills_in_new_task_form(task:, assignee:)
-      # Playbook III: Strict Scoping! 
       # Wrap the entire form interaction so Capybara is blind to the rest of the page.
       # (Note: adjust the 'form' CSS selector if this form has a specific ID like '#new_task')
       within('form', match: :first) do

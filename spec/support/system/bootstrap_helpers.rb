@@ -30,7 +30,7 @@ module System
     end
 
     def bootstrap_multiselect(selector, selections: ['all'])
-      # Playbook IV: Rescue Loop for Complex Chains (No Sleeps!)
+      # Rescue Loop for Complex Chains (No Sleeps!)
       retries = 5
       begin
         bootstrap_wrapper(selector).find('.dropdown-toggle').click
@@ -40,7 +40,7 @@ module System
         raise "StaleElementReferenceError exhausted 5 retries targeting #{selector}"
       end
 
-      # Playbook V: Wait for Animations natively
+      # Wait for Animations natively
       expect(bootstrap_wrapper(selector)).to have_css('.dropdown-menu.show')
 
       if selections.include?('all')
@@ -59,7 +59,6 @@ module System
 
     def bootstrap_select(selector, choice, context_selector: nil)
       action = proc do
-        # Playbook IV: Rescue Loop (No Sleeps!)
         retries = 5
         begin
           bootstrap_wrapper(selector).find('.dropdown-toggle').click
@@ -99,7 +98,6 @@ module System
         input.click
         input.set(text)
         
-        # Playbook IV: Native Blur Event
         find('body').click(x: 0, y: 0) 
       end
     end
