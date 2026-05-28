@@ -20,85 +20,92 @@
 
 require 'rails_helper'
 
-feature 'Identity removes a Procedure', js: true do
+RSpec.describe 'Identity removes a Procedure', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:appointment)           { protocols_participant.appointments.first }
+  let!(:services)              { protocol.organization.inclusive_child_services(:per_participant) }
 
-  before :each do
-    @protocol    = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.first
-    @appointment = @protocols_participant.appointments.first
-    @services    = @protocol.organization.inclusive_child_services(:per_participant)
-  end
+  let(:first_service) { services.first }
 
   context 'when group has more than 3 members' do
     before :each do
-      given_i_am_viewing_a_visit
+      given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
       when_i_start_the_appointment
       when_i_add_3_procedures_to_same_group
     end
 
     scenario 'and no longer sees the Procedure' do
-      when_i_remove_the_first_procedure(expected_remaining: 2)
+      when_i_remove_the_first_procedure
       then_i_should_no_longer_see_that_procedure
     end
 
     scenario 'and sees the group counter decremented' do
-      when_i_remove_the_first_procedure(expected_remaining: 2)
+      when_i_remove_the_first_procedure
       then_i_should_see_the_group_counter_decrement_by_1
     end
   end
 
   context 'when group has 2 members' do
     before :each do
-      given_i_am_viewing_a_visit
+      given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
       when_i_start_the_appointment
       when_i_add_2_procedures_to_same_group
     end
 
     scenario 'and no longer sees the group' do
-      when_i_remove_the_first_procedure(expected_remaining: 1)
+      when_i_remove_the_first_procedure
       then_i_should_no_longer_see_the_group
     end
   end
 
   def when_i_start_the_appointment
-    find('a.btn.start-appointment').click
-    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
+    find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first).click
+    
+    expect(page).to have_no_css('a.btn.start-appointment')
+    expect(page).to have_css('button.complete-appointment', visible: :all)
   end
 
   def when_i_add_3_procedures_to_same_group
-    add_a_procedure @services.first, 3
+    add_a_procedure(service: first_service, count: 3)
   end
 
   def when_i_add_2_procedures_to_same_group
-    add_a_procedure @services.first, 2
+    add_a_procedure(service: first_service, count: 2)
   end
 
-  def when_i_remove_the_first_procedure(expected_remaining:)
-    group_header = first('tr.info.groupBy')
-    group_header.click if group_header && group_header[:class].include?('expanded')
-    expect(page).to have_css('tr.info.groupBy.collapsed', wait: 10)
+  def when_i_remove_the_first_procedure
+    # Safely unroll the accordion, accounting for the app's inverse 'expanded' logic
+    while page.has_css?('tr.groupBy.expanded', wait: 0.5)
+      find('tr.groupBy.expanded', match: :first).click
+    end
+    expect(page).to have_no_css('tr.groupBy.expanded')
 
-    first('a.delete-button').click
-    
-    expect(page).to have_css('.swal2-container', wait: 10)
+    # Natively verify the correct amount of delete buttons exist before clicking one
+    previous_count = all('a.delete-button, button.delete-btn', visible: true).count
+
+    find('a.delete-button, button.delete-btn', match: :first).click
+
+    # Natively anticipate the SweetAlert2 modal to fade in
+    expect(page).to have_css('.swal2-container', visible: true)
     find('button.swal2-confirm').click
-    expect(page).to have_no_css('.swal2-container', wait: 10)
 
-    expect(page).to have_css('a.delete-button', count: expected_remaining, visible: :all, wait: 15)
+    expect(page).to have_no_css('.swal2-container')
+    
+    # Since the UI auto-closes the accordion after a delete, use 'visible: :all'
+    expect(page).to have_css('a.delete-button, button.delete-btn', count: previous_count - 1, visible: :all)
   end
 
   def then_i_should_no_longer_see_that_procedure
-    group_header = first('tr.info.groupBy')
-    group_header.click if group_header && group_header[:class].include?('expanded')
-    
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 2, visible: :all, wait: 10)
+    # Since the UI is strictly synced in 'when_i_remove_the_first_procedure', we safely assert final state
+    expect(page).to have_css('tr[data-parent-index="0"]', count: 2, visible: :all)
   end
 
   def then_i_should_see_the_group_counter_decrement_by_1
-    expect(page).to have_css("tr.info.groupBy p strong", text: '2', wait: 10)
+    expect(page).to have_css('tr.groupBy strong.badge', text: '2')
   end
 
   def then_i_should_no_longer_see_the_group
-    expect(page).to have_no_css('tr.info.groupBy', wait: 15)
+    expect(page).to have_no_css('tr.groupBy')
   end
 end

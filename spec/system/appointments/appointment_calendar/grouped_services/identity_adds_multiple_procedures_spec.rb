@@ -46,7 +46,7 @@ RSpec.describe 'Identity adds multiple Procedures', type: :system, js: true do
   scenario 'and sees the multiselect dropdown instantiated with Select All option and Service option' do
     given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
     when_i_add_5_procedures
-    then_i_should_see_the_multiselect_instantiated_with_2_options
+    then_i_should_see_the_multiselect_instantiated_with_options
   end
 
   def when_i_add_two_similar_procedures
@@ -61,31 +61,30 @@ RSpec.describe 'Identity adds multiple Procedures', type: :system, js: true do
     add_a_procedure(service: first_service, count: 5)
   end
 
-  # Safely sync with the UI before querying the DB to prevent sparc_core_id nil errors
-  def first_procedure_record
-    expect(page).to have_content(first_service.name)
-    Procedure.where(service_id: first_service.id).last
-  end
+  def then_i_should_see_the_multiselect_instantiated_with_options
+    # Wait for the DOM to natively group the elements first by checking the badge
+    expect(page).to have_css('tr.groupBy strong.badge', text: '5')
 
-  def then_i_should_see_the_multiselect_instantiated_with_2_options
-    # Sync Point: Wait for the DOM to natively group the elements first
-    expect(page).to have_css("tr.hidden", count: 5, visible: :all)
-
-    find("button[data-id='core_#{first_procedure_record.sparc_core_id}_multiselect']").click
+    # Safely target the UI natively without querying the DB for dynamic DOM IDs
+    find('.core_multiselect button.dropdown-toggle', match: :first).click
     
     # Wait for animations natively
     expect(page).to have_css('.dropdown-menu.show')
 
-    expect(page).to have_css("button.bs-select-all")
+    expect(page).to have_css('button.bs-select-all')
     expect(page).to have_content(first_service.name)
   end
 
   def then_i_should_see_one_group_with_four_procedures
-    # Capybara natively scans for the DOM elements regardless of toggle state.
-    expect(page).to have_css('tr[data-parent-index="0"]', count: 4, visible: :all)
+    expect(page).to have_css('tr.groupBy strong.badge', text: '4')
+    expect(page).to have_css('tr.groupBy', count: 1)
   end
 
   def then_i_should_see_two_grouped_procedures
-    expect(page).to have_css("tr.info.groupBy.expanded", count: 2)
+    # Replaced the leaky accordion 'expanded' state check with a strict count of group rows
+    expect(page).to have_css('tr.groupBy', count: 2)
+    
+    # Verify both groups accurately reflect their 2 items
+    expect(page).to have_css('tr.groupBy strong.badge', text: '2', count: 2)
   end
 end

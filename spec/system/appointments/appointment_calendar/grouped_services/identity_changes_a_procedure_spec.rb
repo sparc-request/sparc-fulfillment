@@ -29,7 +29,7 @@ RSpec.describe 'Identity changes a Service', type: :system, js: true do
   let!(:appointment)           { protocols_participant.appointments.first }
   let!(:services)              { protocol.organization.inclusive_child_services(:per_participant) }
 
-  let(:first_service) { services.first }
+  let(:first_service)  { services.first }
   let(:second_service) { services.last }
 
   scenario 'and sees it join an existing group' do
@@ -69,23 +69,6 @@ RSpec.describe 'Identity changes a Service', type: :system, js: true do
     then_i_should_see_the_procedure_group_counter_is_two
   end
 
-  def given_i_am_viewing_a_visit(participant:, protocol:)
-    visit calendar_protocol_participant_path(id: participant.id, protocol_id: protocol.id)
-    
-    expect(page).to have_css('#appointmentContainer', visible: :all)
-    expect(page).to have_css('a.list-group-item.appointment-link')
-    
-    retries = 3
-    begin
-      first('a.list-group-item.appointment-link').click
-    rescue Selenium::WebDriver::Error::StaleElementReferenceError
-      retries -= 1
-      retry if retries > 0
-    end
-    
-    expect(page).to have_button('addService', disabled: :all)
-  end
-
   def given_i_am_viewing_a_visit_with_two_procedures_with_different_billing_types
     create(:procedure_insurance_billing_qty_with_notes,
             appointment: appointment,
@@ -99,6 +82,7 @@ RSpec.describe 'Identity changes a Service', type: :system, js: true do
             sparc_core_name: first_service.organization.name,
             sparc_core_id: first_service.organization_id)
 
+    # Defers natively to the VisitHelpers definition
     given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
   end
 
@@ -109,12 +93,12 @@ RSpec.describe 'Identity changes a Service', type: :system, js: true do
                 sparc_core_name: first_service.organization.name,
                 sparc_core_id: first_service.organization_id)
 
+    # Defers natively to the VisitHelpers definition
     given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
   end
 
   def when_i_start_the_appointment
-    start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first)
-    start_btn.click
+    find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first).click
     
     expect(page).to have_no_css('a.btn.start-appointment')
     expect(page).to have_css('button.complete-appointment', visible: :all)
@@ -130,21 +114,22 @@ RSpec.describe 'Identity changes a Service', type: :system, js: true do
   end
 
   def when_i_change_one_procedure_billing_type_to_be_the_same_as_the_other
-    row = first("button[title='R']").ancestor('tr')
+    row = find("button[title='R']", match: :first).ancestor('tr')
     bootstrap_select('#procedure_billing_type', 'T', context_selector: row)
   end
 
   def when_i_move_all_procedures_out_of_the_group
-    @original_group_id = first('tr td.name div', visible: :all)['data-group-id']
-    
     3.times do |i|
-      # Click ANY closed groups to ensure rows are visible, and cleanly wait for the animation
+      # Evaluate freshly from the top down every iteration. 
       # Also... there is inverse logic here within the application... the 'expanded' class is applied when the accordion is closed and vice versa
-      all('tr.groupBy.expanded').each { |closed_group| closed_group.click }
+      while page.has_css?('tr.groupBy.expanded', wait: 0.5)
+        find('tr.groupBy.expanded', match: :first).click
+      end
+      
       expect(page).to have_no_css('tr.groupBy.expanded')
 
       # Target by the visible 'T' title safely, dodging dynamic group IDs entirely
-      row = first("button[title='T']", visible: true).ancestor('tr')
+      row = find("button[title='T']", visible: true, match: :first).ancestor('tr')
       bootstrap_select('#procedure_billing_type', 'R', context_selector: row)
       
       # Crucial Sync: natively wait for the total count of 'T' items to decrement
@@ -157,19 +142,22 @@ RSpec.describe 'Identity changes a Service', type: :system, js: true do
   end
 
   def when_i_change_a_grouped_procedure_to_not_match_the_group
-    all('tr.groupBy.expanded').each { |closed_group| closed_group.click }
+    # Ensure rows are visible safely without caching Stale Elements
+    while page.has_css?('tr.groupBy.expanded', wait: 0.5)
+      find('tr.groupBy.expanded', match: :first).click
+    end
+    
     expect(page).to have_no_css('tr.groupBy.expanded')
 
     # Use the visible 'T' title to safely target a grouped row, dodging internal indices entirely
-    row = first("button[title='T']", visible: true).ancestor('tr')
+    row = find("button[title='T']", visible: true, match: :first).ancestor('tr')
     bootstrap_select('#procedure_billing_type', 'R', context_selector: row)
     
-    # Natively wait for the badge to recalculate
     expect(page).to have_css('tr.groupBy strong.badge', text: '2')
   end
 
   def when_i_change_the_ungrouped_procedure_to_match_the_grouped_procedures
-    row = first("form#edit_procedure_#{ungrouped_procedure_record.id}").ancestor('tr')
+    row = find("form#edit_procedure_#{ungrouped_procedure_record.id}", match: :first).ancestor('tr')
     bootstrap_select('#procedure_billing_type', 'T', context_selector: row)
   end
 
@@ -186,7 +174,9 @@ RSpec.describe 'Identity changes a Service', type: :system, js: true do
   end
 
   def then_i_should_not_see_the_procedure_group
-    expect(page).to_not have_css("div[data-group-id='#{@original_group_id}']")
+    # Using a Regex to handle Capybara squashing adjacent table cell text together
+    expect(page).to have_no_css('tr.groupBy', text: /#{Regexp.quote(first_service.name)}\s*T/)
+    expect(page).to have_css('tr.groupBy', text: /#{Regexp.quote(first_service.name)}\s*R/)
   end
 
   def then_i_should_not_see_the_procedure_in_the_group

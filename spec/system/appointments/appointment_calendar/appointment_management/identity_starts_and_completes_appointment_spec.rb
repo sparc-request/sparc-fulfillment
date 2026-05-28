@@ -109,7 +109,7 @@ RSpec.describe 'Start Complete Buttons', type: :system, js: true do
   end
 
   def given_i_am_viewing_an_appointment
-    # Consolidated all 3 old navigation methods into this single, robust one.
+    # Consolidated all 3 old navigation methods into this single, robust one - this overrides the global helper in VisitHelpers for this test file
     visit calendar_protocol_participant_path(protocol_id: protocol.id, id: protocols_participant.id)
     
     find('a.list-group-item.appointment-link', text: visit_group.name, match: :first).click

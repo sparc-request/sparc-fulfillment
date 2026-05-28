@@ -20,7 +20,6 @@
 
 module System
   module VisitHelpers
-    
     # Enforce keyword arguments for explicit state requirements
     def and_the_visit_has_one_grouped_procedure(service:)
       add_a_procedure(service: service, count: 2)
@@ -44,13 +43,21 @@ module System
       end
     end
 
-    def given_i_am_viewing_a_visit(participant:, protocol:)
+  def given_i_am_viewing_a_visit(participant:, protocol:)
       visit calendar_protocol_participant_path(id: participant.id, protocol_id: protocol.id)
       
       expect(page).to have_css('#appointmentContainer', visible: :all)
       expect(page).to have_css('a.list-group-item.appointment-link')
       
-      first('a.list-group-item.appointment-link').click
+      # Wrap the vulnerable initial click in a StaleElement rescue loop because the calendar framework actively mutates the DOM during initial load.
+      retries = 5
+      begin
+        find('a.list-group-item.appointment-link', match: :first).click
+      rescue Selenium::WebDriver::Error::StaleElementReferenceError
+        retries -= 1
+        retry if retries > 0
+        raise "StaleElementReferenceError exhausted targeting the appointment link"
+      end
       
       expect(page).to have_button('addService', disabled: :all)
     end

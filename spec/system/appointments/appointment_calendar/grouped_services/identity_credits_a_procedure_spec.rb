@@ -20,15 +20,31 @@
 
 require 'rails_helper'
 
-feature 'Invoice Procedure', js: true do
+RSpec.describe 'Invoice Procedure', type: :system, js: true do
 
   context 'Current user is a Billing Manager with Allow Credit True' do
-    before :each do
-      given_i_am_a_billing_manager
+    let!(:sub_service_request)   { create(:sub_service_request_with_organization) }
+    let!(:subsidy)               { create(:subsidy, sub_service_request: sub_service_request) }
+    let!(:protocol)              { create(:protocol_imported_from_sparc, sub_service_request: sub_service_request) }
+    let!(:organization_provider) { create(:organization_provider, name: "Provider") }
+    let!(:organization_program)  { create(:organization_program, name: "Program", parent: organization_provider) }
+    let!(:organization) do
+      org = sub_service_request.organization
+      org.update(parent: organization_program, name: "Core")
+      org
     end
 
+    let!(:clinical_provider) { create(:clinical_provider, identity: @logged_in_identity, organization: organization) }
+    let!(:project_role_pi)   { create(:project_role_pi, identity: @logged_in_identity, protocol: protocol) }
+    let!(:super_user)        { create(:super_user, identity: @logged_in_identity, organization: organization_provider, billing_manager: true, allow_credit: true) }
+
+    let(:protocols_participant) { protocol.protocols_participants.first }
+    let(:appointment)           { protocols_participant.appointments.first }
+    let(:visit_group)           { appointment.visit_group }
+    let(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+
     scenario 'and should only see toggle button credited column' do
-      and_i_am_viewing_uncompleted_procedures
+      given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
       and_i_am_adding_a_procedure
       when_i_start_the_appointment
       then_i_should_see_the_remove_button_as_non_disabled
@@ -39,125 +55,90 @@ feature 'Invoice Procedure', js: true do
 
     context 'a procedure has been credited' do
       scenario 'and remove button and reset button is disabled' do
+        # Generates a valid DB record that physically renders, eliminating the need for the UI-addition hack
         and_i_am_viewing_completed_procedures
-        and_i_am_adding_a_procedure
         then_i_should_see_the_remove_button_disabled
         then_i_should_see_the_reset_visit_button_disabled
       end
     end
+
+    def and_i_am_viewing_completed_procedures
+      appointment.update(start_date: Time.current)
+      create(:procedure_insurance_billing_qty_with_notes,
+             appointment: appointment,
+             service: service,
+             # Explicitly passing Core data to ensure the procedure renders in the UI
+             sparc_core_name: service.organization.name,
+             sparc_core_id: service.organization_id,
+             status: 'complete',
+             completed_date: Date.current.strftime('%m/%d/%Y'),
+             credited: true)
+             
+      given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+    end
   end
 
   context 'Current user is a Non-Billing Manager' do
+    let!(:protocol)              { create_and_assign_protocol_to_me }
+    let!(:protocols_participant) { protocol.protocols_participants.first }
+    let!(:appointment)           { protocols_participant.appointments.first }
+    let!(:visit_group)           { appointment.visit_group }
+    let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+
     scenario 'and should only see view-only credited column' do
       given_i_am_viewing_procedures_as_a_non_billing_manager
       when_i_start_the_appointment
       then_i_should_see_the_credited_column_as_view_only
     end
-  end
 
-  def given_i_am_a_billing_manager
-    sub_service_request   = create(:sub_service_request_with_organization)
-    subsidy               = create(:subsidy, sub_service_request: sub_service_request)
-    @protocol             = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-    organization_provider = create(:organization_provider, name: "Provider")
-    organization_program  = create(:organization_program, name: "Program", parent: organization_provider)
-    organization          = sub_service_request.organization
-    organization.update(parent: organization_program, name: "Core")
-    create(:clinical_provider, identity: @logged_in_identity, organization: organization)
-    create(:project_role_pi, identity: @logged_in_identity, protocol: @protocol)
-    create(:super_user, identity: @logged_in_identity, organization: organization_provider, billing_manager: true, allow_credit: true)
-
-    @protocols_participant   = @protocol.protocols_participants.first
-    @visit_group   = @protocols_participant.appointments.first.visit_group
-    @service       = @protocol.organization.inclusive_child_services(:per_participant).first
-  end
-
-  def given_i_am_viewing_procedures_as_a_non_billing_manager
-    protocol      = create_and_assign_protocol_to_me
-    protocols_participant   = protocol.protocols_participants.first
-    visit_group   = protocols_participant.appointments.first.visit_group
-    @service       = protocol.organization.inclusive_child_services(:per_participant).first
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-
-    add_a_procedure(@service)
+    def given_i_am_viewing_procedures_as_a_non_billing_manager
+      given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+      add_a_procedure(service: service)
+    end
   end
 
   def and_i_am_adding_a_procedure
-    add_a_procedure(@service)
-  end
-
-  def and_i_am_viewing_uncompleted_procedures
-    appointment  = @protocols_participant.appointments.first
-    create(:procedure_insurance_billing_qty_with_notes,
-            appointment: appointment,
-            service: @service,
-            sparc_core_name: @service.organization.name, # NATIVE FIX: Link to Core Tab
-            sparc_core_id: @service.organization_id,     # NATIVE FIX: Link to Core Tab
-            credited: true)
-    given_i_am_viewing_a_visit
-  end
-
-  def and_i_am_viewing_completed_procedures
-    appointment  = @protocols_participant.appointments.first
-    appointment.update_attribute(:start_date, Time.now)
-    create(:procedure_insurance_billing_qty_with_notes,
-            appointment: appointment,
-            service: @service,
-            sparc_core_name: @service.organization.name, # NATIVE FIX: Link to Core Tab
-            sparc_core_id: @service.organization_id,     # NATIVE FIX: Link to Core Tab
-            status: 'complete',                          # NATIVE FIX: Formally Complete!
-            completed_date: DateTime.current.strftime('%m/%d/%Y'),
-            credited: true)
-    given_i_am_viewing_a_visit
+    add_a_procedure(service: service)
   end
 
   def when_i_start_the_appointment
-    find('a.btn.start-appointment').click
-    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
+    start_btn = find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first)
+    start_btn.click
+    
+    expect(page).to have_no_css('a.btn.start-appointment')
+    expect(page).to have_css('button.complete-appointment', visible: :all)
   end
 
   def when_i_update_the_billing_type
-    if page.has_css?('tr.info.groupBy', wait: 2)
-      group_header = find('tr.info.groupBy', match: :first)
-      group_header.click if group_header[:class].include?('expanded')
-    end
-
-    expect(page).to have_css('.dropdown-toggle', visible: :all, wait: 10)
-    
-    bootstrap_select '#procedure_billing_type', 'T' 
-    
-    expect(page).to have_css('button[data-id="procedure_billing_type"][title="T"]', visible: :all, wait: 15)
+    row = find('tr', text: service.name, match: :first)
+    bootstrap_select('#procedure_billing_type', 'T', context_selector: row)
   end
 
   def when_i_complete_the_procedure
-    if page.has_css?('tr.info.groupBy', wait: 2)
-      group_header = find('tr.info.groupBy', match: :first)
-      group_header.click if group_header[:class].include?('expanded')
-    end
-
     find('button.complete-btn', match: :first).click
-    expect(page).to have_css('button.complete-btn.active', wait: 10)
+    
+    expect(page).to have_css('button.complete-btn.active')
   end
 
   def then_i_should_see_the_credited_column_as_view_only
-    expect(page).to have_css('td.credited', minimum: 1, visible: :all, wait: 10)
+    expect(page).to have_css('td.credited', count: 1)
+    
+    expect(page).to have_no_css('td.credited div.toggle')
   end
 
   def then_i_should_see_the_credited_column_as_a_toggle_button
-    expect(page).to have_no_css('td.w-5.credited div.toggle.btn-light.disabled', visible: :all, wait: 10)
+    expect(page).to have_css('td.credited div.toggle:not(.disabled)', count: 1)
   end
 
   def then_i_should_see_the_remove_button_disabled
-    expect(page).to have_css('a.delete-button.disabled', count: 1, visible: :all, wait: 15)
+    expect(page).to have_css('a.delete-button.disabled, button.delete-btn:disabled, button.delete-button:disabled', visible: :all)
   end
 
   def then_i_should_see_the_reset_visit_button_disabled
-    expect(page).to have_css('a.reset-appointment.disabled', count: 1, wait: 10)
+    expect(page).to have_css('a.reset-appointment.disabled, button.reset-appointment:disabled', visible: :all)
   end
 
   def then_i_should_see_the_remove_button_as_non_disabled
-    expect(page).to have_no_css('a.delete-button.disabled', visible: :all, wait: 10)
-    expect(page).to have_css('a.delete-button:not(.disabled)', minimum: 1, visible: :all, wait: 10)
+    expect(page).to have_css('a.delete-button:not(.disabled), button.delete-btn:not(:disabled), button.delete-button:not(:disabled)', count: 1)
   end
 end

@@ -30,7 +30,6 @@ RSpec.describe 'Identity adds Procedure', type: :system, js: true do
 
   context 'User adds two procedures' do
     scenario 'and sees them in the appointment calendar' do
-      # Completely eliminated the redundant local setup methods, upgraded global helper handles the visit and scoping perfectly.
       given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
       
       when_i_add_two_procedures
@@ -39,12 +38,15 @@ RSpec.describe 'Identity adds Procedure', type: :system, js: true do
   end
 
   def when_i_add_two_procedures
-    # Replaced messy inline DOM targeting and wait_for_ajax calls with stabilized global helper.
+    # Stabilized global helper handles the UI interaction natively
     add_a_procedure(service: first_service, count: 2)
   end
 
   def then_i_should_see_two_procedures_in_the_appointment_calendar
-    # Added visible: :all to account for Bootstrap grouping hiding the individual rows.
+    # Verify the group badge is accurately reflecting the count natively
+    expect(page).to have_css('tr.groupBy strong.badge', text: '2')
+    
+    # Secondary validation: Verify the underlying rows are present in the DOM, using visible: :all to account for the Bootstrap accordion naturally hiding them.
     expect(page).to have_css('tr[data-parent-index="0"]', count: 2, visible: :all)
   end
 end

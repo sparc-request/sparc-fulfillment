@@ -20,21 +20,17 @@
 
 require 'rails_helper'
 
-feature 'Identity incompletes all Services', js: true do
-
-  before :each do
-    DatabaseCleaner[:active_record, db: Procedure].clean_with(:truncation)
-    @protocol     = create(:protocol_imported_from_sparc)
-    org           = @protocol.sub_service_request.organization
-                    create(:clinical_provider, identity: @logged_in_identity, organization: org)
-    @protocols_participant  = @protocol.protocols_participants.first
-    @appointment  = @protocols_participant.appointments.first
-    @services     = @protocol.organization.inclusive_child_services(:per_participant)
-  end
+RSpec.describe 'Identity incompletes all Services', type: :system, js: true do
+  let!(:protocol)              { create(:protocol_imported_from_sparc) }
+  let!(:org)                   { protocol.sub_service_request.organization }
+  let!(:provider)              { create(:clinical_provider, identity: @logged_in_identity, organization: org) }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:appointment)           { protocols_participant.appointments.first }
+  let!(:services)              { protocol.organization.inclusive_child_services(:per_participant) }
 
   context 'after visit has begun' do
     before :each do
-      given_i_am_viewing_a_started_visit
+      given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
       when_i_add_some_ungrouped_procedures
       and_i_add_some_grouped_procedures
     end
@@ -43,121 +39,127 @@ feature 'Identity incompletes all Services', js: true do
       when_i_select_all_procedures_in_the_core_dropdown
       and_i_click_incomplete_all_and_give_a_reason
       and_i_unroll_accordion
-      then_all_procedures_should_remain_incomplete
+      then_all_procedures_should_be_incompleted
     end
 
     scenario 'selects an ungrouped procedure' do
-      when_i_select_an_ungrouped_procedure_in_the_core_dropdown
+      selected = [services.first]
+      when_i_select_procedures_in_the_core_dropdown(selected)
       and_i_click_incomplete_all_and_give_a_reason
-      then_the_selected_procedures_should_be_incompleted
+      then_the_selected_procedures_should_be_incompleted(selected)
     end
 
     scenario 'selects multiple but not all ungrouped procedures' do
-      when_i_select_multiple_but_not_all_ungrouped_procedures_in_the_core_dropdown
+      selected = services[0..1]
+      when_i_select_procedures_in_the_core_dropdown(selected)
       and_i_click_incomplete_all_and_give_a_reason
-      then_the_selected_procedures_should_be_incompleted
+      then_the_selected_procedures_should_be_incompleted(selected)
     end
 
     scenario 'selects all ungrouped procedures' do
-      when_i_select_all_ungrouped_procedures_in_the_core_dropdown
+      selected = services[0..2]
+      when_i_select_procedures_in_the_core_dropdown(selected)
       and_i_click_incomplete_all_and_give_a_reason
-      then_the_selected_procedures_should_be_incompleted
+      then_the_selected_procedures_should_be_incompleted(selected)
     end
 
     scenario 'selects all grouped procedures' do
-      when_i_select_all_grouped_procedures_in_the_core_dropdown
+      selected = [services.fourth]
+      when_i_select_procedures_in_the_core_dropdown(selected)
       and_i_click_incomplete_all_and_give_a_reason
       and_i_unroll_accordion
-      then_the_selected_procedures_should_be_incompleted
-    end
-
-    scenario 'selects all procedures' do
-      when_i_select_all_procedures_in_the_core_dropdown
-      and_i_click_incomplete_all_and_give_a_reason
-      and_i_unroll_accordion
-      then_the_selected_procedures_should_be_incompleted
+      then_the_selected_procedures_should_be_incompleted(selected)
     end
   end
 
   def when_i_add_some_ungrouped_procedures
-    @services[0..2].each do |service|
-      add_a_procedure service, 1
+    services[0..2].each do |service|
+      add_a_procedure(service: service, count: 1)
     end
   end
 
   def and_i_add_some_grouped_procedures
-    add_a_procedure @services.fourth, 2
+    add_a_procedure(service: services.fourth, count: 2)
   end
 
-  def when_i_select_an_ungrouped_procedure_in_the_core_dropdown
-    @selected = [@services.first]
-    bootstrap_multiselect '.core_multiselect', @selected.map(&:name)
-  end
+  def when_i_select_procedures_in_the_core_dropdown(selected_services)
+    # bootstrap_multiselect strict `exact_text: true` fails here due to dynamically appended UI badges, hand-roll this specific interaction using Regex for a partial text match.
+    retries = 5
+    begin
+      find('.core_multiselect button.dropdown-toggle', match: :first).click
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      retries -= 1
+      retry if retries > 0
+      raise "StaleElementReferenceError exhausted targeting core multiselect"
+    end
 
-  def when_i_select_multiple_but_not_all_ungrouped_procedures_in_the_core_dropdown
-    @selected = @services[0..1]
-    bootstrap_multiselect '.core_multiselect', @selected.map(&:name)
-  end
-
-  def when_i_select_all_ungrouped_procedures_in_the_core_dropdown
-    @selected = @services[0..2]
-    bootstrap_multiselect '.core_multiselect', @selected.map(&:name)
-  end
-
-  def when_i_select_all_grouped_procedures_in_the_core_dropdown
-    @selected = [@services.fourth]
-    bootstrap_multiselect '.core_multiselect', @selected.map(&:name)
+    expect(page).to have_css('.dropdown-menu.show')
+    
+    selected_services.each do |service|
+      find('.dropdown-menu.show span.text', text: /#{Regexp.quote(service.name)}/, match: :first).click
+    end
+    
+    find('.core_multiselect button.dropdown-toggle', match: :first).click
+    
+    expect(page).to have_no_css('.dropdown-menu.show')
   end
 
   def when_i_select_all_procedures_in_the_core_dropdown
-    @selected = @services
-    bootstrap_multiselect '.core_multiselect'
+    bootstrap_multiselect('.core_multiselect', selections: ['all'])
   end
 
   def and_i_click_incomplete_all_and_give_a_reason
     find('button.incomplete-all').click
     
-    expect(page).to have_css('.modal-dialog', visible: true, wait: 10)
+    expect(page).to have_css('.modal-dialog', visible: true)
     
-    bootstrap_select '[name="performer_id"]', Identity.first.full_name
-    
-    reason = Procedure::NOTABLE_REASONS.first
-    bootstrap_select '[name="reason"]', reason
-    fill_in 'comment', with: 'Test comment'
-    
-    expect(page).to have_no_css('.dropdown-menu.show', wait: 5)
-    
-    retries = 0
-    begin
-      find('input[value="Submit"]').click
-      expect(page).to have_no_css('.modal-dialog', wait: 10)
-    rescue RSpec::Expectations::ExpectationNotMetError => e
-      retry if (retries += 1) < 2
-      raise e
+    within('.modal-content') do
+      # Performer Selection (Safely hand-rolled with Regex to avoid exact text badge traps)
+      find('.bootstrap-select [name="performer_id"]', visible: :hidden).ancestor('.bootstrap-select').find('.dropdown-toggle').click
+      expect(page).to have_css('.dropdown-menu.show')
+      find('.dropdown-menu.show span.text', text: /Sally/i, match: :first).click
+      
+      find('.bootstrap-select [name="reason"]', visible: :hidden).ancestor('.bootstrap-select').find('.dropdown-toggle').click
+      expect(page).to have_css('.dropdown-menu.show')
+      find('.dropdown-menu.show span.text', text: /#{Procedure::NOTABLE_REASONS.first}/i, match: :first).click
+      
+      fill_in 'comment', with: 'Test comment'
+      
+      # Target natively to support both input[type="submit"] and button tags
+      click_button 'Submit'
     end
+    
+    expect(page).to have_no_css('.modal-dialog')
   end
 
   def and_i_unroll_accordion
-    group_header = find('tr.info.groupBy', match: :first)
-    group_header.click if group_header[:class].include?('expanded')
-    expect(page).to have_css('tr.info.groupBy.collapsed', wait: 10)
+    while page.has_css?('tr.groupBy.expanded', wait: 0.5)
+      find('tr.groupBy.expanded', match: :first).click
+    end
+    
+    expect(page).to have_no_css('tr.groupBy.expanded')
   end
 
-  def then_the_selected_procedures_should_be_incompleted
-    selected_procedures, unselected_procedures = Procedure.all.partition { |p| @selected.include? p.service }
+  def then_the_selected_procedures_should_be_incompleted(selected_services)
+    expect(page).to have_css('button.incomplete-btn.active', minimum: 1)
+
+    selected_procedures = Procedure.where(service_id: selected_services.map(&:id))
+    unselected_procedures = Procedure.where.not(service_id: selected_services.map(&:id))
 
     selected_procedures.each do |procedure|
-      expect(procedure.status).to eq 'incomplete'
+      expect(procedure.status).to eq('incomplete')
     end
 
     unselected_procedures.each do |procedure|
-      expect(procedure.status).to eq 'unstarted'
+      expect(procedure.status).to eq('unstarted')
     end
   end
 
-  def then_all_procedures_should_remain_incomplete
-    Procedure.all.each do |p|
-      expect(p.status).to eq 'incomplete'
+  def then_all_procedures_should_be_incompleted
+    expect(page).to have_css('button.incomplete-btn.active', minimum: 1)
+    
+    Procedure.all.each do |procedure|
+      expect(procedure.status).to eq('incomplete')
     end
   end
 end
