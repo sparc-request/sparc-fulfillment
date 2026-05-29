@@ -20,7 +20,15 @@
 
 require 'rails_helper'
 
-feature 'User changes performer of a procedure', js: true do
+RSpec.describe 'Identity changes procedure performer', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:performer)             { create(:identity) }
+  let!(:clinical_provider)     { create(:clinical_provider, identity: performer, organization: protocol.organization) }
+  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+  
+  # Lazily evaluated: safely queries the DB for the newly created procedure only when called
+  let(:procedure)              { protocols_participant.appointments.first.procedures.find_by(service: service) }
 
   scenario 'and sees a note indicating the performer was changed' do
     given_i_have_added_a_procedure_to_an_appointment
@@ -30,57 +38,22 @@ feature 'User changes performer of a procedure', js: true do
   end
 
   def given_i_have_added_a_procedure_to_an_appointment
-    protocol    = create_and_assign_protocol_to_me
-    @performer  = create(:identity)
-    ClinicalProvider.create(identity: @performer, organization: protocol.organization)
-    protocols_participant = protocol.protocols_participants.first
-    visit_group = protocols_participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_child_services(:per_participant).first
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    
-    expect(page).to have_css('a.list-group-item.appointment-link', wait: 10)
-    first('a.list-group-item.appointment-link').click
-    
-    expect(page).to have_css('a.btn.start-appointment', visible: :all, wait: 15)
-    
-    add_a_procedure(service)
-
-    find('a.btn.start-appointment').click
-    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
-
-    visit_group.appointments.first.procedures.reload
-    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
+    # Leveraging global helpers to bypass brittle manual setup
+    given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+    add_a_procedure(service: service)
   end
 
   def when_i_select_another_name_in_the_performed_by_dropdown
-    if page.has_css?('tr.info.groupBy', wait: 2)
-      group_header = find('tr.info.groupBy', match: :first)
-      group_header.click if group_header[:class].include?('expanded')
-      expect(page).to have_css('tr.info.groupBy.collapsed', wait: 10)
-    end
-
-    # Bypass the global bootstrap_select helper because of the AJAX DOM swap.
-    wrapper = find('td.performer div.bootstrap-select', visible: :all, match: :first)
-    within(wrapper) do
-      find('.dropdown-toggle').click
-      
-      expect(page).to have_css('ul.dropdown-menu.inner.show', wait: 5)
-      
-      find('ul.dropdown-menu li a span.text', text: @performer.full_name, visible: :all, match: :first).click
-    end
-    
-    expect(page).to have_css('td.performer div.bootstrap-select .filter-option-inner-inner', text: @performer.full_name, visible: :all, wait: 15)
+    bootstrap_select('#procedure_performer_id', performer.full_name)
   end
 
   def when_i_view_the_notes
-    expect(page).to have_css("div#procedure#{@procedure.id}Notes", visible: :all, wait: 10)
-    find("div#procedure#{@procedure.id}Notes").click
-    
-    expect(page).to have_css('.modal-dialog', wait: 10)
+    # Dynamically injects the ID of the freshly rendered procedure
+    find("div#procedure#{procedure.id}Notes").click
   end
 
   def then_i_should_see_a_note_indicating_that_the_performer_was_changed
-    expect(page).to have_css('.note-body', text: "Performer changed to #{@performer.full_name}", wait: 10)
+    # Assertion-driven wait: natively polls until the note modal/section renders with the text
+    expect(page).to have_css('.note-body', text: "Performer changed to #{performer.full_name}")
   end
 end

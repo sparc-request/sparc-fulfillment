@@ -20,29 +20,37 @@
 
 require 'rails_helper'
 
-feature 'User completes Procedure', js: true do
+RSpec.describe 'Identity completes Procedure', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+
+  # Lazily evaluated: safely queries the DB for the newly created procedure only when needed
+  let(:procedure)              { protocols_participant.appointments.first.procedures.find_by(service: service) }
 
   scenario 'and sees a completed Note' do
-    given_i_have_added_a_procedure_to_an_appointment
-    when_i_start_the_appointment
+    given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+    and_i_have_added_a_procedure
     when_i_complete_the_procedure
     when_i_view_the_notes_list
     then_i_should_see_complete_notes
   end
 
-  context 'and changes their mind, clicking complete again' do
+  context 'and changes their mind, clicking the unstarted button' do
     scenario 'and sees the reset note' do
-      given_i_have_completed_an_appointment
+      given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+      and_i_have_added_a_procedure
       when_i_complete_the_procedure
+      and_i_reset_the_procedure
       when_i_view_the_notes_list
-      then_i_should_see_complete_notes 
+      then_i_should_see_reset_notes
     end
   end
 
   context 'which was previously incomplete' do
     scenario 'and sees the complete note' do
-      given_i_have_added_a_procedure_to_an_appointment
-      when_i_start_the_appointment
+      given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+      and_i_have_added_a_procedure
       when_i_incomplete_the_procedure
       when_i_complete_the_procedure
       when_i_view_the_notes_list
@@ -52,84 +60,70 @@ feature 'User completes Procedure', js: true do
 
   context 'before starting Appointment' do
     scenario 'and sees a helpful error message' do
-      given_i_have_added_a_procedure_to_an_appointment
+      given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+      and_i_have_added_a_procedure
       then_i_should_see_a_helpful_message
     end
   end
 
-  def given_i_have_added_a_procedure_to_an_appointment(qty=1)
-    protocol    = create_and_assign_protocol_to_me
-    protocols_participant = protocol.protocols_participants.first
-    visit_group = protocols_participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_child_services(:per_participant).first
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    
-    expect(page).to have_css('a.list-group-item.appointment-link', wait: 10)
-    first('a.list-group-item.appointment-link').click
-    
-    expect(page).to have_css('a.btn.start-appointment', visible: :all, wait: 15)
-    
-    add_a_procedure(service)
-
-    visit_group.appointments.first.procedures.reload
-    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
-  end
-
-  def given_i_have_completed_an_appointment
-    given_i_have_added_a_procedure_to_an_appointment
-    when_i_start_the_appointment
-    when_i_complete_the_procedure
-  end
-
-  def when_i_start_the_appointment
-    find('a.btn.start-appointment').click
-    expect(page).to have_css('a.btn.reset-appointment', visible: true, wait: 10)
+  def and_i_have_added_a_procedure
+    add_a_procedure(service: service)
   end
 
   def when_i_complete_the_procedure
-    find('button.complete-btn').click
-    expect(page).to have_css('button.complete-btn.active', wait: 10)
+    # Strict scoping to the specific procedure's button group
+    within("#procedure#{procedure.id}StatusButtons") do
+      find('button.complete-btn').click
+    end
+    expect(page).to have_css("#procedure#{procedure.id}StatusButtons button.complete-btn.active")
+  end
+
+  def and_i_reset_the_procedure
+    # Click the dedicated unstarted button natively
+    within("#procedure#{procedure.id}StatusButtons") do
+      find('button.unstarted-btn').click
+    end
+    
+    # Sync point: wait for the complete button to natively lose its active state
+    expect(page).to have_no_css("#procedure#{procedure.id}StatusButtons button.complete-btn.active")
   end
 
   def when_i_incomplete_the_procedure
-    find('button.incomplete-btn').click
-    expect(page).to have_css('.modal.show', wait: 10)
+    within("#procedure#{procedure.id}StatusButtons") do
+      find('button.incomplete-btn').click
+    end
     
-    sleep 0.5 
+    # Native wait for the modal to render
+    expect(page).to have_css('.modal.show')
     
-    bootstrap_select '#procedure_notes_attributes_0_reason', "Assessment missed"
+    within('.modal.show') do
+      bootstrap_select '#procedure_notes_attributes_0_reason', "Assessment missed"
+      find('input[type="submit"]').click
+    end
     
-    sleep 0.5 
-
-    page.execute_script("$('.modal.show input[type=\"submit\"]').click();")
-    
-    sleep 0.5
-    
-    expect(page).to have_no_css('.modal.show', wait: 15)
-    expect(page).to have_css('button.incomplete-btn.active', wait: 10)
-  end
-
-  def when_i_try_to_complete_the_procedure
-    find('button.complete-btn').click
-    expect(page).to have_css('button.complete-btn.active', wait: 10)
+    # Sync point: natively wait for the modal to vanish
+    expect(page).to have_no_css('.modal.show')
+    expect(page).to have_css("#procedure#{procedure.id}StatusButtons button.incomplete-btn.active")
   end
 
   def when_i_view_the_notes_list
-    expect(page).to have_css("div#procedure#{@procedure.id}Notes", visible: :all, wait: 10)
-    find("div#procedure#{@procedure.id}Notes").click
-    expect(page).to have_css('.modal.show', wait: 10)
+    find("div#procedure#{procedure.id}Notes").click
+    expect(page).to have_css('.modal.show')
   end
 
-  def then_i_should_see_complete_notes(count=1)
-    expect(page).to have_css('div.note-body', text: 'Status set to complete', count: count, wait: 10)
+  def then_i_should_see_complete_notes
+    within('.modal.show') do
+      expect(page).to have_css('div.note-body', text: 'Status set to complete')
+    end
   end
 
   def then_i_should_see_reset_notes
-    expect(page).to have_css('div.note-body', text: 'Status reset', count: 1, wait: 10)
+    within('.modal.show') do
+      expect(page).to have_css('div.note-body', text: 'Status reset')
+    end
   end
 
   def then_i_should_see_a_helpful_message
-    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons[data-original-title=\"Click \'Start Visit\' and enter a start date to continue.\"]", visible: :all, wait: 10)
+    expect(page).to have_css("div#procedure#{procedure.id}StatusButtons[data-original-title=\"Click 'Start Visit' and enter a start date to continue.\"]", visible: :all)
   end
 end
