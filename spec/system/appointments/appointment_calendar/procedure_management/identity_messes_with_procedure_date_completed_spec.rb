@@ -20,27 +20,38 @@
 
 require 'rails_helper'
 
-feature 'User messes with a procedures date completed', js: true do
+RSpec.describe 'User messes with a procedures date completed', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+
+  # Lazily evaluated: safely queries the DB for the newly created procedure only when needed
+  let(:procedure)              { protocols_participant.appointments.first.procedures.find_by(service: service) }
+
+  # Extracted to prevent end-of-month and leap year flakiness natively
+  let(:target_date)            { Date.current.beginning_of_month + pick_new_date(Date.current.day).days }
 
   context 'which is incomplete' do
     scenario 'and sees a disabled datepicker' do
-      given_i_am_viewing_an_appointment
-      when_i_add_a_procedure
+      given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+      and_i_have_added_a_procedure
       then_i_should_see_a_disabled_datepicker
     end
   end
 
   context 'which is complete' do
     scenario 'and sees date completed updated and enabled' do
-      given_i_am_viewing_a_procedure
-      given_an_appointment_has_started
+      given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+      and_i_have_added_a_procedure
       when_i_complete_the_procedure
       then_i_should_see_an_enabled_datepicker_with_the_current_date
     end
 
     context 'and changes the completed date' do
       scenario 'and sees the new completed date' do
-        given_i_am_viewing_a_completed_procedure
+        given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+        and_i_have_added_a_procedure
+        when_i_complete_the_procedure
         when_i_edit_the_completed_date
         then_i_should_see_the_completed_date_has_been_updated
       end
@@ -49,117 +60,83 @@ feature 'User messes with a procedures date completed', js: true do
 
   context 'which is complete and sets it to incomplete' do
     scenario 'and sees date completed disabled' do
-      given_i_am_viewing_a_completed_procedure
+      given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+      and_i_have_added_a_procedure
+      when_i_complete_the_procedure
       when_i_incomplete_the_procedure
       then_i_should_see_a_disabled_datepicker
     end
   end
 
-  def given_i_am_viewing_an_appointment
-    next_day               = Time.now.day + 1
-    edited_completed_date  = Time.now.strftime("%m/#{next_day}/%Y")
-
-    @protocol              = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.first
-    service                = @protocol.organization.inclusive_child_services(:per_participant).first
-    @pricing_map           = create(:pricing_map, service: service, effective_date: @the_middle_of_next_month)
-
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    
-    expect(page).to have_css('a.list-group-item.appointment-link', visible: true)
-  end
-
-  def given_i_am_viewing_a_procedure
-    given_i_am_viewing_an_appointment
-    when_i_add_a_procedure
-  end
-
-  def given_i_am_viewing_a_completed_procedure
-    given_i_am_viewing_a_procedure
-    given_an_appointment_has_started
-    when_i_complete_the_procedure
-  end
-
-  def given_an_appointment_has_started
-    find('a.start-appointment').click
-    
-    expect(page).to have_no_css('a.start-appointment', wait: 5)
+  def and_i_have_added_a_procedure
+    add_a_procedure(service: service)
   end
 
   def when_i_complete_the_procedure
-    within("div#procedure#{@procedure.id}StatusButtons") do
-      find("button.complete-btn").click
-      
-      expect(page).to have_css("button.complete-btn.active", wait: 5)
+    within("#procedure#{procedure.id}StatusButtons") do
+      find('button.complete-btn').click
     end
+    
+    expect(page).to have_css("#procedure#{procedure.id}StatusButtons button.complete-btn.active")
   end
 
   def when_i_incomplete_the_procedure
-    reason = Procedure::NOTABLE_REASONS.first
+    within("#procedure#{procedure.id}StatusButtons") do
+      find('button.incomplete-btn').click
+    end
+    
+    expect(page).to have_css('.modal.show')
 
-    find("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn").click
+    # Dropdown logic kept outside the 'within' block to prevent swallowing body clicks
+    find('#procedure_notes_attributes_0_reason', visible: :hidden).ancestor('.bootstrap-select', match: :first).find('.dropdown-toggle').click
+    expect(page).to have_css('.dropdown-menu.show')
+    find('.dropdown-menu.show span.text', match: :first).click
+
+    fill_in 'Comment', with: 'Test comment'
     
-    expect(page).to have_css('.modal', visible: true, wait: 5)
-    
-    within('.modal') do
-      find("button[data-id='procedure_notes_attributes_0_reason']").click
-      find('span.text', text: reason, exact_text: true, match: :first, visible: true).click
-      
-      expect(page).to have_css(".filter-option-inner-inner", text: reason, visible: true, wait: 5)
-      
-      fill_in 'Comment', with: 'Test comment'
-      
-      submit_btn = find('input[type="submit"]')
-      page.execute_script("arguments[0].click();", submit_btn)
+    within('.modal.show') do
+      find('input[type="submit"]').click
     end
 
-    expect(page).to have_no_css('.modal', visible: true, wait: 10)
-    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn.active", wait: 5)
-  end
-
-  def when_i_add_a_procedure
-    visit_group = @protocols_participant.appointments.first.visit_group
-    service     = @protocol.organization.inclusive_child_services(:per_participant).first
-
-    first('a.list-group-item.appointment-link').click
-    
-    add_a_procedure(service)
-
-    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
-    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons", visible: true)
+    expect(page).to have_no_css('.modal.show')
+    expect(page).to have_css("#procedure#{procedure.id}StatusButtons button.incomplete-btn.active")
   end
 
   def when_i_edit_the_completed_date
-    expect(page).to have_field('procedure_completed_date', disabled: false, wait: 5)
-
-    @complete_procedure    = Procedure.complete.last
-    existing_day           = @complete_procedure.completed_date.strftime("%-d").to_i
-    @new_day               = pick_new_date(existing_day)
-    @edited_completed_date = Time.now.change(day: @new_day)
-
-    find('input#procedure_completed_date').click
-    expect(page).to have_css('.datepicker-days', visible: true)
+    input = find("#procedure#{procedure.id}CompletedDatePicker input")
     
-    within('.datepicker-days') do
-      find('td.day:not(.old):not(.new)', text: @new_day.to_s, exact_text: true).click
+    # Native Capybara interaction: click to focus, safely backspace out the old date to appease the JS mask, and type the new date natively.
+    input.click
+    input.set(target_date.strftime('%m/%d/%Y'), clear: :backspace)
+    
+    # Native blur event
+    find('body').click(x: 0, y: 0)
+    
+    # Native sync point to guarantee the UI processed the input before asserting backend logic
+    within("#procedure#{procedure.id}CompletedDatePicker") do
+      expect(page).to have_field('procedure[completed_date]', with: target_date.strftime('%m/%d/%Y'))
     end
-
-    expect(page).to have_field('procedure_completed_date', with: @edited_completed_date.strftime('%m/%d/%Y'), wait: 5)
-    @complete_procedure.reload
   end
 
   def then_i_should_see_a_disabled_datepicker
-    expect(page).to have_field('procedure_completed_date', disabled: true, wait: 5)
+    within("#procedure#{procedure.id}CompletedDatePicker") do
+      expect(page).to have_field('procedure[completed_date]', disabled: true)
+    end
   end
 
   def then_i_should_see_an_enabled_datepicker_with_the_current_date
-    expect(page).to have_field('procedure_completed_date', disabled: false, with: Time.now.strftime('%m/%d/%Y'), wait: 5)
+    within("#procedure#{procedure.id}CompletedDatePicker") do
+      # Completely eradicating the page.evaluate_script anti-pattern
+      expect(page).to have_field('procedure[completed_date]', with: Date.current.strftime('%m/%d/%Y'), disabled: false)
+    end
   end
 
   def then_i_should_see_the_completed_date_has_been_updated
-    date_on_page = find('#procedure_completed_date').value()
-
-    expect(@complete_procedure.completed_date.strftime('%D')).to eq(@edited_completed_date.strftime('%D'))
-    expect(date_on_page).to eq(@edited_completed_date.strftime('%m/%d/%Y'))
+    within("#procedure#{procedure.id}CompletedDatePicker") do
+      expect(page).to have_field('procedure[completed_date]', with: target_date.strftime('%m/%d/%Y'))
+    end
+    
+    # Safely relying on scoped 'procedure' variable rather than guessing with Procedure.last
+    expect(procedure.reload.completed_date.to_date).to eq(target_date)
   end
 end

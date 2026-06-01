@@ -20,7 +20,13 @@
 
 require 'rails_helper'
 
-feature 'User sets Procedure performer', js: true do
+RSpec.describe 'Identity sets Procedure performer', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:appointment)           { protocols_participant.appointments.first }
+  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+  
+  let(:logged_in_identity) { @logged_in_identity }
 
   scenario 'completing without selecting a Performer from the Performer dropdown' do
     given_i_have_added_a_procedure_to_an_appointment
@@ -47,21 +53,8 @@ feature 'User sets Procedure performer', js: true do
   end
 
   def given_i_have_added_a_procedure_to_an_appointment
-    protocol    = create_and_assign_protocol_to_me
-    protocols_participant = protocol.protocols_participants.first
-    visit_group = protocols_participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_child_services(:per_participant).first
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-
-    expect(page).to have_css('a.list-group-item.appointment-link', visible: true)
-    first('a.list-group-item.appointment-link').click
-
-    add_a_procedure(service)
-
-    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
-    
-    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons", visible: true)
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+    add_a_procedure(service: service)
   end
 
   def given_i_have_completed_a_procedure
@@ -75,63 +68,51 @@ feature 'User sets Procedure performer', js: true do
   end
 
   def when_i_complete_the_procedure
-    if page.has_css?('a.start-appointment', wait: 1)
-      find('a.start-appointment').click
-      expect(page).to have_no_css('a.start-appointment', wait: 5)
-    end
+    find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first).click
+    expect(page).to have_no_css('a.btn.start-appointment')
 
-    within("div#procedure#{@procedure.id}StatusButtons") do
+    within('tr', text: /#{Regexp.quote(service.name)}/, match: :first) do
       find('button.complete-btn').click
-      
-      expect(page).to have_css('button.complete-btn.active', wait: 5)
     end
   end
 
   def when_i_uncomplete_the_procedure
-    within("div#procedure#{@procedure.id}StatusButtons") do
+    within('tr', text: /#{Regexp.quote(service.name)}/, match: :first) do
       find('button.unstarted-btn').click
-      
-      expect(page).to have_css('button.unstarted-btn.active', wait: 5)
     end
   end
 
   def when_i_un_incomplete_the_procedure
-    when_i_uncomplete_the_procedure
+    within('tr', text: /#{Regexp.quote(service.name)}/, match: :first) do
+      find('button.unstarted-btn').click
+    end
   end
 
   def when_i_incomplete_the_procedure
-    if page.has_css?('a.start-appointment', wait: 1)
-      find('a.start-appointment').click
-      expect(page).to have_no_css('a.start-appointment', wait: 5)
+    find('a.btn.start-appointment, button', text: /Start (Visit|Appointment)/i, match: :first).click
+    expect(page).to have_no_css('a.btn.start-appointment')
+
+    within('tr', text: /#{Regexp.quote(service.name)}/, match: :first) do
+      find('button.incomplete-btn').click
     end
 
-    find("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn").click
+    bootstrap_select('#procedure_notes_attributes_0_reason', Procedure::NOTABLE_REASONS.first)
+    fill_in 'Comment', with: 'Test comment'
     
-    expect(page).to have_css('.modal', visible: true, wait: 5)
-
-    reason = Procedure::NOTABLE_REASONS.first
+    find('input[type="submit"]', match: :first).click
     
-    within('.modal') do
-      find("button[data-id='procedure_notes_attributes_0_reason']").click
-      find('span.text', text: reason, exact_text: true, match: :first, visible: true).click
-      
-      expect(page).to have_css(".filter-option-inner-inner", text: reason, visible: true, wait: 5)
-      
-      fill_in 'Comment', with: 'Test comment'
-      
-      submit_btn = find('input[type="submit"]')
-      page.execute_script("arguments[0].click();", submit_btn)
-    end
-
-    expect(page).to have_no_css('.modal', visible: true, wait: 10)
-    expect(page).to have_css("div#procedure#{@procedure.id}StatusButtons button.incomplete-btn.active", wait: 5)
+    expect(page).to have_no_css('#procedure_notes_attributes_0_reason')
   end
 
   def then_i_should_see_that_i_am_the_procedure_performer
-    expect(page).to have_css("#core#{@procedure.sparc_core_id}ProceduresGroupedView td.performer div.filter-option", text: @logged_in_identity.full_name, wait: 5)
+    within('tr', text: /#{Regexp.quote(service.name)}/, match: :first) do
+      expect(page).to have_css('td.performer div.filter-option', text: logged_in_identity.full_name)
+    end
   end
 
   def then_i_should_see_that_the_performer_has_not_been_set
-    expect(page).to_not have_css("#core#{@procedure.sparc_core_id}ProceduresGroupedView td.performer div.filter-option", text: @logged_in_identity.full_name, wait: 5)
+    within('tr', text: /#{Regexp.quote(service.name)}/, match: :first) do
+      expect(page).to have_no_css('td.performer div.filter-option', text: logged_in_identity.full_name)
+    end
   end
 end

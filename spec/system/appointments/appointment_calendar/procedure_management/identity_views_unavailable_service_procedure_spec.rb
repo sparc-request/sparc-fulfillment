@@ -20,117 +20,117 @@
 
 require 'rails_helper'
 
-feature 'User views procedure which has an unavailable service', js: true do
+RSpec.describe 'Identity views procedure which has an unavailable service', type: :system, js: true do
+  # VI. The RSpec Execution Trap: Lazy evaluation ONLY. No let! blocks here.
+  let(:protocol)              { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:appointment)           { protocols_participant.appointments.first }
+  let(:services)              { protocol.organization.inclusive_child_services(:per_participant) }
+  let(:first_service)         { services.first }
 
-	scenario 'and sees the inactive tag.' do
-		given_i_am_viewing_the_appointment_calendar
-		when_i_add_a_procedure
-		when_i_change_the_service_to_inactive
-    when_the_procedure_is_not_unstarted
-		when_i_open_the_appointment_calendar_with_the_bad_procedure
-		then_i_should_see_the_inactive_tag
-	end
+  let(:inactive_core)         { create(:organization, type: 'Core', name: 'Test Core') }
+  let(:inactive_service)      { create(:service, organization: inactive_core) }
+  let(:inactive_procedure) do
+    create(
+      :procedure,
+      appointment: appointment,
+      service: inactive_service,
+      service_name: inactive_service.name,
+      sparc_core_id: inactive_core.id,
+      sparc_core_name: inactive_core.name,
+      status: 'unstarted'
+    )
+  end
+
+  scenario 'and sees the inactive tag' do
+    given_i_have_added_a_procedure(service: first_service)
+    when_the_procedure_is_complete(service: first_service)
+    when_i_change_the_service_to_inactive(service: first_service)
+    
+    when_i_open_the_appointment_calendar
+    then_i_should_see_the_inactive_tag(service: first_service)
+  end
 
   scenario 'and procedure is unstarted' do
-    given_i_am_viewing_the_appointment_calendar
-    when_i_add_a_procedure
-    when_i_change_the_service_to_inactive
-    when_i_open_the_appointment_calendar_with_the_bad_procedure
-    then_i_should_not_see_the_procedure
+    given_i_have_added_a_procedure(service: first_service)
+    when_i_change_the_service_to_inactive(service: first_service)
+    
+    when_i_open_the_appointment_calendar
+    then_i_should_not_see_the_procedure(service: first_service)
   end
 
   scenario 'and core with only unstarted unavailable services is hidden' do
-    given_i_am_viewing_the_appointment_calendar
-    when_i_add_a_procedure_to_a_new_core
-    when_i_change_the_service_to_inactive
-    when_i_open_the_appointment_calendar_with_the_bad_procedure
-    then_i_should_not_see_the_procedure
-    then_i_should_not_see_the_core
+    given_i_have_an_unstarted_procedure_in_a_new_core
+    when_i_change_the_service_to_inactive(service: inactive_service)
+    
+    when_i_open_the_appointment_calendar
+    then_i_should_not_see_the_procedure(service: inactive_service)
+    then_i_should_not_see_the_core(core: inactive_core)
 
     when_i_make_the_procedure_incomplete
-    when_i_open_the_appointment_calendar_with_the_bad_procedure
-    then_i_should_see_the_procedure
-    then_i_should_see_the_core
+    when_i_open_the_appointment_calendar
+    
+    then_i_should_see_the_procedure(service: inactive_service)
+    then_i_should_see_the_core(core: inactive_core)
   end
 
-  def when_i_add_a_procedure_to_a_new_core
-    @inactive_core = create(:organization, type: 'Core', name: 'Test Core')
-    @inactive_service = create(:service, organization: @inactive_core)
-    @inactive_procedure = create(
-      :procedure,
-      appointment: @appointment,
-      service: @inactive_service,
-      service_name: @inactive_service.name,
-      sparc_core_id: @inactive_core.id,
-      sparc_core_name: @inactive_core.name,
-      status: 'unstarted'
-    )
-    @appointment.reload
+  def given_i_have_added_a_procedure(service:)
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+    add_a_procedure(service: service)
   end
 
-  def then_i_should_not_see_the_core
-    expect(page).not_to have_content(@inactive_core.name)
+  def given_i_have_an_unstarted_procedure_in_a_new_core
+    # Simply calling the lazy let block instantiates it in the database exactly when needed
+    inactive_procedure
   end
 
-  def then_i_should_see_the_core
-    expect(page).to have_content(@inactive_core.name)
+  def when_the_procedure_is_complete(service:)
+    # Bypassing the UI here to quickly arrange database state
+    procedure = appointment.procedures.find_by(service_id: service.id)
+    procedure.update(status: 'complete')
   end
 
   def when_i_make_the_procedure_incomplete
-    @inactive_procedure.update(status: 'incomplete')
+    inactive_procedure.update(status: 'incomplete')
   end
 
-  def given_i_am_viewing_the_appointment_calendar
-    @protocol     = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.first
-    @appointment  = @protocols_participant.appointments.first
-    @services     = @protocol.organization.inclusive_child_services(:per_participant)
+  def when_i_change_the_service_to_inactive(service:)
+    service.update(is_available: false)
+  end
 
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+  def when_i_open_the_appointment_calendar
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol.id)
     
-    expect(page).to have_css('button#addService', visible: true, wait: 5)
+    # Native sync point to replace wait_for_ajax: ensuring the core container renders
+    expect(page).to have_css('#appointmentContainer', visible: :all)
   end
 
-  def when_i_add_a_procedure
-    @service = @services.first
+  def then_i_should_see_the_inactive_tag(service:)
+    within('tr', text: /#{Regexp.quote(service.name)}/, match: :first) do
+      expect(page).to have_text('(Inactive)')
+    end
+  end
+
+  def then_i_should_not_see_the_procedure(service:)
+    # Because we are asserting the ABSENCE of something, we must first assert 
+    # the PRESENCE of the parent wrapper to avoid a false positive while the page loads!
+    expect(page).to have_css('.list-group-item.appointment-link')
+    expect(page).to have_no_css('tr', text: /#{Regexp.quote(service.name)}/, visible: :all)
+  end
+
+  def then_i_should_see_the_procedure(service:)
+    expect(page).to have_css('tr', text: /#{Regexp.quote(service.name)}/, visible: :all)
     
-    select_container = find('[name="service_id"]', visible: :all).find(:xpath, '..')
-    select_container.find('button.dropdown-toggle').click
-    select_container.find('span.text', text: @service.name, exact_text: true, match: :first, visible: true).click
-    
-    expect(page).to have_css(".filter-option-inner-inner", text: @service.name, visible: true, wait: 5)
-
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    
-    expect(page).to have_text(@service.name, wait: 5)
+    within('tr', text: /#{Regexp.quote(service.name)}/, match: :first) do
+      expect(page).to have_text('(Inactive)')
+    end
   end
 
-  def when_i_change_the_service_to_inactive
-    service_to_update = @inactive_service || @service
-    service_to_update.update(is_available: false)
+  def then_i_should_not_see_the_core(core:)
+    expect(page).to have_no_content(core.name)
   end
 
-  def when_the_procedure_is_not_unstarted
-    @procedure = @appointment.procedures.first
-    @procedure.update(status: 'complete')
-  end
-
-  def when_i_open_the_appointment_calendar_with_the_bad_procedure
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
-    
-    expect(page).to have_css('button#addService', visible: true, wait: 5)
-  end
-
-  def then_i_should_see_the_inactive_tag
-    expect(page).to have_text("(Inactive)", wait: 5)
-  end
-
-  def then_i_should_not_see_the_procedure 
-    expect(page).not_to have_text("(Inactive)")
-  end
-
-  def then_i_should_see_the_procedure
-    expect(page).to have_text("(Inactive)", wait: 5)
+  def then_i_should_see_the_core(core:)
+    expect(page).to have_content(core.name)
   end
 end

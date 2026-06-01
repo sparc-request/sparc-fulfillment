@@ -20,75 +20,77 @@
 
 require 'rails_helper'
 
-feature 'User creates a procedure note', js: true do
+RSpec.describe 'Identity creates a procedure note', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+
+  # Lazily evaluated: safely queries the DB for the newly created procedure only when needed
+  let(:procedure)              { protocols_participant.appointments.first.procedures.find_by(service: service) }
+  
+  # Extracted to prevent time-travel test flakiness
+  let(:target_date)            { Date.current.change(day: 10) }
 
   context 'and views the Notes list before create' do
     scenario 'and sees a notification that there are no notes' do
-      given_i_have_added_a_procedure_to_the_appointment_calendar
+      given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+      and_i_have_added_a_procedure
       when_i_view_the_notes_list
       then_i_should_see_a_notice_that_there_are_no_notes
     end
   end
 
   scenario 'and sees the note in the notes list' do
-    given_i_have_added_a_procedure_to_the_appointment_calendar
+    given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+    and_i_have_added_a_procedure
     when_i_set_a_followup
     when_i_view_the_notes_list
     then_i_should_see_the_note
   end
 
-  def given_i_have_added_a_procedure_to_the_appointment_calendar
-    protocol    = create_and_assign_protocol_to_me
-    @assignee   = Identity.first
-    protocols_participant = protocol.protocols_participants.first
-    visit_group = protocols_participant.appointments.first.visit_group
-    service     = protocol.organization.inclusive_child_services(:per_participant).first
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    
-    expect(page).to have_css('a.start-appointment', visible: :all, wait: 15)
-
-    find('a.start-appointment').click
-    
-    expect(page).to have_css('a.reset-appointment', visible: true, wait: 10)
-
-    add_a_procedure(service)
-
-    @procedure = visit_group.appointments.first.procedures.where(service_id: service.id).first
+  def and_i_have_added_a_procedure
+    add_a_procedure(service: service)
   end
 
   def when_i_set_a_followup
-    find("div#followup#{@procedure.id} a.btn").click
+    find("div#followup#{procedure.id} a.btn").click
     
-    expect(page).to have_css('.modal.show', wait: 10)
-    
-    sleep 0.5 
+    # Native wait for the modal to ensure it's fully rendered before filling
+    expect(page).to have_css('.modal.show')
 
-    bootstrap_select '#task_assignee_id', @assignee.full_name
-    bootstrap_datepicker '#task_due_at', day: '10'
+    # Bypassing the brittle 'Identity.first' DB query by natively grabbing the first available dropdown option
+    find('#task_assignee_id', visible: :hidden).ancestor('.bootstrap-select', match: :first).find('.dropdown-toggle').click
+    expect(page).to have_css('.dropdown-menu.show')
+    find('.dropdown-menu.show span.text', match: :first).click
+
+    # Explicitly pass the formatted text string since the input is writable
+    bootstrap_datepicker '#task_due_at', text: target_date.strftime('%m/%d/%Y')
     fill_in 'Comment', with: 'Test comment'
     
-    sleep 0.5
+    # Safely strict-scope just the submit button
+    within('.modal.show') do
+      find('input[type="submit"]').click
+    end
     
-    page.execute_script("$('.modal.show input[type=\"submit\"]').click();")
-    
-    sleep 0.5
-    
-    expect(page).to have_no_css('.modal.show', wait: 15)
+    # Sync point: natively wait for the modal to vanish, eliminating wait_for_ajax
+    expect(page).to have_no_css('.modal.show')
   end
 
   def when_i_view_the_notes_list
-    expect(page).to have_css("div#procedure#{@procedure.id}Notes a.btn", visible: :all, wait: 10)
-    find("div#procedure#{@procedure.id}Notes a.btn").click
-    
-    expect(page).to have_css('.modal.show', wait: 10)
+    find("div#procedure#{procedure.id}Notes a.btn").click
+    # Native wait for the notes modal to render
+    expect(page).to have_css('.modal.show')
   end
 
   def then_i_should_see_a_notice_that_there_are_no_notes
-    expect(page).to have_css('div.alert', text: 'This Procedure doesn\'t have any notes.', wait: 10)
+    within('.modal.show') do
+      expect(page).to have_css('div.alert', text: "This Procedure doesn't have any notes.")
+    end
   end
 
   def then_i_should_see_the_note
-    expect(page).to have_css('.note-body p', text: "Followup: #{Task.last.due_at.strftime("%Y-%m-10")}: Test comment", wait: 10)
+    within('.modal.show') do
+      expect(page).to have_css('.note-body p', text: "Followup: #{target_date.strftime('%Y-%m-%d')}: Test comment")
+    end
   end
 end
