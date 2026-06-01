@@ -20,57 +20,34 @@
 
 require 'rails_helper'
 
-feature 'Removing a Status', js: true do
+RSpec.describe 'Removing a Status', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:appointment)           { protocols_participant.appointments.first }
 
-  context "User removes an appointment status" do
-    scenario 'and sees the appointment status is destroyed' do
-      given_i_select_an_appointment
-      when_i_deselect_an_appointment_status
-      then_the_appointment_status_should_be_destroyed_for_that_appointment
-    end
+  scenario 'user removes an appointment status and sees it destroyed' do
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+    when_i_select_and_then_deselect_an_appointment_status
+    then_the_appointment_status_should_be_destroyed_for_that_appointment
   end
 
-  def given_i_select_an_appointment
-    protocol      = create_and_assign_protocol_to_me
-    protocols_participant   = protocol.protocols_participants.first
-    @appointment  = protocols_participant.appointments.first
-    visit_group   = @appointment.visit_group
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
+  def when_i_select_and_then_deselect_an_appointment_status
+    bootstrap_select('#statuses', 'Skipped Visit')
     
-    expect(page).to have_css('a.list-group-item.appointment-link', visible: true, wait: 5)
-    first('a.list-group-item.appointment-link').click
-
-    expect(page).to have_css('#statuses', visible: :all, wait: 5)
-  end
-
-  def when_i_deselect_an_appointment_status
-    select_container = find('#statuses', visible: :all).find(:xpath, '..')
+    find('body').click(x: 0, y: 0)
     
-    select_container.find('button.dropdown-toggle').click
-    select_container.find('span.text', text: "Skipped Visit", exact_text: true, match: :first, visible: true).click
+    # Hand-rolling the deselection leveraging 'bootstrap_wrapper' - cannot just call `bootstrap_select` again here
+    bootstrap_wrapper('#statuses').find('.dropdown-toggle').click
+    expect(bootstrap_wrapper('#statuses')).to have_css('.dropdown-menu.show')
     
-    expect(page).to have_css(".filter-option-inner-inner", text: "Skipped Visit", visible: true, wait: 5)
-
-    start_time = Time.now
-    while @appointment.appointment_statuses.reload.size == 0 && (Time.now - start_time) < 5
-      sleep 0.1
-    end
-
-    select_container = find('#statuses', visible: :all).find(:xpath, '..')
-
-    target_span = select_container.find('span.text', text: "Skipped Visit", exact_text: true, match: :first, visible: :all)
-    page.execute_script("arguments[0].click();", target_span)
+    bootstrap_wrapper('#statuses').find('.dropdown-menu.show span.text', text: 'Skipped Visit', exact_text: true, visible: true).click
     
-    expect(page).to_not have_css(".filter-option-inner-inner", text: "Skipped Visit", visible: true, wait: 5)
+    # Native Sync Point: ensure the deselection actually registered in the UI
+    expect(bootstrap_wrapper('#statuses')).to have_no_css('.filter-option-inner-inner', text: 'Skipped Visit', exact_text: true)
   end
 
   def then_the_appointment_status_should_be_destroyed_for_that_appointment
-    start_time = Time.now
-    while @appointment.appointment_statuses.reload.size > 0 && (Time.now - start_time) < 5
-      sleep 0.1
-    end
-
-    expect(@appointment.appointment_statuses.size).to eq(0)
+    # Reload the association to ensure we pull the fresh state from the database
+    expect(appointment.appointment_statuses.reload.size).to eq(0)
   end
 end

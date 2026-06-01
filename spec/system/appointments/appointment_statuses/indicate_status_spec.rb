@@ -18,46 +18,25 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-require "rails_helper"
+require 'rails_helper'
 
-feature "Indicating a Status", js: true do
+RSpec.describe 'Indicating a Status', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:appointment)           { protocols_participant.appointments.first }
 
-  context "User indicates an appointment status" do
-    scenario 'and sees the appointment status has been created' do
-      given_i_select_an_appointment
-      when_i_indicate_an_appointment_status
-      then_an_appointment_status_should_be_created_for_that_appointment
-    end
-  end
-
-  def given_i_select_an_appointment
-    protocol      = create_and_assign_protocol_to_me
-    protocols_participant   = protocol.protocols_participants.first
-    @appointment  = protocols_participant.appointments.first
-    visit_group   = @appointment.visit_group
-
-    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol)
-    
-    expect(page).to have_css('a.list-group-item.appointment-link', visible: true, wait: 5)
-    first('a.list-group-item.appointment-link').click
-    
-    expect(page).to have_css('#statuses', visible: :all, wait: 5)
+  scenario 'user indicates an appointment status and sees it created' do
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
+    when_i_indicate_an_appointment_status
+    then_an_appointment_status_should_be_created_for_that_appointment
   end
 
   def when_i_indicate_an_appointment_status
-    select_container = find('#statuses', visible: :all).find(:xpath, '..')
-    select_container.find('button.dropdown-toggle').click
-    select_container.find('span.text', text: "Skipped Visit", exact_text: true, match: :first, visible: true).click
-    
-    expect(page).to have_css(".filter-option-inner-inner", text: "Skipped Visit", visible: true, wait: 5)
+    bootstrap_select('#statuses', 'Skipped Visit')
   end
 
   def then_an_appointment_status_should_be_created_for_that_appointment
-    start_time = Time.now
-    while @appointment.appointment_statuses.reload.size == 0 && (Time.now - start_time) < 5
-      sleep 0.1
-    end
-
-    expect(@appointment.appointment_statuses.size).to eq(1)
+    # Reload the association to ensure we pull the fresh state from the database
+    expect(appointment.appointment_statuses.reload.size).to eq(1)
   end
 end
