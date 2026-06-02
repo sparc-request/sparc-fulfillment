@@ -103,6 +103,11 @@ RSpec.describe 'User messes with a procedures date completed', type: :system, js
   end
 
   def when_i_edit_the_completed_date
+    # SYNC POINT: Natively wait for the JS to finish enabling the datepicker and injecting the default "today" date. Otherwise, Capybara types too fast and the JS overwrites the custom date.
+    within("#procedure#{procedure.id}CompletedDatePicker") do
+      expect(page).to have_field('procedure[completed_date]', with: Date.current.strftime('%m/%d/%Y'), disabled: false)
+    end
+
     input = find("#procedure#{procedure.id}CompletedDatePicker input")
     
     # Native Capybara interaction: click to focus, safely backspace out the old date to appease the JS mask, and type the new date natively.

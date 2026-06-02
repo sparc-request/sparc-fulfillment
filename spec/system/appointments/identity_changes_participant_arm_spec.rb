@@ -20,18 +20,31 @@
 
 require 'rails_helper'
 
-feature "Change Participant Arm", js: :true do
-  context "original arm does NOT have completed procedures" do
-    scenario "User changes arm on the participant tracker" do
+RSpec.describe 'Identity changes Participant Arm', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:original_arm)          { protocols_participant.arm }
+  let!(:second_arm)            { protocol.arms.where.not(id: original_arm.id).first }
+  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+  let!(:original_appointment)  { original_arm.visit_groups.first }
+  let!(:second_appointment)    { second_arm.visit_groups.first }
+
+  before do
+    service.update(name: 'Test Service')
+    original_appointment.update(name: 'First Arm Appointment')
+  end
+
+  context 'when original arm does NOT have completed procedures' do
+    scenario 'User changes arm on the participant tracker and only sees new appointments' do
       when_i_start_work_on_an_appointment
       then_i_change_the_arm_of_the_participant
       and_i_visit_the_calendar_again
       i_should_only_see_new_appointments
     end
   end
-  
-  context "original arm has completed procedures" do
-    scenario "User changes arm on the participant tracker" do
+
+  context 'when original arm has completed procedures' do
+    scenario 'User changes arm on the participant tracker and sees both new and old appointments' do
       when_i_start_work_on_an_appointment
       and_i_complete_a_procedure
       then_i_change_the_arm_of_the_participant
@@ -41,67 +54,62 @@ feature "Change Participant Arm", js: :true do
   end
 
   def when_i_start_work_on_an_appointment
-    @protocol     = create_and_assign_protocol_to_me
-    @protocols_participant  = @protocol.protocols_participants.first
-    @original_arm = @protocols_participant.arm
-    @second_arm   = @protocol.arms.where.not(id: @original_arm.id).first
-    @service      = @protocol.organization.inclusive_child_services(:per_participant).first
-    @original_appointment = @original_arm.visit_groups.first
-
-    @service.update(name: 'Test Service')
-    @original_appointment.update(name: "First Arm Appointment")
-
-    given_i_am_viewing_a_visit
-
-    find('a.start-appointment').click
-    
-    expect(page).to have_no_css('a.start-appointment', wait: 5)
-    expect(page).to have_css('button#addService', visible: true, wait: 5)
-
-    add_a_procedure(@service)
+    given_i_am_viewing_a_started_visit(participant: protocols_participant, protocol: protocol)
+    add_a_procedure(service: service)
   end
 
   def and_i_complete_a_procedure
-    find('button.complete-btn').click
-    
-    expect(page).to have_css('button.complete-btn.active', wait: 5)
+    find('button.complete-btn', match: :first).click
+
+    expect(page).to have_css('button.complete-btn.active')
   end
 
   def then_i_change_the_arm_of_the_participant
-    visit protocol_path(@protocol.id)
-    
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
-    click_link 'Participant Tracker'
+    visit protocol_path(protocol.id)
 
-    form_selector = "#edit_protocols_participant_#{@protocols_participant.id}"
-    
-    hidden_select = find("#{form_selector} select#protocols_participant_arm_id", visible: :all, wait: 10)
-    select_container = hidden_select.find(:xpath, '..')
-    
-    select_container.find('button.dropdown-toggle').click
-    
-    target_span = select_container.find('span.text', text: @second_arm.name, exact_text: true, match: :first, visible: :all)
-    page.execute_script("arguments[0].click();", target_span)
-    
-    start_time = Time.now
-    while @protocols_participant.reload.arm_id != @second_arm.id && (Time.now - start_time) < 5
-      sleep 0.1
+    # SYNC POINT 1: Ensure Rails UJS is fully initialized
+    expect(page).to have_css('a#studyScheduleTabLink.active')
+    expect(page).to have_css('.tab-pane.active#studyScheduleTab')
+
+    retries = 5
+    begin
+      find('#participantTrackerTabLink').click
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      retries -= 1
+      retry if retries > 0
+      raise "StaleElementReferenceError exhausted targeting Participant Tracker tab"
     end
+
+    expect(page).to have_css('.tab-pane.active#participantTrackerTab')
+    
+    # Scope the loading check strictly to the tracker tab
+    expect(page).to have_no_css('#participantTrackerTab .fixed-table-loading')
+
+    # Strict isolation to bypass the invalid legacy HTML duplicates
+    within("td.arm form#edit_protocols_participant_#{protocols_participant.id}") do
+      expect(page).to have_css('#protocols_participant_arm_id', visible: :hidden)
+      bootstrap_select('#protocols_participant_arm_id', second_arm.name)
+    end
+
+    # SYNC POINT 2: The Ghost Appointment Fix
+    # Target the specific table inside the active tab to dodge the ambiguous match
+    refresh_bootstrap_table('#participantTrackerTab .bootstrap-table')
+    
+    # Ensure the wait for the correct loading overlay to vanish
+    expect(page).to have_no_css('#participantTrackerTab .fixed-table-loading')
   end
 
   def and_i_visit_the_calendar_again
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol.id)
-    
-    expect(page).to have_css("a.appointment-link", visible: true, wait: 5)
+    given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)
   end
 
   def i_should_see_new_and_old_appointments
-    expect(page).to have_css("a.appointment-link span", text: @original_appointment.name)
-    expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
+    expect(page).to have_css('a.appointment-link span', text: original_appointment.name)
+    expect(page).to have_css('a.appointment-link span', text: second_appointment.name)
   end
 
   def i_should_only_see_new_appointments
-    expect(page).to have_css("a.appointment-link span", text: @second_arm.visit_groups.first.name)
-    expect(page).to_not have_css("a.appointment-link span", text: @original_appointment.name)
+    expect(page).to have_no_css('a.appointment-link span', text: original_appointment.name)
+    expect(page).to have_css('a.appointment-link span', text: second_appointment.name)
   end
 end

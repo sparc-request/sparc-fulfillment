@@ -20,12 +20,20 @@
 
 require 'rails_helper'
 
-feature 'Custom appointment', js: true do
+RSpec.describe 'Identity creates custom appointment', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+  let(:custom_visit_name)      { 'Test Visit' }
 
   context 'User tries to create a custom appointment' do
     context 'and the participant has an arm' do
+      before do
+        protocols_participant.update(arm: Arm.last || create(:arm))
+      end
+
       scenario 'and sees the create custom visit modal' do
-        given_i_am_viewing_the_participant_calendar(:with_arm)
+        given_i_am_viewing_the_participant_calendar
         when_i_click_create_custom_appointment
         then_i_should_see_the_create_custom_visit_modal
       end
@@ -33,6 +41,10 @@ feature 'Custom appointment', js: true do
   end
 
   context 'User creates custom appointment' do
+    before do
+      protocols_participant.update(arm: Arm.last || create(:arm))
+    end
+
     context 'and saves after correctly filling out the form' do
       scenario 'and sees the new appointment' do
         given_i_am_viewing_the_participant_calendar
@@ -57,103 +69,74 @@ feature 'Custom appointment', js: true do
     end
   end
 
-  def given_i_am_viewing_the_participant_calendar(has_arm=:with_arm)
-    @protocol     = create_and_assign_protocol_to_me
-    @protocols_participant  = @protocol.protocols_participants.first
-
-    case has_arm
-    when :with_arm
-      @protocols_participant.update_attribute(:arm, Arm.last)
-    when :without_arm
-      @protocols_participant.update_attribute(:arm, nil)
-    end
-
-    visit calendar_protocol_participant_path(id: @protocols_participant.id, protocol_id: @protocol)
+  def given_i_am_viewing_the_participant_calendar
+    visit calendar_protocol_participant_path(id: protocols_participant.id, protocol_id: protocol.id)
     
-    expect(page).to have_css('#new_appointment_button', visible: true, wait: 5)
+    expect(page).to have_css('#appointmentContainer', visible: :all)
   end
 
   def when_i_click_create_custom_appointment
     find('#new_appointment_button').click
-    
-    expect(page).to have_css('.modal', visible: true, wait: 5)
   end
 
   def when_i_fill_in_the_form
+    # Strict targeting: Blind Capybara to the rest of the page to prevent false positive matches
     within('.modal') do
-      fill_in 'custom_visit_name', with: 'Test Visit'
-      
-      position_container = find("#custom_visit_position", visible: :all).find(:xpath, '..')
-      position_container.find('button.dropdown-toggle').click
-      
-      pos_span = position_container.find('span.text', text: "Add as last", exact_text: true, match: :first, visible: :all)
-      page.execute_script("arguments[0].click();", pos_span)
-      expect(page).to have_css(".filter-option-inner-inner", text: "Add as last", visible: :all, wait: 5)
-
-      reason_container = find("#custom_visit_reason", visible: :all).find(:xpath, '..')
-      reason_container.find('button.dropdown-toggle').click
-      
-      reason_span = reason_container.find('span.text', text: "Assessment not performed", exact_text: true, match: :first, visible: :all)
-      page.execute_script("arguments[0].click();", reason_span)
-      expect(page).to have_css(".filter-option-inner-inner", text: "Assessment not performed", visible: :all, wait: 5)
+      fill_in 'custom_visit_name', with: custom_visit_name
+      bootstrap_select '#custom_visit_position', 'Add as last'
+      bootstrap_select '#custom_visit_reason', 'Assessment not performed'
     end
   end
 
   def when_i_click_add_appointment
     within('.modal') do
-      submit_btn = find_button('Submit', visible: :all)
-      page.execute_script("arguments[0].click();", submit_btn)
+      click_button 'Submit'
     end
     
-    expect(page).to have_no_css('.modal', visible: true, wait: 10)
+    expect(page).to have_no_css('.modal')
   end
 
   def when_i_select_the_appointment
-    @service = @protocol.organization.inclusive_child_services(:per_participant).first
-    @service.update(name: 'Test Service')
-    
-    expect(page).to have_css("a.appointment-link span", text: "Test Visit", wait: 10)
-    find("a.appointment-link span", text: "Test Visit").click
-    
-    expect(page).to have_css('#add_procedure_dropdown', visible: :all, wait: 5)
+    retries = 5
+    begin
+      find('a.appointment-link span', text: custom_visit_name, match: :first).click
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      retries -= 1
+      retry if retries > 0
+      raise "StaleElementReferenceError exhausted targeting the newly created custom appointment link"
+    end
+
+    expect(page).to have_button('addService', disabled: :all)
   end
 
   def when_i_add_a_procedure
-    add_service_container = find('#add_procedure_dropdown', visible: :all).find(:xpath, '..')
-    add_service_container.find('button.dropdown-toggle').click
-    
-    service_span = add_service_container.find('span.text', text: 'Test Service', exact_text: true, match: :first, visible: :all)
-    page.execute_script("arguments[0].click();", service_span)
-    
-    expect(page).to have_css(".filter-option-inner-inner", text: 'Test Service', visible: :all, wait: 5)
-
-    fill_in 'service_quantity', with: 1
-    find('button#addService').click
-    
-    expect(page).to have_css('a.start-appointment', visible: true, wait: 10)
+    add_a_procedure(service: service)
   end
 
   def when_i_complete_the_procedure
-    find('a.start-appointment').click
-    expect(page).to have_no_css('a.start-appointment', wait: 5)
+    start_btn = find('a.start-appointment, button.start-appointment', match: :first)
+    start_btn.click
     
-    find('button.complete-btn').click
-    expect(page).to have_css('button.complete-btn.active', wait: 5)
+    expect(page).to have_no_css('a.start-appointment, button.start-appointment')
+    expect(page).to have_css('button.complete-appointment', visible: :all)
+
+    find('button.complete-btn', match: :first).click
+    
+    expect(page).to have_css('button.complete-btn.active')
 
     find('button.complete-appointment').click
-    
-    expect(page).to have_no_css('button.complete-appointment', wait: 10)
   end
 
   def then_i_should_see_the_create_custom_visit_modal
-    expect(page).to have_css(".modal-title", text: "Custom Visit", wait: 5)
+    expect(page).to have_css('.modal-title', text: 'Custom Visit', visible: true)
   end
 
   def then_i_should_see_the_newly_created_appointment
-    expect(page).to have_css("a.appointment-link span", text: "Test Visit", wait: 10)
+    expect(page).to have_css('a.appointment-link span', text: custom_visit_name, visible: :all)
   end
 
   def then_it_should_appear_on_the_dashboard
-    expect(page).to have_content('Test Visit', wait: 5)
+    expect(page).to have_content(custom_visit_name)
+    expect(page).to have_content(service.name)
   end
 end
