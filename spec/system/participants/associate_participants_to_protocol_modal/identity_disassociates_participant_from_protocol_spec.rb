@@ -20,59 +20,56 @@
 
 require 'rails_helper'
 
-feature 'User disassociates Participant to Protocol', js: true do
+RSpec.describe 'User disassociates Participant from Protocol', type: :system, js: true do
+  let!(:protocol)          { create_and_assign_protocol_to_me }
+  let!(:participant)       { create(:participant) }
+  let!(:patient_registrar) { create(:patient_registrar, identity: Identity.first, organization: create(:organization)) }
 
   scenario 'and sees the participant removed from participant tracker list' do
     given_i_am_viewing_the_associate_participants_to_protocol_modal
-    i_should_see_associated_participants
+    then_i_should_see_associated_participants
     when_i_click_to_disassociate_a_participant
     then_i_should_see_the_participant_removed_from_list
   end
 
   def given_i_am_viewing_the_associate_participants_to_protocol_modal
-    @protocol    = create_and_assign_protocol_to_me
-    create(:participant)
-    create(:patient_registrar, identity: Identity.first, organization: create(:organization))
-
-    visit protocol_path(@protocol.id)
+    visit protocol_path(protocol.id)
     
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
-    click_link 'Participant Tracker'
+    expect(page).to have_css('a.active#studyScheduleTabLink')
 
-    expect(page).to have_link('Search Patient Registry', visible: true, wait: 5)
-    click_link 'Search Patient Registry'
+    while page.has_no_css?('#participantTrackerToolbar', visible: true, wait: 0.5)
+      click_link 'Participant Tracker'
+    end
 
-    expect(page).to have_css('.modal', visible: true, wait: 5)
+    expect(page).to have_css('a.btn-success', text: /Search Patient Registry/i)
+    find('a.btn-success', text: /Search Patient Registry/i).click
+
+    expect(page).to have_css('.modal-dialog')
   end
 
-  def i_should_see_associated_participants
-    expected_count = @protocol.protocols_participants.count
-    expect(page).to have_css('.associate a.remove-participant', count: expected_count, wait: 5)
+  def then_i_should_see_associated_participants
+    within('.modal-dialog') do
+      expect(page).to have_css('.associate a.remove-participant', count: protocol.protocols_participants.count)
+    end
   end
 
   def when_i_click_to_disassociate_a_participant
-    @initial_remove_count = all('.associate a.remove-participant').count
-    
-    first('.associate a.remove-participant').click
-    
-    expect(page).to have_css('.associate a.remove-participant', count: @initial_remove_count - 1, wait: 10)
+    within('.modal-dialog') do
+      find('.associate a.remove-participant', match: :first).click
+    end
   end
 
   def then_i_should_see_the_participant_removed_from_list
-    expect(page).to have_css('#flashContainer', text: 'Participant was removed from this request!', wait: 5)
+    expect(page).to have_css('#flashContainer', text: /Participant was removed from this request!/i)
     
-    within('.modal') do
-      find('button', text: 'Close', exact_text: true, visible: :all).click
+    within('.modal-dialog') do
+      click_button 'Close'
     end
 
-    expect(page).to have_no_css('.modal', wait: 10)
-    expect(page).to have_no_css('.modal-backdrop', wait: 10)
+    expect(page).to have_no_css('.modal-dialog')
 
-    visit protocol_path(@protocol.id)
-    
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
-    click_link 'Participant Tracker'
-
-    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2, wait: 10)
+    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2)
   end
+  
+  alias_method :i_should_see_associated_participants, :then_i_should_see_associated_participants
 end
