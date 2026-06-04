@@ -20,7 +20,9 @@
 
 require 'rails_helper'
 
-feature 'Identity views nav bar', js: true do
+RSpec.describe 'Identity views nav bar', type: :system, js: true do
+  let(:protocol)        { create_and_assign_protocol_to_me }
+  let(:second_protocol) { create_and_assign_protocol_to_me }
 
   scenario 'and clicks on Home button' do
     given_i_am_viewing_a_protocol
@@ -56,67 +58,65 @@ feature 'Identity views nav bar', js: true do
   end
 
   def given_i_am_viewing_a_protocol
-    @protocol = create_and_assign_protocol_to_me
-
-    visit protocol_path(@protocol.id)
+    visit protocol_path(protocol.id)
     
-    # Page Load Sync Point
-    expect(page).to have_css('.nav-tabs', visible: true, wait: 5)
+    # Sync point to prevent Capybara from roadrunning before the page loads
+    expect(page).to have_css('#studyScheduleTabLink')
   end
 
   def given_i_am_on_the_participant_page
     click_link 'Participant Tracker'
     
-    btn_selector = 'tbody tr[data-index="0"] a.btn-primary'
-    expect(page).to have_css(btn_selector, visible: true, wait: 5)
+    # Sync point
+    expect(page).to have_css('a.active#participantTrackerTabLink')
+    expect(page).to have_css('tbody tr[data-index="0"] a.btn-primary')
     
-    find(btn_selector).click
-    
-    expect(page).to have_no_css(btn_selector, wait: 5)
+    find('tbody tr[data-index="0"] a.btn-primary').click
   end
 
   def given_there_are_two_protocols
-    2.times { create_and_assign_protocol_to_me }
+    protocol
+    second_protocol
   end
 
   def when_i_click_the_home_button
-    find('#siteNav .nav-link', text: 'Home').click
+    within('#siteNav') do
+      find('.nav-link', text: 'Home').click
+    end
   end
 
   def when_i_click_the_browser_back_button
-    visit protocol_path(@protocol.id)
-    
-    expect(page).to have_css('.nav-tabs', visible: true, wait: 5)
+    visit protocol_path(protocol.id)
   end
 
   def when_i_view_the_first_participants_in_protocol_tracker
-    protocol = Protocol.first
-
     visit protocol_path(protocol.id)
     
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    expect(page).to have_link('Participant Tracker')
     click_link 'Participant Tracker'
     
-    expect(page).to have_css('tbody tr[data-index="0"] a.btn-primary', visible: true, wait: 5)
+    # Sync point
+    expect(page).to have_css('a.active#participantTrackerTabLink')
   end
 
   def when_i_visit_the_home_page
     visit root_path
     
-    expect(page).to have_css('table#protocols', visible: true, wait: 5)
+    # Sync point
+    expect(page).to have_css('table#protocols')
   end
 
   def when_i_view_the_second_protocol
-    protocol = Protocol.second
-
-    visit protocol_path(protocol.id)
+    visit protocol_path(second_protocol.id)
   end
 
   def when_i_sign_out
-    find('#siteNav #navbarUtilities').click
-    
-    expect(page).to have_css('a.text-danger', visible: true, wait: 5)
-    find('a.text-danger').click
+    within('#siteNav') do
+      find('#navbarUtilities').click
+      
+      expect(page).to have_css('a.text-danger')
+      find('a.text-danger').click
+    end
   end
 
   def when_i_click_the_all_reports_link
@@ -124,24 +124,24 @@ feature 'Identity views nav bar', js: true do
   end
 
   def then_i_should_be_on_the_home_page
-    expect(page).to have_css('table#protocols', wait: 5)
+    expect(page).to have_css('table#protocols')
   end
 
   def then_i_should_see_the_participant_tracker_tab_is_active
-    expect(page).to have_css('.nav-tabs a.active#participantTrackerTabLink', wait: 5)
+    expect(page).to have_css('.nav-tabs a.active#participantTrackerTabLink')
   end
 
   def then_the_study_schedule_tab_should_be_active
-    expect(page).to have_css('.nav-tabs a.active#studyScheduleTabLink', wait: 5)
+    expect(page).to have_css('.nav-tabs a.active#studyScheduleTabLink')
   end
 
   def then_i_should_be_signed_out
-    expect(page).to have_css('body.devise-sessions-new', wait: 5)
+    expect(page).to have_css('body.devise-sessions-new', visible: :all)
   end
 
   def then_i_should_be_on_the_reports_page
-    expect(page).to have_current_path(/documents/i, ignore_query: true, wait: 5)
+    expect(page).to have_css('body.documents-index', visible: :all)
   end
 
-  alias :given_i_am_on_the_home_page :when_i_visit_the_home_page
+  alias_method :given_i_am_on_the_home_page, :when_i_visit_the_home_page
 end
