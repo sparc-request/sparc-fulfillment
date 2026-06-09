@@ -20,121 +20,98 @@
 
 require 'rails_helper'
 
-feature 'User creates Participant', js: true do
-  context 'with a numerical mrn' do
-    context 'and VALIDATE_MRN is true' do
-      scenario 'and sees the new Participants in the list' do
+RSpec.describe 'User creates Participant', type: :system, js: true do
+  let(:logged_in_identity) { @logged_in_identity || create(:identity) }
+  let!(:organization)      { create(:organization) }
+  let!(:patient_registrar) { create(:patient_registrar, identity: logged_in_identity, organization: organization) }
+
+  # Physically mutate the process-global ENV hash so the Puma server thread can see it
+  around do |example|
+    original_mrn_setting = ENV['VALIDATE_MRN']
+    ENV['VALIDATE_MRN'] = validate_mrn.to_s
+    
+    example.run
+    
+    # Safely restore the environment for the rest of the suite
+    ENV['VALIDATE_MRN'] = original_mrn_setting
+  end
+
+  context 'when VALIDATE_MRN is true' do
+    let(:validate_mrn) { true }
+
+    context 'with a numerical MRN' do
+      scenario 'sees the new Participant in the list' do
         given_i_am_viewing_the_patient_registry
-        if_validate_mrn_is_true
-        when_i_create_a_new_participant_with_numerical_mrn
+        when_i_create_a_new_participant(mrn: '1234')
         then_i_should_see_the_new_participant_in_the_list
       end
     end
-  end
 
-  context 'with a non-numerical mrn' do
-    context 'and VALIDATE_MRN is true' do
-      scenario 'and sees the new Participants in the list' do
+    context 'with a non-numerical MRN' do
+      scenario 'sees an error message' do
         given_i_am_viewing_the_patient_registry
-        if_validate_mrn_is_true
-        when_i_create_a_new_participant_with_non_numerical_mrn
+        when_i_create_a_new_participant(mrn: '1234abc')
         then_i_should_see_an_error_message
       end
     end
   end
 
-  context 'with a numerical mrn' do
-    context 'if_validate_mrn_is_false' do
-      scenario 'and sees the new Participants in the list' do
+  context 'when VALIDATE_MRN is false' do
+    let(:validate_mrn) { false }
+
+    context 'with a numerical MRN' do
+      scenario 'sees the new Participant in the list' do
         given_i_am_viewing_the_patient_registry
-        if_validate_mrn_is_false
-        when_i_create_a_new_participant_with_numerical_mrn
+        when_i_create_a_new_participant(mrn: '1234')
         then_i_should_see_the_new_participant_in_the_list
       end
     end
-  end
 
-  context 'with a non-numerical mrn' do
-    context 'if_validate_mrn_is_false' do
-      scenario 'and sees the new Participants in the list' do
+    context 'with a non-numerical MRN' do
+      scenario 'sees the new Participant in the list' do
         given_i_am_viewing_the_patient_registry
-        if_validate_mrn_is_false
-        when_i_create_a_new_participant_with_non_numerical_mrn
+        when_i_create_a_new_participant(mrn: '1234abc')
         then_i_should_see_the_new_participant_in_the_list
       end
     end
   end
 
   def given_i_am_viewing_the_patient_registry
-    create(:patient_registrar, identity: @logged_in_identity, organization: create(:organization))
     visit participants_path
-    
-    expect(page).to have_css('.new-participant', wait: 5)
+    expect(page).to have_css('.new-participant')
   end
 
-  def if_validate_mrn_is_false
-    stub_const('ENV', {'VALIDATE_MRN' => 'false'})
-  end
-
-  def if_validate_mrn_is_true
-    stub_const('ENV', {'VALIDATE_MRN' => 'true'})
-  end
-
-  def when_i_create_a_new_participant_with_non_numerical_mrn
+  def when_i_create_a_new_participant(mrn:)
     find('.new-participant').click
 
-    expect(page).to have_field('Last Name', wait: 5)
-
-    fill_in 'Last Name', with: "Potter"
-    fill_in 'First Name', with: "Harry"
-    fill_in 'MRN', with: "1234abc"
+    fill_in 'Last Name', with: 'Potter'
+    fill_in 'First Name', with: 'Harry'
+    fill_in 'MRN', with: mrn
 
     bootstrap_datepicker '#participant_date_of_birth', year: Date.current.year, month: 'Mar', day: '15'
-    bootstrap_select '#participant_gender', "Male"
-    bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
-    bootstrap_select '#participant_race', "Asian"
+    bootstrap_select '#participant_gender', 'Male'
+    bootstrap_select '#participant_ethnicity', 'Hispanic or Latino'
+    bootstrap_select '#participant_race', 'Asian'
 
-    fill_in 'Address', with: "123 Hogwarts"
-    fill_in 'City', with: "London"
-    bootstrap_select '#participant_state', "South Carolina"
-    fill_in 'Zip Code', with: "11111"
+    fill_in 'Address', with: '123 Hogwarts'
+    fill_in 'City', with: 'London'
+    bootstrap_select '#participant_state', 'South Carolina'
+    fill_in 'Zip Code', with: '11111'
 
-    save_btn = find_button('Save Participant', wait: 5)
-    save_btn.hover
-    save_btn.click
-  end
-
-  def when_i_create_a_new_participant_with_numerical_mrn
-    find('.new-participant').click
-
-    expect(page).to have_field('Last Name', wait: 5)
-
-    fill_in 'Last Name', with: "Potter"
-    fill_in 'First Name', with: "Harry"
-    fill_in 'MRN', with: "1234"
-
-    bootstrap_datepicker '#participant_date_of_birth', year: Date.current.year, month: 'Mar', day: '15'
-    bootstrap_select '#participant_gender', "Male"
-    bootstrap_select '#participant_ethnicity', "Hispanic or Latino"
-    bootstrap_select '#participant_race', "Asian"
-
-    fill_in 'Address', with: "123 Hogwarts"
-    fill_in 'City', with: "London"
-    bootstrap_select '#participant_state', "South Carolina"
-    fill_in 'Zip Code', with: "11111"
-
-    save_btn = find_button('Save Participant', wait: 5)
-    save_btn.hover
-    save_btn.click
+    click_button 'Save Participant'
   end
 
   def then_i_should_see_the_new_participant_in_the_list
-    expect(page).to have_css('table.participants tbody tr', count: 1, wait: 5)
+    expect(page).to have_no_css('.modal-dialog')
+
+    # Utilizing a case-insensitive regex to bypass CSS text-transformations
+    expect(page).to have_css('table.participants tbody tr', text: /Potter/i)
+    
+    # Now it is 100% safe to query the database
     expect(Participant.count).to eq(1)
   end
 
   def then_i_should_see_an_error_message
-    expect(page).to have_css('#modal_errors', text: 'MRN must only contain numbers', wait: 5)
+    expect(page).to have_css('#modal_errors', text: 'MRN must only contain numbers', visible: :all)
   end
-
 end

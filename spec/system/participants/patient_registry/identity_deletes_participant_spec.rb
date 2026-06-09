@@ -20,63 +20,69 @@
 
 require 'rails_helper'
 
-feature 'User deletes Participant', js: true do
+RSpec.describe 'User deletes Participant', type: :system, js: true do
+  # Establish the global user state
+  let(:logged_in_identity) { @logged_in_identity || create(:identity) }
+  let!(:organization)      { create(:organization) }
+  let!(:patient_registrar) { create(:patient_registrar, identity: logged_in_identity, organization: organization) }
 
-  scenario 'and sees the Participant is removed from the list' do
-    given_i_have_a_participant
-    and_the_participant_is_deletable
-    given_i_am_viewing_the_patient_registry
-    when_i_delete_a_participant
-    then_i_should_not_see_the_participant
-  end
+  context 'when the participant has no procedure data' do
+    # Explicitly generate the participant so as not to rely on `Participant.last` factory magic
+    let!(:participant) { create(:participant, first_name: 'Luke', last_name: 'Skywalker') }
 
-  scenario 'and connot delete when there is procedure data' do
-    given_i_have_a_participant
-    and_the_participant_has_procedure_data
-    given_i_am_viewing_the_patient_registry
-    then_i_should_see_disabled_delete_button
-  end
+    before do
+      participant.protocols_participants.destroy_all
+    end
 
-  def and_the_participant_is_deletable
-    ProtocolsParticipant.where(participant_id: @participant.id, protocol_id: @protocol.id).first.delete
-  end
-
-  def given_i_have_a_participant
-    @protocol = create_and_assign_protocol_to_me
-    @participant = Participant.last
-  end
-
-  def and_the_participant_has_procedure_data
-    @protocol = create(:protocol)
-    @arm = create(:arm, protocol: @protocol)
-    @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
-    @vg_a        = create(:visit_group, name: 'A', position: 1, day: 2, arm_id: @arm.id)
-    @appointment = create(:appointment, visit_group: @vg_a, protocols_participant: @protocols_participant, name: @vg_a.name, arm_id: @vg_a.arm_id, position: 1)
-    @procedure   = create(:procedure, :complete, appointment: @appointment)
-  end
-
-  def given_i_am_viewing_the_patient_registry
-    create(:patient_registrar, identity: Identity.first, organization: create(:organization))
-    visit participants_path
-    
-    expect(page).to have_css('table.participants tbody tr', wait: 5)
-  end
-
-  def when_i_delete_a_participant
-    accept_confirm do
-      delete_btn = page.find('table.participants tbody tr:first-child td.actions a.remove', wait: 5)
-      delete_btn.hover
-      delete_btn.click
+    scenario 'sees the Participant is removed from the list' do
+      given_i_am_viewing_the_patient_registry
+      when_i_delete_the_participant(last_name: 'Skywalker')
+      then_i_should_not_see_the_participant(last_name: 'Skywalker')
     end
   end
 
-  def then_i_should_not_see_the_participant
-    expect(page).to have_css('#flashes_container', text: 'Participant Removed', wait: 5)
-    
-    expect(page).to have_css('table.participants tbody tr', count: 2, wait: 5)
+  context 'when the participant has procedure data' do
+    # Explicitly defining the data hierarchy that triggers the disabled state
+    let!(:protocol)              { create(:protocol) }
+    let!(:arm)                   { create(:arm, protocol: protocol) }
+    let!(:participant)           { create(:participant, first_name: 'Darth', last_name: 'Vader') }
+    let!(:protocols_participant) { create(:protocols_participant, arm: arm, protocol: protocol, participant: participant) }
+    let!(:visit_group)           { create(:visit_group, arm: arm, name: 'Death Star Visit') }
+    let!(:appointment)           { create(:appointment, visit_group: visit_group, protocols_participant: protocols_participant, name: visit_group.name, arm: arm) }
+    let!(:procedure)             { create(:procedure, :complete, appointment: appointment) }
+
+    scenario 'sees a disabled delete button' do
+      given_i_am_viewing_the_patient_registry
+      then_i_should_see_disabled_delete_button_for(last_name: 'Vader')
+    end
   end
 
-  def then_i_should_see_disabled_delete_button
-    expect(page).to have_css('a[data-original-title="Participants with procedure data cannot be deleted."]', wait: 5)
+  def given_i_am_viewing_the_patient_registry
+    visit participants_path
+    expect(page).to have_css('table.participants')
+  end
+
+  def when_i_delete_the_participant(last_name:)
+    within('table.participants tbody tr', text: /#{Regexp.quote(last_name)}/i) do
+      accept_confirm do
+        find('a.remove').click
+      end
+    end
+  end
+
+  def then_i_should_not_see_the_participant(last_name:)
+    expect(page).to have_css('#flashes_container', text: /Participant Removed/i)
+    
+    expect(page).to have_no_css('table.participants tbody tr', text: /#{Regexp.quote(last_name)}/i)
+    
+    expect(Participant.count).to eq(0)
+  end
+
+  def then_i_should_see_disabled_delete_button_for(last_name:)
+    expect(page).to have_css('table.participants tbody tr', text: /#{Regexp.quote(last_name)}/i)
+
+    within('table.participants tbody tr', text: /#{Regexp.quote(last_name)}/i) do
+      expect(page).to have_css('a[data-original-title="Participants with procedure data cannot be deleted."]')
+    end
   end
 end
