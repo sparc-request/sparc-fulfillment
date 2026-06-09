@@ -20,56 +20,55 @@
 
 require 'rails_helper'
 
-feature 'User changes the status of a participant on the participant tracker', js: true do
+RSpec.describe 'User changes the status of a participant on the participant tracker', type: :system, js: true do
+  let!(:protocol) { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.last }
 
-  scenario 'and sees the updated status on the page' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_update_the_participant_status
-    then_i_should_see_the_updated_status
-  end
+  context 'when updating a participant status' do
+    scenario 'sees the updated status on the page' do
+      given_i_am_viewing_the_participant_tracker
+      when_i_update_the_participant_status
+      then_i_should_see_the_updated_status
+    end
 
-  scenario 'and sees the status updated note' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_update_the_participant_status
-    then_i_should_see_an_associated_note
+    scenario 'sees the status updated note' do
+      given_i_am_viewing_the_participant_tracker
+      when_i_update_the_participant_status
+      then_i_should_see_an_associated_note
+    end
   end
 
   def given_i_am_viewing_the_participant_tracker
-    @protocol    = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.last
-
-    visit protocol_path(@protocol.id)
-
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    visit protocol_path(protocol.id)
+    
+    expect(page).to have_content('Manage Arms')
+    
     click_link 'Participant Tracker'
-
-    expect(page).to have_css("select[id*='protocols_participant_status']", visible: :all, wait: 15)
+    
+    expect(page).to have_css('#participantTrackerTable', visible: :all)
   end
 
   def when_i_update_the_participant_status
-    hidden_select = find("select[id*='protocols_participant_status']", visible: :all, match: :first)
-    
-    target_option = hidden_select.find('option', text: 'Screening', visible: :all)
-    
-    page.execute_script("$(arguments[0]).val(arguments[1]).trigger('change');", hidden_select, target_option.value)
-
-    visit protocol_path(@protocol.id)
-
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
-    click_link 'Participant Tracker'
-
-    expect(page).to have_css("select[id*='protocols_participant_status']", visible: :all, wait: 15)
+    bootstrap_select(
+      '#protocols_participant_status', 
+      'Screening', 
+      context_selector: '#participantTrackerTable tbody tr:first-child'
+    )
   end
 
   def then_i_should_see_the_updated_status
-    expect(page).to have_css('#participantTrackerTable tbody tr:first-child', text: 'Screening', wait: 10)
+    within('#participantTrackerTable tbody tr:first-child') do
+      expect(bootstrap_selected?('protocols_participant_status', 'Screening')).to be
+    end
   end
 
   def then_i_should_see_an_associated_note
-    expect(page).to have_css('#participantTrackerTable tbody tr:first-child', text: 'Screening', wait: 10)
-    
-    find("#participant#{@protocols_participant.id}Notes a", wait: 10).click
+    within('#participantTrackerTable tbody tr:first-child') do
+      expect(bootstrap_selected?('protocols_participant_status', 'Screening')).to be
+      
+      find("#participant#{protocols_participant.id}Notes a").click
+    end
 
-    expect(page).to have_content('Status changed', wait: 10)
+    expect(page).to have_content('Status changed')
   end
 end

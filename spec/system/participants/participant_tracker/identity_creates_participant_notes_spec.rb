@@ -20,27 +20,29 @@
 
 require 'rails_helper'
 
-feature 'User views the participant tracker page', js: true do
+RSpec.describe 'User views the participant tracker page', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.last }
+  let!(:original_arm)          { protocols_participant.arm }
+  let!(:second_arm)            { protocol.arms.second }
 
-  context 'and then tries to create a particpant note' do
-    scenario 'and sees the notes modal' do
+  context 'when interacting with participant notes' do
+    scenario 'sees the notes modal' do
       given_i_am_viewing_the_participant_tracker
       when_i_click_on_the_notes_button
       then_i_should_see_the_notes_modal
     end
 
-    context 'and creates a note' do
-      scenario 'and sees the note in the index' do
-        given_i_am_viewing_the_participant_tracker
-        when_i_click_on_the_notes_button
-        when_i_add_a_comment_and_save
-        then_i_should_see_the_note_in_the_index
-      end
+    scenario 'creates a note and sees it in the index' do
+      given_i_am_viewing_the_participant_tracker
+      when_i_click_on_the_notes_button
+      when_i_add_a_comment_and_save
+      then_i_should_see_the_note_in_the_index
     end
   end
 
-  context 'and changes the participant arm which should create a note' do
-    scenario 'and sees the note' do
+  context 'when changing the participant arm' do
+    scenario 'automatically creates and displays an arm change note' do
       given_i_am_viewing_the_participant_tracker
       when_i_change_the_participants_arm
       when_i_click_on_the_notes_button
@@ -49,62 +51,58 @@ feature 'User views the participant tracker page', js: true do
   end
 
   def given_i_am_viewing_the_participant_tracker
-    @protocol = create_and_assign_protocol_to_me
-    @protocols_participant = @protocol.protocols_participants.last
-    @original_arm = @protocols_participant.arm
-
-    visit protocol_path(@protocol)
+    visit protocol_path(protocol.id)
     
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    expect(page).to have_content('Manage Arms')
+    
     click_link 'Participant Tracker'
+    expect(page).to have_css('#participantTrackerTable', visible: :all)
+  end
 
-    expect(page).to have_css('#participantTrackerTable tbody tr:first-child', visible: true, wait: 15)
+  def participant_row
+    find("#edit_protocols_participant_#{protocols_participant.id}", visible: :all, match: :first).ancestor('tr')
   end
 
   def when_i_click_on_the_notes_button
-    find("#participant#{@protocols_participant.participant_id}Notes a", wait: 10).click
-
-    expect(page).to have_css('.modal-dialog', visible: true, wait: 10)
+    within(participant_row) do
+      find("#participant#{protocols_participant.participant_id}Notes a").click
+    end
   end
 
   def when_i_add_a_comment_and_save
-    within('.modal-content') do
-      expect(page).to have_field('note_comment', visible: true, wait: 10)
+    within('#modalContainer') do
+      expect(page).to have_field('note_comment')
+      fill_in 'note_comment', with: 'Action Jackson'
       
-      note_field = find_field('note_comment')
-      note_field.set("Action Jackson")
-      note_field.send_keys(:tab)
-      
-      submit_btn = find("input[type='submit']", wait: 5)
-      
-      submit_btn.hover
-      submit_btn.click
-    end
+      find('.modal-header').click
 
-    expect(page).to have_content("Action Jackson", wait: 15)
+      click_button 'Leave Note'
+
+      expect(page).to have_field('note_comment', with: '')
+    end
   end
 
   def when_i_change_the_participants_arm
-    @second_arm = @protocol.arms.second
-    hidden_select = find("select[id*='protocols_participant_arm_id']", visible: :all, match: :first)
-    target_option = hidden_select.find('option', text: @second_arm.name, visible: :all)
+    bootstrap_select(
+      '#protocols_participant_arm_id', 
+      second_arm.name, 
+      context_selector: participant_row
+    )
     
-    page.execute_script("$(arguments[0]).val(arguments[1]).trigger('change');", hidden_select, target_option.value)
-
-    visit protocol_path(@protocol)
-    click_link 'Participant Tracker'
-    expect(page).to have_css('#participantTrackerTable tbody tr:first-child', visible: true, wait: 15)
+    within(participant_row) do
+      expect(bootstrap_selected?('protocols_participant_arm_id', second_arm.name)).to be
+    end
   end
 
   def then_i_should_see_the_notes_modal
-    expect(page).to have_css('.modal-title', text: 'Participant Notes', wait: 5)
+    expect(page).to have_content('Participant Notes')
   end
 
   def then_i_should_see_the_note_in_the_index
-    expect(page).to have_content('Action Jackson', wait: 10)
+    expect(page).to have_content('Action Jackson')
   end
 
   def then_i_should_see_the_arm_change_note_in_the_index
-    expect(page).to have_content("Arm changed from #{@original_arm.name} to #{@second_arm.name}", wait: 10)
+    expect(page).to have_content("Arm changed from #{original_arm.name} to #{second_arm.name}")
   end
 end

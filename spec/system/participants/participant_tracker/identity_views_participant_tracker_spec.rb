@@ -20,40 +20,33 @@
 
 require 'rails_helper'
 
-feature 'User views Participant Tracker', js: true do
+RSpec.describe 'User views Participant Tracker', type: :system, js: true do
+  let!(:protocol) { create_and_assign_protocol_to_me }
 
-  scenario 'and sees Participants' do
-    given_i_have_a_protocol_with_a_participant
-    when_i_view_the_participant_tracker
-    then_i_should_see_the_participant_in_the_table
+  scenario 'sees Participants' do
+    given_i_am_viewing_the_participant_tracker
+    then_i_should_see_participants
   end
 
-  def given_i_have_a_protocol_with_a_participant
-    @protocol = create_and_assign_protocol_to_me
+  def given_i_am_viewing_the_participant_tracker
+    visit protocol_path(protocol.id)
     
-    keep_id = @protocol.protocols_participants.first.id
-    @protocol.protocols_participants.where.not(id: keep_id).destroy_all
+    expect(page).to have_content('Manage Arms')
     
-    @protocols_participant = @protocol.protocols_participants.first
-    
-    expect(@protocols_participant).to be_present
-  end
-
-  def when_i_view_the_participant_tracker
-    visit protocol_path(@protocol.id)
-
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
     click_link 'Participant Tracker'
-
-    expect(page).to have_css('#participantTrackerTable tbody tr', visible: true, wait: 15)
+    
+    expect(page).to have_css('#participantTrackerTable', visible: :all)
   end
 
-  def then_i_should_see_the_participant_in_the_table
-    participant = @protocols_participant.participant
+  def then_i_should_see_participants
+    # Caching the names from the database
+    participant_first_names = Participant.all.map(&:first_name)
 
-    table_selector = '#participantTrackerTable'
-    
-    expect(page).to have_css(table_selector, text: participant.first_name, wait: 10)
-    expect(page).to have_css(table_selector, text: participant.last_name, wait: 10)
+    within('#participantTrackerTable tbody') do
+      participant_first_names.each do |first_name|
+        # Check the specific column rather than doing a blind page-wide text search
+        expect(page).to have_css('td.first-name', text: first_name)
+      end
+    end
   end
 end

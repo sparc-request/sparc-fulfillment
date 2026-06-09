@@ -20,37 +20,40 @@
 
 require 'rails_helper'
 
-feature 'User views Participant details', js: true do
+RSpec.describe 'User views Participant details', type: :system, js: true do
+  let!(:protocol) { create_and_assign_protocol_to_me }
 
-  scenario 'and sees the Participants attributes' do
-    given_i_am_viewing_the_participant_tracker
-    when_i_click_the_participant_details_icon
-    then_i_should_see_the_participant_details
+  context 'when interacting with the participant tracker table' do
+    scenario 'sees the Participants attributes' do
+      given_i_am_viewing_the_participant_tracker
+      when_i_click_the_participant_details_icon
+      then_i_should_see_the_participant_details
+    end
   end
 
   def given_i_am_viewing_the_participant_tracker
-    protocol = create_and_assign_protocol_to_me
-
     visit protocol_path(protocol.id)
-
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    
+    expect(page).to have_content('Manage Arms')
+    
     click_link 'Participant Tracker'
-
-    expect(page).to have_css('#participantTrackerTable tbody tr:first-child td.actions a.participant-details', visible: true, wait: 15)
+    
+    expect(page).to have_css('#participantTrackerTable tbody tr', minimum: 1, visible: :all)
   end
 
   def when_i_click_the_participant_details_icon
-    @first_name = find('#participantTrackerTable tbody tr:first-child td.first-name').text
-    @last_name  = find('#participantTrackerTable tbody tr:first-child td.last-name').text
-    
-    details_btn = find('#participantTrackerTable tbody tr:first-child td.actions a.participant-details')
-    
-    details_btn.click
-
-    expect(page).to have_css('.modal-dialog', visible: true, wait: 10)
+    within('#participantTrackerTable tbody tr:first-child') do
+      # Caching the DOM text to pass to the assertion step, completely avoiding DB schema guesswork - instance variables OK here
+      @target_first_name = find('td.first-name').text
+      @target_last_name  = find('td.last-name').text
+      
+      find('a.participant-details').click
+    end
   end
 
   def then_i_should_see_the_participant_details
-    expect(page).to have_css('.modal-title', text: "#{@first_name} #{@last_name}", wait: 5)
+    expect(page).to have_css('.modal-title', text: "#{@target_first_name} #{@target_last_name}")
+    
+    expect(page).to have_css('.modal-body', visible: true)
   end
 end

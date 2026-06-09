@@ -20,62 +20,55 @@
 
 require 'rails_helper'
 
-feature 'User deletes Participant', js: true do
+RSpec.describe 'User deletes Participant', type: :system, js: true do
+  let!(:protocol)              { create_and_assign_protocol_to_me }
+  let!(:protocols_participant) { protocol.protocols_participants.last }
 
-  scenario 'and sees the Participant is removed from the list' do
-    given_i_have_a_participant
-    given_i_am_viewing_the_participant_tracker
-    when_i_delete_a_participant
-    then_i_should_not_see_the_participant
+  context 'when a participant has no procedure data' do
+    scenario 'sees the Participant is removed from the list' do
+      given_i_am_viewing_the_participant_tracker
+      when_i_delete_a_participant
+      then_i_should_not_see_the_participant
+    end
   end
 
-  scenario 'and cannot delete when there is procedure data' do
-    given_i_have_a_participant
-    and_the_participant_is_not_deletable
-    given_i_am_viewing_the_participant_tracker
-    then_i_should_see_disabled_delete_button
-  end
+  context 'when a participant has procedure data' do
+    let!(:procedure) do
+      create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: protocol.arms.first)
+    end
 
-  def and_the_participant_is_not_deletable
-    protocols_participant = ProtocolsParticipant.last
-    create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @protocol.arms.first)
-  end
-
-  def given_i_have_a_participant
-    @protocol = create_and_assign_protocol_to_me
+    scenario 'cannot delete the participant and sees disabled button' do
+      given_i_am_viewing_the_participant_tracker
+      then_i_should_see_disabled_delete_button
+    end
   end
 
   def given_i_am_viewing_the_participant_tracker
-    visit protocol_path(@protocol.id)
-
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
+    visit protocol_path(protocol.id)
+    
+    expect(page).to have_content('Manage Arms')
+    
     click_link 'Participant Tracker'
-
-    expect(page).to have_css('#participantTrackerTable tbody tr .remove-participant', visible: :all, wait: 15)
+    expect(page).to have_css('#participantTrackerTable', visible: :all)
   end
 
   def when_i_delete_a_participant
-    delete_btn = find('#participantTrackerTable tbody tr:first-child td .remove-participant', wait: 5)
-    
-    page.execute_script("arguments[0].click();", delete_btn)
+    within('#participantTrackerTable tbody tr:first-child') do
+      find('.remove-participant').click
+    end
 
-    expect(page).to have_css('.swal2-popup', visible: true, wait: 5)
-    
+    expect(page).to have_css('.swal2-container', visible: true)
+
     find('button.swal2-confirm').click
 
-    expect(page).not_to have_css('.swal2-popup', wait: 10)
-
-    visit protocol_path(@protocol.id)
-    
-    expect(page).to have_link('Participant Tracker', visible: true, wait: 5)
-    click_link 'Participant Tracker'
+    expect(page).to have_no_css('.swal2-container', visible: true)
   end
 
   def then_i_should_not_see_the_participant
-    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2, wait: 15)
+    expect(page).to have_css('#participantTrackerTable tbody tr', count: 2)
   end
 
   def then_i_should_see_disabled_delete_button
-    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted"]', visible: :all, wait: 10)
+    expect(page).to have_css('div[data-original-title="Participants with procedure data cannot be deleted"]')
   end
 end
