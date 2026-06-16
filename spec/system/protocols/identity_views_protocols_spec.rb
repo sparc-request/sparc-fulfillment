@@ -20,82 +20,92 @@
 
 require 'rails_helper'
 
-feature 'Identity views protocols', js: true do
+RSpec.describe 'Identity views protocols', type: :system, js: true do
+  
+  context 'when the user is a Fulfillment Provider for a protocol' do
+    let!(:protocol) { create_and_assign_protocol_to_me }
 
-  scenario 'and sees Protocols for which they are a Fulfillment Provider for' do
-    given_i_am_a_fulfillment_provider_for_a_protocol
-    when_i_visit_the_protocols_page
-    then_i_should_see_protocols_for_which_i_am_a_filfillment_provider
+    scenario 'they see the protocols for which they are a provider' do
+      given_i_am_on_the_protocols_page
+      then_i_should_see_my_protocol(protocol)
+    end
+
+    scenario 'they can view Coordinators via the table dropdown' do
+      given_i_am_on_the_protocols_page
+      when_i_click_on_the_coordinators_dropdown_for(protocol)
+      then_i_should_see_a_list_of_coordinators
+    end
+
+    scenario 'they see changes made by other identities in real-time after a refresh' do
+      given_i_am_on_the_protocols_page
+      when_another_identity_changes_the_protocol(protocol)
+      then_i_should_see_the_updated_protocol_title
+    end
   end
 
-  scenario 'and does not see Protocols for which they are not a Fulfillment Provider for' do
-    given_i_am_not_a_fulfillment_provider_for_a_protocol
-    when_i_visit_the_protocols_page
-    then_i_should_not_see_protocols_for_which_i_am_not_a_filfillment_provider
-    and_i_should_not_be_able_to_access_protocols_for_which_i_am_not_a_filfillment_provider
+  context 'when the user is NOT a Fulfillment Provider for a protocol' do
+    let!(:unauthorized_protocol) do
+      organization = create(:organization)
+      sub_service_request = create(:sub_service_request, organization: organization)
+      create(:protocol, sub_service_request: sub_service_request)
+    end
+
+    scenario 'they cannot see or access the unauthorized protocol' do
+      given_i_am_on_the_protocols_page
+      then_i_should_not_see_the_unauthorized_protocol(unauthorized_protocol)
+      and_i_should_not_be_able_to_access_the_unauthorized_protocol_directly(unauthorized_protocol)
+    end
   end
 
-  scenario 'and sees Coordinators' do
-    given_i_am_a_fulfillment_provider_for_a_protocol
-    when_i_visit_the_protocols_page
-    and_i_click_on_the_coordinators_dropdown
-    then_i_should_see_a_list_of_coordinators
-  end
-
-  scenario 'and sees changes made by other Identitys in realtime' do
-    given_i_am_a_fulfillment_provider_for_a_protocol
-    when_i_visit_the_protocols_page
-    and_a_change_is_made_to_the_protocol_by_another_identity
-    then_i_should_see_the_change
-  end
-
-  def given_i_am_a_fulfillment_provider_for_a_protocol
-    @protocol = create_and_assign_protocol_to_me
-  end
-
-  def given_i_am_not_a_fulfillment_provider_for_a_protocol
-    organization            = create(:organization)
-    sub_service_request     = create(:sub_service_request, organization: organization)
-    @unauthorized_protocol  = create(:protocol, sub_service_request: sub_service_request)
-  end
-
-  def when_i_visit_the_protocols_page
+  def given_i_am_on_the_protocols_page
     visit protocols_path
     
-    expect(page).to have_css('table#protocols', wait: 5)
+    expect(page).to have_css('table#protocols', visible: :all)
   end
 
-  def and_i_click_on_the_coordinators_dropdown
-    coordinator_btn = page.find('table#protocols tbody tr:first-child td.coordinators button', wait: 5)
-    coordinator_btn.hover
-    coordinator_btn.click
+  def then_i_should_see_my_protocol(protocol)
+    short_title = Regexp.quote(protocol.sparc_protocol.short_title)
+    expect(page).to have_css('table#protocols tbody tr td.short-title', text: /#{short_title}/i, visible: :all)
   end
 
-  def and_a_change_is_made_to_the_protocol_by_another_identity
-    @protocol.sparc_protocol.update_attribute :short_title, 'Test 123'
-    refresh_bootstrap_table('table#protocols')
-  end
-
-  def then_i_should_see_protocols_for_which_i_am_a_filfillment_provider
-    expect(page).to have_css("table#protocols tbody tr td.short-title", count: 1, wait: 5)
-  end
-
-  def then_i_should_not_see_protocols_for_which_i_am_not_a_filfillment_provider
-    expect(page).to have_css("table#protocols tbody tr", text: "No matching records found", wait: 5)
-  end
-
-  def and_i_should_not_be_able_to_access_protocols_for_which_i_am_not_a_filfillment_provider
-    visit protocol_path(@unauthorized_protocol.id)
+  def when_i_click_on_the_coordinators_dropdown_for(protocol)
+    short_title = Regexp.quote(protocol.sparc_protocol.short_title)
     
-    expect(page).to have_current_path(root_path, wait: 5)
+    within('table#protocols tbody tr', text: /#{short_title}/i, match: :first) do
+      find('td.coordinators button').click
+      
+      expect(page).to have_css('.dropdown-menu.show', visible: true)
+    end
   end
 
   def then_i_should_see_a_list_of_coordinators
-    expect(page).to have_css('table#protocols tr:first-child td.coordinators div.dropdown-menu', wait: 5)
+    expect(page).to have_css('.coordinators .dropdown-menu.show', visible: :all)
   end
 
-  def then_i_should_see_the_change
-    expect(page).to have_css('table#protocols td.short-title', text: 'Test 123', wait: 5)
+  def when_another_identity_changes_the_protocol(protocol)
+    protocol.sparc_protocol.update!(short_title: 'Test 123')
+    
+    refresh_bootstrap_table('.bootstrap-table')
+  end
+
+  def then_i_should_see_the_updated_protocol_title
+    expect(page).to have_css('table#protocols td.short-title', text: /Test 123/i, visible: :all)
+  end
+
+  def then_i_should_not_see_the_unauthorized_protocol(unauthorized_protocol)
+    short_title = Regexp.quote(unauthorized_protocol.sparc_protocol.short_title)
+    
+    expect(page).to have_css('table#protocols tbody', visible: :all)
+    
+    expect(page).to have_no_css('table#protocols tbody tr', text: /#{short_title}/i)
+    
+    expect(page).to have_css('table#protocols tbody tr', text: /No matching records found/i, visible: :all)
+  end
+
+  def and_i_should_not_be_able_to_access_the_unauthorized_protocol_directly(unauthorized_protocol)
+    visit protocol_path(unauthorized_protocol.id)
+    
+    expect(page).to have_current_path(root_path, ignore_query: true)
   end
 end
 

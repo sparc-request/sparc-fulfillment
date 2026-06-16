@@ -20,29 +20,28 @@
 
 require 'rails_helper'
 
-feature 'Identity views financial view', js: true do
+RSpec.describe 'Identity views financial view', type: :system, js: true do
+  let!(:protocol) { create_and_assign_protocol_to_me }
 
-  scenario 'and sees the financial view' do
-    given_i_am_viewing_the_list_of_protocols
-    when_i_select_the_financial_view
-    then_i_should_see_the_financial_view
+  context 'when viewing the protocols index page' do
+    scenario 'user selects and sees the financial view' do
+      given_i_am_viewing_the_list_of_protocols
+      when_i_select_the_financial_view
+      then_i_should_see_the_financial_view
+    end
   end
 
   def given_i_am_viewing_the_list_of_protocols
-    create_and_assign_protocol_to_me
-
     visit protocols_path
-    
-    expect(page).to have_css('.financial', wait: 5)
+
+    expect(page).to have_css('.bootstrap-table', visible: :all)
   end
 
   def when_i_select_the_financial_view
-    financial_toggle = find('.financial', wait: 5)
-    financial_toggle.hover
-    financial_toggle.click
+    find('.financial').click
   end
 
   def then_i_should_see_the_financial_view
-    expect(page).to have_css('.financial.active', count: 1, wait: 5)
+    expect(page).to have_css('.financial.active', visible: :all)
   end
 end

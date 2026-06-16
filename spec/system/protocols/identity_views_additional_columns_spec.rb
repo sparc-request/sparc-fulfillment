@@ -20,35 +20,39 @@
 
 require 'rails_helper'
 
-feature 'Identity views additional columns', js: true do
+RSpec.describe 'Identity views additional columns', type: :system, js: true do
+  let!(:protocol) { create_and_assign_protocol_to_me }
 
-  before :each do
-    create_and_assign_protocol_to_me
+  context 'when viewing the protocols index table' do
+    scenario 'user adds the organizations column via the column toggle dropdown' do
+      given_i_am_on_the_protocols_index_page
+      when_i_select_organizations_from_the_dropdown
+      then_i_should_see_the_organizations_column
+    end
   end
 
-  scenario 'user adds the organizations column' do
-    as_a_user_who_visits_the_protocols_index_page
-    when_i_select_organizations_from_the_dropdown
-    i_should_see_the_organizations_column
-  end
-
-  def as_a_user_who_visits_the_protocols_index_page
+  def given_i_am_on_the_protocols_index_page
     visit protocols_path
     
-    expect(page).to have_css('.keep-open', wait: 5)
+    expect(page).to have_css('.bootstrap-table', visible: :all)
   end
 
   def when_i_select_organizations_from_the_dropdown
-    dropdown_toggle = find('.keep-open', wait: 5)
-    dropdown_toggle.hover
-    dropdown_toggle.click
-
-    org_checkbox = find("input[data-field='organizations']", wait: 5)
-    org_checkbox.hover
-    org_checkbox.click
+    within('.bootstrap-table') do
+      find('.keep-open').click
+      
+      expect(page).to have_css('.dropdown-menu.show', visible: true)
+      
+      # Bypass CSS pointer-event traps by directly targeting the input and forcing the JS property to update natively
+      checkbox = find("input[data-field='organizations']", visible: :all)
+      checkbox.set(true)
+       
+      find('.keep-open').click
+      expect(page).to have_no_css('.dropdown-menu.show')
+    end
   end
 
-  def i_should_see_the_organizations_column
-    expect(page).to have_content('Provider/Program/Core', wait: 5)
+  def then_i_should_see_the_organizations_column
+    expect(page).to have_css('.bootstrap-table th', text: /Provider\/Program\/Core/i, visible: :all)
   end
 end

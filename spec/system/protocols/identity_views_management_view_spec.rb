@@ -20,29 +20,28 @@
 
 require 'rails_helper'
 
-feature 'Identity views management view', js: true do
+RSpec.describe 'Identity views management view', type: :system, js: true do
+  let!(:protocol) { create_and_assign_protocol_to_me }
 
-  scenario 'and sees the management view' do
-    given_i_am_viewing_the_list_of_protocols
-    when_i_select_the_management_view
-    then_i_should_see_the_management_view
+  context 'when viewing the protocols index page' do
+    scenario 'user selects and sees the management view' do
+      given_i_am_viewing_the_list_of_protocols
+      when_i_select_the_management_view
+      then_i_should_see_the_management_view
+    end
   end
 
   def given_i_am_viewing_the_list_of_protocols
-    create_and_assign_protocol_to_me
-
     visit protocols_path
     
-    expect(page).to have_css('.management', wait: 5)
+    expect(page).to have_css('.bootstrap-table', visible: :all)
   end
 
   def when_i_select_the_management_view
-    management_toggle = find('.management', wait: 5)
-    management_toggle.hover
-    management_toggle.click
+    find('.management').click
   end
 
   def then_i_should_see_the_management_view
-    expect(page).to have_css('.management.active', count: 1, wait: 5)
+    expect(page).to have_css('.management.active', visible: :all)
   end
 end

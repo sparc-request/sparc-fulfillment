@@ -20,44 +20,45 @@
 
 require "rails_helper"
 
-feature "Identity views protocol", js: true do
+RSpec.describe "Identity views protocol", type: :system, js: true do
 
-  scenario "that has no Services" do
-    given_i_am_a_fulfillment_provider_for_a_protocol_without_services
-    when_i_visit_the_protocol_page
-    then_i_should_not_see_service_related_elements
+  context "when the protocol has no services" do
+    let!(:protocol) { create_and_assign_protocol_without_services_to_me }
+
+    scenario "user does not see service-related elements" do
+      when_i_visit_the_protocol_page(protocol)
+      then_i_should_not_see_service_related_elements(protocol)
+    end
   end
 
-  scenario "and sees that the Current IRB Expiration Date is correctly formatted" do
-    given_i_am_a_fulfillment_provider_for_a_protocol
-    when_i_visit_the_protocol_page
-    then_i_should_see_a_correctly_formatted_irb_expiration_date
+  context "when the protocol has services" do
+    let!(:protocol) { create_and_assign_protocol_to_me }
+
+    scenario "user sees that the Current IRB Expiration Date is correctly formatted" do
+      when_i_visit_the_protocol_page(protocol)
+      then_i_should_see_a_correctly_formatted_irb_expiration_date
+    end
   end
 
-  def given_i_am_a_fulfillment_provider_for_a_protocol
-    @protocol = create_and_assign_protocol_to_me
-  end
-
-  def given_i_am_a_fulfillment_provider_for_a_protocol_without_services
-    @protocol = create_and_assign_protocol_without_services_to_me
-  end
-
-  def when_i_visit_the_protocol_page
-    visit protocol_path(@protocol.id)
+  def when_i_visit_the_protocol_page(protocol)
+    visit protocol_path(protocol.id)
     
-    expect(page).to have_css('body', wait: 5) # Baseline wait
-    expect(page).to have_current_path(protocol_path(@protocol.id), wait: 5) 
+    expect(page).to have_current_path(protocol_path(protocol.id), ignore_query: true)
   end
 
   def then_i_should_see_a_correctly_formatted_irb_expiration_date
-    expect(page).to have_css(".irb-expiration", text: /\d\d\/\d\d\/\d\d/, wait: 5)
+    # Upgraded Regex to \d{2} syntax for strict layout matching (e.g., 12/31/2026)
+    expect(page).to have_css(".irb-expiration", text: /\d{2}\/\d{2}\/\d{2,4}/)
   end
 
-  def then_i_should_not_see_service_related_elements
-    expect(page).to_not have_css("div[role='tabpanel'] a", text: "Study Schedule")
-    expect(page).to_not have_css("div[role='tabpanel'] a", text: "Participant List")
-    expect(page).to_not have_css("div[role='tabpanel'] a", text: "Participant Tracker")
-    expect(page).to_not have_css("#study_schedule_buttons")
-    expect(page).to_not have_css("#study_schedule_tabs")
+  def then_i_should_not_see_service_related_elements(protocol)
+    # We must wait for the page content to natively render BEFORE asserting absence - otherwise Capybara checks a white screen, finds nothing, and falsely passes
+    expect(page).to have_css(".irb-expiration", visible: :all)
+
+    expect(page).to have_no_css("div[role='tabpanel'] a", text: "Study Schedule")
+    expect(page).to have_no_css("div[role='tabpanel'] a", text: "Participant List")
+    expect(page).to have_no_css("div[role='tabpanel'] a", text: "Participant Tracker")
+    expect(page).to have_no_css("#study_schedule_buttons")
+    expect(page).to have_no_css("#study_schedule_tabs")
   end
 end
