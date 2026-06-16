@@ -92,9 +92,13 @@ module DataHelpers
   end
 
   def create_and_assign_participant_to_me
-    protocol = create_and_assign_protocol_to_me
-    arm = create(:arm, protocol: protocol)
-    create(:participant, arm: arm, protocol: protocol)
+    protocol    = create_and_assign_protocol_to_me
+    arm         = create(:arm, protocol: protocol)
+    participant = create(:participant)
+    
+    create(:protocols_participant, protocol: protocol, participant: participant, arm: arm)
+    
+    participant
   end
 
   def create_and_assign_appointment_to_me

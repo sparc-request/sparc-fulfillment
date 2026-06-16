@@ -20,55 +20,45 @@
 
 require 'rails_helper'
 
-feature 'Identity views Report tab', js: true, enqueue: false do
-  scenario 'and sees a list of Protocol reports' do
-    protocol = create_data
-    visit protocol_path(protocol)
+RSpec.describe 'Identity views Reports tab', type: :system, js: true, inline_jobs: true do
+  let!(:protocol) { create_and_assign_protocol_to_me }
 
-    export_btn = find_button("Export", wait: 5)
-    
-    export_btn.hover
-    export_btn.click
+  context 'when generating and viewing Protocol reports' do
+    scenario 'sees a list of Protocol reports' do
+      visit protocol_path(protocol)
 
-    reports_tab = find('#reportsTabLink', wait: 5)
-    reports_tab.hover
-    reports_tab.click
+      expect(page).to have_button('Export')
+      click_button 'Export'
 
-    expect(page).to have_css('table.protocol_reports tbody td.title', count: 1, wait: 5)
+      expect(page).to have_css('.reports-tab-badge')
+
+      find('#reportsTabLink').click
+
+      within('table.protocol_reports') do
+        expect(page).to have_css('tbody td.title', text: /Study Schedule Report/i)
+      end
+    end
   end
 
-  scenario 'and sees a list of Participant reports' do
-    protocol = create_data
-    protocols_participant = protocol.protocols_participants.first
-    visit protocol_path(protocol)
+  context 'when generating and viewing Participant reports' do
+    scenario 'sees a list of Participant reports' do
+      visit protocol_path(protocol)
 
-    tracker_tab = find_link('Participant Tracker', wait: 5)
-    tracker_tab.hover
-    tracker_tab.click
+      expect(page).to have_content('Manage Arms')
 
-    report_btn = find('.participant-report', wait: 5)
-    report_btn.hover
-    report_btn.click
+      click_link 'Participant Tracker'
 
-    reports_tab = find('#reportsTabLink', wait: 5)
-    reports_tab.hover
-    reports_tab.click
+      expect(page).to have_css('#participantTrackerTable', visible: :all)
+      expect(page).to have_css('.participant-report', visible: true)
+      
+      find('.participant-report').click
+      expect(page).to have_css('.reports-tab-badge')
 
-    expect(page).to have_css('table.protocol_reports tbody td.title', count: 1, wait: 5)
-  end
+      find('#reportsTabLink').click
 
-  private
-
-  def create_data
-    identity = Identity.first
-    sub_service_request = create(:sub_service_request_with_organization)
-    protocol = create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
-    organization_provider = create(:organization_provider)
-    organization_program = create(:organization_program, parent: organization_provider)
-    organization = sub_service_request.organization
-    organization.update(parent: organization_program, name: "Core")
-    create(:clinical_provider, identity: identity, organization: organization)
-    create(:project_role_pi, identity: identity, protocol: protocol)
-    protocol
+      within('table.protocol_reports') do
+        expect(page).to have_css('tbody td.title', text: /Participant Report/i)
+      end
+    end
   end
 end
