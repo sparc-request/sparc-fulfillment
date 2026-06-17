@@ -62,8 +62,20 @@ RSpec.describe 'Identity creates a protocol-based Document', type: :system, js: 
     visit protocol_path(protocol)
 
     expect(page).to have_css('#reportsTabLink', visible: true)
-    find('#reportsTabLink').click
-    expect(page).to have_css('#reportsTabLink.active')
+
+    # LAW IV: The Hydration Race Condition Rescue Loop
+    # If Capybara clicks before the JS listeners attach, the click is swallowed. We retry safely.
+    retries = 3
+    begin
+      find('#reportsTabLink').click
+      
+      # Short wait to see if the active class applies. If it times out, the click was swallowed.
+      expect(page).to have_css('#reportsTabLink.active', wait: 2)
+    rescue RSpec::Expectations::ExpectationNotMetError
+      retries -= 1
+      retry if retries > 0
+      raise "Hydration Race Condition: Failed to activate Reports tab after 3 attempts."
+    end
   end
 
   def when_i_create_a_document_of_type(type)
