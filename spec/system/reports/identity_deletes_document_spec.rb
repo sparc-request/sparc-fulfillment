@@ -20,125 +20,134 @@
 
 require 'rails_helper'
 
-feature 'Identity deletes a document', js: true, enqueue: false do
+RSpec.describe 'Identity deletes a document', type: :system, js: true, inline_jobs: true do
+  let(:identity) { @logged_in_identity }
+  let(:protocol) { create_and_assign_protocol_to_me(identity: identity) }
 
-  context "from the All Reports page" do
-    context "except they don't because the document is still processing" do
-      scenario "and they see the delete icon is greyed out" do
-        given_i_am_viewing_the_all_reports_page_with_documents(1, "Processing")
-        then_i_should_see_the_delete_icon_is_greyed_out
+  context 'from the All Reports page' do
+    context 'when the document is still processing' do
+      scenario 'sees the delete icon is greyed out' do
+        given_i_am_viewing_the_all_reports_page_with_documents(1, state: 'Processing')
+        then_i_should_see_no_delete_icon
       end
     end
-  end
 
-  context "from the All Reports page" do
-    context "when clicking the delete report" do
-      scenario "does not see the report" do
+    context 'when clicking the delete report' do
+      scenario 'does not see the report after deletion' do
         given_i_am_viewing_the_all_reports_page_with_documents(1)
         when_i_click_the_delete_icon
         then_i_should_not_see_the_document
       end
     end
-  end
 
-  context "from the All Reports page" do
-    context "which has not been accessed" do
-      scenario "and sees the documents counter decrement" do
+    context 'which has not been accessed' do
+      scenario 'sees the documents counter decrement' do
         given_i_am_viewing_the_all_reports_page_with_documents(2)
         when_i_click_the_delete_icon
-        then_i_should_see_the_identity_docs_counter_was_decremented
+        then_i_should_see_the_identity_docs_counter(expected_count: 1)
       end
     end
   end
 
-  context "from the Reports Tab" do
-    context "except they don't because the document is still processing" do
-      scenario "and they see the delete icon is greyed out" do
-        given_i_am_viewing_the_reports_tab_with_documents(1, "Processing")
-        then_i_should_see_the_delete_icon_is_greyed_out
+  context 'from the Reports Tab' do
+    context 'when the document is still processing' do
+      scenario 'sees the delete icon is greyed out' do
+        given_i_am_viewing_the_reports_tab_with_documents(1, state: 'Processing')
+        then_i_should_see_no_delete_icon
       end
     end
-  end
 
-  context "from the Reports Tab" do
-    context "when clicking the delete report" do
-      scenario "does not see the report" do
+    context 'when clicking the delete report' do
+      scenario 'does not see the report after deletion' do
         given_i_am_viewing_the_reports_tab_with_documents(1)
         when_i_click_the_delete_icon
         then_i_should_not_see_the_document
       end
     end
-  end
 
-  context "from the Reports Tab" do
-    context "which has not been accessed" do
-        scenario "and sees the documents counter decrement" do
-          given_i_am_viewing_the_reports_tab_with_documents(2)
-          when_i_click_the_delete_icon
-          then_i_should_see_the_protocol_docs_counter_was_decremented
-        end
+    context 'which has not been accessed' do
+      scenario 'sees the documents counter decrement' do
+        given_i_am_viewing_the_reports_tab_with_documents(2)
+        when_i_click_the_delete_icon
+        then_i_should_see_the_protocol_docs_counter(expected_count: 1)
+      end
     end
   end
 
-
-  def given_i_am_viewing_the_all_reports_page_with_documents(count, state="Completed")
-    @protocol = create_and_assign_protocol_to_me
-
+  def given_i_am_viewing_the_all_reports_page_with_documents(count, state: 'Completed')
+    # Explicitly invoke the lazy variables so they generate under the authenticated user
+    protocol
+    
     count.times do
-      create(:document_of_identity_report, documentable_id: Identity.first.id, state: state)
+      create(:document_of_identity_report, documentable: identity, state: state)
     end
 
     visit documents_path
+
+    expect(page).to have_css('table tbody', visible: true)
+    expect(page).to have_no_content('No matching records found')
     
-    # SYNC POINT: Anchor to the table loading instead of an arbitrary AJAX wait
-    expect(page).to have_css('table', wait: 5)
+    if state == 'Completed'
+      expect(page).to have_css('a.remove-document', count: count, visible: true)
+    end
   end
 
-  def given_i_am_viewing_the_reports_tab_with_documents(count, state="Completed")
-    @protocol = create_and_assign_protocol_to_me
+  def given_i_am_viewing_the_reports_tab_with_documents(count, state: 'Completed')
+    visit protocol_path(protocol)
 
-    count.times do
-      create(:document_of_protocol_report, documentable_id: @protocol.id, state: state)
+    if state == 'Completed'
+      count.times do |i|
+        if i == 0
+          click_button 'Export'
+        else
+          # On subsequent iterations, the button is a dropdown toggle
+          click_button 'Export'
+          
+          # Native Capybara text matching to safely click the inner dropdown link
+          find('a, button', text: /Generate New Report/i, match: :first).click
+        end
+        
+        # Sync point to guarantee the job finishes before moving on
+        expect(page).to have_css('.notification-badge', text: /#{i + 1}/, visible: :all)
+      end
+    else
+      count.times do
+        create(:document_of_protocol_report, documentable: protocol, state: state)
+      end
+      visit protocol_path(protocol)
     end
 
-    visit protocol_path @protocol
+    expect(page).to have_css('#reportsTabLink', visible: true)
+    find('#reportsTabLink').click
+    expect(page).to have_css('#reportsTabLink.active', visible: true)
+
+    expect(page).to have_css('table tbody', visible: true)
+    expect(page).to have_no_content('No matching records found')
     
-    # SYNC POINT & ACTION: Ensure tab is present, click it, and wait for active state
-    reports_tab = find('#reportsTabLink', wait: 5)
-    reports_tab.click
-    expect(page).to have_css('#reportsTabLink.active', wait: 5)
-    
-    # SYNC POINT: Ensure the contents of the tab have loaded
-    expect(page).to have_css('table', wait: 5)
+    if state == 'Completed'
+      expect(page).to have_css('a.remove-document', count: count, visible: true)
+    end
   end
 
   def when_i_click_the_delete_icon
-    @count_before_delete = @logged_in_identity.unaccessed_documents_count
-    
-    # THE BOOTLEG SHIELD: Stripped the wait parameter to satisfy 
-    # the custom page_helpers.rb override, but kept the block structure.
     accept_confirm do
-      first("a.remove-document", wait: 5).click
+      find('a.remove-document', match: :first).click
     end
   end
 
-  def then_i_should_see_the_delete_icon_is_greyed_out
-    # Use have_no_css for native Capybara polling on negative assertions
-    expect(page).to have_no_css(".actions .remove-document", wait: 5)
+  def then_i_should_see_no_delete_icon
+    expect(page).to have_no_css('.actions .remove-document')
   end
 
   def then_i_should_not_see_the_document
-    # Native polling to watch the DOM element get destroyed by the delete action
-    expect(page).to have_no_css("a.attached_file", wait: 5)
+    expect(page).to have_no_css('a.attached_file', visible: :all)
   end
 
-  def then_i_should_see_the_identity_docs_counter_was_decremented
-    # Native wait for the counter to visually update
-    expect(page).to have_css(".identity_report_notifications", text: (@count_before_delete - 1).to_s, wait: 5)
+  def then_i_should_see_the_identity_docs_counter(expected_count:)
+    expect(page).to have_css('.identity_report_notifications', text: /#{expected_count}/)
   end
 
-  def then_i_should_see_the_protocol_docs_counter_was_decremented
-    # Native wait for the counter to visually update
-    expect(page).to have_css(".notification-badge", text: '1', wait: 5)
+  def then_i_should_see_the_protocol_docs_counter(expected_count:)
+    expect(page).to have_css('.notification-badge', text: /#{expected_count}/)
   end
 end

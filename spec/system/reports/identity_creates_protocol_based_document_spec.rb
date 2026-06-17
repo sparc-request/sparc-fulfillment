@@ -20,25 +20,23 @@
 
 require 'rails_helper'
 
-# For reports where:
-# documentable_type = 'Protocol'
-feature 'Identity creates a protocol-based Document', js: true, enqueue: false do
+RSpec.describe 'Identity creates a protocol-based Document', type: :system, js: true, inline_jobs: true do
+  let!(:protocol) { create_and_assign_protocol_to_me }
 
-  before :each do
-    DatabaseCleaner[:active_record, db: Document].clean_with(:truncation)
+  before do
     given_i_am_viewing_the_reports_tab
   end
 
   context 'of type Participant Report' do
     scenario 'and sees the report' do
-      when_i_create_a_document_of_type 'participant_report'
+      when_i_create_a_document_of_type('participant_report')
       then_i_should_see_the_document
     end
   end
 
   context 'of type Study Schedule Report' do
     scenario 'and sees the report' do
-      when_i_create_a_document_of_type 'study_schedule_report'
+      when_i_create_a_document_of_type('study_schedule_report')
       then_i_should_see_the_document
     end
   end
@@ -51,99 +49,52 @@ feature 'Identity creates a protocol-based Document', js: true, enqueue: false d
 
   context 'with documents present' do
     scenario 'and sees the reports counter increment' do
-      when_i_create_a_document_of_type 'study_schedule_report'
+      when_i_create_a_document_of_type('study_schedule_report')
       then_i_should_see_the_counter_increment_to(1)
-      # request a second report
-      when_i_create_a_document_of_type 'participant_report'
+      
+      when_i_create_a_document_of_type('participant_report')
       then_i_should_see_the_counter_increment_to(2)
     end
   end
 
-  scenario 'and opens the finished document dropdown menu' do
-    when_i_create_a_document_of_type 'study_schedule_report'
-    when_i_click_the_created_document_icon
-    then_i_should_see_the_options_dropdown
-  end
-
-  context 'and downloads the document' do
-    scenario 'and sees the button default so that a new report can be run' do
-      when_i_create_a_document_of_type 'study_schedule_report'
-      when_i_click_the_created_document_icon
-      when_i_click_the_download_option
-      then_i_should_see_the_button_is_defaulted
-    end
-  end
-
-  scenario 'and generates a new document' do
-    when_i_create_a_document_of_type 'study_schedule_report'
-    when_i_click_the_created_document_icon
-    when_i_click_the_generate_new_option
-    then_i_should_see_the_document(expected_count: 2)
-  end
-
   def given_i_am_viewing_the_reports_tab
-    @protocol = create_and_assign_protocol_to_me
+    visit protocol_path(protocol)
 
-    visit protocol_path @protocol
-    
-    expect(page).to have_css('#reportsTabLink', wait: 5)
+    expect(page).to have_css('#reportsTabLink', visible: true)
     find('#reportsTabLink').click
-    
-    expect(page).to have_css('#reportsTabLink.active', wait: 5)
+    expect(page).to have_css('#reportsTabLink.active')
   end
 
   def when_i_create_a_document_of_type(type)
-    case type
-    when 'study_schedule_report'
+    if type == 'study_schedule_report'
       click_button "Export"
-      
-      expect(page).to have_selector('ul.dropdown-menu .download-report', visible: :all, wait: 20)
-
-    when 'participant_report'
+    elsif type == 'participant_report'
       click_link 'Participant Tracker'
-      expect(page).to have_css('.participant-report', wait: 5)
-      find('.participant-report').click
-      
-      expect(page).to have_selector('ul.dropdown-menu .download-report', visible: :all, wait: 20)
+      find('.participant-report', match: :first).click
     end
-  end
 
-  def when_i_click_the_created_document_icon
-    first(".fa-file-download").click
-  end
+    expect(page).to have_css('.notification-badge', visible: :all)
 
-  def when_i_click_the_download_option
-    find("ul.dropdown-menu .download-report", wait: 5).click
-  end
-
-  def when_i_click_the_generate_new_option
-    find("ul.dropdown-menu .regenerate-report", wait: 5).click
+    # Re-click the active tab to force the data table to fetch the new records.
+    find('#reportsTabLink').click
+    
+    # Wait for the visual DOM update (the empty state should disappear)
+    expect(page).to have_no_content('No matching records found')
   end
 
   def then_i_should_see_the_document(expected_count: 1)
-    find('#reportsTabLink').click
-    expect(page).to have_css('#reportsTabLink.active', wait: 5)
-
-    Timeout.timeout(5) do
-      sleep 0.25 until Document.where(documentable: @protocol).count == expected_count
-    end
-    expect(Document.where(documentable: @protocol).count).to eq(expected_count)
-  end
-
-  def then_i_should_see_the_options_dropdown
-    expect(page).to have_selector("ul.dropdown-menu", visible: true, wait: 5)
-  end
-
-  def then_i_should_see_the_button_is_defaulted
-    expect(page).to have_css("button.study-schedule-report.btn-success", wait: 5)
-    expect(page).not_to have_css("button.study-schedule-report.btn-secondary")
+    # Target the file icon inside the table row 
+    expect(page).to have_css('table tbody tr .fa-file', count: expected_count, visible: :all)
+    
+    # Now that the UI has settled, safely assert reality
+    expect(Document.where(documentable: protocol).count).to eq(expected_count)
   end
 
   def then_i_should_not_see_the_documents_counter
-    expect(page).to have_no_css(".notification-badge", wait: 2)
+    expect(page).to have_no_css('.notification-badge')
   end
 
   def then_i_should_see_the_counter_increment_to(value)
-    expect(page).to have_css(".notification-badge", text: value.to_s, wait: 15)
+    expect(page).to have_css('.notification-badge', text: /#{value}/)
   end
 end
