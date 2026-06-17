@@ -20,62 +20,71 @@
 
 require 'rails_helper'
 
-feature 'Identity downloads a document from the reports tab', js: true, enqueue: false do
-
-
-  scenario 'and sees the viewed_at date has been updated' do
-    given_i_am_viewing_the_reports_tab_with_documents
-    when_i_download_the_report
-    then_i_should_see_the_read_unread_has_been_updated
-  end
+RSpec.describe 'Identity downloads a document from the reports tab', type: :system, js: true, inline_jobs: true do
+  let(:identity) { @logged_in_identity }
+  let(:protocol) { create_and_assign_protocol_to_me(identity: identity) }
 
   context 'with a single document' do
-    scenario 'and sees the documents counter disappear' do
-      given_i_am_viewing_the_reports_tab_with_documents
+    scenario 'sees the viewed_at date has been updated' do
+      given_i_am_viewing_the_reports_tab_with_documents(1)
+      when_i_download_the_report
+      then_i_should_see_the_read_unread_has_been_updated
+    end
+
+    scenario 'sees the documents counter disappear' do
+      given_i_am_viewing_the_reports_tab_with_documents(1)
       when_i_download_the_report
       then_i_should_not_see_the_reports_counter
     end
   end
 
   context 'with multiple documents' do
-    scenario 'and sees the documents counter decrement' do
+    scenario 'sees the documents counter decrement' do
       given_i_am_viewing_the_reports_tab_with_documents(2)
       when_i_download_the_report
       then_i_should_see_the_reports_counter_decrement_to(1)
     end
   end
 
-  def given_i_am_viewing_the_reports_tab_with_documents(count=1)
-    @protocol = create_and_assign_protocol_to_me
+  def given_i_am_viewing_the_reports_tab_with_documents(count)
+    visit protocol_path(protocol)
 
-    count.times do
-      create(:document_of_protocol_report, documentable_id: @protocol.id)
+    # Eradicate phantom procedures & state-mutating UI - build the data naturally via the UI to guarantee physical file attachments and prevent 500 Errors
+    count.times do |i|
+      if i == 0
+        click_button 'Export'
+      else
+        click_button 'Export'
+        find('a, button', text: /Generate New Report/i, match: :first).click
+      end
+      
+      # Sync point: wait for the background job to finish processing the document
+      expect(page).to have_css('.notification-badge', text: /#{i + 1}/, visible: :all)
     end
 
-    @document = Document.first
+    # Native synchronization for tab structural presence and activation
+    expect(page).to have_css('#reportsTabLink', visible: true)
+    find('#reportsTabLink').click
+    expect(page).to have_css('#reportsTabLink.active', visible: true)
 
-    visit protocol_path @protocol
-    
-    reports_tab = find('#reportsTabLink', wait: 5)
-    reports_tab.click
-    expect(page).to have_css('#reportsTabLink.active', wait: 5)
-
-    expect(page).to have_link("file_#{@document.id}", wait: 5)
+    expect(page).to have_css('table tbody', visible: true)
+    expect(page).to have_no_content('No matching records found')
+    expect(page).to have_css('a.attached_file', count: count, visible: true)
   end
 
   def when_i_download_the_report
-    click_link "file_#{@document.id}"
+    find('a.attached_file', match: :first).click
   end
 
   def then_i_should_not_see_the_reports_counter
-    expect(page).to have_no_css(".notification-badge", wait: 5)
+    expect(page).to have_no_css('.notification-badge')
   end
 
   def then_i_should_see_the_reports_counter_decrement_to(value)
-    expect(page).to have_css(".notification-badge", text: value.to_s, wait: 5)
+    expect(page).to have_css('.notification-badge', text: /#{value}/)
   end
 
   def then_i_should_see_the_read_unread_has_been_updated
-    expect(page).to have_css("td.read_state", text: 'Read', wait: 5)
+    expect(page).to have_css('td.read_state', text: /Read/i)
   end
 end

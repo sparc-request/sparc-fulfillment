@@ -21,7 +21,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity creates a protocol-based Document', type: :system, js: true, inline_jobs: true do
-  let!(:protocol) { create_and_assign_protocol_to_me }
+  let(:identity) { @logged_in_identity }
+  let(:protocol) { create_and_assign_protocol_to_me(identity: identity) }
 
   before do
     given_i_am_viewing_the_reports_tab
