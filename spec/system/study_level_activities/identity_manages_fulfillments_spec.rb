@@ -20,22 +20,35 @@
 
 require 'rails_helper'
 
-feature 'Fulfillments', js: true do
+RSpec.describe 'Identity manages Fulfillments', type: :system, js: true do
+  # Rule I: Eager/Lazy bindings at the top of the file. 
+  # We establish the data dependencies clearly for both the standard and the no-component variants.
+  let(:protocol)  { create(:protocol_imported_from_sparc) }
+  let(:org)       { protocol.sub_service_request.organization }
+  let(:service)   { create(:service_with_one_time_fee, organization: org) }
+  let(:line_item) { create(:line_item, protocol: protocol, service: service) }
+
+  let(:protocol_no_comp)  { create(:protocol_imported_from_sparc_no_components) }
+  let(:org_no_comp)       { protocol_no_comp.sub_service_request.organization }
+  let(:service_no_comp)   { create(:service_without_components, organization: org_no_comp) }
+  let(:line_item_no_comp) { create(:line_item, protocol: protocol_no_comp, service: service_no_comp) }
 
   describe 'fulfillments list with components' do
     it 'should list the fulfillments' do
       given_i_have_fulfillments
-      and_i_have_opened_up_fulfillments
+      and_i_have_opened_up_fulfillments(protocol)
       
-      expect(page).to have_content('Fulfillments List', wait: 5)
-      expect(page).to have_content('Components', wait: 5)
+      expect(page).to have_css('.modal-title', text: /Fulfillments List/i, visible: true)
+      expect(page).to have_content('Components')
     end
+  end
 
+  describe 'fulfillments list without components' do
     it 'should not show components column when the service does not have components' do
       given_i_have_fulfillments_without_components
-      and_i_have_opened_up_fulfillments
+      and_i_have_opened_up_fulfillments(protocol_no_comp)
       
-      expect(page).to have_content('Fulfillments List', wait: 5)
+      expect(page).to have_css('.modal-title', text: /Fulfillments List/i, visible: true)
       expect(page).to have_no_content('Components')
     end
   end
@@ -43,62 +56,54 @@ feature 'Fulfillments', js: true do
   describe 'fulfillment add' do
     it 'should be able to add a fulfillment' do
       given_i_have_fulfillments
-      and_i_have_opened_up_fulfillments
+      and_i_have_opened_up_fulfillments(protocol)
+
+      expect(page).to have_css('.modal-title', text: /Fulfillments List/i, visible: true)
+      click_link "Add Fulfillment"
       
-      add_btn = find('a', text: 'Add Fulfillment', wait: 5)
-      add_btn.hover
-      add_btn.click
-      
-      expect(page).to have_css('#fulfillment_fulfilled_at', wait: 5)
+      expect(page).to have_css('#fulfillment_fulfilled_at', visible: :all)
       
       when_i_fill_out_the_fulfillment_form
       
-      expect(page).to have_content('45.0', wait: 5)
+      expect(page).to have_css('td.qty', text: '45.0')
     end
-
   end
 
   def given_i_have_fulfillments
-    @protocol = create(:protocol_imported_from_sparc)
-    @protocol.sparc_protocol.update(type: 'Study')
-    org       = @protocol.sub_service_request.organization
-    service   = create(:service_with_one_time_fee, organization: org)
-    line_item = create(:line_item, protocol: @protocol, service: service)
-                create(:fulfillment, line_item: line_item)
-                create(:clinical_provider, identity: Identity.first, organization: org)
+    protocol.sparc_protocol.update(type: 'Study')
+    create(:fulfillment, line_item: line_item)
+    
+    # Explicitly binding records to the active Devise session
+    create(:clinical_provider, identity: @logged_in_identity, organization: org)
   end
 
   def given_i_have_fulfillments_without_components
-    @protocol = create(:protocol_imported_from_sparc_no_components)
-    @protocol.sparc_protocol.update(type: 'Study')
-    org = @protocol.sub_service_request.organization
-    service = create(:service_without_components, organization: org)
-    line_item = create(:line_item, protocol: @protocol, service: service)
-    create(:fulfillment, line_item: line_item)
-    create(:clinical_provider, identity: Identity.first, organization: org)
+    protocol_no_comp.sparc_protocol.update(type: 'Study')
+    create(:fulfillment, line_item: line_item_no_comp)
+    create(:clinical_provider, identity: @logged_in_identity, organization: org_no_comp)
   end
 
-  def and_i_have_opened_up_fulfillments
-    visit protocol_path(@protocol.id)
+  def and_i_have_opened_up_fulfillments(protocol)
+    visit protocol_path(protocol)
+
+    expect(page).to have_content('Manage Arms')
+
+    expect(page).to have_css('.nav-link', text: /Non-clinical Services/i)
+    click_link "Non-clinical Services"
+
+    expect(page).to have_css('.fulfillments', visible: true)
+    find('.fulfillments a', match: :first).click
     
-    tab_link = find('a', text: 'Non-clinical Services', wait: 5)
-    tab_link.hover
-    tab_link.click
-    
-    expect(page).to have_css('.fulfillments a', wait: 5)
-    
-    fulfill_link = first('.fulfillments a', wait: 5)
-    fulfill_link.hover
-    fulfill_link.click
+    expect(page).to have_css('.modal-content', visible: true)
   end
 
   def when_i_fill_out_the_fulfillment_form
-    bootstrap_datepicker '#fulfillment_fulfilled_at', day: '15'
+    bootstrap_datepicker '#fulfillment_fulfilled_at', day: '15', text: '06/15/2026'
+    
     fill_in "fulfillment_quantity", with: "45"
     bootstrap_select '#fulfillment_components', "mo"
+    click_button "Save"
     
-    save_btn = find_button("Save", wait: 5)
-    save_btn.hover
-    save_btn.click
+    expect(page).to have_no_css('.modal-title', text: /Create New Fulfillment/i)
   end
 end
