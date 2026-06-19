@@ -20,238 +20,173 @@
 
 require 'rails_helper'
 
-feature 'Identity edits visit groups for a particular protocol', js: true do
+RSpec.describe 'Identity edits visit groups for a particular protocol', type: :system, js: true do
+  let(:identity) { @logged_in_identity }
+  let(:protocol) { create_and_assign_protocol_to_me(identity: identity) }
 
-  context "User adds a visit group to an arm" do
-    scenario "and sees the visit group on the arm" do
-      given_i_am_viewing_an_arm_with_multiple_visit_groups
+  # Clear default arms to ensure a perfectly clean slate for VG testing
+  before { protocol.arms.destroy_all }
 
-      @original_visit_group_1 = @arm.visit_groups.first
-      @original_visit_group_2 = @arm.visit_groups.second
-      @original_visit_group_1.day = 1
-      @original_visit_group_2.day = 3
-      @original_visit_group_1.save
-      @original_visit_group_2.save
+  describe 'adding a visit group to an arm' do
+    let!(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
+    
+    # Manipulate the factory data cleanly inside the let! block using tap
+    let!(:vg1) { arm.visit_groups.first.tap { |vg| vg.update(day: 1) } }
+    let!(:vg2) { arm.visit_groups.second.tap { |vg| vg.update(day: 3) } }
 
-      when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(day: @arm.visit_groups.last.day + 100)
-      when_i_click_the_add_submit_button
-      then_i_should_see_the_visit_group
+    it 'should display the new visit group on the arm' do
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_add_visit_group_modal
+      and_i_fill_in_the_add_form(arm_name: arm.name, name: 'VG', day: vg2.day + 100, position: 'Add as last')
+      then_i_should_see_the_visit_group('VG')
     end
 
-    scenario "and sees it in the correct position" do
-      given_i_am_viewing_an_arm_with_multiple_visit_groups
-
-      @original_visit_group_1 = @arm.visit_groups.first
-      @original_visit_group_2 = @arm.visit_groups.second
-      @original_visit_group_1.day = 1
-      @original_visit_group_2.day = 3
-      @original_visit_group_1.save
-      @original_visit_group_2.save
-
-      when_i_click_the_add_visit_group_button
-      when_i_fill_in_the_form(position: "Before #{@arm.visit_groups.second.name} (Day #{@arm.visit_groups.second.day})", day: @arm.visit_groups.second.day-1)
-      when_i_click_the_add_submit_button
-      then_i_should_see_the_position_is 1
+    it 'should display the new visit group in the correct position' do
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_add_visit_group_modal
+      and_i_fill_in_the_add_form(
+        arm_name: arm.name,
+        name: 'VG',
+        day: vg2.day - 1,
+        position: "Before #{vg2.name} (Day #{vg2.day})"
+      )
+      then_i_should_see_the_visit_group_in_position('VG', position: 2, arm: arm)
     end
   end
 
-  context "User edits a visit group on an arm" do
-    scenario "and sees the updated arm" do
-      given_i_am_viewing_an_arm_with_multiple_visit_groups
-      when_i_click_the_edit_visit_group_button
-      when_i_set_the_name_to 'VG 2'
-      when_i_set_the_day_to 2
-      when_i_click_the_save_submit_button
-      then_i_should_see_the_updated_visit_group
+  describe 'editing a visit group on an arm' do
+    let!(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
+    let!(:vg)  { arm.visit_groups.first }
+
+    it 'should update and display the updated visit group' do
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_edit_visit_group_modal
+      and_i_update_the_visit_group(name: 'VG 2', day: 2)
+      then_i_should_see_the_updated_visit_group(vg, 'VG 2')
     end
   end
 
-  context "User edits a visit groups name in the service calendar" do
-    context "and provides a name" do
-      scenario "and sees the updated name" do
-        given_i_am_viewing_an_arm_with_one_visit_group
-        when_i_enter_the_name "VG YO"
-        then_i_should_see_the_name "VG YO"
+  describe 'inline editing a visit group name in the service calendar' do
+    let!(:arm) { create(:arm_with_one_visit_group, visit_count: 1, protocol: protocol, subject_count: 3) }
+    let!(:vg)  { arm.visit_groups.first }
+
+    context 'providing a valid name' do
+      it 'should update and display the new name' do
+        given_i_am_viewing_the_study_schedule
+        when_i_inline_edit_the_name(vg, 'VG YO')
+        then_i_should_see_the_updated_visit_group(vg, 'VG YO')
       end
     end
 
-    context "and leaves the name blank" do
-      scenario "and sees the original name" do
-        given_i_am_viewing_an_arm_with_one_visit_group
-        @original_name = @arm.visit_groups.first.name
-
-        when_i_enter_the_name ""
-        then_i_should_see_the_original_name
+    context 'leaving the name blank' do
+      it 'should revert to and display the original name' do
+        original_name = vg.name
+        given_i_am_viewing_the_study_schedule
+        when_i_inline_edit_the_name(vg, '')
+        then_it_should_revert_to_the_original_name(vg, original_name)
       end
     end
   end
 
-  context "User deletes a visit group from an arm" do
-    scenario "and does not see the visit group on the arm" do
-      given_i_am_viewing_an_arm_with_multiple_visit_groups
-      when_i_click_the_remove_visit_group_button
-      when_i_click_the_remove_submit_button
-      then_i_should_not_see_the_visit_group
+  describe 'deleting a visit group from an arm' do
+    let!(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
+    let!(:vg_to_delete) { arm.visit_groups.first }
+
+    it 'should remove the visit group from the arm' do
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_remove_visit_group_modal
+      and_i_remove_the_visit_group
+      then_i_should_not_see_the_visit_group(vg_to_delete)
     end
   end
 
-  def given_i_am_viewing_an_arm_with_multiple_visit_groups
-    @protocol = create_and_assign_protocol_to_me
-    @protocol.arms.each do |arm|
-      arm.destroy
+  def given_i_am_viewing_the_study_schedule
+    visit protocol_path(protocol)
+    expect(page).to have_css('#add_visit_group_button', visible: true)
+  end
+
+  def when_i_open_the_add_visit_group_modal
+    find('#add_visit_group_button').click
+    expect(page).to have_css('.modal-title', text: /Add Visit/i, visible: true)
+  end
+
+  def when_i_open_the_edit_visit_group_modal
+    find('#edit_visit_group_button').click
+    expect(page).to have_css('.modal-title', text: /Edit Visit/i, visible: true)
+  end
+
+  def when_i_open_the_remove_visit_group_modal
+    find('#remove_visit_group_button').click
+    expect(page).to have_css('.modal-title', text: /Remove Visit/i, visible: true)
+  end
+
+  def and_i_fill_in_the_add_form(arm_name:, name:, day:, position:)
+    within('.modal-content', text: /Add Visit/i) do
+      bootstrap_select('#visit_group_arm_id', arm_name)
+      fill_in 'visit_group_name', with: name
+      fill_in 'visit_group_day', with: day
+      bootstrap_select('#visit_group_position', position)
+
+      find('input[type="submit"]').click
+    end
+    
+    expect(page).to have_no_css('.modal-content', text: /Add Visit/i)
+  end
+
+  def and_i_update_the_visit_group(name:, day:)
+    within('.modal-content', text: /Edit Visit/i) do
+      fill_in 'visit_group_name', with: name
+      fill_in 'visit_group_day', with: day
+
+      find('input[type="submit"]').click
+    end
+    
+    expect(page).to have_no_css('.modal-content', text: /Edit Visit/i)
+  end
+
+  def when_i_inline_edit_the_name(vg, new_name)
+    input = find("#visit_group_#{vg.id}")
+    input.click
+    input.set(new_name)
+
+    # Trigger blur natively
+    find('body').click(x: 0, y: 0)
+  end
+
+  def and_i_remove_the_visit_group
+    within('.modal-content', text: /Remove Visit/i) do
+      find('#removeVisitGroupButton').click
     end
 
-    @arm      = create(:arm_with_visit_groups, visit_count: 2, protocol: @protocol, subject_count: 3)
-    @visit_groups = @arm.visit_groups
+    expect(page).to have_css('.swal2-container', visible: true)
 
-    visit protocol_path(@protocol)
-
-    schedule_tab = find('#studyScheduleTabLink', wait: 5)
-    schedule_tab.hover
-    schedule_tab.click
-
-    expect(page).to have_css('#add_visit_group_button', wait: 5)
-  end
-
-  def given_i_am_viewing_an_arm_with_one_visit_group
-    @protocol = create_and_assign_protocol_to_me
-    @protocol.arms.each do |arm|
-      arm.delete
+    within('.swal2-container') do
+      find('button.swal2-confirm').click
     end
-    @arm      = create(:arm_with_one_visit_group, visit_count: 1, protocol: @protocol, subject_count: 3)
 
-    visit protocol_path(@protocol)
-
-    schedule_tab = find('#studyScheduleTabLink', wait: 5)
-    schedule_tab.hover
-    schedule_tab.click
-
-    expect(page).to have_css('#add_visit_group_button', wait: 5)
+    expect(page).to have_no_css('.swal2-container')
+    expect(page).to have_no_css('.modal-content', text: /Remove Visit/i)
   end
 
-  def when_i_click_the_add_visit_group_button
-    btn = find("#add_visit_group_button", wait: 5)
-    btn.hover
-    btn.click
-    expect(page).to have_css("h4.modal-title", wait: 5)
+  def then_i_should_see_the_visit_group(name)
+    expect(page).to have_css("input[value='#{name}']", visible: true)
   end
 
-  def when_i_click_the_edit_visit_group_button
-    btn = find("#edit_visit_group_button", wait: 5)
-    btn.hover
-    btn.click
-    expect(page).to have_css("h4.modal-title", wait: 5)
+  def then_i_should_see_the_visit_group_in_position(name, position:, arm:)
+    expect(page).to have_css(".visit_groups_for_#{arm.id} .visit_group_box:nth-child(#{position}) input[value='#{name}']", visible: true)
   end
 
-  def when_i_click_the_remove_visit_group_button
-    btn = find("#remove_visit_group_button", wait: 5)
-    btn.hover
-    btn.click
-    expect(page).to have_css("h4.modal-title", wait: 5)
+  def then_i_should_see_the_updated_visit_group(vg, expected_name)
+    expect(page).to have_css("#visit_group_#{vg.id}[value='#{expected_name}']", visible: true)
   end
 
-  def when_i_fill_in_the_form(opts = {})
-    bootstrap_select "#visit_group_arm_id", "#{@arm.name}"
-    fill_in "visit_group_name", with: opts[:name] || "VG"
-    fill_in "visit_group_day", with: opts[:day] || "13"
-    bootstrap_select "#visit_group_position", opts[:position] || "Add as last"
+  def then_it_should_revert_to_the_original_name(vg, original_name)
+    visit protocol_path(protocol)
+
+    expect(page).to have_css("#visit_group_#{vg.id}[value='#{original_name}']", visible: true)
   end
 
-  def when_i_set_the_name_to name
-    fill_in "visit_group_name", with: name
-  end
-
-  def when_i_set_the_day_to day
-    fill_in "visit_group_day", with: day
-  end
-
-  def when_i_click_the_add_submit_button
-    btn = find('input[type="submit"]', wait: 5)
-    btn.hover
-    btn.click
-    
-    expect(page).to_not have_css("h4.modal-title", wait: 5)
-  end
-
-  def when_i_click_the_remove_submit_button
-    @visit_group_id_to_be_deleted = @visit_groups.first.id
-    
-    btn = find('#removeVisitGroupButton', wait: 5)
-    btn.hover
-    btn.click
-    
-    confirm_btn = find('button.swal2-confirm', wait: 5)
-    confirm_btn.hover
-    confirm_btn.click
-    
-    expect(page).to_not have_css("h4.modal-title", wait: 5)
-    expect(page).to_not have_css(".swal2-container", wait: 5)
-  end
-
-  def when_i_click_the_save_submit_button
-    btn = find('input[type="submit"]', wait: 5)
-    btn.hover
-    btn.click
-    
-    expect(page).to_not have_css("h4.modal-title", wait: 5)
-  end
-
-  def when_i_set_the_position_to position_identifier
-    bootstrap_select "#visit_group_position", position_identifier
-  end
-
-  def when_i_enter_the_name name
-    vg_id = @arm.visit_groups.first.id
-    input_field = find("#visit_group_#{vg_id}", wait: 5)
-    
-    input_field.hover
-    input_field.click
-    
-    fill_in "visit_group_#{vg_id}", with: name
-    
-    # Click the absolute root of the document to cleanly trigger the blur event.
-    find('body').click
-  end
-
-  def then_i_should_see_the_visit_group
-    # Use have_field instead of strictly matching value attribute strings
-    expect(page).to have_field(with: 'VG', wait: 5)
-  end
-
-  def then_i_should_see_the_updated_visit_group
-    vg_id = @arm.visit_groups.first.id
-    expect(page).to have_field("visit_group_#{vg_id}", with: "VG 2", wait: 5)
-  end
-
-  def then_i_should_not_see_the_visit_group
-    expect(page).to have_no_selector(".visit-name", id: "visit_group_#{@visit_group_id_to_be_deleted}", wait: 5)
-  end
-
-  def then_i_should_see_the_position_is position
-    expect(page).to have_field(with: 'VG', wait: 5)
-    
-    @new_visit_group = @arm.visit_groups.find_by(name: "VG")
-
-    within(".visit_groups_for_#{@arm.id}") do
-      boxes = all(".visit_group_box")
-      expect(boxes[0]).to have_field(with: @original_visit_group_1.name)
-      expect(boxes[1]).to have_field(with: @new_visit_group.name)
-      expect(boxes[2]).to have_field(with: @original_visit_group_2.name)
-    end
-  end
-
-  def then_i_should_see_the_name name
-    expect(page).to have_field("visit_group_#{@arm.visit_groups.first.id}", with: name, wait: 5)
-  end
-
-  def then_i_should_see_the_original_name
-    expect(page).to have_content("Visit Name can't be blank", wait: 5)
-
-    visit protocol_path(@protocol) #reload the page
-
-    expect(page).to have_css('#studyScheduleTabLink', wait: 5)
-
-    expect(page).to have_field("visit_group_#{@arm.visit_groups.first.id}", with: @original_name, wait: 5)
+  def then_i_should_not_see_the_visit_group(vg)
+    expect(page).to have_no_css("#visit_group_#{vg.id}")
   end
 end

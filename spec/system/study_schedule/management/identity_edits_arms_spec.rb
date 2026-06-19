@@ -20,190 +20,170 @@
 
 require 'rails_helper'
 
-feature 'Identity edits arms on protocol study schedule', js: true do
+RSpec.describe 'Identity edits arms on protocol study schedule', type: :system, js: true do
+  let(:identity) { @logged_in_identity }
+  let(:protocol) { create_and_assign_protocol_to_me(identity: identity) }
+  let(:first_arm) { protocol.arms.first }
 
-  context 'User adds an arm' do
-    scenario 'and sees the new arm is created' do
-      given_i_am_viewing_a_protocol_with_one_arm
-      when_i_click_the_add_arm_button
-      when_i_fill_in_the_form
-      when_i_click_the_add_submit_button
-      then_i_should_see_the_new_arm
+  describe 'adding an arm' do
+    it 'should create and display the new arm' do
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_add_arm_modal
+      and_i_fill_in_the_new_arm_form(name: 'Brand New Arm')
+      then_i_should_see_the_arm_in_the_schedule('Brand New Arm')
     end
   end
 
-  context 'User edits an arm' do
-    scenario 'and sees the updated arm' do
-      given_i_am_viewing_a_protocol_with_one_arm
-      when_i_click_the_edit_arm_button
-      when_i_set_the_name_to 'other arm name'
-      when_i_set_the_subject_count_to 1234
-      when_i_click_the_save_submit_button
-      then_i_should_see_the_updated_arm
+  describe 'editing an arm' do
+    it 'should update and display the updated arm' do
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_edit_arm_modal
+      and_i_update_the_arm_details(name: 'Updated Arm Name')
+      then_i_should_see_the_arm_in_the_schedule('Updated Arm Name')
     end
   end
 
-  context 'User deletes an arm' do
-    scenario 'and does not see the arm' do
-      given_i_am_viewing_a_protocol_with_multiple_arms
-      when_i_click_the_remove_arm_button
-      and_i_select_the_first_arm
-      when_i_click_the_remove_submit_button
-      then_i_should_not_see_the_arm
+  describe 'deleting an arm' do
+    # Create a second arm strictly so the app permits deleting the first one
+    let!(:second_arm) { create(:arm, protocol: protocol, name: 'Survivor Arm') }
+
+    it 'should successfully remove the arm from the schedule' do
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_remove_arm_modal
+      and_i_remove_the_target_arm(first_arm.name)
+      then_i_should_not_see_the_arm(first_arm.name)
     end
   end
 
-  context 'User tries to delete an arm with fulfillments' do
-    scenario 'and sees the arm' do
-      given_i_am_viewing_a_protocol_with_multiple_arms
-      given_there_is_an_arm_with_completed_procedures
-      when_i_click_the_remove_arm_button
-      when_i_select_the_arm_with_completed_procedures
-      when_i_click_the_remove_submit_button
+  describe 'trying to delete an arm with fulfillments' do
+    # Create a second arm strictly so the app permits attempting to delete the first one
+    let!(:second_arm) { create(:arm, protocol: protocol, name: 'Survivor Arm') }
+
+    it 'should display an error preventing deletion' do
+      given_there_is_an_arm_with_completed_procedures(first_arm)
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_remove_arm_modal
+      and_i_attempt_to_remove_an_invalid_arm(first_arm.name)
       then_i_should_see_an_error_about_completed_procedures
     end
   end
 
-  context 'User tries to delete the last arm' do
-    scenario 'and sees the arm' do
-      given_i_am_viewing_a_protocol_with_one_arm
-      when_i_click_the_remove_arm_button
-      when_i_click_the_remove_submit_button
-      then_i_should_see_an_error_about_last_arm
+  describe 'trying to delete the last arm' do
+    before do
+      # The factory creates multiple arms by default, explicitly destroy the others so this is truly the last arm
+      protocol.arms.where.not(id: first_arm.id).destroy_all
+    end
+
+    it 'should prevent the user from deleting the only remaining arm' do
+      given_i_am_viewing_the_study_schedule
+      when_i_open_the_remove_arm_modal
+      and_i_attempt_to_remove_an_invalid_arm(first_arm.name)
+      then_the_last_arm_should_not_be_deleted(first_arm.name)
     end
   end
 
-  def given_i_am_viewing_a_protocol_with_one_arm
-    @protocol = create_and_assign_protocol_to_me
-    first_arm = @protocol.arms.first
-    @protocol.arms.where.not(id: first_arm.id).destroy_all
-
-    visit protocol_path(@protocol)
-
-    schedule_tab = find('#studyScheduleTabLink', wait: 5)
-    schedule_tab.hover
-    schedule_tab.click
-
-    expect(page).to have_css('#studyScheduleTab', wait: 5)
+  def given_i_am_viewing_the_study_schedule
+    visit protocol_path(protocol)
+    expect(page).to have_css('div#manage_arms', visible: true)
   end
 
-  def given_i_am_viewing_a_protocol_with_multiple_arms
-    @protocol = create_and_assign_protocol_to_me
-    arm       = create(:arm, protocol: @protocol)
+  def given_there_is_an_arm_with_completed_procedures(target_arm)
+    participant = create(:participant)
+    protocols_participant = create(:protocols_participant_with_appointments, protocol: protocol, arm: target_arm, participant: participant)
+    appointment = protocols_participant.appointments.first
 
-    visit protocol_path(@protocol)
-
-    schedule_tab = find('#studyScheduleTabLink', wait: 5)
-    schedule_tab.hover
-    schedule_tab.click
-
-    expect(page).to have_css('#studyScheduleTab', wait: 5)
+    # Letting the factory handle status, service, and dates natively to bypass Date/Pricing Map validations
+    create(:procedure_complete, appointment: appointment, arm: target_arm)
   end
 
-  def given_there_is_an_arm_with_completed_procedures
-    @arm_with_procedures = @protocol.arms.first
-    protocols_participant  = create(:protocols_participant_with_appointments, protocol: @protocol, arm: @arm_with_procedures, participant: create(:participant))
-    procedure    = create(:procedure_complete, appointment: protocols_participant.appointments.first, arm: @arm_with_procedures, status: "complete", completed_date: Date.today.strftime('%m/%d/%Y'), service: create(:service))
-
-    visit protocol_path(@protocol)
-
-    schedule_tab = find('#studyScheduleTabLink', wait: 5)
-    schedule_tab.hover
-    schedule_tab.click
-
-    expect(page).to have_css('#studyScheduleTab', wait: 5)
+  def when_i_open_the_add_arm_modal
+    within('div#manage_arms') do
+      find('.btn-success').click
+    end
+    expect(page).to have_css('.modal-title', text: /Add Arm/i, visible: true)
   end
 
-  def when_i_click_the_add_arm_button
-    add_btn = find('div#manage_arms .btn-success', wait: 5)
-    add_btn.hover
-    add_btn.click
+  def when_i_open_the_edit_arm_modal
+    within('div#manage_arms') do
+      find('.btn-warning').click
+    end
+    expect(page).to have_css('.modal-title', text: /Edit Arm/i, visible: true)
+  end
+
+  def when_i_open_the_remove_arm_modal
+    within('div#manage_arms') do
+      find('.btn-danger').click
+    end
+    expect(page).to have_css('.modal-title', text: /Remove Arm/i, visible: true)
+  end
+
+  def and_i_fill_in_the_new_arm_form(name:)
+    within('.modal-content', text: /Add Arm/i) do
+      fill_in 'Arm Name', with: name
+      fill_in 'Subject Count', with: '1'
+      fill_in 'Visit Count', with: '3'
+      
+      find('input[type="submit"]').click
+    end
     
-    expect(page).to have_css('input[type="submit"]', wait: 5)
+    expect(page).to have_no_css('.modal-content', text: /Add Arm/i)
   end
 
-  def when_i_click_the_remove_arm_button
-    remove_btn = find('div#manage_arms .btn-danger', wait: 5)
-    remove_btn.hover
-    remove_btn.click
+  def and_i_update_the_arm_details(name:)
+    within('.modal-content', text: /Edit Arm/i) do
+      fill_in 'Arm Name', with: name
+      fill_in 'Subject Count', with: '1234'
+      
+      find('input[type="submit"]').click
+    end
     
-    expect(page).to have_css('#removeArmButton', wait: 5)
+    expect(page).to have_no_css('.modal-content', text: /Edit Arm/i)
   end
 
-  def and_i_select_the_first_arm
-    @deleted_arm_name = @protocol.arms.first.name
-    bootstrap_select "#arm_form_select", @deleted_arm_name
-  end
+  def and_i_remove_the_target_arm(arm_name)
+    within('.modal-content', text: /Remove Arm/i) do
+      bootstrap_select('#arm_form_select', arm_name)
+      find('#removeArmButton').click
+    end
 
-  def when_i_click_the_edit_arm_button
-    edit_btn = find('div#manage_arms .btn-warning', wait: 5)
-    edit_btn.hover
-    edit_btn.click
+    expect(page).to have_css('.swal2-container', visible: true)
     
-    expect(page).to have_css('input[type="submit"]', wait: 5)
+    within('.swal2-container') do
+      find('button.swal2-confirm').click
+    end
+
+    expect(page).to have_no_css('.swal2-container')
+    expect(page).to have_no_css('.modal-content', text: /Remove Arm/i)
   end
 
-  def when_i_fill_in_the_form
-    fill_in 'Arm Name', with: 'arm name'
-    fill_in 'Subject Count', with: 1
-    fill_in 'Visit Count', with: 3
+  def and_i_attempt_to_remove_an_invalid_arm(arm_name)
+    within('.modal-content', text: /Remove Arm/i) do
+      bootstrap_select('#arm_form_select', arm_name)
+      find('#removeArmButton').click
+    end
+
+    expect(page).to have_css('.swal2-container', visible: true)
+    
+    within('.swal2-container') do
+      find('button.swal2-confirm').click
+    end
+
+    expect(page).to have_no_css('.swal2-container')
   end
 
-  def when_i_set_the_name_to name
-    fill_in 'Arm Name', with: name
+  def then_i_should_see_the_arm_in_the_schedule(arm_name)
+    expect(page).to have_css('#studyScheduleTab', text: /#{Regexp.quote(arm_name)}/i, visible: true)
   end
 
-  def when_i_set_the_subject_count_to count
-    fill_in 'Subject Count', with: count
-  end
-
-  def when_i_click_the_add_submit_button
-    submit_btn = find('input[type="submit"]', wait: 5)
-    submit_btn.hover
-    submit_btn.click
-  end
-
-  def when_i_click_the_remove_submit_button
-    remove_btn = find('#removeArmButton', wait: 5)
-    remove_btn.hover
-    remove_btn.click
-
-    confirm_btn = find('button.swal2-confirm', wait: 5)
-    confirm_btn.hover
-    confirm_btn.click
-  end
-
-  def when_i_click_the_save_submit_button
-    submit_btn = find('input[type="submit"]', wait: 5)
-    submit_btn.hover
-    submit_btn.click
-  end
-
-  def when_i_select_the_arm_with_completed_procedures
-    bootstrap_select "#arm_form_select", @arm_with_procedures.name
-  end
-
-  def then_i_should_see_the_new_arm
-    expect(page).to have_css("#studyScheduleTab", text: "arm name", wait: 5)
-  end
-
-  def then_i_should_see_an_error_about_last_arm
-    expect(page).to have_content(@protocol.arms.first.name, wait: 5)
+  def then_i_should_not_see_the_arm(arm_name)
+    expect(page).to have_no_css('#studyScheduleTab', text: /#{Regexp.quote(arm_name)}/i)
   end
 
   def then_i_should_see_an_error_about_completed_procedures
-    expect(page).to have_content("has completed procedures and cannot be deleted", wait: 5)
+    expect(page).to have_css('.modal-body', text: /has completed procedures and cannot be deleted/i, visible: true)
   end
 
-  def then_i_should_see_the_updated_arm
-    expect(page).to have_css("#studyScheduleTab", text: "other arm name", wait: 5)
-  end
-
-  def then_i_should_not_see_the_arm
-    expect(page).to_not have_css('.swal2-container', wait: 5)
-    
-    expect(page).to_not have_css('#removeArmButton', wait: 5)
-    
-    expect(find("#studyScheduleTab")).not_to have_content(@deleted_arm_name)
+  def then_the_last_arm_should_not_be_deleted(arm_name)
+    expect(page).to have_css('#studyScheduleTab', text: /#{Regexp.quote(arm_name)}/i, visible: true)
   end
 end
