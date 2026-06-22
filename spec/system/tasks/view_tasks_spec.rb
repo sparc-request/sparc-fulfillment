@@ -20,112 +20,100 @@
 
 require "rails_helper"
 
-feature "View Tasks", js: true do
-  
-  before :each do
-    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
-  end
+RSpec.describe "View Tasks", type: :system, js: true do
+  let(:identity)   { @logged_in_identity }
+  let(:other_user) { create(:identity) }
 
-  scenario "Identity with no Tasks views Tasks list" do
+  # Cleanly scoped, explicitly defined data collections
+  let(:my_incomplete_tasks) { create_list(:task, 2, identity: identity, assignee: identity) }
+  let(:my_complete_tasks)   { create_list(:task_complete, 2, identity: identity, assignee: identity) }
+  let(:other_tasks)         { create_list(:task, 2, identity: other_user, assignee: other_user) }
+
+  it "with no Tasks views Tasks list" do
     given_i_have_no_tasks
     when_i_visit_the_tasks_page
     then_i_should_see_that_i_have_no_tasks
   end
 
-  scenario "Identity views complete Tasks" do
+  it "views complete Tasks" do
     given_i_have_complete_tasks
     when_i_view_complete_tasks
     then_i_should_see_complete_tasks
   end
 
-  scenario "Identity views only their Tasks" do
-    given_i_have_no_tasks
-    given_other_users_have_assigned_tasks
+  it "views only their Tasks" do
+    given_my_own_and_others_tasks
     when_i_visit_the_tasks_page
     then_i_should_only_see_tasks_assigned_to_me
   end
 
-  scenario "Identity initially views only incomplete Tasks" do
+  it "initially views only incomplete Tasks" do
     given_i_have_complete_and_incomplete_tasks
     when_i_visit_the_tasks_page
     then_i_should_see_only_incomplete_tasks
   end
 
-  scenario "Identity views tasks assigned to someone else" do
-    given_other_tasks_have_been_assigned_to_a_different_identity
+  it "views tasks assigned to someone else" do
+    given_my_own_and_others_tasks
     when_i_visit_the_tasks_page
     when_click_on_the_view_all_tasks_button
     then_i_should_see_all_tasks
   end
 
-  def given_i_have_incomplete_tasks
-    @identity = Identity.first
-    create_list(:task, 2, identity: @identity)
+  def given_i_have_no_tasks
+    #  Database cleaner setup takes care of erasing tasks between runs
   end
 
   def given_i_have_complete_tasks
-    @identity = Identity.first
-    create_list(:task_complete, 2, identity: @identity)
+    my_complete_tasks
   end
 
-  def given_other_users_have_assigned_tasks
-    given_i_have_incomplete_tasks
-    other_user = create(:identity)
-    create_list(:task, 2, identity: other_user, assignee: other_user)
-  end
-
-  def given_other_tasks_have_been_assigned_to_a_different_identity
-    given_i_have_incomplete_tasks
-    other_user = create(:identity)
-    create_list(:task, 2, identity: other_user, assignee: other_user)
+  def given_my_own_and_others_tasks
+    my_incomplete_tasks
+    other_tasks
   end
 
   def given_i_have_complete_and_incomplete_tasks
-    given_i_have_incomplete_tasks
-    given_i_have_complete_tasks
-  end
-
-  def given_i_have_no_tasks
-    # Handled globally by the before :each block
-  end
-
-  def when_i_view_complete_tasks
-    when_i_visit_the_tasks_page
-    
-    toggle_off = find("label.toggle-off", text: 'Incomplete', wait: 5)
-    toggle_off.hover
-    toggle_off.click
+    my_incomplete_tasks
+    my_complete_tasks
   end
 
   def when_i_visit_the_tasks_page
     visit tasks_path
     
-    expect(page).to have_css("table.tasks", wait: 5)
+    expect(page).to have_css('#tasksToolbar', visible: true)
+  end
+
+  def when_i_view_complete_tasks
+    when_i_visit_the_tasks_page
+    
+    find("#completeToggle", visible: :all).ancestor('div.toggle').click
   end
 
   def when_click_on_the_view_all_tasks_button
-    toggle_off = find("label.toggle-off", text: 'My Tasks', wait: 5)
-    toggle_off.hover
-    toggle_off.click
+    find("#allTasksToggle", visible: :all).ancestor('div.toggle').click
   end
 
   def then_i_should_see_that_i_have_no_tasks
-    expect(page).to have_css("table.tasks", text: "No matching records found", wait: 5)
+    # Using Regex to safely bypass styling quirks for the empty state
+    expect(page).to have_css("table.tasks tbody tr td", text: /No matching records found/i)
   end
 
   def then_i_should_see_complete_tasks
-    expect(page).to have_css("table.tasks input[checked]", wait: 5)
+    expect(page).to have_css("table.tasks tbody input[type='checkbox']:checked", count: 2)
   end
 
   def then_i_should_only_see_tasks_assigned_to_me
-    expect(page).to have_css("table.tasks tbody tr", count: 2, wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 2)
   end
 
   def then_i_should_see_only_incomplete_tasks
-    expect(page).to_not have_css("table.tasks tbody input[checked]", wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 2)
+    
+    expect(page).to have_no_css("table.tasks tbody input[type='checkbox']:checked")
   end
 
   def then_i_should_see_all_tasks
-    expect(page).to have_css("table.tasks tbody tr", count: Task.count, wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 4)
   end
 end

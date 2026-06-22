@@ -20,42 +20,50 @@
 
 require "rails_helper"
 
-feature "rescheduling a Task", js: true do
+RSpec.describe "Rescheduling a Task", type: :system, js: true do
+  let(:identity)    { @logged_in_identity }
+  let(:tasks)       { create_list(:task, 2, identity: identity, assignee: identity) }
+  
+  let(:target_date) { Date.today.next_month.change(day: 15) } 
 
-  scenario "Identity reschedules a Task" do
-    given_i_have_an_assigned_a_task
+  it "Identity reschedules a Task" do
+    given_i_have_an_assigned_task
     when_i_reschedule_the_task
     then_i_should_see_the_task_has_been_rescheduled
   end
 
-  def given_i_have_an_assigned_a_task
-    @identity = Identity.first
-    create_list(:task, 2, identity: @identity, assignee: @identity)
-    @task = Task.first
+  def given_i_have_an_assigned_task
+    tasks 
 
     visit tasks_path
     
-    expect(page).to have_css('a.reschedule-task', count: 2, wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 2)
   end
 
   def when_i_reschedule_the_task
-    reschedule_btn = all('a.reschedule-task', wait: 5).last
-    reschedule_btn.hover
-    reschedule_btn.click
+    find('a.reschedule-task', match: :first).click
 
-    expect(page).to have_css('.datetimepicker-input', wait: 5)
+    expect(page).to have_css('.modal.show', text: /Reschedule/i, visible: true)
 
-    bootstrap_datepicker '.datetimepicker-input', day: '15'
-    
-    submit_btn = find_button("Submit", wait: 5)
-    submit_btn.hover
-    submit_btn.click
+    formatted_date = target_date.strftime('%m/%d/%Y')
 
-    expect(page).to_not have_button("Submit", wait: 5)
+    within('.modal.show', text: /Reschedule/i) do
+      # Loop until the JS is fully initialized and accepts our value, then safely blur by clicking the `.modal-title` instead of the page backdrop
+      while find('.datetimepicker-input').value != formatted_date
+        find('.datetimepicker-input').set(formatted_date)
+        find('.modal-title', text: /Reschedule/i).click 
+      end
+      
+      click_button "Submit"
+    end
+
+    expect(page).to have_no_css('.modal.show', text: /Reschedule/i)
   end
 
   def then_i_should_see_the_task_has_been_rescheduled
-    expect(page).to have_css("tr td", text: "/09/", wait: 5)
-    expect(page).to have_css("tr td", text: "/15/", wait: 5)
+    # Extract the day from the let block variable dynamically
+    target_day = target_date.strftime('%d')
+    
+    expect(page).to have_css("table.tasks tbody tr td", text: /\/#{target_day}\//)
   end
 end

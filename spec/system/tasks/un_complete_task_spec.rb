@@ -20,50 +20,44 @@
 
 require "rails_helper"
 
-feature "un-completing a Task", js: true do
+RSpec.describe "Un-completing a Task", type: :system, js: true do
+  let(:identity) { @logged_in_identity }
+  let(:assignor) { create(:identity) }
+  
+  # Lazy load the tasks scoped correctly to the logged-in identity
+  let(:tasks)    { create_list(:task, 2, identity: assignor, assignee: identity) }
 
-  scenario "Identity sets a completed Task to incomplete" do
+  it "Identity sets a completed Task to incomplete" do
     given_i_have_set_a_task_to_complete
     when_i_set_the_task_to_incomplete
     then_i_should_see_that_the_task_is_incomplete
   end
 
   def given_i_have_set_a_task_to_complete
-    assignee = Identity.first
-    assignor = create(:identity)
-    create_list(:task, 2, identity: assignor, assignee: assignee)
+    tasks 
 
     visit tasks_path
     
-    expect(page).to have_css("table.tasks tbody tr", count: 2, wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 2)
 
-    complete_btn = first('input.complete', wait: 5)
-    complete_btn.hover
-    complete_btn.click
+    find('input.complete', match: :first).click
     
-    expect(page).to have_css("table.tasks tbody tr", count: 1, wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 1)
   end
 
   def when_i_set_the_task_to_incomplete
-    toggle_off = find("label.toggle-off", text: 'Incomplete', wait: 5)
-    toggle_off.hover
-    toggle_off.click
+    find("#completeToggle", visible: :all).ancestor('div.toggle').click
     
-    expect(page).to have_no_content("No matching records found", wait: 5)
-    expect(page).to have_css("table.tasks tbody tr", count: 1, wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 1)
+
+    find('input.complete', match: :first).click
     
-    uncomplete_btn = first('input.complete', wait: 5)
-    uncomplete_btn.hover
-    uncomplete_btn.click
-    
-    expect(page).to have_content("No matching records found", wait: 5)
+    expect(page).to have_no_css('input.complete')
   end
 
   def then_i_should_see_that_the_task_is_incomplete
-    toggle_on = find("label.toggle-on", text: 'Complete', wait: 5)
-    toggle_on.hover
-    toggle_on.click
+    find("#completeToggle", visible: :all).ancestor('div.toggle').click
     
-    expect(page).to have_css("table.tasks tbody tr", count: 2, wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 2)
   end
 end

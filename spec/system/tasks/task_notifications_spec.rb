@@ -20,64 +20,60 @@
 
 require "rails_helper"
 
-feature "Task notifications", js: true do
+RSpec.describe "Task notifications", type: :system, js: true do
+  let(:identity) { @logged_in_identity }
+  let(:assignor) { create(:identity) }
+  
+  let(:task)     { create(:task, identity: assignor, assignee: identity) }
 
-  before :each do
-    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
-  end
-
-  scenario "Identity sees that they have no Tasks" do
+  it "Identity sees that they have no Tasks" do
     given_i_have_no_tasks
     when_i_visit_the_task_page
     then_i_should_see_that_i_have_no_tasks
   end
 
-  scenario "Identity sees that they have one assigned Task" do
+  it "Identity sees that they have one assigned Task" do
     given_i_have_one_task
     when_i_visit_the_task_page
     then_i_should_see_that_i_have_one_task
   end
 
-  scenario "Identity clicks on Tasks notification" do
+  it "Identity completes a task and sees the notification badge clear" do
     given_i_have_one_task
     when_i_visit_the_task_page
-    when_i_click_on_the_task_notification
+    when_i_complete_the_task
     then_i_should_be_on_the_tasks_page
     then_i_should_see_that_i_have_no_tasks
   end
 
   def given_i_have_no_tasks
-    # Handled globally by the before :each block
+    # Database cleaner setup takes care of erasing tasks between runs
   end
 
   def given_i_have_one_task
-    assignee = Identity.first
-    assignor = create(:identity)
-    create(:task, identity: assignor, assignee: assignee)
+    # Explicitly invoke the lazy let block to build the single task in the database
+    task
   end
 
   def when_i_visit_the_task_page
     visit tasks_path
     
-    expect(page).to have_css("body.tasks-index", wait: 5)
+    expect(page).to have_css("body.tasks-index", visible: :all)
   end
 
-  def when_i_click_on_the_task_notification
-    # Hover Lock: Force Capybara to physically track the checkbox
-    checkbox = first("input[type='checkbox']", wait: 5)
-    checkbox.hover
-    checkbox.click
+  def when_i_complete_the_task
+    find("input[type='checkbox']", match: :first).set(true)
   end
 
   def then_i_should_be_on_the_tasks_page
-    expect(page).to have_css("body.tasks-index", wait: 5)
+    expect(page).to have_css("body.tasks-index", visible: :all)
   end
 
   def then_i_should_see_that_i_have_no_tasks
-    expect(page).to have_no_css(".notification-badge", wait: 5)
+    expect(page).to have_no_css(".notification-badge")
   end
 
   def then_i_should_see_that_i_have_one_task
-    expect(page).to have_css(".notification-badge", text: "1", wait: 5)
+    expect(page).to have_css(".notification-badge", text: "1", exact_text: true)
   end
 end

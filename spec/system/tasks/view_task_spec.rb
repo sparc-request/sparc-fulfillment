@@ -20,102 +20,87 @@
 
 require "rails_helper"
 
-feature "Identity views Task", js: true do
-  before :each do
-    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
-    
-    @assignee = Identity.first
-    protocol = create(:protocol_imported_from_sparc)
-    @core = Organization.where(type: "Core").first
-    @program = create(:organization_program)
-    @core.update(parent_id: @program.id)
-    ClinicalProvider.create(organization: protocol.sub_service_request.organization, identity: @assignee)
+RSpec.describe "Identity views Task", type: :system, js: true do
+  let(:identity) { @logged_in_identity }
+  let(:protocol) { create(:protocol_imported_from_sparc) }
+  
+  # Cleanly structure the Organization core requirement
+  let(:core) do
+    org = protocol.sub_service_request.organization
+    org.update(type: "Core", parent_id: create(:organization_program).id)
+    org
+  end
+  let(:provider) { create(:clinical_provider, organization: core, identity: identity) }
+
+  # Scenario 1 State: Identity Task
+  let(:identity_task) do
+    create(:task, identity: identity, assignee: identity, assignable: identity, body: "Identity Task Body")
   end
 
-  scenario "Identity views a Task that have assigned to themselves" do
-    given_i_am_on_the_tasks_page
-    when_i_view_a_identity_task_assigned_to_myself
+  # Scenario 2 State: Procedure Task
+  let(:procedure) do
+    # Safely grabbing the associated records created implicitly by the protocol factory to maintain referential integrity
+    appt = Appointment.first || create(:appointment)
+    visit_obj = Visit.first || create(:visit)
+    create(:procedure, appointment: appt, visit: visit_obj, sparc_core_id: core.id)
+  end
+  let(:procedure_task) do
+    create(:task, identity: identity, assignee: identity, assignable: procedure, body: "Procedure Task Body")
+  end
+
+  it "views an Identity Task assigned to themselves" do
+    given_i_have_an_identity_task
+    when_i_view_the_task("Identity Task Body")
     then_i_should_see_the_identity_task_details
   end
 
-  scenario "Identity views a Procedure Task they assigned to themselves" do
-    given_i_have_been_assigned_a_procedure_task
-    when_i_view_the_procedure_task_assigned_to_myself
+  it "views a Procedure Task they assigned to themselves" do
+    given_i_have_a_procedure_task
+    when_i_view_the_task("Procedure Task Body")
     then_i_should_see_the_procedure_task_details
   end
 
-  def given_i_am_on_the_tasks_page
+  def given_i_have_an_identity_task
+    provider
+    identity_task
+  end
+
+  def given_i_have_a_procedure_task
+    provider
+    procedure_task
+  end
+
+  def when_i_view_the_task(task_body)
     visit tasks_path
-
-    expect(page).to have_css("table.tasks", wait: 5)
-  end
-
-  def when_i_view_a_identity_task_assigned_to_myself
-    new_task_btn = find_link("Create New Task", wait: 5)
-    new_task_btn.hover
-    new_task_btn.click
-
-    expect(page).to have_css('#new_task', wait: 5)
-
-    bootstrap_select '#task_assignee_id', @assignee.full_name
-    bootstrap_datepicker '.datetimepicker-input', day: '15'
-    fill_in :task_body, with: "Test body"
-
-    submit_btn = find("#new_task .modal-footer .btn-primary", wait: 5)
-    submit_btn.hover
-    submit_btn.click
-
-    expect(page).to_not have_css('#new_task', wait: 5)
-
-    task = Task.where(body: "Test body").last
-    task.update_columns(assignable_type: "Identity", assignable_id: @assignee.id)
-
-    page.execute_script("$('table.tasks').bootstrapTable('refresh')")
-
-    # Sync Point & Geckodriver Fix: Wait for the new row, then physically target its first cell
-    target_row = find("table.tasks tbody tr", text: "Test body", wait: 5)
-    target_cell = target_row.first("td")
-    target_cell.hover
-    target_cell.click
-
-    expect(page).to have_css(".modal div", text: "Created by", wait: 5)
-  end
-
-  def given_i_have_been_assigned_a_procedure_task
-    create(:protocol_imported_from_sparc)
-    identity    = Identity.first
-    appointment = Appointment.first
-    visit       = Visit.first
-    procedure   = create(:procedure, appointment: appointment, visit: visit, sparc_core_id: @core.id)
-
-    procedure.tasks.push build(:task, identity: identity, assignee: identity)
-  end
-
-  def when_i_view_the_procedure_task_assigned_to_myself
-    given_i_am_on_the_tasks_page
     
-    target_cell = first("table.tasks tbody tr:first-child td", wait: 5)
-    target_cell.hover
-    target_cell.click
+    expect(page).to have_css("table.tasks tbody tr", text: task_body, visible: true)
     
-    expect(page).to have_css(".modal div", text: "Created by", wait: 5)
+    find("table.tasks tbody tr", text: task_body).click
+    
+    expect(page).to have_css(".modal-content", visible: true)
   end
 
   def then_i_should_see_the_identity_task_details
-    expect(page).to have_css(".modal div", text: "Created by", wait: 5)
-    expect(page).to have_css(".modal div", text: "Assigned to", wait: 5)
-    expect(page).to have_css(".modal div", text: "Type", wait: 5)
-    expect(page).to have_css(".modal div", text: "Task", wait: 5)
-    expect(page).to have_css(".modal div", text: "Due At", wait: 5)
-    expect(page).to have_css(".modal div", text: "Completed", wait: 5)
+    within('.modal-content') do
+      expect(page).to have_css("div", text: /Created by/i)
+      expect(page).to have_css("div", text: /Assigned to/i)
+      expect(page).to have_css("div", text: /Type/i)
+      expect(page).to have_css("div", text: /Task/i)
+      expect(page).to have_css("div", text: /Due At/i)
+      expect(page).to have_css("div", text: /Completed/i)
+    end
   end
 
   def then_i_should_see_the_procedure_task_details
+    # A Procedure Task should contain all the Identity details...
     then_i_should_see_the_identity_task_details
 
-    expect(page).to have_css(".modal div", text: "Participant Name", wait: 5)
-    expect(page).to have_css(".modal div", text: "Protocol", wait: 5)
-    expect(page).to have_css(".modal div", text: "Visit", wait: 5)
-    expect(page).to have_css(".modal div", text: "Arm", wait: 5)
+    # ...plus these specific clinical details
+    within('.modal-content') do
+      expect(page).to have_css("div", text: /Participant Name/i)
+      expect(page).to have_css("div", text: /Protocol/i)
+      expect(page).to have_css("div", text: /Visit/i)
+      expect(page).to have_css("div", text: /Arm/i)
+    end
   end
 end

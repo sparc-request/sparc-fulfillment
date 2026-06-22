@@ -20,91 +20,74 @@
 
 require "rails_helper"
 
-feature "create Task", js: true do
-  before :each do
-    DatabaseCleaner[:active_record, db: Task].clean_with(:truncation)
-    @assignee = Identity.first
-    @second_assignee = create(:identity)
-    protocol = create(:protocol_imported_from_sparc)
-    ClinicalProvider.create(organization: protocol.sub_service_request.organization, identity: @assignee)
-    ClinicalProvider.create(organization: protocol.sub_service_request.organization, identity: @second_assignee)
+RSpec.describe "Create Task", type: :system, js: true do
+  let(:identity)        { @logged_in_identity }
+  let(:second_assignee) { create(:identity) }
+  let(:protocol)        { create(:protocol_imported_from_sparc) }
+  
+  let(:target_date)     { Date.today.next_month.change(day: 15) }
+
+  it 'creates multiple Tasks for themselves' do
+    given_i_am_viewing_the_tasks_page
+    when_i_create_a_task_assigned_to(identity)
+    then_i_should_see_tasks_assigned_to_me_count(1)
+    
+    when_i_create_a_task_assigned_to(identity)
+    then_i_should_see_tasks_assigned_to_me_count(2)
   end
 
-  scenario 'Identity creates a multiple Tasks for themselves' do
+  it 'creates a new Task for another Identity' do
     given_i_am_viewing_the_tasks_page
-    when_i_create_a_task_assigned_to_myself
-    then_i_should_see_the_task_is_assigned_to_me
-    when_i_create_a_task_assigned_to_myself
-    then_i_should_see_two_tasks_are_assigned_to_me
-  end
-
-  scenario 'Identity creates a new Task for another Identity' do
-    given_i_am_viewing_the_tasks_page
-    when_i_create_a_task_assigned_to_another_identity
+    when_i_create_a_task_assigned_to(second_assignee)
     when_i_click_on_the_all_tasks_button
-    then_i_should_see_the_task_is_assigned_to_the_identity
+    then_i_should_see_the_task_is_assigned_to_the_identity(second_assignee)
   end
 
   def given_i_am_viewing_the_tasks_page
+    org = protocol.sub_service_request.organization
+    create(:clinical_provider, organization: org, identity: identity)
+    create(:clinical_provider, organization: org, identity: second_assignee)
+
     visit tasks_path
-
-    expect(page).to have_css("a.btn.btn-success", wait: 5)
+    
+    expect(page).to have_css('a.btn.btn-success', visible: true)
   end
 
-  def when_i_create_a_task_assigned_to_myself
-    new_task_btn = find("a.btn.btn-success", wait: 5)
-    new_task_btn.hover
-    new_task_btn.click
+  def when_i_create_a_task_assigned_to(assignee)
+    find("a.btn.btn-success").click
     
-    expect(page).to have_css('#new_task', wait: 5)
+    expect(page).to have_css('#new_task', visible: true)
+    
+    formatted_date = target_date.strftime('%m/%d/%Y')
+    
+    # Executed outside the `within` block because Bootstrap select menus append to the <body>
+    bootstrap_select '#task_assignee_id', assignee.full_name
+    
+    within('#new_task') do
+      # Safely type and blur inside the modal until the JS accepts the value.
+      while find('.datetimepicker-input').value != formatted_date
+        find('.datetimepicker-input').set(formatted_date)
+        # Safely blur by clicking the modal title rather than the page backdrop
+        find('.modal-title').click 
+      end
 
-    bootstrap_select '#task_assignee_id', @assignee.full_name
-    bootstrap_datepicker '.datetimepicker-input', day: '15'
-    fill_in :task_body, with: "Test body"
+      fill_in 'task_body', with: "Test body"
+      find(".modal-footer .btn-primary").click
+    end
     
-    save_btn = find("#new_task .modal-footer .btn-primary", wait: 5)
-    save_btn.hover
-    save_btn.click
-    
-    # CRITICAL SYNC POINT: Anchor Capybara until the modal completely fades out. This prevents the second task creation from colliding with the first!
-    expect(page).to_not have_css('#new_task', wait: 5)
-  end
-
-  def when_i_create_a_task_assigned_to_another_identity
-    new_task_btn = find("a.btn.btn-success", wait: 5)
-    new_task_btn.hover
-    new_task_btn.click
-    
-    expect(page).to have_css('#new_task', wait: 5)
-
-    bootstrap_select '#task_assignee_id', @second_assignee.full_name
-    bootstrap_datepicker '.datetimepicker-input', day: '15'
-    fill_in :task_body, with: "Test body"
-    
-    save_btn = find("#new_task .modal-footer .btn-primary", wait: 5)
-    save_btn.hover
-    save_btn.click
-    
-    expect(page).to_not have_css('#new_task', wait: 5)
+    expect(page).to have_no_css('#new_task')
   end
 
   def when_i_click_on_the_all_tasks_button
-    toggle_parent = find("#allTasksToggle", visible: :all, wait: 5).find(:xpath, "..")
-    toggle_parent.hover
-    toggle_parent.click
+    find("#allTasksToggle", visible: :all).ancestor('div.toggle').click
   end
 
-  def then_i_should_see_the_task_is_assigned_to_me
-    expect(page).to have_css("table.tasks tbody tr", count: 1, wait: 5)
-    expect(page).to have_css("span.badge", text: 1, wait: 5)
+  def then_i_should_see_tasks_assigned_to_me_count(count)
+    expect(page).to have_css("table.tasks tbody tr", count: count)
+    expect(page).to have_css("span.badge", text: count.to_s, exact_text: true)
   end
 
-  def then_i_should_see_two_tasks_are_assigned_to_me
-    expect(page).to have_css("table.tasks tbody tr", count: 2, wait: 5)
-    expect(page).to have_css("span.badge", text: 2, wait: 5)
-  end
-
-  def then_i_should_see_the_task_is_assigned_to_the_identity
-    expect(page).to have_css("table.tasks tbody td:nth-child(2)", count: 1, text: @second_assignee.full_name, wait: 5)
+  def then_i_should_see_the_task_is_assigned_to_the_identity(assignee)
+    expect(page).to have_css("table.tasks tbody td:nth-child(2)", count: 1, text: /#{Regexp.quote(assignee.full_name)}/i)
   end
 end

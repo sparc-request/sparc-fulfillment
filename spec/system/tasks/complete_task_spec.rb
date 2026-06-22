@@ -20,33 +20,30 @@
 
 require "rails_helper"
 
-feature "Completing a Task", js: true do
+RSpec.describe "Completing a Task", type: :system, js: true do
+  let(:identity) { @logged_in_identity }
+  let(:assignor) { create(:identity) }
+  let(:tasks)    { create_list(:task, 2, identity: assignor, assignee: identity) }
 
-  scenario "Identity sets a Task as complete" do
+  it "Identity sets a Task as complete" do
     given_i_have_an_assigned_task
     when_i_mark_the_task_as_complete
     then_i_should_not_see_the_task
   end
 
   def given_i_have_an_assigned_task
-    assignee = @logged_in_identity
-    assignor = create(:identity)
-    create_list(:task, 2, identity: assignor, assignee: assignee)
+    tasks
 
     visit tasks_path
     
-    expect(page).to have_css("table.tasks tbody tr", count: 2, wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 2)
   end
 
   def when_i_mark_the_task_as_complete
-    @count_before_marked = Task.where(assignee: @logged_in_identity).count
-
-    complete_btn = first('input.complete', wait: 5)
-    complete_btn.hover
-    complete_btn.click
+    find('input.complete', match: :first).click
   end
 
   def then_i_should_not_see_the_task
-    expect(page).to have_css("table.tasks tbody tr", count: (@count_before_marked - 1), wait: 5)
+    expect(page).to have_css("table.tasks tbody tr", count: 1)
   end
 end
