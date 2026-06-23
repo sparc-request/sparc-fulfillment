@@ -23,7 +23,7 @@ require 'rails_helper'
 RSpec.describe ArmsController do
 
   before :each do
-    sign_in
+    auto_login_identity
     @protocol = create(:protocol)
     @arm = create(:arm, protocol_id: @protocol.id)
   end
@@ -38,9 +38,22 @@ RSpec.describe ArmsController do
 
     it "should only show clinical services" do
       clinical_services = create_list(:service, 3, one_time_fee: false)
+      
       clinical_services.each do |service|
-        create(:line_item, service: service, protocol: @protocol)
+        # Build the object in memory first
+        li = build(:line_item, service: service, protocol: @protocol, arm: @arm)
+        
+        # Try to save it, and scream loudly if it fails
+        unless li.save
+          puts "🚨 FAILED TO SAVE LINE ITEM: #{li.errors.full_messages} 🚨"
+        end
       end
+
+      # Verify the database state right before the controller request
+      puts "======================================"
+      puts "Total Services in DB: #{Service.count}"
+      puts "Total Line Items for Protocol: #{LineItem.where(protocol_id: @protocol.id).count}"
+      puts "======================================"
 
       get :new, params: { protocol_id: @protocol.id }, format: :js, xhr: true
       expect(assigns(:services)).to match_array(clinical_services)

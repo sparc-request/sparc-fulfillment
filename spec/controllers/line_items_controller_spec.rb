@@ -23,7 +23,7 @@ require 'rails_helper'
 RSpec.describe LineItemsController do
 
   before :each do
-    sign_in
+    auto_login_identity
     @protocol = create(:protocol)
     @service = create(:service_with_one_time_fee)
     @service_2 = create(:service)

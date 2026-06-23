@@ -22,7 +22,7 @@ require 'rails_helper'
 
 RSpec.describe VisitsController, type: :controller do
   before :each do
-    sign_in
+    auto_login_identity
     create_and_assign_protocol_to_me
     @visit = Visit.first
   end

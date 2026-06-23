@@ -22,7 +22,7 @@ require 'rails_helper'
 
 RSpec.describe StudyScheduleController do
   before :each do
-    sign_in
+    auto_login_identity
     @protocol = create(:protocol)
     @arm = create(:arm_imported_from_sparc, protocol_id: @protocol.id, visit_count: 10)
   end

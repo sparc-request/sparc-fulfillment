@@ -53,7 +53,7 @@ RSpec.describe ParticipantsController do
   end
 
   before :each do
-    sign_in
+    auto_login_identity
     @protocol = create(:protocol)
     @arm = create(:arm, protocol_id: @protocol.id)
     @participant = create(:participant)
