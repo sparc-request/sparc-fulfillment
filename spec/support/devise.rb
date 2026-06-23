@@ -49,14 +49,18 @@ end
 module ControllerMacros
   def login_user
     before(:each) do
-      @request.env['devise.mapping'] = Devise.mappings[:identity]
+      # Controller specs bypass Rack middleware and require this mapping.
+      # Request specs route through Rack, so we conditionally apply it only for controllers.
+      if RSpec.current_example.metadata[:type] == :controller
+        @request.env['devise.mapping'] = Devise.mappings[:identity]
+      end
+
       auto_login_identity
     end
   end
 end
 
 RSpec.configure do |config|
-  config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Devise::Test::IntegrationHelpers, type: :system
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::ControllerHelpers, type: :controller
@@ -65,16 +69,15 @@ RSpec.configure do |config|
   config.include CustomAuthHelpers, type: :feature
   config.include CustomAuthHelpers, type: :system
   config.include CustomAuthHelpers, type: :model
-  config.extend ControllerMacros, type: :controller
+  config.include CustomAuthHelpers, type: :controller
+  config.include CustomAuthHelpers, type: :request
 
   config.include Warden::Test::Helpers
+
+  config.extend ControllerMacros, type: :controller
   
   config.before(:suite) do
     Warden.test_mode!
-  end
-
-  config.before(:each, type: :feature) do
-    auto_login_identity
   end
 
   config.before(:each, type: :system) do
