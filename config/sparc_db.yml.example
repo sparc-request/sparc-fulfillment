@@ -53,18 +53,24 @@ test:
   variables:
     sql_mode: TRADITIONAL
 
-# Docker Config Example
-# default: &default
-#   adapter: mysql2
-#   username: <%= ENV['DATABASE_USERNAME'] %>
-#   password: <%= ENV['DATABASE_PASSWORD'] %>
-#   host: <%= ENV['DATABASE_HOST'] %>
-#   encoding: utf8
-#   timeout: 5000
-#   pool: 5
-#   variables:
-#    sql_mode: TRADITIONAL
-#
-# development:
-#   <<: *default
-#   database: <%= ENV['SPARC_DATABASE_NAME'] %>
+# Docker Config
+
+default: &default
+  adapter: mysql2
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  encoding: utf8
+  timeout: 5000
+  pool: 5
+  variables:
+   sql_mode: TRADITIONAL
+
+development:
+  <<: *default
+  host: <%= ENV['DATABASE_HOST'] %>
+  database: sparc-docker_development
+
+test:
+  <<: *default
+  host: <%= ENV['TEST_DATABASE_HOST'] %>
+  database: sparc-docker_test
