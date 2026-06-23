@@ -59,6 +59,7 @@ RSpec.describe 'Notes', type: :system, js: true do
     find('.notes a', match: :first).click
     
     expect(page).to have_css('.modal-title', text: /Service Notes/i, visible: true)
+    expect(page).to have_content(/This Service doesn't have any notes/i)
   end
 
   def when_i_open_up_a_new_fulfillment_note
@@ -68,14 +69,15 @@ RSpec.describe 'Notes', type: :system, js: true do
     find('a.fulfillment_notes', match: :first).click
     
     expect(page).to have_css('.modal-title', text: /Fulfillment Notes/i, visible: true)
+    expect(page).to have_content(/This Fulfillment doesn't have any notes/i)
   end
 
   def then_i_fill_out_and_save_the_note
     within('.modal-content', text: /(Service|Fulfillment) Notes/i) do
       fill_in 'note_comment', with: 'Test comment'
       click_button 'Leave Note'
-
-      expect(page).to have_css('.note-body', text: /Test comment/i, visible: true)
     end
+
+    expect(page).to have_css('.note-body', text: /Test comment/i, visible: true)
   end
 end

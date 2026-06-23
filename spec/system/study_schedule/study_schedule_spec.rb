@@ -147,7 +147,6 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
         given_i_am_viewing_a_protocol
         given_i_am_viewing_the_quantity_billing_tab
         when_i_click_the_visit_modal
-        when_i_set_the_research_billing_quantity_to '6'
         when_i_set_the_research_billing_quantity_to ''
         then_i_should_see_not_a_number_error_message
       end
@@ -158,7 +157,6 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
         given_i_am_viewing_a_protocol
         given_i_am_viewing_the_quantity_billing_tab
         when_i_click_the_visit_modal
-        when_i_set_the_research_billing_quantity_to '6'
         when_i_set_the_research_billing_quantity_to '-1'
         then_i_should_see_greater_than_error_message
       end
@@ -308,13 +306,15 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   def when_i_click_the_visit_modal
     find("#visit#{visit_obj.id} a", match: :first).click
 
-    expect(page).to have_css('.modal-content', visible: true)
+    expect(page).to have_css('.modal-content', text: /Research billing qty/i, visible: true)
   end
 
   def when_i_set_the_research_billing_quantity_to(value)
-    within('.modal-content') do
+    expect(page).to have_css("#visit_research_billing_qty")
+    
+    within('.modal-content', text: /Edit Billing Quantities/i) do
       fill_in "visit_research_billing_qty", with: value
-      find("input[type='submit']").click
+      click_button "Submit"
     end
   end
 

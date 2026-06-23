@@ -62,6 +62,7 @@ RSpec.describe 'Identity views nav bar', type: :system, js: true do
     
     # Sync point to prevent Capybara from roadrunning before the page loads
     expect(page).to have_css('#studyScheduleTabLink')
+    expect(page).to have_content('Manage Arms')
   end
 
   def given_i_am_on_the_participant_page

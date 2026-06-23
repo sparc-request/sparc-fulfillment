@@ -23,7 +23,7 @@ require 'rails_helper'
 RSpec.describe 'Identity manages Documents', type: :system, js: true do
   let(:identity) { @logged_in_identity }
   let(:protocol) { create_and_assign_protocol_to_me(identity: identity) }
-  let(:file_path) { Rails.root.join('db', 'fixtures', 'test_document.txt') }
+  let(:file_path) { Rails.root.join("spec/fixtures/files/test_document.txt") }
 
   context 'User views line item documents' do
     scenario 'and sees the line item documents list' do
@@ -61,7 +61,7 @@ RSpec.describe 'Identity manages Documents', type: :system, js: true do
     protocol.sparc_protocol.update(type: 'Study')
     visit protocol_path(protocol)
 
-    expect(page).to have_content('Manage Arms')
+    expect(page).to have_content(/Manage Arms/)
 
     expect(page).to have_css('.nav-link', text: /Non-clinical Services/i)
     click_link "Non-clinical Services"
@@ -72,26 +72,27 @@ RSpec.describe 'Identity manages Documents', type: :system, js: true do
   def when_i_click_on_line_item_documents_icon
     find('.documents a', match: :first).click
 
-    expect(page).to have_css('.modal-content', visible: true)
+    expect(page).to have_css('.modal-content', text: /Line Item Documents/i, visible: true)
   end
 
   def when_i_click_on_the_add_document_button
-    within('.modal-content') do
+    within('.modal-content', text: /Line Item Documents/i) do
       find('.document.new').click
     end
-    
+
+    expect(page).to have_no_css('.modal-title', text: /Line Item Document/i)
+
     expect(page).to have_css('.modal-title', text: /Add Document/i, visible: true)
     expect(page).to have_css("input[type='file']", visible: :all)
   end
 
   def when_i_upload_a_document
     within('.modal-content', text: /Add Document/i) do
-      file_input_id = find("input[type='file']", visible: :all)[:id]
-      attach_file(file_input_id, file_path, make_visible: true)
+      attach_file("Document", file_path, make_visible: true)
       click_button "Save"
     end
 
-    expect(page).to have_no_css('.modal-title', text: /Add Document/i, wait: 10)
+    expect(page).to have_no_css('.modal-title', text: /Add Document/i, wait: 15)
   end
 
   def then_i_should_see_the_line_item_documents_list

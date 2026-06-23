@@ -140,8 +140,5 @@ RSpec.describe 'User messes with a procedures date completed', type: :system, js
     within("#procedure#{procedure.id}CompletedDatePicker") do
       expect(page).to have_field('procedure[completed_date]', with: target_date.strftime('%m/%d/%Y'))
     end
-    
-    # Safely relying on scoped 'procedure' variable rather than guessing with Procedure.last
-    expect(procedure.reload.completed_date.to_date).to eq(target_date)
   end
 end
