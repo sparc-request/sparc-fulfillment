@@ -25,6 +25,11 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+      
+      selenium_chrome:
+        image: selenium/standalone-chrome:latest
+        ports:
+          - 4444:4444
 
     env:
       RAILS_ENV: test
