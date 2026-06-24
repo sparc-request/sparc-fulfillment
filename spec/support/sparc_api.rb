@@ -23,8 +23,8 @@ module SparcHelper
     # Generate the proper Basic Auth headers using the existing defined helper
     auth_headers = http_login_headers(ENV['CWF_API_USERNAME'], ENV['CWF_API_PASSWORD'])
     
-    # Pass the headers explicitly to the post request
-    post '/v1/notifications.json', params: params, headers: auth_headers
+    # Rails 7 Fix: Explicitly pass `as: :json` 
+    post '/v1/notifications.json', params: params, as: :json, headers: auth_headers
   end
 
   def load_protocol_1_json
