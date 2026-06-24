@@ -18,58 +18,25 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-development:
-  username: root
-  adapter: mysql2
-  encoding: utf8
-  database: cwf_development
-  pool: 5
-  timeout: 5000
-  variables:
-    sql_mode: TRADITIONAL
-
-# configured for travis-ci
-# test: &test
-#  adapter: mysql2
-#  encoding: utf8
-#  database: cwf_test
-#  username: travis
-#  pool: 5
-#  timeout: 5000
-#  variables:
-#    sql_mode: TRADITIONAL
-
-# configured for github actions ci
-test:
-  adapter: mysql2
-  encoding: utf8
-  database: <%= ENV.fetch('FULFILLMENT_DATABASE_NAME', 'cwf_test') %>
-  username: <%= ENV.fetch('DATABASE_USERNAME', 'root') %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
-  host: <%= ENV['DATABASE_HOST'] || '127.0.0.1' %>
-  pool: 5
-  timeout: 5000
-  variables:
-    sql_mode: TRADITIONAL
-
-# Docker Config
-
 default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
   timeout: 5000
-  username: <%= ENV['DATABASE_USERNAME'] %>
+  username: <%= ENV.fetch('DATABASE_USERNAME', 'root') %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
+  # 'localhost' routes to a socket connection for standard local devs.
+  # CI and Docker will override this via ENV to force TCP.
+  host: <%= ENV.fetch('DATABASE_HOST', ENV.fetch('TEST_DATABASE_HOST', 'localhost')) %>
   variables:
     sql_mode: TRADITIONAL
 
 development:
   <<: *default
-  host: <%= ENV['DATABASE_HOST'] %>
-  database: cwf-docker_development
+  # Defaults to standard naming for local devs. 
+  database: <%= ENV.fetch('DATABASE_NAME', 'cwf_development') %>
 
 test:
   <<: *default
-  host: <%= ENV['TEST_DATABASE_HOST'] %>
-  database: cwf-docker_test
+  # Checks CI's specific name first, then generic ENV, then defaults to standard standard local naming.
+  database: <%= ENV.fetch('FULFILLMENT_DATABASE_NAME', ENV.fetch('TEST_DATABASE_NAME', 'cwf_test')) %>
