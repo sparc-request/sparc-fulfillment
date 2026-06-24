@@ -19,6 +19,7 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 require 'selenium/webdriver'
+require 'socket'
 
 # Now handles both Docker and CI
 Capybara.register_driver :remote_chrome_headless do |app|
@@ -46,12 +47,17 @@ RSpec.configure do |config|
   config.before(:each, type: :system) do
     if ENV['CI']
       # 1. GITHUB ACTIONS ENVIRONMENT
-      # Connects to the localhost Selenium container added to ci.yml
       driven_by :remote_chrome_headless
-      Capybara.server_host = '127.0.0.1'
+      
+      # Bind to all interfaces so the Docker container can reach in
+      Capybara.server_host = '0.0.0.0'
       Capybara.server_port = 3002
-      # Tells the browser to navigate to the test server running on the CI runner
-      Capybara.app_host = 'http://127.0.0.1:3002'
+      
+      # Dynamically find the runner's IP address on the network
+      runner_ip = Socket.ip_address_list.find { |ai| ai.ipv4? && !ai.ipv4_loopback? }&.ip_address || '172.17.0.1'
+      
+      # Tell Chrome to navigate to the runner's actual IP, not "localhost"
+      Capybara.app_host = "http://#{runner_ip}:3002"
       
     elsif File.exist?('/.dockerenv')
       # 2. DOCKER ENVIRONMENT
