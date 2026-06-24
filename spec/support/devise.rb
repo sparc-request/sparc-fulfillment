@@ -24,22 +24,16 @@ module CustomAuthHelpers
     identity ||= create(:identity, password: 'password', password_confirmation: 'password')
     @logged_in_identity = identity
     
+    # 1. Instantly authenticate at the Rack level (bypasses LDAP and UI entirely)
+    sign_in(identity) if respond_to?(:sign_in) # Devise helper
+    login_as(identity, scope: :identity)       # Warden helper
+    
+    # 2. For browser-based system tests, simply navigate directly to the app
     if respond_to?(:visit)
       visit '/'
       
-      if page.has_css?('#outsideUserLogin', wait: 15)
-        find('#outsideUserLogin').click
-      end
-
-      fill_in 'identity_ldap_uid', with: identity.ldap_uid
-      fill_in 'identity_password', with: identity.password || 'password'
-      click_button 'Sign In'
-
-      # Wait for the user profile to appear in the navbar. This guarantees we don't proceed until the session is fully established.
+      # Wait for the user profile to appear to guarantee the session was recognized
       expect(page).to have_css('.nav-item.profile', wait: 15)
-    else
-      sign_in(identity)
-      login_as(identity, scope: :identity)
     end
     
     identity
