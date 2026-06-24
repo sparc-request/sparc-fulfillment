@@ -66,20 +66,48 @@ end
 
 RSpec.configure do |config|
 
-  config.before(:each, sparc_api: :get_protocol_1) do
-    VCR.insert_cassette('reusable/sparc_api/get_protocol_1', match_requests_on: [:host])
+  config.around(:each, sparc_api: :get_protocol_1) do |example|
+    VCR.configure { |c| c.unignore_hosts 'localhost', '127.0.0.1' }
+    begin
+      VCR.use_cassette('reusable/sparc_api/get_protocol_1', match_requests_on: [:host]) do
+        example.run
+      end
+    ensure
+      VCR.configure { |c| c.ignore_localhost = true }
+    end
   end
 
-  config.before(:each, sparc_api: :get_service_1) do
-    VCR.insert_cassette('reusable/sparc_api/get_service_1', match_requests_on: [:host])
+  config.around(:each, sparc_api: :get_service_1) do |example|
+    VCR.configure { |c| c.unignore_hosts 'localhost', '127.0.0.1' }
+    begin
+      VCR.use_cassette('reusable/sparc_api/get_service_1', match_requests_on: [:host]) do
+        example.run
+      end
+    ensure
+      VCR.configure { |c| c.ignore_localhost = true }
+    end
   end
 
-  config.before(:each, sparc_api: :get_sub_service_request_1) do
-    VCR.insert_cassette('reusable/sparc_api/get_sub_service_request_1')
+  config.around(:each, sparc_api: :get_sub_service_request_1) do |example|
+    VCR.configure { |c| c.unignore_hosts 'localhost', '127.0.0.1' }
+    begin
+      VCR.use_cassette('reusable/sparc_api/get_sub_service_request_1') do
+        example.run
+      end
+    ensure
+      VCR.configure { |c| c.ignore_localhost = true }
+    end
   end
 
-  config.before(:each, sparc_api: :get_service_components_1) do
-    VCR.insert_cassette('reusable/sparc_api/get_service_components_1', match_requests_on: [:method, :path, :query])
+  config.around(:each, sparc_api: :get_service_components_1) do |example|
+    VCR.configure { |c| c.unignore_hosts 'localhost', '127.0.0.1' }
+    begin
+      VCR.use_cassette('reusable/sparc_api/get_service_components_1', match_requests_on: [:method, :path, :query]) do
+        example.run
+      end
+    ensure
+      VCR.configure { |c| c.ignore_localhost = true }
+    end
   end
 
   config.before(:each, sparc_api: :unavailable) do
