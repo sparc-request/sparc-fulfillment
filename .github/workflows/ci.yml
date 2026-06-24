@@ -42,6 +42,7 @@ jobs:
       SPARC_DATABASE_NAME: test_sparc_request
       USE_EPIC: "true"
       EPIC_TEST_MODE: "true"
+      SELENIUM_HOST: 127.0.0.1
 
     steps:
       # Clone cwf and sparc repos into subdirectlories in the runner

@@ -20,12 +20,16 @@
 
 require 'selenium/webdriver'
 
-Capybara.register_driver :docker_chrome_headless do |app|
+# Now handles both Docker and CI
+Capybara.register_driver :remote_chrome_headless do |app|
+  # Fallback chain: CI's host first, then the Docker host
+  selenium_host = ENV.fetch('SELENIUM_HOST', 'selenium_chrome')
+
   selenium_url = begin
-                   selenium_host = Addrinfo.getaddrinfo('selenium_chrome', 4444).first.ip_address
-                   "http://#{selenium_host}:4444/wd/hub"
+                   ip = Addrinfo.getaddrinfo(selenium_host, 4444).first.ip_address
+                   "http://#{ip}:4444/wd/hub"
                  rescue Socket::ResolutionError
-                   'http://selenium_chrome:4444/wd/hub'
+                   "http://#{selenium_host}:4444/wd/hub"
                  end
 
   options = Selenium::WebDriver::Chrome::Options.new
@@ -40,12 +44,32 @@ end
 
 RSpec.configure do |config|
   config.before(:each, type: :system) do
-    driven_by :docker_chrome_headless
-    Capybara.server_host = '0.0.0.0'
-    Capybara.server_port = 3002
-    Capybara.app_host = ENV['CAPYBARA_APP_HOST'] || 'http://cwf_web:3002'
+    if ENV['CI']
+      # 1. GITHUB ACTIONS ENVIRONMENT
+      # Connects to the localhost Selenium container added to ci.yml
+      driven_by :remote_chrome_headless
+      Capybara.server_host = '127.0.0.1'
+      Capybara.server_port = 3002
+      # Tells the browser to navigate to the test server running on the CI runner
+      Capybara.app_host = 'http://127.0.0.1:3002'
+      
+    elsif File.exist?('/.dockerenv')
+      # 2. DOCKER ENVIRONMENT
+      # Uses standard Docker network routing
+      driven_by :remote_chrome_headless
+      Capybara.server_host = '0.0.0.0'
+      Capybara.server_port = 3002
+      Capybara.app_host = ENV.fetch('CAPYBARA_APP_HOST', 'http://cwf_web:3002')
+      
+    else
+      # 3. STANDARD LOCAL ENVIRONMENT
+      # Uses Rails 7's built-in headless driver - no remote server needed!
+      driven_by :selenium, using: :headless_chrome, screen_size: [1920, 1080]
+      Capybara.server_host = '127.0.0.1'
+      Capybara.server_port = 3002
+      # app_host naturally defaults to server_host:server_port locally
+    end
     
-    # Leave the default at 5 seconds for the suite, ensuring fast failures if something is genuinely broken.
     Capybara.default_max_wait_time = 5 
   end
 end
