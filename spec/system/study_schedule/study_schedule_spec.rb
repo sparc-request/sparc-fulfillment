@@ -441,7 +441,15 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   end
 
   def then_i_should_see_the_correct_service
-    expect(find("button.dropdown-toggle[data-id='line_item_service_id']")["title"]).to match(/#{Regexp.quote(line_item.service.name)}/i)
+    # Rule III.B: Scope the interaction strictly to the modal
+    within('.modal-content', text: /Change Service/i) do
+      
+      # Rule II.A: Apply the brakes. Give the CI server up to 10 seconds for Bootstrap Select to build the element.
+      expect(page).to have_css("button.dropdown-toggle[data-id='line_item_service_id']", visible: true, wait: 10)
+      
+      # Now that we have proven the element exists and is visible, safely evaluate its attribute
+      expect(find("button.dropdown-toggle[data-id='line_item_service_id']")["title"]).to match(/#{Regexp.quote(line_item.service.name)}/i)
+    end
   end
 
   def then_i_should_see_the_updated_service(service)

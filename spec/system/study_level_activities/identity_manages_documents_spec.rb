@@ -87,12 +87,13 @@ RSpec.describe 'Identity manages Documents', type: :system, js: true do
   end
 
   def when_i_upload_a_document
-    expect(page).to have_css('.modal.show')
+    expect(page).to have_css('.modal.show', visible: true)
 
     within('.modal-content', text: /Add Document/i) do
-      attach_file("Document", file_path, make_visible: true)
-      # For this very specific use-case, the only consisten workaround seems to be the hacky "send_keys"... Capybara won't consistently find the "Save" button using any other means
-      find_button("Save").send_keys(:return)
+      file_input_id = find("input[type='file']", visible: :all)[:id]
+      attach_file(file_input_id, file_path, make_visible: true)
+      
+      click_button 'Save'
     end
 
     expect(page).to have_no_css('.modal-title', text: /Add Document/i, wait: 15)

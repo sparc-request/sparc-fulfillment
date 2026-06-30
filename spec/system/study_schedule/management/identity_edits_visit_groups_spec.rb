@@ -28,11 +28,15 @@ RSpec.describe 'Identity edits visit groups for a particular protocol', type: :s
   before { protocol.arms.destroy_all }
 
   describe 'adding a visit group to an arm' do
-    let!(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
-    
-    # Manipulate the factory data cleanly inside the let! block using tap
-    let!(:vg1) { arm.visit_groups.first.tap { |vg| vg.update(day: 1) } }
-    let!(:vg2) { arm.visit_groups.second.tap { |vg| vg.update(day: 3) } }
+    let(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
+    let(:vg1) { arm.visit_groups.first }
+    let(:vg2) { arm.visit_groups.second }
+
+    # Safely evaluate and update the data AFTER the auth lifecycle has completed
+    before do
+      vg1.update(day: 1)
+      vg2.update(day: 3)
+    end
 
     it 'should display the new visit group on the arm' do
       given_i_am_viewing_the_study_schedule
@@ -55,8 +59,11 @@ RSpec.describe 'Identity edits visit groups for a particular protocol', type: :s
   end
 
   describe 'editing a visit group on an arm' do
-    let!(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
-    let!(:vg)  { arm.visit_groups.first }
+    let(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
+    let(:vg)  { arm.visit_groups.first }
+
+    # Safely instantiate the chain
+    before { vg }
 
     it 'should update and display the updated visit group' do
       given_i_am_viewing_the_study_schedule
@@ -67,8 +74,10 @@ RSpec.describe 'Identity edits visit groups for a particular protocol', type: :s
   end
 
   describe 'inline editing a visit group name in the service calendar' do
-    let!(:arm) { create(:arm_with_one_visit_group, visit_count: 1, protocol: protocol, subject_count: 3) }
-    let!(:vg)  { arm.visit_groups.first }
+    let(:arm) { create(:arm_with_one_visit_group, visit_count: 1, protocol: protocol, subject_count: 3) }
+    let(:vg)  { arm.visit_groups.first }
+
+    before { vg }
 
     context 'providing a valid name' do
       it 'should update and display the new name' do
@@ -89,8 +98,10 @@ RSpec.describe 'Identity edits visit groups for a particular protocol', type: :s
   end
 
   describe 'deleting a visit group from an arm' do
-    let!(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
-    let!(:vg_to_delete) { arm.visit_groups.first }
+    let(:arm) { create(:arm_with_visit_groups, visit_count: 2, protocol: protocol, subject_count: 3) }
+    let(:vg_to_delete) { arm.visit_groups.first }
+
+    before { vg_to_delete }
 
     it 'should remove the visit group from the arm' do
       given_i_am_viewing_the_study_schedule
@@ -138,7 +149,7 @@ RSpec.describe 'Identity edits visit groups for a particular protocol', type: :s
       fill_in 'visit_group_name', with: name
       fill_in 'visit_group_day', with: day
 
-      find('input[type="submit"]').click
+      click_button 'Submit'
     end
     
     expect(page).to have_no_css('.modal-content', text: /Edit Visit/i, wait: 10)
