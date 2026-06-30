@@ -122,5 +122,5 @@ jobs:
         if: failure() # Only run if the RSpec step fails
         with:
           name: capybara-screenshots-${{ strategy.job-index }}
-          path: sparc-fulfillment/tmp/screenshots/
+          path: sparc-fulfillment/tmp/capybara/
           if-no-files-found: ignore
