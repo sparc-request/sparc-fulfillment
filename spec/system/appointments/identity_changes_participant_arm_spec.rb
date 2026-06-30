@@ -67,7 +67,6 @@ RSpec.describe 'Identity changes Participant Arm', type: :system, js: true do
   def then_i_change_the_arm_of_the_participant
     visit protocol_path(protocol.id)
 
-    # SYNC POINT 1: Ensure Rails UJS is fully initialized
     expect(page).to have_css('a#studyScheduleTabLink.active')
     expect(page).to have_css('.tab-pane.active#studyScheduleTab')
 
@@ -91,12 +90,11 @@ RSpec.describe 'Identity changes Participant Arm', type: :system, js: true do
       bootstrap_select('#protocols_participant_arm_id', second_arm.name)
     end
 
-    # SYNC POINT 2: The Ghost Appointment Fix
-    # Target the specific table inside the active tab to dodge the ambiguous match
+    expect(page).to have_css('.filter-option-inner-inner', text: second_arm.name)
+
     refresh_bootstrap_table('#participantTrackerTab .bootstrap-table')
     
-    # Ensure the wait for the correct loading overlay to vanish
-    expect(page).to have_no_css('#participantTrackerTab .fixed-table-loading')
+    expect(page).to have_no_css('#participantTrackerTab .fixed-table-loading', wait: 10)
   end
 
   def and_i_visit_the_calendar_again

@@ -93,7 +93,12 @@ RSpec.describe 'Identity edits document title', type: :system, js: true, inline_
     fill_in 'Title', with: 'A custom title'
 
     bootstrap_datepicker 'input#start_date', day: '10'
+
+    # Force Capybara to wait until the JS actually populates the field, ensuring the first calendar is fully resolved before triggering the second
+    expect(page).to have_no_field('start_date', with: '')
+
     bootstrap_datepicker 'input#end_date', day: '10'
+    expect(page).to have_no_field('end_date', with: '')
 
     # Explicit descendant selectors replace the `within` block
     find('.modal-content button[data-id="organization_select"]').click

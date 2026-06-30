@@ -92,6 +92,9 @@ RSpec.describe 'Identity views nav bar', type: :system, js: true do
 
   def when_i_view_the_first_participants_in_protocol_tracker
     visit protocol_path(protocol.id)
+
+    # Sync point
+    expect(page).to have_css('a.active#studyScheduleTabLink')
     
     expect(page).to have_link('Participant Tracker')
     click_link 'Participant Tracker'

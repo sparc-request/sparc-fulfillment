@@ -77,9 +77,11 @@ RSpec.describe 'User views the participant tracker page', type: :system, js: tru
       find('.modal-header').click
 
       click_button 'Leave Note'
-
-      expect(page).to have_field('note_comment', with: '')
     end
+
+    expect(page).to have_content('Action Jackson', wait: 10)
+
+    expect(page).to have_field('note_comment', with: '')
   end
 
   def when_i_change_the_participants_arm

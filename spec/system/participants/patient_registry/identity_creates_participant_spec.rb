@@ -84,6 +84,8 @@ RSpec.describe 'User creates Participant', type: :system, js: true do
   def when_i_create_a_new_participant(mrn:)
     find('.new-participant').click
 
+    expect(page).to have_css('.modal.show')
+
     fill_in 'Last Name', with: 'Potter'
     fill_in 'First Name', with: 'Harry'
     fill_in 'MRN', with: mrn
