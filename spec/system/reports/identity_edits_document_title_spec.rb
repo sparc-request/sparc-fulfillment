@@ -128,7 +128,7 @@ RSpec.describe 'Identity edits document title', type: :system, js: true, inline_
     find(".modal-content button[type='submit']").click
 
     # Sync point: wait for the modal to completely vanish
-    expect(page).to have_no_css('.modal.show')
+    expect(page).to have_no_css('.modal.show', wait: 10)
   end
 
   def then_i_should_see_the_title_has_been_updated

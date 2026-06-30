@@ -61,7 +61,7 @@ RSpec.describe 'Identity manages Fulfillments', type: :system, js: true do
       expect(page).to have_css('.modal-title', text: /Fulfillments List/i, visible: true)
       click_link "Add Fulfillment"
       
-      expect(page).to have_css('#fulfillment_fulfilled_at', visible: :all)
+      expect(page).to have_css('.modal-title', text: /Create New Fulfillment/i, visible: true)
       
       when_i_fill_out_the_fulfillment_form
       
