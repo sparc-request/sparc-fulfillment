@@ -21,10 +21,10 @@
 require 'rails_helper'
 
 RSpec.describe 'User views the participant tracker page', type: :system, js: true do
-  let!(:protocol)              { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.last }
-  let!(:original_arm)          { protocols_participant.arm }
-  let!(:second_arm)            { protocol.arms.second }
+  let(:protocol)              { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.last }
+  let(:original_arm)          { protocols_participant.arm }
+  let(:second_arm)            { protocol.arms.second }
 
   context 'when interacting with participant notes' do
     scenario 'sees the notes modal' do
@@ -53,7 +53,7 @@ RSpec.describe 'User views the participant tracker page', type: :system, js: tru
   def given_i_am_viewing_the_participant_tracker
     visit protocol_path(protocol.id)
     
-    expect(page).to have_content('Manage Arms')
+    expect(page).to have_content(/Manage Arms/i)
     
     click_link 'Participant Tracker'
     expect(page).to have_css('#participantTrackerTable', visible: :all)
@@ -67,19 +67,15 @@ RSpec.describe 'User views the participant tracker page', type: :system, js: tru
     within(participant_row) do
       find("#participant#{protocols_participant.participant_id}Notes a").click
     end
+    
+    expect(page).to have_css('.modal-title', text: /Participant Notes/i, visible: true)
   end
 
   def when_i_add_a_comment_and_save
     within('.modal-content', text: /Participant Notes/i) do
-      expect(page).to have_field('note_comment')
       fill_in 'note_comment', with: 'Action Jackson'
-      
-      expect(page).to have_selector("input[name='commit'][value='Leave Note']")
-
-      find("input[name='commit'][value='Leave Note']").click
+      click_button 'Leave Note'
     end
-
-    expect(page).to have_content('Action Jackson', wait: 10)
   end
 
   def when_i_change_the_participants_arm
@@ -92,17 +88,21 @@ RSpec.describe 'User views the participant tracker page', type: :system, js: tru
     within(participant_row) do
       expect(bootstrap_selected?('protocols_participant_arm_id', second_arm.name)).to be
     end
+    
+    # Critical Sync Point: Wait for the AJAX request triggered by the select change to finish 
+    # before allowing Capybara to blindly click the notes button.
+    expect(page).to have_css('.alert.alert-success', text: /Participant was updated successfully!/i, visible: true) 
   end
 
   def then_i_should_see_the_notes_modal
-    expect(page).to have_content('Participant Notes')
+    expect(page).to have_css('.modal-title', text: /Participant Notes/i, visible: true)
   end
 
   def then_i_should_see_the_note_in_the_index
-    expect(page).to have_content('Action Jackson')
+    expect(page).to have_content(/Action Jackson/i)
   end
 
   def then_i_should_see_the_arm_change_note_in_the_index
-    expect(page).to have_content("Arm changed from #{original_arm.name} to #{second_arm.name}")
+    expect(page).to have_content(/Arm changed from #{Regexp.quote(original_arm.name)} to #{Regexp.quote(second_arm.name)}/i)
   end
 end

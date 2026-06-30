@@ -66,7 +66,8 @@ RSpec.describe 'Identity edits document title', type: :system, js: true, inline_
     visit documents_path
 
     expect(page).to have_css('table tbody', visible: true)
-    expect(page).to have_no_content('No matching records found')
+
+    expect(page).to have_css('td a.edit-document', visible: true)
   end
 
   def given_i_am_viewing_the_reports_tab_with_documents
@@ -80,16 +81,14 @@ RSpec.describe 'Identity edits document title', type: :system, js: true, inline_
     expect(page).to have_css('#reportsTabLink.active', visible: true)
 
     expect(page).to have_css('table tbody', visible: true)
-    expect(page).to have_no_content('No matching records found')
+    expect(page).to have_css('td a.edit-document', visible: true)
   end
 
   def when_i_create_an_identity_based_document_with_a_custom_title
-    find('.documents a', text: /Invoice Report/i).click
+    click_link 'Invoice Report'
 
-    # Native sync: Wait for the Bootstrap fade animation to completely finish
-    expect(page).to have_css('.modal.show', visible: true)
+    expect(page).to have_css('.modal-title', text: /Invoice Report/i, visible: true)
 
-    # Executed in global scope so the bootstrap_datepicker helper doesn't crash searching for 'body'
     fill_in 'Title', with: 'A custom title'
 
     bootstrap_datepicker 'input#start_date', day: '10'
@@ -100,16 +99,17 @@ RSpec.describe 'Identity edits document title', type: :system, js: true, inline_
     expect(page).to have_no_field('end_date', with: '', wait: 10)
 
     # Explicit descendant selectors replace the `within` block
-    find('.modal-content button[data-id="organization_select"]').click
+    org_toggle = find('.modal-content button[data-id="organization_select"]')
+    org_toggle.click
     find('.dropdown-menu.show .dropdown-item', text: protocol.organization.name).click
-    find('.modal-header').click # Native blur via dead-zone click
+    org_toggle.click # Native toggle to close the multi-select safely
 
-    find('.modal-content button[data-id="protocol_select"]').click
+    protocol_toggle = find('.modal-content button[data-id="protocol_select"]')
+    protocol_toggle.click
     find('.dropdown-menu.show .dropdown-item', text: /#{protocol.sparc_id}/).click
-    find('.modal-header').click # Native blur via dead-zone click
+    protocol_toggle.click # Native toggle to close the multi-select safely
 
-    # Using the exact button target from the legacy code
-    find(".modal-content input[type='submit']").click
+    click_button 'Request Report'
     
     expect(page).to have_no_css('.modal.show')
   end
@@ -117,16 +117,14 @@ RSpec.describe 'Identity edits document title', type: :system, js: true, inline_
   def when_i_edit_the_title
     find('a.edit-document', match: :first).click
 
-    # Native sync: Wait for the Bootstrap fade animation to completely finish
-    expect(page).to have_css('.modal.show', visible: true)
+    expect(page).to have_css('.modal-title', text: /Edit Report Title/i, visible: true)
 
     within('.modal-content', text: /Edit Report Title/i) do
       fill_in 'document_title', with: 'A custom title'
-    
-      find(".modal-content button[type='submit']").click
+
+      click_button 'Save'
     end
 
-    # Sync point: wait for the modal to completely vanish
     expect(page).to have_no_css('.modal.show', wait: 10)
   end
 
