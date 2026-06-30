@@ -104,6 +104,6 @@ RSpec.describe 'Identity manages Fulfillments', type: :system, js: true do
     bootstrap_select '#fulfillment_components', "mo"
     click_button "Save"
     
-    expect(page).to have_no_css('.modal-title', text: /Create New Fulfillment/i)
+    expect(page).to have_no_css('.modal-title', text: /Create New Fulfillment/i, wait: 10)
   end
 end

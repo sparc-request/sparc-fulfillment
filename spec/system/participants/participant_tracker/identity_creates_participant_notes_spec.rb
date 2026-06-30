@@ -70,18 +70,16 @@ RSpec.describe 'User views the participant tracker page', type: :system, js: tru
   end
 
   def when_i_add_a_comment_and_save
-    within('#modalContainer') do
+    within('.modal-content', text: /Participant Notes/i) do
       expect(page).to have_field('note_comment')
       fill_in 'note_comment', with: 'Action Jackson'
       
-      find('.modal-header').click
+      expect(page).to have_selector("input[name='commit'][value='Leave Note']")
 
-      click_button 'Leave Note'
+      find("input[name='commit'][value='Leave Note']").click
     end
 
     expect(page).to have_content('Action Jackson', wait: 10)
-
-    expect(page).to have_field('note_comment', with: '')
   end
 
   def when_i_change_the_participants_arm

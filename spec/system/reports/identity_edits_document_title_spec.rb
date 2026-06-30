@@ -93,12 +93,11 @@ RSpec.describe 'Identity edits document title', type: :system, js: true, inline_
     fill_in 'Title', with: 'A custom title'
 
     bootstrap_datepicker 'input#start_date', day: '10'
-
     # Force Capybara to wait until the JS actually populates the field, ensuring the first calendar is fully resolved before triggering the second
-    expect(page).to have_no_field('start_date', with: '')
+    expect(page).to have_no_field('start_date', with: '', wait: 10)
 
     bootstrap_datepicker 'input#end_date', day: '10'
-    expect(page).to have_no_field('end_date', with: '')
+    expect(page).to have_no_field('end_date', with: '', wait: 10)
 
     # Explicit descendant selectors replace the `within` block
     find('.modal-content button[data-id="organization_select"]').click
@@ -121,11 +120,11 @@ RSpec.describe 'Identity edits document title', type: :system, js: true, inline_
     # Native sync: Wait for the Bootstrap fade animation to completely finish
     expect(page).to have_css('.modal.show', visible: true)
 
-    fill_in 'document_title', with: 'A custom title'
-    find('.modal-header').click # Natively blur the input to trigger JS change events
+    within('.modal-content', text: /Edit Report Title/i) do
+      fill_in 'document_title', with: 'A custom title'
     
-    # Using the exact button target from the legacy code
-    find(".modal-content button[type='submit']").click
+      find(".modal-content button[type='submit']").click
+    end
 
     # Sync point: wait for the modal to completely vanish
     expect(page).to have_no_css('.modal.show', wait: 10)

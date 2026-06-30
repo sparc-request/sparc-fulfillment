@@ -93,6 +93,8 @@ RSpec.describe 'Identity manages Documents', type: :system, js: true do
       file_input_id = find("input[type='file']", visible: :all)[:id]
       attach_file(file_input_id, file_path, make_visible: true)
       
+      expect(page).to have_field(file_input_id, with: /test_document\.txt$/, visible: :all)
+      
       click_button 'Save'
     end
 
