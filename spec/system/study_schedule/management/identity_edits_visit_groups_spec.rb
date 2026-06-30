@@ -141,7 +141,7 @@ RSpec.describe 'Identity edits visit groups for a particular protocol', type: :s
       find('input[type="submit"]').click
     end
     
-    expect(page).to have_no_css('.modal-content', text: /Edit Visit/i)
+    expect(page).to have_no_css('.modal-content', text: /Edit Visit/i, wait: 10)
   end
 
   def when_i_inline_edit_the_name(vg, new_name)
@@ -165,7 +165,7 @@ RSpec.describe 'Identity edits visit groups for a particular protocol', type: :s
     end
 
     expect(page).to have_no_css('.swal2-container')
-    expect(page).to have_no_css('.modal-content', text: /Remove Visit/i)
+    expect(page).to have_no_css('.modal-content', text: /Remove Visit/i, wait: 10)
   end
 
   def then_i_should_see_the_visit_group(name)

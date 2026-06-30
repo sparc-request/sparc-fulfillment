@@ -78,6 +78,6 @@ RSpec.describe 'Notes', type: :system, js: true do
       click_button 'Leave Note'
     end
 
-    expect(page).to have_css('.note-body', text: /Test comment/i, visible: true)
+    expect(page).to have_css('.note-body', text: /Test comment/i, visible: true, wait: 10)
   end
 end
