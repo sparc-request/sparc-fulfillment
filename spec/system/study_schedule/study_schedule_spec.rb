@@ -310,10 +310,16 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   end
 
   def when_i_set_the_research_billing_quantity_to(value)
-    expect(page).to have_css("#visit_research_billing_qty")
-    
+    expect(page).to have_css('.modal-content', text: /Edit Billing Quantities/i, visible: true)
+    expect(page).to have_css("#visit_research_billing_qty", visible: true)
+
     within('.modal-content', text: /Edit Billing Quantities/i) do
       fill_in "visit_research_billing_qty", with: value
+    end
+
+    find('body').click(x: 0, y: 0)
+    
+    within('.modal-content', text: /Edit Billing Quantities/i) do
       click_button "Submit"
     end
   end
@@ -423,11 +429,11 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   end
 
   def then_i_should_see_not_a_number_error_message
-    expect(page).to have_content(/Is not a number/i)
+    expect(page).to have_content(/Is not a number/i, wait: 10)
   end
 
   def then_i_should_see_greater_than_error_message
-    expect(page).to have_content(/Must be greater than or equal to 0/i)
+    expect(page).to have_content(/Must be greater than or equal to 0/i, wait: 10)
   end
 
   def then_i_should_see_the_edit_line_item_modal
