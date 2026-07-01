@@ -111,7 +111,14 @@ RSpec.describe 'Invoice Procedure', type: :system, js: true do
 
   def when_i_update_the_billing_type
     row = find('tr', text: service.name, match: :first)
+    
+    # Grab the unique procedure ID from the DOM before we trigger the change
+    proc_id = row.find('td.name div')['data-procedure-id']
+    
     bootstrap_select('#procedure_billing_type', 'T', context_selector: row)
+    
+    # CRITICAL SYNC POINT: Wait for the server to replace the old 'R_' row with the new 'T_' row
+    expect(page).to have_css("div[data-group-id^='T_'][data-procedure-id='#{proc_id}']")
   end
 
   def when_i_complete_the_procedure
