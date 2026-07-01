@@ -95,16 +95,19 @@ RSpec.describe 'Identity manages Documents', type: :system, js: true do
       attach_file(file_input_id, file_path, make_visible: true)
     end
 
-    # Move expectation OUTSIDE the within block (Best Practice III.B)
-    # This natively forces Capybara to wait until the file text populates
     expect(page).to have_field(file_input_id, with: /test_document\.txt$/i, visible: :all)
 
-    # CRITICAL SYNC POINT: Native Blur Event via dead zone click (Best Practice V.B)
-    # This forces the browser to flush the event loop and fire the JavaScript 'onChange' 
-    # listener, guaranteeing the application knows the file is there before we click Save.
-    find('body').click(x: 0, y: 0)
+    find('.modal.show .modal-title', text: /Add Document/i).click
 
     within('.modal-content', text: /Add Document/i) do
+      # Ensure the form has finished processing the attachment - if the button is dynamically disabled during JS validation/Direct Upload, wait for it.
+      expect(page).to have_button('Save', disabled: false)
+      
+      # Optional but highly recommended if using ActiveStorage Direct Uploads:
+      # ActiveStorage injects a hidden input with the class `direct-upload` while uploading.
+      # You can uncomment the line below to explicitly wait for the upload XHR to finish.
+      # expect(page).to have_no_css('.direct-upload', visible: :all)
+
       click_button 'Save'
     end
 

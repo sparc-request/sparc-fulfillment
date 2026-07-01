@@ -47,6 +47,7 @@ Rails.application.configure do
   config.active_record.verbose_query_logs = true
 
   config.active_storage.service = :test
+  config.active_storage.queue = :test
 
   config.hosts.clear
   config.assets.compile = false
