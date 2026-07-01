@@ -21,8 +21,8 @@
 require 'rails_helper'
 
 RSpec.describe 'User tries to view the participant calendar', type: :system, js: true do
-  let!(:protocol)              { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.first }
+  let(:protocol)              { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.first }
 
   context 'and the participant is assigned to an arm' do
     scenario 'so the user sees the calendar icon is active' do

@@ -21,8 +21,8 @@
 require 'rails_helper'
 
 RSpec.describe 'User changes the status of a participant on the participant tracker', type: :system, js: true do
-  let!(:protocol) { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.last }
+  let(:protocol) { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.last }
 
   context 'when updating a participant status' do
     scenario 'sees the updated status on the page' do

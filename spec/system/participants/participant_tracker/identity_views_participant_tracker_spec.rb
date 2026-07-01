@@ -21,7 +21,7 @@
 require 'rails_helper'
 
 RSpec.describe 'User views Participant Tracker', type: :system, js: true do
-  let!(:protocol) { create_and_assign_protocol_to_me }
+  let(:protocol) { create_and_assign_protocol_to_me }
 
   scenario 'sees Participants' do
     given_i_am_viewing_the_participant_tracker

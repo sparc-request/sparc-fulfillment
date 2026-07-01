@@ -21,9 +21,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Removing a Status', type: :system, js: true do
-  let!(:protocol)              { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.first }
-  let!(:appointment)           { protocols_participant.appointments.first }
+  let(:protocol)              { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:appointment)           { protocols_participant.appointments.first }
 
   scenario 'user removes an appointment status and sees it destroyed' do
     given_i_am_viewing_a_visit(participant: protocols_participant, protocol: protocol)

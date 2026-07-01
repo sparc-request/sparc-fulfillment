@@ -22,9 +22,9 @@ require 'rails_helper'
 
 RSpec.describe 'User creates an appointment note', type: :system, js: true do
   
-  let!(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
-  let!(:protocols_participant) { protocol.protocols_participants.first }
-  let!(:visit_group) { protocols_participant.appointments.first.visit_group }
+  let(:protocol) { create_and_assign_protocol_to_me(identity: @logged_in_identity) }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:visit_group) { protocols_participant.appointments.first.visit_group }
 
   context 'and views the Notes List before create' do
     scenario 'and sees the automatically generated audit notes' do

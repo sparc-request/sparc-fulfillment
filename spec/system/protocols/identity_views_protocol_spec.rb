@@ -23,7 +23,7 @@ require "rails_helper"
 RSpec.describe "Identity views protocol", type: :system, js: true do
 
   context "when the protocol has no services" do
-    let!(:protocol) { create_and_assign_protocol_without_services_to_me }
+    let(:protocol) { create_and_assign_protocol_without_services_to_me }
 
     scenario "user does not see service-related elements" do
       when_i_visit_the_protocol_page(protocol)
@@ -32,7 +32,7 @@ RSpec.describe "Identity views protocol", type: :system, js: true do
   end
 
   context "when the protocol has services" do
-    let!(:protocol) { create_and_assign_protocol_to_me }
+    let(:protocol) { create_and_assign_protocol_to_me }
 
     scenario "user sees that the Current IRB Expiration Date is correctly formatted" do
       when_i_visit_the_protocol_page(protocol)

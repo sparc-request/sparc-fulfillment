@@ -21,7 +21,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity views Reports tab', type: :system, js: true, inline_jobs: true do
-  let!(:protocol) { create_and_assign_protocol_to_me }
+  let(:protocol) { create_and_assign_protocol_to_me }
 
   context 'when generating and viewing Protocol reports' do
     scenario 'sees a list of Protocol reports' do

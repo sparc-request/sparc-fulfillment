@@ -64,9 +64,9 @@ RSpec.describe 'User views the participant tracker page', type: :system, js: tru
   end
 
   def when_i_click_on_the_notes_button
-    within(participant_row) do
-      find("#participant#{protocols_participant.participant_id}Notes a").click
-    end
+    # The ID is already unique to the participant, so we don't need `within(participant_row)`.
+    # This prevents stale element errors if the row is actively re-rendering from an AJAX call.
+    find("#participant#{protocols_participant.participant_id}Notes a").click
     
     expect(page).to have_css('.modal-title', text: /Participant Notes/i, visible: true)
   end

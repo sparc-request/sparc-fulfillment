@@ -21,7 +21,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity views management view', type: :system, js: true do
-  let!(:protocol) { create_and_assign_protocol_to_me }
+  let(:protocol) { create_and_assign_protocol_to_me }
 
   context 'when viewing the protocols index page' do
     scenario 'user selects and sees the management view' do

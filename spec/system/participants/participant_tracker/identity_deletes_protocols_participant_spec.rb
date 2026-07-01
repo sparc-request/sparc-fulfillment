@@ -21,8 +21,8 @@
 require 'rails_helper'
 
 RSpec.describe 'User deletes Participant', type: :system, js: true do
-  let!(:protocol)              { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.last }
+  let(:protocol)              { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.last }
 
   context 'when a participant has no procedure data' do
     scenario 'sees the Participant is removed from the list' do

@@ -21,9 +21,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity creates custom appointment', type: :system, js: true do
-  let!(:protocol)              { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.first }
-  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+  let(:protocol)              { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
   let(:custom_visit_name)      { 'Test Visit' }
 
   context 'User tries to create a custom appointment' do

@@ -21,9 +21,9 @@
 require 'rails_helper'
 
 RSpec.describe 'User messes with a procedures date completed', type: :system, js: true do
-  let!(:protocol)              { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.first }
-  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+  let(:protocol)              { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
 
   # Lazily evaluated: safely queries the DB for the newly created procedure only when needed
   let(:procedure)              { protocols_participant.appointments.first.procedures.find_by(service: service) }

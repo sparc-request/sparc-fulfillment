@@ -21,7 +21,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity manages Fulfillments', type: :system, js: true do
-  # Rule I: Eager/Lazy bindings at the top of the file. 
   # We establish the data dependencies clearly for both the standard and the no-component variants.
   let(:protocol)  { create(:protocol_imported_from_sparc) }
   let(:org)       { protocol.sub_service_request.organization }

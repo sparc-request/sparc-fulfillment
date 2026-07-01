@@ -21,7 +21,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity views additional columns', type: :system, js: true do
-  let!(:protocol) { create_and_assign_protocol_to_me }
+  let(:protocol) { create_and_assign_protocol_to_me }
 
   context 'when viewing the protocols index table' do
     scenario 'user adds the organizations column via the column toggle dropdown' do

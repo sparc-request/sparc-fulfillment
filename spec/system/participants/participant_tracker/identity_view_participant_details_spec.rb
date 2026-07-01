@@ -21,7 +21,7 @@
 require 'rails_helper'
 
 RSpec.describe 'User views Participant details', type: :system, js: true do
-  let!(:protocol) { create_and_assign_protocol_to_me }
+  let(:protocol) { create_and_assign_protocol_to_me }
 
   context 'when interacting with the participant tracker table' do
     scenario 'sees the Participants attributes' do

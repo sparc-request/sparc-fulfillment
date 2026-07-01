@@ -21,13 +21,13 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity changes Participant Arm', type: :system, js: true do
-  let!(:protocol)              { create_and_assign_protocol_to_me }
-  let!(:protocols_participant) { protocol.protocols_participants.first }
-  let!(:original_arm)          { protocols_participant.arm }
-  let!(:second_arm)            { protocol.arms.where.not(id: original_arm.id).first }
-  let!(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
-  let!(:original_appointment)  { original_arm.visit_groups.first }
-  let!(:second_appointment)    { second_arm.visit_groups.first }
+  let(:protocol)              { create_and_assign_protocol_to_me }
+  let(:protocols_participant) { protocol.protocols_participants.first }
+  let(:original_arm)          { protocols_participant.arm }
+  let(:second_arm)            { protocol.arms.where.not(id: original_arm.id).first }
+  let(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
+  let(:original_appointment)  { original_arm.visit_groups.first }
+  let(:second_appointment)    { second_arm.visit_groups.first }
 
   before do
     service.update(name: 'Test Service')
