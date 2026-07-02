@@ -18,46 +18,64 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-module DeviseHelpers
-
-  def sign_in
-    identity = Identity.first || create(:identity)
+module CustomAuthHelpers
+  def auto_login_identity(identity = nil)
+    # Never trust Identity.first. Always guarantee a known password.
+    identity ||= create(:identity, password: 'password', password_confirmation: 'password')
     @logged_in_identity = identity
-
-    login_as(identity, run_callbacks: false)
+    
+    # 1. Instantly authenticate at the Rack level (bypasses LDAP and UI entirely)
+    sign_in(identity) if respond_to?(:sign_in) # Devise helper
+    login_as(identity, scope: :identity)       # Warden helper
+    
+    # 2. For browser-based system tests, simply navigate directly to the app
+    if respond_to?(:visit)
+      visit '/'
+      
+      # Wait for the user profile to appear to guarantee the session was recognized
+      expect(page).to have_css('.nav-item.profile', wait: 15)
+    end
+    
+    identity
   end
 end
 
 module ControllerMacros
-
   def login_user
-
     before(:each) do
-      @request.env['devise.mapping']  = Devise.mappings[:identity]
-      identity                        = Identity.first || create(:identity)
+      # Controller specs bypass Rack middleware and require this mapping.
+      # Request specs route through Rack, so we conditionally apply it only for controllers.
+      if RSpec.current_example.metadata[:type] == :controller
+        @request.env['devise.mapping'] = Devise.mappings[:identity]
+      end
 
-      @logged_in_identity = identity
-
-      sign_in identity
+      auto_login_identity
     end
   end
 end
 
 RSpec.configure do |config|
-
-  config.include Devise::Test::IntegrationHelpers, type: :feature
-  config.include Warden::Test::Helpers
-  config.include DeviseHelpers, type: :feature
-  config.include DeviseHelpers, type: :model
+  config.include Devise::Test::IntegrationHelpers, type: :system
+  config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::ControllerHelpers, type: :controller
-  config.extend ControllerMacros, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
 
+  config.include CustomAuthHelpers, type: :feature
+  config.include CustomAuthHelpers, type: :system
+  config.include CustomAuthHelpers, type: :model
+  config.include CustomAuthHelpers, type: :controller
+  config.include CustomAuthHelpers, type: :request
+
+  config.include Warden::Test::Helpers
+
+  config.extend ControllerMacros, type: :controller
+  
   config.before(:suite) do
     Warden.test_mode!
   end
 
-  config.before(:each, type: :feature) do
-    sign_in
+  config.before(:each, type: :system) do
+    auto_login_identity
   end
 
   config.after(:each) do

@@ -25,7 +25,7 @@ class IdentityOrganizations
 
   def fulfillment_access_protocols
     fetch_rights
-    organization_ids = @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs
+    organization_ids = (@super_user_orgs.to_a + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs.to_a).map(&:id).uniq
 
     Protocol.includes(
       :subsidy,
@@ -37,50 +37,68 @@ class IdentityOrganizations
     ).where(
       sub_service_requests: {organization_id: organization_ids}
     ).distinct
-
   end
 
   def authorized_protocols
-    ##This is a different version of the above "fulfillment_access_protocols" method, but without eager loading of un-needed relations.
     fetch_rights
-    Protocol.joins(:sub_service_request).includes(sub_service_request: [:organization]).where(sub_service_requests: {organization_id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs}).distinct
+    organization_ids = (@super_user_orgs.to_a + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs.to_a).map(&:id).uniq
+    
+    Protocol.joins(:sub_service_request)
+            .includes(sub_service_request: [:organization])
+            .where(sub_service_requests: {organization_id: organization_ids})
+            .distinct
   end
 
   def authorized_billing_manager_protocols
-    billing_manager_orgs ||= Organization.includes(:super_users).where(super_users: {identity_id: @id, billing_manager: true}).references(:super_users).distinct(:organizations)
-    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: billing_manager_orgs + authorized_child_organizations(billing_manager_orgs)}).distinct
+    billing_manager_orgs = Organization.includes(:super_users).where(super_users: {identity_id: @id, billing_manager: true}).references(:super_users).distinct
+    org_ids = (billing_manager_orgs.to_a + authorized_child_organizations(billing_manager_orgs)).map(&:id).uniq
+    
+    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: org_ids}).distinct
   end
 
   def authorized_billing_manager_protocols_allow_credit
-    billing_manager_orgs ||= Organization.includes(:super_users).where(super_users: {identity_id: @id, billing_manager: true, allow_credit: true}).references(:super_users).distinct(:organizations)
-    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: billing_manager_orgs + authorized_child_organizations(billing_manager_orgs)}).distinct
+    billing_manager_orgs = Organization.includes(:super_users).where(super_users: {identity_id: @id, billing_manager: true, allow_credit: true}).references(:super_users).distinct
+    org_ids = (billing_manager_orgs.to_a + authorized_child_organizations(billing_manager_orgs)).map(&:id).uniq
+    
+    Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: org_ids}).distinct
   end
 
   def fulfillment_organizations_with_protocols(include_distinct=true)
-    # Optional distinct to save an additional sql query when not needed
     fetch_rights
-    organizations = Organization.joins(:protocols).where(id: @super_user_orgs + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs)
-    if include_distinct
-      organizations = organizations.distinct
-    end
+    
+    # 1. Combine all authorized organization objects and extract IDs securely
+    authorized_orgs = @super_user_orgs.to_a + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs.to_a
+    org_ids = authorized_orgs.map(&:id).uniq
+
+    # 2. Query directly against Protocol -> SubServiceRequest to bypass any Rails 7.2 `has_many :through` / STI quirks with Organization.joins(:protocols)
+    org_ids_with_protocols = Protocol.joins(:sub_service_request)
+                                     .where(sub_service_requests: { organization_id: org_ids })
+                                     .pluck(:"sub_service_requests.organization_id")
+
+    # 3. Fetch the final matched organizations
+    organizations = Organization.where(id: org_ids_with_protocols)
+    organizations = organizations.distinct if include_distinct
+    
     return organizations
   end
 
   private
 
   def fetch_rights
-    @super_user_orgs ||= Organization.includes(:super_users).where(super_users: {identity_id: @id}).references(:super_users).distinct(:organizations)
-    @clinical_provider_orgs ||= Organization.includes(:clinical_providers).where(clinical_providers: {identity_id: @id}).references(:clinical_providers).distinct(:organizations)
+    @super_user_orgs ||= Organization.includes(:super_users).where(super_users: {identity_id: @id}).references(:super_users).distinct
+    @clinical_provider_orgs ||= Organization.includes(:clinical_providers).where(clinical_providers: {identity_id: @id}).references(:clinical_providers).distinct
   end
 
   def authorized_child_organizations(org_ids)
-    org_ids = org_ids.compact
-    if org_ids.empty?
+    # Extract IDs safely whether passed as Organization objects or integers
+    ids = Array(org_ids).map { |org| org.is_a?(Organization) ? org.id : org }.compact
+    
+    if ids.empty?
       []
     else
-      orgs = Organization.where(parent_id: org_ids)
-      orgs | authorized_child_organizations(orgs.pluck(:id))
+      # Return objects to remain consistent with array concatenations above
+      orgs = Organization.where(parent_id: ids).to_a
+      orgs | authorized_child_organizations(orgs)
     end
   end
-
 end

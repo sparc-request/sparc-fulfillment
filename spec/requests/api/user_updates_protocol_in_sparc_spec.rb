@@ -20,7 +20,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'User updates Protocol in SPARC', type: :request, enqueue: false do
+RSpec.describe 'User updates Protocol in SPARC', type: :request, inline_jobs: true do
 
   describe 'full lifecycle' do
 

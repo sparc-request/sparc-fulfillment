@@ -33,7 +33,7 @@ RSpec.describe Notification, type: :model do
     describe '.duplicate_not_present?' do
 
       before :each do
-        DatabaseCleaner[:active_record, db: Notification].clean_with(:truncation)
+        Notification.delete_all
       end
 
       context 'duplicate present' do

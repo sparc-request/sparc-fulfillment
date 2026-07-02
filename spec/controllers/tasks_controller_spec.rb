@@ -25,7 +25,7 @@ RSpec.describe TasksController, type: :controller do
   before :each do
     @task = create(:task, due_at: "09/09/2009")
 
-    sign_in
+    auto_login_identity
   end
 
   describe "GET #index" do

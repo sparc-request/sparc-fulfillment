@@ -7,16 +7,30 @@ services:
       - /app/node_modules
     ports:
       - "3001:3001"
+      - "3002:3002"
     environment:
       DATABASE_HOST: sparc_db
+      TEST_DATABASE_HOST: sparc_db_test
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root_password
-      DATABASE_NAME: cwf-docker_development
-      RAILS_ENV: development
-      ## Sparc Info
-      SPARC_DATABASE_NAME: sparc-docker_development
+      TZ: America/New_York
+      SELENIUM_URL: http://selenium_chrome:4444/wd/hub
+      CAPYBARA_APP_HOST: http://cwf_web:3002
     env_file:
       - .env
+    depends_on:
+      - selenium_chrome
+    links:
+      - selenium_chrome
+    networks:
+      - sparc_network
+
+  selenium_chrome:
+    image: selenium/standalone-chrome:latest
+    # Force Docker to use the native platform of the host M1 Silicon Mac
+    platform: linux/amd64
+    ports:
+      - "4444:4444"
     networks:
       - sparc_network
 

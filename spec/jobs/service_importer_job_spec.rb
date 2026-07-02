@@ -48,7 +48,7 @@ RSpec.describe ServiceImporterJob, type: :job do
       )
 
       callback_url = "http://#{ENV['SPARC_API_HOST']}/api/v1/services/1.json"
-      ServiceImporterJob.perform_later(1, callback_url, 'update')
+      ServiceImporterJob.perform_now(1, callback_url, 'update')
 
       line_item.reload
       expect(line_item.components.map(&:component)).to eq ['a','b','c','d']
