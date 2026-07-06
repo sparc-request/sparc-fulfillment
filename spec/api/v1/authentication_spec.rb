@@ -21,72 +21,50 @@
 require 'rails_helper'
 
 RSpec.describe 'CWFSPARC::APIv1', type: :request, debug_response: true do
-
   describe 'authentication' do
+    let(:valid_params) do
+      {
+        notification: {
+          sparc_id: 1,
+          kind: 'SubServiceRequest',
+          action: 'create',
+          callback_url: 'http://localhost:5000/sub_service_requests/1.json'
+        }
+      }
+    end
 
     context 'success' do
-
-      before do
-        http_login(ENV['CWF_API_USERNAME'], ENV['CWF_API_PASSWORD'])
-
-        post '/v1/notifications.json', params: params, headers: @env
-      end
-
-      it 'should allow the request' do
-        expect(response.code).to eq('201')
+      it 'allows the request' do
+        auth_headers = http_login_headers(ENV['CWF_API_USERNAME'], ENV['CWF_API_PASSWORD'])
+        
+        post '/v1/notifications.json', params: valid_params, headers: auth_headers
+        
+        expect(response).to have_http_status(:created) # 201
       end
     end
 
     context 'failure' do
-
-      context 'bad username' do
-
-        before do
-          bad_username = 'bad_username'
-
-          http_login(bad_username, ENV['SPARC_PASSWORD'])
-
-          post '/v1/notifications.json', params: params, headers: @env
-        end
-
-        it 'should not allow the request' do
-          expect(response.code).to eq('401')
-        end
-
-        it 'should not respond' do
+      context 'with bad username' do
+        it 'does not allow the request and returns empty body' do
+          auth_headers = http_login_headers('bad_username', ENV['CWF_API_PASSWORD'])
+          
+          post '/v1/notifications.json', params: valid_params, headers: auth_headers
+          
+          expect(response).to have_http_status(:unauthorized) # 401
           expect(response.body).to be_empty
         end
       end
 
-      context 'bad password' do
-
-        before do
-          bad_password = 'bad_password'
-
-          http_login(bad_password, ENV['SPARC_PASSWORD'])
-
-          post '/v1/notifications.json', params: params, headers: @env
-        end
-
-        it 'should not allow the request' do
-          expect(response.code).to eq('401')
-        end
-
-        it 'should not respond' do
+      context 'with bad password' do
+        it 'does not allow the request and returns empty body' do
+          auth_headers = http_login_headers(ENV['CWF_API_USERNAME'], 'bad_password')
+          
+          post '/v1/notifications.json', params: valid_params, headers: auth_headers
+          
+          expect(response).to have_http_status(:unauthorized) # 401
           expect(response.body).to be_empty
         end
       end
     end
-  end
-
-  def params
-    {
-      notification: {
-        sparc_id: 1,
-        kind: 'SubServiceRequest',
-        action: 'create',
-        callback_url: 'http://localhost:5000/sub_service_requests/1.json'
-      }
-    }
   end
 end

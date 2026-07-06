@@ -294,13 +294,15 @@ class Procedure < ApplicationRecord
     elsif status_changed?(to: "unstarted") or status_changed?(to: "follow_up")
       write_attribute(:completed_date, nil)
       write_attribute(:incompleted_date, nil)
+
+      write_attribute(:performer_id, nil) if status == 'unstarted'
+
       if task.present?
         write_attribute(:status, "follow_up")
       end
     end
 
     if status_changed?(to: "complete")
-
       write_attribute(:service_cost, new_cost(protocol.sparc_funding_source, completed_date))
     end
 

@@ -166,7 +166,7 @@ RSpec.describe VisitGroup, type: :model do
     describe 'default_scope' do
 
       it 'should be scoped to position' do
-        DatabaseCleaner[:active_record, db: VisitGroup].clean_with(:truncation)
+        VisitGroup.delete_all
         groups = []
         # create them with positions 3,2,1
         (3..1).each do |p|
@@ -194,10 +194,6 @@ RSpec.describe VisitGroup, type: :model do
           @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
           @procedure   = create(:procedure, :complete, appointment: @protocols_participant.appointments.first)
         end
-
-      after :each do 
-        DatabaseCleaner.clean
-      end  
 
       describe 'reorder' do
         it 'should reorder_visit_groups_up' do

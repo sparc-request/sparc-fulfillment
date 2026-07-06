@@ -25,7 +25,7 @@ RSpec.describe RemoteObjectUpdaterJob, type: :job do
   describe '#perform_later' do
 
     it 'should enqueue an ActiveJob' do
-      expect { create(:notification_protocol_update) }.to enqueue_a(RemoteObjectUpdaterJob)
+      expect { create(:notification_protocol_update) }.to have_enqueued_job(RemoteObjectUpdaterJob)
     end
 
     context 'Protocol update', sparc_api: :get_protocol_1 do

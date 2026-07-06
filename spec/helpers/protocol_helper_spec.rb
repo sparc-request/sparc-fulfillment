@@ -54,20 +54,22 @@ RSpec.describe ProtocolHelper do
 
   describe "#effective_study_cost" do
     it "should return the direct cost as the total if indirect cost is not used" do
-      stub_const('ENV', {'USE_INDIRECT_COST' => 'false'})
+      allow(ENV).to receive(:fetch).and_call_original
+      allow(ENV).to receive(:fetch).with('USE_INDIRECT_COST').and_return('false')
       protocol = create(:protocol_imported_from_sparc)
       protocol.sparc_protocol.update(indirect_cost_rate: 25.00)
-      sr = create(:service_request, protocol: protocol, status: 'draft')
+      sr = create(:service_request, protocol_id: protocol.sparc_id, status: 'draft')
       ssr = create(:sub_service_request, service_request: sr)
       allow(helper).to receive(:effective_current_total).and_return(100)
       expect(helper.effective_study_cost(protocol)).to eq(100)
     end
 
     it "should return the direct plus indirect cost as the total if indirect cost is used" do
-      stub_const('ENV', {'USE_INDIRECT_COST' => 'true'})
+      allow(ENV).to receive(:fetch).and_call_original
+      allow(ENV).to receive(:fetch).with('USE_INDIRECT_COST').and_return('true')
       protocol = create(:protocol_imported_from_sparc)
       protocol.sparc_protocol.update(indirect_cost_rate: 25.00)
-      sr = create(:service_request, protocol: protocol, status: 'draft')
+      sr = create(:service_request, protocol_id: protocol.sparc_id, status: 'draft')
       ssr = create(:sub_service_request, service_request: sr)
       allow(helper).to receive(:effective_current_total).and_return(100)
       expect(helper.effective_study_cost(protocol)).to eq(125)
