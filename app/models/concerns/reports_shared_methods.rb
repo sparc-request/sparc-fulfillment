@@ -101,11 +101,13 @@ module ReportsSharedMethods
       action: "update",
       )
       .order(created_at: :desc)
-      .find { |a| YAML.load(a.audited_changes, aliases: true)["funding_source"] }
-    previous_funding_info = audit ? YAML.load(audit.audited_changes)["funding_source"] : []
+      .find { |a| YAML.unsafe_load(a.audited_changes)["funding_source"] }
+      
+    previous_funding_info = audit ? YAML.unsafe_load(audit.audited_changes)["funding_source"] : []
+    
     {
       previous_funding_source: previous_funding_info.first&.humanize,
-      change_date: audit ?  format_date(audit.created_at) : nil
+      change_date: audit ? format_date(audit.created_at) : nil
     }
   end
 end
