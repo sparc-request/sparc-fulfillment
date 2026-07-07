@@ -29,21 +29,21 @@ module SparcHelper
 
   def load_protocol_1_json
     file  = ::Rails.root.join('vcr_cassettes', 'reusable', 'sparc_api', 'get_protocol_1.yml')
-    yaml  = YAML.load_file file
+    yaml  = YAML.unsafe_load_file(file)
 
     yaml["http_interactions"][0]["response"]["body"]["string"]
   end
 
   def load_service_1_json
     file  = ::Rails.root.join('vcr_cassettes', 'reusable', 'sparc_api', 'get_service_1.yml')
-    yaml  = YAML.load_file file
+    yaml  = YAML.unsafe_load_file(file)
 
     yaml["http_interactions"][0]["response"]["body"]["string"]
   end
 
   def load_sub_service_request_1_json
     file  = ::Rails.root.join('vcr_cassettes', 'reusable', 'sparc_api', 'get_sub_service_request_1.yml')
-    yaml  = YAML.load_file file
+    yaml  = YAML.unsafe_load_file(file)
 
     yaml["http_interactions"][0]["response"]["body"]["string"]
   end
