@@ -21,9 +21,7 @@
 require 'erb'
 require 'yaml'
 
-sparc_db_path = File.join(Rails.root, "config", "sparc_db.yml")
+sparc_db_path = Rails.root.join("config", "sparc_db.yml")
 
-# Use ERB to process the file first, then load the YAML
-SPARC_DB = YAML.load(ERB.new(File.read(sparc_db_path)).result, aliases: true)[Rails.env.to_s]
-
-# SPARC_DB = YAML.load_file(File.join(Rails.root, "config", "sparc_db.yml"))[Rails.env.to_s]
+# Use ERB to process the file first, then safely load the YAML
+SPARC_DB = YAML.safe_load(ERB.new(File.read(sparc_db_path)).result, aliases: true)[Rails.env.to_s]
