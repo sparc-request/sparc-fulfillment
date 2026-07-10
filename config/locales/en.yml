@@ -356,7 +356,7 @@ en:
         header: "About"
         about_sparc:
           text: "About SPARCRequest"
-          url: "https://research.musc.edu"
+          url: "https://research.musc.edu/about/sc-clinical-translational-research-institute/research-resources/tools/sparcrequest"
         about_sctr:
           text: "About SCTR"
           url: "http://sctr.musc.edu"
