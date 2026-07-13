@@ -67,5 +67,3 @@ namespace :deploy do
     end
   end
 end
-
-after "deploy:restart", "delayed_job:restart"
