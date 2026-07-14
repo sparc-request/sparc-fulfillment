@@ -97,7 +97,10 @@ RSpec.describe 'Identity manages Fulfillments', type: :system, js: true do
   end
 
   def when_i_fill_out_the_fulfillment_form
-    bootstrap_datepicker '#fulfillment_fulfilled_at', day: '15', text: '06/15/2026'
+    today = Date.today
+    
+    # Dynamically inputs today's day (e.g., '14') and today's formatted date (e.g., '07/14/2026')
+    bootstrap_datepicker '#fulfillment_fulfilled_at', day: today.day.to_s, text: today.strftime('%m/%d/%Y')
     
     fill_in "fulfillment_quantity", with: "45"
     bootstrap_select '#fulfillment_components', "mo"
