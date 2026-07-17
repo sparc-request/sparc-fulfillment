@@ -44,7 +44,7 @@ namespace :data do
       @bad_appointments.each do |appointment|
         #Get completed_date of first procedure completed, and assign it as the start date on the appointment
         new_date = appointment.procedures.where.not(completed_date: nil).order(:completed_date).first.completed_date
-        appointment.update_attributes(start_date: new_date)
+        appointment.update(start_date: new_date)
         puts "Appointment #{appointment.id} assigned to #{appointment.start_date.strftime('%D')}"
       end
     end

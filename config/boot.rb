@@ -23,5 +23,6 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __dir__)
 
 require 'bundler/setup' if File.exist?(ENV['BUNDLE_GEMFILE'])
 require 'execjs'
+require "logger" # Fix concurrent-ruby v1.3.5 removing logger dependency which Rails itself does not have (for Rails versions 6.1 and 7.0)
 
 ExecJS.runtime = ExecJS::Runtimes::Node

@@ -82,7 +82,7 @@ FactoryBot.define do
     trait :with_one_visit_group do
       after(:create) do |arm, evaluator|
         create(:visit_group, arm: arm)
-        arm.update_attributes(visit_count: 1)
+        arm.update(visit_count: 1)
       end
     end
 

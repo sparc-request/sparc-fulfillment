@@ -20,14 +20,14 @@
 
 require 'rails_helper'
 
-RSpec.describe 'User creates Protocol in SPARC', type: :request, enqueue: false do
+RSpec.describe 'User creates Protocol in SPARC', type: :request, inline_jobs: true do
 
   describe 'full lifecycle' do
 
     it 'should create and update a Protocol', sparc_api: :get_protocol_1 do
-      user_creates_protocol_in_sparc
-
-      expect(Protocol.count).to eq(1)
+      expect {
+        user_creates_protocol_in_sparc
+      }.to change(Protocol, :count).by(1)
     end
   end
 

@@ -38,7 +38,7 @@ class VisitGroupsController < ApplicationController
     @schedule_tab                = params[:schedule_tab]
     @visit_groups                = @arm.visit_groups.paginate(page: @current_page)
     if @visit_group_visits_importer.save_and_create_dependents
-      @arm.update_attributes(visit_count: @arm.visit_count + 1)
+      @arm.update(visit_count: @arm.visit_count + 1)
       @arm.reload
       flash.now[:success] = t(:visit_groups)[:created]
     else
@@ -52,7 +52,7 @@ class VisitGroupsController < ApplicationController
     @schedule_tab                = params[:schedule_tab]
     @visit_groups                = @arm.visit_groups.paginate(page: @current_page)
     @on_page_edit                = params[:on_page_edit]
-    if @visit_group.update_attributes(visit_group_params)
+    if @visit_group.update(visit_group_params)
       flash[:success] = t(:visit_groups)[:flash_messages][:updated]
     else
       @errors = @visit_group.errors
@@ -74,7 +74,7 @@ class VisitGroupsController < ApplicationController
       @visit_group.errors.add(:visit_group, "'#{@visit_group.name}' has completed procedures and cannot be deleted")
       @errors = @visit_group.errors
     else
-      @arm.update_attributes(visit_count: @arm.visit_count - 1)
+      @arm.update(visit_count: @arm.visit_count - 1)
       flash.now[:alert] = t(:visit_groups)[:deleted]
       @visit_group.destroy
     end

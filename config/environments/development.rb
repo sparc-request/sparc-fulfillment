@@ -100,4 +100,7 @@ Rails.application.configure do
     "localhost",             # The localhost reserved domain.
     "cwf_web"   # Allow this to be addressed when running in containers via docker-compose.yml.
   ]
+
+  # Active Storage config
+  config.active_storage.service = :local
 end

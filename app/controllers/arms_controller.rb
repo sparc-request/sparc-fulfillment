@@ -25,7 +25,11 @@ class ArmsController < ApplicationController
 
   def new
     @protocol = Protocol.find(params[:protocol_id])
-    @services = @protocol.line_items.includes(:service).where(services: { one_time_fee: false }).map(&:service).uniq
+    # 1. Grab the IDs from the primary DB
+    service_ids = @protocol.line_items.pluck(:service_id)
+    # 2. Query the secondary Sparc DB directly
+    @services = Service.per_participant.where(id: service_ids).to_a
+    
     @arm = Arm.new(protocol: @protocol)
     @schedule_tab = params[:schedule_tab]
   end
@@ -49,7 +53,7 @@ class ArmsController < ApplicationController
 
   def update
     @arm = Arm.find(params[:id])
-    if @arm.update_attributes(arm_params)
+    if @arm.update(arm_params)
       flash[:success] = t(:arm)[:flash_messages][:updated]
     else
       @errors = @arm.errors

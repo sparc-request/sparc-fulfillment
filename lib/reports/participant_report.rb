@@ -34,10 +34,10 @@ class ParticipantReport < Report
 
     @gender = @params[:gender] unless @params[:gender] == 'Both' || @params[:gender] == ''
     @mrns = @params[:mrns]
-    @protocols = @params[:protocols]
+    @protocols = @params[:protocols] || []
     @protocol_level = @params[:protocol_level]
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
       conditions = {:mrn => @mrns, :gender => @gender, :date_of_birth => @start_date..@end_date}

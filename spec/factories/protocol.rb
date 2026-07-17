@@ -33,7 +33,7 @@ FactoryBot.define do
 
     after(:create) do |protocol, evaluator|
       sparc_protocol = create(:sparc_protocol)
-      protocol.update_attributes(sparc_id: sparc_protocol.id)
+      protocol.update(sparc_id: sparc_protocol.id)
       create(:human_subjects_info, protocol_id: protocol.sparc_id)
     end
 

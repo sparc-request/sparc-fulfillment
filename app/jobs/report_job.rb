@@ -34,14 +34,14 @@ class ReportJob < ActiveJob::Base
   end
 
   rescue_from(StandardError) do |error|
-    arguments.first.update_attributes state: 'Error', stack_trace: "#{error.message}\n\n#{error.backtrace.join("\n\t")}"
+    arguments.first.update state: 'Error', stack_trace: "#{error.message}\n\n#{error.backtrace.join("\n\t")}"
   end
 
   after_perform do |job|
     job.
       arguments.
       first.
-      update_attributes state: 'Completed'
+      update state: 'Completed'
 
     document = job.arguments.first
 
@@ -49,7 +49,7 @@ class ReportJob < ActiveJob::Base
       when 'Protocol'
         protocol = Protocol.find(job.arguments.last[:documentable_id])
         protocol.document_counter_updated = true
-        protocol.update_attributes(unaccessed_documents_count: (protocol.unaccessed_documents_count + 1))
+        protocol.update(unaccessed_documents_count: (protocol.unaccessed_documents_count + 1))
       when 'Identity'
         find_identity(job).update_counter(:unaccessed_documents, 1)
     end
@@ -62,7 +62,7 @@ class ReportJob < ActiveJob::Base
   end
 
   def find_or_create_document_root_path
-    unless Dir.exists? ENV.fetch('DOCUMENTS_FOLDER')
+    unless Dir.exist? ENV.fetch('DOCUMENTS_FOLDER')
       Dir.mkdir ENV.fetch('DOCUMENTS_FOLDER')
     end
   end

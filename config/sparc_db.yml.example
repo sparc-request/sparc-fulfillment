@@ -21,35 +21,23 @@
 default: &default
   adapter: mysql2
   encoding: utf8
-  port: 3306
-  timeout: 5000
   pool: 5
+  timeout: 5000
+  # Defaults to root if no env var is present
+  username: <%= ENV.fetch('DATABASE_USERNAME', 'root') %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  # 'localhost' defaults to a socket connection for standard local devs.
+  # CI and Docker will override this via ENV to force a TCP connection.
+  host: <%= ENV.fetch('DATABASE_HOST', ENV.fetch('TEST_DATABASE_HOST', 'localhost')) %>
+  variables:
+    sql_mode: TRADITIONAL
 
 development:
   <<: *default
-  database: sparc-request_development
-  username: root
-  password:
+  # Defaults to the standard naming convention for local non-Docker devs.
+  database: <%= ENV.fetch('DEV_SPARC_DATABASE_NAME', 'sparc-request_development') %>
 
-# configured for travis-ci
 test:
   <<: *default
-  database: test_sparc_request # for travis-ci, needs to match sparc-request test database name
-  username: travis
-  password:
-
-# Docker Config Example
-# default: &default
-#   adapter: mysql2
-#   username: <%= ENV['DATABASE_USERNAME'] %>
-#   password: <%= ENV['DATABASE_PASSWORD'] %>
-#   host: <%= ENV['DATABASE_HOST'] %>
-#   encoding: utf8
-#   timeout: 5000
-#   pool: 5
-#   variables:
-#    sql_mode: TRADITIONAL
-# 
-# development:
-#   <<: *default
-#   database: <%= ENV['SPARC_DATABASE_NAME'] %>
+  # Checks CI's specific SPARC database name first, then falls back to standard local naming.
+  database: <%= ENV.fetch('SPARC_DATABASE_NAME', ENV.fetch('TEST_SPARC_DATABASE_NAME', 'test_sparc_request')) %>

@@ -24,6 +24,6 @@ class ChangeDefaultOnProcedureStatus < ActiveRecord::Migration[4.2]
     procedures = []
     procedures << Procedure.where(status: "")
     procedures << Procedure.where(status: nil)
-    procedures.flatten.each{|procedure| procedure.update_attributes(status: "unstarted")}
+    procedures.flatten.each{|procedure| procedure.update(status: "unstarted")}
   end
 end

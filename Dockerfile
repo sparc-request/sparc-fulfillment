@@ -1,5 +1,5 @@
 # Use an official Ruby runtime as a parent image
-FROM ruby:2.7.5
+FROM ruby:3.3.1
 
 # Install Node.js and Yarn using the official Yarn package repository
 RUN apt-get update -qq && apt-get install -y curl gnupg && \
@@ -25,6 +25,9 @@ RUN bundle install
 
 # Copy the rest of the application code
 COPY . .
+
+# Install Node.js dependencies using Yarn
+RUN yarn install
 
 # Precompile assets
 RUN RAILS_ENV=development bundle exec rake assets:precompile

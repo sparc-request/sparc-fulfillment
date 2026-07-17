@@ -31,7 +31,7 @@ FactoryBot.define do
 
     after :create do |organization, evaluator|
       create_list(:pricing_setup, 3, organization: organization).each do |pricing_setup|
-        pricing_setup.update_attributes(organization_id: organization.id)
+        pricing_setup.update(organization_id: organization.id)
       end
 
       evaluator.children_count.times do

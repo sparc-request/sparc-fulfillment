@@ -37,21 +37,17 @@ RSpec.describe NotificationDispatcher, type: :request do
     end
 
     context 'Protocol' do
-
       context 'update' do
-
         it 'should enqueue an ActiveJob' do
-          expect { create(:notification_protocol_update) }.to enqueue_a(RemoteObjectUpdaterJob)
+          expect { create(:notification_protocol_update) }.to have_enqueued_job(RemoteObjectUpdaterJob)
         end
       end
     end
 
     context 'Study' do
-
       context 'update' do
-
         it 'should enqueue an ActiveJob' do
-          expect { create(:notification_protocol_update) }.to enqueue_a(RemoteObjectUpdaterJob)
+          expect { create(:notification_protocol_update) }.to have_enqueued_job(RemoteObjectUpdaterJob)
         end
       end
     end

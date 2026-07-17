@@ -40,7 +40,7 @@ namespace :data do
       protocol            = FactoryBot.create(:protocol_imported_from_sparc, sub_service_request: sub_service_request)
       parent_organization = FactoryBot.create(:organization, type: "Provider")
       organization        = sub_service_request.organization
-      organization.update_attributes(parent: parent_organization)
+      organization.update(parent: parent_organization)
       FactoryBot.create(:clinical_provider, identity: identity, organization: organization)
       FactoryBot.create(:project_role_pi, identity: identity, protocol: protocol)
     end

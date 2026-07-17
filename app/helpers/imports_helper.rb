@@ -20,9 +20,12 @@
 
 module ImportsHelper
 
-  def attached_file(url)
-    content_tag(:a, class: 'attached_file', href: url) do
-      content_tag(:span, '', class: 'fas fa-file')
+  def attached_file(import)
+    if import.file.attached?
+      link_to rails_blob_path(import.file, disposition: 'attachment'), class: 'attached_file' do
+        content_tag(:span, '', class: 'fas fa-file')
+      end
     end
   end
+
 end

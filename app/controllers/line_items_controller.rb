@@ -36,7 +36,7 @@ class LineItemsController < ApplicationController
     respond_to :js
     @otf    = @line_item.one_time_fee
     @field  = params[:field]
-    if @line_item.update_attributes(line_item_params)
+    if @line_item.update(line_item_params)
       unless @otf
         update_line_item_procedures_service # study schedule line item service change
       end
@@ -54,7 +54,7 @@ class LineItemsController < ApplicationController
     service_name = service.name
     @line_item.visits.each do |v|
       v.procedures.select{ |p| not(p.appt_started? or p.complete?) }.each do |p|
-        p.update_attributes(service_id: service.id, service_name: service_name)
+        p.update(service_id: service.id, service_name: service_name)
       end
     end
   end

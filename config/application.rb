@@ -41,6 +41,8 @@ module ClinicalWorkFulfillment
     # config.i18n.default_locale = :de
     config.time_zone = ENV.fetch('APPLICATION_TIME_ZONE')
 
+    config.autoloader = :zeitwerk
+
     config.eager_load_paths << Rails.root.join('lib')
 
     config.paths.add File.join('app', 'jobs'), glob: File.join('**', '*.rb')

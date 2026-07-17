@@ -20,7 +20,7 @@
 
 .modal-dialog
   .modal-content
-    = form_tag reports_path, remote: true, class: "form-horizontal", role: "form" do
+    = form_tag reports_path, remote: true, id: "finance_billing_report", class: "form-horizontal", role: "form" do
       .modal-header
         %h4.modal-title.text-center
           = t(:reports)[:finance_billing_report][:title]

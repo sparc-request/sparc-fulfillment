@@ -23,11 +23,11 @@ FactoryBot.define do
   factory :fulfillment do
     line_item
     service { line_item.service }
-    fulfilled_at { "09/09/2025" }
+    fulfilled_at { Time.current.strftime("%m/%d/%Y") }
     quantity     { 5 }
     performer_id { 1 }
     invoiced { true }
-    invoiced_date { "09/09/2025" }
+    invoiced_date { Time.current.strftime("%m/%d/%Y") }
     components_data { ["component, component1"] }
 
     after(:build) do |fulfillment, evaluator|
@@ -45,3 +45,4 @@ FactoryBot.define do
     factory :fulfillment_without_validations, traits: [:without_validations]
   end
 end
+

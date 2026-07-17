@@ -29,7 +29,7 @@ class ComponentsController < ApplicationController
     to_select = new_component_ids - old_component_ids
     to_select.each do |id|
       component = Component.find(id)
-      component.update_attributes(selected: true)
+      component.update(selected: true)
       comment = "Component: #{component.component} indicated"
       line_item.notes.create(kind: 'log', comment: comment, identity: current_identity)
     end
@@ -37,7 +37,7 @@ class ComponentsController < ApplicationController
     to_deselect = old_component_ids - new_component_ids
     to_deselect.each do |id|
       component = Component.find(id)
-      component.update_attributes(selected: false)
+      component.update(selected: false)
       comment = "Component: #{component.component} no longer indicated"
       line_item.notes.create(kind: 'log', comment: comment, identity: current_identity)
     end

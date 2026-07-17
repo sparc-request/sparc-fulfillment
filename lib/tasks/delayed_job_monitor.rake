@@ -30,11 +30,12 @@ require 'dotenv/tasks'
 task delayed_job_monitor: :environment do
   dj_slack_webhook = ENV.fetch("DJ_SLACK_WEBHOOK", nil)
   dj_teams_webhook = ENV.fetch("DJ_TEAMS_WEBHOOK", nil)
+  workers = ENV.fetch("DJ_WORKERS", 4).to_i
 
-  stdout, stderr, status = Open3.capture3("RAILS_ENV=#{Rails.env} bundle exec bin/delayed_job status")
+  stdout, stderr, status = Open3.capture3("RAILS_ENV=#{Rails.env} bundle exec bin/delayed_job -n #{workers} status")
   prev_status = stderr
 
-  if stderr =~ /delayed_job: no instances running/
+  if stderr =~ /no instances running/
     message = ""
     if dj_slack_webhook.present? || dj_teams_webhook.present?
       message += "```\n[SPARCFulfillment][#{Rails.env}]\n"
@@ -43,7 +44,7 @@ task delayed_job_monitor: :environment do
       message += "delayed_job: attempting restart\n"
     end
 
-    stdout, stderr, status = Open3.capture3("RAILS_ENV=#{Rails.env} bundle exec bin/delayed_job start")
+    stdout, stderr, status = Open3.capture3("RAILS_ENV=#{Rails.env} bundle exec bin/delayed_job -n #{workers} restart")
     curr_status = stdout
 
     if dj_slack_webhook.present? || dj_teams_webhook.present?

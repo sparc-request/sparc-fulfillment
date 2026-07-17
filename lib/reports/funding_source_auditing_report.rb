@@ -32,7 +32,7 @@ class FundingSourceAuditingReport < Report
     formatted_start_date = format_date(start_date)
     formatted_end_date = format_date(end_date)
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     @organizations = IdentityOrganizations.new(@params[:identity_id]).fulfillment_organizations_with_protocols
 
@@ -89,7 +89,7 @@ class FundingSourceAuditingReport < Report
       sparc_protocol_ids = protocols_by_sparc_id.keys
 
       audits = Sparc::Audit.where(auditable_type: "Protocol", auditable_id: sparc_protocol_ids, created_at: @start_date..@end_date, action: "update").select do |audit|
-        audited_changes = YAML.load(audit.audited_changes)
+        audited_changes = YAML.unsafe_load(audit.audited_changes)
         audited_changes.key?('funding_source')
       end
 
@@ -105,7 +105,7 @@ class FundingSourceAuditingReport < Report
 
       audits.each do |audit|
         protocol = protocols_by_sparc_id[audit.auditable_id]
-        funding_source_changes = YAML.load(audit.audited_changes)
+        funding_source_changes = YAML.unsafe_load(audit.audited_changes)
 
         fulfillment_protocols = protocols.select{|p| p.sparc_id == audit.auditable_id}
         fulfillment_protocols.sort_by!{|p| p.sub_service_request.ssr_id}

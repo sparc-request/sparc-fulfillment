@@ -69,7 +69,7 @@ namespace :data do
       fulfillments.each do |fulfillment|
         begin
           csv << ["Fulfillment ID: #{fulfillment.id}", "Protocol ID: #{fulfillment.line_item.protocol.sparc_id}", "Existing performer id: #{fulfillment.performer_id}", "New performer id: #{new_performer_id}", "Existing creator id: #{fulfillment.creator_id}", "New creator id: #{new_creator_id}" ]
-          fulfillment.update_attributes(performer_id: new_performer_id, creator_id: new_creator_id)
+          fulfillment.update(performer_id: new_performer_id, creator_id: new_creator_id)
         rescue Exception => e
           puts "Error with fulfillment id #{fulfillment.id}, Message: #{e.message}"
           next

@@ -78,7 +78,7 @@ class Procedure < ApplicationRecord
       procedure.unstarted? &&
       procedure.service &&
       !procedure.service.is_available? &&
-      !exempt_service_ids.include?(procedure.service_id)
+      !exempt_service_ids.include?(procedure.service_id.to_s)
     end
   end
 
@@ -178,8 +178,8 @@ class Procedure < ApplicationRecord
     self.reload
 
     #Reset Status
-    self.update_attributes(status: "unstarted")
-    self.update_attributes(service_cost: nil)
+    self.update(status: "unstarted")
+    self.update(service_cost: nil)
     self.reload
   end
 
@@ -274,7 +274,7 @@ class Procedure < ApplicationRecord
     end
 
     if cost.nil?
-      errors[:service_cost] << "No cost found, ensure that a valid pricing map exists for that date."
+      errors.add(:service_cost, "No cost found, ensure that a valid pricing map exists for that date.")
     end
   end
 
@@ -294,13 +294,15 @@ class Procedure < ApplicationRecord
     elsif status_changed?(to: "unstarted") or status_changed?(to: "follow_up")
       write_attribute(:completed_date, nil)
       write_attribute(:incompleted_date, nil)
+
+      write_attribute(:performer_id, nil) if status == 'unstarted'
+
       if task.present?
         write_attribute(:status, "follow_up")
       end
     end
 
     if status_changed?(to: "complete")
-
       write_attribute(:service_cost, new_cost(protocol.sparc_funding_source, completed_date))
     end
 

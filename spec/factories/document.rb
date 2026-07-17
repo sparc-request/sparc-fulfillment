@@ -43,7 +43,7 @@ FactoryBot.define do
 
       after :create do |document|
         identity = Identity.find(document.documentable_id)
-        identity.identity_counter.update_attributes(unaccessed_documents_count: identity.unaccessed_documents_count + 1)
+        identity.identity_counter.update(unaccessed_documents_count: identity.unaccessed_documents_count + 1)
         File.open(document.path, "w"){ |file| file.write("a, b, c") }
       end
     end
@@ -58,7 +58,7 @@ FactoryBot.define do
 
       after :create do |document|
         protocol = Protocol.find(document.documentable_id)
-        protocol.update_attributes(unaccessed_documents_count: protocol.unaccessed_documents_count + 1)
+        protocol.update(unaccessed_documents_count: protocol.unaccessed_documents_count + 1)
         File.open(document.path, "w"){ |file| file.write("a, b, c") }
       end
     end
@@ -73,7 +73,7 @@ FactoryBot.define do
 
       after :create do |document|
         protocol = Protocol.find(document.documentable_id)
-        protocol.update_attributes(unaccessed_documents_count: protocol.unaccessed_documents_count + 1)
+        protocol.update(unaccessed_documents_count: protocol.unaccessed_documents_count + 1)
         File.open(document.path, "w"){ |file| file.write("a, b, c") }
       end
     end

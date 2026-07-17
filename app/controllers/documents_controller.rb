@@ -148,7 +148,7 @@ class DocumentsController < ApplicationController
   def mark_document_as_accessed
     update_unaccessed_documents_counter(@document.documentable_type)
 
-    @document.update_attributes last_accessed_at: Time.current
+    @document.update last_accessed_at: Time.current
   end
 
   def update_unaccessed_documents_counter documentable_type
@@ -157,7 +157,7 @@ class DocumentsController < ApplicationController
         when 'Protocol'
           protocol = Protocol.find(@document.documentable_id)
           protocol.document_counter_updated = true
-          protocol.update_attributes(unaccessed_documents_count: (protocol.unaccessed_documents_count - 1))
+          protocol.update(unaccessed_documents_count: (protocol.unaccessed_documents_count - 1))
         when 'Identity'
           current_identity.update_counter :unaccessed_documents, -1
       end

@@ -28,12 +28,12 @@ namespace :data do
     file_path = STDIN.gets.strip
 
     # The header conversion lambda converts the capitalized and spaced names of the headers into lowercase and separated by underscores
-    parsed_csv = CSV.read(file_path, headers: true, converters: :all, :header_converters => lambda { |h| h.downcase.gsub(' ', '_')})
+    parsed_csv = CSV.read(file_path, headers: true, encoding: 'iso-8859-1', converters: :all, :header_converters => lambda { |h| h.downcase.gsub(' ', '_')})
     
     while !parsed_csv
       puts "Unrecognized input"
       puts "Please enter the full file path to the csv file you wish to import below"
-      parsed_csv = CSV.read(file_path, headers: true, converters: :all, :header_converters => lambda { |h| h.downcase.gsub(' ', '_')})
+      parsed_csv = CSV.read(file_path, headers: true, encoding: 'iso-8859-1', converters: :all, :header_converters => lambda { |h| h.downcase.gsub(' ', '_')})
     end
 
     data = []
@@ -95,79 +95,87 @@ namespace :data do
         # Having found the line item, we now begin the process of creating the fulfillment entry.
         if item[:completed_by].present?
 
-          split_name = item[:completed_by].split(" ", 2).map{|str| str.strip}
-          potential_identities = Identity.where(first_name: split_name[0], last_name: split_name[1])
+          identity = Identity.where(ldap_uid: item[:completed_by]).first
 
-          if potential_identities.present?
-            if potential_identities.count == 1
-              funding_source = line_item.protocol.sparc_funding_source
+          if identity.present?
+            funding_source = line_item.protocol.sparc_funding_source
 
-              unless item[:date_fulfilled].present?
-                failed_item_count += 1
-                puts " - Row #{item_count}: failed due to not having Date Fulfilled filled out"
+            unless item[:date_fulfilled].present?
+              failed_item_count += 1
+              puts " - Row #{item_count}: failed due to not having Date Fulfilled filled out"
 
-                next
-              end
+              next
+            end
 
-              unless item[:start_time].present? && item[:end_time].present?
-                failed_item_count += 1
-                puts " - Row #{item_count}: failed due to missing either the Start Time or End time"
+            unless item[:start_time].present? && item[:end_time].present?
+              failed_item_count += 1
+              puts " - Row #{item_count}: failed due to missing either the Start Time or End time"
 
-                next
-              end
+              next
+            end
 
-              fulfillment_date = DateTime.strptime(item[:date_fulfilled], '%m/%d/%Y')
-              fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
+            #NOTE:  This section was added because the csv files sent had a tendency to flip between year formats.  The following code gets the checks for which format is correct for parsing the given date_time and utilizes that for the remainder of the code.
+            potential_fulfillment_date_1 = DateTime.strptime(item[:date_fulfilled], '%m/%d/%Y')
+            potential_fulfillment_date_2 = DateTime.strptime(item[:date_fulfilled], '%m/%d/%y')
+            fulfillment_date = ""
 
-              begin
-                service_cost = line_item.cost(funding_source, fulfillment_date)
-              rescue StandardError => e
-                failed_item_count += 1
-                puts " - Row #{item_count}: failed due to being unable to find a pricing map for the given service and date."
-
-                next
-              end
-
-
-              fulfillment = line_item.fulfillments.new(
-                fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), 
-                performer: potential_identities.first, 
-                service_id: matched_sparc_line_item.first.service.id, 
-                service_name: matched_sparc_line_item.first.service.name, 
-                service_cost: line_item.cost(funding_source, fulfillment_date), 
-                funding_source: funding_source, 
-                quantity: fulfillment_time
-              )
-
-              if item[:fulfillment_component].present?
-                fulfillment.components_data = [item[:fulfillment_component]]
-                fulfillment.components.new(component: fulfillment.components_data.first)
-              end
-
-              if item[:fulfillment_notes].present?
-                fulfillment.notes.new(comment: item[:fulfillment_notes], identity: potential_identities.first)
-              end
-
-              if fulfillment.save
-                successful_item_count += 1
-              else
-                failed_item_count += 1
-                puts " - Row #{item_count}: has all necessary data but failed to save.  Have developer check server log."
-
-                next
-              end
+            if potential_fulfillment_date_1.year.between?(2000,2099)
+              fulfillment_date = potential_fulfillment_date_1
+            elsif potential_fulfillment_date_2.year.between?(2000,2099)
+              fulfillment_date = potential_fulfillment_date_2
             else
               failed_item_count += 1
-              puts " - Row #{item_count}: failed due to finding #{potential_identities.count} people with the same name as the person listed in the 'Completed By' column"
+              puts " - Row #{item_count}: failed due to inability to compose a valid fulfillment date"
+
+              next
+            end
+
+
+            fulfillment_time = ((Time.strptime(item[:end_time], '%I:%M %p') - Time.strptime(item[:start_time], '%I:%M %p'))/3600).round(2)
+
+            begin
+              service_cost = line_item.cost(funding_source, fulfillment_date)
+            rescue StandardError => e
+              failed_item_count += 1
+              puts " - Row #{item_count}: failed due to being unable to find a pricing map for the given service and date."
+
+              next
+            end
+
+
+            fulfillment = line_item.fulfillments.new(
+              fulfilled_at: fulfillment_date.strftime('%m/%d/%Y'), 
+              performer: identity, 
+              service_id: matched_sparc_line_item.first.service.id, 
+              service_name: matched_sparc_line_item.first.service.name, 
+              service_cost: line_item.cost(funding_source, fulfillment_date), 
+              funding_source: funding_source, 
+              quantity: fulfillment_time
+            )
+
+            if item[:fulfillment_component].present?
+              fulfillment.components_data = [item[:fulfillment_component]]
+              fulfillment.components.new(component: fulfillment.components_data.first)
+            end
+
+            if item[:fulfillment_notes].present?
+              fulfillment.notes.new(comment: item[:fulfillment_notes], identity: identity)
+            end
+
+            if fulfillment.save
+              successful_item_count += 1
+            else
+              failed_item_count += 1
+              puts " - Row #{item_count}: has all necessary data but failed to save.  Have developer check server log."
 
               next
             end
           else
             failed_item_count += 1
-            puts " - Row #{item_count}:  failed due to finding no person with the name provided in 'Completed By' column"
+            puts " - Row #{item_count}: failed due to finding no person with the Net ID #{item[:completed_by]}"
 
             next
-          end 
+          end
         else
           failed_item_count += 1
           puts " - Row #{item_count}: failed due to 'Completed By' column being blank"

@@ -19,10 +19,12 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 module ApiAuthenticationHelper
-
-  def http_login(username, password)
-    @env ||= {}
-
-    @env['Authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(username, password)
+  # Returns a clean hash containing the basic auth header.
+  # Usage in a modern Request spec:
+  # get '/api/v1/endpoint', headers: http_login_headers('user', 'pass')
+  def http_login_headers(username, password)
+    {
+      'Authorization' => ActionController::HttpAuthentication::Basic.encode_credentials(username, password)
+    }
   end
 end

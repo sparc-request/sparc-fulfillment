@@ -53,7 +53,7 @@ RSpec.describe ParticipantsController do
   end
 
   before :each do
-    sign_in
+    auto_login_identity
     @protocol = create(:protocol)
     @arm = create(:arm, protocol_id: @protocol.id)
     @participant = create(:participant)
@@ -78,19 +78,10 @@ RSpec.describe ParticipantsController do
 
   describe "POST #create" do
     it "should create a new participant" do
-      attributes = @participant.attributes
-      bad_attributes = ["date_of_birth","id", "deleted_at", "created_at", "updated_at", "total_cost"]
-      attributes.delete_if {|key| bad_attributes.include?(key)}
+      attributes = attributes_for(:participant)
       attributes[:date_of_birth] = "09/10/2015"
       attributes[:mrn] = "888"
-      #Troubleshooting Travis Failure
-      test = Participant.new(attributes)
-      test.valid?
-      puts '#' * 50
-      puts test.errors.messages.inspect
-      puts '#' * 50
-      test = nil
-      ##End Travis Testing
+
       expect{
         post :create, params: { participant: attributes }, format: :js
       }.to change(Participant, :count).by(1)

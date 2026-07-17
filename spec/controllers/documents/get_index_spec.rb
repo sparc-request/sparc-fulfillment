@@ -48,7 +48,7 @@ RSpec.describe DocumentsController, type: :controller do
       it 'should render with :success' do
         get :index, format: :html
 
-        expect(response).to be_success
+        expect(response).to have_http_status(:success)
       end
     end
 
@@ -61,7 +61,7 @@ RSpec.describe DocumentsController, type: :controller do
       it 'should render with :success' do
         get :index, format: :json
 
-        expect(response).to be_success
+        expect(response).to have_http_status(:success)
       end
 
       it 'should assign documents' do

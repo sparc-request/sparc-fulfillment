@@ -36,12 +36,22 @@ RSpec.describe ServiceImporterJob, type: :job do
   describe '#perform', sparc_api: :get_service_components_1, enqueue: false do
 
     it 'should update line_items components if serviceComponents are changed' do
-      line_item = create(:line_item, service: create(:service_with_one_time_fee), protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
+      LineItem.unscoped.delete_all
+      Component.unscoped.delete_all
+      service = create(:service_with_one_time_fee)
+      line_item = create(:line_item, service: service, protocol: create(:protocol), quantity_requested: 500, quantity_type: 'each')
+
+      line_item.update_column(:service_id, 1)
+
+      allow(RemoteObjectFetcher).to receive(:fetch).and_return(
+        { "service" => { "sparc_id" => 1, "one_time_fee" => true, "components" => "a,b,c,d" } }
+      )
 
       callback_url = "http://#{ENV['SPARC_API_HOST']}/api/v1/services/1.json"
-      ServiceImporterJob.perform_later(1, callback_url, 'update')
+      ServiceImporterJob.perform_now(1, callback_url, 'update')
 
-      expect(line_item.components.map(&:component)).to eq ['a','b','c','o']
+      line_item.reload
+      expect(line_item.components.map(&:component)).to eq ['a','b','c','d']
     end
   end
 end

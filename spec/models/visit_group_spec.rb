@@ -166,7 +166,7 @@ RSpec.describe VisitGroup, type: :model do
     describe 'default_scope' do
 
       it 'should be scoped to position' do
-        DatabaseCleaner[:active_record, model: VisitGroup].clean_with(:truncation)
+        VisitGroup.delete_all
         groups = []
         # create them with positions 3,2,1
         (3..1).each do |p|
@@ -194,10 +194,6 @@ RSpec.describe VisitGroup, type: :model do
           @protocols_participant = create(:protocols_participant, arm: @arm, protocol: @protocol, participant: @participant)
           @procedure   = create(:procedure, :complete, appointment: @protocols_participant.appointments.first)
         end
-
-      after :each do 
-        DatabaseCleaner.clean
-      end  
 
       describe 'reorder' do
         it 'should reorder_visit_groups_up' do
@@ -269,14 +265,14 @@ RSpec.describe VisitGroup, type: :model do
       describe 'check for completed data' do
         it "should allow the appointment to be deleted if it is not completed" do
           appointment_count = @protocols_participant.reload.appointments.count
-          @procedure.reload.update_attributes(status: "unstarted")
+          @procedure.reload.update(status: "unstarted")
           @vg_a.reload.destroy
           expect(@protocols_participant.reload.appointments.count).to eq(appointment_count - 1)
         end
 
         it "should not allow the appointment to be deleted if it is completed" do
           @appointment = @protocols_participant.reload.appointments.first
-          @appointment.update_attributes(completed_date: Time.current)
+          @appointment.update(completed_date: Time.current)
           expect{@vg_a.destroy}.to raise_error(ActiveRecord::ActiveRecordError)
         end
 

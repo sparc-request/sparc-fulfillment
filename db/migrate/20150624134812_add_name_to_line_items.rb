@@ -27,7 +27,7 @@ class AddNameToLineItems < ActiveRecord::Migration[4.2]
     add_column :line_items, :name, :string
     LineItem.find_each do |li|
       if li.has_fulfillments? && li.one_time_fee
-        li.update_attributes(name: li.service.name)
+        li.update(name: li.service.name)
       end
     end
   end

@@ -30,14 +30,14 @@ RSpec.describe DocumentsController, type: :controller do
 
       before do
         identity  = Identity.first
-        document  = Rack::Test::UploadedFile.new(File.join('db', 'fixtures', 'test_document.txt'),'txt/plain')
+        document  = Rack::Test::UploadedFile.new(File.join('spec', 'fixtures', 'files', 'test_document.txt'),'txt/plain')
         params    = { document: { title: 'test_document', documentable_id: identity.id, documentable_type: 'Identity', document: document } }
 
         post :create, params: params, format: :js, xhr: true
       end
 
       it 'should render with status: :success' do
-        expect(response).to be_success
+        expect(response).to have_http_status(:success)
       end
 
       it 'should persist a Document object to database' do
@@ -45,7 +45,7 @@ RSpec.describe DocumentsController, type: :controller do
       end
 
       it 'should persist a file to the filesystem' do
-        expect(File.exists?(assigns(:document).path)).to be
+        expect(File.exist?(assigns(:document).path)).to be
       end
     end
 

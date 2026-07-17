@@ -41,7 +41,10 @@ class ImportsController < ApplicationController
         import.update_attribute(:title, determine_if_proof_report ? I18n.t('imports.proof_report_submit') : I18n.t('imports.klok_report_submit'))
         begin
           log_file, valid = import.generate(import.xml_file, determine_if_proof_report)
-          import.update_attribute(:file, File.open(log_file))
+          import.file.attach(
+            io: File.open(log_file),
+            filename: log_file.basename.to_s
+          )
           @valid = valid
           if @valid
             format.js

@@ -70,7 +70,7 @@ class SubsidyReport < Report
 
     
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, 'wb') do |csv|
       if !no_dates

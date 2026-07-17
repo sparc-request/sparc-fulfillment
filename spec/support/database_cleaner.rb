@@ -18,29 +18,30 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR~
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
-RSpec.configure do |config|
-  MODELS = ActiveRecord::Base.descendants.select { |model| model.respond_to?(:sparc_record?) }
-  # FEATURE_TEST_MODELS = [Identity]
+require 'database_cleaner/active_record'
 
-  # Clean data before running the suite
+RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
-    MODELS.each do |model|
-      DatabaseCleaner[:active_record, model: model].clean_with(:truncation)
-    end
   end
 
-  # config.before(:each, type: :feature) do
-  #   FEATURE_TEST_MODELS.each do |model|
-  #     DatabaseCleaner[:active_record, model: model].strategy = :truncation
-  #     DatabaseCleaner[:active_record, model: model].start
-  #   end
-  # end
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
 
-  # Clean data post-test
-  # config.append_after(:each, type: :feature) do
-  #   FEATURE_TEST_MODELS.each do |model|
-  #     DatabaseCleaner[:active_record, model: model].clean
-  #   end
-  # end
+  config.before(:each, type: :feature) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each, type: :system) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
 end

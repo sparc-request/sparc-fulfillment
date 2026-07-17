@@ -42,16 +42,16 @@ class InvoiceReport < Report
     #This allows us to optionally filter by services
     @specific_services = @params[:services].present? ? @params[:services].map{|service| service.to_i} : []
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
       csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
       csv << [""]
 
       if @params[:sort_by] == "Protocol ID"
-        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).sort_by(&:sparc_id)
+        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).order(:sparc_id)
       else
-        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).sort_by{ |protocol| protocol.pi.last_name }
+        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).order{ |protocol| protocol.pi.last_name }
       end
 
       if @params[:sort_order] == "DESC"

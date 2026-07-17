@@ -52,7 +52,7 @@ RSpec.describe Appointment, type: :model do
       end
 
       it 'should return false when appt doesnt have completed procedures' do
-        @proc1.update_attributes(status: "unstarted")
+        @proc1.update(status: "unstarted")
         expect(@appt.has_completed_procedures?).to be false
       end
     end

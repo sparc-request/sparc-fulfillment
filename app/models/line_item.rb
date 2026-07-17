@@ -23,7 +23,7 @@ class LineItem < ApplicationRecord
   has_paper_trail
   acts_as_paranoid
 
-  belongs_to :protocol
+  belongs_to :protocol, foreign_key: :protocol_id
   belongs_to :arm
   belongs_to :service
   belongs_to :sparc_line_item, class_name: 'Sparc::LineItem', foreign_key: :sparc_id
@@ -31,7 +31,7 @@ class LineItem < ApplicationRecord
   has_many :notes, as: :notable
   has_many :documents, as: :documentable
   has_many :components, as: :composable
-  has_many :admin_rates, primary_key: :sparc_id
+  has_many :admin_rates, foreign_key: :line_item_id, primary_key: :sparc_id
   has_many :admin_rate_changes, primary_key: :sparc_id
 
 
@@ -60,7 +60,7 @@ class LineItem < ApplicationRecord
   end
 
   def set_name
-    update_attributes(name: service.name)
+    update(name: service.name)
   end
 
   def name

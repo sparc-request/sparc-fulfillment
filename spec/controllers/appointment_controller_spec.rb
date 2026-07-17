@@ -59,7 +59,7 @@ RSpec.describe AppointmentsController do
 
     before :each do
       protocol = create(:protocol_imported_from_sparc)
-      visit = Visit.first.update_attributes(research_billing_qty: 1)
+      visit = Visit.first.update(research_billing_qty: 1)
       @appointment = Appointment.first
     end
 

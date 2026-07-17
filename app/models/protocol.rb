@@ -41,7 +41,7 @@ class Protocol < ApplicationRecord
   has_one :subsidy,                 through: :sub_service_request
 
   has_many :arms,                   dependent: :destroy
-  has_many :line_items,             dependent: :destroy
+  has_many :line_items,             foreign_key: :protocol_id, dependent: :destroy
   has_many :protocols_participants, dependent: :destroy
   has_many :service_requests,       primary_key: :sparc_id
   has_many :project_roles,          primary_key: :sparc_id
@@ -205,6 +205,6 @@ class Protocol < ApplicationRecord
   private
 
   def set_documents_count
-    update_attributes(unaccessed_documents_count: 0) if self.unaccessed_documents_count < 0
+    update(unaccessed_documents_count: 0) if self.unaccessed_documents_count < 0
   end
 end

@@ -31,7 +31,7 @@ class Arm < ApplicationRecord
   has_many :procedures, through: :appointments
 
   validates :name, presence: true
-  validates_uniqueness_of :name, scope: :protocol_id
+  validates_uniqueness_of :name, scope: :protocol_id, case_sensitive: true
   validates_numericality_of :subject_count, greater_than_or_equal_to: 1
   validates_numericality_of :visit_count, greater_than_or_equal_to: 1
 
@@ -46,7 +46,7 @@ class Arm < ApplicationRecord
       errors.add(:arm, "'#{name}' has completed procedures and cannot be deleted")
       return false
     else
-      update_attributes(marked_for_deletion: true)
+      update(marked_for_deletion: true)
       DelayedDestroyJob.perform_later self
       return true
     end

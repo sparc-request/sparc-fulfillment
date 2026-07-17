@@ -30,7 +30,7 @@ class VisitReport < Report
     include_core_procudures = @params[:core_procedures_option].present? ? true : false
     permitted_protocols = @params[:permissions]
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     from_start_date = @params[:start_date].empty? ? Appointment.order(start_date: :asc).detect{|appointment| appointment.start_date }.start_date : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
     to_start_date   = @params[:end_date].empty? ? Appointment.order(start_date: :desc).first.start_date : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second

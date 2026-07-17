@@ -32,7 +32,7 @@ namespace :data do
     bar = ProgressBar.new(Participant.with_deleted.count)
 
     Participant.with_deleted.find_each do |participant|
-      participant.update_attributes(
+      participant.update(
         first_name: Faker::Name.first_name,
         last_name: Faker::Name.last_name,
         mrn: participant.id,

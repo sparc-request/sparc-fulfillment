@@ -33,7 +33,7 @@ class ProjectSummaryReport < Report
     #then convert to UTC to match database times
     @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
-    document.update_attributes(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
+    document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     protocol = Protocol.find(@params[:protocol])
 

@@ -96,7 +96,7 @@ RSpec.describe VisitGroupsController, type: :controller do
     end
 
     it "should create an error when there is only one visit_group on the arm" do
-      @arm.update_attributes(visit_count: 1)
+      @arm.update(visit_count: 1)
       post :destroy, params: {
         id: @visit_group.id,
         page: "1",

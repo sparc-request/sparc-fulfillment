@@ -24,7 +24,7 @@
 # You can define all roles on a single server, or split them:
 
 set :repo_url, 'git@sparc_fulfillment:sparc-request/sparc-fulfillment.git'
-set :delayed_job_workers, 1
+set :delayed_job_workers, 2
 # server 'bmic-sparc-dev.obis.musc.edu', user: 'capistrano', roles: %w{app db web}
 server 'bmic-sparc-d.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
 
@@ -54,7 +54,7 @@ server 'bmic-sparc-d.mdc.musc.edu', user: 'capistrano', roles: %w{app db web}
 set :deploy_to, "/var/www/rails/sparc-fulfillment"
 set :branch, 'testing'
 set :rails_env, 'testing'
-set :rvm_ruby_version, '2.7.5@cwf --create'
+set :rvm_ruby_version, '3.3.1@cwf --create'
 set :passenger_restart_with_touch, true
 #set :passenger_environment_variables, { :path => '/usr/local/rvm/gems/ruby-1.9.3-p286/bin:$PATH' }
 #set :passenger_rvm_ruby_version, 'ruby-1.9.3-p286'
@@ -85,3 +85,7 @@ set :passenger_restart_with_touch, true
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
+
+set :ssh_options, {
+  encryption: %w(aes256-ctr aes192-ctr aes128-ctr)
+}
