@@ -1,6 +1,5 @@
 # Copyright © 2011-2023 MUSC Foundation for Research Development~
 # All rights reserved.~
-
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:~
 
 # 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.~
@@ -66,4 +65,18 @@ namespace :deploy do
       # end
     end
   end
+end
+
+namespace :deploy do
+  desc 'Run yarn install'
+  task :yarn_install do
+    on roles(:web) do
+      within release_path do
+        execute :yarn, 'install --production'
+        # Or if you use npm: execute :npm, 'install --production'
+      end
+    end
+  end
+
+  before 'deploy:assets:precompile', 'deploy:yarn_install'
 end
