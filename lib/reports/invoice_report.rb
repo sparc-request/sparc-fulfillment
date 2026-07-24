@@ -48,10 +48,12 @@ class InvoiceReport < Report
       csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
       csv << [""]
 
+      protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols])
+
       if @params[:sort_by] == "Protocol ID"
-        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).order(:sparc_id)
+        protocols = protocols.sort_by(&:sparc_id)
       else
-        protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols]).order{ |protocol| protocol.pi.last_name }
+        protocols = protocols.sort_by{ |protocol| protocol.pi&.last_name.to_s }
       end
 
       if @params[:sort_order] == "DESC"
