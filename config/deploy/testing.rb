@@ -85,3 +85,7 @@ set :passenger_restart_with_touch, true
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
+
+set :ssh_options, {
+  encryption: %w(aes256-ctr aes192-ctr aes128-ctr)
+}
