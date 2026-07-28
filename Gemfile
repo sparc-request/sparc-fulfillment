@@ -53,6 +53,7 @@ gem 'will_paginate'
 gem 'yajl-ruby', require: 'yajl'
 gem 'dalli'
 gem 'progress_bar'
+gem 'nokogiri', '1.15.7', force_ruby_platform: true
 
 group :deploy do
   gem 'capistrano', '~> 3.16'
@@ -60,6 +61,7 @@ group :deploy do
   gem 'capistrano-rails', '~> 1.6'
   gem 'capistrano-passenger'
   gem 'capistrano3-delayed-job', '~> 1.7'
+  gem 'capistrano-yarn'
 end
 
 

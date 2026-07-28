@@ -29,6 +29,7 @@ require 'capistrano/passenger'
 require 'capistrano/delayed_job'
 require 'capistrano/rails'
 require "whenever/capistrano"
+require 'capistrano/yarn'
 
 # required to deploy with dotenv
 require 'dotenv'
