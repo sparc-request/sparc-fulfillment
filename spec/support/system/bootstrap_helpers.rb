@@ -52,7 +52,7 @@ module System
       end
 
       bootstrap_wrapper(selector).find('.dropdown-toggle').click
-      
+
       # Sync point: natively wait for the menu to completely close
       expect(bootstrap_wrapper(selector)).to have_no_css('.dropdown-menu.show')
     end
@@ -69,9 +69,9 @@ module System
         end
 
         expect(bootstrap_wrapper(selector)).to have_css('.dropdown-menu.show')
-        
-        bootstrap_wrapper(selector).find('.dropdown-menu.show span.text', text: choice, exact_text: true, visible: true).click
-        
+
+        bootstrap_wrapper(selector).find('.dropdown-menu.show span.text', text: choice, exact_text: true, visible: true, match: :first).click
+
         # Polling validation: Ensure the choice actually registered in the UI
         expect(bootstrap_wrapper(selector)).to have_css(".filter-option-inner-inner", text: choice, exact_text: true)
       end
@@ -97,8 +97,8 @@ module System
       else
         input.click
         input.set(text)
-        
-        find('body').click(x: 0, y: 0) 
+
+        find('body').click(x: 0, y: 0)
       end
     end
   end

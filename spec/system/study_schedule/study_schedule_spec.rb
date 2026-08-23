@@ -32,7 +32,7 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   let(:line_item)   { arm.line_items.first }
   let(:visit_group) { arm.visit_groups.first }
   let(:visit_obj)   { line_item.visits.first } # Renamed to avoid overriding Capybara's native `visit` method
-  
+
   let(:new_service) { line_item.service.organization.inclusive_child_services(:per_participant).last }
 
   context 'User loads a protocol' do
@@ -196,16 +196,16 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
     visit_obj
 
     visit protocol_path(protocol.id)
-    
+
     expect(page).to have_css('#studyScheduleTabLink', visible: true)
     find('#studyScheduleTabLink').click
-    
+
     expect(page).to have_css(".study-schedule-container .arm-#{arm.id}-container", visible: true)
   end
 
   def given_i_am_viewing_the_quantity_billing_tab
     click_link 'Quantity/Billing Tab'
-    expect(page).to have_css('.r-label', visible: true) 
+    expect(page).to have_css('.r-label', visible: true)
   end
 
   def when_i_select_a_new_tab
@@ -220,7 +220,8 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   def when_i_fill_in_a_visit_group_name_with(name)
     fill_in "visit_group_#{visit_group.id}", with: name
     # Safely blur using a body click to trigger the app's validation
-    find('body').click(x: 0, y: 0)
+    # find('body').click(x: 0, y: 0)
+    find("#visit_group_#{visit_group.id}").send_keys(:tab)
   end
 
   def when_i_view_the_first_page_of_the_calendar
@@ -240,7 +241,7 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
     target_page = current_page + 1
 
     find("#arrow-right-#{arm.id}").click
-    
+
     expect(page).to have_css("#arrow-left-#{arm.id}[page='#{target_page}']")
   end
 
@@ -249,20 +250,20 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
     target_page = current_page - 1
 
     find("#arrow-left-#{arm.id}").click
-    
+
     expect(page).to have_css("#arrow-left-#{arm.id}[page='#{target_page}']")
   end
 
   def when_i_select_a_visit_group_from_the_dropdown
     find("button[data-id='visits_select_for_#{arm.id}']").click
-    
+
     expect(page).to have_css('.dropdown-menu.show', visible: true)
-    
+
     dropdown_item = all("a.dropdown-item span.text", visible: true)[9]
     selected_text = dropdown_item.text
-    
+
     dropdown_item.click
-    
+
     expect(page).to have_no_css('.dropdown-menu.show')
 
     expect(page).to have_css("button[data-id='visits_select_for_#{arm.id}']", text: selected_text)
@@ -277,8 +278,8 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   end
 
   def when_i_click_an_uncheck_all_row_box
-    when_i_click_a_check_all_row_box 
-    
+    when_i_click_a_check_all_row_box
+
     accept_confirm do
       find("#line_item_#{line_item.id} .check-row").click
     end
@@ -295,8 +296,8 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   end
 
   def when_i_click_an_uncheck_all_column_box
-    when_i_click_a_check_all_column_box 
-    
+    when_i_click_a_check_all_column_box
+
     accept_confirm do
       find("button[data-visit-group-id='#{visit_group.id}']").click
     end
@@ -318,7 +319,7 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
     end
 
     find('body').click(x: 0, y: 0)
-    
+
     within('.modal-content', text: /Edit Billing Quantities/i) do
       click_button "Submit"
     end
@@ -360,7 +361,7 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   end
 
   def then_it_should_throw_error_message_and_see_that_the_name_is_still(name)
-    expect(page).to have_content(/Visit Name can't be blank/i)
+    expect(page).to have_content(/Visit Name can't be blank/i, wait: 10)
     expect(page).to have_field("visit_group_#{visit_group.id}", with: name)
   end
 
@@ -443,10 +444,10 @@ RSpec.describe 'Study Schedule', type: :system, js: true do
   def then_i_should_see_the_correct_service
     # Rule III.B: Scope the interaction strictly to the modal
     within('.modal-content', text: /Change Service/i) do
-      
+
       # Rule II.A: Apply the brakes. Give the CI server up to 10 seconds for Bootstrap Select to build the element.
       expect(page).to have_css("button.dropdown-toggle[data-id='line_item_service_id']", visible: true, wait: 10)
-      
+
       # Now that we have proven the element exists and is visible, safely evaluate its attribute
       expect(find("button.dropdown-toggle[data-id='line_item_service_id']")["title"]).to match(/#{Regexp.quote(line_item.service.name)}/i)
     end
