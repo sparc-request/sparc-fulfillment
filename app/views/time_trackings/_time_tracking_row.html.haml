@@ -1,0 +1,21 @@
+- is_active = time_tracking.ended_at.nil?
+%tr{ id: "time_tracking_#{time_tracking.id}", class: is_active ? 'table-warning' : '' }
+  %td= time_tracking.protocol&.srid
+  %td= time_tracking.protocol&.research_master_id
+  %td= time_tracking.protocol&.status&.capitalize
+  %td.text-truncate{ style: 'max-width: 200px;', title: time_tracking.protocol&.short_title }= time_tracking.protocol&.short_title
+  %td= time_tracking.protocol&.pi&.full_name
+  %td.text-truncate{ style: 'max-width: 200px;', title: time_tracking.line_item&.service&.name }= time_tracking.line_item&.service&.name
+  %td= time_tracking.component&.component
+  - if is_active
+    %td.text-muted Running...
+    %td.text-muted= time_tracking.started_at&.strftime('%I:%M %p')
+  - else
+    %td= time_tracking.quantity
+    %td= time_tracking.date&.strftime('%m/%d/%Y')
+  %td.text-center
+    - if is_active
+      = link_to "Stop", stop_time_tracking_path(time_tracking), method: :put, remote: true, class: "btn btn-sm btn-danger font-weight-bold"
+    - else
+      = link_to "Edit", edit_time_tracking_path(time_tracking), remote: true, class: "btn btn-sm btn-primary"
+      = link_to "Delete", time_tracking_path(time_tracking), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger ml-1"

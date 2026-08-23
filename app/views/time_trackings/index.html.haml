@@ -1,0 +1,106 @@
+%main.w-100#timeTrackingDashboard
+  .row
+    .col-md-3
+      .card.h-100
+        .card-header.bg-primary.text-white.d-flex.justify-content-between.align-items-center
+          %h5 Protocols
+          %button.btn.btn-sm.btn-success#addProtocolBtn{ data: { toggle: "modal", target: "#addProtocolModal" } }
+            = icon('fas', 'plus')
+            Add
+        .card-body.p-2
+          #protocolsTree
+            - if @sidebar_protocols.empty?
+              .alert.alert-info.text-center.m-3
+                Click '+ Add' to select studies
+            - else
+              #accordionProtocols.accordion
+                - @sidebar_protocols.each_with_index do |protocol, idx|
+                  - pi_display = protocol.pi ? ", #{protocol.pi.full_name}" : ""
+                  - protocol_label = "#{protocol.srid} (#{protocol.short_title}#{pi_display})"
+                  - is_open = idx == 0
+
+                  .tree-node.border-0.mb-1
+                    .tree-header.p-0
+                      %button.btn.btn-link.btn-block.text-left.text-truncate.font-weight-bold.text-primary.p-1{ type: "button", class: (is_open ? '' : 'collapsed'), data: { toggle: "collapse", target: "#collapse-protocol-#{protocol.id}" }, aria: { expanded: is_open.to_s, controls: "collapse-protocol-#{protocol.id}" }, title: protocol_label }
+                        = icon('fas', 'caret-down', class: 'mr-1')
+                        = icon('fas', 'folder', class: 'mr-1 text-secondary')
+                        = protocol_label
+
+                    .collapse{ id: "collapse-protocol-#{protocol.id}", class: (is_open ? 'show' : ''), data: { parent: "#accordionProtocols" } }
+                      - if protocol.line_items.empty?
+                        .pl-4.py-1.text-muted.small No services found.
+                      - else
+                        .services-tree.pl-3
+                          - protocol.line_items.each do |line_item|
+                            .tree-node.border-0.my-1
+                              - if line_item.components.any?
+                                %button.btn.btn-link.btn-block.text-left.text-truncate.font-weight-bold.p-1.collapsed{ type: "button", data: { toggle: "collapse", target: "#collapse-li-#{line_item.id}" }, aria: { expanded: "false", controls: "collapse-li-#{line_item.id}" }, title: line_item.service.name }
+                                  = icon('fas', 'caret-down', class: 'mr-1')
+                                  = icon('fas', 'folder', class: 'mr-1 text-secondary')
+                                  = line_item.service.name
+
+                                .collapse{ id: "collapse-li-#{line_item.id}" }
+                                  %ul.list-unstyled.pl-4.mb-1
+                                    - line_item.components.each do |component|
+                                      %li.py-1.pr-2.d-flex.justify-content-between.align-items-center.text-dark
+                                        %span.text-truncate{ title: component.component }= component.component
+                                        - active_tt = @time_trackings.find { |tt| tt.line_item_id == line_item.id && tt.component_id == component.id && tt.ended_at.nil? }
+                                        %span{ id: "sidebar-span-comp-#{component.id}" }
+                                          - if active_tt
+                                            = link_to 'Stop', stop_time_tracking_path(active_tt), method: :put, remote: true, class: 'btn btn-sm btn-danger py-0 px-2'
+                                          - else
+                                            = link_to icon('far', 'clock'), time_trackings_path(time_tracking: { protocol_id: protocol.id, line_item_id: line_item.id, component_id: component.id }), method: :post, remote: true, class: 'text-secondary'
+                              - else
+                                .d-flex.justify-content-between.align-items-center.p-1
+                                  .text-truncate{ title: line_item.service.name }
+                                    = line_item.service.name
+                                  - active_tt = @time_trackings.find { |tt| tt.line_item_id == line_item.id && tt.component_id.blank? && tt.ended_at.nil? }
+                                  %span{ id: "sidebar-span-li-#{line_item.id}" }
+                                    - if active_tt
+                                      = link_to 'Stop', stop_time_tracking_path(active_tt), method: :put, remote: true, class: 'btn btn-sm btn-danger py-0 px-2'
+                                    - else
+                                      = link_to icon('far', 'clock'), time_trackings_path(time_tracking: { protocol_id: protocol.id, line_item_id: line_item.id }), method: :post, remote: true, class: 'text-secondary'
+
+    .col-md-9
+      .card
+        .card-header.bg-primary.text-white
+          %h5 Time Tracking
+        .card-body
+          .table-responsive
+            %table.table.table-striped.table-hover.table-bordered
+              %thead.bg-light
+                %tr
+                  %th SRID
+                  %th RMID
+                  %th Status
+                  %th Short Title
+                  %th Principal Investigator
+                  %th Service
+                  %th Component
+                  %th Qty Fulfilled
+                  %th Date Fulfilled
+                  %th Actions
+              %tbody#timeTrackingsTableBody
+
+                - if @time_trackings.present?
+                  - @time_trackings.each do |tt|
+                    = render 'time_tracking_row', time_tracking: tt
+                - else
+                  %tr#emptyTimeTrackingsRow
+                    %td{ colspan: 10, class: 'text-center text-muted p-4' } No time tracking records found for the selected studies.
+
+.modal.fade#addProtocolModal{ tabindex: "-1", role: "dialog", aria: { hidden: "true" } }
+  .modal-dialog{ role: "document" }
+    .modal-content
+      = form_tag update_sidebar_time_trackings_path, method: :post do
+        .modal-header
+          %h5.modal-title Select Protocol(s)
+          %button.close{ type: "button", data: { dismiss: "modal" }, aria: { label: "Close" } }
+            %span{ aria: { hidden: "true" } } &times;
+        .modal-body
+          .form-group
+            %label Protocol(s) *
+            = select_tag "protocol_ids", options_for_select(@available_protocols, current_identity.time_tracking_protocols.pluck(:protocol_id)), class: "form-control selectpicker", multiple: true, title: "Select Protocol(s)...", data: { live_search: "true", width: "100%", selected_text_format: "count>2", size: 10, actions_box: "true" }
+        .modal-footer
+          %button.btn.btn-secondary{ type: "button", data: { dismiss: "modal" } } Close
+          = submit_tag "Submit", class: "btn btn-primary"

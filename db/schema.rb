@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_16_015133) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_27_152223) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -386,6 +386,30 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_16_015133) do
     t.index ["assignable_id", "assignable_type"], name: "index_tasks_on_assignable_id_and_assignable_type"
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
     t.index ["identity_id"], name: "index_tasks_on_identity_id"
+  end
+
+  create_table "time_tracking_protocols", charset: "utf8mb3", force: :cascade do |t|
+    t.integer "identity_id"
+    t.integer "protocol_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "time_trackings", charset: "utf8mb3", force: :cascade do |t|
+    t.integer "protocol_id"
+    t.integer "sub_service_request_id"
+    t.integer "line_item_id"
+    t.integer "component_id"
+    t.integer "identity_id"
+    t.date "date"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.decimal "quantity", precision: 10
+    t.string "notes"
+    t.string "text"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|

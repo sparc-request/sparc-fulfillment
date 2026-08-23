@@ -345,6 +345,7 @@ en:
       tasks: "Tasks"
       imports: "Imports"
       patient_registry: "Patient Registry"
+      time_tracking: "Time Tracking"
       toggle: "Toggle Navigation"
       sign_in: "SIGN IN"
       sign_out: "Sign Out"

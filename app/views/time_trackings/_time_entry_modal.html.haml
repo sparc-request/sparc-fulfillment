@@ -1,0 +1,55 @@
+.modal-dialog.modal-lg{ role: "document" }
+  .modal-content
+    = form_tag time_trackings_path, method: :put, remote: true, id: 'timeEntryForm' do
+      .modal-header
+        %h5.modal-title.text-primary Create New Fulfillment Time Entry
+        %button.close{ type: "button", data: { dismiss: "modal" }, aria: { label: "Close" } }
+          %span{ aria: { hidden: "true" } } &times;
+      .modal-body
+        .row.mb-3
+          .col-12
+            %strong.text-primary#modalStudyId
+            %span.text-muted >
+            %strong.text-primary#modalServiceName
+            %span.text-muted.component-breadcrumb{ style: 'display:none'} >
+            %strong.text-primary#modalComponentName
+
+        = hidden_field_tag 'time_tracking[protocol_id]', '', id: 'timeTrackingProtocolId'
+        = hidden_field_tag 'time_tracking[line_item_id]', '', id: 'timeTrackingLineItemId'
+        = hidden_field_tag 'time_tracking[component_id]', '', id: 'timeTrackingComponentId'
+
+        .form-group.row
+          %label.col-sm-3.col-form-label Fulfillment Date *
+          .col-sm-9
+            = date_field_tag 'time_tracking[date]', Date.today, class: 'form-control', required: true
+
+        .form-group.row
+          %label.col-sm-3.col-form-label Start Time *
+          .col-sm-9
+            = time_field_tag 'time_tracking[started_at]', nil, class: 'form-control', required: true, id: 'timeTrackingStartTime'
+
+        .form-group.row
+          %label.col-sm-3.col-form-label End Time *
+          .col-sm-9
+            = time_field_tag 'time_tracking[ended_at]', nil, class: 'form-control', required: true, id: 'timeTrackingEndTime'
+
+        .form-group.row
+          %label.col-sm-3.col-form-label Qty
+          .col-sm-9
+            = number_field_tag 'time_tracking[quantity]', '', class: 'form-control', step: '0.01', readonly: true, id: 'timeTrackingQty'
+
+        .form-group.row
+          %label.col-sm-3.col-form-label Performed By *
+          .col-sm-9
+            = text_field_tag 'performed_by', current_identity.full_name, class: 'form-control', readonly: true
+
+        .form-group.row
+          %label.col-sm-3.col-form-label Notes
+          .col-sm-9
+            = text_area_tag 'time_tracking[notes]', '', class: 'form-control', rows: 3
+
+      .modal-footer
+        %button.btn.btn-secondary{ type: "button", data: { dismiss: "modal" } } Close
+        = submit_tag "Save", class: "btn btn-primary"
+
+
