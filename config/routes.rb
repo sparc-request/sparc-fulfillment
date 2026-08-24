@@ -69,6 +69,14 @@ Rails.application.routes.draw do
   resources :imports
   resources :tasks, only: [:index, :show, :new, :create, :update, :edit]
   resources :procedure_groups, only: :update
+  resources :time_trackings, only: [:index, :create, :edit, :update, :destroy] do
+    collection do
+      post :update_sidebar
+    end
+    member do
+      put :stop
+    end
+  end
 
   resources :reports, only: [:new, :create] do
     collection do

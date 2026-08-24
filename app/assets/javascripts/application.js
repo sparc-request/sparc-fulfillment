@@ -99,3 +99,4 @@
 //= require procedures
 //= require notes
 //= require procedure_groups
+//= require time_trackings

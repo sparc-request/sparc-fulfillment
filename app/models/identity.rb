@@ -33,6 +33,7 @@ class Identity < SparcDbBase
   has_many :super_users
   has_many :patient_registrars
   has_many :column_preferences, dependent: :destroy
+  has_many :time_tracking_protocols, dependent: :destroy
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
@@ -104,7 +105,7 @@ class Identity < SparcDbBase
     #   email = auth.info.email.blank? ? auth.uid : auth.info.email # in case shibboleth doesn't return the required parameters
     #   identity = Identity.create ldap_uid: auth.uid, first_name: auth.info.first_name, last_name: auth.info.last_name, email: email, password: Devise.friendly_token[0,20], approved: true
     # end
-    
+
     identity
   end
 

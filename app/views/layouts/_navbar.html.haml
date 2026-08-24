@@ -50,6 +50,11 @@
               = link_to participants_path, class: ['nav-link', @highlighted_link == 'participants' ? 'active' : ''] do
                 = icon('fas', 'users fa-2x mr-1')
                 = t('layout.navigation.patient_registry')
+
+            .nav-item
+              = link_to time_trackings_path, class: ['nav-link', @highlighted_link == 'time_trackings' ? 'active' : ''] do
+                = icon('fas', 'clock fa-2x mr-1')
+                = t('layout.navigation.time_tracking')
       %button.btn.btn-primary.navbar-toggler.p-0.border-0.text-light{ type: 'button', data: { toggle: 'collapse', target: '#navbarLinks' }, aria: { controls: 'navbarLinks', expanded: 'false', label: t('layout.navigation.toggle') } }
         = icon('fas', 'bars fa-2x')
     .navbar-nav#navbarUtilities
