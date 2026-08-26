@@ -62,18 +62,28 @@ class DocumentsController < ApplicationController
     end
   end
 
-  def create
+def create
     respond_to do |format|
       format.js {
-        @document = Document.create(document_params.merge!(original_filename: params[:document][:document].original_filename,
-                                                          title: params[:document][:document].original_filename,
-                                                          content_type: params[:document][:document].content_type,
-                                                          state: "Completed"))
+        @document = Document.new(document_params.merge(
+                                   original_filename: params[:document][:document].original_filename,
+                                   title: params[:document][:document].original_filename,
+                                   content_type: params[:document][:document].content_type,
+                                   state: "Completed"
+                                 ))
 
-        create_document_file
-        @selector = "#{@document.unique_selector}_documents"
+        # Define @documentable out here so it's ALWAYS available to the view
         @documentable = @document.documentable
-        flash.now[:success] = t(:documents)[:flash_messages][:created]
+
+        if @document.save
+          create_document_file
+          @selector = "#{@document.unique_selector}_documents"
+          flash.now[:success] = t(:documents)[:flash_messages][:created]
+        else
+          # Map the model errors to the singular @error string the view expects
+          @errors = @document.errors
+          @error = @document.errors.full_messages.join(', ')
+        end
       }
     end
   end
