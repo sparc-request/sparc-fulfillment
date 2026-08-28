@@ -21,12 +21,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Identity creates followup note', type: :system, js: true do
-
-  def next_weekday(date)
-    date += 1.day while date.on_weekend?
-    date
-  end
-
   let(:protocol)              { create_and_assign_protocol_to_me }
   let(:protocols_participant) { protocol.protocols_participants.first }
   let(:service)               { protocol.organization.inclusive_child_services(:per_participant).first }
@@ -35,8 +29,8 @@ RSpec.describe 'Identity creates followup note', type: :system, js: true do
   let(:procedure)              { protocols_participant.appointments.first.procedures.find_by(service: service) }
 
   # Extracted to prevent time-travel test flakiness at the end of months
-  let(:target_date)            { next_weekday(Date.current.change(day: 10)) }
-  let(:new_target_date)        { next_weekday(Date.current.change(day: 15)) }
+  let(:target_date)            { Date.current.change(day: 10) }
+  let(:new_target_date)        { Date.current.change(day: 15) }
 
   context 'User starts an appointment' do
     scenario 'and sees the followup button' do
@@ -113,7 +107,7 @@ RSpec.describe 'Identity creates followup note', type: :system, js: true do
 
   def when_i_fill_out_and_submit_the_followup_form
     expect(page).to have_css('.modal.show')
-
+    
     # DO NOT wrap these in a 'within' block because the Bootstrap helpers need to access the 'body' tag to natively blur inputs, and the UI often appends dropdown menus to the body rather than the modal itself.
     find('#task_assignee_id', visible: :hidden).ancestor('.bootstrap-select', match: :first).find('.dropdown-toggle').click
     expect(page).to have_css('.dropdown-menu.show')
@@ -122,7 +116,7 @@ RSpec.describe 'Identity creates followup note', type: :system, js: true do
     # Explicitly pass the formatted text string since the input is writable
     bootstrap_datepicker '#task_due_at', text: target_date.strftime('%m/%d/%Y')
     fill_in 'Comment', with: 'Test comment'
-
+    
     within('.modal.show') do
       find('input[type="submit"]').click
     end
@@ -157,7 +151,7 @@ RSpec.describe 'Identity creates followup note', type: :system, js: true do
   def then_i_should_be_able_to_edit_the_followup_date
     # Passing the exact text representation to match the else block of the global helper
     bootstrap_datepicker "#followupDatePickerInput#{procedure.id}", text: new_target_date.strftime("%m/%d/%Y")
-
+    
     expect(page).to have_field("followupDatePickerInput#{procedure.id}", with: new_target_date.strftime("%m/%d/%Y"))
   end
 
