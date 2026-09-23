@@ -165,11 +165,18 @@ namespace :data do
                     next
                 end
 
-                fulfillment_protocol = ssr.service_request&.protocol
-                sparc_protocol = fulfillment_protocol&.sparc_protocol
+                fulfillment_protocol = Protocol.find_by(sparc_id: protocol_id)
+
+                unless fulfillment_protocol
+                    csv << [display_id, nil, new_name, "Error", "Fulfillment protocol not found"]
+                    skipped_count += 1
+                    next
+                end
+
+                sparc_protocol = fulfillment_protocol.sparc_protocol
 
                 unless sparc_protocol
-                    csv << [display_id, nil, new_name, "Error", "SPARC Request protocol not found"]
+                    csv << [display_id, nil, new_name, "Error", "SPARC Request protocol not found (sparc_id: #{fulfillment_protocol.sparc_id.inspect})"]
                     skipped_count += 1
                     next
                 end
