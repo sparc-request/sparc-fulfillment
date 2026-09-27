@@ -1,0 +1,14 @@
+.modal-dialog.modal-sm{ role: "document" }
+  .modal-content
+    = form_tag update_protocol_title_time_trackings_path, method: :put, remote: true do
+      = hidden_field_tag :protocol_id, protocol.id
+      .modal-header
+        %h5.modal-title.text-primary Edit Working Title
+        %button.close{ type: "button", data: { dismiss: "modal" } } &times;
+      .modal-body
+        .form-group
+          %label.small.text-muted Working Title
+          = text_field_tag :working_title, time_tracking_protocol.working_title.presence || protocol.short_title, class: "form-control"
+      .modal-footer
+        %button.btn.btn-secondary{ type: "button", data: { dismiss: "modal" } } Cancel
+        = submit_tag "Save", class: "btn btn-primary"

@@ -1,6 +1,6 @@
 .modal-dialog.modal-lg{ role: "document" }
   .modal-content
-    = form_tag time_tracking_path(time_tracking), method: :put, remote: true, id: 'timeEntryForm' do
+    = form_tag time_tracking_path(time_tracking), method: :put, remote: true, id: 'timeTrackingForm' do
       .modal-header
         %h5.modal-title.text-primary Edit Time Entry
         %button.close{ type: "button", data: { dismiss: "modal" }, aria: { label: "Close" } }
@@ -11,9 +11,9 @@
             %strong.text-primary= time_tracking.protocol&.srid
             %span.text-muted >
             %strong.text-primary= time_tracking.line_item&.service&.name
-            - if time_tracking.component.present?
+            - if time_tracking.component_name.present?
               %span.text-muted >
-              %strong.text-primary= time_tracking.component&.component
+              %strong.text-primary= time_tracking.component_name
 
         .form-group.row
           %label.col-sm-3.col-form-label Fulfillment Date *
@@ -33,7 +33,7 @@
         .form-group.row
           %label.col-sm-3.col-form-label Qty
           .col-sm-9
-            = number_field_tag 'time_tracking[quantity]', time_tracking.quantity, class: 'form-control', step: 'any', readonly: true, id: 'timeTrackingQty'
+            = number_field_tag 'time_tracking[quantity]', number_with_precision(time_tracking.quantity, precision: 2), class: 'form-control', step: '0.01', readonly: true, id: 'timeTrackingQty'
 
         .form-group.row
           %label.col-sm-3.col-form-label Performed By *

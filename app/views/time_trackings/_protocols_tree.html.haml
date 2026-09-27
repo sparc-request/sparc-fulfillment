@@ -1,0 +1,20 @@
+-# Sidebar: "All" and "Favorites" tabs, each rendering _protocols_list
+- if sidebar_items.empty?
+  .alert.alert-info.text-center.m-3
+    Click '+ Add' to select studies
+- else
+  %ul.nav.nav-tabs.nav-fill.mb-2{ role: 'tablist'}
+    %li.nav-item
+      %a.nav-link.active{ data: { toggle: 'tab' }, href: '#all-tab' } All
+    %li.nav-item
+      %a.nav-link{ data: { toggle: 'tab' }, href: '#favorites-tab' } Favorites
+
+  .tab-content
+    .tab-pane.fade.show.active#all-tab
+      = render 'protocols_list', items: sidebar_items, time_trackings: time_trackings, tab_prefix: "all"
+
+    .tab-pane.fade#favorites-tab
+      - favorites = sidebar_items.select(&:favorite)
+      = render 'protocols_list', items: favorites, time_trackings: time_trackings, tab_prefix: "favorites"
+
+

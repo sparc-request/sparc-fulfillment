@@ -37,6 +37,10 @@ class Identity < SparcDbBase
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
+  def is_a_performer?
+    clinical_providers.any? || super_users.any?
+  end
+
   def column_preferences_hash
     preferences = column_preferences.hidden
     preferences.pluck(:column_name, :visible).to_h
