@@ -59,16 +59,19 @@ class SubsidyReport < Report
   def generate(document)
     # Dates are optional in this report and defaults to all subsidy protocols if both dates not given
     no_dates = ((@params[:start_date] == "") && (@params[:end_date] == ""))
+    permitted_protocols = @params[:permissions] || []
+
+    base_protocols = Protocol.joins(sub_service_request: :subsidy)
+                             .where(id: permitted_protocols)
 
     if !no_dates
       @start_date = (@params[:start_date] == "") ? Time.strptime("1/01/2012", "%m/%d/%Y").utc : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
       @end_date = (@params[:end_date] == "") ? Time.now.utc : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
-      protocols = protocols_for_date_range(Protocol.joins(sub_service_request: :subsidy))
+      
+      protocols = protocols_for_date_range(base_protocols)
     else
-      protocols = Protocol.joins(sub_service_request: :subsidy)
+      protocols = base_protocols.to_a
     end
-
-    
 
     document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
