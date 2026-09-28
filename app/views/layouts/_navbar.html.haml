@@ -50,7 +50,7 @@
               = link_to participants_path, class: ['nav-link', @highlighted_link == 'participants' ? 'active' : ''] do
                 = icon('fas', 'users fa-2x mr-1')
                 = t('layout.navigation.patient_registry')
-
+          - if current_identity.is_a_performer?
             .nav-item
               = link_to time_trackings_path, class: ['nav-link', @highlighted_link == 'time_trackings' ? 'active' : ''] do
                 = icon('fas', 'clock fa-2x mr-1')

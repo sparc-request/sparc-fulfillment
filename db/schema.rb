@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_27_152223) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_17_123622) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -83,7 +83,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_27_152223) do
     t.index ["sparc_id"], name: "index_arms_on_sparc_id"
   end
 
-  create_table "column_preferences", charset: "utf8mb3", force: :cascade do |t|
+  create_table "column_preferences", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.bigint "identity_id", null: false
     t.string "column_name", null: false
     t.boolean "visible", null: false
@@ -393,23 +393,25 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_27_152223) do
     t.integer "protocol_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "working_title"
+    t.boolean "favorite", default: false
   end
 
   create_table "time_trackings", charset: "utf8mb3", force: :cascade do |t|
     t.integer "protocol_id"
     t.integer "sub_service_request_id"
     t.integer "line_item_id"
-    t.integer "component_id"
     t.integer "identity_id"
     t.date "date"
     t.datetime "started_at"
     t.datetime "ended_at"
-    t.decimal "quantity", precision: 10
+    t.decimal "quantity", precision: 10, scale: 2
     t.string "notes"
     t.string "text"
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "component_name"
   end
 
   create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|

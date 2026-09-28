@@ -1,0 +1,46 @@
+.accordion{ id: tab_prefix }
+  - items.each do |item|
+    - protocol = item.protocol
+    - is_open = @open_protocol_ids.to_a.include?(protocol.id)
+    .tree-node.border-0.mb-1
+      = render 'sidebar_protocol', item: item, tab_prefix: tab_prefix, is_open: is_open
+
+      .collapse{ id: "#{tab_prefix}-collapse-protocol-#{protocol.id}", class: (is_open ? 'show' : nil) }
+        - otf_line_items = protocol.line_items.select(&:one_time_fee)
+        - if otf_line_items.empty?
+          .pl-4.py-1.text-muted.small No services found.
+        - else
+          .services-tree.pl-3
+            - otf_line_items.each do |line_item|
+              .tree-node.border-0.my-1
+                - if line_item.service.components.present?
+                  - li_is_open = @open_line_item_ids.to_a.include?(line_item.id)
+                  %button.btn.btn-link.btn-block.text-left.text-truncate.font-weight-bold.p-1{ type: "button", class: (li_is_open ? '' : 'collapsed'), data: { toggle: "collapse", target: "##{tab_prefix}-collapse-li-#{line_item.id}" }, aria: { expanded: li_is_open.to_s, controls: "#{tab_prefix}-collapse-li-#{line_item.id}" }, title: line_item.service.name }
+                    = icon('fas', 'caret-down', class: 'mr-1')
+                    = icon('fas', 'folder', class: 'mr-1 text-secondary')
+                    = line_item.service.name
+
+                  .collapse{ id: "#{tab_prefix}-collapse-li-#{line_item.id}", class: (li_is_open ? 'show' : nil) }
+                    %ul.list-unstyled.pl-4.mb-1
+                      - line_item.service.components_list.each do |comp_name|
+                        %li.py-1.pr-2.d-flex.justify-content-between.align-items-center.text-dark
+                          %span.text-truncate{ title: comp_name }= comp_name
+                          - active_tt = time_trackings.find { |tt| tt.line_item_id == line_item.id && tt.component_name == comp_name && tt.ended_at.nil? }
+                          %span.sidebar-span-comp{ data: { line_item_id: line_item.id, component_name: comp_name } }
+                            - if active_tt
+                              = link_to 'Stop', stop_time_tracking_path(active_tt), method: :put, remote: true, class: 'btn btn-sm btn-danger py-0 px-2'
+                            - else
+                              = link_to icon('far', 'clock'), time_trackings_path(time_tracking: { protocol_id: protocol.id, line_item_id: line_item.id, component_name: comp_name }), method: :post, remote: true, class: 'text-secondary'
+                - else
+                  .d-flex.justify-content-between.align-items-center.p-1
+                    .text-truncate{ title: line_item.service.name }
+                      = line_item.service.name
+                    - active_tt = time_trackings.find { |tt| tt.line_item_id == line_item.id && tt.component_name.blank? && tt.ended_at.nil? }
+                    %span{ id: "#{tab_prefix}-sidebar-span-li-#{line_item.id}" }
+                      - if active_tt
+                        = link_to 'Stop', stop_time_tracking_path(active_tt), method: :put, remote: true, class: 'btn btn-sm btn-danger py-0 px-2'
+                      - else
+                        = link_to icon('far', 'clock'), time_trackings_path(time_tracking: { protocol_id: protocol.id, line_item_id: line_item.id }), method: :post, remote: true, class: 'text-secondary'
+
+
+
