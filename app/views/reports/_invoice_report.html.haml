@@ -102,6 +102,11 @@
               .form-check.ml-3
                 = check_box_tag "include_invoiced", true, false, class: "form-check-input"
                 %label.form-check-label=t(:reports)[:include_invoiced]
+            
+            .form-group.col-sm-6
+              .form-check.ml-3
+                = check_box_tag "remove_participant_identifiers", true, false, class: "form-check-input"
+                %label.form-check-label=t(:reports)[:remove_participant_identifiers]
                 
       .modal-footer
         .center-block
