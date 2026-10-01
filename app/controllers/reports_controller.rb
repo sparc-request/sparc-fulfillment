@@ -176,6 +176,7 @@ class ReportsController < ApplicationController
               :sort_order,
               :include_notes,
               :include_invoiced,
+              :remove_participant_identifiers,
               :participant_id,
               :protocols_participant_id,
               :documentable_id,

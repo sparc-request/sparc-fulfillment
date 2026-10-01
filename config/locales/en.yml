@@ -618,6 +618,7 @@ en:
     inactive: " (inactive)"
     include_notes: "Include Notes"
     include_invoiced: "Include Invoiced"
+    remove_participant_identifiers: "Remove Participant Identifiers"
     invoice_report: "Invoice Report"
     end_date: "End Date"
     finance_billing_report:
