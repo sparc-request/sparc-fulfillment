@@ -71,6 +71,7 @@ Rails.application.routes.draw do
   resources :procedure_groups, only: :update
   resources :time_trackings, only: [:index, :create, :edit, :update, :destroy] do
     collection do
+      get :add_protocol_modal
       post :update_sidebar
       get :edit_protocol_title
       put :update_protocol_title

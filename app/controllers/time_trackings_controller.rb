@@ -2,16 +2,17 @@ class TimeTrackingsController < ApplicationController
   before_action { @highlighted_link = 'time_trackings' }
 
   def index
-    @available_protocols = current_identity.protocols
-      .includes(:sparc_protocol, :sub_service_request)
-      .map { |p| [p.short_title_with_sparc_id.truncate(90), p.id] }
-      .sort_by(&:first)
-
-    load_sidebar_data
-
     respond_to do |format|
-      format.html
-      format.json
+      format.html do
+        load_sidebar_data
+      end
+
+      format.json do
+        @working_titles = current_identity.time_tracking_protocols.pluck(:protocol_id, :working_title).to_h
+        @time_trackings = TimeTracking.where(identity_id: current_identity.id)
+          .includes(protocol: [:sparc_protocol, :sub_service_request, :pi], line_item: :service)
+          .order(date: :desc, started_at: :desc)
+      end
     end
   end
 
@@ -62,8 +63,15 @@ class TimeTrackingsController < ApplicationController
     start_str = time_tracking_params[:started_at]
     end_str = time_tracking_params[:ended_at]
 
-    started_at = Time.zone.parse("#{date_str} #{start_str}") rescue nil
-    ended_at = Time.zone.parse("#{date_str} #{end_str}") rescue nil
+    parsed_date = Date.strptime(date_str, '%m/%d/%Y') rescue nil
+
+    if parsed_date && start_str.present?
+      started_at = Time.zone.parse("#{parsed_date} #{start_str}") rescue nil
+    end
+
+    if parsed_date && end_str.present?
+      ended_at = Time.zone.parse("#{parsed_date} #{end_str}") rescue nil
+    end
 
     if started_at && ended_at
       ended_at += 1.day if ended_at < started_at
@@ -71,10 +79,11 @@ class TimeTrackingsController < ApplicationController
     end
 
     @time_tracking.update(
-      date: date_str,
+      date: parsed_date || date_str,
       started_at: started_at || time_tracking_params[:started_at],
       ended_at: ended_at || time_tracking_params[:ended_at],
       quantity: diff_hours || time_tracking_params[:quantity],
+      component_name: time_tracking_params[:component_name],
       notes: time_tracking_params[:notes]
     )
 
@@ -147,17 +156,42 @@ class TimeTrackingsController < ApplicationController
     end
   end
 
+def add_protocol_modal
+  protocols_data = current_identity.protocols
+    .joins(:sub_service_request, :sparc_protocol)
+    .pluck(
+      Protocol.arel_table[:id],
+      Protocol.arel_table[:sparc_id],
+      SubServiceRequest.arel_table[:ssr_id],
+      Sparc::Protocol.arel_table[:short_title]
+    )
+
+  @available_protocols = protocols_data.map do |id, sparc_id, ssr_id, short_title|
+    ["(#{sparc_id}-#{ssr_id}) #{short_title}".truncate(90), id]
+  end.sort_by(&:first)
+
+  @selected_protocol_ids = current_identity.time_tracking_protocols.pluck(:protocol_id)
+
+  respond_to do |format|
+    format.js
+    format.html { redirect_to time_trackings_path }
+  end
+end
+
+
   private
 
   def load_sidebar_data
     @sidebar_items = current_identity.time_tracking_protocols
       .joins(:protocol)
       .includes(protocol: [:sub_service_request, :sparc_protocol, :pi, line_items: :service])
+      .sort_by { |item| [item.protocol.sparc_id.to_i, item.protocol.sub_service_request&.ssr_id.to_i] }
+
     @open_protocol_ids  = cookies[:open_sidebar_protocols].to_s.split(',').map(&:to_i)
     @open_line_item_ids = cookies[:open_sidebar_line_items].to_s.split(',').map(&:to_i)
-    @time_trackings = TimeTracking.where(identity_id: current_identity.id)
-      .includes(protocol: [:sparc_protocol, :sub_service_request, :pi], line_item: :service)
-      .order(date: :desc, started_at: :desc)
+    @time_trackings = TimeTracking.where(identity_id: current_identity.id, ended_at: nil)
+
+    @working_titles = current_identity.time_tracking_protocols.pluck(:protocol_id, :working_title).to_h
   end
 
   def time_tracking_params

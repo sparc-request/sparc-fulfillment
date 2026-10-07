@@ -4,9 +4,10 @@
       .card.h-100
         .card-header.bg-primary.text-white.d-flex.justify-content-between.align-items-center
           %h5 Protocols
-          %button.btn.btn-sm.btn-success#addProtocolBtn{ data: { toggle: "modal", target: "#addProtocolModal" } }
-            = icon('fas', 'plus')
-            Add
+          -# %button.btn.btn-sm.btn-success#addProtocolBtn{ data: { toggle: "modal", target: "#addProtocolModal" } }
+          -#   = icon('fas', 'plus')
+          -#   Add
+          = link_to icon('fas', 'plus') + ' Add', add_protocol_modal_time_trackings_path, remote: true, class: 'btn btn-sm btn-success', id: 'addProtocolBtn'
         .card-body.p-2
           - if @sidebar_items.any?
             .input-group.input-group-sm.mb-2
@@ -22,33 +23,18 @@
         .card-header.bg-primary.text-white
           %h5 Time Tracking
         .card-body
-          %table#timeTrackingsTable{ data: { toggle: 'table', url: time_trackings_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', striped: 'true', sort_name: 'date', sort_order: 'desc', undefined_text: '', row_style: 'timeTrackingRowStyle' } }
-            %thead.bg-primary.text-white
-              %tr
-                %th{ data: { field: 'srid', sortable: 'true' } } SRID
-                %th{ data: { field: 'rmid', sortable: 'true' } } RMID
-                %th{ data: { field: 'status', sortable: 'true' } } Status
-                %th{ data: { field: 'short_title', sortable: 'true' } } Short Title
-                %th{ data: { field: 'pi', sortable: 'true' } } Principal Investigator
-                %th{ data: { field: 'service_name', sortable: 'true' } } Service
-                %th{ data: { field: 'component_name', sortable: 'true' } } Component
-                %th{ data: { field: 'quantity', sort_name: 'raw_quantity', sortable: 'true' } } Qty Fulfilled
-                %th{ data: { field: 'date', sort_name: 'raw_date', sortable: 'true' } } Date Fulfilled
-                %th{ data: { field: 'actions', align: 'center' } } Actions
-
-
-.modal.fade#addProtocolModal{ tabindex: "-1", role: "dialog", aria: { hidden: "true" } }
-  .modal-dialog{ role: "document" }
-    .modal-content
-      = form_tag update_sidebar_time_trackings_path, method: :post do
-        .modal-header
-          %h5.modal-title Select Protocol(s)
-          %button.close{ type: "button", data: { dismiss: "modal" }, aria: { label: "Close" } }
-            %span{ aria: { hidden: "true" } } &times;
-        .modal-body
-          .form-group
-            %label.required Protocol(s)
-            = select_tag "protocol_ids", options_for_select(@available_protocols, current_identity.time_tracking_protocols.pluck(:protocol_id)), class: "form-control selectpicker", multiple: true, title: "Select Protocol(s)...", data: { live_search: "true", width: "100%", selected_text_format: "count>2", size: 10, actions_box: "true" }
-        .modal-footer
-          %button.btn.btn-secondary{ type: "button", data: { dismiss: "modal" } } Close
-          = submit_tag "Submit", class: "btn btn-primary"
+          .table-responsive
+            %table#timeTrackingsTable{ data: { toggle: 'table', url: time_trackings_path(format: :json), search: 'true', show_columns: 'true', show_refresh: 'true', striped: 'true', sort_name: 'date', sort_order: 'desc', undefined_text: '', row_style: 'timeTrackingRowStyle', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], cookie: 'true', cookie_id_table: 'time-trackings-table' } }
+              %thead.bg-primary.text-white
+                %tr
+                  %th{ data: { field: 'srid', sortable: 'true' } } SRID
+                  %th{ data: { field: 'rmid', sortable: 'true', visible: 'false' } } RMID
+                  %th{ data: { field: 'status', sortable: 'true', visible: 'false' } } Status
+                  %th{ data: { field: 'short_title', sortable: 'true' } } Short Title
+                  %th{ data: { field: 'pi', sortable: 'true' } } Principal Investigator
+                  %th{ data: { field: 'service_name', sortable: 'true' } } Service
+                  %th{ data: { field: 'component_name', sortable: 'true' } } Component
+                  %th{ data: { field: 'quantity', sort_name: 'raw_quantity', sortable: 'true' } } Qty Fulfilled
+                  %th{ data: { field: 'date', sort_name: 'raw_date', sortable: 'true' } } Date Fulfilled
+                  %th{ data: { field: 'notes', sortable: 'true' } } Notes
+                  %th{ data: { field: 'actions', align: 'center' } } Actions
