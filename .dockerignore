@@ -4,3 +4,6 @@ tmp/*
 .DS_Store
 node_modules
 yarn-error.log
+*.sql
+*.dump
+coverage/
