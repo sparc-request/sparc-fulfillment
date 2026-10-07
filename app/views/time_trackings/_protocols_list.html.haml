@@ -2,7 +2,7 @@
   - items.each do |item|
     - protocol = item.protocol
     - is_open = @open_protocol_ids.to_a.include?(protocol.id)
-    .tree-node.border-0.mb-1
+    .tree-node.protocol-node.border-0.mb-1
       = render 'sidebar_protocol', item: item, tab_prefix: tab_prefix, is_open: is_open
 
       .collapse{ id: "#{tab_prefix}-collapse-protocol-#{protocol.id}", class: (is_open ? 'show' : nil) }
@@ -28,7 +28,7 @@
                           - active_tt = time_trackings.find { |tt| tt.line_item_id == line_item.id && tt.component_name == comp_name && tt.ended_at.nil? }
                           %span.sidebar-span-comp{ data: { line_item_id: line_item.id, component_name: comp_name } }
                             - if active_tt
-                              = link_to 'Stop', stop_time_tracking_path(active_tt), method: :put, remote: true, class: 'btn btn-sm btn-danger py-0 px-2'
+                              = link_to icon('fas', 'stop fa-lg'),  stop_time_tracking_path(active_tt), method: :put, remote: true, class: 'btn btn-sm btn-danger p-1', title: 'Stop'
                             - else
                               = link_to icon('far', 'clock'), time_trackings_path(time_tracking: { protocol_id: protocol.id, line_item_id: line_item.id, component_name: comp_name }), method: :post, remote: true, class: 'text-secondary'
                 - else
@@ -38,7 +38,7 @@
                     - active_tt = time_trackings.find { |tt| tt.line_item_id == line_item.id && tt.component_name.blank? && tt.ended_at.nil? }
                     %span{ id: "#{tab_prefix}-sidebar-span-li-#{line_item.id}" }
                       - if active_tt
-                        = link_to 'Stop', stop_time_tracking_path(active_tt), method: :put, remote: true, class: 'btn btn-sm btn-danger py-0 px-2'
+                        = link_to icon('fas', 'stop fa-lg'), stop_time_tracking_path(active_tt), method: :put, remote: true, class: 'btn btn-sm btn-danger p-1', title: 'Stop'
                       - else
                         = link_to icon('far', 'clock'), time_trackings_path(time_tracking: { protocol_id: protocol.id, line_item_id: line_item.id }), method: :post, remote: true, class: 'text-secondary'
 

@@ -21,7 +21,7 @@ $(document).ready(function() {
 
   $(document).on('keyup', '#sidebarSearch', function() {
     var query = $(this).val().toLowerCase();
-    $('.tab-content .tree-node').each(function() {
+    $('.tab-content .protocol-node').each(function() {
       var text = $(this).text().toLowerCase();
       $(this).toggle(text.includes(query));
     });
