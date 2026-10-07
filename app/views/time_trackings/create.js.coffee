@@ -9,9 +9,9 @@ $('#favorites-sidebar-span-li-<%= prev_timer.line_item_id %>, #all-sidebar-span-
 
 # 2) Flip newly started timer's button to red Stop
 <% if @time_tracking.component_name.present? %>
-$(".sidebar-span-comp[data-line-item-id='<%= @time_tracking.line_item_id %>'][data-component-name='<%= j @time_tracking.component_name %>']").html("<%= j link_to('Stop', stop_time_tracking_path(@time_tracking), method: :put, remote: true, class: 'btn btn-sm btn-danger py-0 px-2') %>")
+$(".sidebar-span-comp[data-line-item-id='<%= @time_tracking.line_item_id %>'][data-component-name='<%= j @time_tracking.component_name %>']").html("<%= j link_to(icon('fas', 'stop fa-lg'), stop_time_tracking_path(@time_tracking), method: :put, remote: true, class: 'btn btn-sm btn-danger p-1', title: 'Stop') %>")
 <% else %>
-$('#favorites-sidebar-span-li-<%= @time_tracking.line_item_id %>, #all-sidebar-span-li-<%= @time_tracking.line_item_id %>').html("<%= j link_to('Stop', stop_time_tracking_path(@time_tracking), method: :put, remote: true, class: 'btn btn-sm btn-danger py-0 px-2') %>")
+$('#favorites-sidebar-span-li-<%= @time_tracking.line_item_id %>, #all-sidebar-span-li-<%= @time_tracking.line_item_id %>').html("<%= j link_to(icon('fas', 'stop fa-lg'), stop_time_tracking_path(@time_tracking), method: :put, remote: true, class: 'btn btn-sm btn-danger p-1', title: 'Stop') %>")
 <% end %>
 
 $('#timeTrackingsTable').bootstrapTable('refresh')

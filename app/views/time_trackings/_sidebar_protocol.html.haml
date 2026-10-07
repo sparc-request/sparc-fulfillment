@@ -13,6 +13,6 @@
     = label
   = link_to icon('fas', 'edit'), edit_protocol_title_time_trackings_path(protocol_id: protocol.id), remote: true, class: 'btn btn-sm btn-link text-muted p-1 mr-1', title: 'Edit working title'
   = link_to icon(star_icon, 'star'), toggle_favorite_protocol_time_trackings_path(protocol_id: protocol.id), method: :put, remote: true, class: 'btn btn-sm btn-link text-warning p-1 mr-1', title: "Toggle Favorite"
-  = link_to icon('fas', 'trash'), remove_protocol_time_trackings_path(protocol_id: protocol.id), method: :delete, remote: true, data: { confirm_swal: 'true', text: 'Are you sure you want to remove this protocol from your sidebar?' }, class: 'btn btn-sm btn-link text-danger p-1', title: 'Remove protocol'
+  = link_to icon('fas', 'trash-alt'), remove_protocol_time_trackings_path(protocol_id: protocol.id), method: :delete, remote: true, data: { confirm_swal: 'true', text: 'Are you sure you want to remove the protocol from your list?' }, class: 'btn btn-sm btn-link text-danger p-1', title: 'Remove protocol'
 
 

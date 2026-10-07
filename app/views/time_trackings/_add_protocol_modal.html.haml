@@ -1,0 +1,15 @@
+.modal-dialog{ role: "document" }
+  .modal-content
+    = form_tag update_sidebar_time_trackings_path, method: :post do
+      .modal-header
+        %h5.modal-title Select Protocol(s)
+        %button.close{ type: "button", data: { dismiss: "modal" }, aria: { label: "Close" } }
+          %span{ aria: { hidden: "true" } } &times;
+      .modal-body
+        .form-group
+          %label.required Protocol(s)
+          = select_tag "protocol_ids", options_for_select(available_protocols, selected_protocol_ids), class: "form-control selectpicker", multiple: true, title: "Select Protocol(s)...", data: { live_search: "true", width: "100%", selected_text_format: "count>2", size: 10, actions_box: "true" }
+      .modal-footer
+        %button.btn.btn-secondary{ type: "button", data: { dismiss: "modal" } } Close
+        = submit_tag "Submit", class: "btn btn-primary"
+
