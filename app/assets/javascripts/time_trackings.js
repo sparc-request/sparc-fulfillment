@@ -27,12 +27,12 @@ window.timeTrackingCustomSort = function(sortName, sortOrder, data) {
     var valA = a[field] != null ? a[field] : '';
     var valB = b[field] != null ? b[field] : '';
 
-    // handle number sorting
+    // Handle number sorting
     if (typeof valA === 'number' && typeof valB === 'number') {
       return (valA - valB) * order;
     }
 
-    // handle string sorting
+    // Handle string sorting
     return String(valA).localeCompare(String(valB), undefined, { numeric: true }) * order;
   });
 };
@@ -57,7 +57,7 @@ $(document).ready(function() {
     var query = $(this).val().toLowerCase();
     $('#all-tab .protocol-node').each(function() {
       var text = $(this).text().toLowerCase();
-      $(this).toggle(text.includes(query)); // if query text in
+      $(this).toggle(text.includes(query));
     });
   });
 

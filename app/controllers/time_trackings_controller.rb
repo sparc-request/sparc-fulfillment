@@ -169,9 +169,6 @@ def add_protocol_modal
       Sparc::Protocol.arel_table[:short_title]
     )
 
-  # @available_protocols = protocols_data.map do |id, sparc_id, ssr_id, short_title|
-  #   ["(#{sparc_id}-#{ssr_id}) #{short_title}".truncate(90), id]
-  # end.sort_by(&:first)
   @available_protocols = protocols_data
     .sort_by { |_id, sparc_id, ssr_id, _title| [sparc_id.to_i, ssr_id.to_i] }
     .map do |id, sparc_id, ssr_id, short_title|
