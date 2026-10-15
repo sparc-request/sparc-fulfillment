@@ -78,7 +78,7 @@ class TimeTrackingsController < ApplicationController
       diff_hours = ((ended_at - started_at) / 3600.0).round(2)
     end
 
-    @time_tracking.update(
+    if @time_tracking.update(
       date: parsed_date || date_str,
       started_at: started_at || time_tracking_params[:started_at],
       ended_at: ended_at || time_tracking_params[:ended_at],
@@ -86,6 +86,9 @@ class TimeTrackingsController < ApplicationController
       component_name: time_tracking_params[:component_name],
       notes: time_tracking_params[:notes]
     )
+    else
+      @errors = @time_tracking.errors
+    end
 
     respond_to do |format|
       format.js
@@ -166,9 +169,14 @@ def add_protocol_modal
       Sparc::Protocol.arel_table[:short_title]
     )
 
-  @available_protocols = protocols_data.map do |id, sparc_id, ssr_id, short_title|
-    ["(#{sparc_id}-#{ssr_id}) #{short_title}".truncate(90), id]
-  end.sort_by(&:first)
+  # @available_protocols = protocols_data.map do |id, sparc_id, ssr_id, short_title|
+  #   ["(#{sparc_id}-#{ssr_id}) #{short_title}".truncate(90), id]
+  # end.sort_by(&:first)
+  @available_protocols = protocols_data
+    .sort_by { |_id, sparc_id, ssr_id, _title| [sparc_id.to_i, ssr_id.to_i] }
+    .map do |id, sparc_id, ssr_id, short_title|
+      ["(#{sparc_id}-#{ssr_id}) #{short_title}".truncate(90), id]
+    end
 
   @selected_protocol_ids = current_identity.time_tracking_protocols.pluck(:protocol_id)
 

@@ -2,3 +2,4 @@ $("#protocolsTree").html("<%= j render 'protocols_tree', sidebar_items: @sidebar
 
 $("#modalContainer").modal('hide')
 
+$('#timeTrackingsTable').bootstrapTable('refresh')

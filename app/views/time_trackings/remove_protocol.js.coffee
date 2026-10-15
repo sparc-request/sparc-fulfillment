@@ -2,4 +2,6 @@ $("#protocolsTree").html("<%= j render 'protocols_tree', sidebar_items: @sidebar
 
 $("#protocol_ids").selectpicker('val', <%= current_identity.time_tracking_protocols.pluck(:protocol_id).map(&:to_s).to_json.html_safe %>)
 
+$('#sidebarSearch').trigger('keyup')
+
 NProgress.done()
