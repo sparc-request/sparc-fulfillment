@@ -6,6 +6,7 @@
         %button.close{ type: "button", data: { dismiss: "modal" }, aria: { label: "Close" } }
           %span{ aria: { hidden: "true" } } &times;
       .modal-body
+        #modal_errors
         .row.mb-3
           .col-12
             %strong.text-dark= time_tracking.protocol&.srid
@@ -46,8 +47,8 @@
 
         - if time_tracking.line_item&.service&.components.present?
           .form-group.row
-            %label.col-sm-3.col-form-label Fulfillment Component
-            .col-sm-7
+            %label.col-sm-4.col-form-label Fulfillment Component *
+            .col-sm-6
               = select_tag 'time_tracking[component_name]', options_for_select(time_tracking.line_item.service.components_list, time_tracking.component_name), include_blank: 'Please Select', class: 'form-control selectpicker', data: { width: '100%' }
 
         .form-group.row

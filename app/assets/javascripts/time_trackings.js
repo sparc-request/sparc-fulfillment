@@ -5,6 +5,39 @@ window.timeTrackingRowStyle = function(row, index) {
   return {};
 };
 
+window.timeTrackingCustomSort = function(sortName, sortOrder, data) {
+  // Multiply by -1 to reverse the sort order
+  var order = sortOrder === 'desc' ? -1 : 1;
+
+  // For date, quantity or srid, swap in raw values so sorting works
+  var fieldMap = {
+    'date': 'raw_date',
+    'quantity': 'raw_quantity',
+    'srid': 'raw_srid'
+  };
+  var field = fieldMap[sortName] || sortName;
+
+  data.sort(function(a, b) {
+    // Running timer always first
+    if (a.is_active !== b.is_active) {
+      return a.is_active ? -1 : 1;
+    }
+
+    // Remaining rows sorted by chosen column
+    var valA = a[field] != null ? a[field] : '';
+    var valB = b[field] != null ? b[field] : '';
+
+    // Handle number sorting
+    if (typeof valA === 'number' && typeof valB === 'number') {
+      return (valA - valB) * order;
+    }
+
+    // Handle string sorting
+    return String(valA).localeCompare(String(valB), undefined, { numeric: true }) * order;
+  });
+};
+
+// Set qty and start/end times in the time tracking modal form
 $(document).ready(function() {
   $(document).on('change', '#timeTrackingStartTime, #timeTrackingEndTime', function(event) {
     var startVal = $('#timeTrackingStartTime').val();
@@ -19,9 +52,10 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on('keyup', '#sidebarSearch', function() {
+  // Hide/Show sidebar items based on search query
+  $(document).on('keyup input', '#sidebarSearch', function() {
     var query = $(this).val().toLowerCase();
-    $('.tab-content .protocol-node').each(function() {
+    $('#all-tab .protocol-node').each(function() {
       var text = $(this).text().toLowerCase();
       $(this).toggle(text.includes(query));
     });
