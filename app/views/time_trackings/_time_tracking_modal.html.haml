@@ -17,8 +17,8 @@
               %strong.text-dark= time_tracking.component_name
 
         .form-group.row
-          %label.col-sm-3.col-form-label Fulfillment Date *
-          .col-sm-7
+          %label.col-sm-4.col-form-label Fulfillment Date *
+          .col-sm-8
             .input-group.datetimepicker.date{ id: 'timeTrackingDatePicker', data: { target_input: 'nearest' } }
               = text_field_tag 'time_tracking[date]', time_tracking.date&.strftime('%m/%d/%Y'), class: 'form-control datetimepicker-input', readonly: true, data: { target: '#timeTrackingDatePicker', toggle: 'datetimepicker' }
               .input-group-append{ data: { toggle: 'datetimepicker', target: '#timeTrackingDatePicker' } }
@@ -26,34 +26,34 @@
                   %span.far.fa-calendar
 
         .form-group.row
-          %label.col-sm-3.col-form-label Start Time *
-          .col-sm-7
+          %label.col-sm-4.col-form-label Start Time *
+          .col-sm-8
             = time_field_tag 'time_tracking[started_at]', time_tracking.started_at&.strftime('%H:%M'), class: 'form-control', required: true, id: 'timeTrackingStartTime'
 
         .form-group.row
-          %label.col-sm-3.col-form-label End Time *
-          .col-sm-7
+          %label.col-sm-4.col-form-label End Time *
+          .col-sm-8
             = time_field_tag 'time_tracking[ended_at]', time_tracking.ended_at&.strftime('%H:%M'), class: 'form-control', required: true, id: 'timeTrackingEndTime'
 
         .form-group.row
-          %label.col-sm-3.col-form-label Qty
-          .col-sm-7
+          %label.col-sm-4.col-form-label Qty
+          .col-sm-8
             = number_field_tag 'time_tracking[quantity]', number_with_precision(time_tracking.quantity, precision: 2), class: 'form-control', step: '0.01', readonly: true, id: 'timeTrackingQty'
 
         .form-group.row
-          %label.col-sm-3.col-form-label Performed By *
-          .col-sm-7
+          %label.col-sm-4.col-form-label Performed By *
+          .col-sm-8
             = text_field_tag 'performed_by', time_tracking.identity&.full_name, class: 'form-control', readonly: true
 
         - if time_tracking.line_item&.service&.components.present?
           .form-group.row
             %label.col-sm-4.col-form-label Fulfillment Component *
-            .col-sm-6
+            .col-sm-8
               = select_tag 'time_tracking[component_name]', options_for_select(time_tracking.line_item.service.components_list, time_tracking.component_name), include_blank: 'Please Select', class: 'form-control selectpicker', data: { width: '100%' }
 
         .form-group.row
-          %label.col-sm-3.col-form-label Notes
-          .col-sm-7
+          %label.col-sm-4.col-form-label Notes
+          .col-sm-8
             = text_area_tag 'time_tracking[notes]', time_tracking.notes, class: 'form-control', rows: 3
 
       .modal-footer
