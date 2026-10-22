@@ -32,15 +32,13 @@ class InvoiceReport < Report
   end
 
   def generate(document)
-    #We want to filter from 00:00:00 in the local time zone,
-    #then convert to UTC to match database times
+    # Filter from 00:00:00 in the local time zone to UTC
     @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc
-    #We want to filter from 11:59:59 in the local time zone,
-    #then convert to UTC to match database times
+    # Filter from 11:59:59 in the local time zone to UTC
     @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
-    #This allows us to optionally filter by services
-    @specific_services = @params[:services].present? ? @params[:services].map{|service| service.to_i} : []
+    # Option to filter by services
+    @specific_services = @params[:services].present? ? @params[:services].map(&:to_i) : []
 
     document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
@@ -48,27 +46,45 @@ class InvoiceReport < Report
       csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
       csv << [""]
 
-      protocols = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy, fulfillments: [:components, :performer, line_item: [:admin_rates], service: [:organization]], procedures: [:visit, service: [:organization, :pricing_maps], appointment: [:visit_group]]).where(id: @params[:protocols])
-
+      # OPTIMIZATION 1: Memory-Safe Sorting
+      # We load ONLY the Protocol and PI into memory to determine the sort order.
+      # We avoid loading the massive child associations until we actually process the protocol.
+      protocols_for_sorting = Protocol.includes(:pi).where(id: @params[:protocols])
+      
       if @params[:sort_by] == "Protocol ID"
-        protocols = protocols.sort_by(&:sparc_id)
+        protocols_for_sorting = protocols_for_sorting.sort_by(&:sparc_id)
       else
-        protocols = protocols.sort_by{ |protocol| protocol.pi&.last_name.to_s }
+        protocols_for_sorting = protocols_for_sorting.sort_by { |protocol| protocol.pi&.last_name.to_s }
       end
 
-      if @params[:sort_order] == "DESC"
-        protocols.reverse!
-      end
+      protocols_for_sorting.reverse! if @params[:sort_order] == "DESC"
+      
+      # Grab just the ordered IDs to control our processing loop
+      sorted_protocol_ids = protocols_for_sorting.map(&:id)
 
-      protocols.each do |protocol|
+      # OPTIMIZATION 2: Batched Processing
+      # By iterating over the IDs, we load one Protocol (and its heavy associations) into 
+      # memory at a time. When the loop finishes, Ruby's GC sweeps it away.
+      sorted_protocol_ids.each do |protocol_id|
+        protocol = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy).find(protocol_id)
+        
         total = 0
         total_with_subsidy = 0
 
-        # fulfillments = protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).where(@specific_services)
+        # OPTIMIZATION 3: Database-Level Filtering
+        # We moved the date filtering from Ruby's `.select` into ActiveRecord's `.where`.
+        # This prevents loading decades of history into RAM just to find 5 records.
+        fulfillments = protocol.fulfillments
+                               .includes(:components, :performer, line_item: [:admin_rates], service: [:organization])
+                               .where(fulfilled_at: @start_date..@end_date)
+        
+        fulfillments = fulfillments.where(service_id: @specific_services) if @specific_services.present?
 
-        fulfillments = protocol.fulfillments.select{ |fulfillment| fulfillment.fulfilled_at >= @start_date && fulfillment.fulfilled_at <= @end_date && (@specific_services.present? ? @specific_services.include?(fulfillment.service_id) : true)}
-
-        procedures = protocol.procedures.select{|procedure| procedure.completed_date != nil && procedure.completed_date >= @start_date && procedure.completed_date <= @end_date && procedure.billing_type == 'research_billing_qty' && (@specific_services.present? ? @specific_services.include?(procedure.service_id) : true)}
+        procedures = protocol.procedures
+                             .includes(:visit, service: [:organization, :pricing_maps], appointment: [:visit_group])
+                             .where(completed_date: @start_date..@end_date, billing_type: 'research_billing_qty')
+                             
+        procedures = procedures.where(service_id: @specific_services) if @specific_services.present?
 
         if fulfillments.any?
           csv << ["Non-clinical Services"]
@@ -175,10 +191,9 @@ class InvoiceReport < Report
 
           csv << header
 
+          # Nested group_by is now safe because the dataset is strictly filtered to only matching records
           procedures.group_by{|procedure| procedure.service.organization}.each do |org, org_group|
-
             org_group.group_by{|procedure| procedure.appointment.visit_group}.each do |visit_group, vg_group|
-
               vg_group.group_by(&:appointment).each do |appointment, appointment_group|
                 protocols_participant = appointment.protocols_participant
                 participant = protocols_participant.participant
@@ -201,6 +216,7 @@ class InvoiceReport < Report
                     data << org.name
                     data << service_name
                     data << format_date(procedure.completed_date)
+                    
                     if @params[:remove_participant_identifiers] == "true"
                       data << "[REDACTED]"
                       data << "[REDACTED]"
@@ -208,8 +224,7 @@ class InvoiceReport < Report
                       data << participant.full_name
                       data << participant.label || protocols_participant.label
                     end
-                    # data << participant.full_name
-                    # data << participant.label || protocols_participant.label
+                    
                     data << procedure.notes.map(&:comment).join(' | ') if @params[:include_notes] == "true"
                     data << appointment.name
                     data << format_date(appointment.start_date)
@@ -233,6 +248,7 @@ class InvoiceReport < Report
             end
           end
         end
+        
         if fulfillments.any? or procedures.any?
           csv << [""]
 
