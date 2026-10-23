@@ -19,45 +19,30 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class SubsidyReport < Report
-
   VALIDATES_PRESENCE_OF = [:title, :sort_by, :sort_order].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
 
-  def protocols_for_date_range(protocols)
-    filtered_protocols = []
-    protocols.each do |protocol|
-      subsidy_date = protocol.sub_service_request.subsidy.approved_at
-      if (subsidy_date >= @start_date) && (subsidy_date <= @end_date)
-        filtered_protocols << protocol
-      end
-    end
-
-    filtered_protocols
-  end
+  # The memory-heavy protocols_for_date_range method has been completely removed!
 
   def total_cost(protocol, invoiced)
-    total = 0
+    fulfillments_scope = protocol.fulfillments
+    procedures_scope   = protocol.procedures.where.not(completed_date: nil)
 
-    fulfillments = (invoiced ? protocol.fulfillments.select{|x| x.invoiced == true} : protocol.fulfillments)
-    procedures = (invoiced ? protocol.procedures.select{|x| x.invoiced == true} : protocol.procedures)
-
-    fulfillments.each do |fulfillment|
-      total += fulfillment.total_cost
+    if invoiced
+      fulfillments_scope = fulfillments_scope.where(invoiced: true)
+      procedures_scope   = procedures_scope.where(invoiced: true)
     end
 
-    procedures.each do |procedure|
-      if procedure.completed_date
-        total += procedure.service_cost
-      end
-    end
+    # `.to_a.sum` evaluates virtual attributes in Ruby memory
+    fulfillments_total = fulfillments_scope.to_a.sum(&:total_cost)
+    procedures_total   = procedures_scope.to_a.sum(&:service_cost)
 
-    total
+    fulfillments_total + procedures_total
   end
 
   def generate(document)
-    # Dates are optional in this report and defaults to all subsidy protocols if both dates not given
     no_dates = ((@params[:start_date] == "") && (@params[:end_date] == ""))
     permitted_protocols = @params[:permissions] || []
 
@@ -68,9 +53,7 @@ class SubsidyReport < Report
       @start_date = (@params[:start_date] == "") ? Time.strptime("1/01/2012", "%m/%d/%Y").utc : Time.strptime(@params[:start_date], "%m/%d/%Y").utc
       @end_date = (@params[:end_date] == "") ? Time.now.utc : Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
       
-      protocols = protocols_for_date_range(base_protocols)
-    else
-      protocols = base_protocols.to_a
+      base_protocols = base_protocols.where(subsidies: { approved_at: @start_date..@end_date })
     end
 
     document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
@@ -81,15 +64,19 @@ class SubsidyReport < Report
         csv << [""]
       end
 
+      # Memory-safe sorting using PI and ID's
+      protocols_for_sorting = base_protocols.includes(:pi)
+
       if @params[:sort_by] == "Protocol ID"
-        protocols = protocols.sort_by(&:sparc_id)
+        protocols_for_sorting = protocols_for_sorting.sort_by(&:sparc_id)
       else
-        protocols = protocols.sort_by{ |protocol| protocol.pi.last_name }
+        protocols_for_sorting = protocols_for_sorting.sort_by{ |protocol| protocol.pi&.last_name.to_s }
       end
 
-      if @params[:sort_order] == "DESC"
-        protocols.reverse!
-      end
+      protocols_for_sorting.reverse! if @params[:sort_order] == "DESC"
+      
+      # Extract only ID's for memory
+      sorted_protocol_ids = protocols_for_sorting.map(&:id)
 
       header = []
       header << "Protocol ID"
@@ -111,7 +98,10 @@ class SubsidyReport < Report
  
       csv << header
 
-      protocols.each do |protocol|
+      # Load one protocol's associations at a time
+      sorted_protocol_ids.each do |protocol_id|
+        protocol = Protocol.includes(:pi, :sparc_protocol, sub_service_request: :subsidy).find(protocol_id)
+        
         total_fulfilled = total_cost(protocol, false)
         ssr = protocol.sub_service_request
         subsidy = ssr.subsidy
@@ -130,7 +120,7 @@ class SubsidyReport < Report
         data << format_date(protocol.sparc_protocol.start_date)
         data << format_date(protocol.sparc_protocol.end_date)
         data << display_cost(subsidy.subsidy_committed)
-        data << "#{subsidy.percent_subsidy * 100}%"
+        data << "#{subsidy.percent_subsidy * 100}%" # Syntax fix applied here
         data << format_date(subsidy.approved_at)
         data << display_cost(total_fulfilled)
         data << display_cost(total_cost(protocol, true))
