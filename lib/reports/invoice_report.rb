@@ -46,9 +46,7 @@ class InvoiceReport < Report
       csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
       csv << [""]
 
-      # OPTIMIZATION 1: Memory-Safe Sorting
-      # We load ONLY the Protocol and PI into memory to determine the sort order.
-      # We avoid loading the massive child associations until we actually process the protocol.
+      # Memory-Safe Sorting: Load ONLY the Protocol and PI into memory to determine the sort order, and avoid loading child associations until the protocol is processed.
       protocols_for_sorting = Protocol.includes(:pi).where(id: @params[:protocols])
       
       if @params[:sort_by] == "Protocol ID"
@@ -59,21 +57,17 @@ class InvoiceReport < Report
 
       protocols_for_sorting.reverse! if @params[:sort_order] == "DESC"
       
-      # Grab just the ordered IDs to control our processing loop
+      # Grab ONLY the ordered IDs to control the processing loop
       sorted_protocol_ids = protocols_for_sorting.map(&:id)
 
-      # OPTIMIZATION 2: Batched Processing
-      # By iterating over the IDs, we load one Protocol (and its heavy associations) into 
-      # memory at a time. When the loop finishes, Ruby's GC sweeps it away.
+      # Batched Processing: By iterating over the IDs, load one protocol (and its associations) into memory at a time. When the loop finishes, Ruby's garbage collector gets rid of it.
       sorted_protocol_ids.each do |protocol_id|
         protocol = Protocol.includes(:pi, :sparc_protocol, :project_roles, :sub_service_request, :subsidy).find(protocol_id)
         
         total = 0
         total_with_subsidy = 0
 
-        # OPTIMIZATION 3: Database-Level Filtering
-        # We moved the date filtering from Ruby's `.select` into ActiveRecord's `.where`.
-        # This prevents loading decades of history into RAM just to find 5 records.
+        # Database-Level Filtering: Changed date filtering from the Ruby `.select` method to ActiveRecord's `.where` method, preventing the loading years of history into RAM just to find a few records.
         fulfillments = protocol.fulfillments
                                .includes(:components, :performer, line_item: [:admin_rates], service: [:organization])
                                .where(fulfilled_at: @start_date..@end_date)
@@ -191,7 +185,7 @@ class InvoiceReport < Report
 
           csv << header
 
-          # Nested group_by is now safe because the dataset is strictly filtered to only matching records
+          # Nested group_by is OK because the dataset is strictly filtered to only matching records
           procedures.group_by{|procedure| procedure.service.organization}.each do |org, org_group|
             org_group.group_by{|procedure| procedure.appointment.visit_group}.each do |visit_group, vg_group|
               vg_group.group_by(&:appointment).each do |appointment, appointment_group|
