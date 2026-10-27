@@ -23,6 +23,7 @@ class FundingSourceAuditingReport < Report
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
+  require 'yaml'
 
   def generate(document)
     start_date = Time.strptime(@params[:start_date], "%m/%d/%Y")
@@ -35,19 +36,18 @@ class FundingSourceAuditingReport < Report
     document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     @organizations = IdentityOrganizations.new(@params[:identity_id]).fulfillment_organizations_with_protocols
-
     @sparc_protocol_ids = Protocol.where(id: @params[:protocols]).pluck(:sparc_id).uniq
 
     CSV.open(document.path, "wb") do |csv|
-
       csv << ["Report Parameters:"]
-
       csv << ["Funding Source Changed From:", formatted_start_date, "Funding Source Changed To:", formatted_end_date]
 
       if @params[:organizations].map(&:to_i).sort == @organizations.map(&:id).sort
         csv << ["Organization(s):", "All Organizations"]
       else
-        csv << ["Organization(s):", @params[:organizations].map{|org_id| Organization.find(org_id).name}.join(', ')]
+        # Using pluck to avoid loading all of Organizations into memory
+        org_names = Organization.where(id: @params[:organizations]).pluck(:name)
+        csv << ["Organization(s):", org_names.join(', ')]
       end
 
       if @params[:all_protocols_selected] == 'true'
@@ -88,7 +88,13 @@ class FundingSourceAuditingReport < Report
       protocols_by_sparc_id = protocols.index_by(&:sparc_id)
       sparc_protocol_ids = protocols_by_sparc_id.keys
 
-      audits = Sparc::Audit.where(auditable_type: "Protocol", auditable_id: sparc_protocol_ids, created_at: @start_date..@end_date, action: "update").select do |audit|
+      # Filter audits on the database side with LIKE
+      audits = Sparc::Audit.where(
+        auditable_type: "Protocol",
+        auditable_id: sparc_protocol_ids,
+        created_at: @start_date..@end_date,
+        action: "update"
+      ).where("audited_changes LIKE ?", "%funding_source%").select do |audit|
         audited_changes = YAML.unsafe_load(audit.audited_changes)
         audited_changes.key?('funding_source')
       end
@@ -96,60 +102,62 @@ class FundingSourceAuditingReport < Report
       if @params[:sort_by] == "Protocol ID"
         audits.sort_by!(&:auditable_id)
       else
-        audits = audits.sort_by{ |audit| protocols_by_sparc_id[audit.auditable_id].pi.last_name }
+        audits.sort_by! { |audit| protocols_by_sparc_id[audit.auditable_id].pi.last_name }
       end
 
-      if @params[:sort_order] == "DESC"
-        audits.reverse!
-      end
+      audits.reverse! if @params[:sort_order] == "DESC"
 
       audits.each do |audit|
         protocol = protocols_by_sparc_id[audit.auditable_id]
         funding_source_changes = YAML.unsafe_load(audit.audited_changes)
 
-        fulfillment_protocols = protocols.select{|p| p.sparc_id == audit.auditable_id}
-        fulfillment_protocols.sort_by!{|p| p.sub_service_request.ssr_id}
-        if @params[:sort_order] == "DESC"
-          fulfillment_protocols.reverse!
-        end
+        fulfillment_protocols = protocols.select { |p| p.sparc_id == audit.auditable_id }
+        fulfillment_protocols.sort_by! { |p| p.sub_service_request.ssr_id }
+        fulfillment_protocols.reverse! if @params[:sort_order] == "DESC"
+
         fulfillment_protocols.each do |fulfillment_protocol|
           fulfilled_services = []
           fulfilled_services.concat(fulfillment_protocol.fulfillments.includes(service: :organization))
-          fulfilled_services.concat(fulfillment_protocol.procedures.includes(service: :organization).select{|procedure| procedure.completed_date != nil && procedure.billing_type == 'research_billing_qty'})
+          
+          valid_procedures = fulfillment_protocol.procedures.includes(service: :organization).select do |procedure|
+            procedure.completed_date != nil && procedure.billing_type == 'research_billing_qty'
+          end
+          fulfilled_services.concat(valid_procedures)
 
-          fulfilled_services_grouped_by_org = fulfilled_services.group_by{|item| item.service.organization}
+          fulfilled_services_grouped_by_org = fulfilled_services.group_by { |item| item.service.organization }
 
           fulfilled_services_grouped_by_org.each do |org, service_group|
-
-            csv << [
-              ENV['RMID_URL'] ? protocol.research_master_id : nil,
-              protocol.sparc_protocol.id,
-              fulfillment_protocol.sub_service_request.ssr_id,
-              formatted_status(protocol),
-              protocol.short_title,
-              protocol.sparc_protocol&.funding_status&.humanize,
-              protocol.sparc_protocol&.funding_start_date&.strftime("%m/%d/%Y"),
-              funding_source_changes.dig("funding_source", -1)&.humanize,
-              funding_source_changes.dig("funding_source", 0)&.humanize,
-              format_date(audit.created_at),
-              protocol.pi&.full_name,
-              protocol.pi&.professional_org_lookup("institution"),
-              protocol.billing_business_managers.map(&:full_name).join(', '),
-              service_group.any? ? org.name : "",
-              service_group.any? ? service_group.map{|s| s.service.name }.uniq.join(', ') : "",
-              service_group.any?(&:invoiced) ? "Yes" : service_group.any? ? "No" : ""
-            ]
-          rescue => e
-            Rails.logger.info "#"*20+" An error occured while processing organization #{org.id}: #{e.message}"
+            begin
+              csv << [
+                ENV['RMID_URL'] ? protocol.research_master_id : nil,
+                protocol.sparc_protocol.id,
+                fulfillment_protocol.sub_service_request.ssr_id,
+                formatted_status(protocol),
+                protocol.short_title,
+                protocol.sparc_protocol&.funding_status&.humanize,
+                protocol.sparc_protocol&.funding_start_date&.strftime("%m/%d/%Y"),
+                funding_source_changes.dig("funding_source", -1)&.humanize,
+                funding_source_changes.dig("funding_source", 0)&.humanize,
+                format_date(audit.created_at),
+                protocol.pi&.full_name,
+                protocol.pi&.professional_org_lookup("institution"),
+                protocol.billing_business_managers.map(&:full_name).join(', '),
+                service_group.any? ? org.name : "",
+                service_group.any? ? service_group.map { |s| s.service.name }.uniq.join(', ') : "",
+                service_group.any?(&:invoiced) ? "Yes" : service_group.any? ? "No" : ""
+              ]
+            rescue => e
+              Rails.logger.info "#"*20+" An error occurred while processing organization #{org.id}: #{e.message}"
+            end
           end
         rescue => e
-          Rails.logger.info "#"*20+" An error occured while processing fulfillment protocol #{fulfillment_protocol.id}: #{e.message}"
+          Rails.logger.info "#"*20+" An error occurred while processing fulfillment protocol #{fulfillment_protocol.id}: #{e.message}"
         end
       rescue => e
-        Rails.logger.info "#"*20+" An error occured while processing protocol #{protocol.id}: #{e.message}"
+        Rails.logger.info "#"*20+" An error occurred while processing protocol #{protocol.id}: #{e.message}"
       end
     end
   rescue => e
-    Rails.logger.info "#"*20+" An error occured while generating the Funding Source Auditing Report: #{e.message}"
+    Rails.logger.info "#"*20+" An error occurred while generating the Funding Source Auditing Report: #{e.message}"
   end
 end
