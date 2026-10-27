@@ -41,31 +41,42 @@ class VisitReport < Report
       csv << report_columns(include_core_procudures)
 
       result_set = ProcedureGroup.joins(appointment: { procedures: { protocols_participant: [:participant, :protocol] }})
-        .where(Protocol.arel_table[:id].in(permitted_protocols)) #filters results according to current user's allowable protocols
+        .where(Protocol.arel_table[:id].in(permitted_protocols))
         .where(Appointment.arel_table[:start_date].gteq(from_start_date)
         .and(Appointment.arel_table[:start_date].lteq(to_start_date))
         .and(Procedure.arel_table[:status].not_eq("unstarted")))
         .pluck(
-        ProtocolsParticipant.arel_table[:protocol_id], #0
-        Participant.arel_table[:last_name], #1
-        Participant.arel_table[:first_name], #2
-        Appointment.arel_table[:name], #3
-        Appointment.arel_table[:start_date], #4
-        Appointment.arel_table[:completed_date], #5
-        Appointment.arel_table[:visit_group_id], #6
-        Appointment.arel_table[:type], #7
-        Appointment.arel_table[:id], #8
-        Procedure.arel_table[:status], #9 (-6)
-        ProcedureGroup.arel_table[:sparc_core_id], #10 (-5)
-        Appointment.arel_table[:contents], #11 (-4)
-        Participant.arel_table[:id], #12 (-3)
-        ProcedureGroup.arel_table[:start_time], #13 (-2)
-        ProcedureGroup.arel_table[:end_time]) #14 (-1)
+          ProtocolsParticipant.arel_table[:protocol_id], #0
+          Participant.arel_table[:last_name], #1
+          Participant.arel_table[:first_name], #2
+          Appointment.arel_table[:name], #3
+          Appointment.arel_table[:start_date], #4
+          Appointment.arel_table[:completed_date], #5
+          Appointment.arel_table[:visit_group_id], #6
+          Appointment.arel_table[:type], #7
+          Appointment.arel_table[:id], #8
+          Procedure.arel_table[:status], #9 (-6)
+          ProcedureGroup.arel_table[:sparc_core_id], #10 (-5)
+          Appointment.arel_table[:contents], #11 (-4)
+          Participant.arel_table[:id], #12 (-3)
+          ProcedureGroup.arel_table[:start_time], #13 (-2)
+          ProcedureGroup.arel_table[:end_time] #14 (-1)
+        )
+
+      # Grab unique IDs
+      appointment_ids = result_set.map { |row| row[8] }.uniq
+      protocol_ids = result_set.map { |row| row[0] }.uniq
+      core_ids = result_set.map { |row| row[10] }.compact.uniq
+
+      # 1 query each instead of a huge number of queries in a loop
+      @appointments_map = Appointment.includes(:procedures).where(id: appointment_ids).index_by(&:id)
+      @protocols_map = Protocol.where(id: protocol_ids).index_by(&:id)
+      @appointment_statuses_map = AppointmentStatus.where(appointment_id: appointment_ids).index_by(&:appointment_id)
+      @organizations_map = Organization.where(id: core_ids).index_by(&:id)
 
       sorted_result_set = sort_result_set(result_set, include_core_procudures)
 
       sorted_result_set.each do |procedure_group_row|
-
         if HAS_RMID
           if include_core_procudures == true
             csv << [
@@ -129,7 +140,6 @@ class VisitReport < Report
 
   def sort_result_set(result_set, core_procedures_option)
     sorted_set = filter_result_set(result_set, core_procedures_option)
-
     sorted_set.sort{ |x, y| x <=> y || 1 }
   end
 
@@ -138,7 +148,9 @@ class VisitReport < Report
   end
 
   def get_core_name(core_id)
-    Organization.name_for_id(core_id)
+    # Fetch from memory instead of DB lookup
+    org = @organizations_map[core_id]
+    org.present? ? org.name : ""
   end
 
   def get_duration(procedure_group_row)
@@ -158,7 +170,8 @@ class VisitReport < Report
   end
 
   def get_statuses(appointment_id)
-    appt_status = AppointmentStatus.find_by(appointment_id: appointment_id)
+    # Fetch from memory instead of N+1 queries using find_by
+    appt_status = @appointment_statuses_map[appointment_id]
     (appt_status.blank? ? "" : appt_status.status)
   end
 
@@ -169,11 +182,15 @@ class VisitReport < Report
     result_set.each do |procedure_group_row|
       appointment_id = procedure_group_row[8]
       core_id = procedure_group_row[10]
-      appointment_record = Appointment.find(appointment_id)
+      
+      appointment_record = @appointments_map[appointment_id]
       group_procedures = appointment_record.procedures.select { |p| p.sparc_core_id == core_id }
+      
       next if Procedure.filter_unavailable_services(group_procedures).empty?
+      
+      protocol = @protocols_map[procedure_group_row[0]]
+
       if core_procedures_option == true
-        protocol = Protocol.find(procedure_group_row[0])
         comparison_array = [
           procedure_group_row[0], #protocol_id
           procedure_group_row[1], #last_name
@@ -195,7 +212,6 @@ class VisitReport < Report
           filtered_set << procedure_group_row
         end
       else
-        protocol = Protocol.find(procedure_group_row[0])
         comparison_array = [
           procedure_group_row[0], #protocol_id
           procedure_group_row[1], #last_name
