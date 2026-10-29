@@ -26,7 +26,13 @@ class StudyScheduleReport < Report
   VISIT_GROUP_OFFSET = 2
 
   def generate(document)
-    @protocol = Protocol.find(@params[:documentable_id])
+    # Eager load complete nested study schedule tree to avoid N+1 queries for visit_groups, line_items, services
+    @protocol = Protocol.includes(
+      arms: [
+        :visit_groups, 
+        { line_items: :service }
+      ]
+    ).find(@params[:documentable_id])
 
     document.update(content_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                                original_filename: "#{@params[:title]}.xlsx")
@@ -84,13 +90,13 @@ class StudyScheduleReport < Report
     rows = Array.new
     visit_groups = arm.visit_groups
     r_quantities = visit_groups.map { |vg| vg.r_quantities_grouped_by_service }
-    t_quantities  = visit_groups.map { |vg| vg.t_quantities_grouped_by_service }
+    t_quantities = visit_groups.map { |vg| vg.t_quantities_grouped_by_service }
 
     arm.line_items.each do |line_item|
-      row             = Array.new
+      row = Array.new
 
       row.push [
-        line_item.service.name,
+        line_item.service.name, # No longer triggers an N+1 database call
         line_item.subject_count,
         (r_quantities.map { |vg| vg[line_item.service.id] }).
           zip(t_quantities.map { |vg| vg[line_item.service.id] })
