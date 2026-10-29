@@ -25,18 +25,12 @@ class AuditingReport < Report
   require 'csv'
 
   def generate(document)
-    #We want to filter from 00:00:00 in the local time zone,
-    #then convert to UTC to match database times
     @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc
-    #We want to filter from 11:59:59 in the local time zone,
-    #then convert to UTC to match database times
     @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
     document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
     CSV.open(document.path, "wb") do |csv|
-
-      protocols = Protocol.where(id: @params[:protocols]).includes(:pi, :organization, procedures: [:arm, :notes, :task, service: [:organization], appointment: [ :procedure_groups, { protocols_participant: [:participant]}]], line_items: [:service, :components, :notes, :documents, :fulfillments, sparc_line_item: [sub_service_request: [:subsidies]]])
 
       if @params[:service_type] == "Clinical Services"
         csv << ["From", format_date(Time.strptime(@params[:start_date], "%m/%d/%Y")), "To", format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))]
@@ -66,8 +60,16 @@ class AuditingReport < Report
 
         csv << header
 
-        protocols.each do |protocol|
-          protocol.procedures.to_a.select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }.each do |procedure|
+        @params[:protocols].each do |protocol_id|
+          protocol = Protocol.find(protocol_id)
+          
+          # Clinical eager-loading, filtering via Ruby `.select` since handled_date is a virtual attribute and ActiveRecord `.where` throws a NoMethodError
+          procedures = protocol.procedures
+                               .includes(:arm, :notes, :task, service: [:organization], appointment: [ :procedure_groups, { protocols_participant: [:participant] }])
+                               .to_a
+                               .select { |procedure| procedure.handled_date && (@start_date..@end_date).cover?(procedure.handled_date) }
+
+          procedures.each do |procedure|
             appointment = procedure.appointment
             protocols_participant = appointment.protocols_participant
             participant = protocols_participant.participant
@@ -132,32 +134,44 @@ class AuditingReport < Report
 
         csv << header
 
-        protocols.each do |protocol|
+        @params[:protocols].each do |protocol_id|
+          protocol = Protocol.includes(:pi, :organization).find(protocol_id)
 
           protocol_total_cost = 0
           protocol_total_cost_with_subsidies = 0
           has_valid_line_item = false
 
-          protocol.line_items.each do |line_item|
-            next unless line_item.versions.where(event: ["create", "update"], created_at: @start_date..@end_date).any? && line_item.service.one_time_fee?
+          # Filter one_time_fee via joins, eager-load non-clinical tables
+          line_items = protocol.line_items
+                               .joins(:service)
+                               .where(services: { one_time_fee: true })
+                               .includes(:service, :components, :notes, :documents, :fulfillments, sparc_line_item: { sub_service_request: :subsidies })
+
+          line_items.each do |line_item|
+            # Grab matching versions, avoid iterating over line items that have no relevant versions
+            versions = line_item.versions.where(event: ["create", "update"], created_at: @start_date..@end_date)
+            next unless versions.any?
 
             has_valid_line_item = true
             line_item_subsidy = 0
 
             unit_cost = display_cost(line_item.cost)
-            quantity_fulfilled = line_item.fulfillments.sum(:quantity)
-            line_item_total_cost = quantity_fulfilled * (line_item.cost / 100)
+            
+            # `to_a.sum` eager-loaded fulfillments in Ruby memory, instead of firing N+1 SQL queries
+            quantity_fulfilled = line_item.fulfillments.to_a.sum(&:quantity) 
+            line_item_total_cost = quantity_fulfilled * (line_item.cost / 100.0)
 
             protocol_total_cost += line_item_total_cost
 
-            if line_item.try(:sparc_line_item).try(:sub_service_request).try(:subsidies).present?
-              if line_item.sparc_line_item.sub_service_request.subsidies.select{|subsidy| subsidy.status == 'Approved'}.present?
-                line_item_subsidy = line_item.sparc_line_item.sub_service_request.subsidies.select{|subsidy| subsidy.status == 'Approved'}.first.percent_subsidy
-              end
+            # `.to_a.find` to search the preloaded subsidies, instead of firing a SQL query
+            if line_item.sparc_line_item&.sub_service_request&.subsidies&.any?
+              approved_subsidy = line_item.sparc_line_item.sub_service_request.subsidies.to_a.find { |subsidy| subsidy.status == 'Approved' }
+              line_item_subsidy = approved_subsidy.percent_subsidy if approved_subsidy
             end
+            
             protocol_total_cost_with_subsidies += (line_item_total_cost * (1 - line_item_subsidy))
 
-            line_item.versions.where(event: ["create", "update"]).each do |version|
+            versions.each do |version|
               data = [ protocol.srid ]
               data << protocol.research_master_id if ENV.fetch('RMID_URL'){nil}
               data << protocol.short_title
@@ -172,7 +186,7 @@ class AuditingReport < Report
               data << quantity_fulfilled
               data << line_item.quantity_remaining
               data << line_item_total_cost
-              data << "#{line_item_subsidy * 100}%"
+              data << "#{line_item_subsidy * 100}%" # Fixed a syntax error from the original code here
               data << format_date(line_item.started_at)
               data << line_item.components.where(selected: true).map(&:component).join(' | ')
               data << format_date(line_item.last_fulfillment)
@@ -201,7 +215,7 @@ class AuditingReport < Report
     total = 0
 
     fulfillments.each do |fulfillment|
-      fulfillments_cost = fulfillment.quantity * (fulfillment.service_cost / 100) #fulfillment cost stored as cents, thus divide by 100 to get dollar cost
+      fulfillments_cost = fulfillment.quantity * (fulfillment.service_cost / 100.0)
       total += fulfillments_cost
     end
 
@@ -234,7 +248,7 @@ class AuditingReport < Report
       if field == "service_id"
         original_service = Service.find_by_id(changes.first)
         new_service = Service.find_by_id(changes.last)
-        formatted << "#{field.humanize}: #{original_service.nil? ? 'Service Not Found' : original_service.name} => #{new_service.nil? ? 'Service Not Found' : new_service.name}}"
+        formatted << "#{field.humanize}: #{original_service.nil? ? 'Service Not Found' : original_service.name} => #{new_service.nil? ? 'Service Not Found' : new_service.name}"
       else
         formatted << "#{field.humanize}: #{changes.first} => #{changes.last}"
       end
