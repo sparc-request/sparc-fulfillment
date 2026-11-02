@@ -141,11 +141,11 @@ class AuditingReport < Report
           protocol_total_cost_with_subsidies = 0
           has_valid_line_item = false
 
-          # Filter one_time_fee via joins, eager-load non-clinical tables
+          # Filter one_time_fee via joins, use preload instea of includes
           line_items = protocol.line_items
                                .joins(:service)
                                .where(services: { one_time_fee: true })
-                               .includes(:service, :components, :notes, :documents, :fulfillments, sparc_line_item: { sub_service_request: :subsidies })
+                               .preload(:service, :components, :notes, :documents, :fulfillments, sparc_line_item: { sub_service_request: :subsidies })
 
           line_items.each do |line_item|
             # Grab matching versions, avoid iterating over line items that have no relevant versions
@@ -157,8 +157,8 @@ class AuditingReport < Report
 
             unit_cost = display_cost(line_item.cost)
             
-            # `to_a.sum` eager-loaded fulfillments in Ruby memory, instead of firing N+1 SQL queries
-            quantity_fulfilled = line_item.fulfillments.to_a.sum(&:quantity) 
+            # `to_a.sum` eager-loaded fulfillments in Ruby memory, instead of firing N+1 SQL queries, handle test factories that generate fulfillments without quantities
+            quantity_fulfilled = line_item.fulfillments.to_a.sum { |f| f.quantity || 0 }
             line_item_total_cost = quantity_fulfilled * (line_item.cost / 100.0)
 
             protocol_total_cost += line_item_total_cost
