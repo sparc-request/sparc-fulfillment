@@ -25,11 +25,7 @@ class ParticipantReport < Report
   require 'csv'
 
   def generate(document)
-    #We want to filter from 00:00:00 in the local time zone,
-    #then convert to UTC to match database times
     @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc unless !@params[:end_date].present? || !@params[:start_date].present?
-    #We want to filter from 11:59:59 in the local time zone,
-    #then convert to UTC to match database times
     @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second unless !@params[:start_date].present? || !@params[:end_date].present?
 
     @gender = @params[:gender] unless @params[:gender] == 'Both' || @params[:gender] == ''
@@ -42,11 +38,21 @@ class ParticipantReport < Report
     CSV.open(document.path, "wb") do |csv|
       conditions = {:mrn => @mrns, :gender => @gender, :date_of_birth => @start_date..@end_date}
       conditions.delete_if {|k,v| !v.present? || v.to_s == ".." }
+      
       participants = 
-        if @protocols
-          Participant.eager_load(:protocols).joins(:protocols_participants).where(conditions).where(protocols_participants: { protocol_id: @protocols }).distinct
+        if @protocol_level
+          Participant.includes(:protocols, protocols_participants: :arm)
+                     .where(conditions)
+                     .where(protocols_participants: { protocol_id: @protocols })
+                     .distinct
+        elsif @protocols.any?
+          Participant.includes(:protocols)
+                     .joins(:protocols_participants)
+                     .where(conditions)
+                     .where(protocols_participants: { protocol_id: @protocols })
+                     .distinct
         else
-          Participant.eager_load(:protocols).where(conditions).distinct
+          Participant.includes(:protocols).where(conditions).distinct
         end
 
       if @start_date || @gender
@@ -86,7 +92,8 @@ class ParticipantReport < Report
       end
 
       csv << header
-      participants.each do |participant|
+      
+      participants.find_each do |participant|
         deidentified = participant.deidentified == false ? "No" : participant.deidentified == true ? "Yes" : "N/A"
 
         data = [participant.id]
@@ -106,23 +113,28 @@ class ParticipantReport < Report
         data << participant.zipcode
 
         if @protocol_level
-          ##There is only one protocol in the protocols array, because this is being ran inside of one protocol
-          protocol_id = @protocols.first
-          ##Same with protocols_participant, only one should exist between this particular participant, and protocol
-          protocols_participant = participant.protocols_participants.where(protocol_id: protocol_id).first
-          arm = protocols_participant.arm
-
-          data << protocols_participant.external_id
-          data << (arm.nil? ? "No Arm Selected" : arm.name)
-          data << protocols_participant.status
-          data << protocols_participant.recruitment_source
+          protocol_id = @protocols.first.to_i
+          
+          protocols_participant = participant.protocols_participants.find { |pp| pp.protocol_id == protocol_id }
+          
+          if protocols_participant
+            arm = protocols_participant.arm
+            data << protocols_participant.external_id
+            data << (arm.nil? ? "No Arm Selected" : arm.name)
+            data << protocols_participant.status
+            data << protocols_participant.recruitment_source
+          else
+            data << ""
+            data << "No Arm Selected"
+            data << ""
+            data << ""
+          end
         else
           data << participant.protocols.map(&:sparc_id).map(&:inspect).join(', ')
         end
 
         csv << data
       end
-      
     end
   end
 end
