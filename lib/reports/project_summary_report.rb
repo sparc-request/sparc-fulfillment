@@ -19,23 +19,19 @@
 # TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.~
 
 class ProjectSummaryReport < Report
-
   VALIDATES_PRESENCE_OF = [:title, :start_date, :end_date, :protocol].freeze
   VALIDATES_NUMERICALITY_OF = [].freeze
 
   require 'csv'
 
   def generate(document)
-    #We want to filter from 00:00:00 in the local time zone,
-    #then convert to UTC to match database times
     @start_date = Time.strptime(@params[:start_date], "%m/%d/%Y").utc
-    #We want to filter from 11:59:59 in the local time zone,
-    #then convert to UTC to match database times
     @end_date   = Time.strptime(@params[:end_date], "%m/%d/%Y").tomorrow.utc - 1.second
 
     document.update(content_type: 'text/csv', original_filename: "#{@params[:title]}.csv")
 
-    protocol = Protocol.find(@params[:protocol])
+    # Eager loading PI, Arms, Visit Groups, and Participants which gets rid of N+1 queries during name/MRN fetching
+    protocol = Protocol.includes(:pi, arms: [:visit_groups, { protocols_participants: :participant }]).find(@params[:protocol])
 
     CSV.open(document.path, "wb") do |csv|
       csv << ["SPARC ID:", "#{protocol.sparc_id}"]
@@ -45,26 +41,46 @@ class ProjectSummaryReport < Report
       csv << ["To:", "#{format_date(Time.strptime(@params[:end_date], "%m/%d/%Y"))}"]
       csv << [""]
 
-      # amount due for whole study
       arms_total = 0
 
       protocol.arms.each do |arm|
         visit_groups          = arm.visit_groups
-        visit_group_subtotals = [0] * visit_groups.count # total costs for each visit group
+        visit_group_subtotals = [0] * visit_groups.count
         protocols_participants = arm.protocols_participants
-        participant_totals    = []  # totals per participant
+        participant_totals    = []
+
+        # Bulk SQL aggregation, which replaces tons of N+1 queries
+        vg_ids = visit_groups.map(&:id)
+        
+        # Find all existing appointments to distinguish between no visit and visit with no cost
+        existing_appointments = Appointment.where(visit_group_id: vg_ids)
+                                           .pluck(:protocols_participant_id, :visit_group_id)
+                                           .to_set
+        
+        # Group and sum all procedure costs on the database side for the entire arm at once
+        procedure_costs = Procedure.joins(:appointment)
+                                   .where(appointments: { visit_group_id: vg_ids })
+                                   .completed_r_in_date_range(@start_date, @end_date)
+                                   .group('appointments.protocols_participant_id', 'appointments.visit_group_id')
+                                   .sum(:service_cost)
 
         csv << [""]
         csv << [""]
         csv << [""]
         csv << ["Clinical Services"]
         csv << ["Arm Name: #{arm.name}","","","","","","Invoiceable Visit Cost"]
-        csv << ["", "Patient MRN", "Participant Status", visit_groups.pluck(:name), "Per Patient Invoiceable Total"].flatten
+        
+        # Changing to using .map(&:name) to use eager-loaded records in memory
+        csv << ["", "Patient MRN", "Participant Status", visit_groups.map(&:name), "Per Patient Invoiceable Total"].flatten
         csv << [""]
 
         protocols_participants.each do |protocols_participant|
           participant_costs = visit_groups.map do |vg|
-            total_completed_cost_for_participant(vg, protocols_participant) || "N/A"
+            if existing_appointments.include?([protocols_participant.id, vg.id])
+              procedure_costs[[protocols_participant.id, vg.id]] || 0
+            else
+              "N/A"
+            end
           end
 
           participant_total     = sum_up(participant_costs)
@@ -88,7 +104,9 @@ class ProjectSummaryReport < Report
       csv << [""]
 
       study_level_charges = 0
-      protocol.fulfillments.fulfilled_in_date_range(@start_date, @end_date).each do |f|
+      
+      # Eager-loading line_items to prevent N+1 quantity_type queries and batching the loop
+      protocol.fulfillments.includes(:line_item).fulfilled_in_date_range(@start_date, @end_date).find_each do |f|
         csv << ["", f.service_name, f.quantity.to_s, f.line_item.try(:quantity_type), display_cost(f.service_cost)]
         study_level_charges += f.service_cost
       end
@@ -104,33 +122,19 @@ class ProjectSummaryReport < Report
 
   private
 
-  # If n is "N/A", return 0; otherwise, return n
   def na_to_0(n)
     n == "N/A" ? 0 : n
   end
 
-  # [100, "N/A", 350] -> ["$1.00", "N/A", "$3.50"]
   def display_cost_array(cost_array)
     cost_array.map{ |cost| cost == "N/A" ? "N/A" : display_cost(cost) }
   end
 
-  # [0, 1, "N/A"], [3, 4, 5] -> [3, 5, 5]
   def add_parallel_arrays(a1, a2)
     a1.zip(a2).map { |a, b| na_to_0(a) + na_to_0(b) }
   end
 
-  # [0, 1, "N/A", 2] -> 3
   def sum_up(array)
     array.reject { |a| a == "N/A" }.reduce(0, :+)
-  end
-
-  # Totals the service costs (for completed procedures) rendered
-  # for given participant.
-  def total_completed_cost_for_participant(vg, protocols_participant)
-    (appointment = vg.appointments.where(protocols_participant: protocols_participant).first) ? total_completed_cost(appointment) : nil
-  end
-
-  def total_completed_cost(appointment)
-    appointment.procedures.completed_r_in_date_range(@start_date, @end_date).sum(:service_cost)
   end
 end
