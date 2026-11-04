@@ -1,4 +1,5 @@
 class TimeTrackingsController < ApplicationController
+  before_action :authorize_time_tracking
   before_action { @highlighted_link = 'time_trackings' }
 
   def index
@@ -159,32 +160,39 @@ class TimeTrackingsController < ApplicationController
     end
   end
 
-def add_protocol_modal
-  protocols_data = current_identity.protocols
-    .joins(:sub_service_request, :sparc_protocol)
-    .pluck(
-      Protocol.arel_table[:id],
-      Protocol.arel_table[:sparc_id],
-      SubServiceRequest.arel_table[:ssr_id],
-      Sparc::Protocol.arel_table[:short_title]
-    )
+  def add_protocol_modal
+    protocols_data = current_identity.clinical_provider_protocols
+      .joins(:sub_service_request, :sparc_protocol)
+      .pluck(
+        Protocol.arel_table[:id],
+        Protocol.arel_table[:sparc_id],
+        SubServiceRequest.arel_table[:ssr_id],
+        Sparc::Protocol.arel_table[:short_title]
+      )
 
-  @available_protocols = protocols_data
-    .sort_by { |_id, sparc_id, ssr_id, _title| [sparc_id.to_i, ssr_id.to_i] }
-    .map do |id, sparc_id, ssr_id, short_title|
-      ["(#{sparc_id}-#{ssr_id}) #{short_title}".truncate(90), id]
+    @available_protocols = protocols_data
+      .sort_by { |_id, sparc_id, ssr_id, _title| [sparc_id.to_i, ssr_id.to_i] }
+      .map do |id, sparc_id, ssr_id, short_title|
+        ["(#{sparc_id}-#{ssr_id}) #{short_title}".truncate(90), id]
+      end
+
+    @selected_protocol_ids = current_identity.time_tracking_protocols.pluck(:protocol_id)
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_to time_trackings_path }
     end
-
-  @selected_protocol_ids = current_identity.time_tracking_protocols.pluck(:protocol_id)
-
-  respond_to do |format|
-    format.js
-    format.html { redirect_to time_trackings_path }
   end
-end
 
 
   private
+
+  def authorize_time_tracking
+    unless current_identity.can_access_time_tracking?
+      flash[:alert] = t(:protocol)[:flash_messages][:unauthorized]
+      redirect_to root_path
+    end
+  end
 
   def load_sidebar_data
     @sidebar_items = current_identity.time_tracking_protocols

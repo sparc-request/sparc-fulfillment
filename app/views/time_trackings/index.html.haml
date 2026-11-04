@@ -4,7 +4,8 @@
       .card.h-100
         .card-header.bg-primary.text-white.d-flex.justify-content-between.align-items-center
           %h5 Protocols
-          = link_to icon('fas', 'plus') + ' Add', add_protocol_modal_time_trackings_path, remote: true, class: 'btn btn-sm btn-success', id: 'addProtocolBtn'
+          - if current_identity.clinical_provider?
+            = link_to icon('fas', 'plus') + ' Add', add_protocol_modal_time_trackings_path, remote: true, class: 'btn btn-sm btn-success', id: 'addProtocolBtn'
         .card-body.p-2
           - if @sidebar_items.any?
             .input-group.input-group-sm.mb-2
