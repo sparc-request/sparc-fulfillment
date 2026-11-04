@@ -80,3 +80,15 @@ namespace :deploy do
 
   before 'deploy:assets:precompile', 'deploy:yarn_install'
 end
+
+namespace :deploy do
+  task :configure_bundler_platform do
+    on roles(:app) do
+      within release_path do
+        execute :bundle, "config set --local force_ruby_platform true"
+      end
+    end
+  end
+end
+
+before "bundler:install", "deploy:configure_bundler_platform"
