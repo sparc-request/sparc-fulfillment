@@ -42,30 +42,39 @@ class IdentityOrganizations
   def authorized_protocols
     fetch_rights
     organization_ids = (@super_user_orgs.to_a + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs.to_a).map(&:id).uniq
-    
+
     Protocol.joins(:sub_service_request)
             .includes(sub_service_request: [:organization])
             .where(sub_service_requests: {organization_id: organization_ids})
             .distinct
   end
 
+  def clinical_provider_protocols
+    fetch_rights
+
+    Protocol.joins(:sub_service_request)
+            .where(sub_service_requests: { organization_id: @clinical_provider_orgs.map(&:id) })
+            .distinct
+  end
+
+
   def authorized_billing_manager_protocols
     billing_manager_orgs = Organization.includes(:super_users).where(super_users: {identity_id: @id, billing_manager: true}).references(:super_users).distinct
     org_ids = (billing_manager_orgs.to_a + authorized_child_organizations(billing_manager_orgs)).map(&:id).uniq
-    
+
     Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: org_ids}).distinct
   end
 
   def authorized_billing_manager_protocols_allow_credit
     billing_manager_orgs = Organization.includes(:super_users).where(super_users: {identity_id: @id, billing_manager: true, allow_credit: true}).references(:super_users).distinct
     org_ids = (billing_manager_orgs.to_a + authorized_child_organizations(billing_manager_orgs)).map(&:id).uniq
-    
+
     Protocol.joins(:sub_service_request).where(sub_service_requests: {organization_id: org_ids}).distinct
   end
 
   def fulfillment_organizations_with_protocols(include_distinct=true)
     fetch_rights
-    
+
     # 1. Combine all authorized organization objects and extract IDs securely
     authorized_orgs = @super_user_orgs.to_a + authorized_child_organizations(@super_user_orgs) + @clinical_provider_orgs.to_a
     org_ids = authorized_orgs.map(&:id).uniq
@@ -78,7 +87,7 @@ class IdentityOrganizations
     # 3. Fetch the final matched organizations
     organizations = Organization.where(id: org_ids_with_protocols)
     organizations = organizations.distinct if include_distinct
-    
+
     return organizations
   end
 
@@ -92,7 +101,7 @@ class IdentityOrganizations
   def authorized_child_organizations(org_ids)
     # Extract IDs safely whether passed as Organization objects or integers
     ids = Array(org_ids).map { |org| org.is_a?(Organization) ? org.id : org }.compact
-    
+
     if ids.empty?
       []
     else

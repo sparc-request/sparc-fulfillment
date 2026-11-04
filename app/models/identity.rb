@@ -34,11 +34,28 @@ class Identity < SparcDbBase
   has_many :patient_registrars
   has_many :column_preferences, dependent: :destroy
   has_many :time_tracking_protocols, dependent: :destroy
+  has_many :time_tracking_managers
 
   delegate :tasks_count, :unaccessed_documents_count, to: :identity_counter
 
-  def is_a_performer?
-    clinical_providers.any? || super_users.any?
+  def clinical_provider?
+    clinical_providers.any?
+  end
+
+  def time_tracking_manager?
+    time_tracking_managers.any?
+  end
+
+  def can_access_time_tracking?
+    clinical_provider? || time_tracking_manager?
+  end
+
+  def time_tracking_manager_organization_ids
+    time_tracking_managers.pluck(:organization_id)
+  end
+
+  def clinical_provider_protocols
+    IdentityOrganizations.new(id).clinical_provider_protocols
   end
 
   def column_preferences_hash
