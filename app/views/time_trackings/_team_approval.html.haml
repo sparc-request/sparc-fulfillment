@@ -1,0 +1,81 @@
+.row
+  .col-md-3
+    .card
+      .card-header.bg-primary.text-white
+        %h5.mb-0 Review Filters
+      .card-body
+        .form-group
+          %label.font-weight-bold Staff Member
+          = select_tag 'filter_staff', options_for_select(@staff_members || []), include_blank: 'All Staff', class: 'form-control selectpicker', id: 'filterStaff', data: { live_search: 'true', width: '100%' }
+
+        .form-group
+          %label.font-weight-bold SRID
+          = select_tag 'filter_protocol', options_for_select(@managed_protocols || []), include_blank: 'All Studies', class: 'form-control selectpicker', id: 'filterProtocol', data: { live_search: 'true', width: '100%' }
+
+        .form-group
+          %label.font-weight-bold Date Range
+          .input-group.datetimepicker.date.mb-2#filterDateFromPicker{ data: { target_input: 'nearest' } }
+            = text_field_tag 'filter_date_from', nil, class: 'form-control datetimepicker-input', id: 'filterDateFrom', placeholder: 'Start Date', data: { target: '#filterDateFromPicker', toggle: 'datetimepicker' }
+            .input-group-append{ data: { toggle: 'datetimepicker', target: '#filterDateFromPicker' } }
+              .input-group-text= icon('far', 'calendar')
+          .input-group.datetimepicker.date#filterDateToPicker{ data: { target_input: 'nearest' } }
+            = text_field_tag 'filter_date_to', nil, class: 'form-control datetimepicker-input', id: 'filterDateTo', placeholder: 'End Date', data: { target: '#filterDateToPicker', toggle: 'datetimepicker' }
+            .input-group-append{ data: { toggle: 'datetimepicker', target: '#filterDateToPicker' } }
+              .input-group-text= icon('far', 'calendar')
+
+        .form-group
+          %label.font-weight-bold Status
+          - TimeTracking::STATUSES.each do |st|
+            .form-check
+              = check_box_tag 'filter_status[]', st, st != TimeTracking::IMPORTED, class: 'form-check-input filter-status-checkbox', id: "filterStatus_#{st.parameterize}"
+              %label.form-check-label{ for: "filterStatus_#{st.parameterize}" }= st
+
+        %button.btn.btn-primary.btn-block.mt-3#applyFiltersBtn{ type: 'button' }
+          = icon('fas', 'filter', class: 'mr-1')
+          Apply Filters
+        %button.btn.btn-outline-secondary.btn-block.mt-2#clearFiltersBtn{ type: 'button' }
+          = icon('fas', 'redo', class: 'mr-1')
+          Clear
+
+  .col-md-9
+    .card
+      .card-header.bg-primary.text-white
+        %h5.mb-0 Team Member Time Entries
+      .card-body
+        .alert.alert-info.py-2.px-3.mb-2.small
+          = icon('fas', 'info-circle', class: 'mr-1')
+          Select one or more entries with the same status to see available actions.
+
+        #teamApprovalToolbar.d-flex.align-items-center
+          %span.font-weight-bold.mr-3
+            Selected:
+            %span#selectedCount 0
+          %button.btn.btn-sm.btn-primary.mr-2#startReviewBtn{ type: 'button', disabled: true }
+            = icon('fas', 'lock', class: 'mr-1')
+            Start Review
+          %button.btn.btn-sm.btn-primary.mr-2#finishReviewBtn{ type: 'button', disabled: true }
+            = icon('fas', 'check-circle', class: 'mr-1')
+            Finish Review
+          %button.btn.btn-sm.btn-success.mr-2#importToFulfillmentsBtn{ type: 'button', disabled: true }
+            = icon('fas', 'file-import', class: 'mr-1')
+            Import to Fulfillment
+          %button.btn.btn-sm.btn-warning.text-dark#requestUpdatesBtn{ type: 'button', disabled: true }
+            = icon('fas', 'undo', class: 'mr-1')
+            Request Staff Updates
+
+
+        .table-responsive
+          %table#teamApprovalTable{ data: { toggle: 'table', toolbar: '#teamApprovalToolbar', url: team_approval_time_trackings_path(format: :json), custom_sort: 'timeTrackingCustomSort', search: 'true', show_columns: 'true', show_refresh: 'true', striped: 'true', sort_name: 'date', sort_order: 'desc', pagination: 'true', page_size: 25, show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], click_to_select: 'true' } }
+            %thead.bg-primary.text-white
+              %tr
+                %th{ data: { field: 'state', checkbox: 'true' } }
+                %th{ data: { field: 'staff_name', sortable: 'true' } } Staff Member
+                %th{ data: { field: 'srid', sort_name: 'raw_srid', sortable: 'true' } } SRID
+                %th{ data: { field: 'short_title', sortable: 'true' } } Study Title
+                %th{ data: { field: 'service_name', sortable: 'true' } } Service
+                %th{ data: { field: 'component_name', sortable: 'true', visible: 'false' } } Component
+                %th{ data: { field: 'date', sort_name: 'raw_date', sortable: 'true' } } Date
+                %th{ data: { field: 'quantity', sort_name: 'raw_quantity', sortable: 'true' } } Total Hours
+                %th{ data: { field: 'status', sortable: 'true' } } Status
+                %th{ data: { field: 'notes', sortable: 'true' } } Notes
+                %th{ data: { field: 'actions', align: 'center' } } Actions

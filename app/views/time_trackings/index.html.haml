@@ -1,40 +1,23 @@
+- show_my_entries = current_identity.clinical_provider?
+- show_team_approval = current_identity.time_tracking_manager?
+- active_tab = show_my_entries ? 'my_entries' : 'team'
+
 %main.w-100#timeTrackingDashboard
-  .row
-    .col-md-3
-      .card.h-100
-        .card-header.bg-primary.text-white.d-flex.justify-content-between.align-items-center
-          %h5 Protocols
-          - if current_identity.clinical_provider?
-            = link_to icon('fas', 'plus') + ' Add', add_protocol_modal_time_trackings_path, remote: true, class: 'btn btn-sm btn-success', id: 'addProtocolBtn'
-        .card-body.p-2
-          - if @sidebar_items.any?
-            .input-group.input-group-sm.mb-2
-              .input-group-prepend
-                %span.input-group-text= icon('fas', 'search')
-              %input#sidebarSearch.form-control{ type: "text", placeholder: "Search...", autocomplete: "off" }
-          #protocolsTree
-            = render 'protocols_tree', sidebar_items: @sidebar_items, time_trackings: @time_trackings
+  - if show_my_entries && show_team_approval
+    %ul.nav.nav-tabs.mb-3#timeTrackingTabs{ role: 'tablist' }
+      %li.nav-item
+        %a.nav-link#myTimeEntriesTabLink{ class: active_tab == 'my_entries' ? 'active font-weight-bold' : '', data: { toggle: 'tab' }, href: '#myTimeEntriesPane', role: 'tab' }
+          My Time Entries
+      %li.nav-item
+        %a.nav-link#teamApprovalTabLink{ class: active_tab == 'team' ? 'active font-weight-bold' : '', data: { toggle: 'tab' }, href: '#teamApprovalPane', role: 'tab' }
+          Team Approval
 
+  .tab-content
+    - if show_my_entries
+      .tab-pane.fade#myTimeEntriesPane{ class: active_tab == 'my_entries' ? 'show active' : '', role: 'tabpanel' }
+        = render 'my_time_entries'
 
-    .col-md-9
-      .card
-        .card-header.bg-primary.text-white
-          %h5 Time Tracking
-        .card-body
-          .table-responsive
-            %table#timeTrackingsTable{ data: { toggle: 'table', url: time_trackings_path(format: :json), custom_sort: 'timeTrackingCustomSort', search: 'true', show_columns: 'true', show_refresh: 'true', striped: 'true', sort_name: 'date', sort_order: 'desc', sort_reset: 'true', undefined_text: '', row_style: 'timeTrackingRowStyle', show_export: 'true', export_types: ['json', 'xml', 'csv', 'txt', 'sql'], cookie: 'true', cookie_id_table: 'time-trackings-table' } }
-              %thead.bg-primary.text-white
-                %tr
-                  %th{ data: { field: 'srid', sort_name: 'raw_srid', sortable: 'true' } } SRID
-                  %th{ data: { field: 'rmid', sortable: 'true', visible: 'false' } } RMID
-                  %th{ data: { field: 'status', sortable: 'true', visible: 'false' } } Status
-                  %th{ data: { field: 'short_title', sortable: 'true' } } Short Title
-                  %th{ data: { field: 'pi', sortable: 'true' } } Principal Investigator
-                  %th{ data: { field: 'service_name', sortable: 'true' } } Service
-                  %th{ data: { field: 'component_name', sortable: 'true' } } Component
-                  %th{ data: { field: 'start_time', sortable: 'true', visible: 'false' } } Start Time
-                  %th{ data: { field: 'end_time', sortable: 'true', visible: 'false' } } End Time
-                  %th{ data: { field: 'quantity', sort_name: 'raw_quantity', sortable: 'true' } } Qty Fulfilled
-                  %th{ data: { field: 'date', sort_name: 'raw_date', sortable: 'true' } } Date Fulfilled
-                  %th{ data: { field: 'notes', sortable: 'true' } } Notes
-                  %th{ data: { field: 'actions', align: 'center' } } Actions
+    - if show_team_approval
+      .tab-pane.fade#teamApprovalPane{ class: active_tab == 'team' ? 'show active' : '', role: 'tabpanel' }
+        = render 'team_approval'
+

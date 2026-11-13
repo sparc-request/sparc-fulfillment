@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_17_123622) do
+ActiveRecord::Schema[7.2].define(version: 2026_11_07_170351) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -155,12 +155,14 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_17_123622) do
     t.datetime "invoiced_date", precision: nil
     t.boolean "credited"
     t.float "percent_subsidy"
+    t.integer "time_tracking_id"
     t.index ["creator_id"], name: "index_fulfillments_on_creator_id"
     t.index ["klok_entry_id"], name: "index_fulfillments_on_klok_entry_id"
     t.index ["line_item_id"], name: "index_fulfillments_on_line_item_id"
     t.index ["performer_id"], name: "index_fulfillments_on_performer_id"
     t.index ["service_id"], name: "index_fulfillments_on_service_id"
     t.index ["sparc_id"], name: "index_fulfillments_on_sparc_id"
+    t.index ["time_tracking_id"], name: "index_fulfillments_on_time_tracking_id"
   end
 
   create_table "identity_counters", id: :integer, charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|

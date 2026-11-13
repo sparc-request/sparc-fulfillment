@@ -5,7 +5,24 @@ class TimeTrackingsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
+        # Load 'My Time Entries' sidebar data
         load_sidebar_data
+
+        # Load 'Team Approval' filter dropdowns
+        if current_identity.time_tracking_manager?
+          managed_scope = TimeTracking.managed_by(current_identity).where.not(ended_at: nil)
+
+          staff_ids = managed_scope.distinct.pluck(:identity_id)
+          @staff_members = Identity.where(id: staff_ids)
+            .order(:last_name, :first_name)
+            .map { |i| [i.full_name, i.id] } # <option value=i.id>i.full_name</option>
+
+          protocol_ids = managed_scope.distinct.pluck(:protocol_id)
+          @managed_protocols = Protocol.where(id: protocol_ids)
+            .includes(:sub_service_request, :sparc_protocol)
+            .map { |p| ["(#{p.srid}) #{p.short_title}".truncate(65), p.id] }
+            .sort_by(&:first)
+        end
       end
 
       format.json do
@@ -18,10 +35,8 @@ class TimeTrackingsController < ApplicationController
   end
 
   def create
-    # 1) Stop any currently running timers for this user
     @stopped_timers = TimeTracking.stop_active_for(current_identity)
 
-    # 2) Start new timer
     @time_tracking = TimeTracking.new(time_tracking_params)
     @time_tracking.identity_id = current_identity.id
     @time_tracking.date = Date.today
@@ -98,6 +113,7 @@ class TimeTrackingsController < ApplicationController
 
   def destroy
     @time_tracking = TimeTracking.find(params[:id])
+
     @time_tracking.destroy
 
     respond_to do |format|
@@ -105,6 +121,7 @@ class TimeTrackingsController < ApplicationController
     end
   end
 
+  # Update protocols list in 'My Time Entries' sidebar
   def update_sidebar
     selected = (params[:protocol_ids] || []).map(&:to_i)
     existing = current_identity.time_tracking_protocols.pluck(:protocol_id)
@@ -184,6 +201,67 @@ class TimeTrackingsController < ApplicationController
     end
   end
 
+  # json data for 'Team Approval' table
+  def team_approval
+    @team_time_trackings = TimeTracking.managed_by(current_identity)
+      .where.not(ended_at: nil)
+      .includes(:identity, protocol: [:sparc_protocol, :sub_service_request, :pi], line_item: :service)
+      .order(date: :desc, started_at: :desc)
+
+    if params[:identity_id].present?
+      @team_time_trackings = @team_time_trackings.where(identity_id: params[:identity_id])
+    end
+
+    if params[:protocol_id].present?
+      @team_time_trackings = @team_time_trackings.where(protocol_id: params[:protocol_id])
+    end
+
+    if params[:date_from].present?
+      date_from = Date.strptime(params[:date_from], '%m/%d/%Y') rescue nil
+      @team_time_trackings = @team_time_trackings.where('date >= ?', date_from) if date_from
+    end
+
+    if params[:date_to].present?
+      date_to = Date.strptime(params[:date_to], '%m/%d/%Y') rescue nil
+      @team_time_trackings = @team_time_trackings.where('date <= ?', date_to) if date_to
+    end
+
+    if params[:status].present?
+      statuses = Array(params[:status])
+      if statuses.include?(TimeTracking::IN_PROGRESS)
+        @team_time_trackings = @team_time_trackings.where("status in (?) or status is null", statuses)
+      else
+        @team_time_trackings = @team_time_trackings.where(status: statuses)
+      end
+    end
+
+    respond_to do |format|
+      format.json
+    end
+  end
+
+  def update_status
+    ids = Array(params[:ids]).map(&:to_i)
+    time_trackings = TimeTracking.managed_by(current_identity).where(id: ids)
+    time_trackings.update_all(status: params[:status])
+
+    render json: { success: true, count: time_trackings.count }
+  end
+
+  def import_to_fulfillments
+    ids = Array(params[:ids]).map(&:to_i)
+    time_trackings = TimeTracking.managed_by(current_identity)
+      .where(id: ids)
+      .includes(:fulfillment, :line_item, :protocol)
+
+    ActiveRecord::Base.transaction do
+      time_trackings.each { |tt| tt.import_to_fulfillment!(current_identity) }
+    end
+
+    render json: { success: true, count: time_trackings.size }
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
 
   private
 
