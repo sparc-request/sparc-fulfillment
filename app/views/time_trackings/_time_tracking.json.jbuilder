@@ -42,23 +42,27 @@ else
   json.date time_tracking.date&.strftime('%m/%d/%Y')
   json.raw_date time_tracking.date&.strftime('%Y%m%d')
 
-  edit_btn = link_to(
-    icon('fas', 'edit'),
-    edit_time_tracking_path(time_tracking),
-    remote: true,
-    class: 'btn btn-sm btn-link text-primary p-1',
-    title: 'Edit'
-  )
+  if time_tracking.locked?
+    json.actions content_tag(:span, icon('fas', 'lock'), class: 'text-muted', title: "Locked (#{time_tracking.current_status})")
+  else
+    edit_btn = link_to(
+      icon('fas', 'edit'),
+      edit_time_tracking_path(time_tracking),
+      remote: true,
+      class: 'btn btn-sm btn-link text-primary p-1',
+      title: 'Edit'
+    )
 
-  delete_btn = link_to(
-    icon('fas', 'trash-alt'),
-    time_tracking_path(time_tracking),
-    method: :delete,
-    remote: true,
-    data: { confirm_swal: 'true', text: 'Are you sure you want to delete this time entry?' },
-    class: 'btn btn-sm btn-link text-danger p-1',
-    title: 'Delete'
-  )
+    delete_btn = link_to(
+      icon('fas', 'trash-alt'),
+      time_tracking_path(time_tracking),
+      method: :delete,
+      remote: true,
+      data: { confirm_swal: 'true', text: 'Are you sure you want to delete this time entry?' },
+      class: 'btn btn-sm btn-link text-danger p-1',
+      title: 'Delete'
+    )
 
-  json.actions "#{edit_btn} #{delete_btn}"
+    json.actions "#{edit_btn} #{delete_btn}"
+  end
 end

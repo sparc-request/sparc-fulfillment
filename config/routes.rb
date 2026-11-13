@@ -69,6 +69,7 @@ Rails.application.routes.draw do
   resources :imports
   resources :tasks, only: [:index, :show, :new, :create, :update, :edit]
   resources :procedure_groups, only: :update
+
   resources :time_trackings, only: [:index, :create, :edit, :update, :destroy] do
     collection do
       get :add_protocol_modal
@@ -77,6 +78,9 @@ Rails.application.routes.draw do
       put :update_protocol_title
       put :toggle_favorite_protocol
       delete :remove_protocol
+      get :team_approval
+      put :update_status
+      post :import_to_fulfillments
     end
     member do
       put :stop
