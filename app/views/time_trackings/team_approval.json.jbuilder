@@ -16,11 +16,16 @@ json.array! @team_time_trackings do |tt|
   json.staff_name tt.identity&.full_name || 'Unknown'
   json.srid tt.protocol&.srid
   json.raw_srid tt.protocol ? sprintf("%08d%06d", tt.protocol.sparc_id.to_i, tt.protocol.sub_service_request&.ssr_id.to_i) : ''
+  json.pi tt.protocol&.pi&.full_name
   json.short_title content_tag(:span, tt.protocol&.short_title, class: 'd-inline-block text-truncate', style: 'max-width: 200px;', title: tt.protocol&.short_title)
   json.service_name content_tag(:span, tt.line_item&.service&.name, class: 'd-inline-block text-truncate', style: 'max-width: 200px;', title: tt.line_item&.service&.name)
   json.component_name tt.component_name
   json.date tt.date&.strftime('%m/%d/%Y')
   json.raw_date tt.date&.strftime('%Y%m%d')
+  json.start_time tt.started_at&.strftime('%l:%M %p')&.strip
+  json.raw_start_time tt.started_at&.strftime('%H%M%S')
+  json.end_time tt.ended_at&.strftime('%l:%M %p')&.strip
+  json.raw_end_time tt.ended_at&.strftime('%H%M%S')
   json.quantity number_with_precision(tt.quantity, precision: 2)
   json.raw_quantity tt.quantity.to_f
   json.status_name status_str

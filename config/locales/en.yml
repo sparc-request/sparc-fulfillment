@@ -315,7 +315,7 @@ en:
       invoiced_date:
         disabled: "Fulfillment has not been invoiced"
     view: "View Fulfillment Buttons"
-    klok_description: "Imported via Klok"
+    klok_description: "Imported"
 
   imports:
     klok_import: "New Klok Import"

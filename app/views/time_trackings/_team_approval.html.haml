@@ -6,11 +6,15 @@
       .card-body
         .form-group
           %label.font-weight-bold Staff Member
-          = select_tag 'filter_staff', options_for_select(@staff_members || []), include_blank: 'All Staff', class: 'form-control selectpicker', id: 'filterStaff', data: { live_search: 'true', width: '100%' }
+          = select_tag 'filter_staff', options_for_select(@staff_members || []), multiple: true, title: 'All Staff', class: 'form-control selectpicker', id: 'filterStaff', data: { live_search: 'true', width: '100%', actions_box: 'true', selected_text_format: 'count > 2' }
 
         .form-group
           %label.font-weight-bold SRID
-          = select_tag 'filter_protocol', options_for_select(@managed_protocols || []), include_blank: 'All Studies', class: 'form-control selectpicker', id: 'filterProtocol', data: { live_search: 'true', width: '100%' }
+          = select_tag 'filter_protocol', options_for_select(@managed_protocols || []), multiple: true, title: 'All Studies', class: 'form-control selectpicker', id: 'filterProtocol', data: { live_search: 'true', width: '100%', actions_box: 'true', selected_text_format: 'count > 2' }
+
+        .form-group
+          %label.font-weight-bold Organization
+          = select_tag 'filter_organization', options_for_select(@managed_organizations || []), multiple: true, title: 'All Organizations', class: 'form-control selectpicker', id: 'filterOrganization', data: { live_search: 'true', width: '100%', actions_box: 'true', selected_text_format: 'count > 2' }
 
         .form-group
           %label.font-weight-bold Date Range
@@ -27,8 +31,9 @@
           %label.font-weight-bold Status
           - TimeTracking::STATUSES.each do |st|
             .form-check
-              = check_box_tag 'filter_status[]', st, st != TimeTracking::IMPORTED, class: 'form-check-input filter-status-checkbox', id: "filterStatus_#{st.parameterize}"
+              = check_box_tag 'filter_status[]', st, false, class: 'form-check-input filter-status-checkbox', id: "filterStatus_#{st.parameterize}"
               %label.form-check-label{ for: "filterStatus_#{st.parameterize}" }= st
+
 
         %button.btn.btn-primary.btn-block.mt-3#applyFiltersBtn{ type: 'button' }
           = icon('fas', 'filter', class: 'mr-1')
@@ -71,10 +76,13 @@
                 %th{ data: { field: 'state', checkbox: 'true' } }
                 %th{ data: { field: 'staff_name', sortable: 'true' } } Staff Member
                 %th{ data: { field: 'srid', sort_name: 'raw_srid', sortable: 'true' } } SRID
+                %th{ data: { field: 'pi', sortable: 'true', visible: 'false' } } PI
                 %th{ data: { field: 'short_title', sortable: 'true' } } Study Title
                 %th{ data: { field: 'service_name', sortable: 'true' } } Service
-                %th{ data: { field: 'component_name', sortable: 'true', visible: 'false' } } Component
+                %th{ data: { field: 'component_name', sortable: 'true' } } Component
                 %th{ data: { field: 'date', sort_name: 'raw_date', sortable: 'true' } } Date
+                %th{ data: { field: 'start_time', sort_name: 'raw_start_time', sortable: 'true', visible: 'false' } } Start Time
+                %th{ data: { field: 'end_time', sort_name: 'raw_end_time', sortable: 'true', visible: 'false' } } End Time
                 %th{ data: { field: 'quantity', sort_name: 'raw_quantity', sortable: 'true' } } Total Hours
                 %th{ data: { field: 'status', sortable: 'true' } } Status
                 %th{ data: { field: 'notes', sortable: 'true' } } Notes

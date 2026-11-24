@@ -43,7 +43,15 @@ else
   json.raw_date time_tracking.date&.strftime('%Y%m%d')
 
   if time_tracking.locked?
-    json.actions content_tag(:span, icon('fas', 'lock'), class: 'text-muted', title: "Locked (#{time_tracking.current_status})")
+    view_btn = link_to(
+      icon('fas', 'eye'),
+      edit_time_tracking_path(time_tracking),
+      remote: true,
+      class: 'btn btn-sm btn-link text-primary p-1',
+      title: "View Time Entries"
+    )
+    lock_icon = content_tag(:span, icon('fas', 'lock'), class: 'text-muted', title: "Locked (#{time_tracking.current_status})")
+    json.actions "#{view_btn} #{lock_icon}"
   else
     edit_btn = link_to(
       icon('fas', 'edit'),

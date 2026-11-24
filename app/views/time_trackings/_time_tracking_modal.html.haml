@@ -1,9 +1,9 @@
-- locked = time_tracking.locked?
+- editable = time_tracking.editable_by?(current_identity)
 .modal-dialog{ role: "document" }
   .modal-content
     = form_tag time_tracking_path(time_tracking), method: :put, remote: true, id: 'timeTrackingForm' do
       .modal-header
-        %h5.modal-title.text-dark= locked ? 'View Time Entry' : 'Edit Time Entry'
+        %h5.modal-title.text-dark= editable ? 'Edit Time Entry' : 'View Time Entry'
         %button.close{ type: "button", data: { dismiss: "modal" }, aria: { label: "Close" } }
           %span{ aria: { hidden: "true" } } &times;
       .modal-body
@@ -17,15 +17,16 @@
               %span.text-muted >
               %strong.text-dark= time_tracking.component_name
 
-        %fieldset{ disabled: locked }
+        %fieldset{ disabled: !editable }
           .form-group.row
             %label.col-sm-4.col-form-label Fulfillment Date *
             .col-sm-8
-              .input-group.datetimepicker.date{ id: 'timeTrackingDatePicker', data: { target_input: 'nearest' } }
-                = text_field_tag 'time_tracking[date]', time_tracking.date&.strftime('%m/%d/%Y'), class: 'form-control datetimepicker-input', readonly: true, data: { target: '#timeTrackingDatePicker', toggle: 'datetimepicker' }
-                .input-group-append{ data: { toggle: 'datetimepicker', target: '#timeTrackingDatePicker' } }
-                  .input-group-text
-                    %span.far.fa-calendar
+              .input-group.datetimepicker.date{ id: (editable ? 'timeTrackingDatePicker' : nil), data: { target_input: 'nearest' } }
+                = text_field_tag 'time_tracking[date]', time_tracking.date&.strftime('%m/%d/%Y'), class: 'form-control datetimepicker-input', readonly: true, data: (editable ? { target: '#timeTrackingDatePicker', toggle: 'datetimepicker' } : {})
+                - if editable
+                  .input-group-append{ data: { toggle: 'datetimepicker', target: '#timeTrackingDatePicker' } }
+                    .input-group-text
+                      %span.far.fa-calendar
 
           .form-group.row
             %label.col-sm-4.col-form-label Start Time *
@@ -60,7 +61,7 @@
 
       .modal-footer
         %button.btn.btn-secondary{ type: "button", data: { dismiss: "modal" } } Close
-        - unless locked
+        - if editable
           = submit_tag "Save", class: "btn btn-primary"
 
 
