@@ -22,6 +22,11 @@ class TimeTrackingsController < ApplicationController
             .includes(:sub_service_request, :sparc_protocol)
             .map { |p| ["(#{p.srid}) #{p.short_title}".truncate(65), p.id] }
             .sort_by(&:first)
+
+          org_ids = current_identity.time_tracking_manager_organization_ids
+          @managed_organizations = Organization.where(id: org_ids)
+            .order(:name)
+            .map { |o| [o.name, o.id] }
         end
       end
 
@@ -208,12 +213,21 @@ class TimeTrackingsController < ApplicationController
       .includes(:identity, protocol: [:sparc_protocol, :sub_service_request, :pi], line_item: :service)
       .order(date: :desc, started_at: :desc)
 
-    if params[:identity_id].present?
-      @team_time_trackings = @team_time_trackings.where(identity_id: params[:identity_id])
+    identity_ids = params[:identity_ids].presence || params[:identity_id].presence
+
+    if identity_ids.present?
+      @team_time_trackings = @team_time_trackings.where(identity_id: identity_ids)
     end
 
-    if params[:protocol_id].present?
-      @team_time_trackings = @team_time_trackings.where(protocol_id: params[:protocol_id])
+    protocol_ids = params[:protocol_ids].presence || params[:protocol_id].presence
+    if protocol_ids.present?
+      @team_time_trackings = @team_time_trackings.where(protocol_id: protocol_ids)
+    end
+
+    org_ids = params[:organization_ids].presence || params[:organization_id].presence
+    if org_ids.present?
+      selected_ssr_ids = SubServiceRequest.where(organization_id: org_ids).pluck(:id)
+      @team_time_trackings = @team_time_trackings.where(sub_service_request_id: selected_ssr_ids)
     end
 
     if params[:date_from].present?

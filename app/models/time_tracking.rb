@@ -69,6 +69,10 @@ class TimeTracking < ApplicationRecord
     current_status != IN_PROGRESS
   end
 
+  def editable_by?(identity)
+    identity_id == identity.id && current_status == IN_PROGRESS
+  end
+
   def stop
     now = Time.current
     diff_hours = ((now - started_at) / 3600.0).round(2)

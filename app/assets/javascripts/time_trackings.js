@@ -17,7 +17,9 @@ window.timeTrackingCustomSort = function(sortName, sortOrder, data) {
   var fieldMap = {
     'date': 'raw_date',
     'quantity': 'raw_quantity',
-    'srid': 'raw_srid'
+    'srid': 'raw_srid',
+    'start_time': 'raw_start_time',
+    'end_time': 'raw_end_time'
   };
   var field = fieldMap[sortName] || sortName;
 
@@ -138,7 +140,11 @@ $(document).ready(function() {
     var allUnderReview = statuses.every(function(s) { return s === 'Under Review'; });
     var allReady = statuses.every(function(s) { return s === 'Ready for Import'; });
 
-    $startBtn.prop('disabled', !allInProgress);
+    var canStartReview = statuses.every(function(s) {
+      return s === 'In Progress' || s === 'Ready for Import';
+    });
+
+    $startBtn.prop('disabled', !canStartReview);
     $finishBtn.prop('disabled', !allUnderReview);
     $updatesBtn.prop('disabled', !allUnderReview);
     $importBtn.prop('disabled', !allReady);
@@ -220,11 +226,20 @@ $(document).ready(function() {
   $(document).on('click', '#applyFiltersBtn', function() {
     var params = [];
 
-    var staffId = $('#filterStaff').val();
-    if (staffId) params.push('identity_id=' + encodeURIComponent(staffId));
+    var staffIds = $('#filterStaff').val() || [];
+    staffIds.forEach(function(id) {
+      if (id) params.push('identity_ids[]=' + encodeURIComponent(id));
+    });
 
-    var protocolId = $('#filterProtocol').val();
-    if (protocolId) params.push('protocol_id=' + encodeURIComponent(protocolId));
+    var protocolIds = $('#filterProtocol').val() || [];
+    protocolIds.forEach(function(id) {
+      if (id) params.push('protocol_ids[]=' + encodeURIComponent(id));
+    });
+
+    var orgIds = $('#filterOrganization').val() || [];
+    orgIds.forEach(function(id) {
+      if (id) params.push('organization_ids[]=' + encodeURIComponent(id));
+    });
 
     var dateFrom = $('#filterDateFrom').val();
     if (dateFrom) params.push('date_from=' + encodeURIComponent(dateFrom));
@@ -241,21 +256,22 @@ $(document).ready(function() {
       url += '?' + params.join('&');
     }
 
-    $('#teamApprovalTable').bootstrapTable('refresh', { url: url});
+    $('#teamApprovalTable').bootstrapTable('refresh', { url: url });
   });
+
 
   // Clear filters
   $(document).on('click', '#clearFiltersBtn', function() {
-    $('#filterStaff').val('').selectpicker('refresh');
-    $('#filterProtocol').val('').selectpicker('refresh');
+    $('#filterStaff').val([]).selectpicker('refresh');
+    $('#filterProtocol').val([]).selectpicker('refresh');
+    $('#filterOrganization').val([]).selectpicker('refresh');
     $('#filterDateFrom').val('');
     $('#filterDateTo').val('');
-    $('.filter-status-checkbox').each(function() {
-      $(this).prop('checked', $(this).val() !== 'Imported');
-    });
+    $('.filter-status-checkbox').prop('checked', false);
 
-    $('#teamApprovalTable').bootstrapTable('refresh', { url: '/time_trackings/team_approval.json'});
+    $('#teamApprovalTable').bootstrapTable('refresh', { url: '/time_trackings/team_approval.json' });
   });
+
 
   // Refresh tables when switching between tabs
   $(document).on('shown.bs.tab', '#timeTrackingTabs a[data-toggle="tab"]', function(e) {
